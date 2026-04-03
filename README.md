@@ -11,6 +11,7 @@ Maintained by **Arkheionx** ([@Yudis-bit](https://github.com/Yudis-bit)).
 | ID | Date | Protocol | Vulnerability Vector | Severity | PoC |
 |----|------|----------|---------------------|----------|-----|
 | 01 | 2022-10 | Illuminate / APWine | DoS via 1 wei Donation | 🔴 High | [`test/2022-10-Illuminate.t.sol`](./test/2022-10-Illuminate.t.sol) |
+| 02 | 2023-03 | Euler Finance | Logic Error (Donation) | 🔴 Critical | [`test/2023-03-EulerFinance.t.sol`](./test/2023-03-EulerFinance.t.sol) |
 
 ---
 
