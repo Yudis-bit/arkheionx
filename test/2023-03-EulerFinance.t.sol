@@ -8,7 +8,7 @@ import "forge-std/Test.sol";
  * @author  Yudis-bit
  * @notice  Proof of Concept demonstrating the vulnerability in Euler's donateToReserves
  * @dev     Fork block: 16817995 (just before the hack)
- * 
+ *
  * Vulnerability: The donateToReserves function lacked a health check (checkLiquidation modifier),
  * allowing an attacker to burn their own eTokens (collateral) without reducing their debt (dTokens),
  * leading to undercollateralized positions and potential liquidation bypass.
@@ -35,7 +35,7 @@ interface IERC20 {
 contract Exploit_2023_03_EulerFinance is Test {
     // Mainnet addresses at block 16817995
     address constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    address constant E_DAI = 0xe025E3ca2bE02316033184551D4d3Aa22024D9DC;   // eDAI proxy
+    address constant E_DAI = 0xe025E3ca2bE02316033184551D4d3Aa22024D9DC; // eDAI proxy
     address constant EULER_MODULE = 0x27182842E098f60e3D576794A5bFFb0777E025d3; // Euler main module
 
     IERC20 dai = IERC20(DAI);
