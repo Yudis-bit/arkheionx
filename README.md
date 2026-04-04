@@ -11,7 +11,7 @@
 
 <hr>
 
-<h2>☢️ Vulnerability Registry</h2>
+<h2>Vulnerability Registry</h2>
 <table>
   <thead>
     <tr>
@@ -43,7 +43,7 @@
   </tbody>
 </table>
 
-<h2>🔒 Embargoed Research</h2>
+<h2>Embargoed Research</h2>
 <p><em>Vulnerabilities currently under responsible disclosure or active contest embargo. Proof of Concepts will be published post-patch.</em></p>
 <table>
   <thead>
@@ -70,7 +70,7 @@
   </tbody>
 </table>
 
-<h2>🧬 Attack Taxonomy</h2>
+<h2>Attack Taxonomy</h2>
 <ul>
   <li><strong>Logic &amp; State:</strong> Euler Finance</li>
   <li><strong>Denial of Service (DoS):</strong> Illuminate</li>
@@ -79,7 +79,7 @@
 
 <hr>
 
-<h2>🛠️ Repository Architecture &amp; Execution</h2>
+<h2>Repository Architecture &amp; Execution</h2>
 <p>Environments are isolated by virtual machine. Dependencies, execution flows, and runtime assumptions are scoped per VM family.</p>
 
 <h3>EVM (Foundry / Solidity)</h3>
@@ -100,7 +100,7 @@
 
 <hr>
 
-<h2>📐 The Arkheionx Standard</h2>
+<h2>The Arkheionx Standard</h2>
 <ul>
   <li><strong>Isolation:</strong> One exploit per file. Zero shared state across tests.</li>
   <li><strong>Deterministic Verification:</strong> Every exploit terminates with hard assertions against concrete post-exploit state.</li>
@@ -110,7 +110,7 @@
 
 <hr>
 
-<h2>📁 File Naming Convention</h2>
+<h2>File Naming Convention</h2>
 <p><strong>Format:</strong> <code>[VM_Directory]/test/YYYY-MM-ProtocolName.[ext]</code></p>
 <table>
   <thead>
@@ -137,7 +137,7 @@
 
 <hr>
 
-<h2>🚨 Severity Classification</h2>
+<h2>Severity Classification</h2>
 <table>
   <thead>
     <tr>
@@ -163,6 +163,6 @@
 
 <hr>
 
-<h2>⚖️ Disclaimer &amp; Contact</h2>
+<h2>Disclaimer &amp; Contact</h2>
 <p>This repository is provided exclusively for defensive security research, vulnerability analysis, and auditor training. Any unauthorized reproduction, deployment, or adaptation of these Proof of Concepts against live, unpatched contracts, protocols, or production systems is strictly prohibited and may violate applicable law, contractual restrictions, and responsible disclosure obligations.</p>
 <p><strong>Contact:</strong> Arkheionx (<a href="https://github.com/Yudis-bit">@Yudis-bit</a>)</p>
