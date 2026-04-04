@@ -12,3 +12,22 @@ docs/
 
 # Dotenv file
 .env
+
+# Admin & Social Media Drafts
+POST_DRAFT.txt
+assets/
+*.txt
+!README.md
+!WRITEUP.md
+
+
+# Python Environment (Sampah)
+.venv/
+__pycache__/
+*.pyc
+
+# Local scripts & state
+auto-recon.py
+scaffold-poc.sh
+seen_targets.json
+zeroday-radar.py
