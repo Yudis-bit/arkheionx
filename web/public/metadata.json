@@ -1,0 +1,205 @@
+{
+  "author": "Yudis-bit",
+  "last_update": "2026-04-22T10:57:25.258194",
+  "total_poc": 18,
+  "exploits": [
+    {
+      "id": 1,
+      "title": "July 2017 Archive",
+      "date": "2017-07",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2017-07",
+      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
+    },
+    {
+      "id": 2,
+      "title": "November 2017 Archive",
+      "date": "2017-11",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2017-11",
+      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
+    },
+    {
+      "id": 3,
+      "title": "April 2018 Archive",
+      "date": "2018-04",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2018-04",
+      "educational_insight": "Key takeaways on state management and security best practices."
+    },
+    {
+      "id": 4,
+      "title": "October 2018 Archive",
+      "date": "2018-10",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2018-10",
+      "educational_insight": "Historical exploit analysis: Preventing the mistakes of the past."
+    },
+    {
+      "id": 5,
+      "title": "April 2020 Archive",
+      "date": "2020-04",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-04",
+      "educational_insight": "Strategic review of protocol architecture and its hidden risks."
+    },
+    {
+      "id": 6,
+      "title": "June 2020 Archive",
+      "date": "2020-06",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-06",
+      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
+    },
+    {
+      "id": 7,
+      "title": "August 2020 Archive",
+      "date": "2020-08",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-08",
+      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
+    },
+    {
+      "id": 8,
+      "title": "September 2020 Archive",
+      "date": "2020-09",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-09",
+      "educational_insight": "Key takeaways on state management and security best practices."
+    },
+    {
+      "id": 9,
+      "title": "October 2020 Archive",
+      "date": "2020-10",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-10",
+      "educational_insight": "Historical exploit analysis: Preventing the mistakes of the past."
+    },
+    {
+      "id": 10,
+      "title": "November 2020 Archive",
+      "date": "2020-11",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-11",
+      "educational_insight": "Strategic review of protocol architecture and its hidden risks."
+    },
+    {
+      "id": 11,
+      "title": "December 2020 Archive",
+      "date": "2020-12",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-12",
+      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
+    },
+    {
+      "id": 12,
+      "title": "January 2021 Archive",
+      "date": "2021-01",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-01",
+      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
+    },
+    {
+      "id": 13,
+      "title": "February 2021 Archive",
+      "date": "2021-02",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-02",
+      "educational_insight": "Key takeaways on state management and security best practices."
+    },
+    {
+      "id": 14,
+      "title": "March 2021 Archive",
+      "date": "2021-03",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-03",
+      "educational_insight": "Historical exploit analysis: Preventing the mistakes of the past."
+    },
+    {
+      "id": 15,
+      "title": "October 2021 Archive",
+      "date": "2021-10",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-10",
+      "educational_insight": "Strategic review of protocol architecture and its hidden risks."
+    },
+    {
+      "id": 16,
+      "title": "February 2022 Archive",
+      "date": "2022-02",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2022-02",
+      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
+    },
+    {
+      "id": 17,
+      "title": "November 2025 Archive",
+      "date": "2025-11",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2025-11",
+      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
+    },
+    {
+      "id": 18,
+      "title": "December 2025 Archive",
+      "date": "2025-12",
+      "tags": [
+        "EVM",
+        "Foundry"
+      ],
+      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2025-12",
+      "educational_insight": "Key takeaways on state management and security best practices."
+    }
+  ]
+}
