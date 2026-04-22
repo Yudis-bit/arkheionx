@@ -299,7 +299,7 @@ export default function Home() {
                         flex: 1,
                       }}
                     >
-                      "{exploit.educational_insight}"
+                      &quot;{exploit.educational_insight}&quot;
                     </p>
                     
                     <div
