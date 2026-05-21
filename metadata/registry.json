@@ -164,7 +164,9 @@
       "attacker_profit_check": "Attacker ETH balance after attack > pre-attack balance plus drained pool ETH minus loan fees.",
       "victim_loss_check": "Uniswap V1 pool ETH and imBTC reserves < pre-attack reserves by the drained amounts.",
       "assertion_quality": "unknown",
-      "verification_status": "not-run-no-rpc"
+      "verification_status": "not-run-no-rpc",
+      "latest_public_rpc_status": "public-rpc-not-archival",
+      "latest_public_rpc_notes": "Public Ethereum RPC failed during fork setup at vm.createSelectFork. Error: 'historical state is not available'. Exploit execution did not start; archival RPC required for verification."
     },
     {
       "id": "2020-06-balancer-deflationary",
@@ -568,7 +570,9 @@
       "attacker_profit_check": "Attacker borrowed-asset balance > borrow input value at fair price.",
       "victim_loss_check": "Moonwell market collateral / reserves < pre-attack balance.",
       "assertion_quality": "unknown",
-      "verification_status": "not-run-no-rpc"
+      "verification_status": "not-run-no-rpc",
+      "latest_public_rpc_status": "public-rpc-pass",
+      "latest_public_rpc_notes": "Phase 4A smoke test on public Base RPC: setUp() succeeded, exploit executed, suite reported 1 passed. Logged WETH profit ~24.92. Assertion quality and fork-block correctness not yet reviewed; not promoted to verified."
     },
     {
       "id": "2025-12-yeth",

@@ -158,3 +158,56 @@ Reports include:
 
 The verification report is the source of truth. If the report exists
 but the metadata says otherwise, the metadata is wrong.
+
+---
+
+## Reproducibility status vs verification status vs RPC capability
+
+These four dimensions are independent and must not be conflated:
+
+| Dimension              | Field                                  | Question it answers                                       |
+| ---------------------- | -------------------------------------- | --------------------------------------------------------- |
+| Reproducibility status | `reproducibility`                      | Could this PoC, in principle, be reproduced deterministically? |
+| Verification status    | `verification_status`                  | Has it actually been run end-to-end against the fork?     |
+| RPC capability         | `latest_public_rpc_status`             | What did the most recent public-RPC smoke test produce?   |
+| Assertion quality      | `assertion_quality`                    | Are the assertions strong enough to constitute proof?     |
+
+A PoC can simultaneously be:
+
+- `reproducibility: deterministic-likely-but-unverified`
+- `verification_status: not-run-no-rpc`
+- `latest_public_rpc_status: public-rpc-not-archival`
+- `assertion_quality: unknown`
+
+This means: the PoC structure looks sound, no archival RPC has been run, the
+public RPC cannot serve historical state, and assertion review is pending.
+Each field is independent evidence — none subsume the others.
+
+### Honesty rules for these fields
+
+- **Public RPC failure due to historical state must not downgrade a PoC's
+  `reproducibility`.** It is an RPC limitation, not a PoC defect. Record it
+  in `latest_public_rpc_status` and move on.
+- **A `public-rpc-pass` does not automatically prove research-grade
+  verification.** Public-RPC runs sometimes complete without the test
+  actually exercising the bug (e.g. weak or missing assertions, wrong fork
+  block tolerated by recent state). Promotion to
+  `deterministic-confirmed` still requires meaningful assertions and a
+  verification report.
+- **`verification_status: verified` requires a verification report.** No
+  report, no claim.
+- **`assertion_quality` is set by human review, not by the runner.** A
+  green test bar does not imply strong assertions.
+
+### Quick decision table
+
+| You observed                                            | Record where                          | Do not                                |
+| ------------------------------------------------------- | ------------------------------------- | ------------------------------------- |
+| Public RPC: `historical state is not available`         | `latest_public_rpc_status: public-rpc-not-archival` | Mark PoC failed.                |
+| Public RPC: 429 / rate limit                            | `latest_public_rpc_status: public-rpc-rate-limited` | Mark PoC failed.                |
+| Public RPC: timeout / 502 / inconsistent                | `latest_public_rpc_status: public-rpc-unstable`     | Mark PoC failed.                |
+| Public RPC: passes, weak assertions                     | `latest_public_rpc_status: public-rpc-pass`         | Auto-promote `reproducibility`. |
+| Archival RPC: passes, strong assertions, report written | `verification_status: verified`, `reproducibility: deterministic-confirmed` | Skip the report.                |
+| Setup reverts unrelated to RPC                          | investigate; possible PoC issue       | Edit assertions to make it pass.      |
+| Exploit reverts mid-flow                                | investigate; possible PoC issue       | Delete the failing leg.               |
+| Assertions fail post-exploit                            | investigate; possible bound issue     | Relax bounds without justification.   |

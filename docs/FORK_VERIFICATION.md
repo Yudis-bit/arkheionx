@@ -141,3 +141,96 @@ If a future workflow runs fork tests, it must:
 - Publish a verification artifact.
 
 Until then, the verification report is the artifact.
+
+---
+
+## Public RPC vs Archival RPC
+
+The distinction between public and archival RPC endpoints determines whether a
+PoC can be reproduced at all, and whether a passing run constitutes final
+verification.
+
+### 1. Public RPC
+
+- Useful for cheap smoke testing (does the test compile, link, and reach setup).
+- May work for very recent fork blocks within the endpoint's prune window.
+- Almost always rate-limited; bursty fork-test traffic frequently 429s.
+- Typically does **not** serve historical state for old DeFi incidents.
+- Cannot be relied upon for final verification of pre-2023 mainnet exploits.
+
+### 2. Archival RPC
+
+- Required for historical state access at arbitrary block numbers.
+- Needed for almost every old mainnet exploit PoC in this archive.
+- Required to reproduce fork state at the original attack block.
+- Final deterministic verification should use an archival endpoint.
+
+### 3. Common public-RPC failure messages
+
+When a public endpoint cannot serve the requested historical state, the failure
+typically presents as one of:
+
+- `historical state is not available`
+- `missing trie node`
+- `header not found`
+- `state unavailable`
+- `project ID request rate exceeded`
+- `timeout` / gateway / `502` / `504`
+- Inconsistent or zero token balances at fork (silent archival failure)
+
+### 4. Failure interpretation
+
+| Symptom                                | Likely class                  |
+| -------------------------------------- | ----------------------------- |
+| Historical state / trie node errors    | `public-rpc-not-archival`     |
+| 429 / rate limit / project ID exceeded | `public-rpc-rate-limited`     |
+| Timeout / 502 / 504 / inconsistent     | `public-rpc-unstable`         |
+| Setup revert before exploit logic      | possible code/config issue    |
+| Exploit reverts mid-flow               | possible PoC logic issue      |
+| Assertion fails post-execution         | possible PoC or bound issue   |
+| Solidity / forge-std error             | repository issue              |
+
+A historical-state failure is **not** evidence the PoC is broken. Classify it
+as an RPC limitation; do not downgrade the PoC's reproducibility.
+
+### 5. Required env vars
+
+Public RPC smoke tests and final archival verification both read these env vars:
+
+- `ETH_RPC_URL`
+- `BASE_RPC_URL`
+- `ARBITRUM_RPC_URL`
+- `OPTIMISM_RPC_URL`
+- `POLYGON_RPC_URL`
+- `BSC_RPC_URL`
+- `AVALANCHE_RPC_URL`
+
+Never paste RPC URLs into code, tests, or reports. Endpoint family (e.g.
+"public Ethereum RPC", "Alchemy archival") may be mentioned generically.
+
+### 6. Example commands
+
+```sh
+export ETH_RPC_URL="..."        # archival recommended for old mainnet PoCs
+export BASE_RPC_URL="..."
+
+cd EVM
+forge test --match-path test/2020-04/Exploit_2020-04.t.sol -vvv
+```
+
+### 7. Verification rule
+
+A PoC may only be promoted to `deterministic-confirmed` when **all** of:
+
+- The correct RPC alias is configured for the target chain.
+- The fork block is pinned and matches `metadata/registry.json`.
+- `setUp()` succeeds against that fork.
+- The exploit path executes (no reverts mid-flow).
+- All required assertion families pass with meaningful bounds.
+- The verification report is updated with the command, transcript, and result.
+- `metadata/registry.json` is updated honestly in the same change.
+
+A `public-rpc-pass` result is a positive signal but does **not** automatically
+constitute research-grade verification — assertion quality and fork-block
+correctness still need human review. See
+[`REPRODUCIBILITY_STANDARD.md`](REPRODUCIBILITY_STANDARD.md) for the full bar.

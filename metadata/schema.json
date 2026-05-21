@@ -117,6 +117,21 @@
             "unknown"
           ]
         },
+        "latest_public_rpc_status": {
+          "description": "Outcome of the most recent public-RPC smoke test attempt. This is NOT the same as verification_status; a public RPC failing on historical state does not mean the PoC is broken.",
+          "enum": [
+            "not-tested",
+            "public-rpc-pass",
+            "public-rpc-not-archival",
+            "public-rpc-rate-limited",
+            "public-rpc-unstable",
+            "public-rpc-failed-unknown"
+          ]
+        },
+        "latest_public_rpc_notes": {
+          "type": "string",
+          "description": "Free-form notes describing the most recent public-RPC smoke test attempt (command, failure stage, observed message). Should not contain RPC URLs or API keys."
+        },
         "poc_path": {"type": "string"},
         "summary": {"type": "string", "minLength": 1},
         "root_cause": {"type": "string", "minLength": 1},

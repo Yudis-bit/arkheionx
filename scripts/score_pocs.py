@@ -121,10 +121,16 @@ def score_metadata(e: dict) -> tuple[int, list[str]]:
 
 
 def score_reproducibility(e: dict) -> tuple[int, list[str]]:
-    """0-15. Honest status + presence of verification report."""
+    """0-15. Honest status + presence of verification report.
+
+    Public-RPC failure is recorded separately on the entry as
+    `latest_public_rpc_status` and is NOT a reason to penalize a PoC's
+    reproducibility — that is an endpoint capability issue, not a PoC defect.
+    """
     notes: list[str] = []
     repro = e.get("reproducibility", "unknown")
     vstatus = e.get("verification_status", "unknown")
+    pub = e.get("latest_public_rpc_status", "not-tested")
     eid = e.get("id", "")
     report = REPO / "reports" / "verification" / f"{eid}.md"
 
@@ -145,6 +151,21 @@ def score_reproducibility(e: dict) -> tuple[int, list[str]]:
     if vstatus == "verified" and not report.exists():
         notes.append("verification_status=verified but no report file")
         base = min(base, 8)
+
+    if pub == "public-rpc-not-archival":
+        notes.append(
+            "public RPC lacks archive state (recorded, not penalized); "
+            "archival RPC required for final verification"
+        )
+    elif pub == "public-rpc-rate-limited":
+        notes.append("public RPC rate-limited the last smoke test (not penalized)")
+    elif pub == "public-rpc-unstable":
+        notes.append("public RPC unstable on last smoke test (not penalized)")
+    elif pub == "public-rpc-pass" and vstatus != "verified":
+        notes.append(
+            "public RPC smoke test passed; assertion quality and fork-block "
+            "review still required before promoting to verified"
+        )
 
     return base, notes
 
