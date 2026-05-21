@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Vault PoC Registry",
+  "description": "Canonical schema for an Arkheionx Vault PoC entry. See docs/METADATA_SCHEMA.md for prose documentation and docs/EXPLOIT_TAXONOMY.md for category definitions.",
+  "type": "object",
+  "required": ["version", "entries"],
+  "properties": {
+    "version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "maintainer": {"type": "string"},
+    "entries": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/entry"}
+    }
+  },
+  "definitions": {
+    "reference": {
+      "type": "object",
+      "required": ["title", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "url": {"type": "string", "format": "uri"}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "id", "title", "protocol", "date", "vm", "chain", "rpc_alias",
+        "block_number", "category", "exploit_primitive",
+        "severity", "status", "reproducibility", "poc_path",
+        "summary", "root_cause", "impact",
+        "attacker_path", "invariant_broken", "protocol_assumption_failure",
+        "attacker_profit_check", "victim_loss_check",
+        "assertion_quality", "verification_status",
+        "references"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "protocol": {"type": "string", "minLength": 1},
+        "date": {"type": "string", "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"},
+        "vm": {"enum": ["EVM", "SVM", "MoveVM", "Other"]},
+        "chain": {"type": "string", "minLength": 1},
+        "rpc_alias": {"type": "string"},
+        "block_number": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "null"}
+          ]
+        },
+        "severity": {
+          "enum": ["critical", "high", "medium", "low", "informational", "unknown"]
+        },
+        "category": {
+          "enum": [
+            "oracle-manipulation",
+            "flash-loan-price-manipulation",
+            "reentrancy",
+            "read-only-reentrancy",
+            "access-control-failure",
+            "arithmetic-precision-rounding",
+            "accounting-mismatch",
+            "share-price-manipulation",
+            "donation-inflation",
+            "governance-attack",
+            "signature-permit-misuse",
+            "bridge-validation-failure",
+            "liquidation-logic-flaw",
+            "vault-strategy-accounting-flaw",
+            "amm-invariant-manipulation",
+            "fee-on-transfer-rebasing-assumption",
+            "callback-misuse",
+            "initialization-bug",
+            "proxy-upgradeability-issue",
+            "unsafe-external-call",
+            "bad-debt-creation",
+            "invariant-bypass",
+            "economic-design-flaw",
+            "other"
+          ]
+        },
+        "exploit_primitive": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": [
+            "historical",
+            "patched",
+            "educational",
+            "template",
+            "incomplete",
+            "needs-verification",
+            "embargoed"
+          ]
+        },
+        "reproducibility": {
+          "enum": [
+            "deterministic-confirmed",
+            "deterministic-likely-but-unverified",
+            "requires-archival-rpc",
+            "partially-reproducible",
+            "compile-only",
+            "incomplete",
+            "unknown"
+          ]
+        },
+        "assertion_quality": {
+          "enum": ["strong", "medium", "weak", "none", "unknown"]
+        },
+        "verification_status": {
+          "enum": [
+            "verified",
+            "not-run-no-rpc",
+            "failed",
+            "compile-only",
+            "pending",
+            "unknown"
+          ]
+        },
+        "poc_path": {"type": "string"},
+        "summary": {"type": "string", "minLength": 1},
+        "root_cause": {"type": "string", "minLength": 1},
+        "impact": {"type": "string", "minLength": 1},
+        "attacker_path": {"type": "string", "minLength": 1},
+        "invariant_broken": {"type": "string", "minLength": 1},
+        "protocol_assumption_failure": {"type": "string", "minLength": 1},
+        "attacker_profit_check": {"type": "string", "minLength": 1},
+        "victim_loss_check": {"type": "string", "minLength": 1},
+        "references": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/reference"}
+        },
+        "loss_usd": {"type": "number", "minimum": 0},
+        "attack_tx": {"type": "string"},
+        "patched_status": {
+          "enum": ["patched", "partially-patched", "unpatched", "n/a"]
+        },
+        "patch_reference": {"type": "string"},
+        "disclosure_reference": {"type": "string", "format": "uri"},
+        "disclosure_link": {"type": "string", "format": "uri"},
+        "contest_link": {"type": "string", "format": "uri"},
+        "writeup_reference": {"type": "string", "format": "uri"},
+        "writeup_link": {"type": "string", "format": "uri"},
+        "audit_lesson": {"type": "string"},
+        "similar_incidents": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "notes": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

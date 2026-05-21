@@ -1,0 +1,40 @@
+name: metadata
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'metadata/**'
+      - 'scripts/validate_metadata.py'
+      - 'scripts/generate_registry.py'
+      - 'README.md'
+      - 'web/public/metadata.json'
+      - '.github/workflows/metadata.yml'
+  pull_request:
+    paths:
+      - 'metadata/**'
+      - 'scripts/validate_metadata.py'
+      - 'scripts/generate_registry.py'
+      - 'README.md'
+      - 'web/public/metadata.json'
+      - '.github/workflows/metadata.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validate registry + check generated outputs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate metadata
+        run: python scripts/validate_metadata.py
+
+      - name: Verify generated artifacts are up to date
+        run: python scripts/generate_registry.py --check

@@ -1,0 +1,79 @@
+name: evm
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'EVM/**'
+      - '.github/workflows/evm.yml'
+  pull_request:
+    paths:
+      - 'EVM/**'
+      - '.github/workflows/evm.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  fmt-build:
+    name: fmt + build (no RPC required)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: EVM
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: forge fmt --check
+        run: forge fmt --check
+
+      - name: forge build
+        run: forge build --sizes
+
+  fork-test:
+    name: fork test (gated on configured secrets)
+    needs: fmt-build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    defaults:
+      run:
+        working-directory: EVM
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Check RPC availability
+        id: rpc
+        env:
+          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+        run: |
+          if [ -n "$ETH_RPC_URL" ]; then
+            echo "have_eth=true"  >> "$GITHUB_OUTPUT"
+          else
+            echo "have_eth=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::ETH_RPC_URL not configured; skipping fork tests."
+          fi
+
+      - name: forge test (mainnet)
+        if: steps.rpc.outputs.have_eth == 'true'
+        env:
+          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+        run: forge test -vvv
+
+      - name: skip notice
+        if: steps.rpc.outputs.have_eth != 'true'
+        run: |
+          echo "Skipped: no ETH_RPC_URL secret configured for this run."
+          echo "This job did NOT verify any PoC. Configure ETH_RPC_URL to enable."

@@ -1,0 +1,52 @@
+{
+  "_doc": "Schema-by-example for a backlog candidate. Copy to metadata/backlog/candidates/<candidate_id>.json. Replace TODOs. Use null for genuinely unknown values rather than inventing.",
+  "candidate_id": "TODO-yyyy-mm-protocol-slug",
+  "protocol": "TODO protocol name",
+  "date": "YYYY-MM",
+  "chain": "ethereum",
+  "source_reference": "TODO URL where this incident was first seen (post-mortem, twitter, contest report)",
+  "known_writeup": "TODO URL of the most authoritative public writeup, or null",
+  "estimated_severity": "unknown",
+  "exploit_category": "TODO category from docs/EXPLOIT_TAXONOMY.md, or null if not yet classified",
+  "reproduction_difficulty": "unknown",
+  "fork_block_known": false,
+  "block_number": null,
+  "attack_tx_known": false,
+  "attack_tx": null,
+  "rpc_alias_needed": "mainnet",
+  "implementation_status": "candidate",
+  "verification_status": "pending",
+  "blocked_on": null,
+  "rejection_reason": null,
+  "notes": "TODO why this incident is worth a slot, what is and isn't public, expected difficulty.",
+
+  "_enums": {
+    "estimated_severity": [
+      "critical", "high", "medium", "low", "informational", "unknown"
+    ],
+    "reproduction_difficulty": [
+      "trivial", "easy", "moderate", "hard", "very-hard", "unknown"
+    ],
+    "implementation_status": [
+      "candidate",
+      "metadata-drafted",
+      "poc-in-progress",
+      "compiles",
+      "assertions-added",
+      "fork-verified",
+      "published",
+      "rejected"
+    ],
+    "verification_status": [
+      "verified", "not-run-no-rpc", "failed", "compile-only", "pending", "unknown"
+    ],
+    "blocked_on": [
+      "archival-rpc",
+      "taxonomy-review",
+      "embargo",
+      "source-quality",
+      "maintainer-bandwidth",
+      null
+    ]
+  }
+}

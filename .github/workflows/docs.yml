@@ -1,0 +1,49 @@
+name: docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  required-docs:
+    name: required docs present
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required documentation files exist
+        run: |
+          set -e
+          required=(
+            docs/BRAND.md
+            docs/CONTRIBUTING.md
+            docs/ETHICS.md
+            docs/METADATA_SCHEMA.md
+            docs/REPRODUCIBILITY.md
+            docs/RESEARCH_STANDARD.md
+            docs/ROADMAP.md
+            docs/SECURITY.md
+            docs/STYLEGUIDE.md
+            docs/VM_SUPPORT.md
+          )
+          missing=0
+          for f in "${required[@]}"; do
+            if [ ! -s "$f" ]; then
+              echo "::error::missing or empty: $f"
+              missing=$((missing + 1))
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+          echo "All required docs present."
