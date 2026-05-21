@@ -3,11 +3,10 @@
 pragma solidity ^0.8.0;
 
 library TokenHelper {
-    function callTokenFunction(
-        address tokenAddress,
-        bytes memory data,
-        bool staticCall
-    ) private returns (bytes memory) {
+    function callTokenFunction(address tokenAddress, bytes memory data, bool staticCall)
+        private
+        returns (bytes memory)
+    {
         (bool success, bytes memory result) = staticCall ? tokenAddress.staticcall(data) : tokenAddress.call(data);
         require(success, "Failed to call token function");
         return result;
@@ -19,16 +18,12 @@ library TokenHelper {
         return abi.decode(result, (uint256));
     }
 
-    function getTokenDecimals(
-        address tokenAddress
-    ) internal returns (uint8) {
+    function getTokenDecimals(address tokenAddress) internal returns (uint8) {
         bytes memory result = callTokenFunction(tokenAddress, abi.encodeWithSignature("decimals()"), true);
         return abi.decode(result, (uint8));
     }
 
-    function getTokenSymbol(
-        address tokenAddress
-    ) internal returns (string memory) {
+    function getTokenSymbol(address tokenAddress) internal returns (string memory) {
         bytes memory result = callTokenFunction(tokenAddress, abi.encodeWithSignature("symbol()"), true);
         return abi.decode(result, (string));
     }

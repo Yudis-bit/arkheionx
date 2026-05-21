@@ -9,5 +9,18 @@ via_ir = true
 
 remappings = ['@src/=src/', '@lib/=lib/']
 
+# RPC aliases used by `vm.createSelectFork("<alias>", <block>)` calls inside
+# tests. Each alias resolves an env var; tests targeting a chain whose alias
+# is unset will fail fast rather than silently passing.
+#
+# Only `mainnet` and `base` are exercised by currently merged PoCs. The other
+# aliases are pre-declared so future submissions can use them without a
+# foundry.toml edit. See docs/REPRODUCIBILITY.md.
 [rpc_endpoints]
 mainnet = "${ETH_RPC_URL}"
+base = "${BASE_RPC_URL}"
+arbitrum = "${ARBITRUM_RPC_URL}"
+optimism = "${OPTIMISM_RPC_URL}"
+polygon = "${POLYGON_RPC_URL}"
+bsc = "${BSC_RPC_URL}"
+avalanche = "${AVALANCHE_RPC_URL}"

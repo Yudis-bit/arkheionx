@@ -30,17 +30,15 @@ contract BaseTestWithBalanceLog is Test {
         chainIdToInfo[1329] = ChainInfo("SEI", "SEI");
     }
 
-    function getChainSymbol(
-        uint256 chainId
-    ) internal view returns (string memory symbol) {
+    function getChainSymbol(uint256 chainId) internal view returns (string memory symbol) {
         symbol = chainIdToInfo[chainId].symbol;
         if (bytes(symbol).length == 0) symbol = "ETH";
     }
 
-    function _getTokenData(
-        address token,
-        address account
-    ) internal returns (string memory symbol, uint256 balance, uint8 decimals) {
+    function _getTokenData(address token, address account)
+        internal
+        returns (string memory symbol, uint256 balance, uint8 decimals)
+    {
         if (token == address(0)) {
             symbol = getChainSymbol(block.chainid);
             balance = account.balance;
@@ -52,11 +50,7 @@ contract BaseTestWithBalanceLog is Test {
         }
     }
 
-    function _logTokenBalance(
-        address token,
-        address account,
-        string memory label
-    ) private {
+    function _logTokenBalance(address token, address account, string memory label) private {
         (string memory symbol, uint256 balance, uint8 decimals) = _getTokenData(token, account);
         emit log_named_decimal_uint(string(abi.encodePacked(label, " ", symbol, " Balance")), balance, decimals);
     }
@@ -75,19 +69,11 @@ contract BaseTestWithBalanceLog is Test {
         _logTokenBalance(fundingToken, target, string(abi.encodePacked("Attacker After exploit")));
     }
 
-    function logTokenBalance(
-        address token,
-        address account,
-        string memory label
-    ) internal {
+    function logTokenBalance(address token, address account, string memory label) internal {
         _logTokenBalance(token, account, label);
     }
 
-    function logMultipleTokenBalances(
-        address[] memory tokens,
-        address account,
-        string memory label
-    ) internal {
+    function logMultipleTokenBalances(address[] memory tokens, address account, string memory label) internal {
         emit log_string(string(abi.encodePacked("=== ", label, " ===")));
         for (uint256 i = 0; i < tokens.length; i++) {
             _logTokenBalance(tokens[i], account, "");
