@@ -374,10 +374,10 @@
       "protocol_assumption_failure": "Assumed Blacksmith's reward index was monotonic and bounded by the pool's accumulated rewards.",
       "attacker_profit_check": "Attacker (0x00007569...) COVER balance after claimRewards >> 0 and outside any normal staking yield bound.",
       "victim_loss_check": "COVER token totalSupply increases far beyond the protocol's per-block emissions schedule; staking pool reward index inconsistent with cumulative emissions.",
-      "assertion_quality": "weak",
+      "assertion_quality": "strong",
       "verification_status": "not-run-no-rpc",
-      "notes": "Phase 6A reclassification: PoC code is the Cover Protocol Blacksmith claimRewards exploit (Dec 28 2020), not Warp Finance. Evidence: contract Exploit__202012 forks block 11542309, instantiates Blacksmith bs=0xE0B94a7BB45dD905c79bB1992C9879f40F1CAeD5, BPT=0x59686E01Aa841f622a43688153062C2f24F8fDed, COVER=0x5D8d9F5b96f4438195BE9b99eee6118Ed4304286, pranks 0x00007569... and calls bs.deposit(bpt, ...) followed by bs.claimRewards(bpt), then logs Cover.balanceOf(0x00007569...). Title, protocol, category, root_cause, summary, references, attack_tx, and loss_usd corrected; aggregate loss_usd intentionally absent pending manual confirmation. id slug retained to keep file paths stable.",
-      "tags": ["phase-6a-reclassified"]
+      "notes": "Phase 6A reclassification: PoC code is the Cover Protocol Blacksmith claimRewards exploit (Dec 28 2020), not Warp Finance. Evidence: contract Exploit__202012 forks block 11542309, instantiates Blacksmith bs=0xE0B94a7BB45dD905c79bB1992C9879f40F1CAeD5, BPT=0x59686E01Aa841f622a43688153062C2f24F8fDed, COVER=0x5D8d9F5b96f4438195BE9b99eee6118Ed4304286, pranks 0x00007569... and calls bs.deposit(bpt, ...) followed by bs.claimRewards(bpt), then logs Cover.balanceOf(0x00007569...). Title, protocol, category, root_cause, summary, references, attack_tx, and loss_usd corrected; aggregate loss_usd intentionally absent pending manual confirmation. id slug retained to keep file paths stable. Phase 6G: added F1 floor (depositor delta > 1e18) and F6 equality (totalSupply delta == depositor delta) assertions around the existing claimRewards flow; assertion_quality upgraded weak->strong on static structure; verification_status retained not-run-no-rpc because public RPC returned HTTP 500 on archival fork instantiation.",
+      "tags": ["phase-6a-reclassified", "phase-6g-asserted"]
     },
     {
       "id": "2021-01-saddle",
