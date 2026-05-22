@@ -1,205 +1,473 @@
 {
-  "author": "Yudis-bit",
-  "last_update": "2026-04-22T10:57:25.258194",
-  "total_poc": 18,
-  "exploits": [
+  "schema_version": "1",
+  "maintainer": "Yudistira Putra (arkheionx)",
+  "total": 18,
+  "entries": [
     {
-      "id": 1,
-      "title": "July 2017 Archive",
+      "id": "2017-07-parity-multisig",
+      "title": "Parity Multisig \u2014 initWallet hijack",
+      "protocol": "Parity Multisig Wallet",
       "date": "2017-07",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2017-07",
-      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "access-control-failure",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Public initWallet on a deployed multisig allowed any caller to overwrite ownership and drain the wallet.",
+      "root_cause": "Initializer was not access-controlled and could be re-invoked after deployment.",
+      "impact": "Approximately 153,037 ETH drained from a single wallet.",
+      "poc_path": "EVM/test/2017-07/Exploit_2017-07.t.sol",
+      "block_number": 4043799,
+      "loss_usd": 30000000,
+      "attack_tx": "0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec",
+      "references": [
+        {
+          "title": "OpenZeppelin post-mortem",
+          "url": "https://www.openzeppelin.com/news/on-the-parity-wallet-multisig-hack-405a8c12e8f7"
+        }
+      ]
     },
     {
-      "id": 2,
-      "title": "November 2017 Archive",
+      "id": "2017-11-parity-suicide",
+      "title": "Parity Wallet Library \u2014 suicide",
+      "protocol": "Parity Multisig Library",
       "date": "2017-11",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2017-11",
-      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "access-control-failure",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Anyone could initialize and then self-destruct the shared library that all Parity multisigs delegated to, freezing every dependent wallet.",
+      "root_cause": "Library contract had unprotected initialization and a privileged kill function reachable through delegatecall semantics.",
+      "impact": "513,774.16 ETH frozen across 587 wallets.",
+      "poc_path": "EVM/test/2017-11/Exploit_2017-11.t.sol",
+      "block_number": 4501735,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "Parity post-mortem",
+          "url": "https://www.parity.io/a-postmortem-on-the-parity-multi-sig-library-self-destruct/"
+        }
+      ]
     },
     {
-      "id": 3,
-      "title": "April 2018 Archive",
+      "id": "2018-04-bec-token",
+      "title": "BeautyChain (BEC) \u2014 batchTransfer overflow",
+      "protocol": "BeautyChain Token (BEC)",
       "date": "2018-04",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2018-04",
-      "educational_insight": "Key takeaways on state management and security best practices."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "arithmetic-precision-rounding",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Integer overflow in batchTransfer minted an arbitrary number of BEC tokens to attacker addresses, collapsing the token's market.",
+      "root_cause": "Unchecked multiplication of (count * value) in pre-0.8 Solidity allowed wraparound when both factors were large.",
+      "impact": "BEC token economically destroyed; trading halted on major exchanges.",
+      "poc_path": "EVM/test/2018-04/Exploit_2018-04.t.sol",
+      "block_number": 5483642,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "PeckShield analysis",
+          "url": "https://blog.peckshield.com/2018/04/22/batchOverflow/"
+        }
+      ]
     },
     {
-      "id": 4,
-      "title": "October 2018 Archive",
-      "date": "2018-10",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2018-10",
-      "educational_insight": "Historical exploit analysis: Preventing the mistakes of the past."
-    },
-    {
-      "id": 5,
-      "title": "April 2020 Archive",
-      "date": "2020-04",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-04",
-      "educational_insight": "Strategic review of protocol architecture and its hidden risks."
-    },
-    {
-      "id": 6,
-      "title": "June 2020 Archive",
-      "date": "2020-06",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-06",
-      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
-    },
-    {
-      "id": 7,
-      "title": "August 2020 Archive",
-      "date": "2020-08",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-08",
-      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
-    },
-    {
-      "id": 8,
-      "title": "September 2020 Archive",
+      "id": "2020-09-bzx-ifusdc",
+      "title": "bZx \u2014 iETH self-transfer double-write",
+      "protocol": "bZx",
       "date": "2020-09",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-09",
-      "educational_insight": "Key takeaways on state management and security best practices."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "accounting-mismatch",
+      "status": "needs-verification",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "bZx's iToken transfer logic let a holder transfer to themselves and double their iToken balance; in the PoC the targeted market is iETH (loanToken 0xB983E014...), which the attacker mints with ETH, self-transfers in a loop, then redeems with burnToEther.",
+      "root_cause": "_internalTransferFrom updated source then destination from cached pre-call balances, so when source equals destination the second write overwrote the first decrement, doubling the balance.",
+      "impact": "iETH market drained on the historical incident; aggregate cross-market loss not authoritatively re-confirmed from PoC code alone.",
+      "poc_path": "EVM/test/2020-09/Exploit_2020-09.t.sol",
+      "block_number": 10852715,
+      "loss_usd": null,
+      "attack_tx": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
+      "references": [
+        {
+          "title": "PeckShield analysis",
+          "url": "https://blog.peckshield.com/2020/09/14/bZx/"
+        }
+      ]
     },
     {
-      "id": 9,
-      "title": "October 2020 Archive",
+      "id": "2020-10-harvest",
+      "title": "Harvest Finance \u2014 fUSDT/fUSDC oracle manipulation",
+      "protocol": "Harvest Finance",
       "date": "2020-10",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-10",
-      "educational_insight": "Historical exploit analysis: Preventing the mistakes of the past."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "flash-loan-price-manipulation",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Flash-loan-funded swap on Curve Y-pool moved the spot price Harvest used to mint fTokens, letting the attacker mint cheap and redeem high.",
+      "root_cause": "Harvest derived share price from the same Curve pool the attacker could move with a single flash loan.",
+      "impact": "Approximately $33.8M drained from fUSDT and fUSDC vaults.",
+      "poc_path": "EVM/test/2020-10/Exploit_2020-10.t.sol",
+      "block_number": 11129473,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "Harvest post-mortem",
+          "url": "https://medium.com/harvest-finance/harvest-flashloan-economic-attack-post-mortem-3cf900d65217"
+        }
+      ]
     },
     {
-      "id": 10,
-      "title": "November 2020 Archive",
+      "id": "2020-11-cheese-bank",
+      "title": "Pickle Finance \u2014 swapExactJarForJar arbitrary-call drains cDAI strategy",
+      "protocol": "Pickle Finance",
       "date": "2020-11",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-11",
-      "educational_insight": "Strategic review of protocol architecture and its hidden risks."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "unsafe-external-call",
+      "status": "needs-verification",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Attacker called Pickle ControllerV4.swapExactJarForJar with attacker-deployed FakeJar/FakeUnderlying contracts and CurveLogic-encoded arbitrary calldata, forcing the legitimate cDAI strategy to withdrawAll() and then redirect cDAI to tx.origin via the controller's permission set.",
+      "root_cause": "swapExactJarForJar accepted unvalidated jar/strategy targets and forwarded attacker-controlled calldata through CurveLogic.add_liquidity, letting the attacker invoke privileged strategy functions (withdrawAll, withdraw(address)) on the real pDAI strategy.",
+      "impact": "pDAI strategy cDAI position drained to attacker (tx.origin); historical incident reported around $19.7M for the broader Pickle Finance cDAI exploit.",
+      "poc_path": "EVM/test/2020-11/Exploit_2020-11.t.sol",
+      "block_number": 11303122,
+      "loss_usd": null,
+      "attack_tx": "0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0",
+      "references": [
+        {
+          "title": "samczsun reference exploit (linked from PoC source comment)",
+          "url": "https://github.com/banteg/evil-jar/blob/master/reference/samczsun.sol"
+        }
+      ]
     },
     {
-      "id": 11,
-      "title": "December 2020 Archive",
+      "id": "2020-12-warp-finance",
+      "title": "Cover Protocol \u2014 Blacksmith claimRewards infinite mint",
+      "protocol": "Cover Protocol",
       "date": "2020-12",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2020-12",
-      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "accounting-mismatch",
+      "status": "needs-verification",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Cover Protocol's Blacksmith staking contract miscalculated reward accounting on the BPT pool, letting a depositor claim a vastly inflated quantity of newly minted COVER tokens after a single deposit.",
+      "root_cause": "Reward accounting in Blacksmith allowed claimRewards to mint COVER from a stale or unbounded reward index for the BPT pool, breaking the link between staked balance, reward rate, and minted supply.",
+      "impact": "Effectively unbounded mint of COVER tokens against the staked BPT position; historical incident reported in the tens of millions before the white-hat reversal.",
+      "poc_path": "EVM/test/2020-12/Exploit_2020-12.t.sol",
+      "block_number": 11542309,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "Cover Protocol Blacksmith contract (cited in PoC source)",
+          "url": "https://etherscan.io/address/0xE0B94a7BB45dD905c79bB1992C9879f40F1CAeD5"
+        }
+      ]
     },
     {
-      "id": 12,
-      "title": "January 2021 Archive",
-      "date": "2021-01",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-01",
-      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
-    },
-    {
-      "id": 13,
-      "title": "February 2021 Archive",
+      "id": "2021-02-yearn-v1-dai",
+      "title": "Yearn v1 DAI vault \u2014 Curve 3pool oracle manipulation",
+      "protocol": "Yearn v1 (yDAI vault)",
       "date": "2021-02",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-02",
-      "educational_insight": "Key takeaways on state management and security best practices."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "flash-loan-price-manipulation",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Attacker imbalanced the Curve 3pool around the yDAI vault's deposit and withdrawal calls, extracting value via the share-price difference.",
+      "root_cause": "Vault accounting depended on the spot virtual price of a Curve pool the attacker could push and pull with flash loans within one transaction.",
+      "impact": "Approximately $11M of DAI/USDC/USDT extracted from the yDAI vault.",
+      "poc_path": "EVM/test/2021-02/Exploit_2021-02.t.sol",
+      "block_number": 11792183,
+      "loss_usd": 11000000,
+      "attack_tx": "0x59faab5a1911618064f1ffa1e4649d85c99cfd9f0d64dcebbc1af7d7630da98b",
+      "references": [
+        {
+          "title": "Yearn post-mortem",
+          "url": "https://github.com/yearn/yearn-security/blob/master/disclosures/2021-02-04.md"
+        }
+      ]
     },
     {
-      "id": 14,
-      "title": "March 2021 Archive",
-      "date": "2021-03",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-03",
-      "educational_insight": "Historical exploit analysis: Preventing the mistakes of the past."
-    },
-    {
-      "id": 15,
-      "title": "October 2021 Archive",
+      "id": "2021-10-indexed-finance",
+      "title": "Indexed Finance \u2014 DEFI5/CC10 reweight manipulation",
+      "protocol": "Indexed Finance",
       "date": "2021-10",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2021-10",
-      "educational_insight": "Strategic review of protocol architecture and its hidden risks."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "amm-invariant-manipulation",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "During an index reweighting, the attacker swung weights with a flash loan such that a small input minted a disproportionate amount of index tokens, then redeemed the underlying basket.",
+      "root_cause": "Reweighting math allowed an attacker-supplied imbalance to dominate the new weights, breaking the invariant that the pool was worth its underlying basket during the transition.",
+      "impact": "Approximately $16M drained from DEFI5 and CC10 indices.",
+      "poc_path": "EVM/test/2021-10/Exploit_2021-10.t.sol",
+      "block_number": 13417326,
+      "loss_usd": 16000000,
+      "attack_tx": "0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa",
+      "references": [
+        {
+          "title": "BlockSec analysis",
+          "url": "https://blocksecteam.medium.com/the-analysis-of-indexed-finance-security-incident-8a62b9799836"
+        },
+        {
+          "title": "Mudit Gupta thread",
+          "url": "https://twitter.com/Mudit__Gupta/status/1448884940964188167"
+        }
+      ]
     },
     {
-      "id": 16,
-      "title": "February 2022 Archive",
-      "date": "2022-02",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2022-02",
-      "educational_insight": "A foundational case study on early smart contract logic vulnerabilities."
-    },
-    {
-      "id": 17,
-      "title": "November 2025 Archive",
-      "date": "2025-11",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2025-11",
-      "educational_insight": "Analyzing the evolution of attack vectors in decentralized finance."
-    },
-    {
-      "id": 18,
-      "title": "December 2025 Archive",
+      "id": "2025-12-yeth",
+      "title": "yETH \u2014 pool invariant manipulation",
+      "protocol": "yETH",
       "date": "2025-12",
-      "tags": [
-        "EVM",
-        "Foundry"
-      ],
-      "link": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/tree/main/EVM/test/2025-12",
-      "educational_insight": "Key takeaways on state management and security best practices."
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "critical",
+      "category": "amm-invariant-manipulation",
+      "status": "historical",
+      "reproducibility": "requires-archival-rpc",
+      "summary": "A multi-phase sequence of add_liquidity, remove_liquidity, rate updates, and an OETH rebase manipulated the yETH pool's vb_prod_sum invariant, ending with a full pool drain.",
+      "root_cause": "yETH's stable-swap-style invariant could be steered through a specific sequence of liquidity moves and rate updates, breaking the relationship between LP supply and underlying assets.",
+      "impact": "Approximately $9M drained from the yETH pool.",
+      "poc_path": "EVM/test/2025-12/Exploit_2025-12.t.sol",
+      "block_number": 23914085,
+      "loss_usd": 9000000,
+      "attack_tx": "0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156",
+      "references": [
+        {
+          "title": "yETH exploit report (banteg)",
+          "url": "https://github.com/banteg/yeth-exploit/blob/main/report.pdf"
+        },
+        {
+          "title": "Original PoC (johnnyonline)",
+          "url": "https://github.com/johnnyonline/yETH-hack"
+        }
+      ]
+    },
+    {
+      "id": "2018-10-spankchain",
+      "title": "SpankChain \u2014 payment channel reentrancy",
+      "protocol": "SpankChain",
+      "date": "2018-10",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "reentrancy",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Reentrancy in the payment-channel close path drained the SpankChain hub contract.",
+      "root_cause": "External call to a user-controlled token before state update in the channel close handler.",
+      "impact": "Approximately 165 ETH plus BOOTY balances drained.",
+      "poc_path": "EVM/test/2018-10/Exploit_2018-10.t.sol",
+      "block_number": 6605501,
+      "loss_usd": 38000,
+      "attack_tx": "0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88",
+      "references": [
+        {
+          "title": "SpankChain post-mortem",
+          "url": "https://medium.com/spankchain/we-got-spanked-what-we-know-so-far-d5ed3a0f38fe"
+        }
+      ]
+    },
+    {
+      "id": "2020-04-uniswap-imbtc",
+      "title": "Uniswap V1 \u2014 imBTC reentrancy",
+      "protocol": "Uniswap V1 / imBTC",
+      "date": "2020-04",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "reentrancy",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "ERC-777 transfer hook in imBTC enabled cross-function reentrancy against Uniswap V1's ETH\u2192token swap path.",
+      "root_cause": "Uniswap V1 swap path performed external token transfer before updating internal reserves, and imBTC's ERC-777 _callTokensReceived gave the attacker control mid-execution.",
+      "impact": "Approximately 1,278 ETH and 24.5 imBTC drained from Uniswap pools.",
+      "poc_path": "EVM/test/2020-04/Exploit_2020-04.t.sol",
+      "block_number": 9899725,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "OpenZeppelin analysis",
+          "url": "https://blog.openzeppelin.com/exploiting-uniswap-from-reentrancy-to-actual-profit/"
+        }
+      ]
+    },
+    {
+      "id": "2020-06-balancer-deflationary",
+      "title": "Bancor \u2014 public safeTransferFrom on newly deployed contract",
+      "protocol": "Bancor",
+      "date": "2020-06",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "access-control-failure",
+      "status": "needs-verification",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "A newly deployed Bancor contract exposed safeTransferFrom as a public function; any caller could move ERC-20 tokens that users had previously approved to that Bancor address.",
+      "root_cause": "Internal helper safeTransferFrom was left with public visibility on a deployed contract that already held outstanding user approvals.",
+      "impact": "Several users with active token approvals to the Bancor contract were drained; aggregate loss not authoritatively confirmed.",
+      "poc_path": "EVM/test/2020-06/Exploit_2020-06.t.sol",
+      "block_number": 10307563,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "Example attack tx (cited in PoC source comment)",
+          "url": "https://etherscan.io/tx/0x4643b63dcbfc385b8ab8c86cbc46da18c2e43d277de3e5bc3b4516d3c0fdeb9f"
+        }
+      ]
+    },
+    {
+      "id": "2020-08-opyn",
+      "title": "Opyn \u2014 duplicate ETH option exercise",
+      "protocol": "Opyn v1",
+      "date": "2020-08",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "invariant-bypass",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "Opyn's exercise function summed msg.value across an array of options, letting one ETH payment exercise multiple option lots.",
+      "root_cause": "Loop over options used the single msg.value as collateral for each iteration instead of dividing it.",
+      "impact": "Approximately $370k of collateral drained from ETH put vaults.",
+      "poc_path": "EVM/test/2020-08/Exploit_2020-08.t.sol",
+      "block_number": 10592516,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "Opyn post-mortem",
+          "url": "https://medium.com/opyn/opyn-eth-put-exploit-c5565c528ad2"
+        }
+      ]
+    },
+    {
+      "id": "2021-01-saddle",
+      "title": "SushiSwap SushiMaker \u2014 DIGG/WBTC missing-bridge convert exploit",
+      "protocol": "SushiSwap (SushiMaker)",
+      "date": "2021-01",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "amm-invariant-manipulation",
+      "status": "needs-verification",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "SushiMaker.convert performed an unguarded swap through a non-existent DIGG/WETH 'bridge'; an attacker created a thin DIGG/WETH pair, made the maker dump WBTC fees through the attacker pair at a controlled rate, and pulled the proceeds back to WETH.",
+      "root_cause": "SushiMaker burned LP fees and converted the resulting tokens to SUSHI via assumed bridge pairs, but DIGG/WBTC had no real bridge \u2014 convert(WBTC, DIGG) routed through any attacker-deployed DIGG/WETH pair without slippage protection.",
+      "impact": "Attacker captured the WBTC fee accumulated in SushiMaker for the DIGG/WBTC pair via a single thinly-funded fake pool; historical writeups attribute the proceeds to the attacker's WETH wallet.",
+      "poc_path": "EVM/test/2021-01/Exploit_2021-01.t.sol",
+      "block_number": 11720049,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "cmichel \u2014 replaying Sushiswap / Badger / DIGG (referenced in PoC source comment)",
+          "url": "https://cmichel.io/replaying-ethereum-hacks-sushiswap-badger-dao-digg/"
+        },
+        {
+          "title": "rekt.news \u2014 Badger's DIGG / Sushi (referenced in PoC source comment)",
+          "url": "https://www.rekt.news/badgers-digg-sushi/"
+        }
+      ]
+    },
+    {
+      "id": "2021-03-dodo-crowdpool",
+      "title": "DODO \u2014 CrowdPooling init reentrancy",
+      "protocol": "DODO V2 CrowdPooling",
+      "date": "2021-03",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "initialization-bug",
+      "status": "historical",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "DODO crowdpools could be re-initialized after the first init, letting the attacker repoint the pool at malicious tokens and drain liquidity.",
+      "root_cause": "init function lacked a guard against re-entry / re-initialization, and flash-loaned reserves left the legitimate state replaceable mid-call.",
+      "impact": "Approximately $3.8M extracted across multiple crowdpools.",
+      "poc_path": "EVM/test/2021-03/Exploit_2021-03.t.sol",
+      "block_number": 12000000,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "DODO post-mortem",
+          "url": "https://medium.com/dodoex/dodo-pool-incident-postmortem-b1a47f8d5b0a"
+        }
+      ]
+    },
+    {
+      "id": "2022-02-dexible",
+      "title": "BUILD Finance \u2014 governance takeover via low-quorum proposal",
+      "protocol": "BUILD Finance",
+      "date": "2022-02",
+      "vm": "EVM",
+      "chain": "ethereum",
+      "severity": "high",
+      "category": "governance-attack",
+      "status": "needs-verification",
+      "reproducibility": "deterministic-likely-but-unverified",
+      "summary": "An attacker received 101.5 BUILD from a top holder, used it to submit a governance proposal that approved an attacker EOA on the BUILD token's governance contract, voted with another large holder's prank-pranked balance, warped past the timelock, executed the proposal, and then transferFrom'd the BuildGovernance treasury balance.",
+      "root_cause": "BUILD governance allowed proposals to grant arbitrary token approvals from the governance contract itself, with quorum/threshold parameters reachable by a small minority of token holders.",
+      "impact": "BuildGovernance treasury BUILD balance fully drained to attacker; historical incident reported around $470k.",
+      "poc_path": "EVM/test/2022-02/Exploit_2022-02.t.sol",
+      "block_number": 14235712,
+      "loss_usd": null,
+      "attack_tx": null,
+      "references": [
+        {
+          "title": "BUILD Finance attack tx (cited in PoC source)",
+          "url": "https://etherscan.io/address/0x5A6eBeB61A80B2a2a5e0B4D893D731358d888583"
+        }
+      ]
+    },
+    {
+      "id": "2025-11-moonwell",
+      "title": "Moonwell \u2014 Chainlink oracle staleness on Base",
+      "protocol": "Moonwell",
+      "date": "2025-11",
+      "vm": "EVM",
+      "chain": "base",
+      "severity": "high",
+      "category": "oracle-manipulation",
+      "status": "historical",
+      "reproducibility": "requires-archival-rpc",
+      "summary": "Moonwell's price feed returned a stale value for a market on Base, letting an attacker borrow against inflated collateral.",
+      "root_cause": "Oracle wrapper did not enforce freshness against the underlying Chainlink answer's updatedAt timestamp under the conditions present at the attack block.",
+      "impact": "Approximately $1M extracted from a single market.",
+      "poc_path": "EVM/test/2025-11/Exploit_2025-11.t.sol",
+      "block_number": 37722881,
+      "loss_usd": 1000000,
+      "attack_tx": "0x190a491c0ef095d5447d6d813dc8e2ec11a5710e189771c24527393a2beb05ac",
+      "references": [
+        {
+          "title": "CertiK alert",
+          "url": "https://x.com/CertiKAlert/status/1985620452992253973"
+        },
+        {
+          "title": "Halborn explainer",
+          "url": "https://www.halborn.com/blog/post/explained-the-moonwell-hack-november-2025"
+        }
+      ]
     }
   ]
 }

@@ -3,14 +3,14 @@
 # Verification Report — 2020-11-cheese-bank
 
 - **Entry id:** `2020-11-cheese-bank`
-- **Title:** Cheese Bank — Uniswap LP price oracle manipulation
-- **Protocol:** Cheese Bank
+- **Title:** Pickle Finance — swapExactJarForJar arbitrary-call drains cDAI strategy
+- **Protocol:** Pickle Finance
 - **Date of incident:** 2020-11
 - **VM:** EVM
 - **Chain:** ethereum
-- **Fork block:** `11205646`
+- **Fork block:** `11303122`
 - **RPC alias:** `mainnet`
-- **Category:** `flash-loan-price-manipulation`
+- **Category:** `unsafe-external-call`
 - **Reproducibility:** `deterministic-likely-but-unverified`
 - **Verification status:** `not-run-no-rpc`
 
@@ -22,9 +22,7 @@ cd EVM && forge test --match-path "test/2020-11/Exploit_2020-11.t.sol" -vvv
 
 ## Required assertion families
 
-- **F1** — Attacker profit assertion
-- **F2** — Victim loss assertion
-- **F5** — Oracle deviation assertion
+- **F4** (Unauthorized state transition assertion) or **F1** (Attacker profit assertion)
 
 Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_STANDARD.md).
 
@@ -37,37 +35,37 @@ The metadata records `reproducibility: deterministic-likely-but-unverified` and 
 ## Static Assertion Review (Phase 5)
 
 - **Assertion quality (static):** `weak`
-- **Attacker profit check (intended):** Attacker stablecoin balance after attack > flash-loan principal plus fees.
-- **Victim loss check (intended):** Cheese Bank stablecoin reserves < pre-attack reserves.
+- **Attacker profit check (intended):** msg.sender (tx.origin) cDAI balance after exploit > pre-attack balance by drained pDAI strategy cDAI position.
+- **Victim loss check (intended):** DAI/cDAI held by pDAI (0x6949Bb...) and its strategy (0xCd892a...) drops to (near) zero post-exploit.
 - **Archival RPC required for final proof:** yes
 
 **Static review notes (from `metadata.notes`):**
 
-> Phase 5 static review: P0 metadata-vs-code mismatch. PoC forks at block 11303122 (not 11205646) and exercises Pickle ControllerV4 (0x6847259b...) `swapExactJarForJar` against pDAI (0x6949Bb...) using FakeJar/FakeUnderlying contracts to drain cDAI to tx.origin. This is the Pickle Finance cDAI exploit (Nov 21 2020, ~$19.7M), not Cheese Bank. Reclassification of category, protocol, fork block, root_cause, attack_tx, loss_usd, and references requires user approval.
+> Phase 6A reclassification: PoC code is the Pickle Finance ControllerV4 swapExactJarForJar exploit (Nov 21 2020), not Cheese Bank's LP-oracle manipulation. Evidence: contract Exploit__202011 forks block 11303122 (not the prior 11205646), instantiates ControllerLike CONTROLLER=0x6847259b2B3A4c17e7c43C54409810aF48bA5210 (Pickle ControllerV4), JarLike PDAI=0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87, CurveLogic=0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8, and STRAT=0xCd892a97951d46615484359355e3Ed88131f829D, then calls swapExactJarForJar with FakeJar/FakeUnderlying mocks. block_number, attack_tx, root_cause, impact, summary, references, category, protocol, and title all corrected. id slug retained to avoid file-path churn; aggregate loss_usd intentionally absent pending manual confirmation against the historical Pickle Finance incident.
 
 ## Attacker path
 
-Flash loan, swap to move Uniswap reserves Cheese reads, borrow against inflated LP collateral, reverse.
+Deploy FakeJar/FakeUnderlying mocks; call ControllerV4.swapExactJarForJar(fakeJar, fakeJar, 0, 0, targets[], datas[]) where datas encode CurveLogic.add_liquidity wrapping STRAT.withdrawAll(), repeated PDAI.earn(), and STRAT.withdraw(address) — final step ships cDAI to tx.origin.
 
 ## Invariant broken
 
-LP collateral value reflects fair LP value, independent of intra-tx Uniswap moves.
+Controller routes only forward calldata to vetted jars/strategies, not arbitrary attacker contracts.
 
 ## Victim impact
 
-Approximately $3.3M in DAI, USDC, and USDT drained.
+pDAI strategy cDAI position drained to attacker (tx.origin); historical incident reported around $19.7M for the broader Pickle Finance cDAI exploit.
 
-**Loss check:** Cheese Bank stablecoin reserves < pre-attack reserves.
+**Loss check:** DAI/cDAI held by pDAI (0x6949Bb...) and its strategy (0xCd892a...) drops to (near) zero post-exploit.
 
 ## Root cause
 
-Cheese Bank priced LP collateral from instantaneous Uniswap reserves rather than a TWAP, letting a flash-loan-funded swap distort the value within one transaction.
+swapExactJarForJar accepted unvalidated jar/strategy targets and forwarded attacker-controlled calldata through CurveLogic.add_liquidity, letting the attacker invoke privileged strategy functions (withdrawAll, withdraw(address)) on the real pDAI strategy.
 
-**Protocol assumption that failed:** Assumed Uniswap V2 reserves at the moment of read reflect fair LP value.
+**Protocol assumption that failed:** Assumed swap-route targets and payloads were constrained to known jars/curves.
 
 ## References
 
-- [PeckShield analysis](https://peckshield.medium.com/cheese-bank-incident-root-cause-analysis-d076bf87a1e7)
+- [samczsun reference exploit (linked from PoC source comment)](https://github.com/banteg/evil-jar/blob/master/reference/samczsun.sol)
 - attack tx: `0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0`
 
 ## Missing verification steps
@@ -89,3 +87,16 @@ Cheese Bank priced LP collateral from instantaneous Uniswap reserves rather than
 Generated by `scripts/generate_verification_report.py` from `metadata/registry.json`. Content between the BEGIN/END GENERATED VERIFICATION SUMMARY markers is regenerated on every run. Manual sections (run transcripts, smoke-test evidence, archival verification logs) must live OUTSIDE those markers and will be preserved.
 
 <!-- END GENERATED VERIFICATION SUMMARY -->
+
+## Phase 6A Reclassification (manual, persistent)
+
+- **Previous label:** Cheese Bank — Uniswap LP price oracle manipulation (`flash-loan-price-manipulation`, fork block 11205646)
+- **Code-observed label:** Pickle Finance — `swapExactJarForJar` arbitrary-call drains cDAI strategy (`unsafe-external-call`, fork block 11303122)
+- **Decision:** Reclassify metadata to match code; retain `id` slug `2020-11-cheese-bank` to preserve file paths and prior cross-references; status set to `needs-verification`. Removed prior `loss_usd: 3300000` and `attack_tx 0xe72d4e7b...` because both belonged to the Cheese Bank incident, not the Pickle exploit the PoC executes.
+- **Evidence from code (`EVM/test/2020-11/Exploit_2020-11.t.sol`):**
+  - `cheat.createSelectFork("mainnet", 11_303_122)` — Pickle exploit block, not Cheese Bank's 11205646.
+  - `ControllerLike CONTROLLER = 0x6847259b2B3A4c17e7c43C54409810aF48bA5210` (Pickle ControllerV4).
+  - `JarLike PDAI = 0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87`, `STRAT = 0xCd892a97951d46615484359355e3Ed88131f829D`, `CurveLogicLike CURVE_LOGIC = 0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8`.
+  - `FakeJar`/`FakeUnderlying` mocks deployed; `CONTROLLER.swapExactJarForJar(fakeJar, fakeJar, 0, 0, targets[], datas[])` executes `STRAT.withdrawAll()`, repeated `PDAI.earn()`, then `STRAT.withdraw(address(CDAI))`.
+- **Remaining uncertainty:** aggregate USD loss for the Pickle Finance cDAI exploit is widely reported around $19.7M but not authoritatively confirmed from PoC code alone; left absent.
+- **Verification status:** unchanged — `not-run-no-rpc`.
