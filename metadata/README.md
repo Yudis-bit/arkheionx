@@ -9,9 +9,8 @@ This directory holds the canonical registry for Arkheionx Vault PoCs.
 | `schema.json` | JSON Schema (draft-07) for a registry entry. |
 | `registry.json` | The registry itself. One entry per PoC. |
 
-The registry is the single source of truth. README registry tables and
-the web app metadata are **generated** from it. Do not hand-edit those
-generated surfaces.
+The registry is the single source of truth. The README registry table is
+**generated** from it. Do not hand-edit the generated surface.
 
 ## Editing
 
@@ -28,8 +27,7 @@ generated surfaces.
    python scripts/generate_registry.py
    ```
 
-   This rewrites the README's vulnerability registry section and
-   `web/public/metadata.json`.
+   This rewrites the README's vulnerability registry section.
 
 4. Commit `registry.json` and the regenerated files together.
 

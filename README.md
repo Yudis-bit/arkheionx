@@ -73,7 +73,7 @@ collection.
 - A working set of Foundry tests under `EVM/test/` that fork mainnet (and
   other supported chains) at the block of each incident.
 - A canonical metadata file (`metadata/registry.json`) that drives the
-  registry table below and the web archive under `web/`.
+  registry table below.
 - A documented research standard each PoC is held to before promotion.
 
 ## What this repository is not
@@ -135,7 +135,6 @@ documents:
 ├── reports/    PoC quality matrix + per-PoC verification reports
 ├── scripts/    Validation, registry generation, scoring tooling
 ├── docs/       Brand, ethics, research standard, reproducibility
-├── web/        Next.js archive interface
 └── README.md
 ```
 

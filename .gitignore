@@ -10,3 +10,7 @@ POST_DRAFT.txt
 assets/
 !README.md
 !WRITEUP.md
+
+# Local reference clones (e.g. SunWeb3Sec/DeFiHackLabs) used by
+# scripts/poc_factory.py. Never tracked.
+.reference_data/

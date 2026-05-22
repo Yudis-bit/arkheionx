@@ -9,7 +9,6 @@
 - [ ] Metadata change
 - [ ] Documentation change
 - [ ] CI / tooling change
-- [ ] Web app change
 
 ## Checklist
 
@@ -25,7 +24,7 @@
 - [ ] `metadata/registry.json` updated for any added or changed PoC.
 - [ ] `python scripts/validate_metadata.py` passes locally.
 - [ ] `python scripts/generate_registry.py --check` passes locally
-      (no stale README registry / web metadata).
+      (no stale README registry).
 - [ ] EVM PoCs: `forge fmt --check` and `forge build` pass from `EVM/`.
 - [ ] EVM PoCs: at least one `forge test --match-path "..."` invocation is
       documented below with the chain alias used.

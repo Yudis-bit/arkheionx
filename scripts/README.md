@@ -22,7 +22,6 @@ Generates downstream artifacts from the canonical registry:
 
 - The vulnerability registry table embedded in `README.md` (between the
   `<!-- BEGIN: registry -->` / `<!-- END: registry -->` markers).
-- `web/public/metadata.json`, consumed by the Next.js app under `web/`.
 
 ```sh
 # Write outputs.
