@@ -272,10 +272,10 @@
       "protocol_assumption_failure": "Assumed source and destination of an internal transfer are different addresses.",
       "attacker_profit_check": "Attacker ETH balance after burnToEther > flash-loan principal (200 ether in PoC) plus fees.",
       "victim_loss_check": "iETH loanToken contract underlying ETH balance < pre-attack balance by the duplicated redemption.",
-      "assertion_quality": "weak",
+      "assertion_quality": "strong",
       "verification_status": "not-run-no-rpc",
-      "notes": "Phase 6A reclassification: same root cause as the cited iUSDC incident, but the PoC targets iETH (loanToken=0xB983E01458529665007fF7E0CDdeCDB74B967Eb6, IETHv2/iETH on bZx) at fork block 10852715. attack_tx, attacker address, and the cited PeckShield URL are kept since the PoC source comment block names them; loss_usd retained from prior entry would be misleading for the iETH-only path the PoC executes, so it has been removed pending manual confirmation. Title and summary updated to reflect iETH; id slug retained to keep file paths and references stable.",
-      "tags": ["phase-6a-reclassified"]
+      "notes": "Phase 6A reclassification: same root cause as the cited iUSDC incident, but the PoC targets iETH (loanToken=0xB983E01458529665007fF7E0CDdeCDB74B967Eb6, IETHv2/iETH on bZx) at fork block 10852715. attack_tx, attacker address, and the cited PeckShield URL are kept since the PoC source comment block names them; loss_usd retained from prior entry would be misleading for the iETH-only path the PoC executes, so it has been removed pending manual confirmation. Title and summary updated to reflect iETH; id slug retained to keep file paths and references stable. Phase 6F: additive assertions added in EVM/test/2020-09/Exploit_2020-09.t.sol — mintAmount captured from mintWithEther; per-iteration assertEq(balanceOf, expected) inside the existing 4-iteration loop with expected doubling each step (F6 fingerprint); final assertEq(balanceOf, mintAmount * 16); redeemed captured from burnToEther with assertGt(redeemed, 200 ether) F1 lower bound. Patch compiles and forge fmt-clean; assertion logic unexecuted because public RPC returned 'historical state is not available' for block 10852715 — archival mainnet RPC required for execution. assertion_quality raised weak→strong on static grounds; verification_status retained as not-run-no-rpc.",
+      "tags": ["phase-6a-reclassified", "phase-6f-asserted"]
     },
     {
       "id": "2020-10-harvest",
