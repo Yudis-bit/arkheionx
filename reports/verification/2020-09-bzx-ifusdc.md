@@ -32,6 +32,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker post-redemption asset balance > pre-attack balance.
+- **Victim loss check (intended):** iToken vault asset balance < pre-attack balance by the duplicated redemption.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: P0 id mismatch. Test targets loanToken = 0xB983E01458529665007fF7E0CDdeCDB74B967Eb6 which is iETH_v2; the entry id, title, summary, impact, and attack_tx all describe the iUSDC/LINK incident. The on-chain attack matching this code (mintWithEther + repeated self-transfer + burnToEther) drained ~4,503 ETH. No assertions in the PoC. Re-titling and field corrections require user approval; flagged for Phase 6 reclassification track.
+
 ## Attacker path
 
 Call iToken transfer to self so destination write overwrites source decrement, doubling balance.

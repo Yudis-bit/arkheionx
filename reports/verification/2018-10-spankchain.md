@@ -33,6 +33,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker ETH and BOOTY balances after attack > pre-attack + reentered withdrawals.
+- **Victim loss check (intended):** SpankChain hub contract balance < pre-attack balance by the drained amount.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: only inherited balanceLog modifier; no explicit asserts. The line `payable(address(0x0)).transfer(5 ether)` after the exploit burns the simulated flash-loan principal, which understates the After log. Recommended Phase 6 patch: snapshot SpankChain hub ETH balance pre/post and assertLt; assert attacker net (before the burn) exceeds simulated principal.
+
 ## Attacker path
 
 Open channel, trigger close path, reenter via ERC-20 token call before balance state is updated.

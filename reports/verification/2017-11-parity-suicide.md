@@ -32,6 +32,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Library is selfdestructed; downstream wallet calls revert. (No direct attacker profit.)
+- **Victim loss check (intended):** Library code at the well-known address is empty post-suicide; dependent wallets cannot delegatecall.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: only the ownership hijack is asserted (assertTrue isowner). No assertion that the library actually self-destructs. Recommended Phase 6 patch: capture address(WalletLibrary).code.length pre and post and assert it transitions from non-zero to zero (valid for the pre-Cancun fork block).
+
 ## Attacker path
 
 Initialize the shared library to take ownership, then call its kill function.

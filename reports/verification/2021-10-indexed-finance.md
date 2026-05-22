@@ -33,6 +33,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker basket-asset balance after redeem > pre-attack basket-asset balance.
+- **Victim loss check (intended):** DEFI5 / CC10 underlying balances < pre-attack balances.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: only console.log of final attacker token balances; no strict profit or invariant assertion. Recommended Phase 6 patch: snapshot pre-balances of all 8 borrowed tokens and after start() assert at least one assertGt with the documented attacker margin; assert DEFI5 underlying basket value (sum of pool token reserves * spot prices) dropped vs pre.
+
 ## Attacker path
 
 Flash-loan supply, dominate reweight inputs, mint outsized index tokens, redeem underlying basket.

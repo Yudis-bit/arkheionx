@@ -34,6 +34,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: requires-archival-rpc` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `medium`
+- **Attacker profit check (intended):** Attacker borrowed-asset balance > borrow input value at fair price.
+- **Victim loss check (intended):** Moonwell market collateral / reserves < pre-attack balance.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: single assertGt(wethAfter, wethBefore) covers F1 attacker profit. Missing F5 oracle-deviation assertion (no read of Chainlink latestRoundData updatedAt vs block.timestamp) and missing F2 victim assertion against Moonwell market cash. Recommended Phase 6 patch: capture mwstEth cash pre/post and assertLt by BORROW_AMOUNT; read the underlying Chainlink feed and assert updatedAt < block.timestamp - heartbeat.
+
 ## Attacker path
 
 Borrow against a market while its Chainlink feed is returning a stale (favorable) price.

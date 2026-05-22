@@ -33,6 +33,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker token balance after drain > attacker tokens supplied.
+- **Victim loss check (intended):** Crowdpool reserves < pre-attack reserves; reserve token now attacker-controlled.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: only emit log_named_uint of pre/post wCRES + USDT balances. No assertion that DVM was actually re-initialized with attacker tokens, and no strict profit assertion. Recommended Phase 6 patch: snapshot DVM _BASE_TOKEN_ and _QUOTE_TOKEN_ pre/post and assert they changed; assertGt on attacker wCRES + USDT balances.
+
 ## Attacker path
 
 Flash-loan reserves, call init again with attacker-controlled tokens, drain liquidity.

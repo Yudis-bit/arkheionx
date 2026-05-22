@@ -32,6 +32,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `strong`
+- **Attacker profit check (intended):** Attacker EOA ETH balance after attack > pre-attack balance + ~150,000 ether.
+- **Victim loss check (intended):** Multisig wallet ETH balance after attack equals zero.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: this PoC is the canonical reference template. assertEq on pre/post balances and isOwner transition cover F1, F2, F4, F7. No further static-quality gaps; final promotion still requires archival fork verification.
+
 ## Attacker path
 
 Call initWallet to overwrite owners, then withdraw wallet balance.

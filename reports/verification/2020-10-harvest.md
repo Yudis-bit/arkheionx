@@ -34,6 +34,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker stablecoin balance after attack > flash-loan principal plus fees.
+- **Victim loss check (intended):** fUSDT/fUSDC vault underlying balance < pre-attack balance.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: only emit log_named_uint of attacker USDC/USDT pre/post. No strict profit assertion, no F2 victim assertion against fUSDC vault, no F5 oracle-deviation assertion against the manipulated Curve Y-pool spot price. Recommended Phase 6 patch: snapshot fUSDC vault underlying pre/post and assertLt; assertGt(usdc.balanceOf(this), pre + flashloan_fees).
+
 ## Attacker path
 
 Flash loan, swap to imbalance Curve Y-pool, deposit into Harvest at distorted price, withdraw, reverse swap.

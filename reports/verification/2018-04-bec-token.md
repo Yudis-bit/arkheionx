@@ -32,6 +32,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `none`
+- **Attacker profit check (intended):** Attacker BEC balance after attack approximates the overflowed supply.
+- **Victim loss check (intended):** Token totalSupply no longer matches sum of legitimate holder balances.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: zero assertions; only emit log_named_decimal_uint of pre/post balances. P0 priority. Recommended Phase 6 patch: assert each receiver's post balance > type(uint256).max/2 + 1, and assert sum of receiver balances > totalSupply (the canonical overflow proof).
+
 ## Attacker path
 
 Call batchTransfer with crafted (count, value) pair that overflows count*value.

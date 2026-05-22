@@ -33,6 +33,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker WETH/WBTC/LINK/SNX balance > pre-attack balance.
+- **Victim loss check (intended):** Balancer pool token balances < pre-attack balances for the drained tokens.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: P0 metadata-vs-code mismatch. Test code calls Bancor.safeTransferFrom(XBPToken, victim, attacker, victim_balance) at block 10307563 — this is the Bancor public-safeTransferFrom incident (June 2020, unsafe-external-call), not Balancer's STA deflationary-token drain. No assertions. Reclassification of category, protocol, root_cause, summary, and references requires user approval before any test edit.
+
 ## Attacker path
 
 Repeatedly swap STA against the pool so transfer fee skews weights, then withdraw other tokens.

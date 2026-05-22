@@ -34,6 +34,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker stablecoin balance after attack > flash-loan principal plus fees.
+- **Victim loss check (intended):** Cheese Bank stablecoin reserves < pre-attack reserves.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: P0 metadata-vs-code mismatch. PoC forks at block 11303122 (not 11205646) and exercises Pickle ControllerV4 (0x6847259b...) `swapExactJarForJar` against pDAI (0x6949Bb...) using FakeJar/FakeUnderlying contracts to drain cDAI to tx.origin. This is the Pickle Finance cDAI exploit (Nov 21 2020, ~$19.7M), not Cheese Bank. Reclassification of category, protocol, fork block, root_cause, attack_tx, loss_usd, and references requires user approval.
+
 ## Attacker path
 
 Flash loan, swap to move Uniswap reserves Cheese reads, borrow against inflated LP collateral, reverse.

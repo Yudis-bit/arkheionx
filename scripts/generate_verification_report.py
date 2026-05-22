@@ -159,6 +159,25 @@ def render_report(e: dict) -> str:
         )
     lines.append("")
 
+    aq = e.get("assertion_quality", "unknown")
+    notes = e.get("notes", "").strip()
+    lines.append("## Static Assertion Review (Phase 5)")
+    lines.append("")
+    lines.append(f"- **Assertion quality (static):** `{aq}`")
+    lines.append(f"- **Attacker profit check (intended):** {e.get('attacker_profit_check', 'unknown')}")
+    lines.append(f"- **Victim loss check (intended):** {e.get('victim_loss_check', 'unknown')}")
+    lines.append("- **Archival RPC required for final proof:** "
+                 + ("yes" if not_locally_verified else "no (already verified)"))
+    lines.append("")
+    if notes:
+        lines.append("**Static review notes (from `metadata.notes`):**")
+        lines.append("")
+        lines.append("> " + notes.replace("\n", "\n> "))
+        lines.append("")
+    else:
+        lines.append("_No static-review notes recorded yet for this entry._")
+        lines.append("")
+
     lines.append("## Attacker path")
     lines.append("")
     lines.append(e.get("attacker_path", "unknown"))

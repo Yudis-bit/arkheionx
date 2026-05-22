@@ -33,6 +33,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker ETH balance after attack > pre-attack balance plus drained pool ETH minus loan fees.
+- **Victim loss check (intended):** Uniswap V1 pool ETH and imBTC reserves < pre-attack reserves by the drained amounts.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: PoC code targets Lendf.Me (IMoneyMarket supply/withdraw against `victim = 0x0eEe...`), not Uniswap V1. The cited PeckShield URL is the Uniswap+Lendf.Me joint analysis. Title kept for now to avoid id rename; reclassification deferred to a separate user-approved track. Assertions are absent — only emit log_named_uint. Recommended Phase 6 patch: snapshot victim and attacker imBTC balances and assertLt / assertGt with the drained amount.
+
 ## Attacker path
 
 Initiate Uniswap V1 ETH->imBTC swap; reenter inside ERC-777 hook before reserves update.

@@ -32,6 +32,17 @@ Family definitions are in [`docs/ASSERTION_STANDARD.md`](../../docs/ASSERTION_ST
 
 The metadata records `reproducibility: deterministic-likely-but-unverified` and `verification_status: not-run-no-rpc`. To produce a verified run, configure the appropriate `*_RPC_URL` env var (see [`docs/FORK_VERIFICATION.md`](../../docs/FORK_VERIFICATION.md)), execute the command above, and replace this section with the run transcript.
 
+## Static Assertion Review (Phase 5)
+
+- **Assertion quality (static):** `weak`
+- **Attacker profit check (intended):** Attacker token balance after call > pre-attack balance, sourced from victim approvals.
+- **Victim loss check (intended):** Victim wallet token balance < pre-attack balance for previously approved tokens.
+- **Archival RPC required for final proof:** yes
+
+**Static review notes (from `metadata.notes`):**
+
+> Phase 5 static review: P0 metadata-vs-code mismatch. PoC operates on BuildGovernance (0x5A6eBeB...) and BUILD token (0x6e36556...) at block 14235712; uses propose/vote/warp/execute to grant attacker transferFrom on the governance treasury. This is the BUILD Finance governance takeover (Feb 2022, ~$470k), not Dexible. Reclassification of category to governance-attack and update of protocol, root_cause, attack_tx, references, and id requires user approval.
+
 ## Attacker path
 
 Call selfSwap with attacker-controlled target so router uses pre-approved user tokens.
