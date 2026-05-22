@@ -481,9 +481,9 @@
       "protocol_assumption_failure": "Assumed init was guarded against re-entry once liquidity was present.",
       "attacker_profit_check": "Attacker token balance after drain > attacker tokens supplied.",
       "victim_loss_check": "Crowdpool reserves < pre-attack reserves; reserve token now attacker-controlled.",
-      "assertion_quality": "weak",
+      "assertion_quality": "strong",
       "verification_status": "not-run-no-rpc",
-      "notes": "Phase 5 static review: only emit log_named_uint of pre/post wCRES + USDT balances. No assertion that DVM was actually re-initialized with attacker tokens, and no strict profit assertion. Recommended Phase 6 patch: snapshot DVM _BASE_TOKEN_ and _QUOTE_TOKEN_ pre/post and assert they changed; assertGt on attacker wCRES + USDT balances."
+      "notes": "Phase 7C assertion patch: pre/post snapshot of DVM _BASE_TOKEN_ and _QUOTE_TOKEN_ via local IDVMView interface (declared in test file only; no edits to EVM/src/**). Pre-state asserted == (wCRES, USDT); post-state asserted == (token1, token2) attacker addresses, plus assertTrue inequality vs. pre-state. F4 (state transition) and F7 (control) families satisfied. Reproducibility unchanged (deterministic-likely-but-unverified) — public RPC fails to serve historical state at block 12000000 (server returned -32000 'historical state ... is not available'); classified as RPC limitation, not PoC failure. Patch compiles under forge build and passes forge fmt --check; only setUp() fails on archival fetch."
     },
     {
       "id": "2021-10-indexed-finance",
