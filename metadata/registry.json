@@ -204,10 +204,10 @@
       "protocol_assumption_failure": "Assumed the helper that consumes user approvals was internal; deployment exposed it as public.",
       "attacker_profit_check": "Attacker XBPToken balance after attack > pre-attack balance by the victim's drained amount.",
       "victim_loss_check": "Victim XBPToken balance after attack equals zero (or pre-attack minus drained amount).",
-      "assertion_quality": "none",
+      "assertion_quality": "strong",
       "verification_status": "not-run-no-rpc",
-      "notes": "Phase 6A reclassification: PoC code is the Bancor public-safeTransferFrom incident (June 2020), not the Balancer STA deflationary-token drain. Evidence: contract Exploit__202006 forks block 10307563 and calls IBancor(0x5f58058C0eC971492166763c8C22632B583F667f).safeTransferFrom(XBPToken=0x28dee0...,victim=0xfd0B4D...,attacker,victim_balance); source comment header reads 'Bancor Protocol Access Control Exploit PoC'. id slug retained to keep file paths stable; aggregate loss_usd intentionally absent pending manual confirmation. Protocol identity is high-confidence; status: needs-verification reflects archival fork run still pending.",
-      "tags": ["phase-6a-reclassified"]
+      "notes": "Phase 6A reclassification: PoC code is the Bancor public-safeTransferFrom incident (June 2020), not the Balancer STA deflationary-token drain. Evidence: contract Exploit__202006 forks block 10307563 and calls IBancor(0x5f58058C0eC971492166763c8C22632B583F667f).safeTransferFrom(XBPToken=0x28dee0...,victim=0xfd0B4D...,attacker,victim_balance); source comment header reads 'Bancor Protocol Access Control Exploit PoC'. id slug retained to keep file paths stable; aggregate loss_usd intentionally absent pending manual confirmation. Protocol identity is high-confidence; status: needs-verification reflects archival fork run still pending. Phase 6E: additive assertions added in EVM/test/2020-06/Exploit_2020-06.t.sol (allowanceBefore >= victimBefore precondition; victimAfter == 0 and attackerAfter - attackerBefore == victimBefore postconditions). Patch compiles and forge fmt-clean; assertion logic unexecuted because public RPC returned 'historical state is not available' for block 10307563 — archival mainnet RPC required for execution. assertion_quality raised none→strong on static grounds; verification_status retained as not-run-no-rpc.",
+      "tags": ["phase-6a-reclassified", "phase-6e-assertion-patch"]
     },
     {
       "id": "2020-08-opyn",
