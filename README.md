@@ -1,133 +1,259 @@
 # Arkheionx Vault
 
-**Independent DeFi exploit PoC research archive.** Reproducibility,
-metadata discipline, and root-cause analysis for historical incidents.
+**Independent DeFi Exploit PoC Research Archive**
 
-Maintained by Yudistira Putra (`arkheionx` /
-[@Yudis-bit](https://github.com/Yudis-bit)).
+Maintained by Yudistira Putra — `arkheionx` /
+[@Yudis-bit](https://github.com/Yudis-bit).
 
 ---
 
 ## Overview
 
-Arkheionx Vault is being developed as an independent DeFi exploit PoC
-archive focused on reproducibility, metadata discipline, and root-cause
-analysis. It collects historical Web3 exploit proofs-of-concept for
-defensive research, auditor training, and reproducible study of failure
-modes that have already occurred in production protocols.
+Arkheionx Vault is an independent archive of historical DeFi exploit
+proofs-of-concept. The project is built around reproducibility, assertion
+quality, exploit anatomy, and root-cause analysis rather than raw exploit
+collection.
 
-The current archive is small. The standards, taxonomy, and verification
-process under [`docs/`](docs/) are the foundation for it to grow safely
-past 100 and beyond verified entries — see
-[`docs/EXPANSION_PLAN.md`](docs/EXPANSION_PLAN.md). Counts in this
-README reflect the actual state of `metadata/registry.json`.
+Each entry pairs Foundry-based fork reproduction of a real, already-resolved
+incident with metadata that records the exploit primitive, the broken
+invariant, the protocol assumption that failed, and the assertions that
+prove the resulting compromise. The work is defensive: studying failed
+designs in detail so they are not repeated.
 
-Each entry is structured around three things:
+The archive is small by design. Standards, taxonomy, and verification
+process come first; corpus growth follows.
 
-- a pinned environment that reproduces the pre-exploit state,
-- a PoC that triggers the vulnerability,
-- hard assertions that prove the resulting compromise.
+## Current status
 
-The goal is not to glorify exploits. It is to preserve them, accurately, so
-they can be studied and prevented.
+Honest snapshot of the repository on the current branch.
+
+| Metric | Value |
+|---|---|
+| Total PoCs | 18 |
+| Deterministic-confirmed | 0 (archival fork verification pending) |
+| Strong static assertions | 7 |
+| Medium static assertions | 4 |
+| Weak static assertions | 7 |
+| Public RPC smoke testing | supported |
+| Archival RPC verification | required for historical fork confirmation |
+| EVM (Foundry) | active |
+| SVM (Anchor) | scaffold only |
+| MoveVM (Aptos) | scaffold only |
+
+`deterministic-confirmed` is reserved for entries that have been re-run on a
+pinned archival fork on this branch and have a verification report under
+[`reports/verification/`](reports/verification/). Static assertion quality
+is measured separately and is not a substitute for runtime verification.
+
+## Why this exists
+
+Replaying an exploit in code is necessary but not sufficient. A PoC that
+ends with `console.log(attackerBalance)` proves nothing — the call could
+have reverted silently, the balance could have been pre-seeded, the
+attacker pool could have already held the funds. Without hard assertions,
+a green test says nothing about whether the vulnerability actually
+triggered.
+
+Arkheionx Vault treats each historical incident as a security primitive
+worth dissecting precisely:
+
+- the exploit primitive that was abused,
+- the invariant that was broken,
+- the protocol assumption that turned out to be false,
+- attacker profit and victim loss measured against pinned pre-state,
+- a reference to the original post-mortem.
+
+The goal is defensive learning and auditor training, not exploit
+collection.
 
 ## What this repository is
 
-- A registry of historical and patched DeFi exploits, with code that
-  reproduces each one against pinned chain state.
+- An archive of historical DeFi exploits with code that reproduces each
+  one against pinned chain state.
 - A working set of Foundry tests under `EVM/test/` that fork mainnet (and
   other supported chains) at the block of each incident.
 - A canonical metadata file (`metadata/registry.json`) that drives the
-  registry table below and the web app under `web/`.
-- Documentation of the standard each PoC must meet before it is merged.
+  registry table below and the web archive under `web/`.
+- A documented research standard each PoC is held to before promotion.
 
 ## What this repository is not
 
-- A live-target attack toolkit.
-- A scanner, an autonomous exploit runner, or detection-evasion tooling.
-- A consultancy product. References to security firms, contest platforms,
-  and bounty programs in this repository are attributions to public
-  post-mortems, not partnerships.
-- A commitment that every listed PoC currently runs on every machine.
-  See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) and the
-  `reproducibility` and `status` fields on each entry.
-
-## Research framework
-
-This archive is governed by a set of standards, not by tribal knowledge.
-Each document is small and load-bearing.
-
-- [`docs/POC_STANDARD.md`](docs/POC_STANDARD.md) — what counts as a valid PoC.
-- [`docs/EXPLOIT_TAXONOMY.md`](docs/EXPLOIT_TAXONOMY.md) — vulnerability categories used as the registry's `category` field.
-- [`docs/ASSERTION_STANDARD.md`](docs/ASSERTION_STANDARD.md) — required assertion families per category.
-- [`docs/REPRODUCIBILITY_STANDARD.md`](docs/REPRODUCIBILITY_STANDARD.md) — what each `reproducibility` value means and how a PoC reaches `deterministic-confirmed`.
-- [`docs/FORK_VERIFICATION.md`](docs/FORK_VERIFICATION.md) — how PoCs are run against pinned chain state and how results are recorded.
-- [`docs/AUDITOR_CHECKLIST.md`](docs/AUDITOR_CHECKLIST.md) — per-category review prompts.
-- [`docs/ROOT_CAUSE_PLAYBOOK.md`](docs/ROOT_CAUSE_PLAYBOOK.md) — how to write a credible root-cause section.
-- [`docs/INCIDENT_INTAKE.md`](docs/INCIDENT_INTAKE.md) — pipeline for adding a new incident.
-- [`docs/EXPANSION_PLAN.md`](docs/EXPANSION_PLAN.md) — milestones from 25 to 700+ verified PoCs.
-- [`docs/VERIFICATION_REPORT_TEMPLATE.md`](docs/VERIFICATION_REPORT_TEMPLATE.md) — per-PoC verification artifact format.
-
-The earlier [`docs/RESEARCH_STANDARD.md`](docs/RESEARCH_STANDARD.md) and
-[`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) remain as
-introductions; the documents above are the authoritative standard.
+- Not a live-target attack toolkit.
+- Not a scanner, autonomous exploit runner, or detection-evasion tooling.
+- Not affiliated with any audit firm, contest platform, or bounty
+  program. External references in this repository are attributions to
+  public post-mortems, not partnerships.
+- Not a claim that every listed PoC is currently runtime-verified. See
+  the `reproducibility` and `verification_status` fields on each entry.
+- Not the largest archive of exploit code. There are larger collections.
+  This one optimises for a different axis: assertion quality and
+  reproducibility per entry.
 
 ## Research standard
 
-The full standard is in [docs/RESEARCH_STANDARD.md](docs/RESEARCH_STANDARD.md).
-Summary:
+Every mature PoC in this archive aims to carry:
 
-- One PoC per file. No shared state across tests.
-- Pinned fork block. Documented chain alias.
-- Hard assertions on post-exploit state, in the families required by the
-  PoC's category — see [`docs/ASSERTION_STANDARD.md`](docs/ASSERTION_STANDARD.md).
-- At least one external reference (post-mortem, advisory, contest report,
-  original PoC author) unless the entry is `embargoed` or `educational`.
-- Canonical metadata in `metadata/registry.json`.
+- a pinned fork block and explicit chain alias;
+- the protocol identity, attack transaction, and incident date;
+- the exploit primitive and the attacker path that abuses it;
+- the invariant that was broken;
+- the protocol assumption that failed;
+- an attacker profit assertion against pinned pre-state;
+- a victim loss or state-damage assertion where the on-chain shape
+  allows;
+- a documented reproducibility status;
+- at least one external reference (post-mortem, advisory, original PoC
+  author);
+- a verification report once runtime confirmation is achieved.
 
-## Supported environments
+Hard assertions are required. A PoC that compiles and forks but ends
+without `assert*` is treated as incomplete regardless of how clean its
+narrative reads.
 
-Honest current state. See [docs/VM_SUPPORT.md](docs/VM_SUPPORT.md).
+The full standard is in
+[`docs/RESEARCH_STANDARD.md`](docs/RESEARCH_STANDARD.md). Related
+documents:
 
-| VM | Status | Notes |
-|---|---|---|
-| EVM (Foundry) | Supported | All currently merged PoCs are EVM. Most are `deterministic-likely-but-unverified` — code looks correct, fork test has not been re-run in the current environment. See [`docs/REPRODUCIBILITY_STANDARD.md`](docs/REPRODUCIBILITY_STANDARD.md). |
-| SVM (Anchor) | Template | Directory is scaffolding; no real PoC yet. |
-| MoveVM (Aptos) | Template | Directory is scaffolding; no real PoC yet. |
+- [`docs/POC_STANDARD.md`](docs/POC_STANDARD.md) — what counts as a valid PoC.
+- [`docs/EXPLOIT_TAXONOMY.md`](docs/EXPLOIT_TAXONOMY.md) — vulnerability categories used by the registry's `category` field.
+- [`docs/ASSERTION_STANDARD.md`](docs/ASSERTION_STANDARD.md) — required assertion families per category.
+- [`docs/REPRODUCIBILITY_STANDARD.md`](docs/REPRODUCIBILITY_STANDARD.md) — what each `reproducibility` value means.
+- [`docs/FORK_VERIFICATION.md`](docs/FORK_VERIFICATION.md) — chain aliases, RPC requirements, verification recording.
+- [`docs/AUDITOR_CHECKLIST.md`](docs/AUDITOR_CHECKLIST.md) — per-category review prompts.
+- [`docs/ROOT_CAUSE_PLAYBOOK.md`](docs/ROOT_CAUSE_PLAYBOOK.md) — how to write a credible root-cause section.
+- [`docs/INCIDENT_INTAKE.md`](docs/INCIDENT_INTAKE.md) — pipeline for adding a new incident.
+- [`docs/EXPANSION_PLAN.md`](docs/EXPANSION_PLAN.md) — milestones from the current corpus onward.
 
 ## Repository layout
 
 ```
 .
-├── EVM/                Foundry project: PoCs under test/, helpers under src/
-├── SVM/                Anchor scaffold (template only)
-├── MoveVM/             Aptos Move scaffold (template only)
-├── metadata/           Canonical registry + JSON Schema
-├── scripts/            Validation, registry generation, PoC tooling
-├── web/                Next.js archive interface
-├── docs/               Brand, ethics, research standard, reproducibility
-└── README.md           This file
+├── EVM/        Foundry project: PoCs under test/, helpers under src/
+├── SVM/        Anchor scaffold (template only)
+├── MoveVM/     Aptos Move scaffold (template only)
+├── metadata/   Canonical registry + JSON Schema
+├── reports/    PoC quality matrix + per-PoC verification reports
+├── scripts/    Validation, registry generation, scoring tooling
+├── docs/       Brand, ethics, research standard, reproducibility
+├── web/        Next.js archive interface
+└── README.md
 ```
+
+## Verification model
+
+A PoC moves through three distinct readiness levels:
+
+1. **Static review** — code compiles, fork block is pinned, metadata is
+   complete, hard assertions cover the documented exploit primitive.
+   Recorded in `assertion_quality` and reflected in
+   [`reports/poc_quality_matrix.md`](reports/poc_quality_matrix.md).
+2. **Smoke test (public RPC)** — `setUp()` and exploit body execute
+   without reverting against a public RPC where archival history is
+   available. Useful for recent incidents; insufficient for older ones.
+3. **Deterministic confirmation (archival RPC)** — `forge test` runs to
+   green against a pinned archival fork on this branch, with a recorded
+   verification artifact under
+   [`reports/verification/`](reports/verification/).
+
+Most historical exploits in this archive require step 3. Public RPCs
+typically do not retain state old enough to fork at, for example, block
+4,043,799 (Parity Multisig, 2017). When a public RPC returns *historical
+state is not available*, that is recorded as an RPC limitation, not a
+PoC failure. The entry stays at `deterministic-likely-but-unverified`
+until an archival RPC is configured and the fork test passes.
+
+## Assertion quality
+
+Each entry is tagged with one of four levels:
+
+| Level | Meaning |
+|---|---|
+| strong | Hard assertions cover attacker profit, victim loss, and the broken invariant — sufficient to fail loudly if the exploit logic regresses. |
+| medium | At least one hard assertion against post-state; one or more required families partially covered. |
+| weak | PoC executes the exploit shape but ends without assertions strong enough to prove the compromise (e.g. only `console.log` of balances). |
+| none | No `assert*` calls present. |
+
+Static assertion hardening is independent of runtime verification. A
+strong-assertion PoC can still sit at
+`deterministic-likely-but-unverified` until archival fork execution
+confirms it.
+
+## Severity
+
+| Level | Meaning |
+|---|---|
+| critical | Unconditional fund loss or full protocol takeover. |
+| high | Conditional fund loss, or permanent denial of service of core flow. |
+| medium | Fund risk under specific conditions, governance manipulation, or reversible DoS. |
+| low | Bounded value impact or significant griefing without direct loss. |
+| informational | Defensive note; not exploitable in isolation. |
+
+Severity is recorded in metadata and is not asserted by the test code.
 
 ## Running an EVM PoC
 
 From `EVM/`:
 
 ```sh
-# One-time setup.
 forge install
-export ETH_RPC_URL=https://your-archive-node-endpoint
+export ETH_RPC_URL=https://your-archival-node-endpoint
 
-# Run a single PoC.
+# Single PoC.
 forge test --match-path "test/2017-07/*.t.sol" -vvvv
 
-# Run all PoCs.
+# Full suite.
 forge test -vvv
 ```
 
-Most PoCs require an **archival** RPC. See
-[docs/FORK_VERIFICATION.md](docs/FORK_VERIFICATION.md) for chain
-aliases, required env vars, and how to record verification results.
+Most historical PoCs require an **archival** RPC endpoint. Public RPCs
+will accept the connection but error out with *historical state is not
+available* during `vm.createSelectFork`. See
+[`docs/FORK_VERIFICATION.md`](docs/FORK_VERIFICATION.md) for chain
+aliases, required environment variables, and how to record verification
+results.
+
+## Ethics and responsible use
+
+This repository is defensive security research. By using the contents
+you accept the terms in [`docs/ETHICS.md`](docs/ETHICS.md):
+
+- No unauthorized testing against live systems.
+- No adapting these PoCs to extract value without consent.
+- Compliance with applicable law, contracts, and disclosure obligations.
+
+If you believe content here may aid an attack against an unpatched live
+system, contact the maintainer privately. See
+[`docs/SECURITY.md`](docs/SECURITY.md).
+
+## Researcher
+
+Maintained by **Yudistira Putra** — `arkheionx` /
+[@Yudis-bit](https://github.com/Yudis-bit).
+
+Focus areas:
+
+- DeFi exploit reproduction
+- Smart contract security research
+- Fork-based PoC engineering
+- Root-cause analysis and exploit taxonomy
+- Assertion-driven verification
+
+## Roadmap
+
+Honest near-term plan:
+
+- Finish assertion hardening for the current 18-entry corpus.
+- Configure an archival RPC and produce verification reports for entries
+  that already pass static review.
+- Normalise retained legacy id slugs where reclassification has
+  occurred, without churning file paths.
+- Expand to ~25 verified-ready PoCs.
+- Expand to ~100 PoCs with the same quality gate.
+- Build out SVM and MoveVM only when there is a real PoC to merge, not
+  as scaffolding.
+
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) and
+[`docs/EXPANSION_PLAN.md`](docs/EXPANSION_PLAN.md).
 
 ## Vulnerability registry
 
@@ -135,47 +261,27 @@ The table below is generated from `metadata/registry.json`. Do not
 hand-edit. Run `python scripts/generate_registry.py` to regenerate.
 
 A static-readiness scoring of the registry — metadata completeness,
-assertion presence, root-cause clarity — is at
+assertion presence, root-cause clarity — lives at
 [`reports/poc_quality_matrix.md`](reports/poc_quality_matrix.md),
 generated by `python scripts/score_pocs.py`. Per-PoC verification
-reports live under
-[`reports/verification/`](reports/verification/), generated by
-`python scripts/generate_verification_report.py`. Until an entry has a
-verification report containing real run output, it remains at
+reports go under [`reports/verification/`](reports/verification/),
+generated by `python scripts/generate_verification_report.py`. Until an
+entry has a verification report containing real run output, it stays at
 `deterministic-likely-but-unverified` regardless of how complete its
 metadata looks.
 
-## Severity classification
+Where an `id` slug was retained from an earlier label after Phase 6A
+reclassification, the `Protocol` column reflects current truth. The slug
+is preserved only to keep file paths stable; see the relevant entry's
+`notes` field in `metadata/registry.json` for the reclassification
+record.
 
-| Level | Meaning |
-|---|---|
-| critical | Unconditional fund loss or full protocol takeover. |
-| high | Conditional fund loss, or permanent DoS of core flow. |
-| medium | Fund risk under specific conditions, governance manipulation, or reversible DoS. |
-| low | Bounded value impact or significant griefing without direct loss. |
-| informational | Defensive note; not exploitable in isolation. |
+## License and disclaimer
 
-## Responsible use
-
-This repository is for defensive security research only. By using anything
-here you accept the terms in [docs/ETHICS.md](docs/ETHICS.md):
-
-- No unauthorized testing against live systems.
-- No adapting these PoCs to extract value without consent.
-- Compliance with applicable law, contracts, and disclosure obligations.
-
-If you believe content in this repository may aid attack against an
-unpatched live system, contact the maintainer privately. See
-[docs/SECURITY.md](docs/SECURITY.md).
-
-## Contact
-
-- GitHub: [@Yudis-bit](https://github.com/Yudis-bit)
-- Web3 handle: `arkheionx`
-- Maintainer identity: Yudistira Putra
-
-For substantive issues, prefer the GitHub issue templates under
-`.github/ISSUE_TEMPLATE/`.
+All content is provided for defensive research and educational use.
+Reproductions target historical, patched, or otherwise resolved
+incidents. Nothing in this repository is investment, legal, or security
+advice. The maintainer assumes no liability for downstream use.
 
 ---
 
