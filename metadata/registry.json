@@ -68,9 +68,9 @@
       "protocol_assumption_failure": "Assumed the library was permanently anchored by its consumers; nothing prevented direct ownership.",
       "attacker_profit_check": "Library is selfdestructed; downstream wallet calls revert. (No direct attacker profit.)",
       "victim_loss_check": "Library code at the well-known address is empty post-suicide; dependent wallets cannot delegatecall.",
-      "assertion_quality": "weak",
+      "assertion_quality": "medium",
       "verification_status": "not-run-no-rpc",
-      "notes": "Phase 5 static review: only the ownership hijack is asserted (assertTrue isowner). No assertion that the library actually self-destructs. Recommended Phase 6 patch: capture address(WalletLibrary).code.length pre and post and assert it transitions from non-zero to zero (valid for the pre-Cancun fork block)."
+      "notes": "Phase 6C: additive assertions added — assertGt(code.length>0) before kill and assertEq(code.length==0) after kill, observing the pre-Cancun SELFDESTRUCT bytecode-clear fingerprint. Static proof target is now exact; runtime verification still pending an archival mainnet RPC at block 4501735 (public RPC returned 'historical state ... is not available' on 2026-05-22)."
     },
     {
       "id": "2018-04-bec-token",
