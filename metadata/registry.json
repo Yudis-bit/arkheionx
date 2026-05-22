@@ -101,9 +101,9 @@
       "protocol_assumption_failure": "Assumed solidity arithmetic could not overflow at realistic input sizes.",
       "attacker_profit_check": "Attacker BEC balance after attack approximates the overflowed supply.",
       "victim_loss_check": "Token totalSupply no longer matches sum of legitimate holder balances.",
-      "assertion_quality": "none",
+      "assertion_quality": "strong",
       "verification_status": "not-run-no-rpc",
-      "notes": "Phase 5 static review: zero assertions; only emit log_named_decimal_uint of pre/post balances. P0 priority. Recommended Phase 6 patch: assert each receiver's post balance > type(uint256).max/2 + 1, and assert sum of receiver balances > totalSupply (the canonical overflow proof)."
+      "notes": "Phase 6D: additive assertions added — assertEq(a1After-a1Before, type(uint256).max/2+1), assertEq(a2After-a2Before, type(uint256).max/2+1), and assertGt(a1After+a2After, totalSupply()) capturing the canonical batchTransfer overflow fingerprint (count*value wraparound + invariant break). Static proof target is now exact; runtime verification still pending archival mainnet RPC at block 5483642 (public RPC returned 'historical state ... is not available' on 2026-05-22)."
     },
     {
       "id": "2018-10-spankchain",
