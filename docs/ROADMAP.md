@@ -7,8 +7,9 @@ Honest. Subject to change. No commitment dates.
 - [x] Fix CI working-directory so EVM workflow actually runs.
 - [x] Add canonical metadata schema and registry generator.
 - [x] Generate README registry from metadata, not by hand.
-- [x] Drop fake stats and unverified service offerings from the web app.
+- [x] Remove the unfinished web frontend; repository is research-only.
 - [x] Make `poc_factory.py` dry-run by default; remove auto-push.
+- [x] Add PoC maturity model, maturity index, and research dashboard.
 - [ ] Re-verify each merged PoC and update `reproducibility` accordingly.
 - [ ] Backfill `block_number`, `severity`, `category` for every existing entry.
 
