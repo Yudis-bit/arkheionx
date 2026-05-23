@@ -22,13 +22,24 @@
 - [ ] If a PoC was ported from another repository, original author and
       upstream commit SHA are preserved in the file header.
 - [ ] `metadata/registry.json` updated for any added or changed PoC.
-- [ ] `python scripts/validate_metadata.py` passes locally.
-- [ ] `python scripts/generate_registry.py --check` passes locally
+- [ ] `python3 scripts/validate_metadata.py` passes locally.
+- [ ] `python3 scripts/generate_registry.py --check` passes locally
       (no stale README registry).
+- [ ] `python3 scripts/score_pocs.py --check` passes locally
+      (no stale `reports/poc_quality_matrix.md`).
+- [ ] `python3 scripts/poc_maturity_index.py --check` passes locally
+      (no stale `reports/poc_maturity_index.md`).
+- [ ] If a PoC was promoted to L4 (archival verified) or L5
+      (case study), the corresponding artifacts exist and are honest
+      per `docs/POC_MATURITY_MODEL.md`. No level was claimed without
+      evidence.
 - [ ] EVM PoCs: `forge fmt --check` and `forge build` pass from `EVM/`.
 - [ ] EVM PoCs: at least one `forge test --match-path "..."` invocation is
       documented below with the chain alias used.
 - [ ] Documentation under `docs/` updated if behaviour or scope changed.
+- [ ] No overclaiming. The README, registry, and maturity index do not
+      assert verification, affiliation, or coverage that the artifacts
+      do not back.
 
 ## Test evidence
 

@@ -19,7 +19,7 @@ set -euo pipefail
 
 REPO="Yudis-bit/DeFi-Exploit-PoCs"
 
-DESCRIPTION="Arkheionx Vault: independent DeFi exploit PoC archive focused on reproducibility, assertion quality, and root-cause analysis."
+DESCRIPTION="Arkheionx Vault — independent DeFi exploit PoC archive focused on assertions, root-cause analysis, and fork verification readiness."
 
 TOPICS=(
   "web3-security"

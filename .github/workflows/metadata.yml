@@ -5,15 +5,15 @@ on:
     branches: [main]
     paths:
       - 'metadata/**'
-      - 'scripts/validate_metadata.py'
-      - 'scripts/generate_registry.py'
+      - 'reports/**'
+      - 'scripts/**'
       - 'README.md'
       - '.github/workflows/metadata.yml'
   pull_request:
     paths:
       - 'metadata/**'
-      - 'scripts/validate_metadata.py'
-      - 'scripts/generate_registry.py'
+      - 'reports/**'
+      - 'scripts/**'
       - 'README.md'
       - '.github/workflows/metadata.yml'
 
@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   validate:
-    name: validate registry + check generated outputs
+    name: validate registry + check generated artifacts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,19 @@ jobs:
           python-version: '3.11'
 
       - name: Validate metadata
-        run: python scripts/validate_metadata.py
+        run: python3 scripts/validate_metadata.py
 
-      - name: Verify generated artifacts are up to date
-        run: python scripts/generate_registry.py --check
+      - name: Verify registry README block is up to date
+        run: python3 scripts/generate_registry.py --check
+
+      - name: Verify quality matrix is up to date
+        run: python3 scripts/score_pocs.py --check
+
+      - name: Verify verification report skeletons are up to date
+        run: python3 scripts/generate_verification_report.py --check
+
+      - name: Verify maturity index is up to date
+        run: python3 scripts/poc_maturity_index.py --check
+
+      - name: Verify research dashboard is up to date
+        run: python3 scripts/research_dashboard.py --check
