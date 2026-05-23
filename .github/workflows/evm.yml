@@ -76,4 +76,6 @@ jobs:
         if: steps.rpc.outputs.have_eth != 'true'
         run: |
           echo "Skipped: no ETH_RPC_URL secret configured for this run."
-          echo "This job did NOT verify any PoC. Configure ETH_RPC_URL to enable."
+          echo "This job did NOT verify any PoC. It is not a green check"
+          echo "for runtime verification. Configure ETH_RPC_URL to enable"
+          echo "fork tests; archival RPC is required for historical blocks."

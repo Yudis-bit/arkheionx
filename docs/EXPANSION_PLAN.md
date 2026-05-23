@@ -133,3 +133,16 @@ authoritative count. As of writing, all entries are `historical` or
 `requires-archival-rpc`. M1 work begins by configuring archival RPC,
 running existing PoCs, and producing the first verification reports — see
 the recommended next phase in the Phase 3 report.
+
+## Intake rubric
+
+Triage rules and rejection rubric live alongside the backlog so they
+are reviewable independently of this plan:
+
+- [`metadata/backlog/priority-lanes.md`](../metadata/backlog/priority-lanes.md)
+  — the ten research lanes, lane balancing rules per milestone, and
+  per-lane intake checklist.
+- [`metadata/backlog/rejection-criteria.md`](../metadata/backlog/rejection-criteria.md)
+  — hard and soft rejection categories, banned framings, appeal path.
+- [`docs/INCIDENT_INTAKE.md`](INCIDENT_INTAKE.md) — the candidate-to-
+  registry pipeline.

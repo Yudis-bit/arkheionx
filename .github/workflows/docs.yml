@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'README.md'
       - '.github/workflows/docs.yml'
   pull_request:
     paths:
       - 'docs/**'
+      - 'README.md'
       - '.github/workflows/docs.yml'
 
 permissions:
@@ -29,12 +31,18 @@ jobs:
             docs/CONTRIBUTING.md
             docs/ETHICS.md
             docs/METADATA_SCHEMA.md
+            docs/POC_MATURITY_MODEL.md
+            docs/RELEASE_PROCESS.md
+            docs/RELEASE_CHECKLIST.md
+            docs/LAUNCH_PLAN.md
             docs/REPRODUCIBILITY.md
             docs/RESEARCH_STANDARD.md
             docs/ROADMAP.md
             docs/SECURITY.md
             docs/STYLEGUIDE.md
             docs/VM_SUPPORT.md
+            metadata/backlog/priority-lanes.md
+            metadata/backlog/rejection-criteria.md
           )
           missing=0
           for f in "${required[@]}"; do
@@ -47,3 +55,25 @@ jobs:
             exit 1
           fi
           echo "All required docs present."
+
+  banned-phrases:
+    name: banned phrases on public surface
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan README + docs for hype framings
+        run: |
+          set -e
+          # Scope: README + docs/, but NOT docs/internal/ (phase logs may
+          # legitimately mention these phrases when documenting the
+          # prohibition itself), NOT docs/BRAND.md (defines the list),
+          # NOT metadata/backlog/rejection-criteria.md (lists the bans).
+          targets=$(git ls-files 'README.md' 'docs/*.md' \
+            ':!docs/internal/**' ':!docs/BRAND.md')
+          banned='\b(world-class|industry-leading|military-grade|trusted by [A-Z])'
+          if printf '%s\n' $targets | xargs grep -InE "$banned" 2>/dev/null; then
+            echo "::error::banned hype phrasing detected on the public surface"
+            exit 1
+          fi
+          echo "No banned hype framings detected."
