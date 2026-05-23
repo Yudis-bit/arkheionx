@@ -12,11 +12,16 @@ The backlog is the input to the [intake pipeline](../../docs/INCIDENT_INTAKE.md)
 metadata/backlog/
 ├── README.md                       # this file
 ├── candidates.template.json        # schema-by-example for one candidate
+├── priority-lanes.md               # which categories the corpus needs next
+├── rejection-criteria.md           # when a candidate is closed without merging
 └── candidates/                     # one file per candidate, <id>.json
 ```
 
 A candidate file is a single JSON object using the fields documented in
-`candidates.template.json`.
+`candidates.template.json`. Pick a priority lane from
+[`priority-lanes.md`](priority-lanes.md) when filing the candidate, and
+record it in `notes`. Rejection rules are in
+[`rejection-criteria.md`](rejection-criteria.md).
 
 ## Candidate lifecycle
 

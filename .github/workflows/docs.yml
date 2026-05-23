@@ -29,12 +29,16 @@ jobs:
             docs/CONTRIBUTING.md
             docs/ETHICS.md
             docs/METADATA_SCHEMA.md
+            docs/POC_MATURITY_MODEL.md
+            docs/RELEASE_CHECKLIST.md
+            docs/RELEASE_PROCESS.md
             docs/REPRODUCIBILITY.md
             docs/RESEARCH_STANDARD.md
             docs/ROADMAP.md
             docs/SECURITY.md
             docs/STYLEGUIDE.md
             docs/VM_SUPPORT.md
+            README.md
           )
           missing=0
           for f in "${required[@]}"; do
@@ -47,3 +51,42 @@ jobs:
             exit 1
           fi
           echo "All required docs present."
+
+      - name: No stale web/ references in public surface
+        run: |
+          set -e
+          if [ -d web ]; then
+            echo "::error::web/ directory should not exist; this repository is research-only."
+            exit 1
+          fi
+          if grep -RIn "web/public/metadata.json" README.md docs/ scripts/ .github/ 2>/dev/null \
+             | grep -vE "docs/internal/" ; then
+            echo "::error::stale web/public/metadata.json reference outside docs/internal/"
+            exit 1
+          fi
+          echo "No stale web references found."
+
+      - name: No banned hype phrases in public surface
+        run: |
+          set -e
+          banned=(
+            "world-class"
+            "industry-leading"
+            "military-grade"
+            "AI-powered"
+            "trusted by"
+            "verified archive"
+            "drain framework"
+          )
+          fail=0
+          for phrase in "${banned[@]}"; do
+            if grep -RIn -i -F "$phrase" README.md docs/ 2>/dev/null \
+               | grep -vE "docs/internal/|RELEASE_CHECKLIST.md|RELEASE_PROCESS.md|LAUNCH_PLAN.md|ASSERTION_STANDARD.md|ETHICS.md|launch/" ; then
+              echo "::error::banned phrase '$phrase' found in public surface"
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            exit 1
+          fi
+          echo "No banned hype phrases found."

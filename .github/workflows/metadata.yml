@@ -5,15 +5,25 @@ on:
     branches: [main]
     paths:
       - 'metadata/**'
+      - 'reports/**'
       - 'scripts/validate_metadata.py'
       - 'scripts/generate_registry.py'
+      - 'scripts/score_pocs.py'
+      - 'scripts/generate_verification_report.py'
+      - 'scripts/poc_maturity_index.py'
+      - 'scripts/research_dashboard.py'
       - 'README.md'
       - '.github/workflows/metadata.yml'
   pull_request:
     paths:
       - 'metadata/**'
+      - 'reports/**'
       - 'scripts/validate_metadata.py'
       - 'scripts/generate_registry.py'
+      - 'scripts/score_pocs.py'
+      - 'scripts/generate_verification_report.py'
+      - 'scripts/poc_maturity_index.py'
+      - 'scripts/research_dashboard.py'
       - 'README.md'
       - '.github/workflows/metadata.yml'
 
@@ -34,5 +44,18 @@ jobs:
       - name: Validate metadata
         run: python scripts/validate_metadata.py
 
-      - name: Verify generated artifacts are up to date
+      - name: README registry up to date
         run: python scripts/generate_registry.py --check
+
+      - name: Quality matrix up to date
+        run: python scripts/score_pocs.py --check
+
+      - name: Verification reports up to date
+        run: python scripts/generate_verification_report.py --check
+
+      - name: Maturity index up to date
+        run: python scripts/poc_maturity_index.py --check
+
+      - name: Research dashboard up to date
+        run: python scripts/research_dashboard.py --check
+
