@@ -69,6 +69,19 @@ Long version:
 - Direct outreach to protocol security teams for workshops, not audits.
 - Security communities that already discuss DeFi post-mortems.
 
+## Growth System
+
+Use [`MARKETING_ENGINE.md`](MARKETING_ENGINE.md) as the operating plan for
+turning the service surface into qualified conversations. It includes team
+roles, channel priority, weekly cadence, conversion ladder, and stop rules.
+
+Execution assets:
+
+- [`marketing/30_DAY_GROWTH_SPRINT.md`](marketing/30_DAY_GROWTH_SPRINT.md)
+- [`marketing/ACCOUNT_TARGETING.md`](marketing/ACCOUNT_TARGETING.md)
+- [`marketing/OUTBOUND_SEQUENCES.md`](marketing/OUTBOUND_SEQUENCES.md)
+- [`marketing/KPI_TRACKER.md`](marketing/KPI_TRACKER.md)
+
 ## Pricing Rules
 
 - Quote based on incident complexity, not hours alone.

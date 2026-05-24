@@ -292,6 +292,8 @@ scoped defensive research work.
   packages, recognition rules, and public progress metrics.
 - [`docs/MONETIZATION.md`](docs/MONETIZATION.md) — public plan for funding
   the archive without overstating verification claims.
+- [`docs/MARKETING_ENGINE.md`](docs/MARKETING_ENGINE.md) — distribution plan,
+  outbound cadence, target-account rules, and growth metrics.
 
 Commercial work is limited to historical, patched, or authorized targets.
 It does not include live-target exploitation, scanners, drain helpers,
