@@ -28,19 +28,29 @@ jobs:
           set -e
           required=(
             docs/BRAND.md
+            docs/CASE_STUDY_SAMPLE.md
+            docs/COMMERCIAL.md
             docs/CONTRIBUTING.md
+            docs/CONTENT_PLAYBOOK.md
             docs/ETHICS.md
             docs/METADATA_SCHEMA.md
+            docs/MONETIZATION.md
+            docs/OUTREACH_KIT.md
             docs/POC_MATURITY_MODEL.md
+            docs/PROPOSAL_TEMPLATE.md
             docs/RELEASE_PROCESS.md
             docs/RELEASE_CHECKLIST.md
+            docs/SPONSOR_PROSPECTUS.md
+            docs/SPONSORSHIP.md
             docs/LAUNCH_PLAN.md
             docs/REPRODUCIBILITY.md
             docs/RESEARCH_STANDARD.md
             docs/ROADMAP.md
             docs/SECURITY.md
             docs/STYLEGUIDE.md
+            docs/TRAINING.md
             docs/VM_SUPPORT.md
+            SERVICES.md
             metadata/backlog/priority-lanes.md
             metadata/backlog/rejection-criteria.md
           )
@@ -68,9 +78,14 @@ jobs:
           # Scope: README + docs/, but NOT docs/internal/ (phase logs may
           # legitimately mention these phrases when documenting the
           # prohibition itself), NOT docs/BRAND.md (defines the list),
+          # NOT release/checklist templates that list the guardrail,
           # NOT metadata/backlog/rejection-criteria.md (lists the bans).
           targets=$(git ls-files 'README.md' 'docs/*.md' \
-            ':!docs/internal/**' ':!docs/BRAND.md')
+            ':!docs/internal/**' \
+            ':!docs/BRAND.md' \
+            ':!docs/LAUNCH_PLAN.md' \
+            ':!docs/RELEASE_CHECKLIST.md' \
+            ':!docs/launch/**')
           banned='\b(world-class|industry-leading|military-grade|trusted by [A-Z])'
           if printf '%s\n' $targets | xargs grep -InE "$banned" 2>/dev/null; then
             echo "::error::banned hype phrasing detected on the public surface"

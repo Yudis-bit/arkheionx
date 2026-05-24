@@ -275,6 +275,28 @@ Focus areas:
 - Root-cause analysis and exploit taxonomy
 - Assertion-driven verification
 
+## Support and commercial work
+
+The public archive can be supported directly, or used as the basis for
+scoped defensive research work.
+
+- [`SERVICES.md`](SERVICES.md) — one-page service menu and fastest starter
+  package.
+- [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md) — funding tiers, what support
+  pays for, and sponsor boundaries.
+- [`docs/COMMERCIAL.md`](docs/COMMERCIAL.md) — assertion hardening,
+  historical reproduction reports, and research-review services.
+- [`docs/TRAINING.md`](docs/TRAINING.md) — paid workshop formats for
+  auditors, protocol engineers, and security researchers.
+- [`docs/SPONSOR_PROSPECTUS.md`](docs/SPONSOR_PROSPECTUS.md) — sponsor
+  packages, recognition rules, and public progress metrics.
+- [`docs/MONETIZATION.md`](docs/MONETIZATION.md) — public plan for funding
+  the archive without overstating verification claims.
+
+Commercial work is limited to historical, patched, or authorized targets.
+It does not include live-target exploitation, scanners, drain helpers,
+private-key handling, or guaranteed bounty outcomes.
+
 ## Roadmap
 
 The expansion plan, milestone gates, and quality bar at each step are
