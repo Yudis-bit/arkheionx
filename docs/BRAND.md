@@ -73,3 +73,26 @@ This brand is **defensive security research**.
 
 If the repository's actual capability changes, the brand language updates with
 it. The brand never runs ahead of the work.
+
+## Commercial language
+
+Commercial pages may offer scoped research work only when the deliverable is
+concrete: assertion hardening, historical reproduction review, root-cause
+writing, verification planning, or auditor training.
+
+Use:
+
+- "available for scoped defensive research work"
+- "assertion hardening for historical PoCs"
+- "training based on public post-mortems"
+- "sponsorship funds archive maintenance and verification work"
+
+Avoid:
+
+- "hire me to audit your protocol" unless a full audit practice is actually
+  being offered and evidenced elsewhere.
+- "guaranteed bounty", "guaranteed exploit", or anything that prices an
+  outcome the maintainer does not control.
+- "verified exploit database" while the L4 count is zero.
+- Any phrasing that suggests sponsors can influence findings, categories,
+  severity, or verification status.
