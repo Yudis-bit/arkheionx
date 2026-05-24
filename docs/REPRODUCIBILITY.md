@@ -23,23 +23,26 @@ See [VM_SUPPORT.md](VM_SUPPORT.md) for the honest current state of each VM.
   foundryup
   ```
 
-- `git` (for the `forge-std` submodule)
+- `git` (for cloning the repository and optional local reference data;
+  `forge-std` is vendored under `EVM/lib/forge-std`)
 
 ### Required environment variables
 
-EVM PoCs run against pinned mainnet forks. You need an archival RPC endpoint.
+EVM PoCs run against pinned forks. You need archival RPC endpoints for the
+chains you want to exercise.
 
 ```sh
 # .env (do not commit)
-ETH_RPC_URL=https://your-archive-node-endpoint
+ETH_RPC_URL=https://your-ethereum-archive-node-endpoint
+BASE_RPC_URL=https://your-base-archive-node-endpoint
 ```
 
-Some PoCs may target other chains. Aliases declared in `EVM/foundry.toml`:
+Aliases declared in `EVM/foundry.toml`:
 
 | Alias | Env var | Required for |
 |---|---|---|
-| `mainnet` | `ETH_RPC_URL` | All currently merged PoCs. |
-| `base` | `BASE_RPC_URL` | Base-specific PoCs (none merged yet). |
+| `mainnet` | `ETH_RPC_URL` | Ethereum PoCs (17 currently merged). |
+| `base` | `BASE_RPC_URL` | Base PoCs (currently `2025-11-moonwell`). |
 | `arbitrum` | `ARBITRUM_RPC_URL` | Arbitrum-specific PoCs (none merged yet). |
 | `optimism` | `OPTIMISM_RPC_URL` | Optimism-specific PoCs (none merged yet). |
 | `polygon` | `POLYGON_RPC_URL` | Polygon-specific PoCs (none merged yet). |
@@ -75,8 +78,9 @@ forge test --match-path "test/2017-07/*.t.sol" -vvvv
 forge test -vvv
 ```
 
-`forge test` reads `ETH_RPC_URL` from the environment via the `mainnet` alias
-declared in `foundry.toml`. The fork block is pinned inside each PoC file.
+`forge test` reads the relevant `*_RPC_URL` from the environment via the
+alias declared in `foundry.toml` (`mainnet`, `base`, etc.). The fork block is
+pinned inside each PoC file and must match `metadata/registry.json`.
 
 ## What counts as "reproduced"
 

@@ -5,8 +5,8 @@ Outputs:
   - README.md vulnerability registry section (between markers)
 
 Usage:
-  python scripts/generate_registry.py            # write
-  python scripts/generate_registry.py --check    # exit 1 if outputs would change
+  python3 scripts/generate_registry.py            # write
+  python3 scripts/generate_registry.py --check    # exit 1 if outputs would change
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def render_readme_section(entries: list[dict]) -> str:
     body = render_readme_table(entries)
     note = (
         "_Generated from `metadata/registry.json`. Run "
-        "`python scripts/generate_registry.py` to regenerate. "
+        "`python3 scripts/generate_registry.py` to regenerate. "
         f"Total entries: {len(entries)}._"
     )
     return f"{REGISTRY_BEGIN}\n\n{note}\n\n{body}\n\n{REGISTRY_END}"

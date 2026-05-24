@@ -7,9 +7,9 @@ signals, and reports a per-PoC score with a grade and a list of
 weaknesses.
 
 Usage:
-    python scripts/score_pocs.py             # write reports/poc_quality_matrix.md
-    python scripts/score_pocs.py --check     # exit 1 if matrix would change
-    python scripts/score_pocs.py --stdout    # print matrix to stdout, no write
+    python3 scripts/score_pocs.py             # write reports/poc_quality_matrix.md
+    python3 scripts/score_pocs.py --check     # exit 1 if matrix would change
+    python3 scripts/score_pocs.py --stdout    # print matrix to stdout, no write
 """
 from __future__ import annotations
 
@@ -18,7 +18,6 @@ import json
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable
 
 REPO = Path(__file__).resolve().parent.parent
 REGISTRY = REPO / "metadata" / "registry.json"
@@ -300,13 +299,27 @@ def score_safety(e: dict) -> tuple[int, list[str]]:
 def score_entry(e: dict) -> Score:
     s = Score(entry_id=e["id"])
 
-    val, notes = score_metadata(e);       s.metadata = val;        s.notes += notes
-    val, notes = score_reproducibility(e);s.reproducibility = val; s.notes += notes
-    val, notes = score_assertion(e);      s.assertion = val;       s.notes += notes
-    val, notes = score_root_cause(e);     s.root_cause = val;      s.notes += notes
-    val, notes = score_anatomy(e);        s.anatomy = val;         s.notes += notes
-    val, notes = score_references(e);     s.references = val;      s.notes += notes
-    val, notes = score_safety(e);         s.safety = val;          s.notes += notes
+    val, notes = score_metadata(e)
+    s.metadata = val
+    s.notes += notes
+    val, notes = score_reproducibility(e)
+    s.reproducibility = val
+    s.notes += notes
+    val, notes = score_assertion(e)
+    s.assertion = val
+    s.notes += notes
+    val, notes = score_root_cause(e)
+    s.root_cause = val
+    s.notes += notes
+    val, notes = score_anatomy(e)
+    s.anatomy = val
+    s.notes += notes
+    val, notes = score_references(e)
+    s.references = val
+    s.notes += notes
+    val, notes = score_safety(e)
+    s.safety = val
+    s.notes += notes
     return s
 
 

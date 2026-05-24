@@ -8,9 +8,9 @@ does not claim success unless metadata says so AND a real run output has
 been recorded.
 
 Usage:
-    python scripts/generate_verification_report.py
-    python scripts/generate_verification_report.py --id 2017-07-parity-multisig
-    python scripts/generate_verification_report.py --check
+    python3 scripts/generate_verification_report.py
+    python3 scripts/generate_verification_report.py --id 2017-07-parity-multisig
+    python3 scripts/generate_verification_report.py --check
 """
 from __future__ import annotations
 

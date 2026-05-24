@@ -8,7 +8,7 @@
 - **Date of incident:** 2021-10
 - **VM:** EVM
 - **Chain:** ethereum
-- **Fork block:** `13417326`
+- **Fork block:** `13417948`
 - **RPC alias:** `mainnet`
 - **Category:** `amm-invariant-manipulation`
 - **Reproducibility:** `deterministic-likely-but-unverified`

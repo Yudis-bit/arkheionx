@@ -4,12 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'EVM/**'
-      - '.github/workflows/evm.yml'
+      - "EVM/**"
+      - ".github/workflows/evm.yml"
   pull_request:
     paths:
-      - 'EVM/**'
-      - '.github/workflows/evm.yml'
+      - "EVM/**"
+      - ".github/workflows/evm.yml"
 
 permissions:
   contents: read
@@ -23,8 +23,6 @@ jobs:
         working-directory: EVM
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - uses: foundry-rs/foundry-toolchain@v1
         with:
@@ -46,8 +44,6 @@ jobs:
         working-directory: EVM
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - uses: foundry-rs/foundry-toolchain@v1
         with:
@@ -57,25 +53,44 @@ jobs:
         id: rpc
         env:
           ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
         run: |
           if [ -n "$ETH_RPC_URL" ]; then
             echo "have_eth=true"  >> "$GITHUB_OUTPUT"
           else
             echo "have_eth=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::ETH_RPC_URL not configured; skipping fork tests."
+            echo "::warning::ETH_RPC_URL not configured; skipping mainnet fork tests."
+          fi
+
+          if [ -n "$BASE_RPC_URL" ]; then
+            echo "have_base=true"  >> "$GITHUB_OUTPUT"
+          else
+            echo "have_base=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::BASE_RPC_URL not configured; skipping Base fork tests."
           fi
 
       - name: forge test (mainnet)
         if: steps.rpc.outputs.have_eth == 'true'
         env:
           ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
-          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
-        run: forge test -vvv
+        run: forge test --no-match-path "test/2025-11/*.t.sol" -vvv
 
-      - name: skip notice
+      - name: forge test (base)
+        if: steps.rpc.outputs.have_base == 'true'
+        env:
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+        run: forge test --match-path "test/2025-11/*.t.sol" -vvv
+
+      - name: skip notice (mainnet)
         if: steps.rpc.outputs.have_eth != 'true'
         run: |
           echo "Skipped: no ETH_RPC_URL secret configured for this run."
-          echo "This job did NOT verify any PoC. It is not a green check"
-          echo "for runtime verification. Configure ETH_RPC_URL to enable"
-          echo "fork tests; archival RPC is required for historical blocks."
+          echo "Mainnet PoCs were NOT runtime-verified. Configure ETH_RPC_URL"
+          echo "to enable fork tests; archival RPC is required for historical blocks."
+
+      - name: skip notice (base)
+        if: steps.rpc.outputs.have_base != 'true'
+        run: |
+          echo "Skipped: no BASE_RPC_URL secret configured for this run."
+          echo "Base PoCs were NOT runtime-verified. Configure BASE_RPC_URL"
+          echo "to enable Base fork tests; archival RPC is required for pinned blocks."

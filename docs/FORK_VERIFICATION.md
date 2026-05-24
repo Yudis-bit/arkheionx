@@ -13,11 +13,11 @@ alias is resolved from an environment variable. The minimum set:
 | ----------- | ---------------- | -------------------------------------- |
 | `mainnet`   | `ETH_RPC_URL`    | Ethereum mainnet, archival required.   |
 | `base`      | `BASE_RPC_URL`   | Base, archival required.               |
-| `arbitrum`  | `ARB_RPC_URL`    | Arbitrum One, archival required.       |
-| `optimism`  | `OP_RPC_URL`     | Optimism, archival required.           |
-| `polygon`   | `POLYGON_RPC_URL`| Polygon PoS, archival required.        |
-| `bnb`       | `BNB_RPC_URL`    | BNB Smart Chain, archival required.    |
-| `avalanche` | `AVAX_RPC_URL`   | Avalanche C-Chain, archival required.  |
+| `arbitrum`  | `ARBITRUM_RPC_URL` | Arbitrum One, archival required.    |
+| `optimism`  | `OPTIMISM_RPC_URL` | Optimism, archival required.        |
+| `polygon`   | `POLYGON_RPC_URL`  | Polygon PoS, archival required.     |
+| `bsc`       | `BSC_RPC_URL`      | BNB Smart Chain, archival required. |
+| `avalanche` | `AVALANCHE_RPC_URL` | Avalanche C-Chain, archival required. |
 
 Add new aliases by editing `EVM/foundry.toml` (additive only — do not
 remove or rename existing aliases without a registry sweep).
@@ -126,21 +126,22 @@ CI runs:
 
 - `forge fmt --check`
 - `forge build`
-- `python scripts/validate_metadata.py`
-- `python scripts/generate_registry.py --check`
+- `python3 scripts/validate_metadata.py`
+- `python3 scripts/generate_registry.py --check`
 
-CI does **not** run fork tests by default. RPC URLs are not committed.
-Maintainers run fork tests locally with their own RPC, attach the
-verification report to the PR, and CI verifies that the metadata
-matches.
+CI runs fork tests only when the relevant RPC secrets are configured.
+RPC URLs are not committed. Maintainers can also run fork tests locally
+with their own RPC, attach the verification report to the PR, and CI
+verifies that the metadata matches.
 
-If a future workflow runs fork tests, it must:
+Any CI workflow that runs fork tests must:
 
 - Use repository secrets, never embed URLs.
-- Run on a schedule, not on every PR (cost).
-- Publish a verification artifact.
+- Skip safely when the relevant secret is absent.
+- Publish or reference a verification artifact before metadata is promoted.
 
-Until then, the verification report is the artifact.
+Until an archival run transcript is committed, the verification report remains
+the artifact of record.
 
 ---
 

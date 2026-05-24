@@ -113,7 +113,7 @@ forge test --match-path "test/<YYYY-MM>/*.t.sol" -vvv
 Generate a verification report:
 
 ```sh
-python scripts/generate_verification_report.py --id <id>
+python3 scripts/generate_verification_report.py --id <id>
 ```
 
 Hand-fill the dynamic fields (commit SHA, RPC provider, exit status,

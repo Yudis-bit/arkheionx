@@ -6,14 +6,14 @@ the working tree unless --apply is passed.
 
 Default workflow:
 
-  1.  python scripts/poc_factory.py --report
+  1.  python3 scripts/poc_factory.py --report
       Lists candidate PoCs from .reference_data/ that are not yet present
       under EVM/test/. Read-only.
 
-  2.  python scripts/poc_factory.py --target <YYYY-MM-Protocol> --dry-run
+  2.  python3 scripts/poc_factory.py --target <YYYY-MM-Protocol> --dry-run
       Shows the file plan for a single candidate. No writes.
 
-  3.  python scripts/poc_factory.py --target <YYYY-MM-Protocol> --apply
+  3.  python3 scripts/poc_factory.py --target <YYYY-MM-Protocol> --apply
       Writes the adapted PoC to EVM/test/<target>/. Still does not commit.
       Human review and `forge test` are required before committing.
 
@@ -256,7 +256,7 @@ def cmd_apply(args: argparse.Namespace) -> int:
     print("  1. Review the imported file. Do not assume it builds.")
     print("  2. Run `forge build` and `forge test --match-path ...` from EVM/.")
     print("  3. Add a metadata entry in metadata/registry.json (see docs/METADATA_SCHEMA.md).")
-    print("  4. Run `python scripts/validate_metadata.py` and `generate_registry.py`.")
+    print("  4. Run `python3 scripts/validate_metadata.py` and `python3 scripts/generate_registry.py`.")
     print("  5. Commit by hand. The factory does NOT commit or push.")
     return 0
 

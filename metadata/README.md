@@ -18,13 +18,13 @@ The registry is the single source of truth. The README registry table is
 2. Validate:
 
    ```sh
-   python scripts/validate_metadata.py
+   python3 scripts/validate_metadata.py
    ```
 
 3. Regenerate downstream artifacts:
 
    ```sh
-   python scripts/generate_registry.py
+   python3 scripts/generate_registry.py
    ```
 
    This rewrites the README's vulnerability registry section.

@@ -10,7 +10,7 @@ repository-level rules in `docs/METADATA_SCHEMA.md` (unique IDs, existing
 PoC paths, required references, embargoed-entry constraints).
 
 ```sh
-python scripts/validate_metadata.py
+python3 scripts/validate_metadata.py
 ```
 
 Exits 0 on success, 1 on any error. CI runs this on every PR that touches
@@ -25,10 +25,10 @@ Generates downstream artifacts from the canonical registry:
 
 ```sh
 # Write outputs.
-python scripts/generate_registry.py
+python3 scripts/generate_registry.py
 
 # CI / pre-commit mode: exit 1 if outputs would change.
-python scripts/generate_registry.py --check
+python3 scripts/generate_registry.py --check
 ```
 
 ## `poc_factory.py`
@@ -45,13 +45,13 @@ never commits, never pushes.
 git clone https://github.com/SunWeb3Sec/DeFiHackLabs.git .reference_data
 
 # 2. List candidates not yet imported.
-python scripts/poc_factory.py --report
+python3 scripts/poc_factory.py --report
 
 # 3. Inspect the import plan for one candidate. No writes.
-python scripts/poc_factory.py --target 2023-03-EulerFinance --dry-run
+python3 scripts/poc_factory.py --target 2023-03-EulerFinance --dry-run
 
 # 4. Import. Writes EVM/test/<target>/ but does not commit.
-python scripts/poc_factory.py --target 2023-03-EulerFinance --apply
+python3 scripts/poc_factory.py --target 2023-03-EulerFinance --apply
 ```
 
 After `--apply`, the human is responsible for:
@@ -59,7 +59,7 @@ After `--apply`, the human is responsible for:
 1. Reviewing the diff.
 2. Running `forge build` and `forge test --match-path "test/<target>/*.t.sol"`.
 3. Adding the metadata entry to `metadata/registry.json`.
-4. Running `python scripts/validate_metadata.py` and `generate_registry.py`.
+4. Running `python3 scripts/validate_metadata.py` and `python3 scripts/generate_registry.py`.
 5. Committing.
 
 ### What the factory does not do

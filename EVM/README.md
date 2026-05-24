@@ -7,20 +7,23 @@ Foundry project for the EVM PoCs in [Arkheionx Vault](../README.md).
 ```
 EVM/
 ├── foundry.toml         Profile, remappings, RPC aliases
-├── lib/forge-std        Submodule
+├── lib/forge-std        Vendored Foundry standard library
 ├── src/                 Shared helpers (basetest.sol, interface.sol, tokenhelper.sol)
 └── test/<YYYY-MM>/      One PoC per folder; one .t.sol per folder
 ```
 
 ## Setup
 
+No install step is required for a normal checkout because `forge-std` is
+vendored under `EVM/lib/forge-std`.
+
 ```sh
 # From EVM/
-forge install
+forge build
 ```
 
-The `forge-std` submodule is the only direct dependency. PoC-specific
-interfaces live inline in the test files.
+`forge-std` is the only direct dependency. PoC-specific interfaces live inline
+in the test files.
 
 ## RPC configuration
 

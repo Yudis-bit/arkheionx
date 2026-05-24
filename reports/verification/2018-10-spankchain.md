@@ -8,7 +8,7 @@
 - **Date of incident:** 2018-10
 - **VM:** EVM
 - **Chain:** ethereum
-- **Fork block:** `6605501`
+- **Fork block:** `6467247`
 - **RPC alias:** `mainnet`
 - **Category:** `reentrancy`
 - **Reproducibility:** `deterministic-likely-but-unverified`

@@ -36,8 +36,8 @@ How to add a PoC, fix metadata, or improve docs in Arkheionx Vault.
    [METADATA_SCHEMA.md](METADATA_SCHEMA.md). Run:
 
    ```sh
-   python scripts/validate_metadata.py
-   python scripts/generate_registry.py
+   python3 scripts/validate_metadata.py
+   python3 scripts/generate_registry.py
    ```
 
 7. **Run the test locally.** Document the exact command in the PR description,
@@ -56,8 +56,8 @@ How to add a PoC, fix metadata, or improve docs in Arkheionx Vault.
 Every PR must answer, in the PR description:
 
 - [ ] Metadata updated (`metadata/registry.json`).
-- [ ] `python scripts/validate_metadata.py` passes locally.
-- [ ] `python scripts/generate_registry.py` ran; `README.md` registry
+- [ ] `python3 scripts/validate_metadata.py` passes locally.
+- [ ] `python3 scripts/generate_registry.py` ran; `README.md` registry
       regenerated.
 - [ ] EVM PoCs: `forge fmt --check` and `forge build` from `EVM/` pass locally.
 - [ ] EVM PoCs: at least one `forge test --match-path "..."` run is documented
