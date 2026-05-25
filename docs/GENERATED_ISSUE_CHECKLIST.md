@@ -18,6 +18,10 @@ ARKHEIONX_ISSUE_CHECKLIST.md
 - Documentation tasks.
 - A reminder that the checklist is not a formal audit.
 
+When baseline diff mode is enabled, the checklist puts new findings first,
+then existing unchanged findings, with resolved findings shown as informational
+completed items.
+
 ## How Teams Use It
 
 Indie teams can paste the checklist into a GitHub Issue, project board, launch

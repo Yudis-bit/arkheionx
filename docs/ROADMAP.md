@@ -10,14 +10,15 @@ committed artifacts support it.
 - [x] **v0.2.0: Vault rule pack shipped.** ERC4626 and vault-accounting
       signals, vault-specific scoring, Vault Rule Pack reports, vault-risk
       fixture, scanner tests, and vault service path.
-- [ ] **v0.3.0: GitHub Action UX in progress.** GitHub Step Summary output,
+- [x] **v0.3.0: GitHub Action UX shipped.** GitHub Step Summary output,
       optional PR comment mode, generated issue checklist, stable finding IDs,
       local config suppression, and external repo onboarding docs.
-- [ ] **v0.4.0: SARIF output and report diff mode.** SARIF output marked as
-      readiness notes/warnings, PR diff-aware summaries, and generated GitHub
-      issue creation workflow proposal.
-- [ ] **v0.5.0: Staking/reward and oracle rule packs.** Protocol-specific
-      reward, staking, oracle, and pricing readiness checks.
+- [ ] **v0.4.0: SARIF output and report diff mode in progress.** SARIF output
+      marked as readiness notes/warnings, baseline JSON, diff-aware summaries,
+      stable fingerprints, and optional readiness gates.
+- [ ] **v0.5.0: Generated GitHub issue workflow and rule-pack expansion.**
+      Safe opt-in issue creation workflow, staking/reward and oracle rule
+      packs, and richer report dashboard artifacts.
 - [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
       interface, calibrated rule packs, release artifacts, and contribution
       workflow.

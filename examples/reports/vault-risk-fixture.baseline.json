@@ -1,0 +1,173 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "fingerprint": "8204775ec5a2e76517a34419",
+      "id": "ARK-VLT-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "fingerprint": "a27e37c21dcaab87fb0f191f",
+      "id": "ARK-VLT-002",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "erc4626",
+        "preview-functions",
+        "vault-accounting"
+      ],
+      "title": "ERC4626-like interface without preview function tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "fingerprint": "fc386028cda60db91cd3bfa5",
+      "id": "ARK-VLT-003",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "share-accounting",
+        "rounding",
+        "precision"
+      ],
+      "title": "Shares/assets conversion without rounding tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "fingerprint": "07abc8d8712c4b241abdb021",
+      "id": "ARK-VLT-004",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "totalAssets",
+        "strategy-accounting",
+        "oracle-risk"
+      ],
+      "title": "totalAssets external dependency without manipulation-resistance tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-strategy",
+      "confidence": "high",
+      "fingerprint": "4fe5d3c6f862ef5411ddca69",
+      "id": "ARK-VLT-005",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "strategy-accounting",
+        "gain-loss",
+        "vault-lifecycle"
+      ],
+      "title": "Strategy accounting without gain/loss tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol"
+      ],
+      "category": "vault-withdrawal",
+      "confidence": "medium",
+      "fingerprint": "81e181479549fcdcced6ff32",
+      "id": "ARK-VLT-006",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "withdrawal-queue",
+        "liquidity",
+        "vault-lifecycle"
+      ],
+      "title": "Withdrawal queue/cooldown without lifecycle tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "fingerprint": "4fd92ac8dcf3b8b9fb3b2552",
+      "id": "ARK-ORC-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "oracle-risk",
+        "vault-pricing",
+        "pool-price"
+      ],
+      "title": "Oracle-dependent vault without stale-price or bounds tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "fingerprint": "892be4e21cbb07e5c1f81b09",
+      "id": "ARK-VLT-007",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-operations",
+      "confidence": "high",
+      "fingerprint": "b8459029379073c0fa8883e1",
+      "id": "ARK-VLT-008",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "pause",
+        "emergency-controls",
+        "vault-operations"
+      ],
+      "title": "Pause/emergency controls without operational tests"
+    }
+  ],
+  "fingerprint_version": "0.4.0",
+  "generated_at": "2026-05-25T13:23:41+00:00",
+  "protocol_type": "vault",
+  "repo_root": "examples/vault-risk-fixture",
+  "score": 58,
+  "score_band": "Early readiness",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.4.0"
+}

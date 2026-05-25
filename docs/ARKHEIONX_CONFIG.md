@@ -68,6 +68,13 @@ Suppressed findings are not silently hidden. They appear under:
 Suppression is not proof of safety. It should be reviewed before launch,
 fundraising, audit intake, or handling user funds.
 
+## Baseline And Diff Interaction
+
+Suppressed findings are excluded from active SARIF results and active diff
+findings, but they remain visible in Markdown and JSON. Suppression can affect
+explicit gates such as `--fail-on-unsuppressed-high`; it should never be used
+to hide launch-critical work without a written reason.
+
 ## Ignore Paths
 
 Use `ignore_paths` for generated code, mocks, vendored dependencies, or

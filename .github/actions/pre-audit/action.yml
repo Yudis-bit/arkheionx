@@ -17,6 +17,30 @@ inputs:
     description: Optional JSON report output path.
     required: false
     default: ""
+  sarif-output:
+    description: Optional SARIF output path for GitHub Code Scanning upload.
+    required: false
+    default: ""
+  upload-sarif:
+    description: Whether to upload SARIF. Composite action generates SARIF only; use a separate upload-sarif step.
+    required: false
+    default: "false"
+  baseline-output:
+    description: Optional compact Arkheionx baseline JSON output path.
+    required: false
+    default: ""
+  compare-baseline:
+    description: Optional previous Arkheionx baseline JSON path for diff mode.
+    required: false
+    default: ""
+  diff-output:
+    description: Optional standalone Markdown diff report output path.
+    required: false
+    default: ""
+  diff-json-output:
+    description: Optional standalone JSON diff output path.
+    required: false
+    default: ""
   summary:
     description: Write an Arkheionx summary to the GitHub Actions job summary.
     required: false
@@ -61,6 +85,18 @@ inputs:
     description: Fail workflow if critical readiness gaps are detected.
     required: false
     default: "false"
+  fail-on-new-high:
+    description: Fail workflow if diff mode detects new high or critical readiness gaps.
+    required: false
+    default: "false"
+  fail-score-below:
+    description: Fail workflow if readiness score is below this numeric threshold.
+    required: false
+    default: ""
+  fail-on-unsuppressed-high:
+    description: Fail workflow if unsuppressed high or critical readiness gaps are present.
+    required: false
+    default: "false"
   create-issues:
     description: Reserved for future local issue suggestions. No remote issues are created.
     required: false
@@ -81,6 +117,26 @@ runs:
 
         if [ -n "${{ inputs.json-output }}" ]; then
           ARGS+=(--json-output "${{ inputs.json-output }}")
+        fi
+
+        if [ -n "${{ inputs.sarif-output }}" ]; then
+          ARGS+=(--sarif-output "${{ inputs.sarif-output }}")
+        fi
+
+        if [ -n "${{ inputs.baseline-output }}" ]; then
+          ARGS+=(--baseline-output "${{ inputs.baseline-output }}")
+        fi
+
+        if [ -n "${{ inputs.compare-baseline }}" ]; then
+          ARGS+=(--compare-baseline "${{ inputs.compare-baseline }}")
+        fi
+
+        if [ -n "${{ inputs.diff-output }}" ]; then
+          ARGS+=(--diff-output "${{ inputs.diff-output }}")
+        fi
+
+        if [ -n "${{ inputs.diff-json-output }}" ]; then
+          ARGS+=(--diff-json-output "${{ inputs.diff-json-output }}")
         fi
 
         if [ "${{ inputs.summary }}" = "true" ] && [ -n "${{ inputs.summary-output }}" ]; then
@@ -107,6 +163,18 @@ runs:
           ARGS+=(--fail-on-critical-readiness-gap)
         fi
 
+        if [ "${{ inputs.fail-on-new-high }}" = "true" ]; then
+          ARGS+=(--fail-on-new-high)
+        fi
+
+        if [ -n "${{ inputs.fail-score-below }}" ]; then
+          ARGS+=(--fail-score-below "${{ inputs.fail-score-below }}")
+        fi
+
+        if [ "${{ inputs.fail-on-unsuppressed-high }}" = "true" ]; then
+          ARGS+=(--fail-on-unsuppressed-high)
+        fi
+
         if [ "${{ inputs.create-issues }}" = "true" ]; then
           ARGS+=(--create-issues)
         fi
@@ -120,6 +188,21 @@ runs:
         echo "Arkheionx report generated: ${{ inputs.output }}"
         if [ -n "${{ inputs.json-output }}" ]; then
           echo "Arkheionx JSON report generated: ${{ inputs.json-output }}"
+        fi
+        if [ -n "${{ inputs.sarif-output }}" ]; then
+          echo "Arkheionx SARIF report generated: ${{ inputs.sarif-output }}"
+        fi
+        if [ "${{ inputs.upload-sarif }}" = "true" ]; then
+          echo "Arkheionx SARIF upload requested. Add github/codeql-action/upload-sarif@v3 as a separate workflow step."
+        fi
+        if [ -n "${{ inputs.baseline-output }}" ]; then
+          echo "Arkheionx baseline generated: ${{ inputs.baseline-output }}"
+        fi
+        if [ -n "${{ inputs.diff-output }}" ]; then
+          echo "Arkheionx diff report generated: ${{ inputs.diff-output }}"
+        fi
+        if [ -n "${{ inputs.diff-json-output }}" ]; then
+          echo "Arkheionx diff JSON generated: ${{ inputs.diff-json-output }}"
         fi
         if [ "${{ inputs.summary }}" = "true" ]; then
           echo "Arkheionx summary generated: ${{ inputs.summary-output }}"

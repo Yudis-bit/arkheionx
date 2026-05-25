@@ -26,6 +26,8 @@ Arkheionx helps turn local repository signals into a Markdown readiness report:
 - readiness score;
 - GitHub Actions summary;
 - optional PR Readiness Comment;
+- optional SARIF artifact for GitHub Code Scanning-compatible workflows;
+- baseline diff report for tracking readiness changes over time;
 - missing invariant plan;
 - historical exploit-pattern similarity;
 - generated issue checklist;
@@ -43,6 +45,8 @@ Value:
 - readiness score;
 - Markdown report;
 - optional JSON report;
+- optional SARIF report;
+- optional baseline and diff artifacts;
 - GitHub Actions summary;
 - optional PR Readiness Comment;
 - generated issue checklist;
@@ -77,6 +81,7 @@ What you receive:
 
 - automated Arkheionx scan;
 - manual review of the generated report;
+- baseline/diff interpretation when previous scan artifacts are available;
 - review of the generated issue checklist;
 - prioritized fix checklist;
 - Markdown report suitable for internal planning;
@@ -122,6 +127,7 @@ What you receive:
 - manual security readiness review;
 - historical exploit-pattern mapping;
 - missing invariant and test plan;
+- baseline/diff review to track remediation progress across scans;
 - generated GitHub issue checklist converted into a prioritized remediation plan;
 - final Markdown report;
 - optional follow-up comments if capacity allows.

@@ -38,7 +38,9 @@ python3 scripts/pre_audit_scan.py \
   --root . \
   --protocol-type auto \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
-  --json-output arkheionx-report.json
+  --json-output arkheionx-report.json \
+  --sarif-output arkheionx.sarif.json \
+  --baseline-output arkheionx.baseline.json
 ```
 
 You receive:
@@ -46,6 +48,9 @@ You receive:
 - a readiness score;
 - top readiness gaps;
 - stable finding IDs;
+- stable finding fingerprints for baseline comparison;
+- optional SARIF output for GitHub Code Scanning-compatible workflows;
+- optional baseline and diff artifacts;
 - optional PR Readiness Comment;
 - generated issue checklist;
 - historical pattern similarity;
@@ -69,7 +74,9 @@ systems:
    donation/rounding edges, fee accounting, strategy gain/loss, and withdrawal
    lifecycle if relevant.
 4. Re-run the report and compare readiness gaps.
-5. Open a Launch Report or Pre-Audit Sprint request if you want manual help
+5. Save a baseline and use diff mode to track new, resolved, and unchanged
+   readiness gaps.
+6. Open a Launch Report or Pre-Audit Sprint request if you want manual help
    turning the report into a fix plan.
 
 Local command:
@@ -80,6 +87,8 @@ python3 scripts/pre_audit_scan.py \
   --protocol-type vault \
   --output ARKHEIONX_VAULT_READINESS_REPORT.md \
   --json-output arkheionx-vault-report.json \
+  --sarif-output arkheionx-vault.sarif.json \
+  --baseline-output arkheionx-vault.baseline.json \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
   --generate-invariant-skeletons
 ```
@@ -100,6 +109,7 @@ Output:
 
 - automated scan;
 - manual review of generated report;
+- baseline/diff interpretation if prior scan output is available;
 - generated issue checklist reviewed and turned into a prioritized fix list;
 - Markdown report;
 - clear limitations and formal audit recommendation.
@@ -139,6 +149,7 @@ Output:
 - manual security readiness review;
 - historical exploit-pattern mapping;
 - missing invariant plan;
+- diff-mode review to track remediation progress;
 - generated GitHub issue checklist reviewed and prioritized;
 - final Markdown report;
 - optional follow-up comments if capacity allows.

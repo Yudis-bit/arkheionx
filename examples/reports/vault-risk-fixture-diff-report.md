@@ -3,7 +3,7 @@
 ## Scope
 
 - Repository root: `examples/vault-risk-fixture`
-- Generated at: `2026-05-25T13:16:31+00:00`
+- Generated at: `2026-05-25T13:23:50+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `manual`
 - Files scanned: `5`
@@ -25,14 +25,14 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 - Readiness score: **58/100**
 - Score band: **Early readiness**
-- Active readiness gaps: `8`
-- Suppressed readiness gaps: `1`
+- Active readiness gaps: `9`
+- Suppressed readiness gaps: `0`
 - Top readiness gaps:
   - **ARK-ORC-001 (High readiness gap):** Oracle-dependent vault without stale-price or bounds tests - Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.
+  - **ARK-VLT-001 (High readiness gap):** Vault accounting without invariant tests - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
   - **ARK-VLT-002 (High readiness gap):** ERC4626-like interface without preview function tests - Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.
   - **ARK-VLT-003 (High readiness gap):** Shares/assets conversion without rounding tests - Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.
   - **ARK-VLT-004 (High readiness gap):** totalAssets external dependency without manipulation-resistance tests - Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant.
-  - **ARK-VLT-005 (High readiness gap):** Strategy accounting without gain/loss tests - Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
@@ -65,10 +65,46 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 | ID          | Priority           | Category         | Title                                                                 |
 | ----------- | ------------------ | ---------------- | --------------------------------------------------------------------- |
 | ARK-ORC-001 | High readiness gap | oracle-pricing   | Oracle-dependent vault without stale-price or bounds tests            |
+| ARK-VLT-001 | High readiness gap | vault-accounting | Vault accounting without invariant tests                              |
 | ARK-VLT-002 | High readiness gap | vault-accounting | ERC4626-like interface without preview function tests                 |
 | ARK-VLT-003 | High readiness gap | vault-accounting | Shares/assets conversion without rounding tests                       |
 | ARK-VLT-004 | High readiness gap | vault-accounting | totalAssets external dependency without manipulation-resistance tests |
-| ARK-VLT-005 | High readiness gap | vault-strategy   | Strategy accounting without gain/loss tests                           |
+
+## Baseline Diff
+
+Compared against: `examples/reports/vault-risk-fixture.baseline.json`
+
+| Status                    | Count |
+| ------------------------- | ----- |
+| New readiness gaps        | 0     |
+| Resolved readiness gaps   | 0     |
+| Unchanged readiness gaps  | 9     |
+| Changed readiness gaps    | 0     |
+| Suppressed readiness gaps | 0     |
+
+### New readiness gaps
+
+- None.
+
+### Resolved readiness gaps
+
+- None.
+
+### Unchanged readiness gaps
+
+- `ARK-VLT-001` - Vault accounting without invariant tests
+- `ARK-VLT-002` - ERC4626-like interface without preview function tests
+- `ARK-VLT-003` - Shares/assets conversion without rounding tests
+- `ARK-VLT-004` - totalAssets external dependency without manipulation-resistance tests
+- `ARK-VLT-005` - Strategy accounting without gain/loss tests
+- `ARK-VLT-006` - Withdrawal queue/cooldown without lifecycle tests
+- `ARK-ORC-001` - Oracle-dependent vault without stale-price or bounds tests
+- `ARK-VLT-007` - Fee logic without fee accounting tests
+- `ARK-VLT-008` - Pause/emergency controls without operational tests
+
+### Changed readiness gaps
+
+- None.
 
 ## Risk Signal Summary
 
@@ -280,6 +316,64 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
 - Search tags: `access-control-review, admin-risk, operational-security`
 
 ## All Readiness Gaps
+
+### ARK-VLT-001 - Vault accounting without invariant tests
+
+- Priority: `High readiness gap`
+- Confidence: `high`
+- Category: `vault-accounting`
+
+Detected signals:
+- `asset()`
+- `assets`
+- `balanceOf`
+- `convertToAssets`
+- `convertToShares`
+- `deposit`
+- `maxDeposit`
+- `maxMint`
+- `maxRedeem`
+- `maxWithdraw`
+- `mint`
+- `previewDeposit`
+- `previewMint`
+- `previewRedeem`
+- `previewWithdraw`
+- `redeem`
+- `shares`
+- `strategy`
+- `totalAssets`
+- `totalSupply`
+
+Affected files:
+- `src/VaultRiskFixture.sol`
+- `test/VaultRiskFixture.t.sol`
+
+What was detected:
+
+Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.
+
+Why it matters:
+
+Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals.
+
+Historical pattern similarity:
+
+Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.
+
+Recommended defensive checks:
+
+- deposit/withdraw roundtrip
+- convertToShares/convertToAssets consistency
+- donation/inflation resistance
+- rounding direction tests
+- totalAssets external dependency tests
+
+Suggested tests:
+
+- Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
+
+Search tags: `vault-accounting, invariant-testing, erc4626`
 
 ### ARK-VLT-002 - ERC4626-like interface without preview function tests
 
@@ -681,13 +775,7 @@ Search tags: `pause, emergency-controls, vault-operations`
 
 ## Suppressed Readiness Gaps
 
-Suppressed findings are not deleted. They are shown here for review and should be revisited before launch.
-
-| ID          | Priority           | Category         | Title                                    |
-| ----------- | ------------------ | ---------------- | ---------------------------------------- |
-| ARK-VLT-001 | High readiness gap | vault-accounting | Vault accounting without invariant tests |
-
-- **ARK-VLT-001 - Vault accounting without invariant tests:** Prototype fixture intentionally omits vault invariants so config suppression behavior can be demonstrated. Expires: `2026-12-31`.
+No readiness gaps were suppressed in this run.
 
 ## Suggested Foundry Invariant Skeletons
 
@@ -724,20 +812,23 @@ Suppressed findings are not deleted. They are shown here for review and should b
 
 ## Generated Issue Checklist
 
-- Generated checklist: `examples/reports/vault-risk-fixture-config-checklist.md`
+- Generated checklist: `examples/reports/vault-risk-fixture-diff-checklist.md`
 - Use this as a copyable GitHub Issue body or as a remediation tracker.
 
 ## GitHub Action Outputs
 
-- Markdown Report: `examples/reports/vault-risk-fixture-config-report.md`
-- Json Report: `examples/reports/vault-risk-fixture-config-report.json`
-- Summary: `examples/reports/vault-risk-fixture-config-summary.md`
-- Comment: `examples/reports/vault-risk-fixture-config-comment.md`
-- Issue Checklist: `examples/reports/vault-risk-fixture-config-checklist.md`
+- Markdown Report: `examples/reports/vault-risk-fixture-diff-report.md`
+- Json Report: `examples/reports/vault-risk-fixture-diff-report.json`
+- Sarif Report: `examples/reports/vault-risk-fixture-diff.sarif.json`
+- Summary: `examples/reports/vault-risk-fixture-diff-summary.md`
+- Comment: `examples/reports/vault-risk-fixture-diff-comment.md`
+- Issue Checklist: `examples/reports/vault-risk-fixture-diff-checklist.md`
+- Diff Report: `examples/reports/vault-risk-fixture-diff.md`
+- Diff Json: `examples/reports/vault-risk-fixture-diff.json`
 
 ## Search Tags
 
-`access-control-review`, `arkheionx`, `audit-preparation`, `defi-security`, `foundry`, `historical-exploit-pattern`, `indie-defi`, `invariant-testing`, `oracle-risk`, `pre-audit-readiness`, `reentrancy-review`, `root-cause-analysis`, `smart-contract-security`, `solidity-security`, `vault-accounting`, `vault-security`
+`access-control-review`, `arkheionx`, `audit-preparation`, `defi-security`, `foundry`, `historical-exploit-pattern`, `indie-defi`, `invariant-testing`, `oracle-risk`, `pre-audit-readiness`, `reentrancy-review`, `root-cause-analysis`, `smart-contract-security`, `solidity-security`, `vault-accounting`
 
 ## Recommended Next Steps
 

@@ -19,15 +19,24 @@ Top readiness gaps: `2`
 - Low: `0`
 - Suppressed: `0`
 
+## Baseline Diff
+
+- New readiness gaps: `0`
+- Resolved readiness gaps: `0`
+- Unchanged readiness gaps: `2`
+- Changed readiness gaps: `0`
+- Diff report: `examples/reports/mini-vault-diff.md`
+
 ## Outputs
 
-- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`
-- Json Report: `examples/reports/mini-vault-pre-audit-report.json`
-- Sarif Report: `examples/reports/mini-vault.sarif.json`
-- Summary: `examples/reports/mini-vault-action-summary.md`
-- Comment: `examples/reports/mini-vault-pr-comment.md`
-- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`
-- Baseline: `examples/reports/mini-vault.baseline.json`
+- Markdown Report: `examples/reports/mini-vault-diff-report.md`
+- Json Report: `examples/reports/mini-vault-diff-report.json`
+- Sarif Report: `examples/reports/mini-vault-diff.sarif.json`
+- Summary: `examples/reports/mini-vault-diff-summary.md`
+- Comment: `examples/reports/mini-vault-diff-comment.md`
+- Issue Checklist: `examples/reports/mini-vault-diff-checklist.md`
+- Diff Report: `examples/reports/mini-vault-diff.md`
+- Diff Json: `examples/reports/mini-vault-diff.json`
 
 ## Next Steps
 

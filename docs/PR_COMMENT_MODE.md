@@ -12,6 +12,7 @@ PR comment mode is off by default.
 - Adds the marker `<!-- arkheionx-pre-audit-comment -->`.
 - Optionally posts the body to the current pull request.
 - Updates the existing Arkheionx marker comment in `update` mode.
+- Includes baseline diff counts when `compare-baseline` is provided.
 
 ## Required Workflow Permissions
 
@@ -53,4 +54,5 @@ for the repository pull request when explicitly enabled.
 
 - Comment posting depends on token permissions.
 - The comment is a summary, not the full report.
+- Diff counts are readiness-diff signals, not proof that a finding is fixed.
 - The output is a readiness signal, not a formal audit or security guarantee.

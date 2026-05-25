@@ -3,7 +3,46 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.3.0 - Unreleased
+## v0.4.0 - Unreleased
+
+### Added
+
+- SARIF output for GitHub Code Scanning-compatible workflows.
+- Baseline output for compact readiness snapshots.
+- Report diff mode for new, resolved, unchanged, changed, and suppressed
+  readiness gap classification.
+- Stable finding fingerprints for baseline comparison.
+- Optional CI threshold flags: `--fail-score-below`, `--fail-on-new-high`,
+  and `--fail-on-unsuppressed-high`.
+- SARIF, baseline diff, and CI gating documentation.
+
+### Improved
+
+- GitHub Action inputs for SARIF, baseline, diff, and fail thresholds.
+- JSON schema with `fingerprint_version`, finding fingerprints, diff data, and
+  v0.4 generated output paths.
+- Markdown report, Actions summary, PR comment, and issue checklist integration
+  with baseline diff counts.
+- CI validation for SARIF, baseline, diff outputs, and threshold behavior.
+
+### Safety
+
+- SARIF results are readiness gaps, not confirmed vulnerabilities.
+- Default action behavior remains non-blocking unless thresholds are explicitly
+  enabled.
+- No live-chain calls, RPC use, transaction execution, deployed-contract
+  scanning, or secret handling were added.
+
+### Known Limitations
+
+- SARIF locations are heuristic and usually point to the first affected file.
+- No semantic Solidity call graph yet.
+- Diff mode depends on stable fingerprints and can change when rules are
+  renamed or recalibrated.
+- Code Scanning upload requires user workflow permissions and a separate
+  `github/codeql-action/upload-sarif` step.
+
+## v0.3.0
 
 ### Added
 
@@ -41,7 +80,7 @@ maintainer explicitly cuts them.
 
 - Heuristic static detection.
 - No semantic Solidity call graph.
-- No SARIF output yet.
+- SARIF output deferred to v0.4.0.
 - PR comments depend on GitHub token permissions.
 - Fork PR restrictions may apply.
 

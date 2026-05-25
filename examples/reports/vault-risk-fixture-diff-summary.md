@@ -22,15 +22,24 @@ Top readiness gaps: `5`
 - Low: `0`
 - Suppressed: `0`
 
+## Baseline Diff
+
+- New readiness gaps: `0`
+- Resolved readiness gaps: `0`
+- Unchanged readiness gaps: `9`
+- Changed readiness gaps: `0`
+- Diff report: `examples/reports/vault-risk-fixture-diff.md`
+
 ## Outputs
 
-- Markdown Report: `examples/reports/vault-risk-fixture-pre-audit-report.md`
-- Json Report: `examples/reports/vault-risk-fixture-pre-audit-report.json`
-- Sarif Report: `examples/reports/vault-risk-fixture.sarif.json`
-- Summary: `examples/reports/vault-risk-fixture-action-summary.md`
-- Comment: `examples/reports/vault-risk-fixture-pr-comment.md`
-- Issue Checklist: `examples/reports/vault-risk-fixture-issue-checklist.md`
-- Baseline: `examples/reports/vault-risk-fixture.baseline.json`
+- Markdown Report: `examples/reports/vault-risk-fixture-diff-report.md`
+- Json Report: `examples/reports/vault-risk-fixture-diff-report.json`
+- Sarif Report: `examples/reports/vault-risk-fixture-diff.sarif.json`
+- Summary: `examples/reports/vault-risk-fixture-diff-summary.md`
+- Comment: `examples/reports/vault-risk-fixture-diff-comment.md`
+- Issue Checklist: `examples/reports/vault-risk-fixture-diff-checklist.md`
+- Diff Report: `examples/reports/vault-risk-fixture-diff.md`
+- Diff Json: `examples/reports/vault-risk-fixture-diff.json`
 
 ## Next Steps
 

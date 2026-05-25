@@ -184,6 +184,40 @@ Read:
 - [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
 - [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
 
+## v0.4.0 SARIF And Baseline Diff Preview
+
+Arkheionx v0.4.0 prepares the scanner for GitHub-native security workflows:
+
+- optional SARIF output for GitHub Code Scanning upload;
+- compact baseline JSON snapshots;
+- diff mode for new, resolved, unchanged, changed, and suppressed readiness
+  gaps;
+- stable finding fingerprints;
+- explicit CI gates that are disabled by default.
+
+SARIF results are readiness gaps, not confirmed vulnerabilities. Upload is a
+separate workflow step:
+
+```yaml
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  with:
+    protocol-type: "auto"
+    output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+    json-output: "arkheionx-report.json"
+    sarif-output: "arkheionx.sarif.json"
+
+- uses: github/codeql-action/upload-sarif@v3
+  if: always()
+  with:
+    sarif_file: arkheionx.sarif.json
+```
+
+Read:
+
+- [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
+- [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md)
+- [`docs/CI_GATING.md`](docs/CI_GATING.md)
+
 ## Quick Start: Local CLI
 
 ```sh
@@ -192,6 +226,8 @@ python3 scripts/pre_audit_scan.py \
   --protocol-type auto \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
   --json-output arkheionx-report.json \
+  --sarif-output arkheionx.sarif.json \
+  --baseline-output arkheionx.baseline.json \
   --summary-output ARKHEIONX_ACTION_SUMMARY.md \
   --comment-output ARKHEIONX_PR_COMMENT.md \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
@@ -228,6 +264,9 @@ See the committed examples:
 - Actions summary: [`examples/reports/mini-vault-action-summary.md`](examples/reports/mini-vault-action-summary.md)
 - PR comment body: [`examples/reports/mini-vault-pr-comment.md`](examples/reports/mini-vault-pr-comment.md)
 - Issue checklist: [`examples/reports/mini-vault-issue-checklist.md`](examples/reports/mini-vault-issue-checklist.md)
+- SARIF: [`examples/reports/mini-vault.sarif.json`](examples/reports/mini-vault.sarif.json)
+- Baseline: [`examples/reports/mini-vault.baseline.json`](examples/reports/mini-vault.baseline.json)
+- Diff report: [`examples/reports/mini-vault-diff.md`](examples/reports/mini-vault-diff.md)
 - Fixture: [`examples/mini-vault/`](examples/mini-vault/)
 - Vault Rule Pack Markdown: [`examples/reports/vault-risk-fixture-pre-audit-report.md`](examples/reports/vault-risk-fixture-pre-audit-report.md)
 - Vault Rule Pack JSON: [`examples/reports/vault-risk-fixture-pre-audit-report.json`](examples/reports/vault-risk-fixture-pre-audit-report.json)
@@ -370,6 +409,9 @@ Core standards:
 - [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md)
 - [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
 - [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
+- [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
+- [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md)
+- [`docs/CI_GATING.md`](docs/CI_GATING.md)
 - [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md)
 - [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md)
 - [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md)
@@ -383,7 +425,7 @@ Core standards:
 
 | Offer | Price | Purpose |
 |---|---:|---|
-| Free GitHub Action | Free | Basic readiness scan and Markdown report. |
+| Free GitHub Action | Free | Basic readiness scan, Markdown report, optional SARIF, and baseline diff artifacts. |
 | Indie Builder Sponsor | USD 29/month | Support public tooling, early previews, priority Q&A. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
 | Launch Report | USD 299-499 | Manual review of generated report and prioritized fix checklist. |
@@ -439,11 +481,12 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   and scanner tests.
 - **v0.3.0: GitHub Action UX.** Actions summary, optional PR comment mode,
   generated issue checklist, stable finding IDs, and local config suppression.
+- **v0.4.0: SARIF and baseline diff mode.** SARIF output, readiness
+  baselines, new/resolved/unchanged gap tracking, and explicit CI thresholds.
   Prepared, not tagged.
-- **v0.4.0: SARIF and report diff mode.** SARIF output, PR diff-aware report
-  mode, and generated GitHub issue creation workflow proposal.
-- **v0.5.0: staking/reward and oracle rule packs.** More protocol-specific
-  checks and stronger historical pattern mapping.
+- **v0.5.0: generated GitHub issue workflow and rule-pack expansion.**
+  Opt-in issue creation workflow proposal plus staking/reward and oracle rule
+  packs.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.
 

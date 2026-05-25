@@ -53,6 +53,8 @@ jobs:
             --protocol-type auto \
             --output examples/reports/mini-vault-pre-audit-report.md \
             --json-output examples/reports/mini-vault-pre-audit-report.json \
+            --sarif-output examples/reports/mini-vault.sarif.json \
+            --baseline-output examples/reports/mini-vault.baseline.json \
             --summary-output examples/reports/mini-vault-action-summary.md \
             --comment-output examples/reports/mini-vault-pr-comment.md \
             --issue-checklist-output examples/reports/mini-vault-issue-checklist.md \
@@ -65,10 +67,27 @@ jobs:
             --protocol-type vault \
             --output examples/reports/vault-risk-fixture-pre-audit-report.md \
             --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/vault-risk-fixture.sarif.json \
+            --baseline-output examples/reports/vault-risk-fixture.baseline.json \
             --summary-output examples/reports/vault-risk-fixture-action-summary.md \
             --comment-output examples/reports/vault-risk-fixture-pr-comment.md \
             --issue-checklist-output examples/reports/vault-risk-fixture-issue-checklist.md \
             --generate-invariant-skeletons
+
+      - name: Run scanner diff mode against vault-risk baseline
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/vault-risk-fixture \
+            --protocol-type vault \
+            --compare-baseline examples/reports/vault-risk-fixture.baseline.json \
+            --output examples/reports/vault-risk-fixture-diff-report.md \
+            --json-output examples/reports/vault-risk-fixture-diff-report.json \
+            --diff-output examples/reports/vault-risk-fixture-diff.md \
+            --diff-json-output examples/reports/vault-risk-fixture-diff.json \
+            --sarif-output examples/reports/vault-risk-fixture-diff.sarif.json \
+            --summary-output examples/reports/vault-risk-fixture-diff-summary.md \
+            --comment-output examples/reports/vault-risk-fixture-diff-comment.md \
+            --issue-checklist-output examples/reports/vault-risk-fixture-diff-checklist.md
 
       - name: Run scanner with config suppression
         run: |
@@ -89,6 +108,8 @@ jobs:
           protocol-type: "auto"
           output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
           json-output: "arkheionx-report.json"
+          sarif-output: "arkheionx.sarif.json"
+          baseline-output: "arkheionx.baseline.json"
           generate-invariant-skeletons: "false"
           fail-on-critical-readiness-gap: "false"
           summary: "true"
@@ -101,8 +122,12 @@ jobs:
         run: |
           test -f examples/reports/mini-vault-pre-audit-report.md
           test -f examples/reports/mini-vault-pre-audit-report.json
+          test -f examples/reports/mini-vault.sarif.json
+          test -f examples/reports/mini-vault.baseline.json
           test -f examples/reports/vault-risk-fixture-pre-audit-report.md
           test -f examples/reports/vault-risk-fixture-pre-audit-report.json
+          test -f examples/reports/vault-risk-fixture.sarif.json
+          test -f examples/reports/vault-risk-fixture.baseline.json
           test -f examples/reports/mini-vault-action-summary.md
           test -f examples/reports/mini-vault-pr-comment.md
           test -f examples/reports/mini-vault-issue-checklist.md
@@ -114,10 +139,20 @@ jobs:
           test -f examples/reports/vault-risk-fixture-config-summary.md
           test -f examples/reports/vault-risk-fixture-config-comment.md
           test -f examples/reports/vault-risk-fixture-config-checklist.md
+          test -f examples/reports/vault-risk-fixture-diff-report.md
+          test -f examples/reports/vault-risk-fixture-diff-report.json
+          test -f examples/reports/vault-risk-fixture-diff.md
+          test -f examples/reports/vault-risk-fixture-diff.json
+          test -f examples/reports/vault-risk-fixture-diff.sarif.json
+          test -f examples/reports/vault-risk-fixture-diff-summary.md
+          test -f examples/reports/vault-risk-fixture-diff-comment.md
+          test -f examples/reports/vault-risk-fixture-diff-checklist.md
           test -f examples/mini-vault/test/invariant/ArkheionxReadinessInvariants.t.sol
           test -f examples/vault-risk-fixture/test/invariant/ArkheionxReadinessInvariants.t.sol
           test -f ARKHEIONX_PRE_AUDIT_REPORT.md
           test -f arkheionx-report.json
+          test -f arkheionx.sarif.json
+          test -f arkheionx.baseline.json
           test -f ARKHEIONX_ACTION_SUMMARY.md
           test -f ARKHEIONX_PR_COMMENT.md
           test -f ARKHEIONX_ISSUE_CHECKLIST.md
@@ -140,13 +175,30 @@ jobs:
               assert "findings" in data
               assert "summary" in data
               assert "generated_outputs" in data
+              assert "fingerprint_version" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
+              assert all(item["fingerprint"] for item in data["findings"])
           config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
           assert config["suppressed_findings"]
+          for path in [
+              "examples/reports/mini-vault.sarif.json",
+              "examples/reports/vault-risk-fixture.sarif.json",
+              "examples/reports/vault-risk-fixture-diff.sarif.json",
+              "arkheionx.sarif.json",
+          ]:
+              sarif = json.load(open(path, encoding="utf-8"))
+              assert sarif["version"] == "2.1.0"
+              assert sarif["runs"][0]["tool"]["driver"]["rules"]
+              assert sarif["runs"][0]["results"]
+              assert sarif["runs"][0]["results"][0]["properties"]["not_a_vulnerability_confirmation"] is True
+          baseline = json.load(open("examples/reports/vault-risk-fixture.baseline.json", encoding="utf-8"))
+          assert baseline["findings"] and all(item["fingerprint"] for item in baseline["findings"])
+          diff = json.load(open("examples/reports/vault-risk-fixture-diff.json", encoding="utf-8"))
+          assert "counts" in diff and "unchanged" in diff["counts"]
           print("JSON valid")
           PY
 
-      - name: Verify v0.3 generated UX files
+      - name: Verify v0.4 generated UX files
         run: |
           grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/mini-vault-pr-comment.md
           grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/vault-risk-fixture-pr-comment.md
@@ -156,6 +208,9 @@ jobs:
           grep -q "Score:" examples/reports/mini-vault-action-summary.md
           grep -q "Score:" examples/reports/vault-risk-fixture-action-summary.md
           grep -q "Suppressed Readiness Gaps" examples/reports/vault-risk-fixture-config-report.md
+          grep -q "Baseline Diff" examples/reports/vault-risk-fixture-diff-report.md
+          grep -q "Diff vs baseline" examples/reports/vault-risk-fixture-diff-comment.md
+          grep -q "Score:" examples/reports/vault-risk-fixture-diff-summary.md
 
       - name: Verify disclaimer is present
         run: |

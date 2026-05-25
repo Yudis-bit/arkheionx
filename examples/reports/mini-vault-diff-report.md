@@ -3,7 +3,7 @@
 ## Scope
 
 - Repository root: `examples/mini-vault`
-- Generated at: `2026-05-25T13:16:18+00:00`
+- Generated at: `2026-05-25T13:16:25+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `high`
 - Files scanned: `5`
@@ -63,6 +63,35 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 | ----------- | -------------------- | ---------------- | ---------------------------------------- |
 | ARK-VLT-001 | High readiness gap   | vault-accounting | Vault accounting without invariant tests |
 | ARK-VLT-007 | Medium readiness gap | vault-accounting | Fee logic without fee accounting tests   |
+
+## Baseline Diff
+
+Compared against: `examples/reports/mini-vault.baseline.json`
+
+| Status                    | Count |
+| ------------------------- | ----- |
+| New readiness gaps        | 0     |
+| Resolved readiness gaps   | 0     |
+| Unchanged readiness gaps  | 2     |
+| Changed readiness gaps    | 0     |
+| Suppressed readiness gaps | 0     |
+
+### New readiness gaps
+
+- None.
+
+### Resolved readiness gaps
+
+- None.
+
+### Unchanged readiness gaps
+
+- `ARK-VLT-001` - Vault accounting without invariant tests
+- `ARK-VLT-007` - Fee logic without fee accounting tests
+
+### Changed readiness gaps
+
+- None.
 
 ## Risk Signal Summary
 
@@ -314,7 +343,8 @@ No readiness gaps were suppressed in this run.
 
 ## Suggested Foundry Invariant Skeletons
 
-- Generated skeleton: `test/invariant/ArkheionxReadinessInvariants.t.sol`
+- Skeleton not generated in this run.
+- To generate: `python3 scripts/pre_audit_scan.py --root . --generate-invariant-skeletons`
 
 - **totalAssets consistency** (`vault`): totalAssets should match local asset accounting and strategy balances within documented rounding.
 - **deposit/withdraw roundtrip** (`vault`): A user should not create value by depositing and withdrawing through normal paths.
@@ -341,18 +371,19 @@ No readiness gaps were suppressed in this run.
 
 ## Generated Issue Checklist
 
-- Generated checklist: `examples/reports/mini-vault-issue-checklist.md`
+- Generated checklist: `examples/reports/mini-vault-diff-checklist.md`
 - Use this as a copyable GitHub Issue body or as a remediation tracker.
 
 ## GitHub Action Outputs
 
-- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`
-- Json Report: `examples/reports/mini-vault-pre-audit-report.json`
-- Sarif Report: `examples/reports/mini-vault.sarif.json`
-- Summary: `examples/reports/mini-vault-action-summary.md`
-- Comment: `examples/reports/mini-vault-pr-comment.md`
-- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`
-- Baseline: `examples/reports/mini-vault.baseline.json`
+- Markdown Report: `examples/reports/mini-vault-diff-report.md`
+- Json Report: `examples/reports/mini-vault-diff-report.json`
+- Sarif Report: `examples/reports/mini-vault-diff.sarif.json`
+- Summary: `examples/reports/mini-vault-diff-summary.md`
+- Comment: `examples/reports/mini-vault-diff-comment.md`
+- Issue Checklist: `examples/reports/mini-vault-diff-checklist.md`
+- Diff Report: `examples/reports/mini-vault-diff.md`
+- Diff Json: `examples/reports/mini-vault-diff.json`
 
 ## Search Tags
 

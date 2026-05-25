@@ -77,6 +77,13 @@ Use finding IDs in false-positive reports, PR comments, generated issue
 checklists, and `.arkheionx.json` suppressions. Suppression does not change the
 meaning of the score and does not prove safety.
 
+v0.4.0 adds baseline diff mode. Diff status and score answer different
+questions:
+
+- score estimates current pre-audit hygiene;
+- baseline diff shows what changed since a previous scan;
+- resolved means "not detected now," not "formally proven fixed."
+
 ## How To Improve The Score
 
 Practical improvements:

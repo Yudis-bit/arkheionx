@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import os
 import re
@@ -20,7 +21,8 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
+FINGERPRINT_VERSION = "0.4.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ".arkheionx.json"
@@ -489,6 +491,7 @@ class ReadinessGap:
     id: str = ""
     category: str = "generic"
     confidence: str = "medium"
+    fingerprint: str = ""
     detected: list[str] = field(default_factory=list)
     affected_files: list[str] = field(default_factory=list)
     why_it_matters: str = ""
@@ -575,6 +578,32 @@ def confidence_from_terms(terms: list[str]) -> str:
     if len(terms) >= 3:
         return "medium"
     return "low"
+
+
+def normalize_for_fingerprint(value: str) -> str:
+    return re.sub(r"\s+", " ", value.strip().lower())
+
+
+def compute_finding_fingerprint(gap: ReadinessGap, protocol_type: str) -> str:
+    payload = {
+        "fingerprint_version": FINGERPRINT_VERSION,
+        "protocol_type": protocol_type,
+        "id": gap.id,
+        "category": gap.category,
+        "title": normalize_for_fingerprint(gap.title),
+        "detected_signals": sorted(gap.detected),
+        "affected_files": sorted(gap.affected_files),
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()[:24]
+
+
+def is_high_or_critical(gap: ReadinessGap | dict[str, object]) -> bool:
+    if isinstance(gap, ReadinessGap):
+        text = f"{gap.priority} {gap.severity}".lower()
+    else:
+        text = f"{gap.get('priority', '')} {gap.get('severity', '')}".lower()
+    return "critical" in text or "high" in text
 
 
 def normalize_ignore_path(value: str) -> str:
@@ -1929,6 +1958,7 @@ def infer_affected_files(gap: ReadinessGap, signals: dict[str, dict[str, object]
 def apply_finding_metadata(
     gaps: list[ReadinessGap],
     signals: dict[str, dict[str, object]],
+    protocol_type: str,
 ) -> list[ReadinessGap]:
     seen: dict[str, int] = {}
     for gap in gaps:
@@ -1939,6 +1969,7 @@ def apply_finding_metadata(
             prefix = gap.id.rsplit("-", 1)[0]
             gap.id = f"{prefix}-{900 + seen[gap.id]:03d}"
         gap.affected_files = infer_affected_files(gap, signals)
+        gap.fingerprint = compute_finding_fingerprint(gap, protocol_type)
     return gaps
 
 
@@ -1962,6 +1993,7 @@ def apply_suppressions(
 def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
     data: dict[str, object] = {
         "id": gap.id,
+        "fingerprint": gap.fingerprint,
         "title": gap.title,
         "category": gap.category,
         "priority": gap.priority,
@@ -1988,6 +2020,333 @@ def gap_table_rows(gaps: list[ReadinessGap]) -> list[list[str]]:
     for gap in gaps:
         rows.append([gap.id, gap.priority, gap.category, gap.title])
     return rows
+
+
+def baseline_finding_dict(gap: ReadinessGap) -> dict[str, object]:
+    return {
+        "id": gap.id,
+        "title": gap.title,
+        "category": gap.category,
+        "priority": gap.priority,
+        "severity": gap.severity,
+        "confidence": gap.confidence,
+        "fingerprint": gap.fingerprint,
+        "affected_files": gap.affected_files,
+        "tags": gap.tags,
+    }
+
+
+def build_baseline(
+    root: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
+) -> dict[str, object]:
+    return {
+        "tool": "Arkheionx Pre-Audit Scanner",
+        "version": VERSION,
+        "fingerprint_version": FINGERPRINT_VERSION,
+        "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
+        "repo_root": display_path(root),
+        "protocol_type": protocol_type,
+        "score": score,
+        "score_band": score_band(score),
+        "findings": [baseline_finding_dict(gap) for gap in gaps],
+        "suppressed_findings": [baseline_finding_dict(gap) for gap in suppressed_gaps],
+    }
+
+
+def write_baseline(path: Path, baseline: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(baseline, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def load_baseline(path: Path) -> tuple[dict[str, object] | None, str | None]:
+    try:
+        return json.loads(path.read_text(encoding="utf-8")), None
+    except (OSError, json.JSONDecodeError) as exc:
+        return None, f"Could not load Arkheionx baseline `{display_path(path)}`: {exc}"
+
+
+def previous_finding_to_current_shape(item: dict[str, object]) -> dict[str, object]:
+    return {
+        "id": item.get("id", ""),
+        "fingerprint": item.get("fingerprint", ""),
+        "title": item.get("title", ""),
+        "category": item.get("category", ""),
+        "priority": item.get("priority", ""),
+        "severity": item.get("severity", ""),
+        "confidence": item.get("confidence", ""),
+        "affected_files": item.get("affected_files", []),
+        "tags": item.get("tags", []),
+    }
+
+
+def diff_counts(diff_data: dict[str, object]) -> dict[str, int]:
+    return {
+        "new": len(diff_data.get("new", [])),
+        "resolved": len(diff_data.get("resolved", [])),
+        "unchanged": len(diff_data.get("unchanged", [])),
+        "changed": len(diff_data.get("changed", [])),
+        "suppressed": len(diff_data.get("suppressed_findings", [])),
+    }
+
+
+def empty_diff_data() -> dict[str, object]:
+    return {
+        "baseline_path": "",
+        "new": [],
+        "resolved": [],
+        "unchanged": [],
+        "changed": [],
+        "suppressed_findings": [],
+        "counts": {"new": 0, "resolved": 0, "unchanged": 0, "changed": 0, "suppressed": 0},
+        "warnings": [],
+    }
+
+
+def compare_findings(
+    baseline_path: Path,
+    previous_baseline: dict[str, object],
+    current_gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
+) -> dict[str, object]:
+    previous_items = [
+        previous_finding_to_current_shape(item)
+        for item in previous_baseline.get("findings", [])
+        if isinstance(item, dict)
+    ]
+    current_items = [finding_to_dict(gap) for gap in current_gaps]
+
+    previous_by_fp = {str(item.get("fingerprint", "")): item for item in previous_items if item.get("fingerprint")}
+    current_by_fp = {str(item.get("fingerprint", "")): item for item in current_items if item.get("fingerprint")}
+    matched_prev: set[str] = set()
+    matched_curr: set[str] = set()
+    unchanged: list[dict[str, object]] = []
+    changed: list[dict[str, object]] = []
+
+    for fingerprint, current in current_by_fp.items():
+        previous = previous_by_fp.get(fingerprint)
+        if not previous:
+            continue
+        matched_prev.add(fingerprint)
+        matched_curr.add(fingerprint)
+        if previous.get("title") != current.get("title") or previous.get("priority") != current.get("priority"):
+            changed.append({"previous": previous, "current": current})
+        else:
+            unchanged.append(current)
+
+    unmatched_previous = [item for item in previous_items if item.get("fingerprint") not in matched_prev]
+    unmatched_current = [item for item in current_items if item.get("fingerprint") not in matched_curr]
+    changed_prev_ids: set[int] = set()
+    changed_curr_ids: set[int] = set()
+    for current_index, current in enumerate(unmatched_current):
+        for previous_index, previous in enumerate(unmatched_previous):
+            if previous_index in changed_prev_ids:
+                continue
+            if previous.get("id") == current.get("id"):
+                changed.append({"previous": previous, "current": current})
+                changed_prev_ids.add(previous_index)
+                changed_curr_ids.add(current_index)
+                break
+
+    new = [item for index, item in enumerate(unmatched_current) if index not in changed_curr_ids]
+    resolved = [item for index, item in enumerate(unmatched_previous) if index not in changed_prev_ids]
+    diff_data: dict[str, object] = {
+        "baseline_path": display_path(baseline_path),
+        "new": new,
+        "resolved": resolved,
+        "unchanged": unchanged,
+        "changed": changed,
+        "suppressed_findings": [finding_to_dict(gap) for gap in suppressed_gaps],
+        "warnings": [],
+    }
+    diff_data["counts"] = diff_counts(diff_data)
+    return diff_data
+
+
+def render_diff_markdown(diff_data: dict[str, object]) -> list[str]:
+    lines = [
+        "## Baseline Diff",
+        "",
+    ]
+    baseline_path = diff_data.get("baseline_path", "")
+    if baseline_path:
+        lines.append(f"Compared against: `{baseline_path}`")
+    else:
+        lines.append("No baseline was provided for this run.")
+    lines.append("")
+    counts = diff_data.get("counts", {})
+    lines.append(markdown_table([
+        ["Status", "Count"],
+        ["New readiness gaps", str(counts.get("new", 0))],
+        ["Resolved readiness gaps", str(counts.get("resolved", 0))],
+        ["Unchanged readiness gaps", str(counts.get("unchanged", 0))],
+        ["Changed readiness gaps", str(counts.get("changed", 0))],
+        ["Suppressed readiness gaps", str(counts.get("suppressed", 0))],
+    ]))
+    lines.append("")
+
+    sections = [
+        ("New readiness gaps", diff_data.get("new", [])),
+        ("Resolved readiness gaps", diff_data.get("resolved", [])),
+        ("Unchanged readiness gaps", diff_data.get("unchanged", [])),
+    ]
+    for heading, items in sections:
+        lines.append(f"### {heading}")
+        lines.append("")
+        if items:
+            for item in items:
+                lines.append(f"- `{item.get('id', '')}` - {item.get('title', '')}")
+        else:
+            lines.append("- None.")
+        lines.append("")
+
+    changed = diff_data.get("changed", [])
+    lines.append("### Changed readiness gaps")
+    lines.append("")
+    if changed:
+        for item in changed:
+            current = item.get("current", {}) if isinstance(item, dict) else {}
+            previous = item.get("previous", {}) if isinstance(item, dict) else {}
+            lines.append(
+                f"- `{current.get('id', previous.get('id', ''))}` - {previous.get('title', '')} -> {current.get('title', '')}"
+            )
+    else:
+        lines.append("- None.")
+    lines.append("")
+    return lines
+
+
+def write_diff_report(path: Path, diff_data: dict[str, object]) -> None:
+    lines = ["# Arkheionx Baseline Diff Report", ""]
+    lines.extend(render_diff_markdown(diff_data))
+    lines.extend(
+        [
+            "## Safety Note",
+            "",
+            "This diff compares local/static readiness findings. It is not a formal audit and does not confirm vulnerabilities.",
+        ]
+    )
+    write_markdown(path, lines)
+
+
+def sarif_level(gap: ReadinessGap) -> str:
+    text = f"{gap.priority} {gap.severity}".lower()
+    if "critical" in text:
+        return "error"
+    if "high" in text or "medium" in text:
+        return "warning"
+    return "note"
+
+
+def sarif_location(gap: ReadinessGap, root: Path) -> dict[str, object]:
+    uri = gap.affected_files[0] if gap.affected_files else ("README.md" if (root / "README.md").exists() else ".")
+    return {
+        "physicalLocation": {
+            "artifactLocation": {"uri": uri, "uriBaseId": "%SRCROOT%"},
+            "region": {"startLine": 1},
+        }
+    }
+
+
+def finding_to_sarif_rule(gap: ReadinessGap) -> dict[str, object]:
+    help_text = "\n".join(f"- {check}" for check in (gap.defensive_checks or [gap.recommendation]))
+    return {
+        "id": gap.id,
+        "name": normalize_for_fingerprint(gap.title).replace(" ", "-")[:80],
+        "shortDescription": {"text": gap.title},
+        "fullDescription": {"text": gap.detail},
+        "help": {
+            "text": "Defensive readiness checks:\n" + help_text,
+            "markdown": "Defensive readiness checks:\n" + help_text,
+        },
+        "properties": {
+            "category": gap.category,
+            "tags": gap.tags,
+            "readiness_gap": True,
+            "not_formal_audit": True,
+            "defensive_only": True,
+        },
+    }
+
+
+def finding_to_sarif_result(gap: ReadinessGap, root: Path) -> dict[str, object]:
+    return {
+        "ruleId": gap.id,
+        "level": sarif_level(gap),
+        "message": {
+            "text": f"{gap.title}: {gap.recommendation} This is a pre-audit readiness gap, not a confirmed vulnerability."
+        },
+        "locations": [sarif_location(gap, root)],
+        "partialFingerprints": {
+            "arkheionxFingerprint": gap.fingerprint,
+        },
+        "properties": {
+            "priority": gap.priority,
+            "confidence": gap.confidence,
+            "category": gap.category,
+            "historical_pattern_similarity": gap.historical_pattern_similarity,
+            "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+            "tags": gap.tags,
+            "arkheionx_kind": "pre-audit-readiness",
+            "readiness_gap": True,
+            "not_a_vulnerability_confirmation": True,
+            "not_formal_audit": True,
+        },
+    }
+
+
+def build_sarif_report(
+    root: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
+    diff_data: dict[str, object] | None,
+) -> dict[str, object]:
+    rules_by_id: dict[str, dict[str, object]] = {}
+    for gap in gaps:
+        rules_by_id.setdefault(gap.id, finding_to_sarif_rule(gap))
+    run_properties: dict[str, object] = {
+        "protocol_type": protocol_type,
+        "score": score,
+        "score_band": score_band(score),
+        "suppressed_count": len(suppressed_gaps),
+        "suppressed_finding_ids": [gap.id for gap in suppressed_gaps],
+        "not_formal_audit": True,
+        "defensive_only": True,
+    }
+    if diff_data:
+        run_properties["diff_counts"] = diff_data.get("counts", {})
+        run_properties["baseline_path"] = diff_data.get("baseline_path", "")
+    return {
+        "version": "2.1.0",
+        "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "Arkheionx Pre-Audit Scanner",
+                        "informationUri": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs",
+                        "semanticVersion": VERSION,
+                        "rules": list(rules_by_id.values()),
+                    }
+                },
+                "originalUriBaseIds": {
+                    "%SRCROOT%": {"uri": "file://./"},
+                },
+                "results": [finding_to_sarif_result(gap, root) for gap in gaps],
+                "properties": run_properties,
+            }
+        ],
+    }
+
+
+def write_sarif_report(path: Path, sarif: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(sarif, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def suggest_invariants(
@@ -2086,6 +2445,7 @@ def generate_report(
     config_warnings: list[str],
     additional_search_tags: list[str],
     max_top_gaps: int,
+    diff_data: dict[str, object] | None,
 ) -> None:
     generated_at = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -2168,6 +2528,8 @@ def generate_report(
     else:
         lines.append("No active automated readiness gaps were detected. Manual review is still required.")
     lines.append("")
+    if diff_data:
+        lines.extend(render_diff_markdown(diff_data))
     lines.append("## Risk Signal Summary")
     lines.append("")
     for category in [
@@ -2412,6 +2774,7 @@ def json_report(
     next_steps: list[str],
     generated_outputs: dict[str, str],
     config_warnings: list[str],
+    diff_data: dict[str, object] | None,
 ) -> dict[str, object]:
     counts = finding_counts(gaps, suppressed_gaps)
     findings = [finding_to_dict(item) for item in gaps]
@@ -2419,6 +2782,7 @@ def json_report(
     return {
         "tool": "Arkheionx Pre-Audit Scanner",
         "version": VERSION,
+        "fingerprint_version": FINGERPRINT_VERSION,
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "repo_root": display_path(root),
         "protocol_type": protocol_type,
@@ -2442,6 +2806,7 @@ def json_report(
         "readiness_gaps": findings,
         "suggested_invariants": invariants,
         "generated_outputs": generated_outputs,
+        "diff": diff_data or empty_diff_data(),
         "next_steps": next_steps,
         "config_warnings": config_warnings,
         "disclaimer": DISCLAIMER,
@@ -2467,6 +2832,7 @@ def generate_summary_output(
     generated_outputs: dict[str, str],
     next_steps: list[str],
     max_top_gaps: int,
+    diff_data: dict[str, object] | None,
 ) -> None:
     counts = finding_counts(gaps, suppressed_gaps)
     lines = [
@@ -2493,11 +2859,24 @@ def generate_summary_output(
             f"- Medium: `{counts['medium']}`",
             f"- Low: `{counts['low']}`",
             f"- Suppressed: `{counts['suppressed']}`",
-            "",
-            "## Outputs",
-            "",
         ]
     )
+    if diff_data:
+        counts_diff = diff_data.get("counts", {})
+        lines.extend(
+            [
+                "",
+                "## Baseline Diff",
+                "",
+                f"- New readiness gaps: `{counts_diff.get('new', 0)}`",
+                f"- Resolved readiness gaps: `{counts_diff.get('resolved', 0)}`",
+                f"- Unchanged readiness gaps: `{counts_diff.get('unchanged', 0)}`",
+                f"- Changed readiness gaps: `{counts_diff.get('changed', 0)}`",
+            ]
+        )
+        if generated_outputs.get("diff_report"):
+            lines.append(f"- Diff report: `{generated_outputs['diff_report']}`")
+    lines.extend(["", "## Outputs", ""])
     for label, output_path in generated_outputs.items():
         if output_path:
             lines.append(f"- {label.replace('_', ' ').title()}: `{output_path}`")
@@ -2515,6 +2894,7 @@ def generate_comment_output(
     gaps: list[ReadinessGap],
     generated_outputs: dict[str, str],
     max_top_gaps: int,
+    diff_data: dict[str, object] | None,
 ) -> None:
     lines = [
         COMMENT_MARKER,
@@ -2539,6 +2919,20 @@ def generate_comment_output(
         lines.append(f"Full report: `{report_path}`")
     if checklist_path:
         lines.append(f"Issue checklist: `{checklist_path}`")
+    if diff_data:
+        counts_diff = diff_data.get("counts", {})
+        lines.extend(
+            [
+                "",
+                "Diff vs baseline:",
+                f"- New: `{counts_diff.get('new', 0)}`",
+                f"- Resolved: `{counts_diff.get('resolved', 0)}`",
+                f"- Unchanged: `{counts_diff.get('unchanged', 0)}`",
+                f"- Changed: `{counts_diff.get('changed', 0)}`",
+            ]
+        )
+        if generated_outputs.get("diff_report"):
+            lines.append(f"Diff report: `{generated_outputs['diff_report']}`")
     lines.extend(["", "Arkheionx is not a formal audit and not a security guarantee."])
     write_markdown(path, lines)
 
@@ -2548,6 +2942,7 @@ def generate_issue_checklist(
     protocol_type: str,
     score: int,
     gaps: list[ReadinessGap],
+    diff_data: dict[str, object] | None,
 ) -> None:
     lines = [
         "# Arkheionx Generated Issue Checklist",
@@ -2558,6 +2953,22 @@ def generate_issue_checklist(
         "",
     ]
 
+    if diff_data:
+        new_ids = {str(item.get("id", "")) for item in diff_data.get("new", []) if isinstance(item, dict)}
+        unchanged_ids = {str(item.get("id", "")) for item in diff_data.get("unchanged", []) if isinstance(item, dict)}
+        if new_ids:
+            lines.extend(["## New Findings Since Baseline", ""])
+            for gap in gaps:
+                if gap.id in new_ids:
+                    lines.append(f"- [ ] {gap.id} - {gap.recommendation}")
+            lines.append("")
+        if unchanged_ids:
+            lines.extend(["## Existing Findings From Baseline", ""])
+            for gap in gaps:
+                if gap.id in unchanged_ids:
+                    lines.append(f"- [ ] {gap.id} - {gap.recommendation}")
+            lines.append("")
+
     groups = [
         ("Critical priority readiness gaps", "critical"),
         ("High priority readiness gaps", "high"),
@@ -2566,6 +2977,10 @@ def generate_issue_checklist(
     ]
     for heading, keyword in groups:
         group_gaps = [gap for gap in gaps if keyword in f"{gap.priority} {gap.severity}".lower()]
+        if diff_data:
+            new_ids = {str(item.get("id", "")) for item in diff_data.get("new", []) if isinstance(item, dict)}
+            unchanged_ids = {str(item.get("id", "")) for item in diff_data.get("unchanged", []) if isinstance(item, dict)}
+            group_gaps = [gap for gap in group_gaps if gap.id not in new_ids and gap.id not in unchanged_ids]
         if not group_gaps:
             continue
         lines.extend([f"## {heading}", ""])
@@ -2576,6 +2991,13 @@ def generate_issue_checklist(
             lines.append(f"    - {suggested}")
             for check in gap.defensive_checks[:5]:
                 lines.append(f"    - {check}")
+        lines.append("")
+
+    if diff_data and diff_data.get("resolved"):
+        lines.extend(["## Resolved Since Baseline", ""])
+        for item in diff_data.get("resolved", []):
+            if isinstance(item, dict):
+                lines.append(f"- [x] {item.get('id', '')} - {item.get('title', '')}")
         lines.append("")
 
     documentation_tasks = [
@@ -2671,12 +3093,20 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument("--output", default="ARKHEIONX_PRE_AUDIT_REPORT.md", help="Markdown report output path.")
     parser.add_argument("--json-output", default="", help="Optional JSON report output path.")
+    parser.add_argument("--sarif-output", default="", help="Optional SARIF v2.1.0 output path.")
+    parser.add_argument("--baseline-output", default="", help="Optional compact baseline JSON output path.")
+    parser.add_argument("--compare-baseline", default="", help="Optional previous Arkheionx baseline JSON for diff mode.")
+    parser.add_argument("--diff-output", default="", help="Optional standalone Markdown diff report output path.")
+    parser.add_argument("--diff-json-output", default="", help="Optional standalone JSON diff output path.")
     parser.add_argument("--summary-output", default="", help="Optional GitHub Actions summary Markdown output path.")
     parser.add_argument("--comment-output", default="", help="Optional pull request comment Markdown output path.")
     parser.add_argument("--issue-checklist-output", default="", help="Optional generated issue checklist Markdown output path.")
     parser.add_argument("--config", default=DEFAULT_CONFIG, help="Optional Arkheionx JSON config path.")
     parser.add_argument("--generate-invariant-skeletons", action="store_true", help="Generate safe Foundry invariant skeletons.")
     parser.add_argument("--fail-on-critical-readiness-gap", action="store_true", help="Exit 2 if critical readiness gaps are detected.")
+    parser.add_argument("--fail-on-new-high", action="store_true", help="Exit 2 if diff mode detects new high or critical readiness gaps.")
+    parser.add_argument("--fail-score-below", type=int, default=None, help="Exit 2 if readiness score is below this threshold.")
+    parser.add_argument("--fail-on-unsuppressed-high", action="store_true", help="Exit 2 if unsuppressed high or critical readiness gaps are present.")
     parser.add_argument("--create-issues", action="store_true", help="Reserved for future local issue suggestions; no remote issues are created.")
     parser.add_argument("--verbose", action="store_true", help="Print scanner details.")
     return parser.parse_args(argv)
@@ -2723,7 +3153,7 @@ def main(argv: list[str] | None = None) -> int:
         test_readiness,
         protocol_type,
     )
-    apply_finding_metadata(gaps, signals)
+    apply_finding_metadata(gaps, signals, protocol_type)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
     invariants = suggest_invariants(protocol_type, signals)
     skeleton_path = generate_invariant_skeleton(root) if args.generate_invariant_skeletons else None
@@ -2733,18 +3163,37 @@ def main(argv: list[str] | None = None) -> int:
         print("error: --output cannot be empty", file=sys.stderr)
         return 1
     json_output = resolve_output_path(args.json_output)
+    sarif_output = resolve_output_path(args.sarif_output)
+    baseline_output = resolve_output_path(args.baseline_output)
+    compare_baseline = resolve_output_path(args.compare_baseline)
+    diff_output = resolve_output_path(args.diff_output)
+    diff_json_output = resolve_output_path(args.diff_json_output)
     summary_output = resolve_output_path(args.summary_output)
     comment_output = resolve_output_path(args.comment_output)
     issue_checklist_output = resolve_output_path(args.issue_checklist_output)
     generated_outputs = {
         "markdown_report": display_path(output),
         "json_report": display_path(json_output) if json_output else "",
+        "sarif_report": display_path(sarif_output) if sarif_output else "",
         "summary": display_path(summary_output) if summary_output else "",
         "comment": display_path(comment_output) if comment_output else "",
         "issue_checklist": display_path(issue_checklist_output) if issue_checklist_output else "",
+        "baseline": display_path(baseline_output) if baseline_output else "",
+        "diff_report": display_path(diff_output) if diff_output else "",
+        "diff_json": display_path(diff_json_output) if diff_json_output else "",
     }
     additional_search_tags = config_additional_tags(config)
     max_top_gaps = config_max_top_gaps(config)
+    diff_data: dict[str, object] | None = None
+    if compare_baseline:
+        previous_baseline, baseline_warning = load_baseline(compare_baseline)
+        if baseline_warning:
+            config_warnings.append(baseline_warning)
+            diff_data = empty_diff_data()
+            diff_data["baseline_path"] = display_path(compare_baseline)
+            diff_data["warnings"] = [baseline_warning]
+        elif previous_baseline is not None:
+            diff_data = compare_findings(compare_baseline, previous_baseline, gaps, suppressed_gaps)
 
     generate_report(
         root=root,
@@ -2769,14 +3218,23 @@ def main(argv: list[str] | None = None) -> int:
         config_warnings=config_warnings,
         additional_search_tags=additional_search_tags,
         max_top_gaps=max_top_gaps,
+        diff_data=diff_data,
     )
 
     if issue_checklist_output:
-        generate_issue_checklist(issue_checklist_output, protocol_type, score, gaps)
+        generate_issue_checklist(issue_checklist_output, protocol_type, score, gaps, diff_data)
     if summary_output:
-        generate_summary_output(summary_output, score, protocol_type, gaps, suppressed_gaps, generated_outputs, next_steps, max_top_gaps)
+        generate_summary_output(summary_output, score, protocol_type, gaps, suppressed_gaps, generated_outputs, next_steps, max_top_gaps, diff_data)
     if comment_output:
-        generate_comment_output(comment_output, score, protocol_type, gaps, generated_outputs, max_top_gaps)
+        generate_comment_output(comment_output, score, protocol_type, gaps, generated_outputs, max_top_gaps, diff_data)
+    if baseline_output:
+        write_baseline(baseline_output, build_baseline(root, protocol_type, score, gaps, suppressed_gaps))
+    if diff_output and diff_data:
+        write_diff_report(diff_output, diff_data)
+    if diff_json_output and diff_data:
+        generate_json_report(diff_json_output, diff_data)
+    if sarif_output:
+        write_sarif_report(sarif_output, build_sarif_report(root, protocol_type, score, gaps, suppressed_gaps, diff_data))
 
     if json_output:
         generate_json_report(
@@ -2797,6 +3255,7 @@ def main(argv: list[str] | None = None) -> int:
                 next_steps,
                 generated_outputs,
                 config_warnings,
+                diff_data,
             ),
         )
 
@@ -2804,6 +3263,14 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Arkheionx pre-audit report generated: {output}")
     if json_output:
         print(f"Arkheionx JSON report generated: {json_output}")
+    if sarif_output:
+        print(f"Arkheionx SARIF report generated: {sarif_output}")
+    if baseline_output:
+        print(f"Arkheionx baseline generated: {baseline_output}")
+    if diff_output:
+        print(f"Arkheionx diff report generated: {diff_output}")
+    if diff_json_output:
+        print(f"Arkheionx diff JSON generated: {diff_json_output}")
     if summary_output:
         print(f"Arkheionx summary generated: {summary_output}")
     if comment_output:
@@ -2816,6 +3283,27 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.fail_on_critical_readiness_gap and critical_gaps:
         print("critical readiness gaps detected; failing because --fail-on-critical-readiness-gap was set", file=sys.stderr)
+        return 2
+    if args.fail_score_below is not None and score < args.fail_score_below:
+        print(
+            "Arkheionx readiness threshold failed. This is a pre-audit readiness gate, not a formal vulnerability confirmation.",
+            file=sys.stderr,
+        )
+        print(f"score {score}/100 is below threshold {args.fail_score_below}", file=sys.stderr)
+        return 2
+    if args.fail_on_unsuppressed_high and any(is_high_or_critical(gap) for gap in gaps):
+        print(
+            "Arkheionx readiness threshold failed. This is a pre-audit readiness gate, not a formal vulnerability confirmation.",
+            file=sys.stderr,
+        )
+        print("unsuppressed high or critical readiness gaps detected", file=sys.stderr)
+        return 2
+    if args.fail_on_new_high and diff_data and any(is_high_or_critical(item) for item in diff_data.get("new", [])):
+        print(
+            "Arkheionx readiness threshold failed. This is a pre-audit readiness gate, not a formal vulnerability confirmation.",
+            file=sys.stderr,
+        )
+        print("new high or critical readiness gaps detected against baseline", file=sys.stderr)
         return 2
     return 0
 

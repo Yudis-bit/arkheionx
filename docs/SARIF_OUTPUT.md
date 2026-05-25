@@ -1,0 +1,82 @@
+# SARIF Output
+
+Arkheionx v0.4.0 can write SARIF v2.1.0 so readiness findings can be uploaded
+to GitHub Code Scanning-compatible workflows.
+
+SARIF output is a GitHub-native artifact. It is not a formal audit result and
+does not confirm exploitable vulnerabilities.
+
+## How Arkheionx Uses SARIF
+
+- SARIF rules map to stable Arkheionx finding IDs such as `ARK-VLT-001`.
+- SARIF results represent readiness gaps and review prompts.
+- Result levels are mapped from readiness priority:
+  - critical readiness gap: `error`
+  - high readiness gap: `warning`
+  - medium readiness gap: `warning`
+  - low or informational: `note`
+- Result properties include defensive metadata:
+  - `readiness_gap: true`
+  - `not_a_vulnerability_confirmation: true`
+  - `not_formal_audit: true`
+  - `category`
+  - `confidence`
+  - `historical_pattern_similarity`
+  - `suggested_tests`
+
+Suppressed findings are not emitted as normal SARIF results. Suppression counts
+and suppressed IDs appear in run properties.
+
+## Local Command
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root examples/vault-risk-fixture \
+  --protocol-type vault \
+  --output examples/reports/vault-risk-fixture-pre-audit-report.md \
+  --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
+  --sarif-output examples/reports/vault-risk-fixture.sarif.json
+```
+
+## GitHub Code Scanning Workflow
+
+Use a separate `upload-sarif` step in your workflow:
+
+```yaml
+name: Arkheionx Code Scanning
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  arkheionx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+        with:
+          protocol-type: auto
+          output: ARKHEIONX_PRE_AUDIT_REPORT.md
+          json-output: arkheionx-report.json
+          sarif-output: arkheionx.sarif.json
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: arkheionx.sarif.json
+```
+
+Until `v0.4.0` is tagged, use `@main` only for development testing.
+
+## Limitations
+
+- Locations are heuristic and point to the first affected file when available.
+- Arkheionx does not perform semantic call graph analysis yet.
+- GitHub Code Scanning display language may look security-oriented, but
+  Arkheionx SARIF results remain pre-audit readiness findings.
+- Upload requires `security-events: write`.

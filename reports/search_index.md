@@ -14,13 +14,16 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.3.0, PR comment mode, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.4.0, SARIF, baseline diff, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
-| GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, PR comment, issue checklist |
+| GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
 | PR comment mode | [`docs/PR_COMMENT_MODE.md`](../docs/PR_COMMENT_MODE.md) | pull-request, comment marker, GitHub token |
 | Generated issue checklist | [`docs/GENERATED_ISSUE_CHECKLIST.md`](../docs/GENERATED_ISSUE_CHECKLIST.md) | issue checklist, remediation, finding IDs |
 | Arkheionx config | [`docs/ARKHEIONX_CONFIG.md`](../docs/ARKHEIONX_CONFIG.md) | config, suppression, ignore paths |
+| SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
+| Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
+| CI gating | [`docs/CI_GATING.md`](../docs/CI_GATING.md) | fail threshold, fail-score-below, CI readiness gate |
 | Readiness score | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) | score bands, audit blockers, invariant testing |
 | Vault Rule Pack | [`docs/VAULT_RULE_PACK.md`](../docs/VAULT_RULE_PACK.md) | ERC4626, vault accounting, share accounting |
 | Indie builder offer | [`docs/INDIE_BUILDER_OFFER.md`](../docs/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
@@ -39,6 +42,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Mini-vault action summary | [`examples/reports/mini-vault-action-summary.md`](../examples/reports/mini-vault-action-summary.md) | GitHub Actions summary, score, top gaps |
 | Vault-risk PR comment | [`examples/reports/vault-risk-fixture-pr-comment.md`](../examples/reports/vault-risk-fixture-pr-comment.md) | PR comment, marker, top gaps |
 | Vault-risk issue checklist | [`examples/reports/vault-risk-fixture-issue-checklist.md`](../examples/reports/vault-risk-fixture-issue-checklist.md) | issue checklist, readiness remediation, finding IDs |
+| Vault-risk SARIF report | [`examples/reports/vault-risk-fixture.sarif.json`](../examples/reports/vault-risk-fixture.sarif.json) | SARIF, Code Scanning, readiness result |
+| Vault-risk baseline | [`examples/reports/vault-risk-fixture.baseline.json`](../examples/reports/vault-risk-fixture.baseline.json) | baseline, finding fingerprint, readiness snapshot |
+| Vault-risk diff report | [`examples/reports/vault-risk-fixture-diff.md`](../examples/reports/vault-risk-fixture-diff.md) | baseline diff, new resolved unchanged, remediation tracking |
 | Arkheionx config example | [`examples/arkheionx.config.example.json`](../examples/arkheionx.config.example.json) | config, suppression, ignore paths |
 | Pre-audit scanner | [`scripts/pre_audit_scan.py`](../scripts/pre_audit_scan.py) | cli, scanner, standard-library |
 | PR comment poster | [`scripts/post_pr_comment.py`](../scripts/post_pr_comment.py) | GitHub API, PR comment, marker update |
@@ -69,6 +75,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `generated issue checklist` | issue checklist, remediation checklist, launch checklist, readiness checklist | GitHub Action UX | finding IDs, suggested tests, documentation tasks | issue-checklist, audit-readiness, indie-defi |
 | `finding IDs` | ARK-VLT-001, ARK-ORC-001, stable readiness finding, readiness gap ID | report UX | JSON findings, Markdown gap sections, suppression by ID | finding-id, json-schema, report-ux |
 | `Arkheionx config` | .arkheionx.json, false positive suppression, ignore paths, suppress findings | configuration | suppressed_findings, ignore_paths, additional_search_tags | config, false-positive, local-static-analysis |
+| `SARIF` | SARIF output, sarif-output, GitHub Code Scanning, upload-sarif | GitHub security workflow | readiness_gap properties, not_formal_audit, SARIF rules and results | sarif, code-scanning, github-security-workflow |
+| `GitHub Code Scanning` | code scanning, security-events, upload-sarif, CodeQL upload SARIF | GitHub security workflow | security-events: write, github/codeql-action/upload-sarif, readiness result severity | github-code-scanning, sarif, pre-audit-readiness |
+| `baseline diff` | readiness baseline, compare baseline, diff mode, pre-audit diff | report UX | new findings, resolved findings, unchanged findings, changed findings | baseline-diff, readiness-tracking, report-diff |
+| `finding fingerprint` | stable fingerprint, fingerprint_version, readiness fingerprint, finding hash | report UX | id, category, title, detected signals, affected files | finding-fingerprint, baseline, json-schema |
+| `CI gating` | fail threshold, fail-score-below, fail-on-new-high, fail-on-unsuppressed-high | GitHub Action UX | score threshold, new high readiness gaps, unsuppressed high readiness gaps | ci-gating, fail-threshold, audit-readiness |
+| `new readiness gaps` | new findings, new gaps, regression readiness, diff new | baseline diff | compare-baseline, diff-output, diff-json-output | new-readiness-gaps, baseline-diff, pre-audit-diff |
+| `resolved readiness gaps` | resolved findings, closed gaps, remediated readiness, diff resolved | baseline diff | baseline comparison, remediation tracking, diff report | resolved-readiness-gaps, baseline-diff, remediation |
+| `pre-audit diff` | readiness diff, report diff, baseline comparison, diff report | GitHub-native workflow | new/resolved/unchanged counts, PR comment diff, issue checklist diff | pre-audit-diff, readiness-baseline, github-action |
+| `GitHub security workflow` | Actions security workflow, Code Scanning workflow, pre-audit CI workflow, security-events | GitHub-native workflow | SARIF upload, Actions summary, PR comment, baseline diff | github-security-workflow, code-scanning, pre-audit-readiness |
 
 ## Historical Memory Index
 
@@ -115,6 +130,17 @@ PR readiness comment
 generated issue checklist
 finding IDs
 .arkheionx.json
+SARIF
+GitHub Code Scanning
+baseline diff
+readiness baseline
+finding fingerprint
+CI gating
+fail threshold
+new readiness gaps
+resolved readiness gaps
+pre-audit diff
+GitHub security workflow
 oracle manipulation
 flash loan price manipulation
 reentrancy

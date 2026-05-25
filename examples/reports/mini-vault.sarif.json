@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "originalUriBaseIds": {
+        "%SRCROOT%": {
+          "uri": "file://./"
+        }
+      },
+      "properties": {
+        "defensive_only": true,
+        "not_formal_audit": true,
+        "protocol_type": "vault",
+        "score": 73,
+        "score_band": "Improving",
+        "suppressed_count": 0,
+        "suppressed_finding_ids": []
+      },
+      "results": [
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/MiniVault.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Vault accounting without invariant tests: Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "9421bc5897caf05fb6b2bd6d"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "vault-accounting",
+            "confidence": "high",
+            "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "High readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
+            ],
+            "tags": [
+              "vault-accounting",
+              "invariant-testing",
+              "erc4626"
+            ]
+          },
+          "ruleId": "ARK-VLT-001"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/MiniVault.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Fee logic without fee accounting tests: Add deposit, withdrawal, management, and performance fee tests where relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "1b5cbd6e82091eea30e0f4c1"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "vault-accounting",
+            "confidence": "low",
+            "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations."
+            ],
+            "tags": [
+              "fee-accounting",
+              "vault-accounting"
+            ]
+          },
+          "ruleId": "ARK-VLT-007"
+        }
+      ],
+      "tool": {
+        "driver": {
+          "informationUri": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs",
+          "name": "Arkheionx Pre-Audit Scanner",
+          "rules": [
+            {
+              "fullDescription": {
+                "text": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- deposit/withdraw roundtrip\n- convertToShares/convertToAssets consistency\n- donation/inflation resistance\n- rounding direction tests\n- totalAssets external dependency tests",
+                "text": "Defensive readiness checks:\n- deposit/withdraw roundtrip\n- convertToShares/convertToAssets consistency\n- donation/inflation resistance\n- rounding direction tests\n- totalAssets external dependency tests"
+              },
+              "id": "ARK-VLT-001",
+              "name": "vault-accounting-without-invariant-tests",
+              "properties": {
+                "category": "vault-accounting",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "vault-accounting",
+                  "invariant-testing",
+                  "erc4626"
+                ]
+              },
+              "shortDescription": {
+                "text": "Vault accounting without invariant tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- fee bounds\n- recipient accounting\n- share conservation\n- rounding with fees",
+                "text": "Defensive readiness checks:\n- fee bounds\n- recipient accounting\n- share conservation\n- rounding with fees"
+              },
+              "id": "ARK-VLT-007",
+              "name": "fee-logic-without-fee-accounting-tests",
+              "properties": {
+                "category": "vault-accounting",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "fee-accounting",
+                  "vault-accounting"
+                ]
+              },
+              "shortDescription": {
+                "text": "Fee logic without fee accounting tests"
+              }
+            }
+          ],
+          "semanticVersion": "0.4.0"
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}

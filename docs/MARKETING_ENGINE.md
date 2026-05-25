@@ -137,6 +137,24 @@ CTA:
 > Add the GitHub Action, keep PR comment mode off by default, then enable it
 > when your team wants readiness feedback directly in code review.
 
+## v0.4.0 SARIF And Baseline Diff Message
+
+Primary v0.4.0 message:
+
+> Arkheionx v0.4.0 brings pre-audit readiness into GitHub security workflows:
+> SARIF output, baseline snapshots, diff reports, stable finding fingerprints,
+> and explicit CI gates that stay disabled by default.
+
+Short version:
+
+> Track new, resolved, and unchanged readiness gaps across pull requests. Still
+> not an audit. A GitHub-native way to prepare for one.
+
+CTA:
+
+> Generate SARIF for Code Scanning, save a baseline, and use diff mode to show
+> readiness progress before formal audit intake.
+
 ## Example X Posts
 
 0. Arkheionx v0.2.0 is vault-focused: ERC4626-like checks, share/accounting
@@ -185,6 +203,10 @@ CTA:
 11. Arkheionx v0.3.0 adds the GitHub-native product loop: Action summary,
     optional PR comment, stable finding IDs, generated issue checklist, and
     local config suppression. Not an audit. A way to prepare for one.
+
+12. Arkheionx v0.4.0 adds SARIF output and baseline diff mode: new, resolved,
+    unchanged, and suppressed readiness gaps in GitHub-native artifacts. The
+    output is readiness guidance, not vulnerability confirmation.
 
 ## LinkedIn-Style Technical Posts
 

@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/vault-risk-fixture`
-- Generated at: `2026-05-25T12:29:24+00:00`
+- Generated at: `2026-05-25T13:23:41+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `manual`
 - Files scanned: `5`
-- Scanner version: `0.3.0`
+- Scanner version: `0.4.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -782,9 +782,11 @@ No readiness gaps were suppressed in this run.
 
 - Markdown Report: `examples/reports/vault-risk-fixture-pre-audit-report.md`
 - Json Report: `examples/reports/vault-risk-fixture-pre-audit-report.json`
+- Sarif Report: `examples/reports/vault-risk-fixture.sarif.json`
 - Summary: `examples/reports/vault-risk-fixture-action-summary.md`
 - Comment: `examples/reports/vault-risk-fixture-pr-comment.md`
 - Issue Checklist: `examples/reports/vault-risk-fixture-issue-checklist.md`
+- Baseline: `examples/reports/vault-risk-fixture.baseline.json`
 
 ## Search Tags
 

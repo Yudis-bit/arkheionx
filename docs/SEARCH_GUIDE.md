@@ -177,6 +177,16 @@ PR readiness comment
 generated issue checklist
 finding IDs
 .arkheionx.json
+SARIF
+GitHub Code Scanning
+baseline diff
+readiness baseline
+finding fingerprint
+CI gating
+fail threshold
+new readiness gaps
+resolved readiness gaps
+pre-audit diff
 ```
 
 ## Search By Monetization Or Services
@@ -194,6 +204,10 @@ GitHub Action
 PR comment mode
 issue checklist
 config suppression
+SARIF output
+baseline diff
+CI gating
+GitHub Code Scanning
 services
 sponsorship
 monetization
@@ -208,6 +222,7 @@ rg -n "strategy accounting|withdrawalQueue|requestWithdraw|claimWithdraw|cooldow
 rg -n "oracle manipulation|stale|TWAP|latestRoundData" .
 rg -n "missing invariant|pre-audit readiness|audit blocker" .
 rg -n "ARK-VLT-001|ARK-ORC-001|finding IDs|suppressed_findings" .
+rg -n "SARIF|Code Scanning|baseline diff|finding fingerprint|fail-score-below" .
 rg -n "PR readiness comment|generated issue checklist|.arkheionx.json" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```

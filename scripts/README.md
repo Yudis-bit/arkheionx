@@ -41,6 +41,26 @@ v0.3.0 adds stable finding IDs, optional `.arkheionx.json` config,
 documented suppression, Actions summary output, PR comment body generation,
 and generated issue checklist output.
 
+v0.4.0 adds SARIF output, compact baseline snapshots, report diff mode,
+stable finding fingerprints, and optional CI readiness thresholds.
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type auto \
+  --output ARKHEIONX_PRE_AUDIT_REPORT.md \
+  --json-output arkheionx-report.json \
+  --sarif-output arkheionx.sarif.json \
+  --baseline-output arkheionx.baseline.json
+
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type auto \
+  --compare-baseline arkheionx.baseline.json \
+  --diff-output ARKHEIONX_DIFF.md \
+  --diff-json-output arkheionx-diff.json
+```
+
 ## `post_pr_comment.py`
 
 Posts or updates the optional Arkheionx pull request comment when a GitHub

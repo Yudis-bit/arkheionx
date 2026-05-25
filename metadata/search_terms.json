@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -161,6 +161,78 @@
       "related_patterns": ["documented false-positive suppression"],
       "related_checks": ["suppressed_findings", "ignore_paths", "additional_search_tags"],
       "search_tags": ["config", "false-positive", "local-static-analysis"]
+    },
+    {
+      "term": "SARIF",
+      "aliases": ["SARIF output", "sarif-output", "GitHub Code Scanning", "upload-sarif"],
+      "category": "GitHub security workflow",
+      "related_patterns": ["Code Scanning-compatible readiness output"],
+      "related_checks": ["readiness_gap properties", "not_formal_audit", "SARIF rules and results"],
+      "search_tags": ["sarif", "code-scanning", "github-security-workflow"]
+    },
+    {
+      "term": "GitHub Code Scanning",
+      "aliases": ["code scanning", "security-events", "upload-sarif", "CodeQL upload SARIF"],
+      "category": "GitHub security workflow",
+      "related_patterns": ["pre-audit readiness in GitHub security workflows"],
+      "related_checks": ["security-events: write", "github/codeql-action/upload-sarif", "readiness result severity"],
+      "search_tags": ["github-code-scanning", "sarif", "pre-audit-readiness"]
+    },
+    {
+      "term": "baseline diff",
+      "aliases": ["readiness baseline", "compare baseline", "diff mode", "pre-audit diff"],
+      "category": "report UX",
+      "related_patterns": ["new and resolved readiness gap tracking"],
+      "related_checks": ["new findings", "resolved findings", "unchanged findings", "changed findings"],
+      "search_tags": ["baseline-diff", "readiness-tracking", "report-diff"]
+    },
+    {
+      "term": "finding fingerprint",
+      "aliases": ["stable fingerprint", "fingerprint_version", "readiness fingerprint", "finding hash"],
+      "category": "report UX",
+      "related_patterns": ["stable baseline comparison"],
+      "related_checks": ["id", "category", "title", "detected signals", "affected files"],
+      "search_tags": ["finding-fingerprint", "baseline", "json-schema"]
+    },
+    {
+      "term": "CI gating",
+      "aliases": ["fail threshold", "fail-score-below", "fail-on-new-high", "fail-on-unsuppressed-high"],
+      "category": "GitHub Action UX",
+      "related_patterns": ["optional readiness threshold"],
+      "related_checks": ["score threshold", "new high readiness gaps", "unsuppressed high readiness gaps"],
+      "search_tags": ["ci-gating", "fail-threshold", "audit-readiness"]
+    },
+    {
+      "term": "new readiness gaps",
+      "aliases": ["new findings", "new gaps", "regression readiness", "diff new"],
+      "category": "baseline diff",
+      "related_patterns": ["new local/static readiness signals since baseline"],
+      "related_checks": ["compare-baseline", "diff-output", "diff-json-output"],
+      "search_tags": ["new-readiness-gaps", "baseline-diff", "pre-audit-diff"]
+    },
+    {
+      "term": "resolved readiness gaps",
+      "aliases": ["resolved findings", "closed gaps", "remediated readiness", "diff resolved"],
+      "category": "baseline diff",
+      "related_patterns": ["readiness gap no longer detected since baseline"],
+      "related_checks": ["baseline comparison", "remediation tracking", "diff report"],
+      "search_tags": ["resolved-readiness-gaps", "baseline-diff", "remediation"]
+    },
+    {
+      "term": "pre-audit diff",
+      "aliases": ["readiness diff", "report diff", "baseline comparison", "diff report"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["tracking readiness changes before formal audit"],
+      "related_checks": ["new/resolved/unchanged counts", "PR comment diff", "issue checklist diff"],
+      "search_tags": ["pre-audit-diff", "readiness-baseline", "github-action"]
+    },
+    {
+      "term": "GitHub security workflow",
+      "aliases": ["Actions security workflow", "Code Scanning workflow", "pre-audit CI workflow", "security-events"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["GitHub-native pre-audit readiness process"],
+      "related_checks": ["SARIF upload", "Actions summary", "PR comment", "baseline diff"],
+      "search_tags": ["github-security-workflow", "code-scanning", "pre-audit-readiness"]
     }
   ]
 }

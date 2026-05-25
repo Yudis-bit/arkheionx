@@ -25,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.3.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
         with:
           protocol-type: auto
 ```
 
-Until `v0.3.0` is tagged, use `@main` only if you intentionally want the
+Until `v0.4.0` is tagged, use `@main` only if you intentionally want the
 current development branch.
 
 ## Pull Request Summary Workflow
@@ -104,6 +104,66 @@ Update mode searches for:
 If a matching comment exists, Arkheionx updates it instead of posting a new
 comment.
 
+## SARIF And Code Scanning Workflow
+
+Arkheionx can generate SARIF for GitHub Code Scanning-compatible workflows.
+Use a separate upload step:
+
+```yaml
+permissions:
+  contents: read
+  security-events: write
+
+steps:
+  - uses: actions/checkout@v4
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+    with:
+      protocol-type: "auto"
+      output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+      json-output: "arkheionx-report.json"
+      sarif-output: "arkheionx.sarif.json"
+  - uses: github/codeql-action/upload-sarif@v3
+    if: always()
+    with:
+      sarif_file: arkheionx.sarif.json
+```
+
+SARIF results are readiness gaps, not confirmed vulnerabilities.
+
+## Baseline Diff Workflow
+
+Generate a baseline:
+
+```yaml
+with:
+  baseline-output: "arkheionx.baseline.json"
+```
+
+Compare against a committed or downloaded baseline:
+
+```yaml
+with:
+  compare-baseline: "arkheionx.baseline.json"
+  diff-output: "ARKHEIONX_DIFF.md"
+  diff-json-output: "arkheionx-diff.json"
+```
+
+Diff mode classifies readiness gaps as new, resolved, unchanged, or changed.
+
+## Optional CI Gates
+
+All gates are disabled by default:
+
+```yaml
+with:
+  fail-score-below: "70"
+  fail-on-new-high: "true"
+  fail-on-unsuppressed-high: "false"
+```
+
+Use these as readiness gates only. They are not formal vulnerability
+confirmations.
+
 ## Vault Builder Workflow
 
 For ERC4626-like vaults, strategy vaults, and share/accounting systems:
@@ -159,6 +219,8 @@ python3 scripts/pre_audit_scan.py \
   --protocol-type auto \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
   --json-output arkheionx-report.json \
+  --sarif-output arkheionx.sarif.json \
+  --baseline-output arkheionx.baseline.json \
   --summary-output ARKHEIONX_ACTION_SUMMARY.md \
   --comment-output ARKHEIONX_PR_COMMENT.md \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
@@ -172,6 +234,12 @@ python3 scripts/pre_audit_scan.py \
 | `protocol-type` | `auto` | `auto`, `vault`, `amm`, `lending`, `staking`, `oracle`, or `generic`. |
 | `output` | `ARKHEIONX_PRE_AUDIT_REPORT.md` | Markdown report path. |
 | `json-output` | empty | Optional JSON report path. |
+| `sarif-output` | empty | Optional SARIF report path. |
+| `upload-sarif` | `false` | Documentation flag. Add `upload-sarif` as a separate workflow step. |
+| `baseline-output` | empty | Optional compact baseline JSON output. |
+| `compare-baseline` | empty | Optional baseline JSON path for diff mode. |
+| `diff-output` | empty | Optional standalone Markdown diff report. |
+| `diff-json-output` | empty | Optional standalone JSON diff report. |
 | `summary` | `true` | Write generated summary to the GitHub Actions job summary. |
 | `summary-output` | `ARKHEIONX_ACTION_SUMMARY.md` | Local summary Markdown path. |
 | `pr-comment` | `false` | Generate and optionally post/update a PR comment. |
@@ -183,14 +251,20 @@ python3 scripts/pre_audit_scan.py \
 | `config` | `.arkheionx.json` | Optional config path. |
 | `generate-invariant-skeletons` | `false` | Create safe Foundry invariant skeletons. |
 | `fail-on-critical-readiness-gap` | `false` | Fail only when explicitly enabled. |
+| `fail-on-new-high` | `false` | Fail when diff mode finds new high/critical readiness gaps. |
+| `fail-score-below` | empty | Fail when score is below this threshold. |
+| `fail-on-unsuppressed-high` | `false` | Fail on unsuppressed high/critical readiness gaps. |
 | `create-issues` | `false` | Reserved. No remote issues are created. |
 | `verbose` | `false` | Print scanner details. |
 
 ## JSON Output
 
-v0.3.0 JSON includes:
+v0.4.0 JSON includes:
 
 - canonical `findings` with stable IDs;
+- stable finding fingerprints;
+- `fingerprint_version`;
+- `diff` data when `compare-baseline` is used;
 - `suppressed_findings`;
 - `summary` counts;
 - `generated_outputs`;

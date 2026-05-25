@@ -20,7 +20,7 @@ The repository itself is the product:
 
 | Offer | Price | Primary value |
 |---|---:|---|
-| Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, Actions summary, optional PR Readiness Comment, generated issue checklist. |
+| Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, optional SARIF, baseline diff artifacts, Actions summary, optional PR Readiness Comment, generated issue checklist. |
 | Indie Builder Sponsor | USD 29/month | Recognition if desired, early rule previews, priority Q&A in GitHub Discussions, monthly readiness tips. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
 | Launch Report | USD 299-499 one time | Automated scan, manual report review, prioritized fix checklist, Markdown readiness report. |
@@ -50,6 +50,8 @@ The free tier creates trust and distribution:
 - no backend;
 - no external dashboard;
 - Markdown report committed or uploaded by the builder.
+- optional SARIF output for GitHub Code Scanning-compatible workflows.
+- baseline comparison to track whether remediation is improving readiness.
 - generated issue checklist that can become a remediation tracker.
 - optional PR Readiness Comment for code-review visibility.
 
@@ -94,6 +96,7 @@ Value:
 
 - automated scan;
 - manual review of generated report;
+- interpretation of baseline/diff output when available;
 - manual review of generated issue checklist;
 - prioritized fix checklist;
 - Markdown report;
@@ -166,6 +169,7 @@ Value:
 - manual readiness review;
 - historical exploit-pattern mapping;
 - missing invariant plan;
+- diff-mode review to track new, resolved, and unchanged readiness gaps;
 - generated GitHub issue checklist converted into a prioritized remediation plan;
 - final Markdown report;
 - optional follow-up comments.

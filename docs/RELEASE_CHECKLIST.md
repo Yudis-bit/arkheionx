@@ -25,6 +25,8 @@ written reason in the release PR.
     --protocol-type auto \
     --output examples/reports/mini-vault-pre-audit-report.md \
     --json-output examples/reports/mini-vault-pre-audit-report.json \
+    --sarif-output examples/reports/mini-vault.sarif.json \
+    --baseline-output examples/reports/mini-vault.baseline.json \
     --summary-output examples/reports/mini-vault-action-summary.md \
     --comment-output examples/reports/mini-vault-pr-comment.md \
     --issue-checklist-output examples/reports/mini-vault-issue-checklist.md \
@@ -39,10 +41,29 @@ written reason in the release PR.
     --protocol-type vault \
     --output examples/reports/vault-risk-fixture-pre-audit-report.md \
     --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
+    --sarif-output examples/reports/vault-risk-fixture.sarif.json \
+    --baseline-output examples/reports/vault-risk-fixture.baseline.json \
     --summary-output examples/reports/vault-risk-fixture-action-summary.md \
     --comment-output examples/reports/vault-risk-fixture-pr-comment.md \
     --issue-checklist-output examples/reports/vault-risk-fixture-issue-checklist.md \
     --generate-invariant-skeletons
+  ```
+
+- [ ] Baseline diff scan regenerated:
+
+  ```sh
+  python3 scripts/pre_audit_scan.py \
+    --root examples/vault-risk-fixture \
+    --protocol-type vault \
+    --compare-baseline examples/reports/vault-risk-fixture.baseline.json \
+    --output examples/reports/vault-risk-fixture-diff-report.md \
+    --json-output examples/reports/vault-risk-fixture-diff-report.json \
+    --diff-output examples/reports/vault-risk-fixture-diff.md \
+    --diff-json-output examples/reports/vault-risk-fixture-diff.json \
+    --sarif-output examples/reports/vault-risk-fixture-diff.sarif.json \
+    --summary-output examples/reports/vault-risk-fixture-diff-summary.md \
+    --comment-output examples/reports/vault-risk-fixture-diff-comment.md \
+    --issue-checklist-output examples/reports/vault-risk-fixture-diff-checklist.md
   ```
 
 - [ ] Config suppression scan regenerated:
@@ -61,6 +82,13 @@ written reason in the release PR.
 
 - [ ] JSON outputs parse successfully.
 - [ ] JSON outputs include canonical `findings`.
+- [ ] SARIF outputs parse successfully and use SARIF `2.1.0`.
+- [ ] SARIF outputs include rules, results, and readiness/not-vulnerability
+      properties.
+- [ ] Baseline JSON includes finding fingerprints.
+- [ ] Diff JSON includes new, resolved, unchanged, changed, and suppressed
+      counts.
+- [ ] Diff report includes `Baseline Diff`.
 - [ ] Markdown reports include the disclaimer.
 - [ ] Vault report includes `Vault Rule Pack Coverage`.
 - [ ] PR comment output contains `<!-- arkheionx-pre-audit-comment -->`.
@@ -89,6 +117,11 @@ written reason in the release PR.
 - [ ] `docs/PR_COMMENT_MODE.md` documents permissions and update mode.
 - [ ] `docs/GENERATED_ISSUE_CHECKLIST.md` documents manual issue workflow.
 - [ ] `docs/ARKHEIONX_CONFIG.md` documents suppression behavior.
+- [ ] `docs/SARIF_OUTPUT.md` documents Code Scanning upload and severity
+      mapping.
+- [ ] `docs/BASELINE_DIFF_MODE.md` documents baseline and diff usage.
+- [ ] `docs/CI_GATING.md` documents fail thresholds and false-positive
+      caution.
 - [ ] `docs/READINESS_SCORE.md` matches scanner scoring categories.
 - [ ] `SERVICES.md`, `docs/MONETIZATION.md`, and `docs/SPONSORSHIP.md` avoid
       formal-audit or guarantee claims.

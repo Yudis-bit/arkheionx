@@ -1,0 +1,96 @@
+{
+  "baseline_path": "examples/reports/mini-vault.baseline.json",
+  "changed": [],
+  "counts": {
+    "changed": 0,
+    "new": 0,
+    "resolved": 0,
+    "suppressed": 0,
+    "unchanged": 2
+  },
+  "new": [],
+  "resolved": [],
+  "suppressed_findings": [],
+  "unchanged": [
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+      "detected_signals": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "mint",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "fingerprint": "9421bc5897caf05fb6b2bd6d",
+      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+      "id": "ARK-VLT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+      "recommended_defensive_checks": [
+        "deposit/withdraw roundtrip",
+        "convertToShares/convertToAssets consistency",
+        "donation/inflation resistance",
+        "rounding direction tests",
+        "totalAssets external dependency tests"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
+      ],
+      "suppressible": true,
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests",
+      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "low",
+      "detail": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
+      "detected_signals": [
+        "fee"
+      ],
+      "fingerprint": "1b5cbd6e82091eea30e0f4c1",
+      "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+      "id": "ARK-VLT-007",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add deposit, withdrawal, management, and performance fee tests where relevant.",
+      "recommended_defensive_checks": [
+        "fee bounds",
+        "recipient accounting",
+        "share conservation",
+        "rounding with fees"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations."
+      ],
+      "suppressible": true,
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests",
+      "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+    }
+  ],
+  "warnings": []
+}

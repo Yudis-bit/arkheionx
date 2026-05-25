@@ -1,0 +1,48 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "fingerprint": "9421bc5897caf05fb6b2bd6d",
+      "id": "ARK-VLT-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests"
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "low",
+      "fingerprint": "1b5cbd6e82091eea30e0f4c1",
+      "id": "ARK-VLT-007",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests"
+    }
+  ],
+  "fingerprint_version": "0.4.0",
+  "generated_at": "2026-05-25T13:16:18+00:00",
+  "protocol_type": "vault",
+  "repo_root": "examples/mini-vault",
+  "score": 73,
+  "score_band": "Improving",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.4.0"
+}
