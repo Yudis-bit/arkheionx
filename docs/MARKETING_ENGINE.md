@@ -101,7 +101,30 @@ Monthly:
 - sample report;
 - roadmap note.
 
+## v0.2.0 Vault Launch Message
+
+Primary v0.2.0 message:
+
+> Arkheionx v0.2.0 focuses on indie vault builders: ERC4626-like readiness
+> checks, share/accounting gaps, missing invariants, withdrawal lifecycle
+> risks, and oracle-dependent vault review prompts.
+
+Short version:
+
+> Building a vault? Arkheionx v0.2.0 helps you find missing share-accounting,
+> strategy, withdrawal, fee, and oracle readiness gaps before formal audit.
+
+CTA:
+
+> Run the GitHub Action with `protocol-type: vault` and read the generated
+> Markdown report.
+
 ## Example X Posts
+
+0. Arkheionx v0.2.0 is vault-focused: ERC4626-like checks, share/accounting
+   readiness gaps, missing invariants, withdrawal lifecycle prompts, strategy
+   accounting checks, and oracle-dependent vault review guidance. Not an audit.
+   A way to prepare for one.
 
 1. Most indie DeFi builders cannot afford a formal audit on day one. Arkheionx
    helps them get audit-ready first: missing invariants, exploit-pattern risks,

@@ -5,13 +5,17 @@ committed artifacts support it.
 
 ## Product Roadmap
 
-- [x] **v0.1: Scanner MVP.** Local scanner, GitHub Action, Markdown report,
+- [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
       JSON report, mini-vault fixture, safe invariant skeleton generator.
-- [ ] **v0.2: Vault rule pack.** Better ERC4626 and vault-accounting signals:
-      totalAssets consistency, donation/inflation resistance, fee conservation,
-      share math, strategy balance drift.
-- [ ] **v0.3: Invariant skeleton generator.** Protocol-specific Foundry
-      skeletons, handler guidance, and placeholder detection.
+- [x] **v0.2.0: Vault rule pack prepared.** ERC4626 and vault-accounting
+      signals, vault-specific scoring, Vault Rule Pack reports, vault-risk
+      fixture, scanner tests, and vault service path. Tag pending release
+      approval.
+- [ ] **v0.3.0: PR comment mode and issue checklist.** GitHub Step Summary
+      expansion, optional PR comment mode, generated issue checklist, more rule
+      packs, better historical mapping.
+- [ ] **v0.4: Invariant skeleton generator.** Protocol-specific Foundry
+      skeletons, handler guidance, and richer generated examples.
 - [ ] **v0.4: Historical pattern mapping.** Stronger mapping from
       `metadata/registry.json` categories to readiness gaps and invariant
       families.

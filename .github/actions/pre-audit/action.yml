@@ -29,6 +29,10 @@ inputs:
     description: Reserved for future local issue suggestions. No remote issues are created.
     required: false
     default: "false"
+  summary:
+    description: Write a short Arkheionx report excerpt to the GitHub Actions job summary.
+    required: false
+    default: "true"
 runs:
   using: composite
   steps:
@@ -59,4 +63,21 @@ runs:
         echo "Arkheionx report generated: ${{ inputs.output }}"
         if [ -n "${{ inputs.json-output }}" ]; then
           echo "Arkheionx JSON report generated: ${{ inputs.json-output }}"
+        fi
+
+        if [ "${{ inputs.summary }}" = "true" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+          {
+            echo "## Arkheionx Pre-Audit Scan"
+            echo ""
+            echo "- Markdown report: \`${{ inputs.output }}\`"
+            if [ -n "${{ inputs.json-output }}" ]; then
+              echo "- JSON report: \`${{ inputs.json-output }}\`"
+            fi
+            if [ -f "${{ inputs.output }}" ]; then
+              echo ""
+              grep -E "Readiness score:|Score band:|Protocol type:|Protocol confidence:" "${{ inputs.output }}" | head -12 || true
+            fi
+            echo ""
+            echo "This is a pre-audit readiness signal, not a formal audit or security guarantee."
+          } >> "$GITHUB_STEP_SUMMARY"
         fi

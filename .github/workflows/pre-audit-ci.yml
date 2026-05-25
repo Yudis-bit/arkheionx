@@ -4,9 +4,14 @@ on:
   pull_request:
     paths:
       - "scripts/pre_audit_scan.py"
+      - "tests/**"
       - ".github/actions/pre-audit/action.yml"
       - ".github/workflows/pre-audit-ci.yml"
       - "examples/mini-vault/**"
+      - "examples/vault-risk-fixture/**"
+      - "examples/reports/**"
+      - "metadata/search_terms.json"
+      - "reports/search_index.md"
       - "templates/**"
       - "docs/**"
       - "README.md"
@@ -35,6 +40,9 @@ jobs:
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
 
+      - name: Run scanner unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+
       - name: Run scanner directly against mini-vault
         run: |
           python3 scripts/pre_audit_scan.py \
@@ -42,6 +50,15 @@ jobs:
             --protocol-type auto \
             --output examples/reports/mini-vault-pre-audit-report.md \
             --json-output examples/reports/mini-vault-pre-audit-report.json \
+            --generate-invariant-skeletons
+
+      - name: Run scanner directly against vault-risk-fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/vault-risk-fixture \
+            --protocol-type vault \
+            --output examples/reports/vault-risk-fixture-pre-audit-report.md \
+            --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
             --generate-invariant-skeletons
 
       - name: Run local GitHub Action wrapper
@@ -53,12 +70,16 @@ jobs:
           json-output: "arkheionx-report.json"
           generate-invariant-skeletons: "false"
           fail-on-critical-readiness-gap: "false"
+          summary: "true"
 
       - name: Verify report artifacts
         run: |
           test -f examples/reports/mini-vault-pre-audit-report.md
           test -f examples/reports/mini-vault-pre-audit-report.json
+          test -f examples/reports/vault-risk-fixture-pre-audit-report.md
+          test -f examples/reports/vault-risk-fixture-pre-audit-report.json
           test -f examples/mini-vault/test/invariant/ArkheionxReadinessInvariants.t.sol
+          test -f examples/vault-risk-fixture/test/invariant/ArkheionxReadinessInvariants.t.sol
           test -f ARKHEIONX_PRE_AUDIT_REPORT.md
           test -f arkheionx-report.json
 
@@ -69,12 +90,14 @@ jobs:
 
           for path in [
               "examples/reports/mini-vault-pre-audit-report.json",
+              "examples/reports/vault-risk-fixture-pre-audit-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
+              assert "vault_rule_pack" in data
           print("JSON valid")
           PY
 
@@ -83,6 +106,8 @@ jobs:
           grep -qi "not a formal audit" examples/reports/mini-vault-pre-audit-report.md
           grep -qi "does not prove" examples/reports/mini-vault-pre-audit-report.md
           grep -qi "formal audit is recommended" examples/reports/mini-vault-pre-audit-report.md
+          grep -qi "not a formal audit" examples/reports/vault-risk-fixture-pre-audit-report.md
+          grep -qi "Vault Rule Pack Coverage" examples/reports/vault-risk-fixture-pre-audit-report.md
 
       - name: Verify unsafe marketing phrases are absent
         run: |
@@ -90,15 +115,18 @@ jobs:
           from pathlib import Path
 
           phrases = [
-              "guaranteed secure",
-              "audit replacement",
-              "cheap audit",
-              "exploit live",
-              "drain helper",
-              "profit calculator",
-              "bounty guaranteed",
-              "fully verified database",
-              "autonomous exploit runner",
+              "guaranteed " + "secure",
+              "audit " + "replacement",
+              "cheap " + "audit",
+              "exploit " + "live",
+              "d" + "rain helper",
+              "profit " + "calculator",
+              "bounty " + "guaranteed",
+              "fully " + "verified database",
+              "autonomous " + "exploit runner",
+              "attack " + "live protocol",
+              "weapon" + "ize",
+              "exploit " + "any protocol",
           ]
           roots = [
               Path("README.md"),

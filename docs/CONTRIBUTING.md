@@ -27,6 +27,7 @@ Run the scanner before opening a PR that touches readiness code:
 
 ```sh
 python3 -m py_compile scripts/pre_audit_scan.py
+python3 -m unittest discover -s tests -p "test_*.py"
 python3 scripts/pre_audit_scan.py \
   --root examples/mini-vault \
   --protocol-type auto \

@@ -131,6 +131,7 @@ jobs:
           json-output: "arkheionx-report.json"
           generate-invariant-skeletons: "false"
           fail-on-critical-readiness-gap: "false"
+          summary: "true"
 ```
 
 The action requires no secrets and no RPC endpoint. It scans local repository
@@ -146,6 +147,17 @@ python3 scripts/pre_audit_scan.py \
   --json-output arkheionx-report.json
 ```
 
+Vault builders can force the v0.2.0 Vault Rule Pack:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type vault \
+  --output ARKHEIONX_VAULT_READINESS_REPORT.md \
+  --json-output arkheionx-vault-report.json \
+  --generate-invariant-skeletons
+```
+
 Generate a safe Foundry invariant skeleton:
 
 ```sh
@@ -159,16 +171,19 @@ python3 scripts/pre_audit_scan.py \
 
 ## Sample Report Excerpt
 
-See the committed example:
+See the committed examples:
 
 - Markdown: [`examples/reports/mini-vault-pre-audit-report.md`](examples/reports/mini-vault-pre-audit-report.md)
 - JSON: [`examples/reports/mini-vault-pre-audit-report.json`](examples/reports/mini-vault-pre-audit-report.json)
 - Fixture: [`examples/mini-vault/`](examples/mini-vault/)
+- Vault Rule Pack Markdown: [`examples/reports/vault-risk-fixture-pre-audit-report.md`](examples/reports/vault-risk-fixture-pre-audit-report.md)
+- Vault Rule Pack JSON: [`examples/reports/vault-risk-fixture-pre-audit-report.json`](examples/reports/vault-risk-fixture-pre-audit-report.json)
+- Vault Rule Pack fixture: [`examples/vault-risk-fixture/`](examples/vault-risk-fixture/)
 
 Excerpt:
 
 ```text
-Readiness score: 70/100
+Readiness score: 73/100
 Score band: Improving
 Detected protocol type: vault
 Historical pattern similarity:
@@ -185,9 +200,30 @@ Recommended next steps:
 The report is a readiness artifact. It does not prove safety or confirm
 exploitability.
 
+## v0.2.0 Vault Rule Pack
+
+Arkheionx v0.2.0 adds a vault-focused rule pack for indie builders working on
+ERC4626-like vaults, strategy vaults, yield vaults, staking vaults, and
+share/accounting systems.
+
+It checks for readiness gaps around:
+
+- ERC4626 preview/action consistency;
+- shares/assets conversion and rounding;
+- totalAssets external dependencies;
+- donation and low-supply sensitivity;
+- fee accounting;
+- strategy gain/loss/debt lifecycle;
+- withdrawal queue and cooldown lifecycle;
+- oracle and pool-pricing assumptions;
+- admin setters, pause, emergency, and upgrade boundaries.
+
+Read [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md).
+
 ## What The Scanner Checks
 
-- Vault accounting.
+- Vault accounting and ERC4626-like share conversion.
+- Vault strategies, fees, withdrawal queues, and totalAssets assumptions.
 - Oracle assumptions.
 - Reentrancy-sensitive value flows.
 - Access control.
@@ -218,6 +254,10 @@ Search examples:
 
 ```text
 vault accounting
+ERC4626
+convertToShares
+withdrawal queue
+strategy accounting
 share price manipulation
 oracle manipulation
 reentrancy-review
@@ -275,6 +315,7 @@ Core standards:
 - [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md)
 - [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
 - [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md)
+- [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md)
 - [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md)
 - [`docs/MONETIZATION.md`](docs/MONETIZATION.md)
 - [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md)
@@ -291,7 +332,10 @@ Core standards:
 | Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
 | Launch Report | USD 299-499 | Manual review of generated report and prioritized fix checklist. |
 | Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, GitHub issue checklist. |
+| Vault Launch Report | USD 299-499 | Vault Rule Pack review and prioritized vault fix checklist. |
+| Vault Pre-Audit Sprint | USD 1,000-2,000 | Vault-focused invariant, strategy, oracle, and withdrawal lifecycle plan. |
 | Ecosystem Pack | USD 5,000-20,000/month | Bulk readiness reports and builder security clinic. |
+| Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and portfolio-level Markdown dashboard. |
 | Research Sponsorship | Flexible | Fund public exploit-memory and readiness-rule work. |
 
 Use [`SERVICES.md`](SERVICES.md) for requests and
@@ -332,12 +376,13 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 
 ## Roadmap
 
-- **v0.1: scanner MVP.** Local scanner, GitHub Action, Markdown/JSON reports,
+- **v0.1.0: scanner MVP.** Local scanner, GitHub Action, Markdown/JSON reports,
   mini-vault demo.
-- **v0.2: vault rule pack.** Stronger vault accounting and ERC4626-specific
-  readiness rules.
-- **v0.3: invariant skeleton generator.** Better protocol-specific skeletons
-  and handler guidance.
+- **v0.2.0: vault rule pack.** Stronger vault accounting and ERC4626-specific
+  readiness rules, vault-risk fixture, vault-specific scoring, report coverage,
+  and scanner tests. Prepared, not tagged.
+- **v0.3.0: PR comment mode and issue checklist.** GitHub-native feedback loop,
+  generated issue checklist, more rule packs, better historical mapping.
 - **v0.4: historical pattern mapping.** More precise mappings from registry
   categories to readiness checks.
 - **v0.5: searchable memory layer.** Better generated search index and
@@ -410,7 +455,7 @@ _Generated from `metadata/registry.json`. Run `python3 scripts/generate_registry
 | 2020-08 | Opyn — duplicate ETH option exercise | ethereum | high | invariant-bypass | historical | [`EVM/test/2020-08/Exploit_2020-08.t.sol`](EVM/test/2020-08/Exploit_2020-08.t.sol) |
 | 2020-09 | bZx — iETH self-transfer double-write | ethereum | critical | accounting-mismatch | needs-verification | [`EVM/test/2020-09/Exploit_2020-09.t.sol`](EVM/test/2020-09/Exploit_2020-09.t.sol) |
 | 2020-10 | Harvest Finance — fUSDT/fUSDC oracle manipulation | ethereum | critical | flash-loan-price-manipulation | historical | [`EVM/test/2020-10/Exploit_2020-10.t.sol`](EVM/test/2020-10/Exploit_2020-10.t.sol) |
-| 2020-11 | Pickle Finance — swapExactJarForJar arbitrary-call drains cDAI strategy | ethereum | critical | unsafe-external-call | needs-verification | [`EVM/test/2020-11/Exploit_2020-11.t.sol`](EVM/test/2020-11/Exploit_2020-11.t.sol) |
+| 2020-11 | Pickle Finance — swapExactJarForJar arbitrary-call cDAI strategy asset loss | ethereum | critical | unsafe-external-call | needs-verification | [`EVM/test/2020-11/Exploit_2020-11.t.sol`](EVM/test/2020-11/Exploit_2020-11.t.sol) |
 | 2020-12 | Cover Protocol — Blacksmith claimRewards infinite mint | ethereum | critical | accounting-mismatch | needs-verification | [`EVM/test/2020-12/Exploit_2020-12.t.sol`](EVM/test/2020-12/Exploit_2020-12.t.sol) |
 | 2021-01 | SushiSwap SushiMaker — DIGG/WBTC missing-bridge convert exploit | ethereum | high | amm-invariant-manipulation | needs-verification | [`EVM/test/2021-01/Exploit_2021-01.t.sol`](EVM/test/2021-01/Exploit_2021-01.t.sol) |
 | 2021-02 | Yearn v1 DAI vault — Curve 3pool oracle manipulation | ethereum | critical | flash-loan-price-manipulation | historical | [`EVM/test/2021-02/Exploit_2021-02.t.sol`](EVM/test/2021-02/Exploit_2021-02.t.sol) |

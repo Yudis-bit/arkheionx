@@ -19,6 +19,8 @@ is safe.
 
 ## Categories
 
+Generic/non-vault scoring:
+
 | Category | Max | What It Rewards |
 |---|---:|---|
 | Repository structure | 15 | Solidity sources, recognized config, clear src/test/docs shape, CI. |
@@ -28,6 +30,19 @@ is safe.
 | Documentation readiness | 10 | README, security docs, assumptions, deployment/role notes. |
 | Operational/admin readiness | 15 | Access control, emergency controls, upgrade notes, privileged setter coverage, incident/monitoring notes. |
 
+Vault-specific scoring:
+
+| Category | Max | What It Rewards |
+|---|---:|---|
+| Repository structure | 10 | Solidity vault-like sources, config, src/test/docs shape, CI. |
+| Test presence | 15 | Test files, assertions, Foundry/Hardhat, deposit/withdraw, mint/preview coverage. |
+| Vault accounting coverage | 20 | ERC4626/share accounting signals, totalAssets tests, conversion tests, roundtrip tests, donation/rounding tests. |
+| Invariant/fuzz readiness | 20 | Invariants, fuzzing, handlers, edge cases, broad vault test vocabulary. |
+| Oracle/pricing readiness | 10 | Stale price, bounds, decimals, oracle/pool pricing tests or no explicit pricing dependency. |
+| Strategy/withdrawal lifecycle readiness | 10 | Strategy gain/loss tests, debt/harvest tests, withdrawal queue/cooldown lifecycle tests. |
+| Admin/operational readiness | 10 | Role boundaries, pause/emergency behavior, upgrade coverage, fee accounting. |
+| Documentation readiness | 5 | README, assumptions, limitations, roles, treasury, deployment notes. |
+
 ## Deductions And Gaps
 
 The scanner reports readiness gaps when it sees patterns such as:
@@ -36,6 +51,13 @@ The scanner reports readiness gaps when it sees patterns such as:
 - no invariant tests for a DeFi-shaped protocol;
 - oracle usage without visible staleness, TWAP, bounds, or sanity coverage;
 - vault accounting without roundtrip or conservation coverage;
+- ERC4626-like interface without preview function tests;
+- shares/assets conversion without rounding tests;
+- totalAssets external dependency without manipulation-resistance tests;
+- strategy accounting without gain/loss tests;
+- withdrawal queue/cooldown without lifecycle tests;
+- fee logic without fee accounting tests;
+- pause/emergency controls without operational tests;
 - external-call value flow without guard or reentrancy-review signals;
 - upgradeability without initializer review signals;
 - admin setters without role documentation or tests;

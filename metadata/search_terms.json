@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -81,6 +81,54 @@
       "related_patterns": ["repository readiness gap", "missing invariant coverage"],
       "related_checks": ["readiness report", "GitHub Action", "Markdown report", "JSON report"],
       "search_tags": ["pre-audit", "audit-readiness", "indie-defi", "github-action"]
+    },
+    {
+      "term": "ERC4626",
+      "aliases": ["vault standard", "previewDeposit", "previewWithdraw", "maxRedeem", "asset()"],
+      "category": "vault rule pack",
+      "related_patterns": ["ERC4626/share inflation or donation sensitivity readiness gap", "vault accounting invariant readiness gap"],
+      "related_checks": ["preview/action equivalence", "convertToShares/convertToAssets consistency", "max function boundaries"],
+      "search_tags": ["erc4626", "vault-security", "share-accounting", "pre-audit"]
+    },
+    {
+      "term": "share inflation",
+      "aliases": ["donation sensitivity", "low supply share accounting", "share price manipulation", "donation risk class"],
+      "category": "vault rule pack",
+      "related_patterns": ["ERC4626/share inflation or donation sensitivity readiness gap"],
+      "related_checks": ["donation tests", "first deposit tests", "rounding direction tests", "low supply tests"],
+      "search_tags": ["share-inflation-risk", "donation-sensitivity", "vault-invariant"]
+    },
+    {
+      "term": "strategy accounting",
+      "aliases": ["strategy debt", "harvest", "gain", "loss", "totalDebt", "withdrawFromStrategy"],
+      "category": "vault rule pack",
+      "related_patterns": ["strategy debt/gain/loss accounting readiness gap"],
+      "related_checks": ["mock strategy gain", "mock strategy loss", "debt update", "harvest/report tests"],
+      "search_tags": ["strategy-accounting", "gain-loss", "vault-lifecycle"]
+    },
+    {
+      "term": "withdrawal queue",
+      "aliases": ["requestWithdraw", "claimWithdraw", "cooldown", "pendingWithdraw", "liquidityBuffer"],
+      "category": "vault rule pack",
+      "related_patterns": ["withdrawal liquidity and queue lifecycle readiness gap"],
+      "related_checks": ["request lifecycle", "claim lifecycle", "cancel lifecycle", "liquidity buffer tests"],
+      "search_tags": ["withdrawal-queue", "vault-lifecycle", "liquidity-buffer"]
+    },
+    {
+      "term": "oracle-dependent vault",
+      "aliases": ["LP token pricing", "pool price", "Chainlink vault", "Yearn-style vault risk", "Harvest-style oracle risk"],
+      "category": "vault rule pack",
+      "related_patterns": ["Harvest/Yearn-style oracle or pool price readiness gap"],
+      "related_checks": ["stale price rejection", "pool price bounds", "TWAP sanity check", "decimals normalization"],
+      "search_tags": ["oracle-risk", "vault-pricing", "pool-pricing"]
+    },
+    {
+      "term": "vault invariant tests",
+      "aliases": ["totalAssets invariant", "share accounting invariant", "fee accounting invariant", "strategy loss invariant"],
+      "category": "vault rule pack",
+      "related_patterns": ["vault accounting invariant readiness gap"],
+      "related_checks": ["totalAssets consistency", "deposit-withdraw roundtrip", "fee accounting conservation", "strategy loss handling"],
+      "search_tags": ["vault-invariant", "foundry", "invariant-testing"]
     }
   ]
 }

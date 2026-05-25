@@ -19,11 +19,27 @@ contract ArkheionxReadinessInvariants {
         // TODO: assert deposit/withdraw sequences do not create value beyond rounding.
     }
 
-    function invariant_sharePriceManipulationResistance() public {
-        // TODO: assert donation, supply, and mock-price edges cannot distort share value unexpectedly.
+    function invariant_convertToSharesConvertToAssetsConsistency() public {
+        // TODO: assert conversion functions are consistent within documented rounding.
     }
 
-    function invariant_adminRoleCannotBypassAccounting() public {
+    function invariant_sharePriceDonationResistance() public {
+        // TODO: assert donations and low-supply states cannot distort share value unexpectedly.
+    }
+
+    function invariant_feeAccountingDoesNotCreateValue() public {
+        // TODO: assert fees remain bounded and do not create or strand value beyond policy.
+    }
+
+    function invariant_strategyLossDoesNotBreakAccounting() public {
+        // TODO: assert mocked strategy gain/loss keeps totalAssets and shares consistent.
+    }
+
+    function invariant_withdrawalLifecycleConservesShares() public {
+        // TODO: assert request, cooldown, claim, and cancel flows conserve shares/assets.
+    }
+
+    function invariant_adminCannotBypassAccountingWithoutExplicitTrust() public {
         // TODO: assert privileged actions cannot silently bypass documented accounting invariants.
     }
 

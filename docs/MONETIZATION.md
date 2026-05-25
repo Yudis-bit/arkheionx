@@ -25,6 +25,9 @@ The repository itself is the product:
 | Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
 | Launch Report | USD 299-499 one time | Automated scan, manual report review, prioritized fix checklist, Markdown readiness report. |
 | Pre-Audit Sprint | USD 1,000-2,000 one time | Manual readiness review, historical pattern mapping, missing invariant plan, GitHub issue checklist. |
+| Vault Launch Report | USD 299-499 one time | Vault Rule Pack report, manual gap review, prioritized vault fix checklist. |
+| Vault Pre-Audit Sprint | USD 1,000-2,000 one time | Vault-focused readiness review, strategy/oracle/withdrawal checklist, invariant plan. |
+| Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and a portfolio-level Markdown dashboard. |
 | Ecosystem Pack | USD 5,000-20,000/month | Bulk reports, portfolio dashboard, security clinic, training, community support. |
 | Research Sponsorship | Flexible | Fund exploit-memory research, assertion hardening, verification work, education, and rule packs. |
 
@@ -108,6 +111,47 @@ Language to avoid:
 - proven safe;
 - bounty-ready;
 - proof claims from static scan output.
+
+## Vault-Specific Offers
+
+### Vault Launch Report
+
+Price: USD 299-499 one time.
+
+Value:
+
+- automated Vault Rule Pack scan;
+- manual readiness-gap review;
+- prioritized vault fix checklist;
+- suggested invariant plan;
+- Markdown report.
+
+### Vault Pre-Audit Sprint
+
+Price: USD 1,000-2,000 one time.
+
+Value:
+
+- vault-specific manual readiness review;
+- ERC4626/share-accounting checks;
+- strategy gain/loss checklist;
+- withdrawal lifecycle checklist;
+- oracle/pricing assumption review prompts;
+- GitHub issue checklist.
+
+### Ecosystem Vault Readiness Pack
+
+Price: custom.
+
+Value:
+
+- bulk vault reports for ecosystem builders;
+- portfolio-level Markdown dashboard;
+- vault invariant workshop;
+- GitHub-native Q&A if configured.
+
+All vault-specific offers are readiness support only. They are not formal audit
+services and do not certify protocol safety.
 
 ## Pre-Audit Sprint
 

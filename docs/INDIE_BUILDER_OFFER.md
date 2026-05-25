@@ -55,6 +55,33 @@ You receive:
 Paid work is optional and scoped. It is defensive readiness work, not a formal
 audit.
 
+## Vault Builder Path
+
+For ERC4626-like vaults, strategy vaults, yield vaults, or share/accounting
+systems:
+
+1. Run the scanner with `--protocol-type vault`.
+2. Review the Vault Rule Pack coverage table.
+3. Add invariant tests for totalAssets, share conversion, roundtrip behavior,
+   donation/rounding edges, fee accounting, strategy gain/loss, and withdrawal
+   lifecycle if relevant.
+4. Re-run the report and compare readiness gaps.
+5. Open a Launch Report or Pre-Audit Sprint request if you want manual help
+   turning the report into a fix plan.
+
+Local command:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type vault \
+  --output ARKHEIONX_VAULT_READINESS_REPORT.md \
+  --json-output arkheionx-vault-report.json \
+  --generate-invariant-skeletons
+```
+
+Vault builders should read [`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md).
+
 ### Launch Report
 
 Price range: USD 299-499 one time.
@@ -72,6 +99,25 @@ Output:
 - prioritized fix checklist;
 - Markdown report;
 - clear limitations and formal audit recommendation.
+
+### Vault Launch Report
+
+Price range: USD 299-499 one time.
+
+Best for:
+
+- ERC4626-like vault builders;
+- strategy vaults preparing for first audit;
+- teams that need share/accounting, fee, withdrawal, and oracle assumptions
+  organized before review.
+
+Output:
+
+- automated Vault Rule Pack report;
+- manual review of readiness gaps;
+- prioritized vault fix checklist;
+- suggested invariant plan;
+- Markdown report.
 
 ### Pre-Audit Sprint
 
@@ -92,6 +138,25 @@ Output:
 - GitHub issue checklist;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
+
+### Vault Pre-Audit Sprint
+
+Price range: USD 1,000-2,000 one time.
+
+Best for:
+
+- vault teams preparing for formal audit intake;
+- teams with strategy accounting, queued withdrawals, LP pricing, or fee logic;
+- teams that want a sharper invariant and test plan.
+
+Output:
+
+- Vault Rule Pack scan;
+- manual readiness review;
+- strategy/oracle/withdrawal lifecycle checklist;
+- suggested Foundry invariant plan;
+- GitHub issue checklist;
+- final Markdown report.
 
 ### Ecosystem Pack
 

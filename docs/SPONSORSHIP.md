@@ -50,6 +50,8 @@ security approval.
 - Maintaining metadata and generated reports.
 - Building pre-audit readiness rules and templates.
 - Supporting indie builders through GitHub-native materials.
+- Expanding the Vault Rule Pack with better ERC4626, strategy, withdrawal, fee,
+  and oracle/pricing readiness checks.
 
 ## What Sponsorship Does Not Buy
 
@@ -68,7 +70,7 @@ Near-term goals:
 2. Produce the first archival-confirmed L4 reports only when evidence exists.
 3. Publish one L5-style case study after an L4 entry exists.
 4. Expand the readiness scanner with protocol-specific rule packs.
-5. Add more mini fixtures and sample reports for indie builders.
+5. Improve the Vault Rule Pack with false-positive reports and more fixtures.
 6. Improve search metadata and generated indexes.
 
 Progress should be reported through committed artifacts, not inflated claims.

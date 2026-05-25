@@ -1,134 +1,93 @@
 # Release Checklist
 
-A printable, item-by-item gate for cutting a release of Arkheionx Vault.
-The full process is documented in
-[`RELEASE_PROCESS.md`](RELEASE_PROCESS.md). This file is the literal
-checklist — copy it into the release PR description and tick the boxes
-honestly.
+A release is not cut until every applicable box is checked or marked N/A with a
+written reason in the release PR.
 
-A release is not cut until every applicable box is checked or marked
-N/A with a written reason in the PR.
+## Scope
 
----
+- [ ] Release type identified: scanner, rule pack, archive, verification,
+      docs, or service surface.
+- [ ] Version named in `CHANGELOG.md`.
+- [ ] No unsupported claims added to README, docs, reports, or release notes.
+- [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
+      confirmed entries unless regenerated artifacts prove otherwise.
 
-## 1. Trigger
+## Scanner And Product Validation
 
-- [ ] Release type identified (corpus / assertion / verification /
-      maturity / case study / taxonomy).
-- [ ] Milestone or trigger documented in the PR description.
-- [ ] Release manager named (Yudistira Putra / arkheionx by default).
+- [ ] `python3 -m py_compile scripts/pre_audit_scan.py scripts/generate_search_index.py`
+- [ ] `python3 -m unittest discover -s tests -p "test_*.py"`
+- [ ] Mini-vault scan regenerated:
 
-## 2. Tree state
+  ```sh
+  python3 scripts/pre_audit_scan.py \
+    --root examples/mini-vault \
+    --protocol-type auto \
+    --output examples/reports/mini-vault-pre-audit-report.md \
+    --json-output examples/reports/mini-vault-pre-audit-report.json \
+    --generate-invariant-skeletons
+  ```
 
-- [ ] Working on `main` (or a release branch about to merge to `main`).
-- [ ] `git status --short` is empty.
-- [ ] No tracked secrets, no `.env`, no real RPC URLs in the diff.
-- [ ] `.reference_data/` is not tracked.
+- [ ] Vault-risk fixture scan regenerated:
 
-## 3. Metadata and registry
+  ```sh
+  python3 scripts/pre_audit_scan.py \
+    --root examples/vault-risk-fixture \
+    --protocol-type vault \
+    --output examples/reports/vault-risk-fixture-pre-audit-report.md \
+    --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
+    --generate-invariant-skeletons
+  ```
 
-- [ ] `python3 scripts/validate_metadata.py` passes.
-- [ ] `python3 scripts/generate_registry.py --check` passes.
-- [ ] `python3 scripts/score_pocs.py --check` passes.
-- [ ] `python3 scripts/generate_verification_report.py --check` passes.
-- [ ] `python3 scripts/poc_maturity_index.py --check` passes.
-- [ ] `python3 scripts/research_dashboard.py --check` passes.
+- [ ] JSON outputs parse successfully.
+- [ ] Markdown reports include the disclaimer.
+- [ ] Vault report includes `Vault Rule Pack Coverage`.
 
-## 4. EVM build
+## Search And Registry
 
-- [ ] `cd EVM && forge fmt --check` passes.
-- [ ] `cd EVM && forge build` passes.
-- [ ] Fork tests are skipped or green per release type:
-  - corpus / assertion / maturity / taxonomy: not required.
-  - verification milestone: required, with the run transcript stored
-    under the PoC's verification report.
+- [ ] `python3 scripts/generate_search_index.py --check`
+- [ ] `python3 scripts/generate_registry.py --check`
+- [ ] `python3 scripts/validate_metadata.py`
+- [ ] `python3 scripts/score_pocs.py --check`
+- [ ] `python3 scripts/generate_verification_report.py --check`
+- [ ] `python3 scripts/poc_maturity_index.py --check`
+- [ ] `python3 scripts/research_dashboard.py --check`
 
-## 5. Reports
+## README And Docs
 
-- [ ] `reports/poc_quality_matrix.md` regenerated.
-- [ ] `reports/poc_maturity_index.md` regenerated.
-- [ ] `reports/research_dashboard.md` regenerated.
-- [ ] `reports/verification/<id>.md` updated for any PoC that flipped
-      verification status in this release.
+- [ ] README renders cleanly on GitHub.
+- [ ] Quick Start YAML is valid.
+- [ ] Sample commands are readable.
+- [ ] Registry table remains between generated markers.
+- [ ] `docs/VAULT_RULE_PACK.md` linked from README and search index.
+- [ ] `docs/GITHUB_ACTION_USAGE.md` matches action inputs.
+- [ ] `docs/READINESS_SCORE.md` matches scanner scoring categories.
+- [ ] `SERVICES.md`, `docs/MONETIZATION.md`, and `docs/SPONSORSHIP.md` avoid
+      formal-audit or guarantee claims.
 
-## 6. README
+## Safety Scan
 
-- [ ] Status table reflects current truth (totals, assertion mix,
-      verified count, maturity distribution).
-- [ ] Links work (registry, dashboard, maturity index, quality matrix,
-      verification reports).
-- [ ] No banned hype phrases ("largest", "world-class",
-      "industry-leading", "AI-powered" outside of intended use,
-      "trusted by", "verified" without basis).
-- [ ] No stale `web/` references in the public surface.
+- [ ] No live-target workflow added.
+- [ ] No RPC requirement added to scanner or action.
+- [ ] No transaction submission, key handling, or deployed-contract testing.
+- [ ] No private keys, mnemonics, RPC credentials, or secrets in the diff.
+- [ ] No banned/suspicious marketing phrases from the CI safety list.
 
-## 7. Documentation
+## GitHub Surface
 
-- [ ] `docs/POC_MATURITY_MODEL.md` matches the maturity index gates.
-- [ ] `docs/EXPANSION_PLAN.md` reflects the milestones being claimed.
-- [ ] `docs/RELEASE_PROCESS.md` matches the steps actually taken.
-- [ ] No new docs introduced without a link from README or another doc.
+- [ ] Issue templates render correctly.
+- [ ] GitHub Action path is correct.
+- [ ] CI workflow runs scanner tests and fixture scans.
+- [ ] Recommended topics reviewed in README/search guide.
+- [ ] Discussions/categories updated manually if part of release.
 
-## 8. GitHub surface
+## Release Steps
 
-- [ ] `bash scripts/github_surface_setup.sh --dry-run` produces the
-      intended description and topic list.
-- [ ] Social preview asset under `.github/assets/` is current. (Manual
-      upload via Repository Settings → Social preview.)
-- [ ] Issue templates render correctly:
-      `research_candidate.md`, `assertion_hardening.md`,
-      `poc_verification_issue.md`, `documentation_issue.md`,
-      `unsafe_content_report.md`, `bug_report.md`.
-- [ ] PR template up to date.
+- [ ] Commit changes.
+- [ ] Open release PR.
+- [ ] Wait for CI green.
+- [ ] Merge to `main`.
+- [ ] Tag from `main` only after approval.
+- [ ] Publish GitHub release from `CHANGELOG.md`.
+- [ ] Announce only with honest, bounded language.
 
-## 9. Safety scan
-
-- [ ] No live-target instructions, scanners, or attacker automation
-      added.
-- [ ] No new `vm.envString`, `PRIVATE_KEY`, `--broadcast`, or
-      `scan.target` calls in PoC source.
-- [ ] No fake claims (verified-without-report, fake affiliations,
-      fake bounty wins, fake "trusted by").
-- [ ] No new content that could meaningfully aid attack against an
-      unpatched live system.
-
-## 10. Release notes
-
-- [ ] `docs/launch/GITHUB_RELEASE_NOTES.md` template instantiated for
-      this tag.
-- [ ] Numeric deltas honest (entries added, hardened, verified).
-- [ ] Maintainer attribution present (Yudistira Putra / arkheionx).
-- [ ] No claims unsupported by the registry, the dashboard, or the
-      verification reports.
-
-## 11. CI
-
-- [ ] `metadata` workflow green.
-- [ ] `evm` workflow green (fmt + build job; fork test job per release
-      type).
-- [ ] `docs` workflow green.
-
-## 12. Tag and publish
-
-- [ ] PR merged to `main`.
-- [ ] Tag created from `main` (`vMAJOR.MINOR.PATCH`).
-- [ ] Tag pushed: `git push origin <tag>`.
-- [ ] GitHub release published from the rendered notes.
-- [ ] (Optional) Repository surface refreshed:
-      `bash scripts/github_surface_setup.sh --apply`.
-- [ ] (Optional) Social preview re-uploaded if changed.
-
-## 13. Announcement
-
-- [ ] Decision recorded: announce or stay quiet.
-- [ ] If announcing, the [`LAUNCH_PLAN.md`](LAUNCH_PLAN.md) outline is
-      followed and the post avoids hype copy.
-
-## 14. Post-release
-
-- [ ] Open follow-up issues for any known gaps surfaced during this
-      release (weak entries remaining, archival-RPC-blocked entries,
-      taxonomy gaps).
-- [ ] Update `docs/internal/` with a release log entry if the release
-      is non-trivial (corpus / verification / maturity).
-- [ ] Decompress. Releases are checkpoints, not finish lines.
+Releases are checkpoints, not finish lines.

@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 DISCLAIMER = (
@@ -55,13 +55,170 @@ IGNORED_DIRS = {
 }
 
 
+VAULT_ERC4626_TERMS = [
+    "ERC4626",
+    "asset()",
+    "totalAssets",
+    "convertToShares",
+    "convertToAssets",
+    "previewDeposit",
+    "previewMint",
+    "previewWithdraw",
+    "previewRedeem",
+    "maxDeposit",
+    "maxMint",
+    "maxWithdraw",
+    "maxRedeem",
+    "deposit",
+    "mint",
+    "withdraw",
+    "redeem",
+    "shares",
+    "assets",
+    "totalSupply",
+    "balanceOf",
+    "pricePerShare",
+    "exchangeRate",
+    "sharePrice",
+]
+
+VAULT_ACCOUNTING_RISK_TERMS = [
+    "totalAssets",
+    "convertToShares",
+    "convertToAssets",
+    "previewDeposit",
+    "previewMint",
+    "previewWithdraw",
+    "previewRedeem",
+    "rounding",
+    "mulDiv",
+    "precision",
+    "decimals",
+    "donation",
+    "inflation",
+    "feeOnTransfer",
+    "fee-on-transfer",
+    "rebasing",
+    "performanceFee",
+    "managementFee",
+    "withdrawalFee",
+    "depositFee",
+    "treasury",
+    "feeRecipient",
+    "externalBalance",
+]
+
+VAULT_STRATEGY_TERMS = [
+    "strategy",
+    "strategies",
+    "allocate",
+    "withdrawFromStrategy",
+    "harvest",
+    "rebalance",
+    "report",
+    "debt",
+    "totalDebt",
+    "credit",
+    "loss",
+    "gain",
+    "profit",
+    "migrateStrategy",
+    "strategyMigration",
+    "emergencyExit",
+]
+
+VAULT_PRICING_TERMS = [
+    "oracle",
+    "priceFeed",
+    "getPrice",
+    "latestRoundData",
+    "latestAnswer",
+    "getReserves",
+    "spot",
+    "twap",
+    "stale",
+    "heartbeat",
+    "decimals",
+    "Chainlink",
+    "UniswapV2",
+    "UniswapV3",
+    "Curve",
+    "pool price",
+    "lpPrice",
+    "LP token",
+]
+
+VAULT_WITHDRAWAL_TERMS = [
+    "queue",
+    "withdrawalQueue",
+    "requestWithdraw",
+    "claimWithdraw",
+    "cooldown",
+    "lock",
+    "epoch",
+    "pendingWithdraw",
+    "availableLiquidity",
+    "liquidityBuffer",
+    "instantWithdraw",
+    "delayedWithdraw",
+    "cancelWithdraw",
+]
+
+VAULT_ADMIN_TERMS = [
+    "setStrategy",
+    "setOracle",
+    "setFee",
+    "setTreasury",
+    "pause",
+    "unpause",
+    "emergencyWithdraw",
+    "sweep",
+    "rescue",
+    "setDepositLimit",
+    "setWithdrawLimit",
+    "setMaxLoss",
+    "setSlippage",
+    "upgradeTo",
+    "initialize",
+    "initializer",
+]
+
+VAULT_TEST_COVERAGE_TERMS: dict[str, list[str]] = {
+    "deposit": ["deposit", "previewDeposit"],
+    "withdraw": ["withdraw", "previewWithdraw", "redeem", "previewRedeem"],
+    "mint": ["mint", "previewMint"],
+    "preview_functions": ["previewDeposit", "previewMint", "previewWithdraw", "previewRedeem"],
+    "total_assets": ["totalAssets"],
+    "share_conversion": ["convertToShares", "convertToAssets", "shares", "assets"],
+    "roundtrip": ["roundtrip", "depositWithdraw", "withdrawDeposit"],
+    "invariant": ["invariant", "StdInvariant"],
+    "fuzz": ["fuzz", "testFuzz"],
+    "donation_inflation": ["donation", "inflation"],
+    "decimals_rounding": ["decimals", "rounding", "precision", "mulDiv"],
+    "fee": ["fee", "performanceFee", "managementFee", "withdrawalFee", "depositFee"],
+    "strategy_loss": ["strategy", "loss", "gain", "debt", "harvest", "rebalance"],
+    "withdrawal_lifecycle": ["withdrawalQueue", "requestWithdraw", "claimWithdraw", "cooldown", "pendingWithdraw"],
+    "emergency_pause": ["emergency", "pause", "unpause"],
+    "oracle_pricing": ["oracle", "priceFeed", "stale", "twap", "heartbeat", "bounds", "slippage"],
+}
+
 SIGNAL_TERMS: dict[str, list[str]] = {
     "vault_accounting": [
+        "ERC4626",
         "totalAssets",
         "convertToShares",
         "convertToAssets",
+        "previewDeposit",
+        "previewMint",
+        "previewWithdraw",
+        "previewRedeem",
+        "maxDeposit",
+        "maxMint",
+        "maxWithdraw",
+        "maxRedeem",
         "pricePerShare",
         "sharePrice",
+        "exchangeRate",
         "totalSupply",
         "balanceOf",
         "shares",
@@ -72,6 +229,12 @@ SIGNAL_TERMS: dict[str, list[str]] = {
         "redeem",
         "mint",
     ],
+    "vault_erc4626": VAULT_ERC4626_TERMS,
+    "vault_accounting_risk": VAULT_ACCOUNTING_RISK_TERMS,
+    "vault_strategy": VAULT_STRATEGY_TERMS,
+    "vault_pricing": VAULT_PRICING_TERMS,
+    "vault_withdrawal_liquidity": VAULT_WITHDRAWAL_TERMS,
+    "vault_admin_ops": VAULT_ADMIN_TERMS,
     "oracle": [
         "oracle",
         "priceFeed",
@@ -147,6 +310,12 @@ SIGNAL_TERMS: dict[str, list[str]] = {
         "decimals",
         "precision",
         "mulDiv",
+        "donation",
+        "inflation",
+        "feeOnTransfer",
+        "rebasing",
+        "withdrawalFee",
+        "depositFee",
     ],
     "governance": [
         "governor",
@@ -207,6 +376,7 @@ SIGNAL_TERMS: dict[str, list[str]] = {
 PROTOCOL_WEIGHTS: dict[str, dict[str, int]] = {
     "vault": {
         "vault": 4,
+        "ERC4626": 8,
         "deposit": 3,
         "withdraw": 3,
         "mint": 2,
@@ -214,11 +384,17 @@ PROTOCOL_WEIGHTS: dict[str, dict[str, int]] = {
         "totalAssets": 5,
         "convertToShares": 5,
         "convertToAssets": 5,
+        "previewDeposit": 4,
+        "previewWithdraw": 4,
+        "previewRedeem": 4,
+        "maxWithdraw": 3,
         "pricePerShare": 4,
+        "sharePrice": 4,
+        "exchangeRate": 4,
         "share": 2,
         "strategy": 3,
+        "withdrawalQueue": 4,
         "asset": 2,
-        "ERC4626": 5,
     },
     "amm": {
         "swap": 4,
@@ -307,6 +483,12 @@ class ReadinessGap:
     detail: str
     recommendation: str
     tags: list[str]
+    priority: str = "Medium"
+    detected: list[str] = field(default_factory=list)
+    why_it_matters: str = ""
+    historical_pattern_similarity: str = ""
+    defensive_checks: list[str] = field(default_factory=list)
+    suggested_test: str = ""
 
 
 def rel(path: Path, root: Path) -> str:
@@ -500,6 +682,24 @@ def has_meaningful_oracle_signal(signals: dict[str, dict[str, object]]) -> bool:
     return bool(found - {"decimals"})
 
 
+def has_meaningful_vault_pricing_signal(signals: dict[str, dict[str, object]]) -> bool:
+    """Treat decimals alone as accounting complexity, not a vault pricing dependency."""
+    found = set(signals.get("vault_pricing", {}).get("terms", []))
+    return bool(found - {"decimals"})
+
+
+def detected_terms(signals: dict[str, dict[str, object]], *categories: str) -> list[str]:
+    return signal_terms(signals, *categories)
+
+
+def signal_count(signals: dict[str, dict[str, object]], category: str) -> int:
+    return len(signals.get(category, {}).get("terms", []))
+
+
+def collect_text_for_paths(contents: dict[Path, str], paths: Iterable[Path]) -> str:
+    return combined_text(contents, paths)
+
+
 def detect_test_readiness(
     contents: dict[Path, str],
     classified: ClassifiedFiles,
@@ -555,6 +755,32 @@ def detect_test_readiness(
         "slither": slither,
         "ci_workflow": ci,
         "edge_case_tests": edge_case_count >= 3,
+    }
+
+
+def detect_vault_test_coverage(
+    contents: dict[Path, str],
+    classified: ClassifiedFiles,
+) -> dict[str, object]:
+    usable_tests = [
+        path
+        for path in classified.solidity_tests
+        if not is_placeholder_skeleton(contents.get(path, ""))
+    ]
+    test_text = collect_text_for_paths(contents, usable_tests)
+    coverage: dict[str, bool] = {}
+    matched_terms: dict[str, list[str]] = {}
+    for key, terms in VAULT_TEST_COVERAGE_TERMS.items():
+        matched = sorted({term for term in terms if count_term(test_text, term) > 0})
+        coverage[key] = bool(matched)
+        matched_terms[key] = matched
+
+    return {
+        "coverage": coverage,
+        "matched_terms": matched_terms,
+        "covered_count": sum(1 for value in coverage.values() if value),
+        "total_checks": len(coverage),
+        "test_files_considered": len(usable_tests),
     }
 
 
@@ -633,30 +859,31 @@ def map_historical_patterns(
 ) -> list[HistoricalPattern]:
     patterns: list[HistoricalPattern] = []
     weak_invariants = not bool(test_readiness.get("invariant_tests"))
+    vault_like = has_any(signals, "vault_accounting") or has_any(signals, "vault_erc4626")
 
-    if has_any(signals, "vault_accounting") and has_meaningful_oracle_signal(signals) and weak_invariants:
+    if vault_like and (has_meaningful_oracle_signal(signals) or has_meaningful_vault_pricing_signal(signals)) and weak_invariants:
         patterns.append(
             pattern(
-                "Vault/oracle price-manipulation readiness gap",
-                signal_terms(signals, "vault_accounting", "oracle"),
-                "Vault accounting that depends on price or reserve assumptions has historically failed when spot values were trusted without enough defensive checks.",
+                "Harvest/Yearn-style oracle or pool price readiness gap",
+                signal_terms(signals, "vault_accounting", "vault_pricing", "oracle"),
+                "Vault accounting that depends on oracle, pool, LP, or reserve pricing needs explicit tests for stale, spot, and manipulated local price assumptions.",
                 "Price source remains representative during deposits, withdrawals, and share conversions.",
                 "Share/accounting value cannot be moved by transient price state.",
                 [
                     "Document oracle freshness, bounds, and fallback behavior.",
-                    "Test deposit and withdraw paths under manipulated local mock prices.",
-                    "Prefer TWAP, sanity bounds, or explicit staleness checks where appropriate.",
+                    "Test deposit, withdraw, and totalAssets under mocked stale and bounded prices.",
+                    "Prefer TWAP, sanity bounds, or explicit staleness checks where the design depends on external prices.",
                 ],
-                "Invariant: share price and totalAssets cannot be inflated by a single mocked price movement.",
-                ["vault-accounting", "oracle-risk", "price-manipulation", "invariant-testing"],
+                "Invariant: share price and totalAssets cannot be inflated by a single mocked price or pool-state movement.",
+                ["vault-accounting", "oracle-risk", "pool-pricing", "historical-vault-pattern", "invariant-testing"],
             )
         )
 
-    if has_any(signals, "vault_accounting") and weak_invariants:
+    if vault_like and weak_invariants:
         patterns.append(
             pattern(
                 "Vault accounting invariant readiness gap",
-                signal_terms(signals, "vault_accounting", "accounting_complexity"),
+                signal_terms(signals, "vault_accounting", "vault_erc4626", "vault_accounting_risk", "accounting_complexity"),
                 "Vaults need explicit conservation and roundtrip properties because share math, fees, donations, and rounding can break user-value assumptions.",
                 "Shares and assets remain exchangeable according to documented accounting rules.",
                 "Deposits, withdrawals, redemptions, and fee paths conserve value within expected rounding bounds.",
@@ -667,6 +894,78 @@ def map_historical_patterns(
                 ],
                 "Invariant: deposit followed by withdraw does not create value and does not strand assets beyond expected rounding.",
                 ["vault-security", "share-accounting", "totalAssets", "audit-readiness"],
+            )
+        )
+
+    if vault_like and has_any(signals, "vault_accounting_risk", ["donation", "inflation"]) and weak_invariants:
+        patterns.append(
+            pattern(
+                "ERC4626/share inflation or donation sensitivity readiness gap",
+                signal_terms(signals, "vault_erc4626", "vault_accounting_risk"),
+                "ERC4626-like share systems need tests for zero-supply, donation, inflation, and rounding edges before audit intake.",
+                "Initial or low-liquidity share accounting cannot be distorted by donated assets or rounding direction.",
+                "Share issuance and redemption preserve user value across supply edges.",
+                [
+                    "Test first deposit and low-supply states.",
+                    "Test donated assets before and after deposits.",
+                    "Test convertToShares and convertToAssets around rounding boundaries.",
+                ],
+                "Invariant: donations and low-supply states do not let share accounting create value beyond documented rounding.",
+                ["erc4626", "share-inflation-risk", "donation-sensitivity", "vault-invariant"],
+            )
+        )
+
+    if vault_like and has_any(signals, "vault_strategy"):
+        patterns.append(
+            pattern(
+                "Strategy debt/gain/loss accounting readiness gap",
+                signal_terms(signals, "vault_strategy", "vault_accounting"),
+                "Strategy vaults need explicit tests for gain, loss, debt, harvest, report, and migration lifecycle assumptions.",
+                "Strategy-reported balances, gains, losses, and debt remain aligned with vault accounting.",
+                "Strategy lifecycle events cannot silently break totalAssets, share price, or withdrawal accounting.",
+                [
+                    "Test harvest/report gain and loss paths with local mocks.",
+                    "Test strategy withdrawal and migration accounting.",
+                    "Document trusted strategy roles and loss-handling assumptions.",
+                ],
+                "Invariant: strategy gain/loss reports update totalAssets and share accounting according to documented policy.",
+                ["strategy-accounting", "vault-lifecycle", "gain-loss", "audit-readiness"],
+            )
+        )
+
+    if vault_like and has_any(signals, "vault_withdrawal_liquidity"):
+        patterns.append(
+            pattern(
+                "Withdrawal liquidity and queue lifecycle readiness gap",
+                signal_terms(signals, "vault_withdrawal_liquidity", "vault_accounting"),
+                "Withdrawal queues, cooldowns, epochs, and liquidity buffers need lifecycle tests because user exits depend on state transitions over time.",
+                "Requested, pending, claimable, and cancelled withdrawals move through documented states only.",
+                "Withdrawal lifecycle preserves shares/assets accounting and available liquidity assumptions.",
+                [
+                    "Test request, cancel, claim, cooldown, and epoch transitions.",
+                    "Test available liquidity and buffer boundaries.",
+                    "Document delayed withdrawal assumptions for auditors.",
+                ],
+                "Test: withdrawal lifecycle conserves shares and assets across request, cooldown, claim, and cancellation.",
+                ["withdrawal-queue", "liquidity-buffer", "vault-lifecycle", "audit-readiness"],
+            )
+        )
+
+    if vault_like and has_any(signals, "vault_admin_ops"):
+        patterns.append(
+            pattern(
+                "Privileged vault controls and emergency operation readiness gap",
+                signal_terms(signals, "vault_admin_ops", "access_control", "upgradeability"),
+                "Vault admin operations can change strategy, oracle, fee, limits, slippage, pause state, or upgrade targets and should be tested as launch-critical boundaries.",
+                "Privileged operations are limited to documented roles and cannot bypass accounting assumptions silently.",
+                "Emergency and configuration changes preserve the user-facing safety properties the protocol claims.",
+                [
+                    "Test unauthorized calls for each setter and emergency function.",
+                    "Test pause and emergency controls against deposit, withdraw, redeem, and strategy paths.",
+                    "Document trusted-role powers and operational limits.",
+                ],
+                "Invariant: admin operations cannot bypass vault accounting without explicit, documented trust assumptions.",
+                ["vault-admin", "emergency-controls", "access-control-review", "operational-readiness"],
             )
         )
 
@@ -809,8 +1108,357 @@ def add_gap(
     detail: str,
     recommendation: str,
     tags: list[str],
+    priority: str | None = None,
+    detected: list[str] | None = None,
+    why_it_matters: str = "",
+    historical_pattern_similarity: str = "",
+    defensive_checks: list[str] | None = None,
+    suggested_test: str = "",
 ) -> None:
-    gaps.append(ReadinessGap(severity, title, detail, recommendation, tags))
+    gaps.append(
+        ReadinessGap(
+            severity=severity,
+            title=title,
+            detail=detail,
+            recommendation=recommendation,
+            tags=tags,
+            priority=priority or severity.split(" ", 1)[0],
+            detected=detected or [],
+            why_it_matters=why_it_matters,
+            historical_pattern_similarity=historical_pattern_similarity,
+            defensive_checks=defensive_checks or [],
+            suggested_test=suggested_test,
+        )
+    )
+
+
+def compute_vault_readiness_score(
+    root: Path,
+    classified: ClassifiedFiles,
+    contents: dict[Path, str],
+    signals: dict[str, dict[str, object]],
+    test_readiness: dict[str, object],
+) -> tuple[int, dict[str, dict[str, object]], list[ReadinessGap], list[str]]:
+    all_text = combined_text(contents)
+    lower_text = all_text.lower()
+    lower_paths = [rel(p, root).lower() for p in contents]
+    vault_tests = detect_vault_test_coverage(contents, classified)
+    coverage = vault_tests["coverage"]
+    gaps: list[ReadinessGap] = []
+
+    score: dict[str, dict[str, object]] = {
+        "repository_structure": {"score": 0, "max": 10, "notes": []},
+        "test_presence": {"score": 0, "max": 15, "notes": []},
+        "vault_accounting_coverage": {"score": 0, "max": 20, "notes": []},
+        "invariant_fuzz_readiness": {"score": 0, "max": 20, "notes": []},
+        "oracle_pricing_readiness": {"score": 0, "max": 10, "notes": []},
+        "strategy_withdrawal_lifecycle_readiness": {"score": 0, "max": 10, "notes": []},
+        "admin_operational_readiness": {"score": 0, "max": 10, "notes": []},
+        "documentation_readiness": {"score": 0, "max": 5, "notes": []},
+    }
+
+    def award(category: str, points: int, note: str) -> None:
+        score[category]["score"] = min(
+            int(score[category]["max"]),
+            int(score[category]["score"]) + points,
+        )
+        score[category]["notes"].append(note)
+
+    has_sources = bool(classified.solidity_sources)
+    has_config = bool(classified.configs)
+    has_src = any(p.startswith("src/") or "/src/" in f"/{p}" for p in lower_paths)
+    has_tests = bool(classified.solidity_tests)
+    has_docs_dir = any(p.startswith("docs/") for p in lower_paths)
+    has_workflow = bool(classified.workflows)
+    vault_like_terms = detected_terms(signals, "vault_erc4626", "vault_accounting")
+    pricing_terms = detected_terms(signals, "vault_pricing", "oracle")
+    meaningful_pricing_terms = sorted(set(pricing_terms) - {"decimals"})
+    strategy_terms = detected_terms(signals, "vault_strategy")
+    withdrawal_terms = detected_terms(signals, "vault_withdrawal_liquidity")
+    admin_terms = detected_terms(signals, "vault_admin_ops", "access_control")
+    upgrade_terms = detected_terms(signals, "upgradeability")
+    fee_terms = [term for term in detected_terms(signals, "vault_accounting_risk", "accounting_complexity") if "fee" in term.lower()]
+    share_conversion_signal = has_any(signals, "vault_erc4626", ["convertToShares", "convertToAssets", "previewDeposit", "previewWithdraw"]) or has_any(signals, "vault_accounting", ["convertToShares", "convertToAssets", "shares", "assets"])
+    role_covered = any(term in lower_text for term in ["unauthorized", "onlyowner", "accesscontrol", "role", "admin"])
+    oracle_controls = any(term in lower_text for term in ["stale", "heartbeat", "twap", "bounds", "sanity", "slippage"])
+    upgrade_covered = not upgrade_terms or any(term in lower_text for term in ["initializer", "reinitializer", "upgrade", "storage gap", "__gap"])
+
+    if has_sources:
+        award("repository_structure", 4, "Solidity vault-like sources detected.")
+    if has_config:
+        award("repository_structure", 2, "Recognized build or analysis config detected.")
+    if has_src and (has_tests or has_docs_dir):
+        award("repository_structure", 2, "Clear src/test/docs structure detected.")
+    if has_workflow:
+        award("repository_structure", 2, "CI workflow detected.")
+
+    if has_tests:
+        award("test_presence", 5, "Solidity tests detected.")
+    if test_readiness["assert_usage"]:
+        award("test_presence", 3, "Assert usage detected.")
+    if test_readiness["foundry_tests"] or test_readiness["hardhat_tests"]:
+        award("test_presence", 3, "Foundry or Hardhat environment detected.")
+    if coverage["deposit"] and coverage["withdraw"]:
+        award("test_presence", 2, "Deposit and withdraw/redeem test signals detected.")
+    if coverage["mint"] or coverage["preview_functions"]:
+        award("test_presence", 2, "Mint or preview function test signals detected.")
+
+    if vault_like_terms:
+        award("vault_accounting_coverage", 4, "Vault/ERC4626 share-accounting surface detected.")
+    if coverage["total_assets"]:
+        award("vault_accounting_coverage", 4, "totalAssets test signal detected.")
+    if coverage["share_conversion"]:
+        award("vault_accounting_coverage", 4, "Shares/assets conversion test signal detected.")
+    if coverage["roundtrip"]:
+        award("vault_accounting_coverage", 4, "Deposit/withdraw roundtrip test signal detected.")
+    if coverage["donation_inflation"] or coverage["decimals_rounding"]:
+        award("vault_accounting_coverage", 4, "Donation, inflation, decimals, or rounding test signal detected.")
+
+    if test_readiness["invariant_tests"]:
+        award("invariant_fuzz_readiness", 8, "Invariant tests detected.")
+    if test_readiness["fuzz_tests"]:
+        award("invariant_fuzz_readiness", 4, "Fuzz tests detected.")
+    if test_readiness["handler_contracts"]:
+        award("invariant_fuzz_readiness", 3, "Handler/property-style test signal detected.")
+    if test_readiness["edge_case_tests"]:
+        award("invariant_fuzz_readiness", 2, "Edge-case test signal detected.")
+    if vault_tests["covered_count"] >= 8:
+        award("invariant_fuzz_readiness", 3, "Broad vault test vocabulary detected.")
+
+    if has_meaningful_oracle_signal(signals) or has_meaningful_vault_pricing_signal(signals):
+        if oracle_controls:
+            award("oracle_pricing_readiness", 4, "Oracle/pool pricing controls are documented or tested.")
+        if coverage["oracle_pricing"]:
+            award("oracle_pricing_readiness", 3, "Oracle/pricing test signal detected.")
+        if coverage["decimals_rounding"]:
+            award("oracle_pricing_readiness", 2, "Decimals or normalization test signal detected.")
+        if role_covered:
+            award("oracle_pricing_readiness", 1, "Oracle update role boundary signal detected.")
+    else:
+        award("oracle_pricing_readiness", 10, "No explicit oracle or pool-pricing dependency detected.")
+
+    if strategy_terms or withdrawal_terms:
+        if strategy_terms and coverage["strategy_loss"]:
+            award("strategy_withdrawal_lifecycle_readiness", 4, "Strategy gain/loss lifecycle test signal detected.")
+        if withdrawal_terms and coverage["withdrawal_lifecycle"]:
+            award("strategy_withdrawal_lifecycle_readiness", 4, "Withdrawal lifecycle test signal detected.")
+        if (strategy_terms or withdrawal_terms) and (coverage["emergency_pause"] or role_covered):
+            award("strategy_withdrawal_lifecycle_readiness", 2, "Lifecycle operational boundary signal detected.")
+    else:
+        award("strategy_withdrawal_lifecycle_readiness", 10, "No strategy or queued-withdrawal lifecycle surface detected.")
+
+    if admin_terms:
+        award("admin_operational_readiness", 2, "Vault admin/operational surface is visible.")
+    if role_covered:
+        award("admin_operational_readiness", 3, "Role or unauthorized-call coverage signal detected.")
+    if coverage["emergency_pause"] or any(term in lower_text for term in ["pause", "emergency"]):
+        award("admin_operational_readiness", 2, "Pause or emergency control signal detected.")
+    if upgrade_covered:
+        award("admin_operational_readiness", 2, "Upgradeability is absent or initializer/upgrade terms are visible.")
+    if fee_terms and coverage["fee"]:
+        award("admin_operational_readiness", 1, "Fee accounting test signal detected.")
+    elif not fee_terms:
+        award("admin_operational_readiness", 1, "No explicit fee logic detected.")
+
+    has_readme = any(p.name.lower() == "readme.md" for p in classified.docs)
+    if has_readme:
+        award("documentation_readiness", 2, "README detected.")
+    if any(term in lower_text for term in ["assumption", "invariant", "limitations", "rounding", "oracle"]):
+        award("documentation_readiness", 2, "Vault assumptions or limitations are documented.")
+    if any(term in lower_text for term in ["owner", "admin", "role", "treasury", "deployment"]):
+        award("documentation_readiness", 1, "Role, treasury, owner, or deployment terms are documented.")
+
+    if not has_tests:
+        add_gap(
+            gaps,
+            "Critical readiness gap",
+            "No Solidity tests detected",
+            "The scanner did not find Solidity test files. A value-bearing vault repository without tests is not ready for audit intake.",
+            "Add Foundry or Hardhat tests for deposit, mint, withdraw, redeem, totalAssets, conversion, admin, and emergency flows.",
+            ["testing", "vault", "audit-blocker"],
+            priority="Critical",
+            detected=vault_like_terms,
+            why_it_matters="Vault accounting depends on user balances, shares, assets, and role-gated operations staying consistent across state transitions.",
+            historical_pattern_similarity="Maps to historical vault/accounting failure classes where untested assumptions created audit blockers or loss conditions.",
+            defensive_checks=["Core flow tests", "Role-boundary tests", "Accounting conservation tests"],
+            suggested_test="Add local unit tests for deposit, withdraw/redeem, totalAssets, convertToShares, convertToAssets, pause, and admin setters.",
+        )
+    if vault_like_terms and not test_readiness["invariant_tests"]:
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "Vault accounting without invariant tests",
+            "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+            "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+            ["vault-accounting", "invariant-testing", "erc4626"],
+            priority="High",
+            detected=vault_like_terms,
+            why_it_matters="Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals.",
+            historical_pattern_similarity="Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+            defensive_checks=[
+                "deposit/withdraw roundtrip",
+                "convertToShares/convertToAssets consistency",
+                "donation/inflation resistance",
+                "rounding direction tests",
+                "totalAssets external dependency tests",
+            ],
+            suggested_test="Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.",
+        )
+    if has_any(signals, "vault_erc4626", ["previewDeposit", "previewMint", "previewWithdraw", "previewRedeem"]) and not coverage["preview_functions"]:
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "ERC4626-like interface without preview function tests",
+            "Preview function signals were detected, but test files do not visibly cover previewDeposit, previewMint, previewWithdraw, or previewRedeem.",
+            "Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.",
+            ["erc4626", "preview-functions", "vault-accounting"],
+            priority="High",
+            detected=detected_terms(signals, "vault_erc4626"),
+            why_it_matters="ERC4626 integrations often rely on preview functions for quotes and UX; inconsistent previews can create user and integration risk.",
+            historical_pattern_similarity="Maps to share/accounting mismatch classes where quoted and realized vault state diverge.",
+            defensive_checks=["preview/action equivalence", "rounding direction tests", "max function boundary tests"],
+            suggested_test="For each preview function, compare the previewed shares/assets with the actual deposit, mint, withdraw, or redeem result.",
+        )
+    if share_conversion_signal and not coverage["decimals_rounding"]:
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "Shares/assets conversion without rounding tests",
+            "Shares/assets conversion signals were detected without visible decimals, precision, mulDiv, or rounding test coverage.",
+            "Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.",
+            ["share-accounting", "rounding", "precision"],
+            priority="High",
+            detected=detected_terms(signals, "vault_erc4626", "vault_accounting_risk"),
+            why_it_matters="Small rounding mistakes in conversion functions can compound into unfair share issuance, redemption drift, or stranded assets.",
+            historical_pattern_similarity="Maps to historical arithmetic and accounting mismatch classes where precision assumptions failed.",
+            defensive_checks=["small amount tests", "decimals normalization", "mulDiv/precision review", "conversion reversibility"],
+            suggested_test="Fuzz assets and shares across small, large, and decimal-edge values and assert conversion error stays within documented bounds.",
+        )
+    if (strategy_terms or meaningful_pricing_terms or has_any(signals, "vault_accounting_risk", ["externalBalance"])) and not (coverage["donation_inflation"] or coverage["oracle_pricing"] or coverage["strategy_loss"]):
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "totalAssets external dependency without manipulation-resistance tests",
+            "totalAssets appears connected to external strategy, pricing, or balance assumptions without visible manipulation-resistance test coverage.",
+            "Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant.",
+            ["totalAssets", "strategy-accounting", "oracle-risk"],
+            priority="High",
+            detected=sorted(set(strategy_terms + meaningful_pricing_terms + detected_terms(signals, "vault_accounting"))),
+            why_it_matters="Vault share value often depends on totalAssets; external balances, strategies, or prices can make the accounting view drift from user expectations.",
+            historical_pattern_similarity="Maps to Harvest/Yearn-style vault readiness classes where pricing or strategy state influenced share accounting.",
+            defensive_checks=["donation tests", "mock strategy gain/loss", "stale/bounded oracle tests", "share price drift checks"],
+            suggested_test="Mock external strategy or price state and assert totalAssets, share price, and withdrawal accounting remain within documented policy.",
+        )
+    if strategy_terms and not coverage["strategy_loss"]:
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "Strategy accounting without gain/loss tests",
+            "Strategy, harvest, debt, gain, loss, or migration signals were detected without visible strategy lifecycle tests.",
+            "Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present.",
+            ["strategy-accounting", "gain-loss", "vault-lifecycle"],
+            priority="High",
+            detected=strategy_terms,
+            why_it_matters="Strategy vaults can look solvent until gain/loss, debt, or migration paths update accounting in unexpected ways.",
+            historical_pattern_similarity="Maps to strategy debt/gain/loss accounting readiness classes.",
+            defensive_checks=["gain report", "loss report", "debt update", "withdrawFromStrategy", "strategy migration"],
+            suggested_test="Use a local mock strategy that reports gain and loss, then assert totalAssets and share accounting follow documented policy.",
+        )
+    if withdrawal_terms and not coverage["withdrawal_lifecycle"]:
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "Withdrawal queue/cooldown without lifecycle tests",
+            "Withdrawal queue, cooldown, epoch, pending withdrawal, or liquidity-buffer signals were detected without visible lifecycle tests.",
+            "Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior.",
+            ["withdrawal-queue", "liquidity", "vault-lifecycle"],
+            priority="High",
+            detected=withdrawal_terms,
+            why_it_matters="Delayed withdrawals create state machines; audit preparation should prove shares and assets are conserved through each state.",
+            historical_pattern_similarity="Maps to vault lifecycle readiness classes where exit accounting or liquidity assumptions can break.",
+            defensive_checks=["requestWithdraw", "claimWithdraw", "cancelWithdraw", "cooldown", "available liquidity"],
+            suggested_test="Test the full withdrawal lifecycle and assert shares/assets are conserved across request, cooldown, claim, and cancellation.",
+        )
+    if (has_meaningful_oracle_signal(signals) or has_meaningful_vault_pricing_signal(signals)) and not (coverage["oracle_pricing"] and oracle_controls):
+        add_gap(
+            gaps,
+            "High readiness gap",
+            "Oracle-dependent vault without stale-price or bounds tests",
+            "Oracle, price-feed, pool-price, reserve, TWAP, or LP pricing signals were detected without enough stale-price, bounds, or sanity-check coverage.",
+            "Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.",
+            ["oracle-risk", "vault-pricing", "pool-price"],
+            priority="High",
+            detected=meaningful_pricing_terms,
+            why_it_matters="Vaults that price assets, LP tokens, or strategies through external sources need explicit assumptions around stale, spot, and bounded prices.",
+            historical_pattern_similarity="Maps to historical vault/oracle and pool-price manipulation readiness classes.",
+            defensive_checks=["stale price rejection", "decimals normalization", "TWAP/sanity check", "bounds", "oracle setter roles"],
+            suggested_test="Use local mock oracles/pools to test stale, out-of-bounds, decimals, and spot-price scenarios without live-chain calls.",
+        )
+    if fee_terms and not coverage["fee"]:
+        add_gap(
+            gaps,
+            "Medium readiness gap",
+            "Fee logic without fee accounting tests",
+            "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
+            "Add deposit, withdrawal, management, and performance fee tests where relevant.",
+            ["fee-accounting", "vault-accounting"],
+            priority="Medium",
+            detected=fee_terms,
+            why_it_matters="Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier.",
+            historical_pattern_similarity="Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+            defensive_checks=["fee bounds", "recipient accounting", "share conservation", "rounding with fees"],
+            suggested_test="Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations.",
+        )
+    if admin_terms and not role_covered:
+        add_gap(
+            gaps,
+            "Medium readiness gap",
+            "Admin setters without role-boundary tests",
+            "Vault admin setter or emergency-control signals were detected without visible unauthorized-call or role-boundary coverage.",
+            "Add unauthorized-call tests for every setter, strategy/oracle update, fee update, limit change, rescue, sweep, pause, and upgrade path.",
+            ["access-control-review", "vault-admin", "operational-security"],
+            priority="Medium",
+            detected=admin_terms,
+            why_it_matters="Vault owners or roles can often change pricing, strategies, fees, limits, and emergency behavior; boundaries should be explicit before audit.",
+            historical_pattern_similarity="Maps to privileged control and operational risk readiness classes.",
+            defensive_checks=["unauthorized-call tests", "role documentation", "timelock/multisig assumptions", "setter bounds"],
+            suggested_test="For each admin function, assert an unprivileged caller reverts and the authorized role changes only the documented state.",
+        )
+    if has_any(signals, "vault_admin_ops", ["pause", "unpause", "emergencyWithdraw", "emergencyExit"]) and not coverage["emergency_pause"]:
+        add_gap(
+            gaps,
+            "Medium readiness gap",
+            "Pause/emergency controls without operational tests",
+            "Pause or emergency signals were detected without visible tests for blocked flows and documented recovery behavior.",
+            "Add tests showing pause/emergency controls block risky flows and preserve documented exit or recovery paths.",
+            ["pause", "emergency-controls", "vault-operations"],
+            priority="Medium",
+            detected=detected_terms(signals, "vault_admin_ops"),
+            why_it_matters="Emergency controls are launch-critical; they should behave predictably under stress without bypassing accounting assumptions.",
+            historical_pattern_similarity="Maps to operational readiness classes where emergency behavior changes core state transitions.",
+            defensive_checks=["pause blocks deposit", "pause blocks withdraw/redeem if intended", "emergency exit behavior", "role boundary"],
+            suggested_test="Assert pause and emergency states block or allow each vault flow exactly as documented.",
+        )
+    if upgrade_terms and not upgrade_covered:
+        add_gap(
+            gaps,
+            "Medium readiness gap",
+            "Upgradeable vault without initializer/upgrade tests",
+            "Upgradeable/proxy signals were detected without visible initializer, reinitializer, storage, or upgrade authorization coverage.",
+            "Add initializer-once, unauthorized-upgrade, storage layout, and post-upgrade accounting tests.",
+            ["upgradeability", "initializer", "proxy-review"],
+            priority="Medium",
+            detected=upgrade_terms,
+            why_it_matters="Upgradeable vaults combine accounting risk with implementation risk; initialization and authorization gaps are common audit blockers.",
+            historical_pattern_similarity="Maps to initialization and upgrade boundary readiness classes.",
+            defensive_checks=["initializer can run once", "upgrade authorization", "storage layout notes", "post-upgrade invariant"],
+            suggested_test="Assert unauthorized callers cannot initialize or upgrade and that accounting invariants hold after a local upgrade simulation.",
+        )
+
+    total = sum(int(category["score"]) for category in score.values())
+    total = max(0, min(100, total))
+    next_steps = recommended_next_steps(gaps, "vault")
+    return total, score, gaps, next_steps
 
 
 def compute_readiness_score(
@@ -821,6 +1469,9 @@ def compute_readiness_score(
     test_readiness: dict[str, object],
     protocol_type: str,
 ) -> tuple[int, dict[str, dict[str, object]], list[ReadinessGap], list[str]]:
+    if protocol_type == "vault":
+        return compute_vault_readiness_score(root, classified, contents, signals, test_readiness)
+
     all_text = combined_text(contents)
     lower_paths = [rel(p, root).lower() for p in contents]
     gaps: list[ReadinessGap] = []
@@ -1027,6 +1678,11 @@ def recommended_next_steps(gaps: list[ReadinessGap], protocol_type: str) -> list
         steps.append("Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.")
     if "vault" in gap_titles or protocol_type == "vault":
         steps.append("Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.")
+        steps.append("Add convertToShares/convertToAssets rounding tests and preview/action equivalence checks for ERC4626-like flows.")
+    if "strategy" in gap_titles:
+        steps.append("Add local mock strategy tests for gain, loss, debt, harvest, and migration accounting.")
+    if "withdrawal queue" in gap_titles or "cooldown" in gap_titles:
+        steps.append("Add withdrawal lifecycle tests for request, cooldown, claim, cancellation, and liquidity-buffer boundaries.")
     if "admin" in gap_titles or "authorization" in gap_titles:
         steps.append("Document privileged roles and add unauthorized-call tests for every setter and emergency control.")
     if "reentrancy" in gap_titles:
@@ -1056,9 +1712,11 @@ def suggest_invariants(
     if protocol_type == "vault" or has_any(signals, "vault_accounting"):
         add("totalAssets consistency", "vault", "totalAssets should match local asset accounting and strategy balances within documented rounding.")
         add("deposit/withdraw roundtrip", "vault", "A user should not create value by depositing and withdrawing through normal paths.")
-        add("share price manipulation resistance", "vault", "Donations, supply edges, or local price changes should not let one actor distort share value unexpectedly.")
+        add("convertToShares/convertToAssets consistency", "vault", "Conversion functions should be mutually consistent within documented rounding across supply states.")
+        add("share price donation resistance", "vault", "Donations, low supply, and external balances should not let one actor distort share value unexpectedly.")
         add("fee accounting conservation", "vault", "Fees should be bounded, documented, and unable to overcharge beyond configured limits.")
         add("strategy balance drift handling", "vault", "Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.")
+        add("withdrawal lifecycle conservation", "vault", "Queued or delayed withdrawals should conserve shares/assets through request, cooldown, claim, and cancellation.")
         add("pause behavior", "vault", "Pause should block risky flows while preserving documented emergency exits.")
     if protocol_type == "oracle" or has_meaningful_oracle_signal(signals):
         add("stale price rejection", "oracle", "Stale oracle rounds should be rejected or handled according to documented policy.")
@@ -1124,6 +1782,7 @@ def generate_report(
     protocol_scores: dict[str, int],
     signals: dict[str, dict[str, object]],
     test_readiness: dict[str, object],
+    vault_test_coverage: dict[str, object],
     registry_metadata: dict[str, object],
     historical_patterns: list[HistoricalPattern],
     score: int,
@@ -1199,7 +1858,13 @@ def generate_report(
     lines.append("## Risk Signal Summary")
     lines.append("")
     for category in [
+        "vault_erc4626",
         "vault_accounting",
+        "vault_accounting_risk",
+        "vault_strategy",
+        "vault_pricing",
+        "vault_withdrawal_liquidity",
+        "vault_admin_ops",
         "oracle",
         "access_control",
         "reentrancy_value_flow",
@@ -1230,6 +1895,24 @@ def generate_report(
     if test_readiness.get("test_files"):
         lines.append(f"- Test files: `{', '.join(test_readiness['test_files'][:10])}`")
     lines.append("")
+    if protocol_type == "vault":
+        lines.append("## Vault Rule Pack Coverage")
+        lines.append("")
+        lines.append("The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets assumptions, conversion rounding, fee logic, strategies, withdrawal lifecycle, oracle/pricing assumptions, admin controls, and pause/emergency behavior.")
+        lines.append("")
+        coverage = vault_test_coverage.get("coverage", {})
+        matched = vault_test_coverage.get("matched_terms", {})
+        rows = [["Vault check", "Covered", "Matched terms"]]
+        for key in sorted(coverage):
+            rows.append(
+                [
+                    key.replace("_", " "),
+                    "yes" if coverage[key] else "no",
+                    ", ".join(matched.get(key, [])) or "-",
+                ]
+            )
+        lines.append(markdown_table(rows))
+        lines.append("")
     lines.append("## Historical Exploit-Pattern Similarity")
     lines.append("")
     if historical_patterns:
@@ -1254,7 +1937,22 @@ def generate_report(
     lines.append("")
     if gaps:
         for gap in gaps:
-            lines.append(f"- **{gap.severity}: {gap.title}.** {gap.detail} Recommendation: {gap.recommendation} Tags: `{', '.join(gap.tags)}`")
+            lines.append(f"### {gap.severity}: {gap.title}")
+            lines.append("")
+            lines.append(f"- Priority: `{gap.priority}`")
+            lines.append(f"- Detected: `{', '.join(gap.detected) if gap.detected else 'scanner signal'}`")
+            lines.append(f"- What was detected: {gap.detail}")
+            if gap.why_it_matters:
+                lines.append(f"- Why it matters: {gap.why_it_matters}")
+            if gap.historical_pattern_similarity:
+                lines.append(f"- Historical pattern similarity: {gap.historical_pattern_similarity}")
+            if gap.defensive_checks:
+                lines.append("- Recommended defensive checks:")
+                for check in gap.defensive_checks:
+                    lines.append(f"  - {check}")
+            lines.append(f"- Suggested test: {gap.suggested_test or gap.recommendation}")
+            lines.append(f"- Search tags: `{', '.join(gap.tags)}`")
+            lines.append("")
     else:
         lines.append("- No major automated gaps detected. This does not prove safety and should be followed by manual review.")
     lines.append("")
@@ -1332,6 +2030,7 @@ def json_report(
     score_breakdown: dict[str, dict[str, object]],
     classified: ClassifiedFiles,
     signals: dict[str, dict[str, object]],
+    vault_test_coverage: dict[str, object],
     historical_patterns: list[HistoricalPattern],
     gaps: list[ReadinessGap],
     invariants: list[dict[str, str]],
@@ -1355,6 +2054,7 @@ def json_report(
             "workflows": [rel(p, root) for p in classified.workflows],
         },
         "signals": signals,
+        "vault_rule_pack": vault_test_coverage,
         "historical_patterns": [item.__dict__ for item in historical_patterns],
         "readiness_gaps": [item.__dict__ for item in gaps],
         "suggested_invariants": invariants,
@@ -1389,11 +2089,27 @@ contract ArkheionxReadinessInvariants {
         // TODO: assert deposit/withdraw sequences do not create value beyond rounding.
     }
 
-    function invariant_sharePriceManipulationResistance() public {
-        // TODO: assert donation, supply, and mock-price edges cannot distort share value unexpectedly.
+    function invariant_convertToSharesConvertToAssetsConsistency() public {
+        // TODO: assert conversion functions are consistent within documented rounding.
     }
 
-    function invariant_adminRoleCannotBypassAccounting() public {
+    function invariant_sharePriceDonationResistance() public {
+        // TODO: assert donations and low-supply states cannot distort share value unexpectedly.
+    }
+
+    function invariant_feeAccountingDoesNotCreateValue() public {
+        // TODO: assert fees remain bounded and do not create or strand value beyond policy.
+    }
+
+    function invariant_strategyLossDoesNotBreakAccounting() public {
+        // TODO: assert mocked strategy gain/loss keeps totalAssets and shares consistent.
+    }
+
+    function invariant_withdrawalLifecycleConservesShares() public {
+        // TODO: assert request, cooldown, claim, and cancel flows conserve shares/assets.
+    }
+
+    function invariant_adminCannotBypassAccountingWithoutExplicitTrust() public {
         // TODO: assert privileged actions cannot silently bypass documented accounting invariants.
     }
 
@@ -1453,6 +2169,7 @@ def main(argv: list[str] | None = None) -> int:
     ]
     signals = detect_signals(contents, root, signal_paths or contents.keys())
     test_readiness = detect_test_readiness(contents, classified, root)
+    vault_test_coverage = detect_vault_test_coverage(contents, classified)
     registry_metadata = load_existing_registry_metadata(root)
     historical_patterns = map_historical_patterns(signals, test_readiness)
     score, score_breakdown, gaps, next_steps = compute_readiness_score(
@@ -1478,6 +2195,7 @@ def main(argv: list[str] | None = None) -> int:
         protocol_scores=protocol_scores,
         signals=signals,
         test_readiness=test_readiness,
+        vault_test_coverage=vault_test_coverage,
         registry_metadata=registry_metadata,
         historical_patterns=historical_patterns,
         score=score,
@@ -1502,6 +2220,7 @@ def main(argv: list[str] | None = None) -> int:
                 score_breakdown,
                 classified,
                 signals,
+                vault_test_coverage,
                 historical_patterns,
                 gaps,
                 invariants,

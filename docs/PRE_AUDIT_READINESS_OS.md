@@ -83,6 +83,9 @@ Main stages:
 
 Arkheionx currently looks for signals in these families:
 
+- vault rule pack: ERC4626-like interfaces, share/accounting conversion,
+  totalAssets assumptions, fees, strategies, withdrawal queues, and vault
+  admin operations;
 - vault accounting: `totalAssets`, `convertToShares`, `withdraw`, `deposit`;
 - oracle assumptions: price feeds, TWAP, staleness, reserves, decimals;
 - reentrancy-sensitive value flow: external calls, transfers, callbacks;
@@ -95,6 +98,8 @@ Arkheionx currently looks for signals in these families:
 - governance: proposals, quorum, delegates, execution.
 
 Signals are not findings. They are review prompts.
+
+For vault-specific behavior, see [`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md).
 
 ## Historical Pattern Similarity
 

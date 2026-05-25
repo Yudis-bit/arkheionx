@@ -30,9 +30,14 @@ Examples:
 
 ```text
 vault accounting
+ERC4626
 share price manipulation
 totalAssets consistency
+convertToShares
+convertToAssets
 deposit withdraw roundtrip
+share inflation
+donation risk class
 reward conservation
 no overclaim
 interest index monotonicity
@@ -133,6 +138,14 @@ audit blocker
 missing invariant
 oracle-risk
 vault-accounting
+ERC4626 readiness
+share accounting
+totalAssets external dependency
+fee accounting
+strategy accounting
+withdrawal queue
+oracle-dependent vault
+vault invariant tests
 reentrancy-review
 access-control-review
 upgradeability review
@@ -157,6 +170,9 @@ search index
 launch report
 pre-audit sprint
 ecosystem pack
+Vault Rule Pack
+Vault Launch Report
+Vault Pre-Audit Sprint
 ```
 
 ## Search By Monetization Or Services
@@ -180,6 +196,8 @@ monetization
 
 ```sh
 rg -n "vault accounting|share price manipulation|totalAssets" .
+rg -n "ERC4626|convertToShares|convertToAssets|previewDeposit|previewWithdraw" .
+rg -n "strategy accounting|withdrawalQueue|requestWithdraw|claimWithdraw|cooldown" .
 rg -n "oracle manipulation|stale|TWAP|latestRoundData" .
 rg -n "missing invariant|pre-audit readiness|audit blocker" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .

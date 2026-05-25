@@ -47,6 +47,20 @@ funds.
 | Documentation readiness | `{{ documentation_score }}` | 10 | `{{ documentation_notes }}` |
 | Operational/admin readiness | `{{ operational_score }}` | 15 | `{{ operational_notes }}` |
 
+## Vault Rule Pack Coverage
+
+For vault-like protocols, include:
+
+- ERC4626/share accounting signals;
+- totalAssets coverage;
+- conversion and preview coverage;
+- donation/inflation and rounding coverage;
+- fee accounting coverage;
+- strategy gain/loss coverage;
+- withdrawal lifecycle coverage;
+- oracle/pricing coverage;
+- pause/emergency/admin coverage.
+
 ## Historical Exploit-Pattern Similarity
 
 For each pattern, use risk-signal language only:
@@ -63,7 +77,16 @@ For each pattern, use risk-signal language only:
 
 ## Missing Invariant And Test Coverage
 
-- `{{ missing_invariant_or_test_coverage }}`
+### `{{ severity }}: {{ readiness_gap_title }}`
+
+- Priority: `{{ priority }}`
+- Detected: `{{ detected_signals }}`
+- What was detected: `{{ what_was_detected }}`
+- Why it matters: `{{ why_it_matters }}`
+- Historical pattern similarity: `{{ historical_pattern_similarity }}`
+- Recommended defensive checks: `{{ defensive_checks }}`
+- Suggested test: `{{ suggested_test }}`
+- Search tags: `{{ search_tags }}`
 
 ## Suggested Foundry Invariant Skeletons
 

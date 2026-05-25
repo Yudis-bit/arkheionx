@@ -16,7 +16,7 @@
     ],
     "workflows": []
   },
-  "generated_at": "2026-05-25T06:11:33+00:00",
+  "generated_at": "2026-05-25T08:16:43+00:00",
   "historical_patterns": [
     {
       "broken_invariant_class": "Deposits, withdrawals, redemptions, and fee paths conserve value within expected rounding bounds.",
@@ -38,6 +38,7 @@
         "shares",
         "totalAssets",
         "totalSupply",
+        "treasury",
         "withdraw"
       ],
       "failed_assumption_class": "Shares and assets remain exchangeable according to documented accounting rules.",
@@ -50,6 +51,32 @@
       ],
       "suggested_test": "Invariant: deposit followed by withdraw does not create value and does not strand assets beyond expected rounding.",
       "why_it_matters": "Vaults need explicit conservation and roundtrip properties because share math, fees, donations, and rounding can break user-value assumptions."
+    },
+    {
+      "broken_invariant_class": "Emergency and configuration changes preserve the user-facing safety properties the protocol claims.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Test unauthorized calls for each setter and emergency function.",
+        "Test pause and emergency controls against deposit, withdraw, redeem, and strategy paths.",
+        "Document trusted-role powers and operational limits."
+      ],
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "failed_assumption_class": "Privileged operations are limited to documented roles and cannot bypass accounting assumptions silently.",
+      "name": "Privileged vault controls and emergency operation readiness gap",
+      "search_tags": [
+        "vault-admin",
+        "emergency-controls",
+        "access-control-review",
+        "operational-readiness"
+      ],
+      "suggested_test": "Invariant: admin operations cannot bypass vault accounting without explicit, documented trust assumptions.",
+      "why_it_matters": "Vault admin operations can change strategy, oracle, fee, limits, slippage, pause state, or upgrade targets and should be tested as launch-critical boundaries."
     },
     {
       "broken_invariant_class": "Value flow remains single-entry and accounting is updated before control leaves the contract.",
@@ -112,7 +139,7 @@
   "next_steps": [
     "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
     "Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.",
-    "Review state update order and add malicious local receiver tests for callback-capable flows.",
+    "Add convertToShares/convertToAssets rounding tests and preview/action equivalence checks for ERC4626-like flows.",
     "Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.",
     "Run a formal smart contract audit before mainnet launch or before handling real user funds."
   ],
@@ -120,84 +147,135 @@
   "protocol_type": "vault",
   "readiness_gaps": [
     {
-      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
-      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-      "severity": "High readiness gap",
-      "tags": [
-        "invariant-testing",
-        "vault"
+      "defensive_checks": [
+        "deposit/withdraw roundtrip",
+        "convertToShares/convertToAssets consistency",
+        "donation/inflation resistance",
+        "rounding direction tests",
+        "totalAssets external dependency tests"
       ],
-      "title": "No invariant tests detected for DeFi protocol shape"
+      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+      "detected": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "mint",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+      "priority": "High",
+      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+      "severity": "High readiness gap",
+      "suggested_test": "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.",
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests",
+      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
     },
     {
-      "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
-      "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
-      "severity": "Medium readiness gap",
-      "tags": [
-        "reentrancy-review",
-        "value-flow"
+      "defensive_checks": [
+        "fee bounds",
+        "recipient accounting",
+        "share conservation",
+        "rounding with fees"
       ],
-      "title": "External-call value flow needs reentrancy review"
+      "detail": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
+      "detected": [
+        "fee"
+      ],
+      "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+      "priority": "Medium",
+      "recommendation": "Add deposit, withdrawal, management, and performance fee tests where relevant.",
+      "severity": "Medium readiness gap",
+      "suggested_test": "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations.",
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests",
+      "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
     }
   ],
   "repo_root": "examples/mini-vault",
-  "score": 70,
+  "score": 73,
   "score_band": "Improving",
   "score_breakdown": {
-    "defi_risk_coverage": {
-      "max": 20,
-      "notes": [
-        "Accounting assumptions have at least some documented or tested controls.",
-        "Role or admin boundaries have some visible coverage.",
-        "Protocol-specific checklist or property coverage detected."
-      ],
-      "score": 12
-    },
-    "documentation_readiness": {
+    "admin_operational_readiness": {
       "max": 10,
       "notes": [
-        "README detected.",
-        "Assumptions, invariants, or limitations are documented.",
-        "Deployment or role information appears in docs/code comments."
+        "Vault admin/operational surface is visible.",
+        "Role or unauthorized-call coverage signal detected.",
+        "Pause or emergency control signal detected.",
+        "Upgradeability is absent or initializer/upgrade terms are visible."
       ],
-      "score": 8
+      "score": 9
+    },
+    "documentation_readiness": {
+      "max": 5,
+      "notes": [
+        "README detected.",
+        "Vault assumptions or limitations are documented.",
+        "Role, treasury, owner, or deployment terms are documented."
+      ],
+      "score": 5
     },
     "invariant_fuzz_readiness": {
       "max": 20,
       "notes": [
-        "Edge-case testing terms detected."
+        "Edge-case test signal detected."
       ],
-      "score": 3
+      "score": 2
     },
-    "operational_admin_readiness": {
-      "max": 15,
+    "oracle_pricing_readiness": {
+      "max": 10,
       "notes": [
-        "Access-control surface is visible.",
-        "Emergency control or incident terms detected.",
-        "Upgradeability is absent or has visible documentation/test terms.",
-        "Privileged setters or owner boundaries are visible for review.",
-        "Monitoring, incident, limitation, or emergency notes detected."
+        "No explicit oracle or pool-pricing dependency detected."
       ],
-      "score": 15
+      "score": 10
     },
     "repository_structure": {
-      "max": 15,
+      "max": 10,
       "notes": [
-        "Solidity sources detected.",
+        "Solidity vault-like sources detected.",
         "Recognized build or analysis config detected.",
         "Clear src/test/docs structure detected."
       ],
-      "score": 12
+      "score": 8
+    },
+    "strategy_withdrawal_lifecycle_readiness": {
+      "max": 10,
+      "notes": [
+        "No strategy or queued-withdrawal lifecycle surface detected."
+      ],
+      "score": 10
     },
     "test_presence": {
+      "max": 15,
+      "notes": [
+        "Solidity tests detected.",
+        "Assert usage detected.",
+        "Foundry or Hardhat environment detected.",
+        "Mint or preview function test signals detected."
+      ],
+      "score": 13
+    },
+    "vault_accounting_coverage": {
       "max": 20,
       "notes": [
-        "Solidity test files detected.",
-        "Assert usage detected.",
-        "Foundry or Hardhat test environment detected.",
-        "Protocol-specific terms appear in the testable codebase."
+        "Vault/ERC4626 share-accounting surface detected.",
+        "totalAssets test signal detected.",
+        "Shares/assets conversion test signal detected.",
+        "Donation, inflation, decimals, or rounding test signal detected."
       ],
-      "score": 20
+      "score": 16
     }
   },
   "signals": {
@@ -330,6 +408,99 @@
         "totalSupply",
         "withdraw"
       ]
+    },
+    "vault_accounting_risk": {
+      "counts": {
+        "convertToAssets": 1,
+        "convertToShares": 3,
+        "decimals": 1,
+        "totalAssets": 5,
+        "treasury": 5
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "convertToAssets",
+        "convertToShares",
+        "decimals",
+        "totalAssets",
+        "treasury"
+      ]
+    },
+    "vault_admin_ops": {
+      "counts": {
+        "pause": 2,
+        "setFee": 2,
+        "unpause": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "pause",
+        "setFee",
+        "unpause"
+      ]
+    },
+    "vault_erc4626": {
+      "counts": {
+        "assets": 15,
+        "balanceOf": 16,
+        "convertToAssets": 1,
+        "convertToShares": 3,
+        "deposit": 4,
+        "mint": 2,
+        "shares": 18,
+        "totalAssets": 5,
+        "totalSupply": 9,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "mint",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ]
+    },
+    "vault_pricing": {
+      "counts": {
+        "decimals": 1
+      },
+      "file_count": 1,
+      "files": [
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "decimals"
+      ]
+    },
+    "vault_strategy": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_withdrawal_liquidity": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
     }
   },
   "suggested_invariants": [
@@ -345,8 +516,13 @@
     },
     {
       "category": "vault",
-      "description": "Donations, supply edges, or local price changes should not let one actor distort share value unexpectedly.",
-      "name": "share price manipulation resistance"
+      "description": "Conversion functions should be mutually consistent within documented rounding across supply states.",
+      "name": "convertToShares/convertToAssets consistency"
+    },
+    {
+      "category": "vault",
+      "description": "Donations, low supply, and external balances should not let one actor distort share value unexpectedly.",
+      "name": "share price donation resistance"
     },
     {
       "category": "vault",
@@ -357,6 +533,11 @@
       "category": "vault",
       "description": "Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.",
       "name": "strategy balance drift handling"
+    },
+    {
+      "category": "vault",
+      "description": "Queued or delayed withdrawals should conserve shares/assets through request, cooldown, claim, and cancellation.",
+      "name": "withdrawal lifecycle conservation"
     },
     {
       "category": "vault",
@@ -385,5 +566,58 @@
     }
   ],
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "0.1.0"
+  "vault_rule_pack": {
+    "coverage": {
+      "decimals_rounding": true,
+      "deposit": true,
+      "donation_inflation": false,
+      "emergency_pause": true,
+      "fee": false,
+      "fuzz": false,
+      "invariant": false,
+      "mint": true,
+      "oracle_pricing": false,
+      "preview_functions": false,
+      "roundtrip": false,
+      "share_conversion": true,
+      "strategy_loss": false,
+      "total_assets": true,
+      "withdraw": false,
+      "withdrawal_lifecycle": false
+    },
+    "covered_count": 6,
+    "matched_terms": {
+      "decimals_rounding": [
+        "decimals"
+      ],
+      "deposit": [
+        "deposit"
+      ],
+      "donation_inflation": [],
+      "emergency_pause": [
+        "pause"
+      ],
+      "fee": [],
+      "fuzz": [],
+      "invariant": [],
+      "mint": [
+        "mint"
+      ],
+      "oracle_pricing": [],
+      "preview_functions": [],
+      "roundtrip": [],
+      "share_conversion": [
+        "shares"
+      ],
+      "strategy_loss": [],
+      "total_assets": [
+        "totalAssets"
+      ],
+      "withdraw": [],
+      "withdrawal_lifecycle": []
+    },
+    "test_files_considered": 1,
+    "total_checks": 16
+  },
+  "version": "0.2.0"
 }

@@ -1,0 +1,1262 @@
+{
+  "disclaimer": "This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.",
+  "files_scanned": {
+    "configs": [
+      "foundry.toml"
+    ],
+    "docs": [
+      "README.md"
+    ],
+    "solidity_sources": [
+      "src/VaultRiskFixture.sol"
+    ],
+    "solidity_tests": [
+      "test/VaultRiskFixture.t.sol",
+      "test/invariant/ArkheionxReadinessInvariants.t.sol"
+    ],
+    "workflows": []
+  },
+  "generated_at": "2026-05-25T08:16:49+00:00",
+  "historical_patterns": [
+    {
+      "broken_invariant_class": "Share/accounting value cannot be moved by transient price state.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Document oracle freshness, bounds, and fallback behavior.",
+        "Test deposit, withdraw, and totalAssets under mocked stale and bounded prices.",
+        "Prefer TWAP, sanity bounds, or explicit staleness checks where the design depends on external prices."
+      ],
+      "detected_signals": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "getPrice",
+        "latestRoundData",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "priceFeed",
+        "redeem",
+        "setOracle",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "failed_assumption_class": "Price source remains representative during deposits, withdrawals, and share conversions.",
+      "name": "Harvest/Yearn-style oracle or pool price readiness gap",
+      "search_tags": [
+        "vault-accounting",
+        "oracle-risk",
+        "pool-pricing",
+        "historical-vault-pattern",
+        "invariant-testing"
+      ],
+      "suggested_test": "Invariant: share price and totalAssets cannot be inflated by a single mocked price or pool-state movement.",
+      "why_it_matters": "Vault accounting that depends on oracle, pool, LP, or reserve pricing needs explicit tests for stale, spot, and manipulated local price assumptions."
+    },
+    {
+      "broken_invariant_class": "Deposits, withdrawals, redemptions, and fee paths conserve value within expected rounding bounds.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Add totalAssets consistency tests.",
+        "Add deposit-withdraw roundtrip tests across small and large amounts.",
+        "Test donation, zero-supply, rounding, and fee paths."
+      ],
+      "detected_signals": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "depositFee",
+        "feeRecipient",
+        "managementFee",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "performanceFee",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "treasury",
+        "withdraw",
+        "withdrawalFee"
+      ],
+      "failed_assumption_class": "Shares and assets remain exchangeable according to documented accounting rules.",
+      "name": "Vault accounting invariant readiness gap",
+      "search_tags": [
+        "vault-security",
+        "share-accounting",
+        "totalAssets",
+        "audit-readiness"
+      ],
+      "suggested_test": "Invariant: deposit followed by withdraw does not create value and does not strand assets beyond expected rounding.",
+      "why_it_matters": "Vaults need explicit conservation and roundtrip properties because share math, fees, donations, and rounding can break user-value assumptions."
+    },
+    {
+      "broken_invariant_class": "Strategy lifecycle events cannot silently break totalAssets, share price, or withdrawal accounting.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Test harvest/report gain and loss paths with local mocks.",
+        "Test strategy withdrawal and migration accounting.",
+        "Document trusted strategy roles and loss-handling assumptions."
+      ],
+      "detected_signals": [
+        "allocate",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "emergencyExit",
+        "gain",
+        "harvest",
+        "loss",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "profit",
+        "rebalance",
+        "redeem",
+        "report",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalDebt",
+        "totalSupply",
+        "withdraw",
+        "withdrawFromStrategy"
+      ],
+      "failed_assumption_class": "Strategy-reported balances, gains, losses, and debt remain aligned with vault accounting.",
+      "name": "Strategy debt/gain/loss accounting readiness gap",
+      "search_tags": [
+        "strategy-accounting",
+        "vault-lifecycle",
+        "gain-loss",
+        "audit-readiness"
+      ],
+      "suggested_test": "Invariant: strategy gain/loss reports update totalAssets and share accounting according to documented policy.",
+      "why_it_matters": "Strategy vaults need explicit tests for gain, loss, debt, harvest, report, and migration lifecycle assumptions."
+    },
+    {
+      "broken_invariant_class": "Withdrawal lifecycle preserves shares/assets accounting and available liquidity assumptions.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Test request, cancel, claim, cooldown, and epoch transitions.",
+        "Test available liquidity and buffer boundaries.",
+        "Document delayed withdrawal assumptions for auditors."
+      ],
+      "detected_signals": [
+        "assets",
+        "balanceOf",
+        "cancelWithdraw",
+        "claimWithdraw",
+        "convertToAssets",
+        "convertToShares",
+        "cooldown",
+        "deposit",
+        "liquidityBuffer",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "pendingWithdraw",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "requestWithdraw",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "withdraw",
+        "withdrawalQueue"
+      ],
+      "failed_assumption_class": "Requested, pending, claimable, and cancelled withdrawals move through documented states only.",
+      "name": "Withdrawal liquidity and queue lifecycle readiness gap",
+      "search_tags": [
+        "withdrawal-queue",
+        "liquidity-buffer",
+        "vault-lifecycle",
+        "audit-readiness"
+      ],
+      "suggested_test": "Test: withdrawal lifecycle conserves shares and assets across request, cooldown, claim, and cancellation.",
+      "why_it_matters": "Withdrawal queues, cooldowns, epochs, and liquidity buffers need lifecycle tests because user exits depend on state transitions over time."
+    },
+    {
+      "broken_invariant_class": "Emergency and configuration changes preserve the user-facing safety properties the protocol claims.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Test unauthorized calls for each setter and emergency function.",
+        "Test pause and emergency controls against deposit, withdraw, redeem, and strategy paths.",
+        "Document trusted-role powers and operational limits."
+      ],
+      "detected_signals": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "rescue",
+        "setDepositLimit",
+        "setFee",
+        "setMaxLoss",
+        "setOracle",
+        "setSlippage",
+        "setStrategy",
+        "setTreasury",
+        "setWithdrawLimit",
+        "sweep",
+        "unpause"
+      ],
+      "failed_assumption_class": "Privileged operations are limited to documented roles and cannot bypass accounting assumptions silently.",
+      "name": "Privileged vault controls and emergency operation readiness gap",
+      "search_tags": [
+        "vault-admin",
+        "emergency-controls",
+        "access-control-review",
+        "operational-readiness"
+      ],
+      "suggested_test": "Invariant: admin operations cannot bypass vault accounting without explicit, documented trust assumptions.",
+      "why_it_matters": "Vault admin operations can change strategy, oracle, fee, limits, slippage, pause state, or upgrade targets and should be tested as launch-critical boundaries."
+    },
+    {
+      "broken_invariant_class": "Value flow remains single-entry and accounting is updated before control leaves the contract.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Review checks-effects-interactions order.",
+        "Add reentrancy tests using local receiver mocks.",
+        "Use guards where the protocol design requires them."
+      ],
+      "detected_signals": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "transfer(",
+        "transferFrom",
+        "withdraw"
+      ],
+      "failed_assumption_class": "External receivers cannot re-enter before internal accounting reaches a safe state.",
+      "name": "Reentrancy-sensitive value flow review recommended",
+      "search_tags": [
+        "reentrancy-review",
+        "value-flow",
+        "checks-effects-interactions"
+      ],
+      "suggested_test": "Test: malicious local receiver cannot withdraw, claim, or redeem twice through a callback.",
+      "why_it_matters": "External calls around withdrawals, claims, callbacks, or token transfers have repeatedly exposed state-ordering assumptions."
+    },
+    {
+      "broken_invariant_class": "Admin actions cannot silently bypass accounting, oracle, or user-safety invariants.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Document every privileged role and setter.",
+        "Add unauthorized-call tests for each privileged function.",
+        "Add tests showing pause/emergency controls behave as documented."
+      ],
+      "detected_signals": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "setOracle",
+        "setStrategy",
+        "setTreasury",
+        "unpause"
+      ],
+      "failed_assumption_class": "Privileged actors can only perform documented, intended operations.",
+      "name": "Privileged control and operational risk review recommended",
+      "search_tags": [
+        "access-control-review",
+        "admin-risk",
+        "operational-security"
+      ],
+      "suggested_test": "Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.",
+      "why_it_matters": "Admin setters, emergency controls, fee updates, and governance execution paths can become launch blockers if role boundaries are unclear or untested."
+    }
+  ],
+  "next_steps": [
+    "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
+    "Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.",
+    "Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.",
+    "Add convertToShares/convertToAssets rounding tests and preview/action equivalence checks for ERC4626-like flows.",
+    "Add local mock strategy tests for gain, loss, debt, harvest, and migration accounting."
+  ],
+  "protocol_confidence": "manual",
+  "protocol_type": "vault",
+  "readiness_gaps": [
+    {
+      "defensive_checks": [
+        "deposit/withdraw roundtrip",
+        "convertToShares/convertToAssets consistency",
+        "donation/inflation resistance",
+        "rounding direction tests",
+        "totalAssets external dependency tests"
+      ],
+      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+      "detected": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+      "priority": "High",
+      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+      "severity": "High readiness gap",
+      "suggested_test": "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.",
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests",
+      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
+    },
+    {
+      "defensive_checks": [
+        "preview/action equivalence",
+        "rounding direction tests",
+        "max function boundary tests"
+      ],
+      "detail": "Preview function signals were detected, but test files do not visibly cover previewDeposit, previewMint, previewWithdraw, or previewRedeem.",
+      "detected": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "historical_pattern_similarity": "Maps to share/accounting mismatch classes where quoted and realized vault state diverge.",
+      "priority": "High",
+      "recommendation": "Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.",
+      "severity": "High readiness gap",
+      "suggested_test": "For each preview function, compare the previewed shares/assets with the actual deposit, mint, withdraw, or redeem result.",
+      "tags": [
+        "erc4626",
+        "preview-functions",
+        "vault-accounting"
+      ],
+      "title": "ERC4626-like interface without preview function tests",
+      "why_it_matters": "ERC4626 integrations often rely on preview functions for quotes and UX; inconsistent previews can create user and integration risk."
+    },
+    {
+      "defensive_checks": [
+        "small amount tests",
+        "decimals normalization",
+        "mulDiv/precision review",
+        "conversion reversibility"
+      ],
+      "detail": "Shares/assets conversion signals were detected without visible decimals, precision, mulDiv, or rounding test coverage.",
+      "detected": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "depositFee",
+        "feeRecipient",
+        "managementFee",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "performanceFee",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "treasury",
+        "withdraw",
+        "withdrawalFee"
+      ],
+      "historical_pattern_similarity": "Maps to historical arithmetic and accounting mismatch classes where precision assumptions failed.",
+      "priority": "High",
+      "recommendation": "Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.",
+      "severity": "High readiness gap",
+      "suggested_test": "Fuzz assets and shares across small, large, and decimal-edge values and assert conversion error stays within documented bounds.",
+      "tags": [
+        "share-accounting",
+        "rounding",
+        "precision"
+      ],
+      "title": "Shares/assets conversion without rounding tests",
+      "why_it_matters": "Small rounding mistakes in conversion functions can compound into unfair share issuance, redemption drift, or stranded assets."
+    },
+    {
+      "defensive_checks": [
+        "donation tests",
+        "mock strategy gain/loss",
+        "stale/bounded oracle tests",
+        "share price drift checks"
+      ],
+      "detail": "totalAssets appears connected to external strategy, pricing, or balance assumptions without visible manipulation-resistance test coverage.",
+      "detected": [
+        "allocate",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "emergencyExit",
+        "gain",
+        "getPrice",
+        "harvest",
+        "latestRoundData",
+        "loss",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "priceFeed",
+        "profit",
+        "rebalance",
+        "redeem",
+        "report",
+        "setOracle",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalDebt",
+        "totalSupply",
+        "withdraw",
+        "withdrawFromStrategy"
+      ],
+      "historical_pattern_similarity": "Maps to Harvest/Yearn-style vault readiness classes where pricing or strategy state influenced share accounting.",
+      "priority": "High",
+      "recommendation": "Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant.",
+      "severity": "High readiness gap",
+      "suggested_test": "Mock external strategy or price state and assert totalAssets, share price, and withdrawal accounting remain within documented policy.",
+      "tags": [
+        "totalAssets",
+        "strategy-accounting",
+        "oracle-risk"
+      ],
+      "title": "totalAssets external dependency without manipulation-resistance tests",
+      "why_it_matters": "Vault share value often depends on totalAssets; external balances, strategies, or prices can make the accounting view drift from user expectations."
+    },
+    {
+      "defensive_checks": [
+        "gain report",
+        "loss report",
+        "debt update",
+        "withdrawFromStrategy",
+        "strategy migration"
+      ],
+      "detail": "Strategy, harvest, debt, gain, loss, or migration signals were detected without visible strategy lifecycle tests.",
+      "detected": [
+        "allocate",
+        "emergencyExit",
+        "gain",
+        "harvest",
+        "loss",
+        "profit",
+        "rebalance",
+        "report",
+        "strategy",
+        "totalDebt",
+        "withdrawFromStrategy"
+      ],
+      "historical_pattern_similarity": "Maps to strategy debt/gain/loss accounting readiness classes.",
+      "priority": "High",
+      "recommendation": "Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present.",
+      "severity": "High readiness gap",
+      "suggested_test": "Use a local mock strategy that reports gain and loss, then assert totalAssets and share accounting follow documented policy.",
+      "tags": [
+        "strategy-accounting",
+        "gain-loss",
+        "vault-lifecycle"
+      ],
+      "title": "Strategy accounting without gain/loss tests",
+      "why_it_matters": "Strategy vaults can look solvent until gain/loss, debt, or migration paths update accounting in unexpected ways."
+    },
+    {
+      "defensive_checks": [
+        "requestWithdraw",
+        "claimWithdraw",
+        "cancelWithdraw",
+        "cooldown",
+        "available liquidity"
+      ],
+      "detail": "Withdrawal queue, cooldown, epoch, pending withdrawal, or liquidity-buffer signals were detected without visible lifecycle tests.",
+      "detected": [
+        "cancelWithdraw",
+        "claimWithdraw",
+        "cooldown",
+        "liquidityBuffer",
+        "pendingWithdraw",
+        "requestWithdraw",
+        "withdrawalQueue"
+      ],
+      "historical_pattern_similarity": "Maps to vault lifecycle readiness classes where exit accounting or liquidity assumptions can break.",
+      "priority": "High",
+      "recommendation": "Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior.",
+      "severity": "High readiness gap",
+      "suggested_test": "Test the full withdrawal lifecycle and assert shares/assets are conserved across request, cooldown, claim, and cancellation.",
+      "tags": [
+        "withdrawal-queue",
+        "liquidity",
+        "vault-lifecycle"
+      ],
+      "title": "Withdrawal queue/cooldown without lifecycle tests",
+      "why_it_matters": "Delayed withdrawals create state machines; audit preparation should prove shares and assets are conserved through each state."
+    },
+    {
+      "defensive_checks": [
+        "stale price rejection",
+        "decimals normalization",
+        "TWAP/sanity check",
+        "bounds",
+        "oracle setter roles"
+      ],
+      "detail": "Oracle, price-feed, pool-price, reserve, TWAP, or LP pricing signals were detected without enough stale-price, bounds, or sanity-check coverage.",
+      "detected": [
+        "getPrice",
+        "latestRoundData",
+        "priceFeed",
+        "setOracle"
+      ],
+      "historical_pattern_similarity": "Maps to historical vault/oracle and pool-price manipulation readiness classes.",
+      "priority": "High",
+      "recommendation": "Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.",
+      "severity": "High readiness gap",
+      "suggested_test": "Use local mock oracles/pools to test stale, out-of-bounds, decimals, and spot-price scenarios without live-chain calls.",
+      "tags": [
+        "oracle-risk",
+        "vault-pricing",
+        "pool-price"
+      ],
+      "title": "Oracle-dependent vault without stale-price or bounds tests",
+      "why_it_matters": "Vaults that price assets, LP tokens, or strategies through external sources need explicit assumptions around stale, spot, and bounded prices."
+    },
+    {
+      "defensive_checks": [
+        "fee bounds",
+        "recipient accounting",
+        "share conservation",
+        "rounding with fees"
+      ],
+      "detail": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
+      "detected": [
+        "depositFee",
+        "feeRecipient",
+        "managementFee",
+        "performanceFee",
+        "withdrawalFee"
+      ],
+      "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+      "priority": "Medium",
+      "recommendation": "Add deposit, withdrawal, management, and performance fee tests where relevant.",
+      "severity": "Medium readiness gap",
+      "suggested_test": "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations.",
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests",
+      "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+    },
+    {
+      "defensive_checks": [
+        "pause blocks deposit",
+        "pause blocks withdraw/redeem if intended",
+        "emergency exit behavior",
+        "role boundary"
+      ],
+      "detail": "Pause or emergency signals were detected without visible tests for blocked flows and documented recovery behavior.",
+      "detected": [
+        "emergencyWithdraw",
+        "pause",
+        "rescue",
+        "setDepositLimit",
+        "setFee",
+        "setMaxLoss",
+        "setOracle",
+        "setSlippage",
+        "setStrategy",
+        "setTreasury",
+        "setWithdrawLimit",
+        "sweep",
+        "unpause"
+      ],
+      "historical_pattern_similarity": "Maps to operational readiness classes where emergency behavior changes core state transitions.",
+      "priority": "Medium",
+      "recommendation": "Add tests showing pause/emergency controls block risky flows and preserve documented exit or recovery paths.",
+      "severity": "Medium readiness gap",
+      "suggested_test": "Assert pause and emergency states block or allow each vault flow exactly as documented.",
+      "tags": [
+        "pause",
+        "emergency-controls",
+        "vault-operations"
+      ],
+      "title": "Pause/emergency controls without operational tests",
+      "why_it_matters": "Emergency controls are launch-critical; they should behave predictably under stress without bypassing accounting assumptions."
+    }
+  ],
+  "repo_root": "examples/vault-risk-fixture",
+  "score": 58,
+  "score_band": "Early readiness",
+  "score_breakdown": {
+    "admin_operational_readiness": {
+      "max": 10,
+      "notes": [
+        "Vault admin/operational surface is visible.",
+        "Role or unauthorized-call coverage signal detected.",
+        "Pause or emergency control signal detected.",
+        "Upgradeability is absent or initializer/upgrade terms are visible."
+      ],
+      "score": 9
+    },
+    "documentation_readiness": {
+      "max": 5,
+      "notes": [
+        "README detected.",
+        "Vault assumptions or limitations are documented.",
+        "Role, treasury, owner, or deployment terms are documented."
+      ],
+      "score": 5
+    },
+    "invariant_fuzz_readiness": {
+      "max": 20,
+      "notes": [
+        "Edge-case test signal detected."
+      ],
+      "score": 2
+    },
+    "oracle_pricing_readiness": {
+      "max": 10,
+      "notes": [
+        "Oracle/pool pricing controls are documented or tested.",
+        "Oracle update role boundary signal detected."
+      ],
+      "score": 5
+    },
+    "repository_structure": {
+      "max": 10,
+      "notes": [
+        "Solidity vault-like sources detected.",
+        "Recognized build or analysis config detected.",
+        "Clear src/test/docs structure detected."
+      ],
+      "score": 8
+    },
+    "strategy_withdrawal_lifecycle_readiness": {
+      "max": 10,
+      "notes": [
+        "Lifecycle operational boundary signal detected."
+      ],
+      "score": 2
+    },
+    "test_presence": {
+      "max": 15,
+      "notes": [
+        "Solidity tests detected.",
+        "Assert usage detected.",
+        "Foundry or Hardhat environment detected.",
+        "Deposit and withdraw/redeem test signals detected.",
+        "Mint or preview function test signals detected."
+      ],
+      "score": 15
+    },
+    "vault_accounting_coverage": {
+      "max": 20,
+      "notes": [
+        "Vault/ERC4626 share-accounting surface detected.",
+        "totalAssets test signal detected.",
+        "Shares/assets conversion test signal detected."
+      ],
+      "score": 12
+    }
+  },
+  "signals": {
+    "access_control": {
+      "counts": {
+        "emergencyWithdraw": 1,
+        "onlyOwner": 20,
+        "owner": 3,
+        "pause": 1,
+        "setFee": 1,
+        "setOracle": 1,
+        "setStrategy": 1,
+        "setTreasury": 1,
+        "unpause": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/VaultRiskFixture.sol"
+      ],
+      "terms": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "setOracle",
+        "setStrategy",
+        "setTreasury",
+        "unpause"
+      ]
+    },
+    "accounting_complexity": {
+      "counts": {
+        "depositFee": 2,
+        "managementFee": 2,
+        "performanceFee": 2,
+        "withdrawalFee": 2
+      },
+      "file_count": 1,
+      "files": [
+        "src/VaultRiskFixture.sol"
+      ],
+      "terms": [
+        "depositFee",
+        "managementFee",
+        "performanceFee",
+        "withdrawalFee"
+      ]
+    },
+    "amm": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "bridge_cross_chain": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "governance": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "lending": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "oracle": {
+      "counts": {
+        "latestRoundData": 3,
+        "priceFeed": 4,
+        "setOracle": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "terms": [
+        "latestRoundData",
+        "priceFeed",
+        "setOracle"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "counts": {
+        "transfer(": 8,
+        "transferFrom": 4
+      },
+      "file_count": 2,
+      "files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "terms": [
+        "transfer(",
+        "transferFrom"
+      ]
+    },
+    "staking_rewards": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "upgradeability": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_accounting": {
+      "counts": {
+        "assets": 28,
+        "balanceOf": 25,
+        "convertToAssets": 7,
+        "convertToShares": 5,
+        "deposit": 3,
+        "maxDeposit": 1,
+        "maxMint": 1,
+        "maxRedeem": 1,
+        "maxWithdraw": 1,
+        "mint": 3,
+        "previewDeposit": 1,
+        "previewMint": 1,
+        "previewRedeem": 1,
+        "previewWithdraw": 1,
+        "redeem": 1,
+        "shares": 36,
+        "strategy": 4,
+        "totalAssets": 5,
+        "totalSupply": 9,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "terms": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ]
+    },
+    "vault_accounting_risk": {
+      "counts": {
+        "convertToAssets": 7,
+        "convertToShares": 5,
+        "depositFee": 2,
+        "feeRecipient": 4,
+        "managementFee": 2,
+        "performanceFee": 2,
+        "previewDeposit": 1,
+        "previewMint": 1,
+        "previewRedeem": 1,
+        "previewWithdraw": 1,
+        "totalAssets": 5,
+        "treasury": 5,
+        "withdrawalFee": 2
+      },
+      "file_count": 2,
+      "files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "terms": [
+        "convertToAssets",
+        "convertToShares",
+        "depositFee",
+        "feeRecipient",
+        "managementFee",
+        "performanceFee",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "totalAssets",
+        "treasury",
+        "withdrawalFee"
+      ]
+    },
+    "vault_admin_ops": {
+      "counts": {
+        "emergencyWithdraw": 1,
+        "pause": 1,
+        "rescue": 1,
+        "setDepositLimit": 1,
+        "setFee": 1,
+        "setMaxLoss": 1,
+        "setOracle": 1,
+        "setSlippage": 1,
+        "setStrategy": 1,
+        "setTreasury": 1,
+        "setWithdrawLimit": 1,
+        "sweep": 1,
+        "unpause": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/VaultRiskFixture.sol"
+      ],
+      "terms": [
+        "emergencyWithdraw",
+        "pause",
+        "rescue",
+        "setDepositLimit",
+        "setFee",
+        "setMaxLoss",
+        "setOracle",
+        "setSlippage",
+        "setStrategy",
+        "setTreasury",
+        "setWithdrawLimit",
+        "sweep",
+        "unpause"
+      ]
+    },
+    "vault_erc4626": {
+      "counts": {
+        "asset()": 1,
+        "assets": 28,
+        "balanceOf": 25,
+        "convertToAssets": 7,
+        "convertToShares": 5,
+        "deposit": 3,
+        "maxDeposit": 1,
+        "maxMint": 1,
+        "maxRedeem": 1,
+        "maxWithdraw": 1,
+        "mint": 3,
+        "previewDeposit": 1,
+        "previewMint": 1,
+        "previewRedeem": 1,
+        "previewWithdraw": 1,
+        "redeem": 1,
+        "shares": 36,
+        "totalAssets": 5,
+        "totalSupply": 9,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "terms": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ]
+    },
+    "vault_pricing": {
+      "counts": {
+        "getPrice": 1,
+        "latestRoundData": 3,
+        "priceFeed": 4
+      },
+      "file_count": 2,
+      "files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "terms": [
+        "getPrice",
+        "latestRoundData",
+        "priceFeed"
+      ]
+    },
+    "vault_strategy": {
+      "counts": {
+        "allocate": 1,
+        "emergencyExit": 1,
+        "gain": 3,
+        "harvest": 1,
+        "loss": 5,
+        "profit": 2,
+        "rebalance": 1,
+        "report": 1,
+        "strategy": 4,
+        "totalDebt": 7,
+        "withdrawFromStrategy": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/VaultRiskFixture.sol"
+      ],
+      "terms": [
+        "allocate",
+        "emergencyExit",
+        "gain",
+        "harvest",
+        "loss",
+        "profit",
+        "rebalance",
+        "report",
+        "strategy",
+        "totalDebt",
+        "withdrawFromStrategy"
+      ]
+    },
+    "vault_withdrawal_liquidity": {
+      "counts": {
+        "cancelWithdraw": 1,
+        "claimWithdraw": 1,
+        "cooldown": 1,
+        "liquidityBuffer": 1,
+        "pendingWithdraw": 6,
+        "requestWithdraw": 1,
+        "withdrawalQueue": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/VaultRiskFixture.sol"
+      ],
+      "terms": [
+        "cancelWithdraw",
+        "claimWithdraw",
+        "cooldown",
+        "liquidityBuffer",
+        "pendingWithdraw",
+        "requestWithdraw",
+        "withdrawalQueue"
+      ]
+    }
+  },
+  "suggested_invariants": [
+    {
+      "category": "vault",
+      "description": "totalAssets should match local asset accounting and strategy balances within documented rounding.",
+      "name": "totalAssets consistency"
+    },
+    {
+      "category": "vault",
+      "description": "A user should not create value by depositing and withdrawing through normal paths.",
+      "name": "deposit/withdraw roundtrip"
+    },
+    {
+      "category": "vault",
+      "description": "Conversion functions should be mutually consistent within documented rounding across supply states.",
+      "name": "convertToShares/convertToAssets consistency"
+    },
+    {
+      "category": "vault",
+      "description": "Donations, low supply, and external balances should not let one actor distort share value unexpectedly.",
+      "name": "share price donation resistance"
+    },
+    {
+      "category": "vault",
+      "description": "Fees should be bounded, documented, and unable to overcharge beyond configured limits.",
+      "name": "fee accounting conservation"
+    },
+    {
+      "category": "vault",
+      "description": "Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.",
+      "name": "strategy balance drift handling"
+    },
+    {
+      "category": "vault",
+      "description": "Queued or delayed withdrawals should conserve shares/assets through request, cooldown, claim, and cancellation.",
+      "name": "withdrawal lifecycle conservation"
+    },
+    {
+      "category": "vault",
+      "description": "Pause should block risky flows while preserving documented emergency exits.",
+      "name": "pause behavior"
+    },
+    {
+      "category": "oracle",
+      "description": "Stale oracle rounds should be rejected or handled according to documented policy.",
+      "name": "stale price rejection"
+    },
+    {
+      "category": "oracle",
+      "description": "Price decimals should be normalized consistently before accounting decisions.",
+      "name": "decimals normalization"
+    },
+    {
+      "category": "oracle",
+      "description": "Outlier prices should hit documented bounds or review paths.",
+      "name": "price bounds"
+    },
+    {
+      "category": "oracle",
+      "description": "Spot price dependence should be bounded by TWAP, sanity checks, or explicit assumptions.",
+      "name": "TWAP or sanity check"
+    },
+    {
+      "category": "oracle",
+      "description": "Only authorized roles should change oracle configuration.",
+      "name": "oracle update access control"
+    },
+    {
+      "category": "access control",
+      "description": "Unauthorized users cannot call privileged setters or emergency functions.",
+      "name": "unauthorized role rejection"
+    },
+    {
+      "category": "access control",
+      "description": "Owner/admin operations cannot silently break accounting invariants unless explicitly trusted and documented.",
+      "name": "admin cannot bypass accounting"
+    },
+    {
+      "category": "access control",
+      "description": "Pause blocks documented risky flows and preserves expected recovery paths.",
+      "name": "pause blocks risky flows"
+    },
+    {
+      "category": "access control",
+      "description": "Upgrade authorization works as intended and cannot be triggered by untrusted callers.",
+      "name": "upgrade authorization"
+    }
+  ],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "vault_rule_pack": {
+    "coverage": {
+      "decimals_rounding": false,
+      "deposit": true,
+      "donation_inflation": false,
+      "emergency_pause": false,
+      "fee": false,
+      "fuzz": false,
+      "invariant": false,
+      "mint": true,
+      "oracle_pricing": false,
+      "preview_functions": false,
+      "roundtrip": false,
+      "share_conversion": true,
+      "strategy_loss": false,
+      "total_assets": true,
+      "withdraw": true,
+      "withdrawal_lifecycle": false
+    },
+    "covered_count": 5,
+    "matched_terms": {
+      "decimals_rounding": [],
+      "deposit": [
+        "deposit"
+      ],
+      "donation_inflation": [],
+      "emergency_pause": [],
+      "fee": [],
+      "fuzz": [],
+      "invariant": [],
+      "mint": [
+        "mint"
+      ],
+      "oracle_pricing": [],
+      "preview_functions": [],
+      "roundtrip": [],
+      "share_conversion": [
+        "shares"
+      ],
+      "strategy_loss": [],
+      "total_assets": [
+        "totalAssets"
+      ],
+      "withdraw": [
+        "withdraw"
+      ],
+      "withdrawal_lifecycle": []
+    },
+    "test_files_considered": 1,
+    "total_checks": 16
+  },
+  "version": "0.2.0"
+}

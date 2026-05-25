@@ -24,6 +24,16 @@ Generate safe Foundry invariant skeletons:
 python3 scripts/pre_audit_scan.py --root . --generate-invariant-skeletons
 ```
 
+Run the v0.2.0 Vault Rule Pack explicitly:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type vault \
+  --output ARKHEIONX_VAULT_READINESS_REPORT.md \
+  --json-output arkheionx-vault-report.json
+```
+
 ## `generate_search_index.py`
 
 Generates [`reports/search_index.md`](../reports/search_index.md) from

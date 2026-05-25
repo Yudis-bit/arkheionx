@@ -75,6 +75,27 @@ What you receive:
 
 This is a launch preparation report, not a formal audit.
 
+## Vault Launch Report
+
+Price range: USD 299-499 one time.
+
+Best for:
+
+- ERC4626-like vault builders;
+- strategy vaults preparing for first audit;
+- teams with fee, withdrawal, or oracle-dependent share accounting;
+- founders who need a concise vault readiness artifact.
+
+What you receive:
+
+- automated Vault Rule Pack scan;
+- manual review of vault readiness gaps;
+- prioritized vault fix checklist;
+- suggested invariant plan;
+- Markdown report.
+
+This is vault launch preparation, not a formal audit.
+
 ## Pre-Audit Sprint
 
 Price range: USD 1,000-2,000 one time.
@@ -98,6 +119,29 @@ What you receive:
 
 This is defensive readiness work. It does not certify protocol safety.
 
+## Vault Pre-Audit Sprint
+
+Price range: USD 1,000-2,000 one time.
+
+Best for:
+
+- vault teams preparing for formal audit intake;
+- protocols with strategy accounting, withdrawal queues, LP pricing, or
+  performance/management fee logic;
+- teams that need a concrete Foundry invariant plan.
+
+What you receive:
+
+- Vault Rule Pack scan;
+- manual readiness review;
+- historical vault-pattern mapping;
+- strategy/oracle/withdrawal lifecycle checklist;
+- GitHub issue checklist;
+- final Markdown report.
+
+This is readiness support only. Formal audit remains recommended before user
+funds are at risk.
+
 ## Ecosystem Pack
 
 Price range: USD 5,000-20,000 per month.
@@ -118,6 +162,23 @@ What you receive:
 - private GitHub Discussion support if configured;
 - training session for builders;
 - no website or SaaS dashboard required.
+
+## Ecosystem Vault Readiness Pack
+
+Price: custom.
+
+Best for:
+
+- L2 ecosystems with many vault builders;
+- accelerators supporting yield or ERC4626 projects;
+- grant programs that want portfolio-level readiness visibility.
+
+What you receive:
+
+- bulk Vault Rule Pack reports;
+- portfolio-level Markdown dashboard;
+- vault invariant workshop;
+- builder Q&A through GitHub-native channels if configured.
 
 ## Research Sponsorship
 

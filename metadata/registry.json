@@ -312,7 +312,7 @@
     },
     {
       "id": "2020-11-cheese-bank",
-      "title": "Pickle Finance \u2014 swapExactJarForJar arbitrary-call drains cDAI strategy",
+      "title": "Pickle Finance \u2014 swapExactJarForJar arbitrary-call cDAI strategy asset loss",
       "protocol": "Pickle Finance",
       "date": "2020-11",
       "vm": "EVM",
@@ -326,7 +326,7 @@
       "reproducibility": "deterministic-likely-but-unverified",
       "summary": "Attacker called Pickle ControllerV4.swapExactJarForJar with attacker-deployed FakeJar/FakeUnderlying contracts and CurveLogic-encoded arbitrary calldata, forcing the legitimate cDAI strategy to withdrawAll() and then redirect cDAI to tx.origin via the controller's permission set.",
       "root_cause": "swapExactJarForJar accepted unvalidated jar/strategy targets and forwarded attacker-controlled calldata through CurveLogic.add_liquidity, letting the attacker invoke privileged strategy functions (withdrawAll, withdraw(address)) on the real pDAI strategy.",
-      "impact": "pDAI strategy cDAI position drained to attacker (tx.origin); historical incident reported around $19.7M for the broader Pickle Finance cDAI exploit.",
+      "impact": "pDAI strategy cDAI position redirected to attacker (tx.origin); historical incident reported around $19.7M for the broader Pickle Finance cDAI exploit.",
       "attack_tx": "0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0",
       "references": [
         {

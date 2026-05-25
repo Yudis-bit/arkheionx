@@ -29,7 +29,40 @@ jobs:
           json-output: "arkheionx-report.json"
           generate-invariant-skeletons: "false"
           fail-on-critical-readiness-gap: "false"
+          summary: "true"
 ```
+
+## Vault Builder Workflow
+
+For ERC4626-like vaults, strategy vaults, and share/accounting systems, pin the
+protocol type to `vault` so the v0.2.0 Vault Rule Pack is used:
+
+```yaml
+name: Arkheionx Vault Readiness
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+jobs:
+  vault-readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+        with:
+          root: "."
+          protocol-type: "vault"
+          output: "ARKHEIONX_VAULT_READINESS_REPORT.md"
+          json-output: "arkheionx-vault-report.json"
+          generate-invariant-skeletons: "true"
+          fail-on-critical-readiness-gap: "false"
+          summary: "true"
+```
+
+The vault report includes a Vault Rule Pack coverage section and a
+`vault_rule_pack` object in JSON output.
 
 ## Pull Request Workflow
 
@@ -107,6 +140,7 @@ calls, and no exploit logic.
 | `generate-invariant-skeletons` | `false` | Create safe Foundry invariant skeletons. |
 | `fail-on-critical-readiness-gap` | `false` | Fail only when explicitly enabled. |
 | `create-issues` | `false` | Reserved for future local issue suggestions. No remote issues are created. |
+| `summary` | `true` | Write a short report excerpt to the GitHub Actions job summary. |
 
 ## Troubleshooting
 
