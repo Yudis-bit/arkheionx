@@ -1,6 +1,7 @@
 # Contributing
 
-How to add a PoC, fix metadata, or improve docs in Arkheionx Vault.
+How to add a PoC, improve metadata, tune readiness rules, or improve docs in
+Arkheionx.
 
 ## Before you submit
 
@@ -9,6 +10,36 @@ How to add a PoC, fix metadata, or improve docs in Arkheionx Vault.
 2. Read [RESEARCH_STANDARD.md](RESEARCH_STANDARD.md). Submissions that don't
    meet the standard will not be merged.
 3. Read [METADATA_SCHEMA.md](METADATA_SCHEMA.md). Every PoC needs metadata.
+
+## Pre-audit readiness contributions
+
+Good readiness contributions are defensive, local, and explainable:
+
+- scanner signal calibration;
+- false positive reductions;
+- new protocol-specific readiness checks;
+- safe Foundry invariant skeleton improvements;
+- mini fixtures under `examples/`;
+- search metadata in `metadata/search_terms.json`;
+- docs that help indie builders prepare for formal audit.
+
+Run the scanner before opening a PR that touches readiness code:
+
+```sh
+python3 -m py_compile scripts/pre_audit_scan.py
+python3 scripts/pre_audit_scan.py \
+  --root examples/mini-vault \
+  --protocol-type auto \
+  --output examples/reports/mini-vault-pre-audit-report.md \
+  --json-output examples/reports/mini-vault-pre-audit-report.json \
+  --generate-invariant-skeletons
+python3 scripts/generate_search_index.py --check
+```
+
+Scanner output must use readiness language: risk signal, readiness gap,
+historical pattern similarity, missing invariant, review recommended, and
+defensive check. Do not add language that claims static scanning proves
+exploitability or guarantees safety.
 
 ## Submitting a PoC
 
@@ -84,6 +115,8 @@ conventions.
   detection-evasion tooling.
 - README or web-app changes that introduce inflated claims, unverified
   metrics, or service offerings the maintainer has not actually delivered.
+- Scanner rules that call live chains, require RPC, submit transactions,
+  inspect deployed contracts, or adapt historical PoCs to active systems.
 
 ## Conduct
 

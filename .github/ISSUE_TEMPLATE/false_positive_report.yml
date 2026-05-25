@@ -1,0 +1,36 @@
+name: False Positive Report
+description: Report an Arkheionx scanner signal that needs better calibration.
+title: "[False Positive]: "
+labels: ["scanner-calibration", "false-positive"]
+body:
+  - type: input
+    id: report_section
+    attributes:
+      label: Report section
+      placeholder: Historical pattern similarity, readiness gap, score category
+    validations:
+      required: true
+  - type: input
+    id: rule_or_signal
+    attributes:
+      label: Rule or signal
+      placeholder: vault accounting, oracle-risk, reentrancy-review
+    validations:
+      required: true
+  - type: textarea
+    id: why_false_positive
+    attributes:
+      label: Why it is a false positive
+      placeholder: Explain the protocol context and why the signal should be reduced or reclassified.
+    validations:
+      required: true
+  - type: textarea
+    id: code_reference
+    attributes:
+      label: Code reference
+      placeholder: File paths, line references, or public repository links.
+  - type: textarea
+    id: suggested_improvement
+    attributes:
+      label: Suggested improvement
+      placeholder: Detection rule, wording, scoring, or documentation improvement.

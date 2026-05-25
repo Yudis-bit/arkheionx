@@ -3,6 +3,38 @@
 Internal tooling for Arkheionx Vault. All scripts are pure-stdlib Python 3.11+
 and run from the repository root unless noted.
 
+## `pre_audit_scan.py`
+
+Runs the GitHub-native pre-audit readiness scanner. It inspects local
+repository files only and writes a Markdown report plus optional JSON output.
+It does not call RPC endpoints, submit transactions, inspect deployed
+contracts, or collect secrets.
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type auto \
+  --output ARKHEIONX_PRE_AUDIT_REPORT.md \
+  --json-output arkheionx-report.json
+```
+
+Generate safe Foundry invariant skeletons:
+
+```sh
+python3 scripts/pre_audit_scan.py --root . --generate-invariant-skeletons
+```
+
+## `generate_search_index.py`
+
+Generates [`reports/search_index.md`](../reports/search_index.md) from
+`metadata/registry.json`, `metadata/search_terms.json`, and the product
+surface map.
+
+```sh
+python3 scripts/generate_search_index.py
+python3 scripts/generate_search_index.py --check
+```
+
 ## `validate_metadata.py`
 
 Validates `metadata/registry.json` against `metadata/schema.json` plus the

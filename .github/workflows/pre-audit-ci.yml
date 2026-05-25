@@ -1,0 +1,131 @@
+name: pre-audit-ci
+
+on:
+  pull_request:
+    paths:
+      - "scripts/pre_audit_scan.py"
+      - ".github/actions/pre-audit/action.yml"
+      - ".github/workflows/pre-audit-ci.yml"
+      - "examples/mini-vault/**"
+      - "templates/**"
+      - "docs/**"
+      - "README.md"
+      - "SERVICES.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pre-audit-scanner:
+    name: validate scanner, action, reports, and safety copy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python syntax check
+        run: |
+          python3 -m py_compile scripts/pre_audit_scan.py
+          python3 -m py_compile scripts/generate_search_index.py
+
+      - name: Verify search index is current
+        run: python3 scripts/generate_search_index.py --check
+
+      - name: Run scanner directly against mini-vault
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/mini-vault \
+            --protocol-type auto \
+            --output examples/reports/mini-vault-pre-audit-report.md \
+            --json-output examples/reports/mini-vault-pre-audit-report.json \
+            --generate-invariant-skeletons
+
+      - name: Run local GitHub Action wrapper
+        uses: ./.github/actions/pre-audit
+        with:
+          root: "examples/mini-vault"
+          protocol-type: "auto"
+          output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+          json-output: "arkheionx-report.json"
+          generate-invariant-skeletons: "false"
+          fail-on-critical-readiness-gap: "false"
+
+      - name: Verify report artifacts
+        run: |
+          test -f examples/reports/mini-vault-pre-audit-report.md
+          test -f examples/reports/mini-vault-pre-audit-report.json
+          test -f examples/mini-vault/test/invariant/ArkheionxReadinessInvariants.t.sol
+          test -f ARKHEIONX_PRE_AUDIT_REPORT.md
+          test -f arkheionx-report.json
+
+      - name: Parse JSON output
+        run: |
+          python3 - <<'PY'
+          import json
+
+          for path in [
+              "examples/reports/mini-vault-pre-audit-report.json",
+              "arkheionx-report.json",
+          ]:
+              data = json.load(open(path, encoding="utf-8"))
+              assert data["tool"] == "Arkheionx Pre-Audit Scanner"
+              assert isinstance(data["score"], int)
+              assert "disclaimer" in data
+          print("JSON valid")
+          PY
+
+      - name: Verify disclaimer is present
+        run: |
+          grep -qi "not a formal audit" examples/reports/mini-vault-pre-audit-report.md
+          grep -qi "does not prove" examples/reports/mini-vault-pre-audit-report.md
+          grep -qi "formal audit is recommended" examples/reports/mini-vault-pre-audit-report.md
+
+      - name: Verify unsafe marketing phrases are absent
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          phrases = [
+              "guaranteed secure",
+              "audit replacement",
+              "cheap audit",
+              "exploit live",
+              "drain helper",
+              "profit calculator",
+              "bounty guaranteed",
+              "fully verified database",
+              "autonomous exploit runner",
+          ]
+          roots = [
+              Path("README.md"),
+              Path("SERVICES.md"),
+              Path("docs/PRE_AUDIT_READINESS_OS.md"),
+              Path("docs/GITHUB_ACTION_USAGE.md"),
+              Path("docs/READINESS_SCORE.md"),
+              Path("docs/INDIE_BUILDER_OFFER.md"),
+              Path("docs/SEARCH_GUIDE.md"),
+              Path("docs/MARKETING_ENGINE.md"),
+              Path("docs/MONETIZATION.md"),
+              Path("docs/SPONSORSHIP.md"),
+              Path("docs/ETHICS.md"),
+              Path(".github/actions"),
+              Path("templates"),
+          ]
+          failures = []
+          for root in roots:
+              files = [root] if root.is_file() else list(root.rglob("*"))
+              for path in files:
+                  if not path.is_file() or path.suffix.lower() not in {".md", ".yml", ".yaml", ".sol"}:
+                      continue
+                  text = path.read_text(encoding="utf-8", errors="ignore").lower()
+                  for phrase in phrases:
+                      if phrase in text:
+                          failures.append(f"{path}: {phrase}")
+          if failures:
+              raise SystemExit("Unsafe phrase check failed:\n" + "\n".join(failures))
+          print("unsafe phrase check passed")
+          PY

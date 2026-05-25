@@ -1,169 +1,264 @@
 # Marketing Engine
 
-This page turns the commercial surface into a repeatable growth system. It is
-written for a small team, but one maintainer can run it by batching the work.
+Arkheionx can grow without a website. GitHub is the landing page, product,
+support channel, sales surface, distribution system, and public proof.
 
-The goal is qualified conversations: sponsors, workshop buyers, assertion
-hardening clients, and partners who can introduce the archive to security
-teams.
+## Market Thesis
+
+Indie DeFi builders need security preparation before they can afford or
+schedule formal audits.
+
+They do not need fear-based marketing. They need a practical way to find
+missing invariants, unclear assumptions, weak tests, and audit blockers while
+their protocol is still cheap to change.
 
 ## Positioning
 
-Primary message:
+Arkheionx is not a substitute for a formal audit.
 
-> Arkheionx Vault helps security teams learn from historical DeFi incidents by
-> turning exploit replays into assertion-driven, reviewer-readable research
-> artifacts.
+Arkheionx is a pre-audit readiness layer:
 
-Short offer:
+> Historical DeFi failures turned into practical GitHub-native readiness
+> checks for the next generation of indie protocols.
 
-> Historical exploit PoC hardening, root-cause reports, and auditor workshops.
+## Core Message
 
-Boundary:
+> Before you spend thousands on a formal audit, check if your protocol is
+> audit-ready.
 
-> Historical, patched, or authorized targets only. No live-target exploitation,
-> scanner work, drain tooling, private exploit adaptation, or bounty guarantees.
+Short version:
 
-## Team Roles
+> Not an audit. A way to prepare for one.
 
-| Role | If solo | Main job | Weekly output |
-|---|---|---|---|
-| Founder / closer | You | Discovery calls, proposals, paid scope | 3-5 qualified conversations |
-| Technical content | Batch on one day | Posts, threads, mini case studies | 5 short posts, 1 deeper writeup |
-| Outbound researcher | Batch leads weekly | Build target list and personalize outreach | 50 qualified accounts |
-| Partnership lead | Batch follow-ups | Communities, educators, audit teams | 10 partner asks |
-| Operations | Friday review | Track replies, proposals, revenue | KPI table updated |
+## Audience Segments
 
-Do not hire a general marketing person first. The first hire or contractor
-should be able to understand security audiences, rewrite technical notes into
-clear posts, and keep outreach personalized.
+- Solo DeFi founder.
+- Hackathon winner.
+- Grant-funded builder.
+- Small DAO.
+- Vault builder.
+- L2 ecosystem.
+- Accelerator.
+- Junior security researcher.
 
-## Growth Loops
+## GitHub-Only Funnel
 
-1. **Content to conversation.** Publish one assertion lesson, then DM it to
-   people who already care about PoC quality.
-2. **Repo update to sponsor ask.** Every hardening release explains what was
-   improved and what sponsorship funds next.
-3. **Workshop to retainer.** End each workshop with a narrow offer: review one
-   internal PoC and turn it into hard assertions.
-4. **Case study to proposal.** Use one public incident writeup as the sample
-   attached to paid report proposals.
-5. **Partner to cohort.** Offer communities one paid or sponsored training
-   slot instead of asking them to promote the repo blindly.
+Discovery:
 
-## Channel Priority
+- GitHub search;
+- GitHub topics;
+- X posts;
+- LinkedIn posts;
+- Discord and Telegram builder communities;
+- hackathons;
+- L2 grant communities;
+- audit-preparation conversations.
 
-| Channel | Use it for | CTA |
-|---|---|---|
-| GitHub README | Credibility, service menu, sponsor button | Sponsor or inquire |
-| GitHub topics | Discovery by researchers and maintainers | Star, read, contribute |
-| LinkedIn | Protocol teams, founders, audit managers | Workshop or report call |
-| X / security threads | Technical reach and sponsor asks | Read the repo, sponsor |
-| Discord / Telegram communities | Workshops and partner sessions | Invite session |
-| Audit contest profiles | Proof of work | Paid review inquiry |
-| Direct email | Closing paid work | One-page outline |
+Activation:
 
-The best early path is not broad paid ads. Start with technical proof, warm
-distribution, and focused outbound to buyers who already spend money on
-security education or research.
+- user copies GitHub Action;
+- user runs local CLI;
+- user opens the mini-vault sample report.
 
-## Weekly Operating Rhythm
+Value:
 
-Monday:
+- user receives a Markdown report;
+- user sees top readiness gaps;
+- user gets suggested invariant skeletons;
+- user has a checklist for formal audit prep.
 
-- Pick one technical theme from `docs/CONTENT_PLAYBOOK.md`.
-- Select one commercial CTA from `SERVICES.md`.
-- Build a 50-account target list using `docs/marketing/ACCOUNT_TARGETING.md`.
+Conversion:
 
-Tuesday:
+- user opens a GitHub issue for Launch Report or Pre-Audit Sprint;
+- sponsor clicks GitHub Sponsors;
+- ecosystem asks about a readiness pack.
 
-- Publish one short technical post.
-- Send 10 highly personalized DMs or emails.
-- Ask 3 existing contacts for one intro each.
+Retention:
 
-Wednesday:
+- Sponsors receive updates;
+- Discussions collect Q&A;
+- rule requests improve the scanner;
+- examples and reports compound.
 
-- Publish one mini case study or assertion lesson.
-- Send 10 more personalized messages.
-- Follow up with warm replies only.
+Expansion:
 
-Thursday:
+- Ecosystem Pack for L2s, accelerators, hackathons, and grant programs.
 
-- Pitch 5 communities, bootcamps, audit teams, or protocol security groups for
-  a workshop.
-- Package one proposal using `docs/PROPOSAL_TEMPLATE.md`.
+## Content Engine
 
-Friday:
+Weekly:
 
-- Update `docs/marketing/KPI_TRACKER.md`.
-- Convert best-performing post into a longer writeup.
-- Decide next week's offer focus.
+- one historical exploit lesson;
+- one readiness checklist;
+- one invariant testing tip;
+- one founder-focused security post.
 
-## Conversion Ladder
+Monthly:
 
-Use one clear next step at each stage:
+- research dashboard update;
+- sponsor update;
+- new rule pack;
+- sample report;
+- roadmap note.
 
-| Stage | Ask | Success signal |
-|---|---|---|
-| Awareness | Read the assertion standard | Star, reply, repost |
-| Interest | Want a one-page outline? | Asks for details |
-| Discovery | 20-minute fit call | Confirms historical/authorized scope |
-| Proposal | Fixed deliverable and price | Written approval |
-| Delivery | Ship code/report/workshop | Testimonial, referral, sponsor |
+## Example X Posts
 
-## First Money Targets
+1. Most indie DeFi builders cannot afford a formal audit on day one. Arkheionx
+   helps them get audit-ready first: missing invariants, exploit-pattern risks,
+   and launch blockers, all inside GitHub. Not an audit. A way to prepare for
+   one.
 
-Prioritize offers with the shortest path to trust:
+2. A vault without roundtrip tests is not ready for audit pressure. Add
+   deposit -> withdraw checks, totalAssets consistency, donation edges, and
+   fee conservation before paying reviewers to find the basics.
 
-1. **Workshop pilot.** Easiest to buy because it does not require sending code.
-2. **Assertion hardening sprint.** Best proof that the repo can improve real
-   engineering artifacts.
-3. **Sponsor package.** Good for believers, but usually slower than services.
-4. **Historical report.** Higher price, but needs stronger sample proof.
-5. **Retainer.** Offer only after a successful smaller engagement.
+3. Historical DeFi failures are not just stories. They are test prompts.
+   Arkheionx turns root causes into GitHub-native readiness checks for indie
+   builders.
 
-## Launch Message
+4. If your protocol uses an oracle, your audit prep should explain freshness,
+   decimals, bounds, fallback behavior, and who can update the source.
+   Arkheionx flags that as a readiness gap.
 
-```text
-I am opening a few paid slots around Arkheionx Vault.
+5. The first Arkheionx scanner is deliberately boring: local files only, no
+   RPC, no live targets, no secrets, Markdown output. Boring is good when the
+   goal is defensive preparation.
 
-The work is defensive and historical:
-- assertion hardening for Foundry exploit PoCs
-- root-cause and invariant writeups
-- auditor workshops using public DeFi incidents
-- sponsorship lanes for public archive work
+6. A pre-audit report should not say "you are safe." It should say: here are
+   the assumptions, here are the missing invariants, here are the blockers to
+   fix before formal review.
 
-Good fit:
-- security teams with internal PoC collections
-- audit teams training junior researchers
-- Web3 security communities
-- protocols that want historical incident learning material
+7. The best security tool for small teams is often a checklist that actually
+   gets used. Arkheionx makes the checklist executable inside GitHub.
 
-Not a fit:
-- live-target exploitation
-- scanner or drain tooling
-- private exploit adaptation
-- bounty guarantees
+8. Indie DeFi teams need a path between "we wrote contracts" and "we can afford
+   a formal audit." Arkheionx is building that path as an open GitHub repo.
 
-Service menu:
-<link to SERVICES.md>
-```
+9. Every readiness gap is cheaper to fix before audit intake. Tests, invariants,
+   role docs, oracle assumptions, and launch scope should not be discovered on
+   the final week.
+
+10. Arkheionx is becoming a security memory layer: historical exploit research
+    plus pre-audit readiness tooling for the next wave of DeFi builders.
+
+## LinkedIn-Style Technical Posts
+
+1. **Why pre-audit readiness matters**
+
+   Most early DeFi teams approach audits with preventable gaps: missing
+   invariant tests, unclear role docs, oracle assumptions that live only in a
+   founder's head, and no clean scope. Arkheionx gives those teams a GitHub
+   Action that produces a Markdown readiness report before formal review.
+
+2. **Historical incidents as product input**
+
+   Arkheionx started as an assertion-driven DeFi exploit PoC archive. The next
+   layer is practical: map historical failure classes to defensive checks that
+   builders can run against their own repositories.
+
+3. **The right language for automated security tooling**
+
+   A static readiness scanner should not claim proof from heuristics. It should
+   say "risk signal," "readiness gap," "review recommended," and "missing
+   invariant." That language protects users and keeps the output useful.
+
+4. **What a good launch report should contain**
+
+   A useful Launch Report should include protocol shape, score breakdown, top
+   gaps, historical pattern similarity, suggested tests, role assumptions, and
+   formal audit recommendation. It should not pretend to be certification.
+
+5. **Why GitHub-native matters**
+
+   Indie builders already live in GitHub. A readiness product that outputs
+   Markdown, JSON, issue checklists, and action logs can fit their workflow
+   without asking them to adopt another dashboard.
+
+## GitHub Discussion Announcement Templates
+
+1. **New scanner rule pack**
+
+   Arkheionx has added a new defensive readiness rule pack for `<protocol
+   type>`. It maps `<risk class>` signals to suggested checks and invariant
+   themes. Try it with the GitHub Action and open a Rule Request if the signal
+   needs better calibration.
+
+2. **Monthly readiness update**
+
+   This month Arkheionx improved `<rule/docs/example>`, regenerated the sample
+   report, and updated the roadmap. Current archive truth remains unchanged
+   unless the maturity index says otherwise.
+
+3. **False positive review thread**
+
+   If the scanner produced a noisy readiness signal for your authorized repo,
+   share the report section and code context here or open the False Positive
+   Report form. The goal is useful signal, not alarm.
+
+4. **Indie builder office hours**
+
+   Drop questions about pre-audit readiness, invariant planning, report
+   interpretation, or audit-scope prep. Do not post secrets, private keys,
+   undisclosed exploit details, or confidential production material.
+
+5. **Sponsor update**
+
+   Sponsor funding this cycle supported `<artifact>`. The next useful target is
+   `<specific milestone>`. As always, sponsor support does not influence
+   severity, taxonomy, or verification claims.
+
+## Founder DM Templates
+
+Use these only in opted-in, public, or clearly relevant builder contexts.
+Personalize them. Do not mass-send.
+
+1. Saw your `<protocol>` repo is moving toward `<testnet/grant/audit>`. I am
+   building Arkheionx, a GitHub-native pre-audit readiness scanner for indie
+   DeFi teams. It outputs a Markdown report with missing invariants and audit
+   blockers. Happy to share the free action if useful.
+
+2. Your vault work caught my eye because Arkheionx currently has a vault
+   readiness path: totalAssets consistency, roundtrip tests, share accounting,
+   and role docs. Not an audit, just prep before formal review. Want the link?
+
+3. I noticed your team is applying for ecosystem support. One gap I see often
+   in grant-stage DeFi repos is no clear pre-audit report. Arkheionx generates
+   a GitHub-native readiness report you can use internally or for audit prep.
+
+4. I am looking for a few indie DeFi builders to pressure-test Arkheionx's
+   scanner output. It is local-only, no RPC, no secrets, Markdown report. If
+   your repo is public and authorized, I can take feedback on false positives.
+
+5. If your team is not ready for a formal audit yet, Arkheionx may still help:
+   it identifies missing invariants, historical pattern similarity, and launch
+   blockers from your GitHub repo. No claims of safety, just readiness prep.
+
+## Anti-Hype Rules
+
+- No fake metrics.
+- No fake partnerships.
+- No guarantee claims.
+- No fearmongering.
+- No exploit-bait wording.
+- No claim that the archive has more verification evidence than the committed
+  reports support.
+- No claim that scanner output confirms exploitability.
+- No claim that Arkheionx replaces professional review.
 
 ## Stop Rules
 
-Stop or decline immediately when:
+Stop or decline when:
 
-- the lead asks for live-target exploitation;
-- the target is unpatched or authorization is unclear;
-- the buyer wants evasion, drain support, or bounty guarantees;
-- the conversation requires confidential exploit details in public channels;
-- the lead will not define a concrete deliverable.
+- authorization is unclear;
+- the request involves active target testing without permission;
+- the buyer wants value extraction, evasion, or stealth;
+- private keys, mnemonics, or secrets are requested or shared;
+- the buyer wants a safety guarantee;
+- the requested deliverable would weaken Arkheionx's defensive boundary.
 
-## Related Playbooks
+## Related Pages
 
-- [`docs/marketing/30_DAY_GROWTH_SPRINT.md`](marketing/30_DAY_GROWTH_SPRINT.md)
-- [`docs/marketing/ACCOUNT_TARGETING.md`](marketing/ACCOUNT_TARGETING.md)
-- [`docs/marketing/OUTBOUND_SEQUENCES.md`](marketing/OUTBOUND_SEQUENCES.md)
-- [`docs/marketing/KPI_TRACKER.md`](marketing/KPI_TRACKER.md)
-- [`docs/OUTREACH_KIT.md`](OUTREACH_KIT.md)
-- [`docs/CONTENT_PLAYBOOK.md`](CONTENT_PLAYBOOK.md)
+- [`INDIE_BUILDER_OFFER.md`](INDIE_BUILDER_OFFER.md)
+- [`MONETIZATION.md`](MONETIZATION.md)
+- [`SPONSORSHIP.md`](SPONSORSHIP.md)
+- [`../SERVICES.md`](../SERVICES.md)

@@ -1,114 +1,195 @@
-# Monetization Plan
+# Monetization
 
-This plan makes Arkheionx Vault easier to fund without changing its identity.
-The archive remains a public defensive research artifact. Monetization should
-come from education, sponsorship, and scoped research services.
+Arkheionx monetizes as a GitHub-native security readiness system while keeping
+the public archive honest, defensive, and useful.
+
+The repository itself is the product:
+
+- README as landing page;
+- GitHub Action as product engine;
+- CLI scanner as local engine;
+- Markdown report as dashboard;
+- docs as knowledge base;
+- metadata as search index;
+- examples as demos;
+- issues as intake forms;
+- sponsors as funding surface;
+- releases as distribution.
 
 ## Revenue Ladder
 
-1. **Sponsorship.** Lowest friction. Add funding links and a clear explanation
-   of what support pays for.
-2. **Workshops.** Package existing knowledge into repeatable sessions.
-3. **Assertion hardening.** Sell a narrow, concrete service that matches the
-   archive's current strengths.
-4. **Historical reproduction reports.** Higher-value work for teams that want
-   a polished case study around a resolved incident.
-5. **Retainers.** Only after at least a few small engagements prove demand.
+| Offer | Price | Primary value |
+|---|---:|---|
+| Free GitHub Action | Free | Basic scan, readiness score, Markdown report, JSON output, basic checklist. |
+| Indie Builder Sponsor | USD 29/month | Recognition if desired, early rule previews, priority Q&A in GitHub Discussions, monthly readiness tips. |
+| Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
+| Launch Report | USD 299-499 one time | Automated scan, manual report review, prioritized fix checklist, Markdown readiness report. |
+| Pre-Audit Sprint | USD 1,000-2,000 one time | Manual readiness review, historical pattern mapping, missing invariant plan, GitHub issue checklist. |
+| Ecosystem Pack | USD 5,000-20,000/month | Bulk reports, portfolio dashboard, security clinic, training, community support. |
+| Research Sponsorship | Flexible | Fund exploit-memory research, assertion hardening, verification work, education, and rule packs. |
 
-## First 7 Days
+## Positioning
 
-- Publish `docs/COMMERCIAL.md`, `docs/SPONSORSHIP.md`, and `docs/TRAINING.md`.
-- Publish `SERVICES.md`, `docs/OUTREACH_KIT.md`,
-  `docs/CONTENT_PLAYBOOK.md`, `docs/SPONSOR_PROSPECTUS.md`, and
-  `docs/PROPOSAL_TEMPLATE.md`.
-- Add a support/commercial-work section to `README.md`.
-- Add `.github/FUNDING.yml` so GitHub can surface sponsorship.
-- Create one short public post explaining the archive's funding model:
-  "support assertion-driven DeFi exploit research, not live exploit tooling."
-- Use `docs/launch/COMMERCIAL_LAUNCH_POSTS.md` to publish one commercial
-  launch post and one sponsor ask.
-- Pick one workshop topic and make it bookable with a clear starting price.
+Arkheionx is not a substitute for a formal audit.
 
-## First 30 Days
+It is a pre-audit readiness layer:
 
-- Harden at least two weak PoCs and mention the before/after in a release note.
-- Turn one strong PoC into a sample training excerpt.
-- Publish a short "what a good assertion proves" article linked to the repo.
-- Offer three pilot workshop slots to security communities or small teams.
-- Track inbound interest in a simple table outside the repository.
+> Before you spend thousands on a formal audit, check whether your repository
+> is audit-ready.
 
-## First 90 Days
+## Free GitHub Action
 
-- Produce the first L4 archival-verified report if archival RPC access is
-  available.
-- Publish one L5-style case-study draft.
-- Convert the most common workshop questions into docs.
-- Decide whether retainers are worth offering based on actual demand.
-- Keep sponsorship progress tied to generated reports and maturity counts.
+The free tier creates trust and distribution:
 
-## Offer Copy
+- copy-paste workflow;
+- no secrets;
+- no RPC;
+- no backend;
+- no external dashboard;
+- Markdown report committed or uploaded by the builder.
 
-Short version:
+Conversion happens when a builder wants help interpreting or improving the
+report.
 
-> Arkheionx Vault offers defensive exploit-reproduction research, assertion
-> hardening, and auditor training based on historical DeFi incidents.
+## Indie Builder Sponsor
 
-Long version:
+Price: USD 29/month.
 
-> I help teams turn historical exploit replays into useful security learning
-> artifacts: pinned-fork PoCs, hard assertions, root-cause notes, invariant
-> maps, and auditor training material. Work is limited to patched, historical,
-> or authorized targets.
+Value:
 
-## Distribution Channels
+- sponsor recognition if desired;
+- early rule previews;
+- sponsor-only examples when available;
+- priority Q&A in GitHub Discussions;
+- monthly readiness tips.
 
-- GitHub README and sponsor button.
-- GitHub profile pinned repository.
-- Short technical posts showing one invariant or assertion at a time.
-- Audit contest profiles and applications as a proof-of-work portfolio.
-- Direct outreach to protocol security teams for workshops, not audits.
-- Security communities that already discuss DeFi post-mortems.
+Best for individual founders and small teams who want to support the public
+tooling while staying close to new readiness guidance.
 
-## Growth System
+## Protocol Pro Sponsor
 
-Use [`MARKETING_ENGINE.md`](MARKETING_ENGINE.md) as the operating plan for
-turning the service surface into qualified conversations. It includes team
-roles, channel priority, weekly cadence, conversion ladder, and stop rules.
+Price: USD 99/month.
 
-Execution assets:
+Value:
 
-- [`marketing/30_DAY_GROWTH_SPRINT.md`](marketing/30_DAY_GROWTH_SPRINT.md)
-- [`marketing/ACCOUNT_TARGETING.md`](marketing/ACCOUNT_TARGETING.md)
-- [`marketing/OUTBOUND_SEQUENCES.md`](marketing/OUTBOUND_SEQUENCES.md)
-- [`marketing/KPI_TRACKER.md`](marketing/KPI_TRACKER.md)
+- deeper templates;
+- priority issue support;
+- advanced invariant templates;
+- monthly mini-review slot if capacity allows;
+- private examples later if implemented.
 
-## Pricing Rules
+This tier should be capacity-limited. Do not promise response times the
+maintainer cannot sustain.
 
-- Quote based on incident complexity, not hours alone.
-- Charge more for fresh reproduction than for review of existing PoC code.
-- Charge more when archival RPC, trace analysis, or multi-chain context is
-  needed.
-- Do not discount work by promising public exposure.
-- Do not price bounty outcomes; price delivered research artifacts.
+## Launch Report
+
+Price: USD 299-499 one time.
+
+Value:
+
+- automated scan;
+- manual review of generated report;
+- prioritized fix checklist;
+- Markdown report;
+- explicit limitations;
+- formal audit preparation notes.
+
+Language to use:
+
+- readiness report;
+- launch preparation;
+- defensive review;
+- formal audit preparation.
+
+Language to avoid:
+
+- certification;
+- guarantee;
+- proven safe;
+- bounty-ready;
+- proof claims from static scan output.
+
+## Pre-Audit Sprint
+
+Price: USD 1,000-2,000 one time.
+
+Value:
+
+- automated scan;
+- manual readiness review;
+- historical exploit-pattern mapping;
+- missing invariant plan;
+- GitHub issue checklist;
+- final Markdown report;
+- optional follow-up comments.
+
+Best for teams that already have working code and are preparing for audit
+intake.
+
+## Ecosystem Pack
+
+Price: USD 5,000-20,000 per month.
+
+Target buyers:
+
+- L2 ecosystems;
+- accelerators;
+- hackathons;
+- grant programs;
+- builder communities.
+
+Value:
+
+- bulk readiness reports;
+- monthly security clinic;
+- portfolio-level Markdown dashboard;
+- private GitHub Discussion support;
+- training session;
+- no website required.
+
+This is the highest-leverage path because one ecosystem can introduce
+Arkheionx to many indie builders at once.
+
+## Research Sponsorship
+
+Price: flexible.
+
+Value:
+
+- support historical exploit archive;
+- sponsor verification work;
+- sponsor case hardening;
+- sponsor education materials;
+- sponsor new rule packs.
+
+Sponsor influence boundaries must stay strict. Sponsors do not control
+severity, taxonomy, inclusion, verification status, or report language.
+
+## Metrics
+
+Track monthly:
+
+- stars;
+- forks;
+- GitHub Action copies;
+- reports generated in public repos;
+- sponsor count;
+- Launch Report requests;
+- Pre-Audit Sprint requests;
+- rule requests;
+- false positive reports;
+- new historical metadata entries;
+- weak PoCs improved to medium or strong;
+- L4 reports added only when backed by evidence.
 
 ## Guardrails
 
+- No fake clients.
+- No fake partnerships.
 - No inflated verification claims.
-- No "audit firm" positioning unless a real audit practice exists.
-- No private exploit adaptation.
-- No unpatched live-target work through public channels.
-- No sponsor influence over taxonomy, severity, or verification status.
+- No claim that a static scan confirms exploitability.
+- No guarantee language.
+- No live-target workflows.
+- No sponsor influence over research truth.
 
-## Useful Metrics
-
-Track these monthly:
-
-- Sponsor count and monthly recurring support.
-- Workshop inquiries and booked sessions.
-- Paid assertion-hardening requests.
-- Weak entries reduced.
-- L4 verification reports added.
-- Case studies published.
-- Public posts that generate qualified inbound requests.
-
-The archive's credibility is the asset. Monetization should preserve it.
+The credibility is the asset. Monetization must strengthen it, not spend it.

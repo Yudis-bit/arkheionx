@@ -1,46 +1,168 @@
 # Services
 
-Arkheionx Vault is available for scoped defensive research work built around
-historical DeFi incidents, assertion-driven PoCs, and auditor education.
+Arkheionx offers GitHub-native pre-audit readiness support for indie DeFi
+builders and defensive research support for the public exploit-memory archive.
 
-The repository is not a live exploit toolkit and this is not a general audit
-firm page. Work is limited to historical, patched, or explicitly authorized
-targets.
+This is not a formal audit service. Arkheionx helps builders prepare for one.
 
-## Core Offers
+Core message:
 
-| Offer | Outcome | Starting range |
-|---|---|---:|
-| Assertion hardening sprint | Turn a weak exploit replay into a PoC with hard post-state assertions, invariant notes, and metadata updates | USD 750-2,500 |
-| Historical exploit report | Produce a defensive case study for a resolved incident: root cause, attacker path, invariant break, assertion plan, and verification notes | USD 2,500-7,500 |
-| Auditor workshop | Teach a team how to read exploit PoCs, map assertion families, and review similar protocol code | USD 1,000-3,000 |
-| Research review retainer | Monthly review of PoC quality, incident writeups, assertion coverage, or internal training material | USD 2,000-5,000/month |
-| Archive sponsorship | Fund public assertion hardening, archival verification, and case-study work | USD 250-2,000/month |
+> Find exploit-pattern risks, missing invariants, and audit blockers before
+> paying for a formal smart contract audit.
 
-## Fastest Starter Package
-
-**Assertion Hardening Sprint**
+## For Indie Builders
 
 Best fit:
 
-- You already have a Foundry PoC.
-- It runs or almost runs.
-- It mostly proves the exploit through logs.
-- You need stronger assertions, root-cause notes, and a reviewer-readable
-  explanation.
+- solo DeFi founders;
+- small vault, AMM, lending, staking, and oracle teams;
+- hackathon winners preparing for grants or testnet;
+- small DAOs preparing an audit scope;
+- L2 ecosystem builders who need practical security readiness before formal
+  review.
 
-Typical output:
+Arkheionx helps turn local repository signals into a Markdown readiness report:
 
-- Patched Foundry test with category-appropriate assertions.
-- Invariant and attacker-path summary.
-- Notes for `metadata/registry.json`.
-- Short reviewer memo explaining what now fails if the exploit regresses.
+- readiness score;
+- missing invariant plan;
+- historical exploit-pattern similarity;
+- prioritized fix checklist;
+- audit preparation notes;
+- formal audit recommendation.
 
-## Inquiry
+## Free GitHub Action
 
-Use the template in [`docs/COMMERCIAL.md`](docs/COMMERCIAL.md). Do not send
-private keys, RPC URLs, confidential protocol material, or undisclosed exploit
-details in the first message.
+Price: Free.
 
-For support without a scoped engagement, see
-[`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md).
+Value:
+
+- basic pre-audit scan;
+- readiness score;
+- Markdown report;
+- optional JSON report;
+- limited historical pattern mapping;
+- basic checklist;
+- optional safe Foundry invariant skeleton.
+
+Use it from any authorized repository:
+
+```yaml
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  with:
+    root: "."
+    protocol-type: "auto"
+    output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+    json-output: "arkheionx-report.json"
+```
+
+## Launch Report
+
+Price range: USD 299-499 one time.
+
+Best for:
+
+- builders preparing for first audit intake;
+- teams close to testnet or public launch;
+- grant-funded teams that need a serious readiness artifact.
+
+What you receive:
+
+- automated Arkheionx scan;
+- manual review of the generated report;
+- prioritized fix checklist;
+- Markdown report suitable for internal planning;
+- clear limitations and formal audit recommendation.
+
+This is a launch preparation report, not a formal audit.
+
+## Pre-Audit Sprint
+
+Price range: USD 1,000-2,000 one time.
+
+Best for:
+
+- teams preparing for a formal audit;
+- protocols with vault accounting, oracle assumptions, reward math,
+  upgradeability, liquidation, or admin-role complexity;
+- teams that want a missing invariant plan before paying for deeper review.
+
+What you receive:
+
+- automated scan;
+- manual security readiness review;
+- historical exploit-pattern mapping;
+- missing invariant and test plan;
+- GitHub issue checklist;
+- final Markdown report;
+- optional follow-up comments if capacity allows.
+
+This is defensive readiness work. It does not certify protocol safety.
+
+## Ecosystem Pack
+
+Price range: USD 5,000-20,000 per month.
+
+Best for:
+
+- L2 ecosystems;
+- accelerators;
+- hackathons;
+- grant programs;
+- builder communities.
+
+What you receive:
+
+- bulk readiness reports for participating repositories;
+- monthly security clinic;
+- portfolio-level Markdown dashboard;
+- private GitHub Discussion support if configured;
+- training session for builders;
+- no website or SaaS dashboard required.
+
+## Research Sponsorship
+
+Price: flexible.
+
+Sponsors can fund public work:
+
+- assertion hardening for weak PoCs;
+- archival verification when RPC access is available;
+- new historical case metadata;
+- root-cause writeups;
+- educational examples;
+- readiness rule improvements.
+
+Sponsors do not buy influence over severity, taxonomy, verification status, or
+inclusion decisions.
+
+## What This Is Not
+
+Arkheionx does not provide:
+
+- formal audit certification;
+- security guarantees;
+- live-target testing without authorization;
+- exploit adaptation for active systems;
+- private key, mnemonic, or secret handling;
+- bounty outcome promises;
+- deployed-contract attack workflows.
+
+## How To Request
+
+Open one of the GitHub issue forms:
+
+- `Pre-Audit Readiness Request` for free guidance or package fit;
+- `Launch Report Request` for a one-time paid report;
+- `Pre-Audit Sprint Request` for deeper readiness preparation;
+- `Rule Request` for new defensive scanner coverage;
+- `False Positive Report` for scanner calibration.
+
+Do not include private keys, mnemonics, RPC credentials, undisclosed exploit
+details, or confidential production material in public issues.
+
+## Ethical Boundaries
+
+All work is defensive and authorized. Formal audit remains recommended before
+mainnet deployment, material TVL, or handling real user funds.
+
+See [`docs/ETHICS.md`](docs/ETHICS.md).

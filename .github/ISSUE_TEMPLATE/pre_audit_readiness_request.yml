@@ -1,0 +1,124 @@
+name: Pre-Audit Readiness Request
+description: Ask for free guidance or a paid readiness report for an authorized DeFi repository.
+title: "[Readiness]: "
+labels: ["pre-audit-readiness", "authorized-scope"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for defensive pre-audit readiness requests only. Arkheionx does not provide formal audits, guarantees, live-target testing, or unauthorized review.
+  - type: input
+    id: protocol_name
+    attributes:
+      label: Protocol name
+      placeholder: Example Vault
+    validations:
+      required: true
+  - type: input
+    id: repository_url
+    attributes:
+      label: Repository URL
+      placeholder: https://github.com/org/repo
+    validations:
+      required: true
+  - type: dropdown
+    id: authorization
+    attributes:
+      label: Is this your repo or are you authorized to request review?
+      options:
+        - "Yes, I own or am authorized to request review"
+        - "No"
+    validations:
+      required: true
+  - type: dropdown
+    id: visibility
+    attributes:
+      label: Public or private repo?
+      options:
+        - Public
+        - Private
+        - Not sure yet
+    validations:
+      required: true
+  - type: dropdown
+    id: protocol_type
+    attributes:
+      label: Protocol type
+      options:
+        - auto / unsure
+        - vault
+        - AMM
+        - lending
+        - staking / rewards
+        - oracle
+        - bridge / cross-chain
+        - generic Solidity
+    validations:
+      required: true
+  - type: input
+    id: chain_vm
+    attributes:
+      label: Chain / VM
+      placeholder: Ethereum, Base, Arbitrum, Solana, Aptos, other
+  - type: textarea
+    id: main_contracts
+    attributes:
+      label: Main contracts
+      description: List the contracts and paths you want reviewed for readiness.
+      placeholder: |
+        src/Vault.sol
+        src/Strategy.sol
+        src/OracleAdapter.sol
+  - type: dropdown
+    id: launch_stage
+    attributes:
+      label: Launch stage
+      options:
+        - Idea / prototype
+        - Testnet
+        - Pre-mainnet
+        - Mainnet with low TVL
+        - Mainnet with material TVL
+    validations:
+      required: true
+  - type: dropdown
+    id: audit_status
+    attributes:
+      label: Current audit status
+      options:
+        - No audit yet
+        - Preparing for first audit
+        - Audit scheduled
+        - Audited before, preparing update
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: worries
+    attributes:
+      label: What worries you most?
+      description: Share design areas you want defensive readiness guidance on.
+      placeholder: Oracle assumptions, vault accounting, reward math, admin roles, upgradeability, tests, documentation.
+  - type: dropdown
+    id: guidance_type
+    attributes:
+      label: Do you want free guidance or a paid report?
+      options:
+        - Free guidance / triage
+        - Launch Report
+        - Pre-Audit Sprint
+        - Ecosystem Pack
+        - Not sure
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I confirm this is authorized review only.
+          required: true
+        - label: I am not requesting live-target testing or exploit adaptation.
+          required: true
+        - label: I understand this is not a formal audit and does not guarantee security.
+          required: true

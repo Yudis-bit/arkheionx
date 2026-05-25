@@ -1,31 +1,42 @@
 # Sponsorship
 
-Sponsorship funds the public archive: assertion hardening, archival
-verification, documentation, and case-study work.
+Sponsorship funds Arkheionx as a public defensive security memory and
+pre-audit readiness system.
 
-The repository remains defensive research. Sponsors do not buy influence over
-findings, severity, category, verification status, or inclusion decisions.
+Sponsors support:
 
-## Funding Tiers
+- historical exploit research;
+- assertion hardening;
+- archival verification when evidence is available;
+- readiness scanner rules;
+- examples and templates;
+- education for indie DeFi builders.
 
-| Tier | Monthly amount | Fit | What it funds |
+Sponsors do not buy influence over findings, severity, categories,
+verification status, inclusion decisions, or readiness reports.
+
+## Sponsor Tiers
+
+| Tier | Monthly amount | Fit | What it supports |
 |---|---:|---|---|
-| Reader | USD 5 | Individual readers | Maintenance time, typo fixes, link repair |
-| Research Supporter | USD 25 | Security learners | Assertion hardening and small docs improvements |
-| Lab Sponsor | USD 100 | Small teams | Public-RPC smoke runs, report maintenance, triage |
-| Protocol Sponsor | USD 500 | Protocols and tooling teams | Archival verification work and case-study writing |
-| Research Partner | USD 1,500+ | Organizations funding deeper public work | A named public research lane or milestone |
+| Reader | USD 5 | Individual readers | Maintenance, typo fixes, link repair. |
+| Research Supporter | USD 25 | Security learners | Assertion hardening and docs improvements. |
+| Indie Builder Sponsor | USD 29 | Solo founders and small teams | Readiness tips, early rule previews, priority Q&A. |
+| Protocol Pro Sponsor | USD 99 | Small protocols | Deeper templates, priority issue support, capacity-limited mini-review. |
+| Lab Sponsor | USD 250 | Security teams | Public reports, rule improvements, triage work. |
+| Protocol Sponsor | USD 500 | Protocols and tooling teams | Archival verification attempts and case-study writing. |
+| Ecosystem Sponsor | USD 1,500+ | L2s, accelerators, grant programs | Public readiness packs, training, research lanes. |
 
-Amounts are suggested. One-time support is also useful, especially for archival
-RPC runs and verification passes.
+One-time support is also useful, especially for archival RPC runs, verification
+passes, and new educational examples.
 
-## Sponsor Recognition
+## Recognition
 
 Optional recognition can include:
 
-- Name or handle in a future sponsors section.
-- Mention in a release note for a funded milestone.
-- Acknowledgement in a case study funded by the sponsor.
+- name or handle in a future sponsors section;
+- mention in a release note for a funded milestone;
+- acknowledgement in a funded case study or rule pack.
 
 Recognition never implies endorsement, partnership, audit status, or protocol
 security approval.
@@ -36,8 +47,9 @@ security approval.
 - Running archival fork verification where RPC access is available.
 - Writing verification reports with real transcripts.
 - Producing root-cause case studies.
-- Maintaining the metadata registry and generated reports.
-- Building training material from historical incidents.
+- Maintaining metadata and generated reports.
+- Building pre-audit readiness rules and templates.
+- Supporting indie builders through GitHub-native materials.
 
 ## What Sponsorship Does Not Buy
 
@@ -45,23 +57,24 @@ security approval.
 - Priority for unpatched live targets.
 - Suppression or softening of findings.
 - A claim that a protocol is safe.
-- A private audit report.
+- A private formal audit report.
+- Bounty outcome promises.
 
 ## Funding Goals
 
-Near-term goals that are appropriate for sponsors:
+Near-term goals:
 
-1. Harden all remaining `weak` entries to at least `medium`.
-2. Produce the first three archival-verified L4 reports.
-3. Publish one L5 case study with an auditor checklist walkthrough.
-4. Replace one non-EVM scaffold with a real SVM or MoveVM teaching case.
+1. Improve all remaining weak PoCs to at least medium assertion quality.
+2. Produce the first archival-confirmed L4 reports only when evidence exists.
+3. Publish one L5-style case study after an L4 entry exists.
+4. Expand the readiness scanner with protocol-specific rule packs.
+5. Add more mini fixtures and sample reports for indie builders.
+6. Improve search metadata and generated indexes.
 
-Progress should be reported through generated artifacts, not manually inflated
-claims.
+Progress should be reported through committed artifacts, not inflated claims.
 
 ## Related Pages
 
-- [`SPONSOR_PROSPECTUS.md`](SPONSOR_PROSPECTUS.md) — sponsor packages and
-  recognition rules.
-- [`MONETIZATION.md`](MONETIZATION.md) — funding plan and metrics.
-- [`../SERVICES.md`](../SERVICES.md) — service menu for scoped paid work.
+- [`MONETIZATION.md`](MONETIZATION.md)
+- [`INDIE_BUILDER_OFFER.md`](INDIE_BUILDER_OFFER.md)
+- [`../SERVICES.md`](../SERVICES.md)

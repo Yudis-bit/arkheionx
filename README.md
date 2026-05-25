@@ -1,380 +1,399 @@
-# Arkheionx Vault
+# Arkheionx
 
-**Independent DeFi Exploit PoC Research Archive**
+GitHub-native DeFi Security Memory and Pre-Audit Readiness OS for indie
+builders.
 
-Maintained by Yudistira Putra — `arkheionx` /
+Find exploit-pattern risks, missing invariants, and audit blockers before
+paying for a formal smart contract audit.
+
+> Not an audit. A way to prepare for one.
+
+Arkheionx turns historical DeFi failures into practical GitHub-native readiness
+checks for the next generation of indie protocols. The repository remains an
+independent assertion-driven exploit PoC research archive, and now also acts as
+a local scanner, GitHub Action, Markdown reporting system, searchable security
+knowledge base, and service surface for authorized defensive work.
+
+Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 [@Yudis-bit](https://github.com/Yudis-bit).
 
----
+## Two Audiences, One System
 
-## Overview
+For indie builders:
 
-Arkheionx Vault is an independent archive of historical DeFi exploit
-proofs-of-concept. The project is built around reproducibility, assertion
-quality, exploit anatomy, and root-cause analysis rather than raw exploit
-collection.
+- run the pre-audit scanner locally or in GitHub Actions;
+- get a Markdown readiness report and optional JSON output;
+- identify missing invariants and audit blockers;
+- generate safe Foundry invariant skeletons;
+- prepare a cleaner formal audit scope.
 
-Each entry pairs Foundry-based fork reproduction of a real, already-resolved
-incident with metadata that records the exploit primitive, the broken
-invariant, the protocol assumption that failed, and the assertions that
-prove the resulting compromise. The work is defensive: studying failed
-designs in detail so they are not repeated.
+For security researchers:
 
-The archive is small by design. Standards, taxonomy, and verification
-process come first; corpus growth follows.
+- study historical exploit root causes;
+- improve PoC assertion quality;
+- contribute case metadata and taxonomy;
+- help grow the security memory layer;
+- keep verification claims honest.
 
-## Current status
+## The Five Pillars
 
-Honest snapshot of the repository on the current branch. Numeric values
-are regenerated from `metadata/registry.json` by
+1. **Arkheionx Memory** - historical DeFi exploit research, root-cause
+   taxonomy, exploit primitives, broken invariants, failed assumptions,
+   assertion families, reproducibility status, and case references.
+2. **Arkheionx Readiness** - a GitHub-native pre-audit scanner for authorized
+   repositories that generates practical Markdown and JSON reports.
+3. **Arkheionx Tests** - suggested invariant tests, Foundry skeletons,
+   readiness checklists, test coverage guidance, and audit preparation
+   templates.
+4. **Arkheionx Search** - searchable security knowledge base with tags,
+   indexes, category maps, metadata, reports, and GitHub search terms.
+5. **Arkheionx Market** - GitHub Sponsors, Launch Reports, Pre-Audit Sprints,
+   Ecosystem Packs, training, and research sponsorship.
+
+## What Arkheionx Is
+
+- Historical DeFi exploit memory.
+- Assertion-driven research archive.
+- Pre-audit readiness scanner.
+- GitHub Action.
+- Markdown report generator.
+- JSON report generator.
+- Safe Foundry invariant skeleton generator.
+- Searchable root-cause knowledge base.
+- Indie-builder support and services surface.
+
+## What Arkheionx Is Not
+
+- Not a formal audit.
+- Not a security guarantee.
+- Not live exploitation tooling.
+- Not a bounty guarantee.
+- Not an attack framework.
+- Not a replacement for professional review.
+- Not affiliated with any audit firm, contest platform, bounty program, or
+  protocol unless a relationship is explicitly documented in committed public
+  artifacts.
+
+## Current Status
+
+Honest snapshot from the current branch. Numeric values are regenerated from
+[`metadata/registry.json`](metadata/registry.json) by
 [`scripts/research_dashboard.py`](scripts/research_dashboard.py) and
 [`scripts/poc_maturity_index.py`](scripts/poc_maturity_index.py).
 
 | Metric | Value |
-|---|---|
-| Total PoCs | 18 |
-| Deterministic-confirmed (L4+) | 0 (archival fork verification pending) |
-| Assertion-hardened (medium / strong) | 11 |
+|---|---:|
+| Total structured PoCs | 18 |
+| Deterministic-confirmed L4+ entries | 0 |
+| Assertion-hardened entries (medium / strong) | 11 |
 | Strong static assertions | 7 |
 | Medium static assertions | 4 |
 | Weak static assertions | 7 |
 | Public-RPC smoke attempted | 2 |
 | Needs verification | 18 |
-| Legacy slug retained (Phase 6A) | 7 |
-| EVM (Foundry) | active |
-| SVM (Anchor) | scaffold only |
-| MoveVM (Aptos) | scaffold only |
+| EVM / Foundry | active |
+| SVM / Anchor | scaffold only |
+| MoveVM / Aptos | scaffold only |
 
 `deterministic-confirmed` is reserved for entries that have been re-run on a
 pinned archival fork on this branch and have a verification report under
-[`reports/verification/`](reports/verification/). Static assertion quality
-is measured separately and is not a substitute for runtime verification.
-The per-PoC maturity level (L0–L5) is tracked in
-[`reports/poc_maturity_index.md`](reports/poc_maturity_index.md) and is
-defined by [`docs/POC_MATURITY_MODEL.md`](docs/POC_MATURITY_MODEL.md).
+[`reports/verification/`](reports/verification/). Static assertion quality is
+measured separately and is not a substitute for archival fork verification.
 
-A single-page snapshot of the corpus — maturity, milestones, working
-set — lives at
-[`reports/research_dashboard.md`](reports/research_dashboard.md),
-generated by `scripts/research_dashboard.py`.
+Current dashboards:
 
-## Why this exists
+- [`reports/research_dashboard.md`](reports/research_dashboard.md)
+- [`reports/poc_maturity_index.md`](reports/poc_maturity_index.md)
+- [`reports/poc_quality_matrix.md`](reports/poc_quality_matrix.md)
 
-Replaying an exploit in code is necessary but not sufficient. A PoC that
-ends with `console.log(attackerBalance)` proves nothing — the call could
-have reverted silently, the balance could have been pre-seeded, the
-attacker pool could have already held the funds. Without hard assertions,
-a green test says nothing about whether the vulnerability actually
-triggered.
+## Quick Start: GitHub Action
 
-Arkheionx Vault treats each historical incident as a security primitive
-worth dissecting precisely:
+Add this to an authorized repository:
 
-- the exploit primitive that was abused,
-- the invariant that was broken,
-- the protocol assumption that turned out to be false,
-- attacker profit and victim loss measured against pinned pre-state,
-- a reference to the original post-mortem.
+```yaml
+name: Arkheionx Pre-Audit Scan
 
-The goal is defensive learning and auditor training, not exploit
-collection.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
 
-## What this repository is
-
-- An archive of historical DeFi exploits with code that reproduces each
-  one against pinned chain state.
-- A working set of Foundry tests under `EVM/test/` that fork mainnet (and
-  other supported chains) at the block of each incident.
-- A canonical metadata file (`metadata/registry.json`) that drives the
-  registry table below.
-- A documented research standard each PoC is held to before promotion.
-
-## What this repository is not
-
-- Not a live-target attack toolkit.
-- Not a scanner, autonomous exploit runner, or detection-evasion tooling.
-- Not affiliated with any audit firm, contest platform, or bounty
-  program. External references in this repository are attributions to
-  public post-mortems, not partnerships.
-- Not a claim that every listed PoC is currently runtime-verified. See
-  the `reproducibility` and `verification_status` fields on each entry.
-- Not the largest archive of exploit code. There are larger collections.
-  This one optimises for a different axis: assertion quality and
-  reproducibility per entry.
-
-## Research standard
-
-Every mature PoC in this archive aims to carry:
-
-- a pinned fork block and explicit chain alias;
-- the protocol identity, attack transaction, and incident date;
-- the exploit primitive and the attacker path that abuses it;
-- the invariant that was broken;
-- the protocol assumption that failed;
-- an attacker profit assertion against pinned pre-state;
-- a victim loss or state-damage assertion where the on-chain shape
-  allows;
-- a documented reproducibility status;
-- at least one external reference (post-mortem, advisory, original PoC
-  author);
-- a verification report once runtime confirmation is achieved.
-
-Hard assertions are required. A PoC that compiles and forks but ends
-without `assert*` is treated as incomplete regardless of how clean its
-narrative reads.
-
-The full standard is in
-[`docs/RESEARCH_STANDARD.md`](docs/RESEARCH_STANDARD.md). Related
-documents:
-
-- [`docs/POC_STANDARD.md`](docs/POC_STANDARD.md) — what counts as a valid PoC.
-- [`docs/POC_MATURITY_MODEL.md`](docs/POC_MATURITY_MODEL.md) — the L0–L5 maturity ladder used by the index.
-- [`docs/EXPLOIT_TAXONOMY.md`](docs/EXPLOIT_TAXONOMY.md) — vulnerability categories used by the registry's `category` field.
-- [`docs/ASSERTION_STANDARD.md`](docs/ASSERTION_STANDARD.md) — required assertion families per category.
-- [`docs/REPRODUCIBILITY_STANDARD.md`](docs/REPRODUCIBILITY_STANDARD.md) — what each `reproducibility` value means.
-- [`docs/FORK_VERIFICATION.md`](docs/FORK_VERIFICATION.md) — chain aliases, RPC requirements, verification recording.
-- [`docs/AUDITOR_CHECKLIST.md`](docs/AUDITOR_CHECKLIST.md) — per-category review prompts.
-- [`docs/ROOT_CAUSE_PLAYBOOK.md`](docs/ROOT_CAUSE_PLAYBOOK.md) — how to write a credible root-cause section.
-- [`docs/INCIDENT_INTAKE.md`](docs/INCIDENT_INTAKE.md) — pipeline for adding a new incident.
-- [`docs/EXPANSION_PLAN.md`](docs/EXPANSION_PLAN.md) — milestones from the current corpus onward.
-- [`docs/RELEASE_PROCESS.md`](docs/RELEASE_PROCESS.md) — how research milestones are tagged and published.
-- [`metadata/backlog/priority-lanes.md`](metadata/backlog/priority-lanes.md) — triage order for new candidate intake.
-
-## Repository layout
-
-```
-.
-├── EVM/        Foundry project: PoCs under test/, helpers under src/
-├── SVM/        Anchor scaffold (template only)
-├── MoveVM/     Aptos Move scaffold (template only)
-├── metadata/   Canonical registry + JSON Schema
-├── reports/    PoC quality matrix + per-PoC verification reports
-├── scripts/    Validation, registry generation, scoring tooling
-├── docs/       Brand, ethics, research standard, reproducibility
-└── README.md
+jobs:
+  pre-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+        with:
+          root: "."
+          protocol-type: "auto"
+          output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+          json-output: "arkheionx-report.json"
+          generate-invariant-skeletons: "false"
+          fail-on-critical-readiness-gap: "false"
 ```
 
-## Verification model
+The action requires no secrets and no RPC endpoint. It scans local repository
+files only.
 
-A PoC moves through three distinct readiness levels:
-
-1. **Static review** — code compiles, fork block is pinned, metadata is
-   complete, hard assertions cover the documented exploit primitive.
-   Recorded in `assertion_quality` and reflected in
-   [`reports/poc_quality_matrix.md`](reports/poc_quality_matrix.md).
-2. **Smoke test (public RPC)** — `setUp()` and exploit body execute
-   without reverting against a public RPC where archival history is
-   available. Useful for recent incidents; insufficient for older ones.
-3. **Deterministic confirmation (archival RPC)** — `forge test` runs to
-   green against a pinned archival fork on this branch, with a recorded
-   verification artifact under
-   [`reports/verification/`](reports/verification/).
-
-Most historical exploits in this archive require step 3. Public RPCs
-typically do not retain state old enough to fork at, for example, block
-4,043,799 (Parity Multisig, 2017). When a public RPC returns *historical
-state is not available*, that is recorded as an RPC limitation, not a
-PoC failure. The entry stays at `deterministic-likely-but-unverified`
-until an archival RPC is configured and the fork test passes.
-
-## Assertion quality
-
-Each entry is tagged with one of four levels:
-
-| Level | Meaning |
-|---|---|
-| strong | Hard assertions cover attacker profit, victim loss, and the broken invariant — sufficient to fail loudly if the exploit logic regresses. |
-| medium | At least one hard assertion against post-state; one or more required families partially covered. |
-| weak | PoC executes the exploit shape but ends without assertions strong enough to prove the compromise (e.g. only `console.log` of balances). |
-| none | No `assert*` calls present. |
-
-Static assertion hardening is independent of runtime verification. A
-strong-assertion PoC can still sit at
-`deterministic-likely-but-unverified` until archival fork execution
-confirms it.
-
-## PoC maturity ladder
-
-Every PoC sits at exactly one level. The full model — promotion gates,
-demotion rules, what does and does not count as evidence — is in
-[`docs/POC_MATURITY_MODEL.md`](docs/POC_MATURITY_MODEL.md). The current
-per-PoC index is at
-[`reports/poc_maturity_index.md`](reports/poc_maturity_index.md),
-generated by `python3 scripts/poc_maturity_index.py`.
-
-| Level | Meaning |
-|---|---|
-| L0 — Raw Replay | Compiles or replays the exploit shape, but the proof is weak. |
-| L1 — Structured Metadata | Root cause, attacker path, invariant, and protocol assumption are documented. |
-| L2 — Assertion-Hardened | Hard assertions on attacker profit, victim loss, invariant break, or control transition. |
-| L3 — Public RPC Smoke-Tested | Attempted on a public RPC; outcome (pass / fail / not-archival) recorded honestly. |
-| L4 — Archival Verified | Archival fork run at the pinned block, declared assertions pass, verification report committed. |
-| L5 — Research-Grade Case Study | L4 plus root-cause write-up, patch lesson, and auditor-checklist walkthrough. |
-
-The current corpus has **0** entries at L4 and **0** at L5. Most
-assertion-hardened entries sit at L2 awaiting archival RPC
-configuration.
-
-## Severity
-
-| Level | Meaning |
-|---|---|
-| critical | Unconditional fund loss or full protocol takeover. |
-| high | Conditional fund loss, or permanent denial of service of core flow. |
-| medium | Fund risk under specific conditions, governance manipulation, or reversible DoS. |
-| low | Bounded value impact or significant griefing without direct loss. |
-| informational | Defensive note; not exploitable in isolation. |
-
-Severity is recorded in metadata and is not asserted by the test code.
-
-## Running an EVM PoC
-
-From `EVM/`:
+## Quick Start: Local CLI
 
 ```sh
-forge build
-export ETH_RPC_URL=https://your-archival-node-endpoint
-
-# Single PoC.
-forge test --match-path "test/2017-07/*.t.sol" -vvvv
-
-# Full suite.
-forge test -vvv
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type auto \
+  --output ARKHEIONX_PRE_AUDIT_REPORT.md \
+  --json-output arkheionx-report.json
 ```
 
-Most historical PoCs require an **archival** RPC endpoint. Public RPCs
-will accept the connection but error out with *historical state is not
-available* during `vm.createSelectFork`. See
-[`docs/FORK_VERIFICATION.md`](docs/FORK_VERIFICATION.md) for chain
-aliases, required environment variables, and how to record verification
-results.
+Generate a safe Foundry invariant skeleton:
 
-## Ethics and responsible use
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --protocol-type auto \
+  --output ARKHEIONX_PRE_AUDIT_REPORT.md \
+  --json-output arkheionx-report.json \
+  --generate-invariant-skeletons
+```
 
-This repository is defensive security research. By using the contents
-you accept the terms in [`docs/ETHICS.md`](docs/ETHICS.md):
+## Sample Report Excerpt
 
-- No unauthorized testing against live systems.
-- No adapting these PoCs to extract value without consent.
-- Compliance with applicable law, contracts, and disclosure obligations.
+See the committed example:
 
-If you believe content here may aid an attack against an unpatched live
-system, contact the maintainer privately. See
-[`docs/SECURITY.md`](docs/SECURITY.md).
+- Markdown: [`examples/reports/mini-vault-pre-audit-report.md`](examples/reports/mini-vault-pre-audit-report.md)
+- JSON: [`examples/reports/mini-vault-pre-audit-report.json`](examples/reports/mini-vault-pre-audit-report.json)
+- Fixture: [`examples/mini-vault/`](examples/mini-vault/)
 
-## Researcher
+Excerpt:
 
-Maintained by **Yudistira Putra** — `arkheionx` /
-[@Yudis-bit](https://github.com/Yudis-bit).
+```text
+Readiness score: 70/100
+Score band: Improving
+Detected protocol type: vault
+Historical pattern similarity:
+- Vault accounting invariant readiness gap
+- Reentrancy-sensitive value flow review recommended
+- Privileged control and operational risk review recommended
 
-Focus areas:
+Recommended next steps:
+1. Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
+2. Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.
+3. Review state update order and add malicious local receiver tests for callback-capable flows.
+```
 
-- DeFi exploit reproduction
-- Smart contract security research
-- Fork-based PoC engineering
-- Root-cause analysis and exploit taxonomy
-- Assertion-driven verification
+The report is a readiness artifact. It does not prove safety or confirm
+exploitability.
 
-## Support and commercial work
+## What The Scanner Checks
 
-The public archive can be supported directly, or used as the basis for
-scoped defensive research work.
+- Vault accounting.
+- Oracle assumptions.
+- Reentrancy-sensitive value flows.
+- Access control.
+- Upgradeability.
+- Reward accounting.
+- AMM invariants.
+- Lending and liquidation signals.
+- Cross-chain message validation signals.
+- Tests, assertions, invariant/fuzz coverage.
+- Documentation readiness.
+- CI readiness.
+- Operational and admin readiness.
 
-- [`SERVICES.md`](SERVICES.md) — one-page service menu and fastest starter
-  package.
-- [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md) — funding tiers, what support
-  pays for, and sponsor boundaries.
-- [`docs/COMMERCIAL.md`](docs/COMMERCIAL.md) — assertion hardening,
-  historical reproduction reports, and research-review services.
-- [`docs/TRAINING.md`](docs/TRAINING.md) — paid workshop formats for
-  auditors, protocol engineers, and security researchers.
-- [`docs/SPONSOR_PROSPECTUS.md`](docs/SPONSOR_PROSPECTUS.md) — sponsor
-  packages, recognition rules, and public progress metrics.
-- [`docs/MONETIZATION.md`](docs/MONETIZATION.md) — public plan for funding
-  the archive without overstating verification claims.
-- [`docs/MARKETING_ENGINE.md`](docs/MARKETING_ENGINE.md) — distribution plan,
-  outbound cadence, target-account rules, and growth metrics.
+Output language is intentionally defensive: risk signal, readiness gap,
+historical pattern similarity, missing invariant, review recommended, audit
+blocker, and defensive check.
 
-Commercial work is limited to historical, patched, or authorized targets.
-It does not include live-target exploitation, scanners, drain helpers,
-private-key handling, or guaranteed bounty outcomes.
+## Search Arkheionx
+
+Start here:
+
+- [`docs/SEARCH_GUIDE.md`](docs/SEARCH_GUIDE.md)
+- [`reports/search_index.md`](reports/search_index.md)
+- [`metadata/search_terms.json`](metadata/search_terms.json)
+- [`metadata/registry.json`](metadata/registry.json)
+
+Search examples:
+
+```text
+vault accounting
+share price manipulation
+oracle manipulation
+reentrancy-review
+access-control-review
+missing invariant
+pre-audit readiness
+root-cause analysis
+Foundry invariant testing
+```
+
+Recommended GitHub topics:
+
+```text
+defi-security
+smart-contract-security
+solidity-security
+foundry
+pre-audit
+audit-readiness
+invariant-testing
+exploit-research
+root-cause-analysis
+web3-security
+indie-defi
+security-tools
+github-action
+```
+
+## Research Standard
+
+Every mature PoC in the archive aims to carry:
+
+- pinned fork block and explicit chain alias;
+- protocol identity, attack transaction, and incident date;
+- exploit primitive and attacker path;
+- broken invariant;
+- failed protocol assumption;
+- hard post-state assertions;
+- documented reproducibility status;
+- external reference;
+- verification report once runtime confirmation is achieved.
+
+Core standards:
+
+- [`docs/RESEARCH_STANDARD.md`](docs/RESEARCH_STANDARD.md)
+- [`docs/POC_STANDARD.md`](docs/POC_STANDARD.md)
+- [`docs/ASSERTION_STANDARD.md`](docs/ASSERTION_STANDARD.md)
+- [`docs/REPRODUCIBILITY_STANDARD.md`](docs/REPRODUCIBILITY_STANDARD.md)
+- [`docs/POC_MATURITY_MODEL.md`](docs/POC_MATURITY_MODEL.md)
+- [`docs/EXPLOIT_TAXONOMY.md`](docs/EXPLOIT_TAXONOMY.md)
+- [`docs/ROOT_CAUSE_PLAYBOOK.md`](docs/ROOT_CAUSE_PLAYBOOK.md)
+
+## Product Docs
+
+- [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md)
+- [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
+- [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md)
+- [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md)
+- [`docs/MONETIZATION.md`](docs/MONETIZATION.md)
+- [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md)
+- [`docs/MARKETING_ENGINE.md`](docs/MARKETING_ENGINE.md)
+- [`docs/ROADMAP.md`](docs/ROADMAP.md)
+- [`SERVICES.md`](SERVICES.md)
+
+## Monetization And Support
+
+| Offer | Price | Purpose |
+|---|---:|---|
+| Free GitHub Action | Free | Basic readiness scan and Markdown report. |
+| Indie Builder Sponsor | USD 29/month | Support public tooling, early previews, priority Q&A. |
+| Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
+| Launch Report | USD 299-499 | Manual review of generated report and prioritized fix checklist. |
+| Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, GitHub issue checklist. |
+| Ecosystem Pack | USD 5,000-20,000/month | Bulk readiness reports and builder security clinic. |
+| Research Sponsorship | Flexible | Fund public exploit-memory and readiness-rule work. |
+
+Use [`SERVICES.md`](SERVICES.md) for requests and
+[`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md) for sponsor boundaries.
+
+## Ethics
+
+Arkheionx is defensive only.
+
+- Use only on repositories you own or are authorized to review.
+- No live-target testing without authorization.
+- No chain calls or RPC in the scanner.
+- No transaction submission.
+- No private key or mnemonic handling.
+- No adapting historical PoCs to active systems.
+- Formal audit recommended before mainnet, material TVL, or user funds.
+
+Read [`docs/ETHICS.md`](docs/ETHICS.md).
+
+## Repository Layout
+
+```text
+.
+├── .github/actions/pre-audit/   GitHub Action wrapper
+├── .github/workflows/           CI and validation workflows
+├── EVM/                         Active Foundry exploit-memory project
+├── SVM/                         Anchor scaffold only
+├── MoveVM/                      Aptos Move scaffold only
+├── docs/                        Research, readiness, ethics, growth docs
+├── examples/                    Mini fixtures and generated sample reports
+├── metadata/                    Registry, schema, search terms
+├── reports/                     Dashboards, search index, verification reports
+├── scripts/                     Registry and readiness tooling
+├── templates/                   Report and invariant templates
+├── README.md
+└── SERVICES.md
+```
 
 ## Roadmap
 
-The expansion plan, milestone gates, and quality bar at each step are
-in [`docs/EXPANSION_PLAN.md`](docs/EXPANSION_PLAN.md). The release
-process is in [`docs/RELEASE_PROCESS.md`](docs/RELEASE_PROCESS.md).
-Honest near-term plan, no timeline:
+- **v0.1: scanner MVP.** Local scanner, GitHub Action, Markdown/JSON reports,
+  mini-vault demo.
+- **v0.2: vault rule pack.** Stronger vault accounting and ERC4626-specific
+  readiness rules.
+- **v0.3: invariant skeleton generator.** Better protocol-specific skeletons
+  and handler guidance.
+- **v0.4: historical pattern mapping.** More precise mappings from registry
+  categories to readiness checks.
+- **v0.5: searchable memory layer.** Better generated search index and
+  metadata tags.
+- **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
+  calibrated rules, release artifacts, contribution workflow.
 
-- **M0 — 18 PoCs structured.** Done. Full registry, schema, taxonomy,
-  assertion standard, scoring, verification report skeletons, maturity
-  index. This is where the corpus is now.
-- **M1 — 25 assertion-hardened PoCs.** Lift remaining `weak` entries to
-  `medium` / `strong` per `docs/ASSERTION_STANDARD.md`. Add ~7 new
-  intake-quality entries from priority lanes.
-- **M2 — 25 archival-verified PoCs.** Configure archival RPC, run
-  pinned forks, commit verification reports with real run transcripts.
-  No L4 promotion without artifacts.
-- **M3 — 100 PoCs with metadata + reports.** Cover every category in
-  `docs/EXPLOIT_TAXONOMY.md` with at least one verified entry. Backlog
-  grooming becomes the gating step.
-- **M4 — 300+ PoCs with full taxonomy coverage.** Cross-VM scaffolds
-  graduate to verified entries (SVM, MoveVM). Re-verification workload
-  becomes constant.
-- **M5 — Research-grade case studies and auditor training modules.**
-  L5 case studies referenced from `docs/ROOT_CAUSE_PLAYBOOK.md` and
-  `docs/AUDITOR_CHECKLIST.md`.
+Archive milestones remain honest:
 
-No milestone is claimed achieved until the maturity index counts back
-the claim. See [`reports/poc_maturity_index.md`](reports/poc_maturity_index.md)
-for the current state.
+- keep hardening weak PoCs;
+- do not claim L4 or L5 without committed verification evidence;
+- graduate SVM and MoveVM only when real entries exist.
 
-## How to contribute
+## Contribution Path
 
-Two intake paths are open:
+Good contributions:
 
-- **New incident.** Use the `Research candidate` issue template under
-  [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/). Triage follows
-  [`metadata/backlog/priority-lanes.md`](metadata/backlog/priority-lanes.md).
-  Embargoed or live-target candidates are not accepted.
-- **Hardening an existing PoC.** Use the `Assertion hardening` issue
-  template. Promotion criteria from L1 → L2 are documented in
-  [`docs/POC_MATURITY_MODEL.md`](docs/POC_MATURITY_MODEL.md).
+- improve scanner rules defensively;
+- report false positives;
+- add safe example fixtures;
+- improve invariant skeletons;
+- improve metadata and search terms;
+- harden existing historical PoCs with better assertions;
+- improve docs without inflating claims.
 
-A good PoC contribution carries: pinned fork block, complete metadata,
-hard assertions matching the category's required families, an
-authoritative reference, and an honest reproducibility status. PRs that
-upgrade verification status without artifacts are not accepted.
+Start with:
 
-## Vulnerability registry
+- [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)
+- `Rule Request` issue template
+- `False Positive Report` issue template
+- `Research candidate` issue template
+- `Assertion hardening` issue template
 
-The table below is generated from `metadata/registry.json`. Do not
-hand-edit. Run `python3 scripts/generate_registry.py` to regenerate.
+## Maintainer
 
-A static-readiness scoring of the registry — metadata completeness,
-assertion presence, root-cause clarity — lives at
-[`reports/poc_quality_matrix.md`](reports/poc_quality_matrix.md),
-generated by `python3 scripts/score_pocs.py`. Per-PoC verification
-reports go under [`reports/verification/`](reports/verification/),
-generated by `python3 scripts/generate_verification_report.py`. Until an
-entry has a verification report containing real run output, it stays at
-`deterministic-likely-but-unverified` regardless of how complete its
-metadata looks.
+Built by the creator of Arkheionx, a defensive research project focused on:
 
-Where an `id` slug was retained from an earlier label after Phase 6A
-reclassification, the `Protocol` column reflects current truth. The slug
-is preserved only to keep file paths stable; see the relevant entry's
-`notes` field in `metadata/registry.json` for the reclassification
-record.
+- DeFi exploit reproduction;
+- assertion-driven security research;
+- pre-audit readiness tooling;
+- root-cause intelligence;
+- indie-builder security support.
 
-## License and disclaimer
+Clarity, standards, and honest verification are the brand.
 
-All content is provided for defensive research and educational use.
-Reproductions target historical, patched, or otherwise resolved
-incidents. Nothing in this repository is investment, legal, or security
-advice. The maintainer assumes no liability for downstream use.
+## License And Disclaimer
 
----
+All content is provided for defensive research, education, and authorized
+pre-audit readiness use. Reproductions target historical, patched, or otherwise
+resolved incidents. Nothing in this repository is investment, legal, or
+security advice. The maintainer assumes no liability for downstream use.
+
+## Vulnerability Registry
+
+The table below is generated from `metadata/registry.json`. Do not hand-edit.
+Run `python3 scripts/generate_registry.py` to regenerate.
 
 <!-- BEGIN: registry -->
 

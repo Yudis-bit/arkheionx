@@ -1,39 +1,54 @@
 # Roadmap
 
-Honest. Subject to change. No commitment dates.
+Honest. Subject to change. No commitment dates. No milestone is claimed until
+committed artifacts support it.
 
-## Short-term
+## Product Roadmap
 
-- [x] Fix CI working-directory so EVM workflow actually runs.
-- [x] Add canonical metadata schema and registry generator.
-- [x] Generate README registry from metadata, not by hand.
-- [x] Drop fake stats and unverified service offerings from the web app.
-- [x] Make `poc_factory.py` dry-run by default; remove auto-push.
-- [ ] Re-verify each merged PoC and update `reproducibility` accordingly.
-- [ ] Backfill `block_number`, `severity`, `category` for every existing entry.
+- [x] **v0.1: Scanner MVP.** Local scanner, GitHub Action, Markdown report,
+      JSON report, mini-vault fixture, safe invariant skeleton generator.
+- [ ] **v0.2: Vault rule pack.** Better ERC4626 and vault-accounting signals:
+      totalAssets consistency, donation/inflation resistance, fee conservation,
+      share math, strategy balance drift.
+- [ ] **v0.3: Invariant skeleton generator.** Protocol-specific Foundry
+      skeletons, handler guidance, and placeholder detection.
+- [ ] **v0.4: Historical pattern mapping.** Stronger mapping from
+      `metadata/registry.json` categories to readiness gaps and invariant
+      families.
+- [ ] **v0.5: Searchable memory layer.** Richer generated search index, more
+      aliases, report indexes, and category maps.
+- [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
+      interface, calibrated rule packs, release artifacts, and contribution
+      workflow.
 
-## Mid-term
+## Archive Roadmap
 
-- [ ] First real SVM PoC (replace empty `it()` stub).
-- [ ] First real MoveVM PoC (replace empty entry function).
-- [ ] WRITEUP.md per PoC: short root-cause analysis with trace excerpt.
-- [ ] Per-PoC archival RPC documentation when the standard `mainnet` alias
-      isn't sufficient.
-- [ ] Optional CI fork-test runs gated by configured secrets, with skip behavior
-      that doesn't pretend to pass.
+- [ ] Continue improving weak assertion PoCs to medium or strong.
+- [ ] Produce L4 archival-confirmed reports only when archival run evidence is
+      committed.
+- [ ] Publish L5 case studies only after the underlying entry reaches L4.
+- [ ] Keep EVM/Foundry active and honest.
+- [ ] Graduate SVM/Anchor and MoveVM/Aptos from scaffold only when real
+      entries exist.
 
-## Long-term
+## Market Roadmap
 
-- [ ] Cross-VM exploit taxonomy doc.
-- [ ] Auditor-training modules built around selected PoCs.
-- [ ] Periodic research notes (no schedule).
-- [ ] If volume justifies it, a static site over the registry instead of the
-      current Next.js app.
+- [x] GitHub-native service surface in `SERVICES.md`.
+- [x] Sponsor and monetization docs.
+- [x] Issue forms for readiness requests, Launch Reports, Pre-Audit Sprints,
+      false positives, and rule requests.
+- [ ] GitHub Discussions categories for support, rule requests, release notes,
+      and sponsor updates.
+- [ ] First public Launch Report sample beyond the toy fixture.
+- [ ] First ecosystem-ready portfolio dashboard template.
 
-## Explicitly not on the roadmap
+## Explicitly Not On The Roadmap
 
-- Live-target tooling.
-- Generic Web3 audit consultancy product.
-- Affiliated branding with audit firms or contest platforms.
-- Anything requiring private RPC keys, paid APIs, or non-public protocol
-  material checked into the repo.
+- Live-target workflows.
+- Deployed-contract attack automation.
+- Private key, mnemonic, or secret handling.
+- A separate SaaS dashboard.
+- A separate website.
+- Inflated verification claims.
+- Claims that scanner output proves protocol safety.
+- Sponsor influence over taxonomy, severity, inclusion, or verification status.

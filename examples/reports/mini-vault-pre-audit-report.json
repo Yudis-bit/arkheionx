@@ -1,0 +1,389 @@
+{
+  "disclaimer": "This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.",
+  "files_scanned": {
+    "configs": [
+      "foundry.toml"
+    ],
+    "docs": [
+      "README.md"
+    ],
+    "solidity_sources": [
+      "src/MiniVault.sol"
+    ],
+    "solidity_tests": [
+      "test/MiniVault.t.sol",
+      "test/invariant/ArkheionxReadinessInvariants.t.sol"
+    ],
+    "workflows": []
+  },
+  "generated_at": "2026-05-25T06:11:33+00:00",
+  "historical_patterns": [
+    {
+      "broken_invariant_class": "Deposits, withdrawals, redemptions, and fee paths conserve value within expected rounding bounds.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Add totalAssets consistency tests.",
+        "Add deposit-withdraw roundtrip tests across small and large amounts.",
+        "Test donation, zero-supply, rounding, and fee paths."
+      ],
+      "detected_signals": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "decimals",
+        "deposit",
+        "fee",
+        "mint",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "failed_assumption_class": "Shares and assets remain exchangeable according to documented accounting rules.",
+      "name": "Vault accounting invariant readiness gap",
+      "search_tags": [
+        "vault-security",
+        "share-accounting",
+        "totalAssets",
+        "audit-readiness"
+      ],
+      "suggested_test": "Invariant: deposit followed by withdraw does not create value and does not strand assets beyond expected rounding.",
+      "why_it_matters": "Vaults need explicit conservation and roundtrip properties because share math, fees, donations, and rounding can break user-value assumptions."
+    },
+    {
+      "broken_invariant_class": "Value flow remains single-entry and accounting is updated before control leaves the contract.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Review checks-effects-interactions order.",
+        "Add reentrancy tests using local receiver mocks.",
+        "Use guards where the protocol design requires them."
+      ],
+      "detected_signals": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "mint",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "transfer(",
+        "transferFrom",
+        "withdraw"
+      ],
+      "failed_assumption_class": "External receivers cannot re-enter before internal accounting reaches a safe state.",
+      "name": "Reentrancy-sensitive value flow review recommended",
+      "search_tags": [
+        "reentrancy-review",
+        "value-flow",
+        "checks-effects-interactions"
+      ],
+      "suggested_test": "Test: malicious local receiver cannot withdraw, claim, or redeem twice through a callback.",
+      "why_it_matters": "External calls around withdrawals, claims, callbacks, or token transfers have repeatedly exposed state-ordering assumptions."
+    },
+    {
+      "broken_invariant_class": "Admin actions cannot silently bypass accounting, oracle, or user-safety invariants.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Document every privileged role and setter.",
+        "Add unauthorized-call tests for each privileged function.",
+        "Add tests showing pause/emergency controls behave as documented."
+      ],
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "failed_assumption_class": "Privileged actors can only perform documented, intended operations.",
+      "name": "Privileged control and operational risk review recommended",
+      "search_tags": [
+        "access-control-review",
+        "admin-risk",
+        "operational-security"
+      ],
+      "suggested_test": "Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.",
+      "why_it_matters": "Admin setters, emergency controls, fee updates, and governance execution paths can become launch blockers if role boundaries are unclear or untested."
+    }
+  ],
+  "next_steps": [
+    "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
+    "Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.",
+    "Review state update order and add malicious local receiver tests for callback-capable flows.",
+    "Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.",
+    "Run a formal smart contract audit before mainnet launch or before handling real user funds."
+  ],
+  "protocol_confidence": "high",
+  "protocol_type": "vault",
+  "readiness_gaps": [
+    {
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+      "severity": "High readiness gap",
+      "tags": [
+        "invariant-testing",
+        "vault"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    },
+    {
+      "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
+      "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow"
+      ],
+      "title": "External-call value flow needs reentrancy review"
+    }
+  ],
+  "repo_root": "examples/mini-vault",
+  "score": 70,
+  "score_band": "Improving",
+  "score_breakdown": {
+    "defi_risk_coverage": {
+      "max": 20,
+      "notes": [
+        "Accounting assumptions have at least some documented or tested controls.",
+        "Role or admin boundaries have some visible coverage.",
+        "Protocol-specific checklist or property coverage detected."
+      ],
+      "score": 12
+    },
+    "documentation_readiness": {
+      "max": 10,
+      "notes": [
+        "README detected.",
+        "Assumptions, invariants, or limitations are documented.",
+        "Deployment or role information appears in docs/code comments."
+      ],
+      "score": 8
+    },
+    "invariant_fuzz_readiness": {
+      "max": 20,
+      "notes": [
+        "Edge-case testing terms detected."
+      ],
+      "score": 3
+    },
+    "operational_admin_readiness": {
+      "max": 15,
+      "notes": [
+        "Access-control surface is visible.",
+        "Emergency control or incident terms detected.",
+        "Upgradeability is absent or has visible documentation/test terms.",
+        "Privileged setters or owner boundaries are visible for review.",
+        "Monitoring, incident, limitation, or emergency notes detected."
+      ],
+      "score": 15
+    },
+    "repository_structure": {
+      "max": 15,
+      "notes": [
+        "Solidity sources detected.",
+        "Recognized build or analysis config detected.",
+        "Clear src/test/docs structure detected."
+      ],
+      "score": 12
+    },
+    "test_presence": {
+      "max": 20,
+      "notes": [
+        "Solidity test files detected.",
+        "Assert usage detected.",
+        "Foundry or Hardhat test environment detected.",
+        "Protocol-specific terms appear in the testable codebase."
+      ],
+      "score": 20
+    }
+  },
+  "signals": {
+    "access_control": {
+      "counts": {
+        "onlyOwner": 4,
+        "owner": 4,
+        "pause": 2,
+        "setFee": 2,
+        "unpause": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ]
+    },
+    "accounting_complexity": {
+      "counts": {
+        "decimals": 1,
+        "fee": 4
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "decimals",
+        "fee"
+      ]
+    },
+    "amm": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "bridge_cross_chain": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "governance": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "lending": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "oracle": {
+      "counts": {
+        "decimals": 1
+      },
+      "file_count": 1,
+      "files": [
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "decimals"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "counts": {
+        "transfer(": 3,
+        "transferFrom": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "transfer(",
+        "transferFrom"
+      ]
+    },
+    "staking_rewards": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "upgradeability": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_accounting": {
+      "counts": {
+        "assets": 15,
+        "balanceOf": 16,
+        "convertToAssets": 1,
+        "convertToShares": 3,
+        "deposit": 4,
+        "mint": 2,
+        "shares": 18,
+        "totalAssets": 5,
+        "totalSupply": 9,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "mint",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ]
+    }
+  },
+  "suggested_invariants": [
+    {
+      "category": "vault",
+      "description": "totalAssets should match local asset accounting and strategy balances within documented rounding.",
+      "name": "totalAssets consistency"
+    },
+    {
+      "category": "vault",
+      "description": "A user should not create value by depositing and withdrawing through normal paths.",
+      "name": "deposit/withdraw roundtrip"
+    },
+    {
+      "category": "vault",
+      "description": "Donations, supply edges, or local price changes should not let one actor distort share value unexpectedly.",
+      "name": "share price manipulation resistance"
+    },
+    {
+      "category": "vault",
+      "description": "Fees should be bounded, documented, and unable to overcharge beyond configured limits.",
+      "name": "fee accounting conservation"
+    },
+    {
+      "category": "vault",
+      "description": "Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.",
+      "name": "strategy balance drift handling"
+    },
+    {
+      "category": "vault",
+      "description": "Pause should block risky flows while preserving documented emergency exits.",
+      "name": "pause behavior"
+    },
+    {
+      "category": "access control",
+      "description": "Unauthorized users cannot call privileged setters or emergency functions.",
+      "name": "unauthorized role rejection"
+    },
+    {
+      "category": "access control",
+      "description": "Owner/admin operations cannot silently break accounting invariants unless explicitly trusted and documented.",
+      "name": "admin cannot bypass accounting"
+    },
+    {
+      "category": "access control",
+      "description": "Pause blocks documented risky flows and preserves expected recovery paths.",
+      "name": "pause blocks risky flows"
+    },
+    {
+      "category": "access control",
+      "description": "Upgrade authorization works as intended and cannot be triggered by untrusted callers.",
+      "name": "upgrade authorization"
+    }
+  ],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.1.0"
+}

@@ -1,0 +1,72 @@
+name: Pre-Audit Sprint Request
+description: Request a deeper defensive readiness sprint before a formal audit.
+title: "[Pre-Audit Sprint]: "
+labels: ["pre-audit-sprint", "paid-readiness", "authorized-scope"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A Pre-Audit Sprint maps readiness gaps, missing invariants, and historical pattern similarity before formal audit. It does not replace professional audit review.
+  - type: input
+    id: protocol_name
+    attributes:
+      label: Protocol name
+    validations:
+      required: true
+  - type: input
+    id: repository_url
+    attributes:
+      label: Repository URL
+      placeholder: https://github.com/org/repo
+    validations:
+      required: true
+  - type: input
+    id: commit_hash
+    attributes:
+      label: Commit hash
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      placeholder: Contracts, docs, tests, deployment assumptions, protocol roles.
+    validations:
+      required: true
+  - type: input
+    id: launch_timeline
+    attributes:
+      label: Launch timeline
+      placeholder: Testnet now, audit in 3 weeks, mainnet target in 8 weeks
+  - type: textarea
+    id: main_risks
+    attributes:
+      label: Main risks
+      placeholder: Oracle, vault accounting, liquidation, reward math, upgradeability, privileged roles.
+  - type: dropdown
+    id: preferred_package
+    attributes:
+      label: Preferred package
+      options:
+        - Launch Report
+        - Pre-Audit Sprint
+        - Ecosystem Pack
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: budget_range
+    attributes:
+      label: Budget range optional
+      placeholder: Optional
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I am authorized to request this defensive review.
+          required: true
+        - label: I am not requesting live-target testing, value extraction, or exploit adaptation.
+          required: true
+        - label: I understand a formal audit is recommended before handling real user funds.
+          required: true

@@ -1,0 +1,86 @@
+{
+  "version": "0.1.0",
+  "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
+  "topics": [
+    {
+      "term": "vault accounting",
+      "aliases": ["share accounting", "totalAssets", "pricePerShare", "convertToShares", "convertToAssets"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["vault accounting invariant readiness gap", "vault/oracle price-manipulation readiness gap"],
+      "related_checks": ["totalAssets consistency", "deposit-withdraw roundtrip", "share price manipulation resistance"],
+      "search_tags": ["vault-security", "invariant-testing", "audit-readiness"]
+    },
+    {
+      "term": "oracle manipulation",
+      "aliases": ["price manipulation", "stale oracle", "TWAP", "latestRoundData", "spot price"],
+      "category": "historical exploit pattern",
+      "related_patterns": ["vault/oracle price-manipulation readiness gap", "liquidation and collateral accounting review"],
+      "related_checks": ["stale price rejection", "decimals normalization", "price bounds", "TWAP or sanity check"],
+      "search_tags": ["oracle-risk", "price-assumptions", "defi-security"]
+    },
+    {
+      "term": "reentrancy",
+      "aliases": ["callback", "external call", "value flow", "nonReentrant", "checks effects interactions"],
+      "category": "historical exploit pattern",
+      "related_patterns": ["reentrancy-sensitive value flow review recommended"],
+      "related_checks": ["malicious local receiver test", "state update order", "callback boundary review"],
+      "search_tags": ["reentrancy-review", "value-flow", "smart-contract-security"]
+    },
+    {
+      "term": "access control",
+      "aliases": ["onlyOwner", "AccessControl", "admin", "role", "privileged setter"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["privileged control and operational risk review recommended"],
+      "related_checks": ["unauthorized role rejection", "privileged setter tests", "pause behavior"],
+      "search_tags": ["access-control-review", "admin-risk", "operational-security"]
+    },
+    {
+      "term": "upgradeability",
+      "aliases": ["initializer", "reinitializer", "proxy", "UUPS", "implementation", "storage gap"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["initialization and upgrade boundary review recommended"],
+      "related_checks": ["initializer runs once", "upgrade authorization", "storage layout documentation"],
+      "search_tags": ["upgradeability", "initialization-bug", "proxy-review"]
+    },
+    {
+      "term": "reward accounting",
+      "aliases": ["rewardPerToken", "accumulator", "index", "claim", "emission"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["reward accounting mismatch review recommended"],
+      "related_checks": ["reward conservation", "no overclaim", "index monotonicity", "precision tests"],
+      "search_tags": ["reward-accounting", "staking", "precision"]
+    },
+    {
+      "term": "AMM invariant",
+      "aliases": ["reserve manipulation", "liquidity", "swap invariant", "kLast", "sqrtPriceX96"],
+      "category": "historical exploit pattern",
+      "related_patterns": ["AMM invariant manipulation review recommended"],
+      "related_checks": ["invariant conservation", "swap does not create value", "liquidity proportionality"],
+      "search_tags": ["amm-invariant", "liquidity", "reserve-manipulation"]
+    },
+    {
+      "term": "lending liquidation",
+      "aliases": ["collateral", "debt", "healthFactor", "liquidate", "loanToValue"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["liquidation and collateral accounting review recommended"],
+      "related_checks": ["collateralization invariant", "liquidation solvency", "interest index monotonicity"],
+      "search_tags": ["lending", "liquidation", "collateral", "oracle-risk"]
+    },
+    {
+      "term": "cross-chain validation",
+      "aliases": ["bridge", "endpoint", "relayer", "message", "LayerZero", "CCIP", "Hyperlane", "Wormhole"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["cross-chain message validation review recommended"],
+      "related_checks": ["source validation", "sender validation", "replay rejection", "trusted endpoint documentation"],
+      "search_tags": ["cross-chain", "bridge-validation", "message-authentication"]
+    },
+    {
+      "term": "pre-audit readiness",
+      "aliases": ["audit preparation", "readiness score", "audit blocker", "missing invariant", "launch report"],
+      "category": "product",
+      "related_patterns": ["repository readiness gap", "missing invariant coverage"],
+      "related_checks": ["readiness report", "GitHub Action", "Markdown report", "JSON report"],
+      "search_tags": ["pre-audit", "audit-readiness", "indie-defi", "github-action"]
+    }
+  ]
+}

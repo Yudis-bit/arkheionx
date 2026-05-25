@@ -1,0 +1,72 @@
+name: Launch Report Request
+description: Request a scoped Arkheionx Launch Report for formal audit preparation.
+title: "[Launch Report]: "
+labels: ["launch-report", "paid-readiness", "authorized-scope"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A Launch Report is a defensive pre-audit readiness artifact. It is not a formal audit, not a security guarantee, and not live-target testing.
+  - type: input
+    id: protocol_name
+    attributes:
+      label: Protocol name
+    validations:
+      required: true
+  - type: input
+    id: repository_url
+    attributes:
+      label: Repository URL
+      placeholder: https://github.com/org/repo
+    validations:
+      required: true
+  - type: input
+    id: commit_hash
+    attributes:
+      label: Commit hash
+      description: The exact commit to scan and review.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      placeholder: Contracts, folders, docs, assumptions, and known out-of-scope areas.
+    validations:
+      required: true
+  - type: dropdown
+    id: protocol_type
+    attributes:
+      label: Protocol type
+      options:
+        - vault
+        - AMM
+        - lending
+        - staking / rewards
+        - oracle
+        - bridge / cross-chain
+        - generic Solidity
+        - unsure
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline
+      placeholder: YYYY-MM-DD or flexible
+  - type: textarea
+    id: requested_output
+    attributes:
+      label: Requested output
+      placeholder: Markdown report, prioritized fix checklist, GitHub issue checklist, invariant plan.
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I am authorized to request this review.
+          required: true
+        - label: I understand this is not a formal audit.
+          required: true
+        - label: I understand the report does not guarantee security or launch safety.
+          required: true
