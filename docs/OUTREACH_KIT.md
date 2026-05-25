@@ -1,17 +1,18 @@
 # Outreach Kit
 
-This kit turns the archive into qualified conversations without overstating
-what it is. Use it for direct messages, emails, community posts, and workshop
+This kit turns Arkheionx into qualified conversations without overstating what
+it is. Use it for direct messages, emails, community posts, and workshop
 outreach.
 
 ## Ideal Customers
 
 Best early targets:
 
+- indie DeFi builders preparing for first audit intake,
+- grant-funded vault, oracle, staking, or reward-system teams,
+- small DAOs that need a GitHub-native readiness plan,
 - small audit teams that train junior researchers,
 - Web3 security bootcamps,
-- protocol security teams with internal education budgets,
-- bug bounty researchers who maintain private PoC collections,
 - security communities that discuss DeFi post-mortems.
 
 Avoid early:
@@ -28,52 +29,60 @@ Short:
 > I help teams turn historical DeFi exploit replays into assertion-driven
 > learning artifacts.
 
+Builder version:
+
+> Arkheionx helps indie DeFi teams turn pre-audit readiness gaps into
+> GitHub-native reports, issue plans, and remediation checklists. Not an audit.
+> A way to prepare for one.
+
 Long:
 
-> Arkheionx Vault is a public archive of historical DeFi exploit PoCs. I offer
-> scoped defensive work around the archive: assertion hardening, root-cause
-> reports, verification planning, and auditor workshops based on public
-> incidents.
+> Arkheionx is a GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
+> I offer scoped defensive work around readiness reports, generated issue
+> plans, missing invariant planning, assertion hardening, root-cause reports,
+> and auditor workshops based on public incidents.
 
 ## Direct Message
 
 ```text
-Hi <name>, I maintain Arkheionx Vault, a defensive archive of historical DeFi
-exploit PoCs focused on assertions, root cause, and reproducibility.
+Hi <name>, I maintain Arkheionx, a GitHub-native DeFi Security Memory and
+Pre-Audit Readiness OS.
 
-I noticed your team publishes security education / audit notes. I am opening a
-few scoped sessions around exploit anatomy and assertion-driven PoCs:
+I noticed your team is building in DeFi and appears to be moving toward audit
+readiness. Arkheionx can generate a local/static readiness report, baseline
+diff, and GitHub issue plan from your repository.
 
-- 90-minute workshop for auditors
-- PoC assertion hardening sprint
-- historical exploit report for a resolved incident
+- Launch Report: manual review of the generated readiness report and issue plan
+- Pre-Audit Sprint: missing invariant plan plus prioritized remediation tasks
+- Research support: assertion hardening or root-cause writeups
 
-The work is limited to patched or authorized targets. Would this be useful for
-your team this month?
+The work is defensive, authorized-only, and not a formal audit. Would a dry-run
+readiness report be useful before you schedule deeper review?
 ```
 
 ## Email
 
 ```text
-Subject: Assertion-driven DeFi exploit training
+Subject: GitHub-native pre-audit readiness for <protocol>
 
 Hi <name>,
 
-I maintain Arkheionx Vault, a public defensive archive of historical DeFi
-exploit PoCs. The archive focuses on pinned forks, hard assertions, broken
-invariants, and root-cause notes rather than raw exploit collection.
+I maintain Arkheionx, a GitHub-native DeFi Security Memory and Pre-Audit
+Readiness OS. It combines a defensive historical exploit archive with a local
+scanner that generates readiness reports, SARIF, baseline diffs, and issue
+plans for authorized repositories.
 
 I am offering a small number of scoped engagements:
 
-1. Assertion hardening for existing Foundry PoCs
-2. Historical exploit reproduction reports
-3. Auditor workshops based on public DeFi incidents
+1. Launch Report: manual review of generated readiness gaps and issue plan
+2. Pre-Audit Sprint: missing invariant plan plus prioritized remediation tasks
+3. Assertion hardening or root-cause training for historical cases
 
-This is not live-target work and not a bounty guarantee. It is for teams that
-want better internal learning material or stronger PoC review discipline.
+This is not a formal audit, not live-target work, and not a security guarantee.
+It is for teams that want cleaner audit preparation inside GitHub.
 
-A good first session is a 90-minute workshop on turning console-log exploit
-replays into assertion-hardened tests.
+A good first step is a dry-run report plus generated issue plan, then a short
+call to decide which gaps matter before formal audit intake.
 
 Would it make sense to send a one-page outline?
 
@@ -86,32 +95,33 @@ Yudistira Putra / arkheionx
 ```text
 Quick follow-up. The most practical starter format is:
 
-Assertion Hardening Sprint
-- review one existing PoC
-- map the broken invariant
-- add category-appropriate assertions
-- write a short reviewer memo
+Launch Report
+- run Arkheionx locally on the authorized repository
+- review readiness gaps and generated issue plan
+- prioritize missing invariants and documentation tasks
+- deliver a Markdown readiness report
 
-Typical range: USD 750-2,500 depending on complexity.
+Typical range: USD 299-499 depending on scope.
 
-Useful if your team keeps internal exploit replays but wants them to fail
-loudly when the proof is weak.
+Useful if your team wants a clear pre-audit task list before paying for deeper
+review.
 ```
 
 ## Community Post
 
 ```text
-I am opening a few paid slots around Arkheionx Vault.
+I am opening a few paid slots around Arkheionx.
 
-The work is defensive and historical:
-- assertion hardening for Foundry exploit PoCs
-- root-cause and invariant writeups
-- auditor workshops using public DeFi incidents
+The work is defensive and GitHub-native:
+- readiness reports for authorized repositories
+- generated issue plans from readiness gaps
+- missing invariant planning
+- assertion hardening for historical PoCs
 
-No live-target tooling, no scanner work, no bounty guarantees.
+No live-target tooling, no formal audit claims, no security guarantees.
 
-If your PoC ends with logs but no hard post-state checks, that is the exact
-thing I can help improve.
+If your protocol is approaching audit intake, Arkheionx can help turn scanner
+output into a practical remediation plan.
 ```
 
 ## Discovery Questions

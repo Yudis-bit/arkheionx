@@ -31,6 +31,7 @@ Arkheionx helps turn local repository signals into a Markdown readiness report:
 - missing invariant plan;
 - historical exploit-pattern similarity;
 - generated issue checklist;
+- generated GitHub issue plan for remediation tracking;
 - prioritized fix checklist after manual review;
 - audit preparation notes;
 - formal audit recommendation.
@@ -50,6 +51,7 @@ Value:
 - GitHub Actions summary;
 - optional PR Readiness Comment;
 - generated issue checklist;
+- generated issue plan and dry-run issue workflow;
 - stable finding IDs;
 - limited historical pattern mapping;
 - basic checklist;
@@ -83,6 +85,7 @@ What you receive:
 - manual review of the generated report;
 - baseline/diff interpretation when previous scan artifacts are available;
 - review of the generated issue checklist;
+- review of the generated issue plan;
 - prioritized fix checklist;
 - Markdown report suitable for internal planning;
 - clear limitations and formal audit recommendation.
@@ -129,6 +132,7 @@ What you receive:
 - missing invariant and test plan;
 - baseline/diff review to track remediation progress across scans;
 - generated GitHub issue checklist converted into a prioritized remediation plan;
+- generated issue plan reviewed and organized into owner-ready tasks;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 
@@ -152,6 +156,7 @@ What you receive:
 - historical vault-pattern mapping;
 - strategy/oracle/withdrawal lifecycle checklist;
 - GitHub issue checklist;
+- optional issue plan review;
 - final Markdown report.
 
 This is readiness support only. Formal audit remains recommended before user
@@ -172,6 +177,7 @@ Best for:
 What you receive:
 
 - bulk readiness reports for participating repositories;
+- standardized issue plans for participating builders;
 - monthly security clinic;
 - portfolio-level Markdown dashboard;
 - private GitHub Discussion support if configured;

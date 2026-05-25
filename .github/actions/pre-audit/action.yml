@@ -54,7 +54,7 @@ inputs:
     required: false
     default: "false"
   github-token:
-    description: GitHub token used only for optional PR comment mode.
+    description: GitHub token used only for optional PR comment and issue workflows.
     required: false
     default: ""
   comment-output:
@@ -73,6 +73,42 @@ inputs:
     description: Generated issue checklist Markdown path.
     required: false
     default: "ARKHEIONX_ISSUE_CHECKLIST.md"
+  issue-plan-output:
+    description: Optional JSON issue plan output path.
+    required: false
+    default: ""
+  create-github-issues:
+    description: Create or update GitHub issues from Arkheionx issue plan.
+    required: false
+    default: "false"
+  issue-create-mode:
+    description: "Issue mode: dry-run, create, update."
+    required: false
+    default: "dry-run"
+  issue-grouping:
+    description: "Issue grouping: one-per-finding or summary."
+    required: false
+    default: "one-per-finding"
+  issue-max:
+    description: Maximum issues to create or update.
+    required: false
+    default: "5"
+  issue-only-priority:
+    description: "Priority filter: critical, high, medium, low, informational, all."
+    required: false
+    default: "high"
+  issue-labels:
+    description: Comma-separated extra issue labels.
+    required: false
+    default: ""
+  issue-assignees:
+    description: Comma-separated issue assignees.
+    required: false
+    default: ""
+  issue-dry-run-output:
+    description: Optional dry-run Markdown output path.
+    required: false
+    default: "ARKHEIONX_ISSUE_DRY_RUN.md"
   config:
     description: Optional Arkheionx config file path.
     required: false
@@ -98,7 +134,7 @@ inputs:
     required: false
     default: "false"
   create-issues:
-    description: Reserved for future local issue suggestions. No remote issues are created.
+    description: Legacy scanner flag. Use create-github-issues for the opt-in remote issue workflow.
     required: false
     default: "false"
   verbose:
@@ -149,6 +185,14 @@ runs:
 
         if [ "${{ inputs.create-issue-checklist }}" = "true" ] && [ -n "${{ inputs.issue-checklist-output }}" ]; then
           ARGS+=(--issue-checklist-output "${{ inputs.issue-checklist-output }}")
+        fi
+
+        ISSUE_PLAN_OUTPUT="${{ inputs.issue-plan-output }}"
+        if [ -z "$ISSUE_PLAN_OUTPUT" ] && [ "${{ inputs.create-github-issues }}" = "true" ]; then
+          ISSUE_PLAN_OUTPUT="ARKHEIONX_ISSUE_PLAN.json"
+        fi
+        if [ -n "$ISSUE_PLAN_OUTPUT" ]; then
+          ARGS+=(--issue-plan-output "$ISSUE_PLAN_OUTPUT")
         fi
 
         if [ -n "${{ inputs.config }}" ]; then
@@ -210,12 +254,36 @@ runs:
         if [ "${{ inputs.create-issue-checklist }}" = "true" ]; then
           echo "Arkheionx issue checklist generated: ${{ inputs.issue-checklist-output }}"
         fi
+        if [ -n "$ISSUE_PLAN_OUTPUT" ]; then
+          echo "Arkheionx issue plan generated: $ISSUE_PLAN_OUTPUT"
+        fi
         if [ "${{ inputs.pr-comment }}" = "true" ]; then
           echo "Arkheionx PR comment body generated: ${{ inputs.comment-output }}"
         fi
 
         if [ "${{ inputs.summary }}" = "true" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ] && [ -f "${{ inputs.summary-output }}" ]; then
           cat "${{ inputs.summary-output }}" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        if [ "${{ inputs.create-github-issues }}" = "true" ]; then
+          ISSUE_ARGS=(
+            --issue-plan "$ISSUE_PLAN_OUTPUT"
+            --mode "${{ inputs.issue-create-mode }}"
+            --repo "${{ github.repository }}"
+            --max-issues "${{ inputs.issue-max }}"
+            --grouping "${{ inputs.issue-grouping }}"
+            --only-priority "${{ inputs.issue-only-priority }}"
+            --labels "${{ inputs.issue-labels }}"
+            --assignees "${{ inputs.issue-assignees }}"
+            --dry-run-output "${{ inputs.issue-dry-run-output }}"
+          )
+          if [ -n "${{ inputs.github-token }}" ]; then
+            ISSUE_ARGS+=(--github-token "${{ inputs.github-token }}")
+          fi
+          python3 "${{ github.action_path }}/../../../scripts/create_github_issues.py" "${ISSUE_ARGS[@]}" || true
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ] && [ -f "${{ inputs.issue-dry-run-output }}" ]; then
+            cat "${{ inputs.issue-dry-run-output }}" >> "$GITHUB_STEP_SUMMARY"
+          fi
         fi
 
     - name: Post Arkheionx pull request comment

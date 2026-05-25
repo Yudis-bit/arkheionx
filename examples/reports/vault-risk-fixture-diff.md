@@ -8,7 +8,7 @@ Compared against: `examples/reports/vault-risk-fixture.baseline.json`
 | ------------------------- | ----- |
 | New readiness gaps        | 0     |
 | Resolved readiness gaps   | 0     |
-| Unchanged readiness gaps  | 9     |
+| Unchanged readiness gaps  | 16    |
 | Changed readiness gaps    | 0     |
 | Suppressed readiness gaps | 0     |
 
@@ -31,6 +31,13 @@ Compared against: `examples/reports/vault-risk-fixture.baseline.json`
 - `ARK-ORC-001` - Oracle-dependent vault without stale-price or bounds tests
 - `ARK-VLT-007` - Fee logic without fee accounting tests
 - `ARK-VLT-008` - Pause/emergency controls without operational tests
+- `ARK-ORC-002` - Oracle decimals or normalization not covered by tests
+- `ARK-ORC-004` - Oracle setter/admin path without role-boundary tests
+- `ARK-ACC-001` - Privileged setters without role-boundary tests
+- `ARK-ACC-003` - Admin role concentration not documented
+- `ARK-REENT-001` - Value flow with external calls needs reentrancy review
+- `ARK-REENT-004` - External call path without documented ordering assumptions
+- `ARK-RWD-004` - Lock/cooldown reward lifecycle not tested
 
 ### Changed readiness gaps
 

@@ -6,7 +6,7 @@
     "new": 0,
     "resolved": 0,
     "suppressed": 0,
-    "unchanged": 9
+    "unchanged": 16
   },
   "new": [],
   "resolved": [],
@@ -43,7 +43,7 @@
         "totalSupply",
         "withdraw"
       ],
-      "fingerprint": "8204775ec5a2e76517a34419",
+      "fingerprint": "7643a0cb79cbbb4d13183229",
       "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
       "id": "ARK-VLT-001",
       "priority": "High readiness gap",
@@ -98,7 +98,7 @@
         "totalSupply",
         "withdraw"
       ],
-      "fingerprint": "a27e37c21dcaab87fb0f191f",
+      "fingerprint": "26cb37c1e06daceb0c36ea66",
       "historical_pattern_similarity": "Maps to share/accounting mismatch classes where quoted and realized vault state diverge.",
       "id": "ARK-VLT-002",
       "priority": "High readiness gap",
@@ -157,7 +157,7 @@
         "withdraw",
         "withdrawalFee"
       ],
-      "fingerprint": "fc386028cda60db91cd3bfa5",
+      "fingerprint": "a505bf602ba213841d23a764",
       "historical_pattern_similarity": "Maps to historical arithmetic and accounting mismatch classes where precision assumptions failed.",
       "id": "ARK-VLT-003",
       "priority": "High readiness gap",
@@ -191,6 +191,8 @@
       "detail": "totalAssets appears connected to external strategy, pricing, or balance assumptions without visible manipulation-resistance test coverage.",
       "detected_signals": [
         "allocate",
+        "answer",
+        "answeredInRound",
         "assets",
         "balanceOf",
         "convertToAssets",
@@ -216,16 +218,18 @@
         "rebalance",
         "redeem",
         "report",
+        "roundId",
         "setOracle",
         "shares",
         "strategy",
         "totalAssets",
         "totalDebt",
         "totalSupply",
+        "updatedAt",
         "withdraw",
         "withdrawFromStrategy"
       ],
-      "fingerprint": "07abc8d8712c4b241abdb021",
+      "fingerprint": "2c9993713d0fbb88ffa98bd1",
       "historical_pattern_similarity": "Maps to Harvest/Yearn-style vault readiness classes where pricing or strategy state influenced share accounting.",
       "id": "ARK-VLT-004",
       "priority": "High readiness gap",
@@ -270,7 +274,7 @@
         "totalDebt",
         "withdrawFromStrategy"
       ],
-      "fingerprint": "4fe5d3c6f862ef5411ddca69",
+      "fingerprint": "7c2f4109500fcbf428eaa6db",
       "historical_pattern_similarity": "Maps to strategy debt/gain/loss accounting readiness classes.",
       "id": "ARK-VLT-005",
       "priority": "High readiness gap",
@@ -297,7 +301,8 @@
     },
     {
       "affected_files": [
-        "src/VaultRiskFixture.sol"
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
       ],
       "category": "vault-withdrawal",
       "confidence": "medium",
@@ -311,7 +316,7 @@
         "requestWithdraw",
         "withdrawalQueue"
       ],
-      "fingerprint": "81e181479549fcdcced6ff32",
+      "fingerprint": "a07b033b53b02c1d05f4244a",
       "historical_pattern_similarity": "Maps to vault lifecycle readiness classes where exit accounting or liquidity assumptions can break.",
       "id": "ARK-VLT-006",
       "priority": "High readiness gap",
@@ -342,15 +347,19 @@
         "test/VaultRiskFixture.t.sol"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
+      "confidence": "high",
       "detail": "Oracle, price-feed, pool-price, reserve, TWAP, or LP pricing signals were detected without enough stale-price, bounds, or sanity-check coverage.",
       "detected_signals": [
+        "answer",
+        "answeredInRound",
         "getPrice",
         "latestRoundData",
         "priceFeed",
-        "setOracle"
+        "roundId",
+        "setOracle",
+        "updatedAt"
       ],
-      "fingerprint": "4fd92ac8dcf3b8b9fb3b2552",
+      "fingerprint": "d6e5fb8d0598b843faca8367",
       "historical_pattern_similarity": "Maps to historical vault/oracle and pool-price manipulation readiness classes.",
       "id": "ARK-ORC-001",
       "priority": "High readiness gap",
@@ -390,7 +399,7 @@
         "performanceFee",
         "withdrawalFee"
       ],
-      "fingerprint": "892be4e21cbb07e5c1f81b09",
+      "fingerprint": "6fd9e73019a0aeca8ddd1fc5",
       "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
@@ -436,7 +445,7 @@
         "sweep",
         "unpause"
       ],
-      "fingerprint": "b8459029379073c0fa8883e1",
+      "fingerprint": "829fbda42c03968c59c0fcc5",
       "historical_pattern_similarity": "Maps to operational readiness classes where emergency behavior changes core state transitions.",
       "id": "ARK-VLT-008",
       "priority": "Medium readiness gap",
@@ -459,6 +468,291 @@
       ],
       "title": "Pause/emergency controls without operational tests",
       "why_it_matters": "Emergency controls are launch-critical; they should behave predictably under stress without bypassing accounting assumptions."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "detail": "Oracle decimals or price normalization signals were detected without visible normalization tests.",
+      "detected_signals": [
+        "answer",
+        "answeredInRound",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "fingerprint": "60725ca11edcd2f1efcb8648",
+      "historical_pattern_similarity": "Maps to arithmetic and oracle normalization failure classes.",
+      "id": "ARK-ORC-002",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions.",
+      "recommended_defensive_checks": [
+        "decimals normalization",
+        "mixed asset decimals",
+        "precision scaling",
+        "rounding bounds"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Mock price feeds with different decimals and assert protocol accounting normalizes every value before use."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "decimals",
+        "precision",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle decimals or normalization not covered by tests",
+      "why_it_matters": "Decimals mismatches can distort collateral, share, reward, or pricing calculations even when the oracle value itself is fresh."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+      "detected_signals": [
+        "answer",
+        "answeredInRound",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "fingerprint": "11765a572891d4866dca0594",
+      "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests",
+      "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+      "detected_signals": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "rescue",
+        "setFee",
+        "setOracle",
+        "setStrategy",
+        "setTreasury",
+        "sweep",
+        "unpause"
+      ],
+      "fingerprint": "8fb546c50f0c77fbe211b141",
+      "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests",
+      "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "rescue",
+        "setFee",
+        "setOracle",
+        "setStrategy",
+        "setTreasury",
+        "sweep",
+        "unpause"
+      ],
+      "fingerprint": "fff2c4a9c55e4afa54795b57",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "detail": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+      "detected_signals": [
+        "redeem",
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "fingerprint": "bb769afb79bc059d289e0686",
+      "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+      "recommended_defensive_checks": [
+        "state update before external call",
+        "reentrant receiver mock",
+        "failed external call behavior",
+        "single-claim guarantees"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review",
+      "why_it_matters": "External calls can hand control to untrusted code before accounting reaches a safe state."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "redeem",
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "fingerprint": "1d78f58bf70ff5520a005d67",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "medium",
+      "detail": "Lock, cooldown, epoch, or vesting signals were detected without visible lifecycle tests.",
+      "detected_signals": [
+        "cooldown",
+        "shares",
+        "withdraw"
+      ],
+      "fingerprint": "a4c3d9faf9a66e4e0e4bb32d",
+      "historical_pattern_similarity": "Maps to reward lifecycle and state-transition readiness classes.",
+      "id": "ARK-RWD-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Add tests for stake, lock/cooldown, reward accrual, claim, and unstake lifecycle transitions.",
+      "recommended_defensive_checks": [
+        "epoch boundaries",
+        "cooldown transitions",
+        "vesting claim timing"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Advance local time/epochs and assert reward and withdrawal state transitions follow documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "staking-lifecycle",
+        "staking-rule-pack"
+      ],
+      "title": "Lock/cooldown reward lifecycle not tested",
+      "why_it_matters": "Time or epoch-based reward states are easy to mis-handle around boundary transitions."
     }
   ],
   "warnings": []

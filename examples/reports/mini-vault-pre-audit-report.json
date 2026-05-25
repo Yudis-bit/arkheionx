@@ -54,7 +54,7 @@
         "totalSupply",
         "withdraw"
       ],
-      "fingerprint": "9421bc5897caf05fb6b2bd6d",
+      "fingerprint": "0efe79b4c594d0c69d06787b",
       "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
       "id": "ARK-VLT-001",
       "priority": "High readiness gap",
@@ -90,7 +90,7 @@
       "detected_signals": [
         "fee"
       ],
-      "fingerprint": "1b5cbd6e82091eea30e0f4c1",
+      "fingerprint": "f469763c155a4851c647534a",
       "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
@@ -112,16 +112,129 @@
       ],
       "title": "Fee logic without fee accounting tests",
       "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "fingerprint": "61734a0b8340c3a5e0311823",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "detail": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "fingerprint": "c7702243b98ca713849747c2",
+      "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+      "recommended_defensive_checks": [
+        "state update before external call",
+        "reentrant receiver mock",
+        "failed external call behavior",
+        "single-claim guarantees"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review",
+      "why_it_matters": "External calls can hand control to untrusted code before accounting reaches a safe state."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "fingerprint": "a694c676706044a9ea675c45",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     }
   ],
-  "fingerprint_version": "0.4.0",
-  "generated_at": "2026-05-25T13:16:18+00:00",
+  "fingerprint_version": "0.5.0",
+  "generated_at": "2026-05-25T18:53:56+00:00",
   "generated_outputs": {
     "baseline": "examples/reports/mini-vault.baseline.json",
     "comment": "examples/reports/mini-vault-pr-comment.md",
     "diff_json": "",
     "diff_report": "",
     "issue_checklist": "examples/reports/mini-vault-issue-checklist.md",
+    "issue_plan": "examples/reports/mini-vault-issue-plan.json",
     "json_report": "examples/reports/mini-vault-pre-audit-report.json",
     "markdown_report": "examples/reports/mini-vault-pre-audit-report.md",
     "sarif_report": "examples/reports/mini-vault.sarif.json",
@@ -206,7 +319,7 @@
         "shares",
         "totalAssets",
         "totalSupply",
-        "transfer(",
+        "transfer",
         "transferFrom",
         "withdraw"
       ],
@@ -244,6 +357,31 @@
       ],
       "suggested_test": "Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.",
       "why_it_matters": "Admin setters, emergency controls, fee updates, and governance execution paths can become launch blockers if role boundaries are unclear or untested."
+    },
+    {
+      "broken_invariant_class": "Claimable rewards cannot exceed funded rewards beyond documented rounding.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Test claim conservation across multiple users.",
+        "Test stake/unstake around reward updates.",
+        "Check precision and rounding around small balances."
+      ],
+      "detected_signals": [
+        "decimals",
+        "fee",
+        "shares",
+        "withdraw"
+      ],
+      "failed_assumption_class": "Reward index math always reflects actual funded rewards and stake weights.",
+      "name": "Reward accounting mismatch review recommended",
+      "search_tags": [
+        "reward-accounting",
+        "staking",
+        "index-math",
+        "precision"
+      ],
+      "suggested_test": "Invariant: total claimed plus remaining claimable never exceeds funded rewards beyond expected rounding.",
+      "why_it_matters": "Reward indexes and accumulators are common sources of overclaim, underclaim, and precision drift when supply changes across epochs."
     }
   ],
   "next_steps": [
@@ -276,7 +414,7 @@
         "totalSupply",
         "withdraw"
       ],
-      "fingerprint": "9421bc5897caf05fb6b2bd6d",
+      "fingerprint": "0efe79b4c594d0c69d06787b",
       "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
       "id": "ARK-VLT-001",
       "priority": "High readiness gap",
@@ -312,7 +450,7 @@
       "detected_signals": [
         "fee"
       ],
-      "fingerprint": "1b5cbd6e82091eea30e0f4c1",
+      "fingerprint": "f469763c155a4851c647534a",
       "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
@@ -334,9 +472,444 @@
       ],
       "title": "Fee logic without fee accounting tests",
       "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "fingerprint": "61734a0b8340c3a5e0311823",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "detail": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "fingerprint": "c7702243b98ca713849747c2",
+      "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+      "recommended_defensive_checks": [
+        "state update before external call",
+        "reentrant receiver mock",
+        "failed external call behavior",
+        "single-claim guarantees"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review",
+      "why_it_matters": "External calls can hand control to untrusted code before accounting reaches a safe state."
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "fingerprint": "a694c676706044a9ea675c45",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     }
   ],
   "repo_root": "examples/mini-vault",
+  "rule_packs": {
+    "access_control_upgradeability": {
+      "detected": true,
+      "docs": "docs/ACCESS_CONTROL_RULE_PACK.md",
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "finding_count": 1,
+      "findings": [
+        {
+          "affected_files": [
+            "src/MiniVault.sol",
+            "test/MiniVault.t.sol"
+          ],
+          "category": "access-control",
+          "confidence": "medium",
+          "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+          "detected_signals": [
+            "onlyOwner",
+            "owner",
+            "pause",
+            "setFee",
+            "unpause"
+          ],
+          "fingerprint": "61734a0b8340c3a5e0311823",
+          "historical_pattern_similarity": "Maps to operational control readiness classes.",
+          "id": "ARK-ACC-003",
+          "priority": "Low readiness gap",
+          "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+          "recommended_defensive_checks": [
+            "role matrix",
+            "owner powers",
+            "timelock assumptions",
+            "multisig assumptions"
+          ],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Add a role matrix to docs and unit tests for critical roles."
+          ],
+          "suppressible": true,
+          "tags": [
+            "access-control-review",
+            "documentation-readiness",
+            "access-control-rule-pack"
+          ],
+          "title": "Admin role concentration not documented",
+          "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+        }
+      ],
+      "label": "Access Control / Upgradeability Rule Pack",
+      "signal_count": 5,
+      "signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "suggested_tests": [
+        "unauthorized setter tests",
+        "pause/emergency boundaries",
+        "initializer once",
+        "upgrade authorization"
+      ]
+    },
+    "oracle": {
+      "detected": true,
+      "docs": "docs/ORACLE_RULE_PACK.md",
+      "files": [
+        "test/MiniVault.t.sol"
+      ],
+      "finding_count": 0,
+      "findings": [],
+      "label": "Oracle Rule Pack",
+      "signal_count": 1,
+      "signals": [
+        "decimals"
+      ],
+      "suggested_tests": [
+        "stale price rejection",
+        "decimals normalization",
+        "price bounds",
+        "TWAP vs spot behavior"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "detected": true,
+      "docs": "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "finding_count": 2,
+      "findings": [
+        {
+          "affected_files": [
+            "src/MiniVault.sol",
+            "test/MiniVault.t.sol"
+          ],
+          "category": "reentrancy-value-flow",
+          "confidence": "medium",
+          "detail": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+          "detected_signals": [
+            "transfer",
+            "transferFrom",
+            "withdraw"
+          ],
+          "fingerprint": "c7702243b98ca713849747c2",
+          "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+          "id": "ARK-REENT-001",
+          "priority": "High readiness gap",
+          "recommendation": "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+          "recommended_defensive_checks": [
+            "state update before external call",
+            "reentrant receiver mock",
+            "failed external call behavior",
+            "single-claim guarantees"
+          ],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reentrancy-review",
+            "value-flow",
+            "reentrancy-rule-pack"
+          ],
+          "title": "Value flow with external calls needs reentrancy review",
+          "why_it_matters": "External calls can hand control to untrusted code before accounting reaches a safe state."
+        },
+        {
+          "affected_files": [
+            "src/MiniVault.sol",
+            "test/MiniVault.t.sol"
+          ],
+          "category": "reentrancy-value-flow",
+          "confidence": "medium",
+          "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+          "detected_signals": [
+            "transfer",
+            "transferFrom",
+            "withdraw"
+          ],
+          "fingerprint": "a694c676706044a9ea675c45",
+          "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+          "id": "ARK-REENT-004",
+          "priority": "Low readiness gap",
+          "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+          "recommended_defensive_checks": [
+            "ordering documentation",
+            "callback assumptions",
+            "external call failure behavior"
+          ],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reentrancy-review",
+            "documentation-readiness",
+            "reentrancy-rule-pack"
+          ],
+          "title": "External call path without documented ordering assumptions",
+          "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
+        }
+      ],
+      "label": "Reentrancy / Value Flow Rule Pack",
+      "signal_count": 3,
+      "signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "suggested_tests": [
+        "reentrant receiver mock",
+        "state update ordering",
+        "double claim prevention",
+        "failed external call behavior"
+      ]
+    },
+    "reward_accounting": {
+      "detected": true,
+      "docs": "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "finding_count": 0,
+      "findings": [],
+      "label": "Staking / Reward Accounting Rule Pack",
+      "signal_count": 4,
+      "signals": [
+        "decimals",
+        "fee",
+        "shares",
+        "withdraw"
+      ],
+      "suggested_tests": [
+        "reward conservation",
+        "no overclaim",
+        "index monotonicity",
+        "stake/unstake/claim lifecycle"
+      ]
+    },
+    "vault": {
+      "detected": true,
+      "docs": "docs/VAULT_RULE_PACK.md",
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "finding_count": 2,
+      "findings": [
+        {
+          "affected_files": [
+            "src/MiniVault.sol",
+            "test/MiniVault.t.sol"
+          ],
+          "category": "vault-accounting",
+          "confidence": "high",
+          "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+          "detected_signals": [
+            "assets",
+            "balanceOf",
+            "convertToAssets",
+            "convertToShares",
+            "deposit",
+            "mint",
+            "shares",
+            "totalAssets",
+            "totalSupply",
+            "withdraw"
+          ],
+          "fingerprint": "0efe79b4c594d0c69d06787b",
+          "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+          "id": "ARK-VLT-001",
+          "priority": "High readiness gap",
+          "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+          "recommended_defensive_checks": [
+            "deposit/withdraw roundtrip",
+            "convertToShares/convertToAssets consistency",
+            "donation/inflation resistance",
+            "rounding direction tests",
+            "totalAssets external dependency tests"
+          ],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
+          ],
+          "suppressible": true,
+          "tags": [
+            "vault-accounting",
+            "invariant-testing",
+            "erc4626"
+          ],
+          "title": "Vault accounting without invariant tests",
+          "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
+        },
+        {
+          "affected_files": [
+            "src/MiniVault.sol",
+            "test/MiniVault.t.sol"
+          ],
+          "category": "vault-accounting",
+          "confidence": "low",
+          "detail": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
+          "detected_signals": [
+            "fee"
+          ],
+          "fingerprint": "f469763c155a4851c647534a",
+          "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+          "id": "ARK-VLT-007",
+          "priority": "Medium readiness gap",
+          "recommendation": "Add deposit, withdrawal, management, and performance fee tests where relevant.",
+          "recommended_defensive_checks": [
+            "fee bounds",
+            "recipient accounting",
+            "share conservation",
+            "rounding with fees"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations."
+          ],
+          "suppressible": true,
+          "tags": [
+            "fee-accounting",
+            "vault-accounting"
+          ],
+          "title": "Fee logic without fee accounting tests",
+          "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+        }
+      ],
+      "label": "Vault Rule Pack",
+      "signal_count": 15,
+      "signals": [
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "decimals",
+        "deposit",
+        "mint",
+        "pause",
+        "setFee",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "treasury",
+        "unpause",
+        "withdraw"
+      ],
+      "suggested_tests": [
+        "totalAssets consistency",
+        "deposit/withdraw roundtrip",
+        "share conversion rounding",
+        "strategy gain/loss lifecycle"
+      ]
+    }
+  },
   "score": 73,
   "score_band": "Improving",
   "score_breakdown": {
@@ -432,6 +1005,27 @@
         "unpause"
       ]
     },
+    "access_upgrade_rule_pack": {
+      "counts": {
+        "onlyOwner": 4,
+        "owner": 4,
+        "pause": 2,
+        "setFee": 2,
+        "unpause": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ]
+    },
     "accounting_complexity": {
       "counts": {
         "decimals": 1,
@@ -483,10 +1077,23 @@
         "decimals"
       ]
     },
-    "reentrancy_value_flow": {
+    "oracle_rule_pack": {
       "counts": {
-        "transfer(": 3,
-        "transferFrom": 3
+        "decimals": 1
+      },
+      "file_count": 1,
+      "files": [
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "decimals"
+      ]
+    },
+    "reentrancy_rule_pack": {
+      "counts": {
+        "transfer": 3,
+        "transferFrom": 3,
+        "withdraw": 3
       },
       "file_count": 2,
       "files": [
@@ -494,15 +1101,57 @@
         "test/MiniVault.t.sol"
       ],
       "terms": [
-        "transfer(",
-        "transferFrom"
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "counts": {
+        "transfer": 3,
+        "transferFrom": 3,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ]
+    },
+    "reward_rule_pack": {
+      "counts": {
+        "shares": 18,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "shares",
+        "withdraw"
       ]
     },
     "staking_rewards": {
-      "counts": {},
-      "file_count": 0,
-      "files": [],
-      "terms": []
+      "counts": {
+        "shares": 18,
+        "withdraw": 3
+      },
+      "file_count": 2,
+      "files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "terms": [
+        "shares",
+        "withdraw"
+      ]
     },
     "upgradeability": {
       "counts": {},
@@ -677,6 +1326,31 @@
       "name": "pause behavior"
     },
     {
+      "category": "staking",
+      "description": "Total claimed plus remaining claimable should not exceed funded rewards beyond rounding.",
+      "name": "reward conservation"
+    },
+    {
+      "category": "staking",
+      "description": "Users should not claim more than their funded and accrued share.",
+      "name": "no overclaim"
+    },
+    {
+      "category": "staking",
+      "description": "Reward indexes should be monotonic and supply-aware.",
+      "name": "index monotonicity"
+    },
+    {
+      "category": "staking",
+      "description": "Stake and unstake flows should preserve balances and reward accounting.",
+      "name": "stake/unstake roundtrip"
+    },
+    {
+      "category": "staking",
+      "description": "Small balances and precision edges should not create systematic reward drift.",
+      "name": "reward accounting precision"
+    },
+    {
       "category": "access control",
       "description": "Unauthorized users cannot call privileged setters or emergency functions.",
       "name": "unauthorized role rejection"
@@ -699,12 +1373,12 @@
   ],
   "summary": {
     "critical": 0,
-    "high": 1,
+    "high": 2,
     "informational": 0,
-    "low": 0,
+    "low": 2,
     "medium": 1,
     "suppressed": 0,
-    "total_readiness_gaps": 2
+    "total_readiness_gaps": 5
   },
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
@@ -761,5 +1435,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

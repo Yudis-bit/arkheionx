@@ -5,11 +5,13 @@ on:
     paths:
       - "scripts/pre_audit_scan.py"
       - "scripts/post_pr_comment.py"
+      - "scripts/create_github_issues.py"
       - "tests/**"
       - ".github/actions/pre-audit/action.yml"
       - ".github/workflows/pre-audit-ci.yml"
       - "examples/mini-vault/**"
       - "examples/vault-risk-fixture/**"
+      - "examples/oracle-staking-fixture/**"
       - "examples/arkheionx.config.example.json"
       - "examples/reports/**"
       - "metadata/search_terms.json"
@@ -39,6 +41,7 @@ jobs:
           python3 -m py_compile scripts/pre_audit_scan.py
           python3 -m py_compile scripts/generate_search_index.py
           python3 -m py_compile scripts/post_pr_comment.py
+          python3 -m py_compile scripts/create_github_issues.py
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
@@ -58,6 +61,7 @@ jobs:
             --summary-output examples/reports/mini-vault-action-summary.md \
             --comment-output examples/reports/mini-vault-pr-comment.md \
             --issue-checklist-output examples/reports/mini-vault-issue-checklist.md \
+            --issue-plan-output examples/reports/mini-vault-issue-plan.json \
             --generate-invariant-skeletons
 
       - name: Run scanner directly against vault-risk-fixture
@@ -72,7 +76,28 @@ jobs:
             --summary-output examples/reports/vault-risk-fixture-action-summary.md \
             --comment-output examples/reports/vault-risk-fixture-pr-comment.md \
             --issue-checklist-output examples/reports/vault-risk-fixture-issue-checklist.md \
+            --issue-plan-output examples/reports/vault-risk-fixture-issue-plan.json \
             --generate-invariant-skeletons
+
+      - name: Run scanner directly against oracle-staking-fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture \
+            --protocol-type auto \
+            --output examples/reports/oracle-staking-fixture-pre-audit-report.md \
+            --json-output examples/reports/oracle-staking-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/oracle-staking-fixture.sarif.json \
+            --baseline-output examples/reports/oracle-staking-fixture.baseline.json \
+            --issue-checklist-output examples/reports/oracle-staking-fixture-issue-checklist.md \
+            --issue-plan-output examples/reports/oracle-staking-fixture-issue-plan.json
+
+      - name: Dry-run GitHub issue workflow
+        run: |
+          python3 scripts/create_github_issues.py \
+            --issue-plan examples/reports/vault-risk-fixture-issue-plan.json \
+            --mode dry-run \
+            --dry-run-output examples/reports/vault-risk-fixture-issue-dry-run.md \
+            --max-issues 5
 
       - name: Run scanner diff mode against vault-risk baseline
         run: |
@@ -117,6 +142,10 @@ jobs:
           comment-output: "ARKHEIONX_PR_COMMENT.md"
           create-issue-checklist: "true"
           issue-checklist-output: "ARKHEIONX_ISSUE_CHECKLIST.md"
+          issue-plan-output: "ARKHEIONX_ISSUE_PLAN.json"
+          create-github-issues: "true"
+          issue-create-mode: "dry-run"
+          issue-dry-run-output: "ARKHEIONX_ISSUE_DRY_RUN.md"
 
       - name: Verify report artifacts
         run: |
@@ -131,9 +160,18 @@ jobs:
           test -f examples/reports/mini-vault-action-summary.md
           test -f examples/reports/mini-vault-pr-comment.md
           test -f examples/reports/mini-vault-issue-checklist.md
+          test -f examples/reports/mini-vault-issue-plan.json
           test -f examples/reports/vault-risk-fixture-action-summary.md
           test -f examples/reports/vault-risk-fixture-pr-comment.md
           test -f examples/reports/vault-risk-fixture-issue-checklist.md
+          test -f examples/reports/vault-risk-fixture-issue-plan.json
+          test -f examples/reports/vault-risk-fixture-issue-dry-run.md
+          test -f examples/reports/oracle-staking-fixture-pre-audit-report.md
+          test -f examples/reports/oracle-staking-fixture-pre-audit-report.json
+          test -f examples/reports/oracle-staking-fixture.sarif.json
+          test -f examples/reports/oracle-staking-fixture.baseline.json
+          test -f examples/reports/oracle-staking-fixture-issue-checklist.md
+          test -f examples/reports/oracle-staking-fixture-issue-plan.json
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -156,6 +194,8 @@ jobs:
           test -f ARKHEIONX_ACTION_SUMMARY.md
           test -f ARKHEIONX_PR_COMMENT.md
           test -f ARKHEIONX_ISSUE_CHECKLIST.md
+          test -f ARKHEIONX_ISSUE_PLAN.json
+          test -f ARKHEIONX_ISSUE_DRY_RUN.md
 
       - name: Parse JSON output
         run: |
@@ -165,6 +205,7 @@ jobs:
           for path in [
               "examples/reports/mini-vault-pre-audit-report.json",
               "examples/reports/vault-risk-fixture-pre-audit-report.json",
+              "examples/reports/oracle-staking-fixture-pre-audit-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
@@ -176,14 +217,30 @@ jobs:
               assert "summary" in data
               assert "generated_outputs" in data
               assert "fingerprint_version" in data
+              assert "rule_packs" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
               assert all(item["fingerprint"] for item in data["findings"])
+          oracle = json.load(open("examples/reports/oracle-staking-fixture-pre-audit-report.json", encoding="utf-8"))
+          oracle_ids = {item["id"] for item in oracle["findings"]}
+          assert "ARK-ORC-001" in oracle_ids
+          assert "ARK-RWD-001" in oracle_ids
+          for path in [
+              "examples/reports/mini-vault-issue-plan.json",
+              "examples/reports/vault-risk-fixture-issue-plan.json",
+              "examples/reports/oracle-staking-fixture-issue-plan.json",
+              "ARKHEIONX_ISSUE_PLAN.json",
+          ]:
+              plan = json.load(open(path, encoding="utf-8"))
+              assert plan["issues"]
+              assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
+              assert all("not a formal audit finding" in issue["body"] for issue in plan["issues"])
           config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
           assert config["suppressed_findings"]
           for path in [
               "examples/reports/mini-vault.sarif.json",
               "examples/reports/vault-risk-fixture.sarif.json",
               "examples/reports/vault-risk-fixture-diff.sarif.json",
+              "examples/reports/oracle-staking-fixture.sarif.json",
               "arkheionx.sarif.json",
           ]:
               sarif = json.load(open(path, encoding="utf-8"))
@@ -198,13 +255,15 @@ jobs:
           print("JSON valid")
           PY
 
-      - name: Verify v0.4 generated UX files
+      - name: Verify generated UX files
         run: |
           grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/mini-vault-pr-comment.md
           grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/vault-risk-fixture-pr-comment.md
           grep -q "<!-- arkheionx-pre-audit-comment -->" ARKHEIONX_PR_COMMENT.md
           grep -q -- "- \\[ \\]" examples/reports/mini-vault-issue-checklist.md
           grep -q -- "- \\[ \\]" examples/reports/vault-risk-fixture-issue-checklist.md
+          grep -q "<!-- arkheionx-issue:" examples/reports/vault-risk-fixture-issue-plan.json
+          grep -q "No GitHub API calls were made." examples/reports/vault-risk-fixture-issue-dry-run.md
           grep -q "Score:" examples/reports/mini-vault-action-summary.md
           grep -q "Score:" examples/reports/vault-risk-fixture-action-summary.md
           grep -q "Suppressed Readiness Gaps" examples/reports/vault-risk-fixture-config-report.md
@@ -219,6 +278,7 @@ jobs:
           grep -qi "formal audit is recommended" examples/reports/mini-vault-pre-audit-report.md
           grep -qi "not a formal audit" examples/reports/vault-risk-fixture-pre-audit-report.md
           grep -qi "Vault Rule Pack Coverage" examples/reports/vault-risk-fixture-pre-audit-report.md
+          grep -qi "Rule Pack Coverage" examples/reports/oracle-staking-fixture-pre-audit-report.md
 
       - name: Verify unsafe marketing phrases are absent
         run: |
@@ -242,6 +302,7 @@ jobs:
           roots = [
               Path("README.md"),
               Path("SERVICES.md"),
+              Path("docs"),
               Path("docs/PRE_AUDIT_READINESS_OS.md"),
               Path("docs/GITHUB_ACTION_USAGE.md"),
               Path("docs/PR_COMMENT_MODE.md"),

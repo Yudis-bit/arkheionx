@@ -1,0 +1,2042 @@
+{
+  "config_warnings": [],
+  "diff": {
+    "baseline_path": "",
+    "changed": [],
+    "counts": {
+      "changed": 0,
+      "new": 0,
+      "resolved": 0,
+      "suppressed": 0,
+      "unchanged": 0
+    },
+    "new": [],
+    "resolved": [],
+    "suppressed_findings": [],
+    "unchanged": [],
+    "warnings": []
+  },
+  "disclaimer": "This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.",
+  "files_scanned": {
+    "configs": [
+      "foundry.toml"
+    ],
+    "docs": [
+      "README.md"
+    ],
+    "solidity_sources": [
+      "src/OracleRewardFixture.sol"
+    ],
+    "solidity_tests": [
+      "test/OracleRewardFixture.t.sol"
+    ],
+    "workflows": []
+  },
+  "findings": [
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
+      "detected_signals": [],
+      "fingerprint": "d73c8a2c3e3055849cc2a36d",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
+      "priority": "High readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+      "recommended_defensive_checks": [],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "invariant-testing",
+        "staking"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
+      "detected_signals": [],
+      "fingerprint": "28931344b387571d2cc7a0e0",
+      "historical_pattern_similarity": "",
+      "id": "ARK-ORC-002",
+      "priority": "High readiness gap",
+      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+      "recommended_defensive_checks": [],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "price-assumptions"
+      ],
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "low",
+      "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
+      "detected_signals": [],
+      "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+      "historical_pattern_similarity": "",
+      "id": "ARK-VLT-009",
+      "priority": "High readiness gap",
+      "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
+      "recommended_defensive_checks": [],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
+      ],
+      "suppressible": true,
+      "tags": [
+        "vault-accounting",
+        "share-accounting"
+      ],
+      "title": "Vault accounting lacks visible roundtrip or conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "low",
+      "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
+      "detected_signals": [],
+      "fingerprint": "843d4f2224907dabc3816772",
+      "historical_pattern_similarity": "",
+      "id": "ARK-REENT-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+      "recommended_defensive_checks": [],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Review state update order and add local malicious-receiver tests where callbacks are possible."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow"
+      ],
+      "title": "External-call value flow needs reentrancy review",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "detail": "Reward/index/claim signals were detected without invariant testing.",
+      "detected_signals": [],
+      "fingerprint": "c0a40921efd524042b77b919",
+      "historical_pattern_similarity": "",
+      "id": "ARK-RWD-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+      "recommended_defensive_checks": [],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "fingerprint": "9aee372d5fc42a664ef7e458",
+      "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+      "id": "ARK-ORC-001",
+      "priority": "High readiness gap",
+      "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
+      "recommended_defensive_checks": [
+        "stale round rejection",
+        "heartbeat checks",
+        "updatedAt validation",
+        "answeredInRound handling"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "title": "Oracle-dependent logic without stale-price tests",
+      "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "fingerprint": "968c56ae1cd3dae1e2eae280",
+      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+      "id": "ARK-ORC-005",
+      "priority": "Medium readiness gap",
+      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+      "recommended_defensive_checks": [
+        "price bounds",
+        "fallback policy",
+        "stale-price policy",
+        "sequencer downtime notes"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "documentation-readiness",
+        "oracle-rule-pack"
+      ],
+      "title": "Missing price bounds or fallback assumptions documentation",
+      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "fingerprint": "13af6797121f94ff50563104",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "low",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom"
+      ],
+      "fingerprint": "c6c3deef7e721e9057a3f65a",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+      "detected_signals": [
+        "accumulator",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ],
+      "fingerprint": "e7599f77df25242d8103622d",
+      "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+      "id": "ARK-RWD-002",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+      "recommended_defensive_checks": [
+        "index monotonicity",
+        "rounding dust",
+        "small balance behavior",
+        "multi-user precision"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests",
+      "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
+      "detected_signals": [
+        "accumulator",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ],
+      "fingerprint": "9362d8f81c0fd2384aea5bbb",
+      "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
+      "id": "ARK-RWD-003",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
+      "recommended_defensive_checks": [
+        "double claim prevention",
+        "claim state reset",
+        "multi-user claim ordering"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert claim twice without new rewards returns zero or reverts according to documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "claim-flow",
+        "staking-rule-pack"
+      ],
+      "title": "Claim flow without double-claim prevention tests",
+      "why_it_matters": "Claim flows depend on updating accrued state at exactly the right time."
+    }
+  ],
+  "fingerprint_version": "0.5.0",
+  "generated_at": "2026-05-25T19:01:52+00:00",
+  "generated_outputs": {
+    "baseline": "examples/reports/oracle-staking-fixture.baseline.json",
+    "comment": "",
+    "diff_json": "",
+    "diff_report": "",
+    "issue_checklist": "examples/reports/oracle-staking-fixture-issue-checklist.md",
+    "issue_plan": "examples/reports/oracle-staking-fixture-issue-plan.json",
+    "json_report": "examples/reports/oracle-staking-fixture-pre-audit-report.json",
+    "markdown_report": "examples/reports/oracle-staking-fixture-pre-audit-report.md",
+    "sarif_report": "examples/reports/oracle-staking-fixture.sarif.json",
+    "summary": ""
+  },
+  "historical_patterns": [
+    {
+      "broken_invariant_class": "Share/accounting value cannot be moved by transient price state.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Document oracle freshness, bounds, and fallback behavior.",
+        "Test deposit, withdraw, and totalAssets under mocked stale and bounded prices.",
+        "Prefer TWAP, sanity bounds, or explicit staleness checks where the design depends on external prices."
+      ],
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "balanceOf",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "failed_assumption_class": "Price source remains representative during deposits, withdrawals, and share conversions.",
+      "name": "Harvest/Yearn-style oracle or pool price readiness gap",
+      "search_tags": [
+        "vault-accounting",
+        "oracle-risk",
+        "pool-pricing",
+        "historical-vault-pattern",
+        "invariant-testing"
+      ],
+      "suggested_test": "Invariant: share price and totalAssets cannot be inflated by a single mocked price or pool-state movement.",
+      "why_it_matters": "Vault accounting that depends on oracle, pool, LP, or reserve pricing needs explicit tests for stale, spot, and manipulated local price assumptions."
+    },
+    {
+      "broken_invariant_class": "Deposits, withdrawals, redemptions, and fee paths conserve value within expected rounding bounds.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Add totalAssets consistency tests.",
+        "Add deposit-withdraw roundtrip tests across small and large amounts.",
+        "Test donation, zero-supply, rounding, and fee paths."
+      ],
+      "detected_signals": [
+        "accumulator",
+        "balanceOf",
+        "decimals",
+        "reward",
+        "treasury"
+      ],
+      "failed_assumption_class": "Shares and assets remain exchangeable according to documented accounting rules.",
+      "name": "Vault accounting invariant readiness gap",
+      "search_tags": [
+        "vault-security",
+        "share-accounting",
+        "totalAssets",
+        "audit-readiness"
+      ],
+      "suggested_test": "Invariant: deposit followed by withdraw does not create value and does not strand assets beyond expected rounding.",
+      "why_it_matters": "Vaults need explicit conservation and roundtrip properties because share math, fees, donations, and rounding can break user-value assumptions."
+    },
+    {
+      "broken_invariant_class": "Emergency and configuration changes preserve the user-facing safety properties the protocol claims.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Test unauthorized calls for each setter and emergency function.",
+        "Test pause and emergency controls against deposit, withdraw, redeem, and strategy paths.",
+        "Document trusted-role powers and operational limits."
+      ],
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "failed_assumption_class": "Privileged operations are limited to documented roles and cannot bypass accounting assumptions silently.",
+      "name": "Privileged vault controls and emergency operation readiness gap",
+      "search_tags": [
+        "vault-admin",
+        "emergency-controls",
+        "access-control-review",
+        "operational-readiness"
+      ],
+      "suggested_test": "Invariant: admin operations cannot bypass vault accounting without explicit, documented trust assumptions.",
+      "why_it_matters": "Vault admin operations can change strategy, oracle, fee, limits, slippage, pause state, or upgrade targets and should be tested as launch-critical boundaries."
+    },
+    {
+      "broken_invariant_class": "Value flow remains single-entry and accounting is updated before control leaves the contract.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Review checks-effects-interactions order.",
+        "Add reentrancy tests using local receiver mocks.",
+        "Use guards where the protocol design requires them."
+      ],
+      "detected_signals": [
+        "accumulator",
+        "balanceOf",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "transfer",
+        "transferFrom",
+        "unstake"
+      ],
+      "failed_assumption_class": "External receivers cannot re-enter before internal accounting reaches a safe state.",
+      "name": "Reentrancy-sensitive value flow review recommended",
+      "search_tags": [
+        "reentrancy-review",
+        "value-flow",
+        "checks-effects-interactions"
+      ],
+      "suggested_test": "Test: malicious local receiver cannot withdraw, claim, or redeem twice through a callback.",
+      "why_it_matters": "External calls around withdrawals, claims, callbacks, or token transfers have repeatedly exposed state-ordering assumptions."
+    },
+    {
+      "broken_invariant_class": "Admin actions cannot silently bypass accounting, oracle, or user-safety invariants.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Document every privileged role and setter.",
+        "Add unauthorized-call tests for each privileged function.",
+        "Add tests showing pause/emergency controls behave as documented."
+      ],
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "failed_assumption_class": "Privileged actors can only perform documented, intended operations.",
+      "name": "Privileged control and operational risk review recommended",
+      "search_tags": [
+        "access-control-review",
+        "admin-risk",
+        "operational-security"
+      ],
+      "suggested_test": "Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.",
+      "why_it_matters": "Admin setters, emergency controls, fee updates, and governance execution paths can become launch blockers if role boundaries are unclear or untested."
+    },
+    {
+      "broken_invariant_class": "Claimable rewards cannot exceed funded rewards beyond documented rounding.",
+      "confidence": "high",
+      "defensive_checks": [
+        "Test claim conservation across multiple users.",
+        "Test stake/unstake around reward updates.",
+        "Check precision and rounding around small balances."
+      ],
+      "detected_signals": [
+        "accumulator",
+        "claimReward",
+        "decimals",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ],
+      "failed_assumption_class": "Reward index math always reflects actual funded rewards and stake weights.",
+      "name": "Reward accounting mismatch review recommended",
+      "search_tags": [
+        "reward-accounting",
+        "staking",
+        "index-math",
+        "precision"
+      ],
+      "suggested_test": "Invariant: total claimed plus remaining claimable never exceeds funded rewards beyond expected rounding.",
+      "why_it_matters": "Reward indexes and accumulators are common sources of overclaim, underclaim, and precision drift when supply changes across epochs."
+    }
+  ],
+  "next_steps": [
+    "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
+    "Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.",
+    "Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.",
+    "Add convertToShares/convertToAssets rounding tests and preview/action equivalence checks for ERC4626-like flows.",
+    "Review state update order and add malicious local receiver tests for callback-capable flows."
+  ],
+  "protocol_confidence": "medium",
+  "protocol_type": "staking",
+  "readiness_gaps": [
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
+      "detected_signals": [],
+      "fingerprint": "d73c8a2c3e3055849cc2a36d",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
+      "priority": "High readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+      "recommended_defensive_checks": [],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "invariant-testing",
+        "staking"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
+      "detected_signals": [],
+      "fingerprint": "28931344b387571d2cc7a0e0",
+      "historical_pattern_similarity": "",
+      "id": "ARK-ORC-002",
+      "priority": "High readiness gap",
+      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+      "recommended_defensive_checks": [],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "price-assumptions"
+      ],
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "low",
+      "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
+      "detected_signals": [],
+      "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+      "historical_pattern_similarity": "",
+      "id": "ARK-VLT-009",
+      "priority": "High readiness gap",
+      "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
+      "recommended_defensive_checks": [],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
+      ],
+      "suppressible": true,
+      "tags": [
+        "vault-accounting",
+        "share-accounting"
+      ],
+      "title": "Vault accounting lacks visible roundtrip or conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "low",
+      "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
+      "detected_signals": [],
+      "fingerprint": "843d4f2224907dabc3816772",
+      "historical_pattern_similarity": "",
+      "id": "ARK-REENT-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+      "recommended_defensive_checks": [],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Review state update order and add local malicious-receiver tests where callbacks are possible."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow"
+      ],
+      "title": "External-call value flow needs reentrancy review",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "detail": "Reward/index/claim signals were detected without invariant testing.",
+      "detected_signals": [],
+      "fingerprint": "c0a40921efd524042b77b919",
+      "historical_pattern_similarity": "",
+      "id": "ARK-RWD-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+      "recommended_defensive_checks": [],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "fingerprint": "9aee372d5fc42a664ef7e458",
+      "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+      "id": "ARK-ORC-001",
+      "priority": "High readiness gap",
+      "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
+      "recommended_defensive_checks": [
+        "stale round rejection",
+        "heartbeat checks",
+        "updatedAt validation",
+        "answeredInRound handling"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "title": "Oracle-dependent logic without stale-price tests",
+      "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "fingerprint": "968c56ae1cd3dae1e2eae280",
+      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+      "id": "ARK-ORC-005",
+      "priority": "Medium readiness gap",
+      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+      "recommended_defensive_checks": [
+        "price bounds",
+        "fallback policy",
+        "stale-price policy",
+        "sequencer downtime notes"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "documentation-readiness",
+        "oracle-rule-pack"
+      ],
+      "title": "Missing price bounds or fallback assumptions documentation",
+      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "fingerprint": "13af6797121f94ff50563104",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "low",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom"
+      ],
+      "fingerprint": "c6c3deef7e721e9057a3f65a",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+      "detected_signals": [
+        "accumulator",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ],
+      "fingerprint": "e7599f77df25242d8103622d",
+      "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+      "id": "ARK-RWD-002",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+      "recommended_defensive_checks": [
+        "index monotonicity",
+        "rounding dust",
+        "small balance behavior",
+        "multi-user precision"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests",
+      "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
+      "detected_signals": [
+        "accumulator",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ],
+      "fingerprint": "9362d8f81c0fd2384aea5bbb",
+      "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
+      "id": "ARK-RWD-003",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
+      "recommended_defensive_checks": [
+        "double claim prevention",
+        "claim state reset",
+        "multi-user claim ordering"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert claim twice without new rewards returns zero or reverts according to documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "claim-flow",
+        "staking-rule-pack"
+      ],
+      "title": "Claim flow without double-claim prevention tests",
+      "why_it_matters": "Claim flows depend on updating accrued state at exactly the right time."
+    }
+  ],
+  "repo_root": "examples/oracle-staking-fixture",
+  "rule_packs": {
+    "access_control_upgradeability": {
+      "detected": true,
+      "docs": "docs/ACCESS_CONTROL_RULE_PACK.md",
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "finding_count": 1,
+      "findings": [
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "access-control",
+          "confidence": "medium",
+          "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+          "detected_signals": [
+            "onlyOwner",
+            "owner",
+            "pause",
+            "setOracle",
+            "setTreasury",
+            "unpause"
+          ],
+          "fingerprint": "13af6797121f94ff50563104",
+          "historical_pattern_similarity": "Maps to operational control readiness classes.",
+          "id": "ARK-ACC-003",
+          "priority": "Low readiness gap",
+          "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+          "recommended_defensive_checks": [
+            "role matrix",
+            "owner powers",
+            "timelock assumptions",
+            "multisig assumptions"
+          ],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Add a role matrix to docs and unit tests for critical roles."
+          ],
+          "suppressible": true,
+          "tags": [
+            "access-control-review",
+            "documentation-readiness",
+            "access-control-rule-pack"
+          ],
+          "title": "Admin role concentration not documented",
+          "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+        }
+      ],
+      "label": "Access Control / Upgradeability Rule Pack",
+      "signal_count": 6,
+      "signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "suggested_tests": [
+        "unauthorized setter tests",
+        "pause/emergency boundaries",
+        "initializer once",
+        "upgrade authorization"
+      ]
+    },
+    "oracle": {
+      "detected": true,
+      "docs": "docs/ORACLE_RULE_PACK.md",
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "finding_count": 3,
+      "findings": [
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "oracle-pricing",
+          "confidence": "low",
+          "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
+          "detected_signals": [],
+          "fingerprint": "28931344b387571d2cc7a0e0",
+          "historical_pattern_similarity": "",
+          "id": "ARK-ORC-002",
+          "priority": "High readiness gap",
+          "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+          "recommended_defensive_checks": [],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+          ],
+          "suppressible": true,
+          "tags": [
+            "oracle-risk",
+            "price-assumptions"
+          ],
+          "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+          "why_it_matters": ""
+        },
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "oracle-pricing",
+          "confidence": "high",
+          "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
+          "detected_signals": [
+            "AggregatorV3Interface",
+            "answer",
+            "answeredInRound",
+            "decimals",
+            "getPrice",
+            "latestAnswer",
+            "latestRoundData",
+            "priceFeed",
+            "roundId",
+            "setOracle",
+            "updatedAt"
+          ],
+          "fingerprint": "9aee372d5fc42a664ef7e458",
+          "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+          "id": "ARK-ORC-001",
+          "priority": "High readiness gap",
+          "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
+          "recommended_defensive_checks": [
+            "stale round rejection",
+            "heartbeat checks",
+            "updatedAt validation",
+            "answeredInRound handling"
+          ],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+          ],
+          "suppressible": true,
+          "tags": [
+            "oracle-risk",
+            "oracle-rule-pack",
+            "pre-audit-readiness"
+          ],
+          "title": "Oracle-dependent logic without stale-price tests",
+          "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
+        },
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "oracle-pricing",
+          "confidence": "high",
+          "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+          "detected_signals": [
+            "AggregatorV3Interface",
+            "answer",
+            "answeredInRound",
+            "decimals",
+            "getPrice",
+            "latestAnswer",
+            "latestRoundData",
+            "priceFeed",
+            "roundId",
+            "setOracle",
+            "updatedAt"
+          ],
+          "fingerprint": "968c56ae1cd3dae1e2eae280",
+          "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+          "id": "ARK-ORC-005",
+          "priority": "Medium readiness gap",
+          "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+          "recommended_defensive_checks": [
+            "price bounds",
+            "fallback policy",
+            "stale-price policy",
+            "sequencer downtime notes"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+          ],
+          "suppressible": true,
+          "tags": [
+            "oracle-risk",
+            "documentation-readiness",
+            "oracle-rule-pack"
+          ],
+          "title": "Missing price bounds or fallback assumptions documentation",
+          "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+        }
+      ],
+      "label": "Oracle Rule Pack",
+      "signal_count": 11,
+      "signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "suggested_tests": [
+        "stale price rejection",
+        "decimals normalization",
+        "price bounds",
+        "TWAP vs spot behavior"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "detected": true,
+      "docs": "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "finding_count": 2,
+      "findings": [
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "reentrancy-value-flow",
+          "confidence": "low",
+          "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
+          "detected_signals": [],
+          "fingerprint": "843d4f2224907dabc3816772",
+          "historical_pattern_similarity": "",
+          "id": "ARK-REENT-001",
+          "priority": "Medium readiness gap",
+          "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+          "recommended_defensive_checks": [],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Review state update order and add local malicious-receiver tests where callbacks are possible."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reentrancy-review",
+            "value-flow"
+          ],
+          "title": "External-call value flow needs reentrancy review",
+          "why_it_matters": ""
+        },
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol"
+          ],
+          "category": "reentrancy-value-flow",
+          "confidence": "low",
+          "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+          "detected_signals": [
+            "transfer",
+            "transferFrom"
+          ],
+          "fingerprint": "c6c3deef7e721e9057a3f65a",
+          "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+          "id": "ARK-REENT-004",
+          "priority": "Low readiness gap",
+          "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+          "recommended_defensive_checks": [
+            "ordering documentation",
+            "callback assumptions",
+            "external call failure behavior"
+          ],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reentrancy-review",
+            "documentation-readiness",
+            "reentrancy-rule-pack"
+          ],
+          "title": "External call path without documented ordering assumptions",
+          "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
+        }
+      ],
+      "label": "Reentrancy / Value Flow Rule Pack",
+      "signal_count": 2,
+      "signals": [
+        "transfer",
+        "transferFrom"
+      ],
+      "suggested_tests": [
+        "reentrant receiver mock",
+        "state update ordering",
+        "double claim prevention",
+        "failed external call behavior"
+      ]
+    },
+    "reward_accounting": {
+      "detected": true,
+      "docs": "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "finding_count": 3,
+      "findings": [
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "reward-accounting",
+          "confidence": "low",
+          "detail": "Reward/index/claim signals were detected without invariant testing.",
+          "detected_signals": [],
+          "fingerprint": "c0a40921efd524042b77b919",
+          "historical_pattern_similarity": "",
+          "id": "ARK-RWD-001",
+          "priority": "Medium readiness gap",
+          "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+          "recommended_defensive_checks": [],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reward-accounting",
+            "precision"
+          ],
+          "title": "Reward accounting needs conservation coverage",
+          "why_it_matters": ""
+        },
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "reward-accounting",
+          "confidence": "high",
+          "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+          "detected_signals": [
+            "accumulator",
+            "claimReward",
+            "earned",
+            "pendingReward",
+            "reward",
+            "rewardPerToken",
+            "stake",
+            "totalStaked",
+            "unstake"
+          ],
+          "fingerprint": "e7599f77df25242d8103622d",
+          "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+          "id": "ARK-RWD-002",
+          "priority": "Medium readiness gap",
+          "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+          "recommended_defensive_checks": [
+            "index monotonicity",
+            "rounding dust",
+            "small balance behavior",
+            "multi-user precision"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reward-accounting",
+            "precision",
+            "staking-rule-pack"
+          ],
+          "title": "Accumulator/index logic without precision/rounding tests",
+          "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+        },
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "reward-accounting",
+          "confidence": "high",
+          "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
+          "detected_signals": [
+            "accumulator",
+            "claimReward",
+            "earned",
+            "pendingReward",
+            "reward",
+            "rewardPerToken",
+            "stake",
+            "totalStaked",
+            "unstake"
+          ],
+          "fingerprint": "9362d8f81c0fd2384aea5bbb",
+          "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
+          "id": "ARK-RWD-003",
+          "priority": "Medium readiness gap",
+          "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
+          "recommended_defensive_checks": [
+            "double claim prevention",
+            "claim state reset",
+            "multi-user claim ordering"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Assert claim twice without new rewards returns zero or reverts according to documented policy."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reward-accounting",
+            "claim-flow",
+            "staking-rule-pack"
+          ],
+          "title": "Claim flow without double-claim prevention tests",
+          "why_it_matters": "Claim flows depend on updating accrued state at exactly the right time."
+        }
+      ],
+      "label": "Staking / Reward Accounting Rule Pack",
+      "signal_count": 10,
+      "signals": [
+        "accumulator",
+        "claimReward",
+        "decimals",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ],
+      "suggested_tests": [
+        "reward conservation",
+        "no overclaim",
+        "index monotonicity",
+        "stake/unstake/claim lifecycle"
+      ]
+    },
+    "vault": {
+      "detected": true,
+      "docs": "docs/VAULT_RULE_PACK.md",
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "finding_count": 1,
+      "findings": [
+        {
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "category": "vault-accounting",
+          "confidence": "low",
+          "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
+          "detected_signals": [],
+          "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+          "historical_pattern_similarity": "",
+          "id": "ARK-VLT-009",
+          "priority": "High readiness gap",
+          "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
+          "recommended_defensive_checks": [],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
+          ],
+          "suppressible": true,
+          "tags": [
+            "vault-accounting",
+            "share-accounting"
+          ],
+          "title": "Vault accounting lacks visible roundtrip or conservation coverage",
+          "why_it_matters": ""
+        }
+      ],
+      "label": "Vault Rule Pack",
+      "signal_count": 7,
+      "signals": [
+        "balanceOf",
+        "decimals",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "treasury",
+        "unpause"
+      ],
+      "suggested_tests": [
+        "totalAssets consistency",
+        "deposit/withdraw roundtrip",
+        "share conversion rounding",
+        "strategy gain/loss lifecycle"
+      ]
+    }
+  },
+  "score": 65,
+  "score_band": "Improving",
+  "score_breakdown": {
+    "defi_risk_coverage": {
+      "max": 20,
+      "notes": [
+        "Role or admin boundaries have some visible coverage.",
+        "Protocol-specific checklist or property coverage detected."
+      ],
+      "score": 7
+    },
+    "documentation_readiness": {
+      "max": 10,
+      "notes": [
+        "README detected.",
+        "Assumptions, invariants, or limitations are documented.",
+        "Deployment or role information appears in docs/code comments."
+      ],
+      "score": 8
+    },
+    "invariant_fuzz_readiness": {
+      "max": 20,
+      "notes": [
+        "Edge-case testing terms detected."
+      ],
+      "score": 3
+    },
+    "operational_admin_readiness": {
+      "max": 15,
+      "notes": [
+        "Access-control surface is visible.",
+        "Emergency control or incident terms detected.",
+        "Upgradeability is absent or has visible documentation/test terms.",
+        "Privileged setters or owner boundaries are visible for review.",
+        "Monitoring, incident, limitation, or emergency notes detected."
+      ],
+      "score": 15
+    },
+    "repository_structure": {
+      "max": 15,
+      "notes": [
+        "Solidity sources detected.",
+        "Recognized build or analysis config detected.",
+        "Clear src/test/docs structure detected."
+      ],
+      "score": 12
+    },
+    "test_presence": {
+      "max": 20,
+      "notes": [
+        "Solidity test files detected.",
+        "Assert usage detected.",
+        "Foundry or Hardhat test environment detected.",
+        "Protocol-specific terms appear in the testable codebase."
+      ],
+      "score": 20
+    }
+  },
+  "signals": {
+    "access_control": {
+      "counts": {
+        "onlyOwner": 6,
+        "owner": 4,
+        "pause": 1,
+        "setOracle": 1,
+        "setTreasury": 1,
+        "unpause": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ]
+    },
+    "access_upgrade_rule_pack": {
+      "counts": {
+        "onlyOwner": 6,
+        "owner": 4,
+        "pause": 1,
+        "setOracle": 1,
+        "setTreasury": 1,
+        "unpause": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ]
+    },
+    "accounting_complexity": {
+      "counts": {
+        "accumulator": 2,
+        "decimals": 1,
+        "reward": 4
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "accumulator",
+        "decimals",
+        "reward"
+      ]
+    },
+    "amm": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "bridge_cross_chain": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "governance": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "lending": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "oracle": {
+      "counts": {
+        "AggregatorV3Interface": 4,
+        "answer": 4,
+        "answeredInRound": 1,
+        "decimals": 1,
+        "getPrice": 2,
+        "latestAnswer": 2,
+        "latestRoundData": 2,
+        "priceFeed": 4,
+        "roundId": 1,
+        "setOracle": 2,
+        "updatedAt": 4
+      },
+      "file_count": 2,
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "terms": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ]
+    },
+    "oracle_rule_pack": {
+      "counts": {
+        "AggregatorV3Interface": 4,
+        "answer": 4,
+        "answeredInRound": 1,
+        "decimals": 1,
+        "getPrice": 2,
+        "latestAnswer": 2,
+        "latestRoundData": 2,
+        "priceFeed": 4,
+        "roundId": 1,
+        "setOracle": 1,
+        "updatedAt": 4
+      },
+      "file_count": 2,
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "terms": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ]
+    },
+    "reentrancy_rule_pack": {
+      "counts": {
+        "transfer": 5,
+        "transferFrom": 3
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "transfer",
+        "transferFrom"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "counts": {
+        "transfer": 5,
+        "transferFrom": 3
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "transfer",
+        "transferFrom"
+      ]
+    },
+    "reward_rule_pack": {
+      "counts": {
+        "accumulator": 2,
+        "claimReward": 1,
+        "earned": 2,
+        "pendingReward": 5,
+        "reward": 4,
+        "rewardPerToken": 3,
+        "stake": 1,
+        "totalStaked": 7,
+        "unstake": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "terms": [
+        "accumulator",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ]
+    },
+    "staking_rewards": {
+      "counts": {
+        "accumulator": 2,
+        "claimReward": 1,
+        "earned": 2,
+        "pendingReward": 5,
+        "reward": 4,
+        "rewardPerToken": 3,
+        "stake": 1,
+        "totalStaked": 7,
+        "unstake": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "terms": [
+        "accumulator",
+        "claimReward",
+        "earned",
+        "pendingReward",
+        "reward",
+        "rewardPerToken",
+        "stake",
+        "totalStaked",
+        "unstake"
+      ]
+    },
+    "upgradeability": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_accounting": {
+      "counts": {
+        "balanceOf": 4
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "balanceOf"
+      ]
+    },
+    "vault_accounting_risk": {
+      "counts": {
+        "decimals": 1,
+        "treasury": 3
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "decimals",
+        "treasury"
+      ]
+    },
+    "vault_admin_ops": {
+      "counts": {
+        "pause": 1,
+        "setOracle": 1,
+        "setTreasury": 1,
+        "unpause": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ]
+    },
+    "vault_erc4626": {
+      "counts": {
+        "balanceOf": 4
+      },
+      "file_count": 1,
+      "files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "terms": [
+        "balanceOf"
+      ]
+    },
+    "vault_pricing": {
+      "counts": {
+        "decimals": 1,
+        "getPrice": 2,
+        "latestAnswer": 2,
+        "latestRoundData": 2,
+        "priceFeed": 4
+      },
+      "file_count": 2,
+      "files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "terms": [
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed"
+      ]
+    },
+    "vault_strategy": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_withdrawal_liquidity": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    }
+  },
+  "suggested_invariants": [
+    {
+      "category": "vault",
+      "description": "totalAssets should match local asset accounting and strategy balances within documented rounding.",
+      "name": "totalAssets consistency"
+    },
+    {
+      "category": "vault",
+      "description": "A user should not create value by depositing and withdrawing through normal paths.",
+      "name": "deposit/withdraw roundtrip"
+    },
+    {
+      "category": "vault",
+      "description": "Conversion functions should be mutually consistent within documented rounding across supply states.",
+      "name": "convertToShares/convertToAssets consistency"
+    },
+    {
+      "category": "vault",
+      "description": "Donations, low supply, and external balances should not let one actor distort share value unexpectedly.",
+      "name": "share price donation resistance"
+    },
+    {
+      "category": "vault",
+      "description": "Fees should be bounded, documented, and unable to overcharge beyond configured limits.",
+      "name": "fee accounting conservation"
+    },
+    {
+      "category": "vault",
+      "description": "Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.",
+      "name": "strategy balance drift handling"
+    },
+    {
+      "category": "vault",
+      "description": "Queued or delayed withdrawals should conserve shares/assets through request, cooldown, claim, and cancellation.",
+      "name": "withdrawal lifecycle conservation"
+    },
+    {
+      "category": "vault",
+      "description": "Pause should block risky flows while preserving documented emergency exits.",
+      "name": "pause behavior"
+    },
+    {
+      "category": "oracle",
+      "description": "Stale oracle rounds should be rejected or handled according to documented policy.",
+      "name": "stale price rejection"
+    },
+    {
+      "category": "oracle",
+      "description": "Price decimals should be normalized consistently before accounting decisions.",
+      "name": "decimals normalization"
+    },
+    {
+      "category": "oracle",
+      "description": "Outlier prices should hit documented bounds or review paths.",
+      "name": "price bounds"
+    },
+    {
+      "category": "oracle",
+      "description": "Spot price dependence should be bounded by TWAP, sanity checks, or explicit assumptions.",
+      "name": "TWAP or sanity check"
+    },
+    {
+      "category": "oracle",
+      "description": "Only authorized roles should change oracle configuration.",
+      "name": "oracle update access control"
+    },
+    {
+      "category": "staking",
+      "description": "Total claimed plus remaining claimable should not exceed funded rewards beyond rounding.",
+      "name": "reward conservation"
+    },
+    {
+      "category": "staking",
+      "description": "Users should not claim more than their funded and accrued share.",
+      "name": "no overclaim"
+    },
+    {
+      "category": "staking",
+      "description": "Reward indexes should be monotonic and supply-aware.",
+      "name": "index monotonicity"
+    },
+    {
+      "category": "staking",
+      "description": "Stake and unstake flows should preserve balances and reward accounting.",
+      "name": "stake/unstake roundtrip"
+    },
+    {
+      "category": "staking",
+      "description": "Small balances and precision edges should not create systematic reward drift.",
+      "name": "reward accounting precision"
+    }
+  ],
+  "summary": {
+    "critical": 0,
+    "high": 4,
+    "informational": 0,
+    "low": 2,
+    "medium": 5,
+    "suppressed": 0,
+    "total_readiness_gaps": 11
+  },
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "vault_rule_pack": {
+    "coverage": {
+      "decimals_rounding": false,
+      "deposit": false,
+      "donation_inflation": false,
+      "emergency_pause": false,
+      "fee": false,
+      "fuzz": false,
+      "invariant": false,
+      "mint": false,
+      "oracle_pricing": false,
+      "preview_functions": false,
+      "roundtrip": false,
+      "share_conversion": false,
+      "strategy_loss": false,
+      "total_assets": false,
+      "withdraw": false,
+      "withdrawal_lifecycle": false
+    },
+    "covered_count": 0,
+    "matched_terms": {
+      "decimals_rounding": [],
+      "deposit": [],
+      "donation_inflation": [],
+      "emergency_pause": [],
+      "fee": [],
+      "fuzz": [],
+      "invariant": [],
+      "mint": [],
+      "oracle_pricing": [],
+      "preview_functions": [],
+      "roundtrip": [],
+      "share_conversion": [],
+      "strategy_loss": [],
+      "total_assets": [],
+      "withdraw": [],
+      "withdrawal_lifecycle": []
+    },
+    "test_files_considered": 1,
+    "total_checks": 16
+  },
+  "version": "0.5.0"
+}

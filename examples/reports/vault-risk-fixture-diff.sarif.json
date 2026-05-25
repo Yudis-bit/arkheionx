@@ -15,7 +15,7 @@
           "new": 0,
           "resolved": 0,
           "suppressed": 0,
-          "unchanged": 9
+          "unchanged": 16
         },
         "not_formal_audit": true,
         "protocol_type": "vault",
@@ -44,7 +44,7 @@
             "text": "Vault accounting without invariant tests: Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "8204775ec5a2e76517a34419"
+            "arkheionxFingerprint": "7643a0cb79cbbb4d13183229"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -85,7 +85,7 @@
             "text": "ERC4626-like interface without preview function tests: Add tests that preview functions match actual state-changing outcomes within documented rounding bounds. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "a27e37c21dcaab87fb0f191f"
+            "arkheionxFingerprint": "26cb37c1e06daceb0c36ea66"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -126,7 +126,7 @@
             "text": "Shares/assets conversion without rounding tests: Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "fc386028cda60db91cd3bfa5"
+            "arkheionxFingerprint": "a505bf602ba213841d23a764"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -167,7 +167,7 @@
             "text": "totalAssets external dependency without manipulation-resistance tests: Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "07abc8d8712c4b241abdb021"
+            "arkheionxFingerprint": "2c9993713d0fbb88ffa98bd1"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -208,7 +208,7 @@
             "text": "Strategy accounting without gain/loss tests: Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "4fe5d3c6f862ef5411ddca69"
+            "arkheionxFingerprint": "7c2f4109500fcbf428eaa6db"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -249,7 +249,7 @@
             "text": "Withdrawal queue/cooldown without lifecycle tests: Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "81e181479549fcdcced6ff32"
+            "arkheionxFingerprint": "a07b033b53b02c1d05f4244a"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -290,12 +290,12 @@
             "text": "Oracle-dependent vault without stale-price or bounds tests: Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "4fd92ac8dcf3b8b9fb3b2552"
+            "arkheionxFingerprint": "d6e5fb8d0598b843faca8367"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "medium",
+            "confidence": "high",
             "historical_pattern_similarity": "Maps to historical vault/oracle and pool-price manipulation readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -331,7 +331,7 @@
             "text": "Fee logic without fee accounting tests: Add deposit, withdrawal, management, and performance fee tests where relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "892be4e21cbb07e5c1f81b09"
+            "arkheionxFingerprint": "6fd9e73019a0aeca8ddd1fc5"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -371,7 +371,7 @@
             "text": "Pause/emergency controls without operational tests: Add tests showing pause/emergency controls block risky flows and preserve documented exit or recovery paths. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "b8459029379073c0fa8883e1"
+            "arkheionxFingerprint": "829fbda42c03968c59c0fcc5"
           },
           "properties": {
             "arkheionx_kind": "pre-audit-readiness",
@@ -392,6 +392,294 @@
             ]
           },
           "ruleId": "ARK-VLT-008"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Oracle decimals or normalization not covered by tests: Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "60725ca11edcd2f1efcb8648"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "high",
+            "historical_pattern_similarity": "Maps to arithmetic and oracle normalization failure classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Mock price feeds with different decimals and assert protocol accounting normalizes every value before use."
+            ],
+            "tags": [
+              "oracle-risk",
+              "decimals",
+              "precision",
+              "oracle-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ORC-002"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Oracle setter/admin path without role-boundary tests: Add tests proving only documented roles can update oracle configuration. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "11765a572891d4866dca0594"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "high",
+            "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+            ],
+            "tags": [
+              "oracle-risk",
+              "access-control-review",
+              "oracle-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ORC-004"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Privileged setters without role-boundary tests: Add tests proving unauthorized users cannot call privileged setters or role-management functions. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "8fb546c50f0c77fbe211b141"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "access-control",
+            "confidence": "high",
+            "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+            ],
+            "tags": [
+              "access-control-review",
+              "admin-risk",
+              "access-control-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ACC-001"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Admin role concentration not documented: Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "fff2c4a9c55e4afa54795b57"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "access-control",
+            "confidence": "high",
+            "historical_pattern_similarity": "Maps to operational control readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Add a role matrix to docs and unit tests for critical roles."
+            ],
+            "tags": [
+              "access-control-review",
+              "documentation-readiness",
+              "access-control-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ACC-003"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Value flow with external calls needs reentrancy review: Review state ordering and add local reentrant receiver tests around every value-flow path. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "bb769afb79bc059d289e0686"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reentrancy-value-flow",
+            "confidence": "medium",
+            "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "High readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+            ],
+            "tags": [
+              "reentrancy-review",
+              "value-flow",
+              "reentrancy-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-REENT-001"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "External call path without documented ordering assumptions: Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "1d78f58bf70ff5520a005d67"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reentrancy-value-flow",
+            "confidence": "medium",
+            "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+            ],
+            "tags": [
+              "reentrancy-review",
+              "documentation-readiness",
+              "reentrancy-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-REENT-004"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/VaultRiskFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Lock/cooldown reward lifecycle not tested: Add tests for stake, lock/cooldown, reward accrual, claim, and unstake lifecycle transitions. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "a4c3d9faf9a66e4e0e4bb32d"
+          },
+          "properties": {
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reward-accounting",
+            "confidence": "medium",
+            "historical_pattern_similarity": "Maps to reward lifecycle and state-transition readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Advance local time/epochs and assert reward and withdrawal state transitions follow documented policy."
+            ],
+            "tags": [
+              "reward-accounting",
+              "staking-lifecycle",
+              "staking-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-RWD-004"
         }
       ],
       "tool": {
@@ -622,9 +910,185 @@
               "shortDescription": {
                 "text": "Pause/emergency controls without operational tests"
               }
+            },
+            {
+              "fullDescription": {
+                "text": "Oracle decimals or price normalization signals were detected without visible normalization tests."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- decimals normalization\n- mixed asset decimals\n- precision scaling\n- rounding bounds",
+                "text": "Defensive readiness checks:\n- decimals normalization\n- mixed asset decimals\n- precision scaling\n- rounding bounds"
+              },
+              "id": "ARK-ORC-002",
+              "name": "oracle-decimals-or-normalization-not-covered-by-tests",
+              "properties": {
+                "category": "oracle-pricing",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "oracle-risk",
+                  "decimals",
+                  "precision",
+                  "oracle-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Oracle decimals or normalization not covered by tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- unauthorized setOracle reverts\n- trusted role documentation\n- fallback oracle controls",
+                "text": "Defensive readiness checks:\n- unauthorized setOracle reverts\n- trusted role documentation\n- fallback oracle controls"
+              },
+              "id": "ARK-ORC-004",
+              "name": "oracle-setter/admin-path-without-role-boundary-tests",
+              "properties": {
+                "category": "oracle-pricing",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "oracle-risk",
+                  "access-control-review",
+                  "oracle-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Oracle setter/admin path without role-boundary tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- unauthorized setter tests\n- role grant/revoke tests\n- pause role tests\n- timelock/multisig assumptions",
+                "text": "Defensive readiness checks:\n- unauthorized setter tests\n- role grant/revoke tests\n- pause role tests\n- timelock/multisig assumptions"
+              },
+              "id": "ARK-ACC-001",
+              "name": "privileged-setters-without-role-boundary-tests",
+              "properties": {
+                "category": "access-control",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "access-control-review",
+                  "admin-risk",
+                  "access-control-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Privileged setters without role-boundary tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- role matrix\n- owner powers\n- timelock assumptions\n- multisig assumptions",
+                "text": "Defensive readiness checks:\n- role matrix\n- owner powers\n- timelock assumptions\n- multisig assumptions"
+              },
+              "id": "ARK-ACC-003",
+              "name": "admin-role-concentration-not-documented",
+              "properties": {
+                "category": "access-control",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "access-control-review",
+                  "documentation-readiness",
+                  "access-control-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Admin role concentration not documented"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- state update before external call\n- reentrant receiver mock\n- failed external call behavior\n- single-claim guarantees",
+                "text": "Defensive readiness checks:\n- state update before external call\n- reentrant receiver mock\n- failed external call behavior\n- single-claim guarantees"
+              },
+              "id": "ARK-REENT-001",
+              "name": "value-flow-with-external-calls-needs-reentrancy-review",
+              "properties": {
+                "category": "reentrancy-value-flow",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "reentrancy-review",
+                  "value-flow",
+                  "reentrancy-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Value flow with external calls needs reentrancy review"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior",
+                "text": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior"
+              },
+              "id": "ARK-REENT-004",
+              "name": "external-call-path-without-documented-ordering-assumptions",
+              "properties": {
+                "category": "reentrancy-value-flow",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "reentrancy-review",
+                  "documentation-readiness",
+                  "reentrancy-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "External call path without documented ordering assumptions"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Lock, cooldown, epoch, or vesting signals were detected without visible lifecycle tests."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- epoch boundaries\n- cooldown transitions\n- vesting claim timing",
+                "text": "Defensive readiness checks:\n- epoch boundaries\n- cooldown transitions\n- vesting claim timing"
+              },
+              "id": "ARK-RWD-004",
+              "name": "lock/cooldown-reward-lifecycle-not-tested",
+              "properties": {
+                "category": "reward-accounting",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "reward-accounting",
+                  "staking-lifecycle",
+                  "staking-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Lock/cooldown reward lifecycle not tested"
+              }
             }
           ],
-          "semanticVersion": "0.4.0"
+          "semanticVersion": "0.5.0"
         }
       }
     }

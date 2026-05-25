@@ -1,5 +1,5 @@
 {
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -281,6 +281,46 @@
       "related_patterns": ["GitHub-native pre-audit readiness process"],
       "related_checks": ["SARIF upload", "Actions summary", "PR comment", "baseline diff"],
       "search_tags": ["github-security-workflow", "code-scanning", "pre-audit-readiness"]
+    },
+    {
+      "term": "GitHub issue workflow",
+      "aliases": ["generated issue plan", "issue creation dry-run", "readiness remediation", "issue plan JSON"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["readiness gap remediation planning"],
+      "related_checks": ["issue markers", "duplicate prevention", "dry-run output", "max issue limit"],
+      "search_tags": ["github-issue-workflow", "issue-plan", "readiness-remediation"]
+    },
+    {
+      "term": "oracle rule pack",
+      "aliases": ["ARK-ORC", "price feed checks", "stale price tests", "oracle readiness"],
+      "category": "rule pack",
+      "related_patterns": ["oracle-dependent logic readiness gap"],
+      "related_checks": ["stale round rejection", "decimals normalization", "price bounds", "oracle update access control"],
+      "search_tags": ["oracle-rule-pack", "oracle-risk", "pre-audit-readiness"]
+    },
+    {
+      "term": "access control rule pack",
+      "aliases": ["ARK-ACC", "upgradeability rule pack", "ARK-UPG", "privileged setters"],
+      "category": "rule pack",
+      "related_patterns": ["privileged control readiness gap", "upgrade boundary readiness gap"],
+      "related_checks": ["role-boundary tests", "initializer tests", "upgrade authorization", "emergency constraints"],
+      "search_tags": ["access-control-rule-pack", "upgradeability", "admin-risk"]
+    },
+    {
+      "term": "reentrancy value flow rule pack",
+      "aliases": ["ARK-REENT", "external call review", "claim flow tests", "callback path"],
+      "category": "rule pack",
+      "related_patterns": ["reentrancy-sensitive value flow review recommended"],
+      "related_checks": ["state transition tests", "double claim prevention", "callback receiver mock", "external call ordering"],
+      "search_tags": ["reentrancy-rule-pack", "value-flow", "defensive-review"]
+    },
+    {
+      "term": "reward accounting rule pack",
+      "aliases": ["ARK-RWD", "staking rule pack", "rewardPerToken", "accumulator"],
+      "category": "rule pack",
+      "related_patterns": ["reward accounting mismatch review recommended"],
+      "related_checks": ["reward conservation", "no overclaim", "accumulator monotonicity", "emission update constraints"],
+      "search_tags": ["reward-accounting-rule-pack", "staking", "precision"]
     }
   ]
 }

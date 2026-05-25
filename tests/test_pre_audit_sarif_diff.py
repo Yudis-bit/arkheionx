@@ -55,7 +55,7 @@ class PreAuditSarifDiffTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
 
             baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
-            self.assertEqual(baseline["fingerprint_version"], "0.4.0")
+            self.assertEqual(baseline["fingerprint_version"], "0.5.0")
             self.assertTrue(baseline["findings"])
             self.assertTrue(all(item["fingerprint"] for item in baseline["findings"]))
 

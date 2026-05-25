@@ -7,6 +7,8 @@ vaults, and share/accounting systems.
 It is defensive and local-only. It does not inspect deployed contracts, call
 RPC endpoints, submit transactions, or prove exploitability.
 
+For the full rule-pack map, see [RULE_PACKS.md](RULE_PACKS.md).
+
 ## Why Vaults Are High-Risk
 
 Vaults compress many security assumptions into a small interface:

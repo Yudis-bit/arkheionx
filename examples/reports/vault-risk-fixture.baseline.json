@@ -7,7 +7,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "high",
-      "fingerprint": "8204775ec5a2e76517a34419",
+      "fingerprint": "7643a0cb79cbbb4d13183229",
       "id": "ARK-VLT-001",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -25,7 +25,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "high",
-      "fingerprint": "a27e37c21dcaab87fb0f191f",
+      "fingerprint": "26cb37c1e06daceb0c36ea66",
       "id": "ARK-VLT-002",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -43,7 +43,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "high",
-      "fingerprint": "fc386028cda60db91cd3bfa5",
+      "fingerprint": "a505bf602ba213841d23a764",
       "id": "ARK-VLT-003",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -61,7 +61,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "high",
-      "fingerprint": "07abc8d8712c4b241abdb021",
+      "fingerprint": "2c9993713d0fbb88ffa98bd1",
       "id": "ARK-VLT-004",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -79,7 +79,7 @@
       ],
       "category": "vault-strategy",
       "confidence": "high",
-      "fingerprint": "4fe5d3c6f862ef5411ddca69",
+      "fingerprint": "7c2f4109500fcbf428eaa6db",
       "id": "ARK-VLT-005",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -92,11 +92,12 @@
     },
     {
       "affected_files": [
-        "src/VaultRiskFixture.sol"
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
       ],
       "category": "vault-withdrawal",
       "confidence": "medium",
-      "fingerprint": "81e181479549fcdcced6ff32",
+      "fingerprint": "a07b033b53b02c1d05f4244a",
       "id": "ARK-VLT-006",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -113,8 +114,8 @@
         "test/VaultRiskFixture.t.sol"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "fingerprint": "4fd92ac8dcf3b8b9fb3b2552",
+      "confidence": "high",
+      "fingerprint": "d6e5fb8d0598b843faca8367",
       "id": "ARK-ORC-001",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -132,7 +133,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "medium",
-      "fingerprint": "892be4e21cbb07e5c1f81b09",
+      "fingerprint": "6fd9e73019a0aeca8ddd1fc5",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -149,7 +150,7 @@
       ],
       "category": "vault-operations",
       "confidence": "high",
-      "fingerprint": "b8459029379073c0fa8883e1",
+      "fingerprint": "829fbda42c03968c59c0fcc5",
       "id": "ARK-VLT-008",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -159,15 +160,142 @@
         "vault-operations"
       ],
       "title": "Pause/emergency controls without operational tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "fingerprint": "60725ca11edcd2f1efcb8648",
+      "id": "ARK-ORC-002",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "decimals",
+        "precision",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle decimals or normalization not covered by tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "fingerprint": "11765a572891d4866dca0594",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "fingerprint": "8fb546c50f0c77fbe211b141",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "fingerprint": "fff2c4a9c55e4afa54795b57",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "fingerprint": "bb769afb79bc059d289e0686",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "fingerprint": "1d78f58bf70ff5520a005d67",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "medium",
+      "fingerprint": "a4c3d9faf9a66e4e0e4bb32d",
+      "id": "ARK-RWD-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reward-accounting",
+        "staking-lifecycle",
+        "staking-rule-pack"
+      ],
+      "title": "Lock/cooldown reward lifecycle not tested"
     }
   ],
-  "fingerprint_version": "0.4.0",
-  "generated_at": "2026-05-25T13:23:41+00:00",
+  "fingerprint_version": "0.5.0",
+  "generated_at": "2026-05-25T19:01:40+00:00",
   "protocol_type": "vault",
   "repo_root": "examples/vault-risk-fixture",
   "score": 58,
   "score_band": "Early readiness",
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

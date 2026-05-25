@@ -28,8 +28,9 @@ Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 2. Run a pre-audit readiness scan.
 3. Read the generated Markdown report.
 4. Review SARIF, PR comment, or issue-checklist output if enabled.
-5. Fix readiness gaps and missing invariants.
-6. Request a Launch Report or Pre-Audit Sprint only if you want manual
+5. Review generated issue plans if enabled.
+6. Fix readiness gaps and missing invariants.
+7. Request a Launch Report or Pre-Audit Sprint only if you want manual
    readiness support.
 
 ### If You Are A Security Researcher
@@ -59,6 +60,7 @@ v0.4.0 adds:
 | v0.3.0 | GitHub Action UX + PR Comment Mode | Released |
 | v0.4.0 | SARIF Output + Baseline Diff Mode | Released |
 | v0.4.1 | Public polish and release consistency | In preparation |
+| v0.5.0 | Generated issue workflow + rule-pack expansion | In progress |
 
 ## The Five Pillars
 
@@ -258,7 +260,8 @@ python3 scripts/pre_audit_scan.py \
   --baseline-output arkheionx.baseline.json \
   --summary-output ARKHEIONX_ACTION_SUMMARY.md \
   --comment-output ARKHEIONX_PR_COMMENT.md \
-  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
+  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
 Vault builders can force the v0.2.0 Vault Rule Pack:
@@ -292,6 +295,7 @@ See the committed examples:
 - Actions summary: [`examples/reports/mini-vault-action-summary.md`](examples/reports/mini-vault-action-summary.md)
 - PR comment body: [`examples/reports/mini-vault-pr-comment.md`](examples/reports/mini-vault-pr-comment.md)
 - Issue checklist: [`examples/reports/mini-vault-issue-checklist.md`](examples/reports/mini-vault-issue-checklist.md)
+- Issue plan: [`examples/reports/vault-risk-fixture-issue-plan.json`](examples/reports/vault-risk-fixture-issue-plan.json)
 - SARIF: [`examples/reports/mini-vault.sarif.json`](examples/reports/mini-vault.sarif.json)
 - Baseline: [`examples/reports/mini-vault.baseline.json`](examples/reports/mini-vault.baseline.json)
 - Diff report: [`examples/reports/mini-vault-diff.md`](examples/reports/mini-vault-diff.md)
@@ -340,6 +344,27 @@ It checks for readiness gaps around:
 
 Read [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md).
 
+## v0.5.0 Development Preview
+
+The next milestone focuses on generated GitHub issue workflows and expanded
+rule packs. Development usage is available from `@main`; stable users should
+remain on `@v0.4.0` until v0.5.0 is released.
+
+Current v0.5 work includes:
+
+- generated issue-plan JSON;
+- dry-run issue workflow with deterministic markers;
+- optional create/update workflow for authorized repositories;
+- Oracle Rule Pack;
+- Access Control / Upgradeability Rule Pack;
+- Reentrancy / Value Flow Rule Pack;
+- Staking / Reward Accounting Rule Pack.
+
+Read:
+
+- [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md)
+- [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md)
+
 ## What The Scanner Checks
 
 - Vault accounting and ERC4626-like share conversion.
@@ -373,6 +398,7 @@ blocker, and defensive check.
 | Actions summary | Short CI summary for GitHub Actions runs. |
 | PR comment body | Optional pull request feedback with top readiness gaps. |
 | Issue checklist | Copyable remediation checklist for GitHub Issues. |
+| Issue plan | Structured remediation issue plan for optional dry-run/create/update workflows. |
 
 ## Search Arkheionx
 
@@ -451,11 +477,17 @@ Core standards:
 | Install the GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
 | Use PR comments | [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md) |
 | Generate issue checklists | [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md) |
+| Generate issue plans | [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md) |
 | Use SARIF / Code Scanning | [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md) |
 | Track baseline diff | [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md) |
 | Configure suppressions | [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md) |
 | Understand scoring | [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md) |
 | Run vault-specific checks | [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md) |
+| Understand all rule packs | [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md) |
+| Use oracle checks | [`docs/ORACLE_RULE_PACK.md`](docs/ORACLE_RULE_PACK.md) |
+| Use access/upgradeability checks | [`docs/ACCESS_CONTROL_RULE_PACK.md`](docs/ACCESS_CONTROL_RULE_PACK.md) |
+| Use reentrancy/value-flow checks | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) |
+| Use reward accounting checks | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](docs/REWARD_ACCOUNTING_RULE_PACK.md) |
 | Find builder support paths | [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md) |
 | Request paid support | [`SERVICES.md`](SERVICES.md) |
 | Review monetization boundaries | [`docs/MONETIZATION.md`](docs/MONETIZATION.md) |
@@ -466,11 +498,11 @@ Core standards:
 
 | Offer | Price | Purpose |
 |---|---:|---|
-| Free GitHub Action | Free | Basic readiness scan, Markdown report, optional SARIF, and baseline diff artifacts. |
+| Free GitHub Action | Free | Basic readiness scan, Markdown report, optional SARIF, baseline diff artifacts, and issue plan output. |
 | Indie Builder Sponsor | USD 29/month | Support public tooling, early previews, priority Q&A. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
-| Launch Report | USD 299-499 | Manual review of generated report and prioritized fix checklist. |
-| Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, GitHub issue checklist. |
+| Launch Report | USD 299-499 | Manual review of generated report, issue plan, and prioritized fix checklist. |
+| Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, GitHub issue plan/checklist. |
 | Vault Launch Report | USD 299-499 | Vault Rule Pack review and prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 | Vault-focused invariant, strategy, oracle, and withdrawal lifecycle plan. |
 | Ecosystem Pack | USD 5,000-20,000/month | Bulk readiness reports and builder security clinic. |
@@ -527,8 +559,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v0.4.1: public polish and release consistency.** README onboarding,
   stable `@v0.4.0` examples, and docs cleanup. In preparation.
 - **v0.5.0: generated GitHub issue workflow and rule-pack expansion.**
-  Opt-in issue creation workflow proposal plus staking/reward and oracle rule
-  packs.
+  Opt-in issue workflow plus oracle, access/upgradeability, reentrancy/value-flow,
+  and staking/reward rule packs.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.
 

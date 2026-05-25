@@ -40,7 +40,8 @@ python3 scripts/pre_audit_scan.py \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
   --json-output arkheionx-report.json \
   --sarif-output arkheionx.sarif.json \
-  --baseline-output arkheionx.baseline.json
+  --baseline-output arkheionx.baseline.json \
+  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
 You receive:
@@ -53,6 +54,7 @@ You receive:
 - optional baseline and diff artifacts;
 - optional PR Readiness Comment;
 - generated issue checklist;
+- generated issue plan for owner-ready remediation tasks;
 - historical pattern similarity;
 - suggested invariant tests;
 - audit preparation checklist;
@@ -89,6 +91,7 @@ python3 scripts/pre_audit_scan.py \
   --json-output arkheionx-vault-report.json \
   --sarif-output arkheionx-vault.sarif.json \
   --baseline-output arkheionx-vault.baseline.json \
+  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
   --generate-invariant-skeletons
 ```
@@ -111,6 +114,7 @@ Output:
 - manual review of generated report;
 - baseline/diff interpretation if prior scan output is available;
 - generated issue checklist reviewed and turned into a prioritized fix list;
+- generated issue plan reviewed for safe remediation tasks;
 - Markdown report;
 - clear limitations and formal audit recommendation.
 
@@ -151,6 +155,7 @@ Output:
 - missing invariant plan;
 - diff-mode review to track remediation progress;
 - generated GitHub issue checklist reviewed and prioritized;
+- generated GitHub issue plan converted into owner-ready tasks;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 
@@ -171,6 +176,7 @@ Output:
 - strategy/oracle/withdrawal lifecycle checklist;
 - suggested Foundry invariant plan;
 - GitHub issue checklist;
+- issue plan review;
 - final Markdown report.
 
 ### Ecosystem Pack

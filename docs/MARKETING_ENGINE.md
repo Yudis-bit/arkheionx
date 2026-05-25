@@ -155,6 +155,25 @@ CTA:
 > Generate SARIF for Code Scanning, save a baseline, and use diff mode to show
 > readiness progress before formal audit intake.
 
+## v0.5.0 Issue Workflow And Rule Pack Message
+
+Primary v0.5.0 message:
+
+> Arkheionx v0.5.0 turns readiness gaps into GitHub-native remediation plans:
+> generated issue-plan JSON, dry-run issue creation, duplicate-safe markers,
+> and expanded oracle, access control, reentrancy, and reward accounting rule
+> packs.
+
+Short version:
+
+> Scan, review the issue plan, dry-run it, then choose whether to create
+> owner-ready GitHub tasks. Still not an audit. A way to prepare for one.
+
+CTA:
+
+> Generate an Arkheionx issue plan and use it as the starting point for a
+> Launch Report or Pre-Audit Sprint remediation plan.
+
 ## Example X Posts
 
 0. Arkheionx v0.2.0 is vault-focused: ERC4626-like checks, share/accounting

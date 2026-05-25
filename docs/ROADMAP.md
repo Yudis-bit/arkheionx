@@ -19,9 +19,13 @@ committed artifacts support it.
 - [ ] **v0.4.1: Public polish and release consistency in preparation.**
       README onboarding, stable `@v0.4.0` examples, docs consistency checks,
       and public first-impression cleanup.
-- [ ] **v0.5.0: Generated GitHub issue workflow and rule-pack expansion.**
-      Safe opt-in issue creation workflow, staking/reward and oracle rule
-      packs, and richer report dashboard artifacts.
+- [ ] **v0.5.0: Generated GitHub issue workflow and rule-pack expansion in progress.**
+      Structured issue plans, dry-run/create/update issue workflow, oracle,
+      access/upgradeability, reentrancy/value-flow, and reward accounting rule
+      packs.
+- [ ] **v0.6.0: Semantic-lite Solidity extraction and false-positive reduction.**
+      Slither integration where available, source-structure extraction, smarter
+      affected-file mapping, and rule calibration.
 - [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
       interface, calibrated rule packs, release artifacts, and contribution
       workflow.

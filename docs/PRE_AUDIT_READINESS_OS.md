@@ -19,7 +19,9 @@ Arkheionx Readiness is:
 - GitHub Actions job summary output;
 - optional PR Readiness Comment;
 - generated issue checklist;
+- generated issue plan for optional GitHub issue workflows;
 - stable finding IDs;
+- SARIF, baseline, and diff artifacts when requested;
 - optional local `.arkheionx.json` config;
 - safe Foundry invariant skeleton generation;
 - a bridge from historical DeFi failures to defensive builder checklists.
@@ -58,9 +60,10 @@ Short message:
    generic.
 4. It detects static risk signals and test-readiness signals.
 5. It maps the signals to historical pattern similarity using Arkheionx memory.
-6. It writes Markdown, JSON, summary, PR comment body, and issue checklist
-   artifacts when requested.
-7. The builder uses the report and checklist as pre-audit planning material.
+6. It writes Markdown, JSON, SARIF, baseline, summary, PR comment body,
+   issue checklist, and issue plan artifacts when requested.
+7. The builder uses the report, checklist, and issue plan as pre-audit planning
+   material.
 8. If useful, the builder opens a GitHub issue for a Launch Report or
    Pre-Audit Sprint.
 
@@ -86,6 +89,7 @@ Main stages:
 - `generate_report`: writes the Markdown dashboard.
 - `generate_json_report`: writes machine-readable output.
 - `generate_issue_checklist`: writes a copyable remediation checklist.
+- `build_issue_plan`: writes structured remediation issue tasks.
 - `generate_comment_output`: writes an optional PR comment body.
 
 ## Risk Signals
@@ -108,7 +112,8 @@ Arkheionx currently looks for signals in these families:
 
 Signals are not findings. They are review prompts.
 
-For vault-specific behavior, see [`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md).
+For current rule packs, see [`RULE_PACKS.md`](RULE_PACKS.md) and
+[`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md).
 
 ## Historical Pattern Similarity
 

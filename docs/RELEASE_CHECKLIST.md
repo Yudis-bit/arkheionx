@@ -15,7 +15,7 @@ written reason in the release PR.
 ## Scanner And Product Validation
 
 - [ ] `python3 -m py_compile scripts/pre_audit_scan.py scripts/generate_search_index.py`
-- [ ] `python3 -m py_compile scripts/post_pr_comment.py`
+- [ ] `python3 -m py_compile scripts/post_pr_comment.py scripts/create_github_issues.py`
 - [ ] `python3 -m unittest discover -s tests -p "test_*.py"`
 - [ ] Mini-vault scan regenerated:
 
@@ -95,6 +95,21 @@ written reason in the release PR.
 - [ ] Summary output contains `Score:`.
 - [ ] Generated issue checklist contains Markdown checkboxes.
 - [ ] Config suppression output shows `Suppressed Readiness Gaps`.
+
+## v0.5 Issue Workflow And Rule Pack Checks
+
+- [ ] Issue plan JSON generated and parses successfully.
+- [ ] Issue plan contains deterministic `<!-- arkheionx-issue:* -->` markers.
+- [ ] Issue plan contains defensive disclaimers.
+- [ ] `scripts/create_github_issues.py --mode dry-run` makes no API calls and
+      writes dry-run output.
+- [ ] Real issue creation is not used in CI.
+- [ ] Rule pack coverage includes vault, oracle, access/upgradeability,
+      reentrancy/value-flow, and reward accounting when relevant.
+- [ ] SARIF output includes new rule-pack finding IDs as readiness gaps.
+- [ ] Baseline/diff output supports new rule-pack findings.
+- [ ] `docs/GITHUB_ISSUE_WORKFLOW.md` documents permissions, dry-run, create,
+      update, duplicate prevention, and safety boundaries.
 
 ## Search And Registry
 

@@ -14,18 +14,24 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.4.1, v0.4.0 released, SARIF, baseline diff, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.5.0, issue workflow, rule packs, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
 | PR comment mode | [`docs/PR_COMMENT_MODE.md`](../docs/PR_COMMENT_MODE.md) | pull-request, comment marker, GitHub token |
 | Generated issue checklist | [`docs/GENERATED_ISSUE_CHECKLIST.md`](../docs/GENERATED_ISSUE_CHECKLIST.md) | issue checklist, remediation, finding IDs |
+| GitHub issue workflow | [`docs/GITHUB_ISSUE_WORKFLOW.md`](../docs/GITHUB_ISSUE_WORKFLOW.md) | issue plan, dry-run, duplicate prevention |
 | Arkheionx config | [`docs/ARKHEIONX_CONFIG.md`](../docs/ARKHEIONX_CONFIG.md) | config, suppression, ignore paths |
 | SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
 | Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
 | CI gating | [`docs/CI_GATING.md`](../docs/CI_GATING.md) | fail threshold, fail-score-below, CI readiness gate |
 | Readiness score | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) | score bands, audit blockers, invariant testing |
 | Vault Rule Pack | [`docs/VAULT_RULE_PACK.md`](../docs/VAULT_RULE_PACK.md) | ERC4626, vault accounting, share accounting |
+| Rule Packs | [`docs/RULE_PACKS.md`](../docs/RULE_PACKS.md) | oracle rule pack, access control, reward accounting |
+| Oracle Rule Pack | [`docs/ORACLE_RULE_PACK.md`](../docs/ORACLE_RULE_PACK.md) | oracle, stale price, price bounds |
+| Access Control Rule Pack | [`docs/ACCESS_CONTROL_RULE_PACK.md`](../docs/ACCESS_CONTROL_RULE_PACK.md) | access control, upgradeability, initializer |
+| Reentrancy Value Flow Rule Pack | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](../docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) | reentrancy, external calls, claim flow |
+| Reward Accounting Rule Pack | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](../docs/REWARD_ACCOUNTING_RULE_PACK.md) | staking, reward accounting, accumulator |
 | Indie builder offer | [`docs/INDIE_BUILDER_OFFER.md`](../docs/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
 | Search guide | [`docs/SEARCH_GUIDE.md`](../docs/SEARCH_GUIDE.md) | search tags, root-cause analysis, broken invariant |
 | Marketing engine | [`docs/MARKETING_ENGINE.md`](../docs/MARKETING_ENGINE.md) | growth, positioning, GitHub-only funnel |
@@ -35,6 +41,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Roadmap | [`docs/ROADMAP.md`](../docs/ROADMAP.md) | release roadmap, rule packs, GitHub-native |
 | Mini-vault fixture | [`examples/mini-vault/README.md`](../examples/mini-vault/README.md) | vault, fixture, scanner demo |
 | Vault-risk fixture | [`examples/vault-risk-fixture/README.md`](../examples/vault-risk-fixture/README.md) | ERC4626, strategy vault, Vault Rule Pack |
+| Oracle staking fixture | [`examples/oracle-staking-fixture/README.md`](../examples/oracle-staking-fixture/README.md) | oracle, staking, reward rule pack |
 | Sample Markdown report | [`examples/reports/mini-vault-pre-audit-report.md`](../examples/reports/mini-vault-pre-audit-report.md) | readiness report, vault, example |
 | Vault-risk Markdown report | [`examples/reports/vault-risk-fixture-pre-audit-report.md`](../examples/reports/vault-risk-fixture-pre-audit-report.md) | vault readiness, ERC4626, readiness gaps |
 | Sample JSON report | [`examples/reports/mini-vault-pre-audit-report.json`](../examples/reports/mini-vault-pre-audit-report.json) | json-output, automation, example |
@@ -42,12 +49,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Mini-vault action summary | [`examples/reports/mini-vault-action-summary.md`](../examples/reports/mini-vault-action-summary.md) | GitHub Actions summary, score, top gaps |
 | Vault-risk PR comment | [`examples/reports/vault-risk-fixture-pr-comment.md`](../examples/reports/vault-risk-fixture-pr-comment.md) | PR comment, marker, top gaps |
 | Vault-risk issue checklist | [`examples/reports/vault-risk-fixture-issue-checklist.md`](../examples/reports/vault-risk-fixture-issue-checklist.md) | issue checklist, readiness remediation, finding IDs |
+| Vault-risk issue plan | [`examples/reports/vault-risk-fixture-issue-plan.json`](../examples/reports/vault-risk-fixture-issue-plan.json) | issue plan, remediation issue, GitHub issue workflow |
+| Oracle staking issue plan | [`examples/reports/oracle-staking-fixture-issue-plan.json`](../examples/reports/oracle-staking-fixture-issue-plan.json) | oracle rule pack, reward accounting, issue plan |
 | Vault-risk SARIF report | [`examples/reports/vault-risk-fixture.sarif.json`](../examples/reports/vault-risk-fixture.sarif.json) | SARIF, Code Scanning, readiness result |
 | Vault-risk baseline | [`examples/reports/vault-risk-fixture.baseline.json`](../examples/reports/vault-risk-fixture.baseline.json) | baseline, finding fingerprint, readiness snapshot |
 | Vault-risk diff report | [`examples/reports/vault-risk-fixture-diff.md`](../examples/reports/vault-risk-fixture-diff.md) | baseline diff, new resolved unchanged, remediation tracking |
 | Arkheionx config example | [`examples/arkheionx.config.example.json`](../examples/arkheionx.config.example.json) | config, suppression, ignore paths |
 | Pre-audit scanner | [`scripts/pre_audit_scan.py`](../scripts/pre_audit_scan.py) | cli, scanner, standard-library |
 | PR comment poster | [`scripts/post_pr_comment.py`](../scripts/post_pr_comment.py) | GitHub API, PR comment, marker update |
+| GitHub issue creator | [`scripts/create_github_issues.py`](../scripts/create_github_issues.py) | GitHub API, issue plan, dry-run |
 | Report template | [`templates/pre_audit_report.md`](../templates/pre_audit_report.md) | template, Markdown report, disclaimer |
 | Invariant skeleton template | [`templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol`](../templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol) | Foundry, invariant, skeleton |
 
@@ -90,6 +100,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `resolved readiness gaps` | resolved findings, closed gaps, remediated readiness, diff resolved | baseline diff | baseline comparison, remediation tracking, diff report | resolved-readiness-gaps, baseline-diff, remediation |
 | `pre-audit diff` | readiness diff, report diff, baseline comparison, diff report | GitHub-native workflow | new/resolved/unchanged counts, PR comment diff, issue checklist diff | pre-audit-diff, readiness-baseline, github-action |
 | `GitHub security workflow` | Actions security workflow, Code Scanning workflow, pre-audit CI workflow, security-events | GitHub-native workflow | SARIF upload, Actions summary, PR comment, baseline diff | github-security-workflow, code-scanning, pre-audit-readiness |
+| `GitHub issue workflow` | generated issue plan, issue creation dry-run, readiness remediation, issue plan JSON | GitHub-native workflow | issue markers, duplicate prevention, dry-run output, max issue limit | github-issue-workflow, issue-plan, readiness-remediation |
+| `oracle rule pack` | ARK-ORC, price feed checks, stale price tests, oracle readiness | rule pack | stale round rejection, decimals normalization, price bounds, oracle update access control | oracle-rule-pack, oracle-risk, pre-audit-readiness |
+| `access control rule pack` | ARK-ACC, upgradeability rule pack, ARK-UPG, privileged setters | rule pack | role-boundary tests, initializer tests, upgrade authorization, emergency constraints | access-control-rule-pack, upgradeability, admin-risk |
+| `reentrancy value flow rule pack` | ARK-REENT, external call review, claim flow tests, callback path | rule pack | state transition tests, double claim prevention, callback receiver mock, external call ordering | reentrancy-rule-pack, value-flow, defensive-review |
+| `reward accounting rule pack` | ARK-RWD, staking rule pack, rewardPerToken, accumulator | rule pack | reward conservation, no overclaim, accumulator monotonicity, emission update constraints | reward-accounting-rule-pack, staking, precision |
 
 ## Historical Memory Index
 
@@ -147,6 +162,19 @@ new readiness gaps
 resolved readiness gaps
 pre-audit diff
 GitHub security workflow
+GitHub issue workflow
+generated issue plan
+issue creation dry-run
+issue marker
+duplicate prevention
+readiness remediation
+oracle rule pack
+access control rule pack
+upgradeability rule pack
+reentrancy value flow rule pack
+reward accounting rule pack
+staking rule pack
+issue plan JSON
 oracle manipulation
 flash loan price manipulation
 reentrancy

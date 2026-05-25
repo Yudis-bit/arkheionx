@@ -175,6 +175,11 @@ Vault Launch Report
 Vault Pre-Audit Sprint
 PR readiness comment
 generated issue checklist
+generated issue plan
+GitHub issue workflow
+issue creation dry-run
+issue marker
+duplicate prevention
 finding IDs
 .arkheionx.json
 SARIF
@@ -187,6 +192,10 @@ fail threshold
 new readiness gaps
 resolved readiness gaps
 pre-audit diff
+oracle rule pack
+access control rule pack
+reentrancy value flow rule pack
+reward accounting rule pack
 ```
 
 ## Search By Monetization Or Services
@@ -203,6 +212,8 @@ Research Sponsorship
 GitHub Action
 PR comment mode
 issue checklist
+issue plan JSON
+readiness remediation
 config suppression
 SARIF output
 baseline diff
@@ -223,7 +234,9 @@ rg -n "oracle manipulation|stale|TWAP|latestRoundData" .
 rg -n "missing invariant|pre-audit readiness|audit blocker" .
 rg -n "ARK-VLT-001|ARK-ORC-001|finding IDs|suppressed_findings" .
 rg -n "SARIF|Code Scanning|baseline diff|finding fingerprint|fail-score-below" .
-rg -n "PR readiness comment|generated issue checklist|.arkheionx.json" .
+rg -n "PR readiness comment|generated issue checklist|generated issue plan|.arkheionx.json" .
+rg -n "oracle rule pack|access control rule pack|reentrancy value flow|reward accounting rule pack" .
+rg -n "issue marker|duplicate prevention|issue creation dry-run|GitHub issue workflow" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

@@ -20,7 +20,7 @@ The repository itself is the product:
 
 | Offer | Price | Primary value |
 |---|---:|---|
-| Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, optional SARIF, baseline diff artifacts, Actions summary, optional PR Readiness Comment, generated issue checklist. |
+| Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, optional SARIF, baseline diff artifacts, Actions summary, optional PR Readiness Comment, generated issue checklist, generated issue plan. |
 | Indie Builder Sponsor | USD 29/month | Recognition if desired, early rule previews, priority Q&A in GitHub Discussions, monthly readiness tips. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
 | Launch Report | USD 299-499 one time | Automated scan, manual report review, prioritized fix checklist, Markdown readiness report. |
@@ -52,7 +52,7 @@ The free tier creates trust and distribution:
 - Markdown report committed or uploaded by the builder.
 - optional SARIF output for GitHub Code Scanning-compatible workflows.
 - baseline comparison to track whether remediation is improving readiness.
-- generated issue checklist that can become a remediation tracker.
+- generated issue checklist and issue plan that can become a remediation tracker.
 - optional PR Readiness Comment for code-review visibility.
 
 Conversion happens when a builder wants help interpreting or improving the
@@ -98,6 +98,7 @@ Value:
 - manual review of generated report;
 - interpretation of baseline/diff output when available;
 - manual review of generated issue checklist;
+- manual review of generated issue plan;
 - prioritized fix checklist;
 - Markdown report;
 - explicit limitations;
@@ -171,6 +172,7 @@ Value:
 - missing invariant plan;
 - diff-mode review to track new, resolved, and unchanged readiness gaps;
 - generated GitHub issue checklist converted into a prioritized remediation plan;
+- generated GitHub issue plan reviewed and organized into owner-ready tasks;
 - final Markdown report;
 - optional follow-up comments.
 
@@ -192,6 +194,7 @@ Target buyers:
 Value:
 
 - bulk readiness reports;
+- standardized generated issue plans for participating builders;
 - monthly security clinic;
 - portfolio-level Markdown dashboard;
 - private GitHub Discussion support;

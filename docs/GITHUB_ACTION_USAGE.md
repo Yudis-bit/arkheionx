@@ -157,6 +157,61 @@ with:
 
 Diff mode classifies readiness gaps as new, resolved, unchanged, or changed.
 
+## Generated Issue Plan Workflow
+
+Arkheionx can generate a machine-readable issue plan without creating any
+GitHub issues:
+
+```yaml
+with:
+  issue-plan-output: "ARKHEIONX_ISSUE_PLAN.json"
+  issue-checklist-output: "ARKHEIONX_ISSUE_CHECKLIST.md"
+```
+
+The issue plan contains deterministic markers, labels, titles, disclaimers, and
+defensive remediation tasks for each selected readiness gap.
+
+## Dry-Run Issue Creation
+
+Issue creation is disabled by default. Start with dry-run mode:
+
+```yaml
+with:
+  create-github-issues: "true"
+  issue-create-mode: "dry-run"
+  issue-plan-output: "ARKHEIONX_ISSUE_PLAN.json"
+  issue-dry-run-output: "ARKHEIONX_ISSUE_DRY_RUN.md"
+  issue-max: "5"
+```
+
+Dry-run mode makes no GitHub API calls.
+
+## Create Or Update Arkheionx Issues
+
+Only enable this in repositories you own or are authorized to manage:
+
+```yaml
+permissions:
+  contents: read
+  issues: write
+
+steps:
+  - uses: actions/checkout@v4
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+    with:
+      protocol-type: "auto"
+      create-github-issues: "true"
+      issue-create-mode: "create"
+      issue-plan-output: "ARKHEIONX_ISSUE_PLAN.json"
+      issue-max: "5"
+      issue-only-priority: "high"
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Use `issue-create-mode: "update"` to update existing Arkheionx issues that
+contain deterministic markers such as `<!-- arkheionx-issue:ARK-VLT-001 -->`.
+Generated issues are readiness tasks, not formal audit findings.
+
 ## Optional CI Gates
 
 All gates are disabled by default:
@@ -230,7 +285,8 @@ python3 scripts/pre_audit_scan.py \
   --baseline-output arkheionx.baseline.json \
   --summary-output ARKHEIONX_ACTION_SUMMARY.md \
   --comment-output ARKHEIONX_PR_COMMENT.md \
-  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
+  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
 ## Inputs
@@ -250,18 +306,27 @@ python3 scripts/pre_audit_scan.py \
 | `summary` | `true` | Write generated summary to the GitHub Actions job summary. |
 | `summary-output` | `ARKHEIONX_ACTION_SUMMARY.md` | Local summary Markdown path. |
 | `pr-comment` | `false` | Generate and optionally post/update a PR comment. |
-| `github-token` | empty | Token used only for optional PR comment mode. |
+| `github-token` | empty | Token used only for optional PR comment and issue workflows. |
 | `comment-output` | `ARKHEIONX_PR_COMMENT.md` | Local PR comment body path. |
 | `comment-mode` | `update` | `update` existing marker comment or `append`. |
 | `create-issue-checklist` | `true` | Generate a copyable Markdown issue checklist. |
 | `issue-checklist-output` | `ARKHEIONX_ISSUE_CHECKLIST.md` | Checklist output path. |
+| `issue-plan-output` | empty | Optional generated GitHub issue plan JSON path. |
+| `create-github-issues` | `false` | Run the optional issue workflow. Defaults to no issue creation. |
+| `issue-create-mode` | `dry-run` | `dry-run`, `create`, or `update`. |
+| `issue-grouping` | `one-per-finding` | `one-per-finding` or `summary`. |
+| `issue-max` | `5` | Maximum issues selected for create/update/dry-run. |
+| `issue-only-priority` | `high` | `critical`, `high`, `medium`, `low`, `informational`, or `all`. |
+| `issue-labels` | empty | Comma-separated extra labels. |
+| `issue-assignees` | empty | Comma-separated assignees. |
+| `issue-dry-run-output` | `ARKHEIONX_ISSUE_DRY_RUN.md` | Optional dry-run Markdown output. |
 | `config` | `.arkheionx.json` | Optional config path. |
 | `generate-invariant-skeletons` | `false` | Create safe Foundry invariant skeletons. |
 | `fail-on-critical-readiness-gap` | `false` | Fail only when explicitly enabled. |
 | `fail-on-new-high` | `false` | Fail when diff mode finds new high/critical readiness gaps. |
 | `fail-score-below` | empty | Fail when score is below this threshold. |
 | `fail-on-unsuppressed-high` | `false` | Fail on unsuppressed high/critical readiness gaps. |
-| `create-issues` | `false` | Reserved. No remote issues are created. |
+| `create-issues` | `false` | Legacy scanner flag. Use `create-github-issues` for the opt-in issue workflow. |
 | `verbose` | `false` | Print scanner details. |
 
 ## JSON Output
@@ -315,8 +380,11 @@ The default action path does not:
 - inspect deployed contracts;
 - submit transactions;
 - collect secrets;
-- create remote GitHub issues;
 - prove a repository is secure.
 
 PR comment mode uses the GitHub API only when explicitly enabled and only to
 write a comment on the pull request running the workflow.
+
+GitHub issue creation uses the GitHub API only when `create-github-issues` is
+enabled and `issue-create-mode` is set to `create` or `update`. Dry-run mode
+makes no API calls.

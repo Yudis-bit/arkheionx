@@ -7,7 +7,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "high",
-      "fingerprint": "9421bc5897caf05fb6b2bd6d",
+      "fingerprint": "0efe79b4c594d0c69d06787b",
       "id": "ARK-VLT-001",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -25,7 +25,7 @@
       ],
       "category": "vault-accounting",
       "confidence": "low",
-      "fingerprint": "1b5cbd6e82091eea30e0f4c1",
+      "fingerprint": "f469763c155a4851c647534a",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -34,15 +34,69 @@
         "vault-accounting"
       ],
       "title": "Fee logic without fee accounting tests"
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "fingerprint": "61734a0b8340c3a5e0311823",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "fingerprint": "c7702243b98ca713849747c2",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review"
+    },
+    {
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "fingerprint": "a694c676706044a9ea675c45",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions"
     }
   ],
-  "fingerprint_version": "0.4.0",
-  "generated_at": "2026-05-25T13:16:18+00:00",
+  "fingerprint_version": "0.5.0",
+  "generated_at": "2026-05-25T18:53:56+00:00",
   "protocol_type": "vault",
   "repo_root": "examples/mini-vault",
   "score": 73,
   "score_band": "Improving",
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

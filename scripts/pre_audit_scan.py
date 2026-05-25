@@ -21,18 +21,24 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.4.0"
-FINGERPRINT_VERSION = "0.4.0"
+VERSION = "0.5.0"
+FINGERPRINT_VERSION = "0.5.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ".arkheionx.json"
 COMMENT_MARKER = "<!-- arkheionx-pre-audit-comment -->"
+ISSUE_MARKER_PREFIX = "<!-- arkheionx-issue:"
 DISCLAIMER = (
     "This is an automated pre-audit readiness report. It is not a formal "
     "audit, does not prove the absence or presence of vulnerabilities, does "
     "not authorize live-target testing, and should only be used on repositories "
     "you own or are authorized to review. A formal audit is recommended before "
     "handling real user funds."
+)
+ISSUE_DISCLAIMER = (
+    "This issue was generated from an Arkheionx pre-audit readiness scan. "
+    "It is not a formal audit finding. It does not confirm a vulnerability. "
+    "It is a defensive remediation task for authorized repository maintainers."
 )
 
 RELEVANT_EXTENSIONS = {".sol", ".md"}
@@ -187,6 +193,123 @@ VAULT_ADMIN_TERMS = [
     "initializer",
 ]
 
+ORACLE_RULE_TERMS = [
+    "oracle",
+    "priceFeed",
+    "latestRoundData",
+    "latestAnswer",
+    "answer",
+    "roundId",
+    "answeredInRound",
+    "updatedAt",
+    "decimals",
+    "AggregatorV3Interface",
+    "Chainlink",
+    "getPrice",
+    "consult",
+    "twap",
+    "spot",
+    "getReserves",
+    "sqrtPriceX96",
+    "observe",
+    "pool",
+    "reserve0",
+    "reserve1",
+    "stale",
+    "heartbeat",
+    "minPrice",
+    "maxPrice",
+    "bounds",
+    "sequencer",
+    "fallbackOracle",
+    "setOracle",
+]
+
+ACCESS_UPGRADE_RULE_TERMS = [
+    "onlyOwner",
+    "Ownable",
+    "AccessControl",
+    "DEFAULT_ADMIN_ROLE",
+    "role",
+    "grantRole",
+    "revokeRole",
+    "hasRole",
+    "admin",
+    "owner",
+    "operator",
+    "guardian",
+    "multisig",
+    "timelock",
+    "setFee",
+    "setOracle",
+    "setStrategy",
+    "setTreasury",
+    "pause",
+    "unpause",
+    "emergencyWithdraw",
+    "rescue",
+    "sweep",
+    "upgradeTo",
+    "upgradeToAndCall",
+    "UUPSUpgradeable",
+    "TransparentUpgradeableProxy",
+    "initializer",
+    "reinitializer",
+    "__gap",
+    "implementation",
+    "proxy",
+]
+
+REENTRANCY_RULE_TERMS = [
+    "withdraw",
+    "redeem",
+    "claim",
+    "payout",
+    "refund",
+    "send",
+    "transfer",
+    "transferFrom",
+    "safeTransfer",
+    "call{",
+    ".call(",
+    "delegatecall",
+    "onERC721Received",
+    "onERC1155Received",
+    "ERC777",
+    "callback",
+    "flashLoan",
+    "executeOperation",
+    "nonReentrant",
+    "ReentrancyGuard",
+    "checks-effects-interactions",
+]
+
+REWARD_RULE_TERMS = [
+    "stake",
+    "unstake",
+    "withdraw",
+    "reward",
+    "rewards",
+    "claim",
+    "claimReward",
+    "rewardPerToken",
+    "accumulator",
+    "index",
+    "emission",
+    "emissions",
+    "epoch",
+    "vesting",
+    "lock",
+    "cooldown",
+    "multiplier",
+    "boost",
+    "shares",
+    "totalStaked",
+    "pendingReward",
+    "earned",
+    "notifyRewardAmount",
+]
+
 VAULT_TEST_COVERAGE_TERMS: dict[str, list[str]] = {
     "deposit": ["deposit", "previewDeposit"],
     "withdraw": ["withdraw", "previewWithdraw", "redeem", "previewRedeem"],
@@ -240,37 +363,12 @@ SIGNAL_TERMS: dict[str, list[str]] = {
     "vault_withdrawal_liquidity": VAULT_WITHDRAWAL_TERMS,
     "vault_admin_ops": VAULT_ADMIN_TERMS,
     "oracle": [
-        "oracle",
-        "priceFeed",
-        "latestRoundData",
-        "latestAnswer",
-        "getReserves",
-        "reserve0",
-        "reserve1",
-        "twap",
-        "spot",
-        "consult",
-        "decimals",
-        "stale",
-        "heartbeat",
+        *ORACLE_RULE_TERMS,
         "setOracle",
     ],
+    "oracle_rule_pack": ORACLE_RULE_TERMS,
     "access_control": [
-        "onlyOwner",
-        "Ownable",
-        "AccessControl",
-        "DEFAULT_ADMIN_ROLE",
-        "owner",
-        "admin",
-        "role",
-        "setFee",
-        "setOracle",
-        "setStrategy",
-        "setTreasury",
-        "pause",
-        "unpause",
-        "emergencyWithdraw",
-        "upgradeTo",
+        *ACCESS_UPGRADE_RULE_TERMS,
     ],
     "upgradeability": [
         "initializer",
@@ -282,24 +380,14 @@ SIGNAL_TERMS: dict[str, list[str]] = {
         "storage gap",
         "__gap",
         "upgradeTo",
+        "upgradeToAndCall",
     ],
+    "access_upgrade_rule_pack": ACCESS_UPGRADE_RULE_TERMS,
     "reentrancy_value_flow": [
-        ".call(",
-        "call{",
-        "delegatecall",
+        *REENTRANCY_RULE_TERMS,
         "staticcall",
-        "safeTransfer",
-        "transferFrom",
-        "transfer(",
-        "onERC721Received",
-        "onERC1155Received",
-        "ERC777",
-        "callback",
-        "flashLoan",
-        "executeOperation",
-        "nonReentrant",
-        "ReentrancyGuard",
     ],
+    "reentrancy_rule_pack": REENTRANCY_RULE_TERMS,
     "accounting_complexity": [
         "fee",
         "performanceFee",
@@ -366,15 +454,9 @@ SIGNAL_TERMS: dict[str, list[str]] = {
         "loanToValue",
     ],
     "staking_rewards": [
-        "stake",
-        "unstake",
-        "reward",
-        "claim",
-        "rewardPerToken",
-        "accumulator",
-        "index",
-        "emission",
+        *REWARD_RULE_TERMS,
     ],
+    "reward_rule_pack": REWARD_RULE_TERMS,
 }
 
 PROTOCOL_WEIGHTS: dict[str, dict[str, int]] = {
@@ -523,6 +605,25 @@ FINDING_RULES: list[tuple[str, str, str]] = [
     ("Reward accounting needs conservation coverage", "ARK-RWD-001", "reward-accounting"),
     ("AMM math needs invariant coverage", "ARK-AMM-001", "amm-invariant"),
     ("Vault accounting lacks visible roundtrip or conservation coverage", "ARK-VLT-009", "vault-accounting"),
+    ("Oracle-dependent logic without stale-price tests", "ARK-ORC-001", "oracle-pricing"),
+    ("Oracle decimals or normalization not covered by tests", "ARK-ORC-002", "oracle-pricing"),
+    ("Spot or reserve-based pricing without manipulation-resistance tests", "ARK-ORC-003", "oracle-pricing"),
+    ("Oracle setter/admin path without role-boundary tests", "ARK-ORC-004", "oracle-pricing"),
+    ("Missing price bounds or fallback assumptions documentation", "ARK-ORC-005", "oracle-pricing"),
+    ("Privileged setters without role-boundary tests", "ARK-ACC-001", "access-control"),
+    ("Emergency or rescue functions without documented constraints", "ARK-ACC-002", "access-control"),
+    ("Admin role concentration not documented", "ARK-ACC-003", "access-control"),
+    ("Upgradeable contract without initializer/upgrade tests", "ARK-UPG-001", "upgradeability-initialization"),
+    ("Storage layout or upgrade assumptions not documented", "ARK-UPG-002", "upgradeability-initialization"),
+    ("Value flow with external calls needs reentrancy review", "ARK-REENT-001", "reentrancy-value-flow"),
+    ("Callback-capable token or receiver path detected", "ARK-REENT-002", "reentrancy-value-flow"),
+    ("Claim/refund flow without state-transition tests", "ARK-REENT-003", "reentrancy-value-flow"),
+    ("External call path without documented ordering assumptions", "ARK-REENT-004", "reentrancy-value-flow"),
+    ("Reward accounting without conservation tests", "ARK-RWD-001", "reward-accounting"),
+    ("Accumulator/index logic without precision/rounding tests", "ARK-RWD-002", "reward-accounting"),
+    ("Claim flow without double-claim prevention tests", "ARK-RWD-003", "reward-accounting"),
+    ("Lock/cooldown reward lifecycle not tested", "ARK-RWD-004", "reward-accounting"),
+    ("Emission/admin update assumptions not documented", "ARK-RWD-005", "reward-accounting"),
 ]
 
 CATEGORY_PREFIXES: list[tuple[set[str], str, str]] = [
@@ -1973,6 +2074,455 @@ def apply_finding_metadata(
     return gaps
 
 
+def test_text(contents: dict[Path, str], classified: ClassifiedFiles) -> str:
+    usable_tests = [
+        path
+        for path in classified.solidity_tests
+        if not is_placeholder_skeleton(contents.get(path, ""))
+    ]
+    return collect_text_for_paths(contents, usable_tests).lower()
+
+
+def source_and_doc_text(contents: dict[Path, str], classified: ClassifiedFiles) -> str:
+    paths = classified.solidity_sources + classified.solidity_tests + classified.docs
+    return collect_text_for_paths(contents, paths or contents.keys()).lower()
+
+
+def text_has_any(text: str, terms: Iterable[str]) -> bool:
+    return any(term.lower() in text for term in terms)
+
+
+def existing_finding_ids(gaps: list[ReadinessGap]) -> set[str]:
+    return {gap.id for gap in gaps if gap.id}
+
+
+def add_rule_pack_gaps(
+    gaps: list[ReadinessGap],
+    contents: dict[Path, str],
+    classified: ClassifiedFiles,
+    signals: dict[str, dict[str, object]],
+) -> None:
+    """Add v0.5 starter rule-pack findings without replacing existing scoring."""
+    tests = test_text(contents, classified)
+    corpus_text = source_and_doc_text(contents, classified)
+    existing_ids = existing_finding_ids(gaps)
+
+    def maybe_add(finding_id: str, *args: object, **kwargs: object) -> None:
+        if finding_id in existing_ids:
+            return
+        add_gap(gaps, *args, finding_id=finding_id, **kwargs)  # type: ignore[arg-type]
+        existing_ids.add(finding_id)
+
+    oracle_terms = detected_terms(signals, "oracle_rule_pack")
+    has_oracle = bool(set(oracle_terms) - {"decimals", "answer"})
+    has_stale_tests = text_has_any(tests, ["stale", "heartbeat", "updatedat", "answeredInRound", "roundId"])
+    has_decimal_tests = text_has_any(tests, ["decimal", "normalize", "scale", "precision"])
+    has_spot_pricing = bool(set(oracle_terms) & {"getReserves", "reserve0", "reserve1", "spot", "sqrtPriceX96", "pool"})
+    has_spot_tests = text_has_any(tests, ["twap", "manipulation", "bounds", "minprice", "maxprice", "sanity", "reserve"])
+    has_oracle_setter = bool(set(oracle_terms) & {"setOracle", "fallbackOracle"})
+    has_role_tests = text_has_any(tests, ["unauthorized", "onlyowner", "accesscontrol", "revert", "role"])
+    has_price_docs = text_has_any(corpus_text, ["minprice", "maxprice", "bounds", "fallback", "stale", "heartbeat", "oracle assumption"])
+
+    if has_oracle and not has_stale_tests:
+        maybe_add(
+            "ARK-ORC-001",
+            "High readiness gap",
+            "Oracle-dependent logic without stale-price tests",
+            "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
+            "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
+            ["oracle-risk", "oracle-rule-pack", "pre-audit-readiness"],
+            priority="High",
+            category="oracle-pricing",
+            detected=oracle_terms,
+            why_it_matters="Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions.",
+            historical_pattern_similarity="Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+            defensive_checks=["stale round rejection", "heartbeat checks", "updatedAt validation", "answeredInRound handling"],
+            suggested_test="Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        )
+    if has_oracle and not has_decimal_tests:
+        maybe_add(
+            "ARK-ORC-002",
+            "Medium readiness gap",
+            "Oracle decimals or normalization not covered by tests",
+            "Oracle decimals or price normalization signals were detected without visible normalization tests.",
+            "Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions.",
+            ["oracle-risk", "decimals", "precision", "oracle-rule-pack"],
+            priority="Medium",
+            category="oracle-pricing",
+            detected=oracle_terms,
+            why_it_matters="Decimals mismatches can distort collateral, share, reward, or pricing calculations even when the oracle value itself is fresh.",
+            historical_pattern_similarity="Maps to arithmetic and oracle normalization failure classes.",
+            defensive_checks=["decimals normalization", "mixed asset decimals", "precision scaling", "rounding bounds"],
+            suggested_test="Mock price feeds with different decimals and assert protocol accounting normalizes every value before use.",
+        )
+    if has_spot_pricing and not has_spot_tests:
+        maybe_add(
+            "ARK-ORC-003",
+            "High readiness gap",
+            "Spot or reserve-based pricing without manipulation-resistance tests",
+            "Spot, reserve, pool, or sqrtPriceX96 pricing signals were detected without visible manipulation-resistance tests.",
+            "Add local pool/reserve tests for TWAP, bounds, and spot-price movement assumptions.",
+            ["oracle-risk", "spot-price", "reserve-pricing", "oracle-rule-pack"],
+            priority="High",
+            category="oracle-pricing",
+            detected=oracle_terms,
+            why_it_matters="Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design.",
+            historical_pattern_similarity="Maps to historical price-manipulation readiness classes.",
+            defensive_checks=["TWAP vs spot behavior", "reserve movement bounds", "price sanity checks", "local pool mocks"],
+            suggested_test="Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        )
+    if has_oracle_setter and not has_role_tests:
+        maybe_add(
+            "ARK-ORC-004",
+            "Medium readiness gap",
+            "Oracle setter/admin path without role-boundary tests",
+            "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+            "Add tests proving only documented roles can update oracle configuration.",
+            ["oracle-risk", "access-control-review", "oracle-rule-pack"],
+            priority="Medium",
+            category="oracle-pricing",
+            detected=oracle_terms,
+            why_it_matters="Oracle configuration changes can alter all downstream accounting assumptions.",
+            historical_pattern_similarity="Maps to privileged control and oracle configuration readiness classes.",
+            defensive_checks=["unauthorized setOracle reverts", "trusted role documentation", "fallback oracle controls"],
+            suggested_test="Assert unprivileged callers cannot change oracle or fallback oracle configuration.",
+        )
+    if has_oracle and not has_price_docs:
+        maybe_add(
+            "ARK-ORC-005",
+            "Medium readiness gap",
+            "Missing price bounds or fallback assumptions documentation",
+            "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+            "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+            ["oracle-risk", "documentation-readiness", "oracle-rule-pack"],
+            priority="Medium",
+            category="oracle-pricing",
+            detected=oracle_terms,
+            why_it_matters="Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.",
+            historical_pattern_similarity="Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+            defensive_checks=["price bounds", "fallback policy", "stale-price policy", "sequencer downtime notes"],
+            suggested_test="Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        )
+
+    access_terms = detected_terms(signals, "access_upgrade_rule_pack", "access_control", "upgradeability")
+    has_access = bool(access_terms)
+    has_privileged_setters = bool(set(access_terms) & {"setFee", "setOracle", "setStrategy", "setTreasury", "grantRole", "revokeRole", "pause", "unpause"})
+    has_emergency = bool(set(access_terms) & {"emergencyWithdraw", "rescue", "sweep"})
+    has_upgrade = bool(set(access_terms) & {"upgradeTo", "upgradeToAndCall", "UUPSUpgradeable", "TransparentUpgradeableProxy", "initializer", "reinitializer", "proxy"})
+    has_storage_docs = text_has_any(corpus_text, ["storage layout", "__gap", "storage gap", "upgrade assumption", "upgrade process"])
+    has_admin_docs = text_has_any(corpus_text, ["multisig", "timelock", "guardian", "admin role", "role boundary", "owner powers"])
+
+    if has_privileged_setters and not has_role_tests:
+        maybe_add(
+            "ARK-ACC-001",
+            "Medium readiness gap",
+            "Privileged setters without role-boundary tests",
+            "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+            "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+            ["access-control-review", "admin-risk", "access-control-rule-pack"],
+            priority="Medium",
+            category="access-control",
+            detected=access_terms,
+            why_it_matters="Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions.",
+            historical_pattern_similarity="Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+            defensive_checks=["unauthorized setter tests", "role grant/revoke tests", "pause role tests", "timelock/multisig assumptions"],
+            suggested_test="For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.",
+        )
+    if has_emergency and not text_has_any(corpus_text, ["constraint", "limit", "emergency policy", "rescue policy", "sweep policy"]):
+        maybe_add(
+            "ARK-ACC-002",
+            "Medium readiness gap",
+            "Emergency or rescue functions without documented constraints",
+            "Emergency, rescue, or sweep signals were detected without clear constraints or policy documentation.",
+            "Document emergency powers, asset constraints, recipient restrictions, and user-impact assumptions.",
+            ["access-control-review", "emergency-controls", "access-control-rule-pack"],
+            priority="Medium",
+            category="access-control",
+            detected=access_terms,
+            why_it_matters="Emergency functions can be necessary but should be constrained and understandable before launch or audit intake.",
+            historical_pattern_similarity="Maps to privileged operational risk readiness classes.",
+            defensive_checks=["rescue constraints", "sweep asset allowlist/blocklist", "recipient restrictions", "event coverage"],
+            suggested_test="Test emergency/rescue functions against allowed and disallowed assets, callers, and protocol states.",
+        )
+    if has_access and not has_admin_docs:
+        maybe_add(
+            "ARK-ACC-003",
+            "Low readiness gap",
+            "Admin role concentration not documented",
+            "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+            "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+            ["access-control-review", "documentation-readiness", "access-control-rule-pack"],
+            priority="Low",
+            category="access-control",
+            detected=access_terms,
+            why_it_matters="Role concentration affects operational risk and audit scope even when access control code is syntactically correct.",
+            historical_pattern_similarity="Maps to operational control readiness classes.",
+            defensive_checks=["role matrix", "owner powers", "timelock assumptions", "multisig assumptions"],
+            suggested_test="Add a role matrix to docs and unit tests for critical roles.",
+        )
+    if has_upgrade and not text_has_any(tests, ["initializer", "reinitializer", "upgrade", "upgradeto"]):
+        maybe_add(
+            "ARK-UPG-001",
+            "Medium readiness gap",
+            "Upgradeable contract without initializer/upgrade tests",
+            "Upgradeable or proxy signals were detected without visible initializer or upgrade authorization tests.",
+            "Add tests for initializer-once behavior, unauthorized upgrade rejection, and post-upgrade invariant preservation.",
+            ["upgradeability", "initializer", "access-control-rule-pack"],
+            priority="Medium",
+            category="upgradeability-initialization",
+            detected=access_terms,
+            why_it_matters="Initialization and upgrade boundaries can affect every storage, accounting, and role assumption in the protocol.",
+            historical_pattern_similarity="Maps to initialization and upgrade boundary readiness classes.",
+            defensive_checks=["initializer once", "unauthorized upgrade rejection", "post-upgrade invariant", "implementation ownership"],
+            suggested_test="Deploy a local proxy or upgradeable instance and assert initialization and upgrade authorization match the documented process.",
+        )
+    if has_upgrade and not has_storage_docs:
+        maybe_add(
+            "ARK-UPG-002",
+            "Low readiness gap",
+            "Storage layout or upgrade assumptions not documented",
+            "Upgradeable/proxy signals were detected without visible storage layout or upgrade-process documentation.",
+            "Document storage layout, gaps, upgrade procedure, and operational approval assumptions.",
+            ["upgradeability", "documentation-readiness", "access-control-rule-pack"],
+            priority="Low",
+            category="upgradeability-initialization",
+            detected=access_terms,
+            why_it_matters="Upgrade documentation helps reviewers understand whether future implementations can preserve state safely.",
+            historical_pattern_similarity="Maps to upgrade boundary and storage assumption readiness classes.",
+            defensive_checks=["storage layout", "__gap usage", "upgrade runbook", "post-upgrade checks"],
+            suggested_test="Add storage layout notes and a local upgrade simulation that preserves key invariants.",
+        )
+
+    reent_terms = detected_terms(signals, "reentrancy_rule_pack", "reentrancy_value_flow")
+    has_reent_surface = bool(set(reent_terms) & {"withdraw", "redeem", "claim", "refund", "safeTransfer", "transferFrom", ".call(", "call{", "callback", "flashLoan", "executeOperation"})
+    has_guard = bool(set(reent_terms) & {"nonReentrant", "ReentrancyGuard"}) or "nonreentrant" in corpus_text
+    has_ordering_docs = text_has_any(corpus_text, ["checks-effects-interactions", "state update before", "reentrancy", "external call ordering"])
+    has_claim_refund = bool(set(reent_terms) & {"claim", "refund", "payout"})
+
+    if has_reent_surface and not has_guard:
+        maybe_add(
+            "ARK-REENT-001",
+            "High readiness gap",
+            "Value flow with external calls needs reentrancy review",
+            "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+            "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+            ["reentrancy-review", "value-flow", "reentrancy-rule-pack"],
+            priority="High",
+            category="reentrancy-value-flow",
+            detected=reent_terms,
+            why_it_matters="External calls can hand control to untrusted code before accounting reaches a safe state.",
+            historical_pattern_similarity="Maps to reentrancy and callback-driven value-flow readiness classes.",
+            defensive_checks=["state update before external call", "reentrant receiver mock", "failed external call behavior", "single-claim guarantees"],
+            suggested_test="Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry.",
+        )
+    if bool(set(reent_terms) & {"onERC721Received", "onERC1155Received", "ERC777", "callback", "flashLoan", "executeOperation"}) and "callback" not in tests:
+        maybe_add(
+            "ARK-REENT-002",
+            "Medium readiness gap",
+            "Callback-capable token or receiver path detected",
+            "Callback-capable token, receiver, flash loan, or execution callback signals were detected without visible callback tests.",
+            "Add local callback tests for token receiver, flash loan, and callback-capable flows.",
+            ["reentrancy-review", "callback", "reentrancy-rule-pack"],
+            priority="Medium",
+            category="reentrancy-value-flow",
+            detected=reent_terms,
+            why_it_matters="Callback-capable flows can invalidate assumptions about call ordering and intermediate state.",
+            historical_pattern_similarity="Maps to callback and reentrancy-sensitive flow readiness classes.",
+            defensive_checks=["callback receiver mock", "flash loan callback state", "ERC777/ERC1155/ERC721 receiver behavior"],
+            suggested_test="Create a local callback receiver that attempts repeated entry and assert protocol state remains consistent.",
+        )
+    if has_claim_refund and not text_has_any(tests, ["double", "already claimed", "claim twice", "refund", "state transition"]):
+        maybe_add(
+            "ARK-REENT-003",
+            "Medium readiness gap",
+            "Claim/refund flow without state-transition tests",
+            "Claim, refund, or payout signals were detected without visible state-transition or double-claim tests.",
+            "Add tests for claim/refund mutual exclusion, repeated calls, and failed external transfers.",
+            ["reentrancy-review", "claim-flow", "reentrancy-rule-pack"],
+            priority="Medium",
+            category="reentrancy-value-flow",
+            detected=reent_terms,
+            why_it_matters="Claim and refund flows often depend on one-way state transitions that should be explicit before audit intake.",
+            historical_pattern_similarity="Maps to duplicate-claim and state-transition readiness classes.",
+            defensive_checks=["double claim prevention", "claim/refund mutual exclusion", "failed transfer behavior"],
+            suggested_test="Assert claim or refund can only happen once per entitlement and failed transfers cannot leave reusable claim state.",
+        )
+    if has_reent_surface and not has_ordering_docs:
+        maybe_add(
+            "ARK-REENT-004",
+            "Low readiness gap",
+            "External call path without documented ordering assumptions",
+            "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+            "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+            ["reentrancy-review", "documentation-readiness", "reentrancy-rule-pack"],
+            priority="Low",
+            category="reentrancy-value-flow",
+            detected=reent_terms,
+            why_it_matters="Reviewers need clear state-ordering assumptions to evaluate external call safety.",
+            historical_pattern_similarity="Maps to checks-effects-interactions and callback boundary readiness classes.",
+            defensive_checks=["ordering documentation", "callback assumptions", "external call failure behavior"],
+            suggested_test="Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+        )
+
+    reward_terms = detected_terms(signals, "reward_rule_pack", "staking_rewards")
+    has_reward = bool(set(reward_terms) & {"stake", "unstake", "reward", "rewards", "claim", "rewardPerToken", "accumulator", "index", "emission", "earned", "pendingReward"})
+    has_conservation = text_has_any(tests, ["conservation", "funded", "total reward", "totalrewards", "overclaim"])
+    has_precision = text_has_any(tests, ["precision", "rounding", "dust", "accumulator", "index"])
+    has_double_claim = text_has_any(tests, ["double", "already claimed", "claim twice", "overclaim"])
+    has_lock = bool(set(reward_terms) & {"lock", "cooldown", "epoch", "vesting"})
+    has_emission_admin = bool(set(reward_terms) & {"notifyRewardAmount", "emission", "emissions"}) and has_privileged_setters
+
+    if has_reward and not has_conservation:
+        maybe_add(
+            "ARK-RWD-001",
+            "Medium readiness gap",
+            "Reward accounting without conservation tests",
+            "Reward, stake, claim, or accounting signals were detected without visible reward conservation tests.",
+            "Add tests proving total claimed plus remaining claimable cannot exceed funded rewards beyond documented rounding.",
+            ["reward-accounting", "staking-rule-pack", "pre-audit-readiness"],
+            priority="Medium",
+            category="reward-accounting",
+            detected=reward_terms,
+            why_it_matters="Reward systems can silently over-distribute or under-distribute when stake weights, timing, and funding change.",
+            historical_pattern_similarity="Maps to reward accounting mismatch readiness classes.",
+            defensive_checks=["funded reward conservation", "multi-user distribution", "stake/unstake around reward updates"],
+            suggested_test="Fund rewards, run multiple users through stake/claim/unstake sequences, and assert total claimed remains bounded by funded rewards.",
+        )
+    if has_reward and not has_precision:
+        maybe_add(
+            "ARK-RWD-002",
+            "Medium readiness gap",
+            "Accumulator/index logic without precision/rounding tests",
+            "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+            "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+            ["reward-accounting", "precision", "staking-rule-pack"],
+            priority="Medium",
+            category="reward-accounting",
+            detected=reward_terms,
+            why_it_matters="Index and accumulator math can leak value or strand rewards through rounding across many users.",
+            historical_pattern_similarity="Maps to precision and accounting mismatch readiness classes.",
+            defensive_checks=["index monotonicity", "rounding dust", "small balance behavior", "multi-user precision"],
+            suggested_test="Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards.",
+        )
+    if has_reward and bool(set(reward_terms) & {"claim", "claimReward"}) and not has_double_claim:
+        maybe_add(
+            "ARK-RWD-003",
+            "Medium readiness gap",
+            "Claim flow without double-claim prevention tests",
+            "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
+            "Add tests proving users cannot claim the same reward entitlement twice.",
+            ["reward-accounting", "claim-flow", "staking-rule-pack"],
+            priority="Medium",
+            category="reward-accounting",
+            detected=reward_terms,
+            why_it_matters="Claim flows depend on updating accrued state at exactly the right time.",
+            historical_pattern_similarity="Maps to duplicate-claim and reward accounting mismatch classes.",
+            defensive_checks=["double claim prevention", "claim state reset", "multi-user claim ordering"],
+            suggested_test="Assert claim twice without new rewards returns zero or reverts according to documented policy.",
+        )
+    if has_lock and not text_has_any(tests, ["cooldown", "epoch", "vesting", "lock"]):
+        maybe_add(
+            "ARK-RWD-004",
+            "Low readiness gap",
+            "Lock/cooldown reward lifecycle not tested",
+            "Lock, cooldown, epoch, or vesting signals were detected without visible lifecycle tests.",
+            "Add tests for stake, lock/cooldown, reward accrual, claim, and unstake lifecycle transitions.",
+            ["reward-accounting", "staking-lifecycle", "staking-rule-pack"],
+            priority="Low",
+            category="reward-accounting",
+            detected=reward_terms,
+            why_it_matters="Time or epoch-based reward states are easy to mis-handle around boundary transitions.",
+            historical_pattern_similarity="Maps to reward lifecycle and state-transition readiness classes.",
+            defensive_checks=["epoch boundaries", "cooldown transitions", "vesting claim timing"],
+            suggested_test="Advance local time/epochs and assert reward and withdrawal state transitions follow documented policy.",
+        )
+    if has_emission_admin and not has_admin_docs:
+        maybe_add(
+            "ARK-RWD-005",
+            "Low readiness gap",
+            "Emission/admin update assumptions not documented",
+            "Emission or reward funding update signals were detected without clear admin or emission-policy documentation.",
+            "Document who can update emissions, how reward funding is bounded, and how changes affect accrued users.",
+            ["reward-accounting", "admin-risk", "staking-rule-pack"],
+            priority="Low",
+            category="reward-accounting",
+            detected=reward_terms,
+            why_it_matters="Emission controls define reward economics and can affect user expectations even if accounting is correct.",
+            historical_pattern_similarity="Maps to operational reward-configuration readiness classes.",
+            defensive_checks=["emission role bounds", "notifyRewardAmount constraints", "reward funding assumptions"],
+            suggested_test="Assert emission updates are role-gated and do not corrupt already accrued rewards.",
+        )
+
+
+RULE_PACK_DEFINITIONS = {
+    "vault": {
+        "label": "Vault Rule Pack",
+        "signal_categories": ["vault_erc4626", "vault_accounting", "vault_accounting_risk", "vault_strategy", "vault_withdrawal_liquidity", "vault_admin_ops"],
+        "finding_prefixes": ["ARK-VLT"],
+        "docs": "docs/VAULT_RULE_PACK.md",
+        "suggested_tests": ["totalAssets consistency", "deposit/withdraw roundtrip", "share conversion rounding", "strategy gain/loss lifecycle"],
+    },
+    "oracle": {
+        "label": "Oracle Rule Pack",
+        "signal_categories": ["oracle_rule_pack", "oracle", "vault_pricing"],
+        "finding_prefixes": ["ARK-ORC"],
+        "docs": "docs/ORACLE_RULE_PACK.md",
+        "suggested_tests": ["stale price rejection", "decimals normalization", "price bounds", "TWAP vs spot behavior"],
+    },
+    "access_control_upgradeability": {
+        "label": "Access Control / Upgradeability Rule Pack",
+        "signal_categories": ["access_upgrade_rule_pack", "access_control", "upgradeability"],
+        "finding_prefixes": ["ARK-ACC", "ARK-UPG"],
+        "docs": "docs/ACCESS_CONTROL_RULE_PACK.md",
+        "suggested_tests": ["unauthorized setter tests", "pause/emergency boundaries", "initializer once", "upgrade authorization"],
+    },
+    "reentrancy_value_flow": {
+        "label": "Reentrancy / Value Flow Rule Pack",
+        "signal_categories": ["reentrancy_rule_pack", "reentrancy_value_flow"],
+        "finding_prefixes": ["ARK-REENT"],
+        "docs": "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+        "suggested_tests": ["reentrant receiver mock", "state update ordering", "double claim prevention", "failed external call behavior"],
+    },
+    "reward_accounting": {
+        "label": "Staking / Reward Accounting Rule Pack",
+        "signal_categories": ["reward_rule_pack", "staking_rewards", "accounting_complexity"],
+        "finding_prefixes": ["ARK-RWD"],
+        "docs": "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+        "suggested_tests": ["reward conservation", "no overclaim", "index monotonicity", "stake/unstake/claim lifecycle"],
+    },
+}
+
+
+def build_rule_packs(
+    signals: dict[str, dict[str, object]],
+    gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
+) -> dict[str, dict[str, object]]:
+    all_findings = gaps + suppressed_gaps
+    rule_packs: dict[str, dict[str, object]] = {}
+    for key, definition in RULE_PACK_DEFINITIONS.items():
+        signal_terms_found: set[str] = set()
+        signal_files: set[str] = set()
+        for category in definition["signal_categories"]:
+            data = signals.get(category, {})
+            signal_terms_found.update(str(term) for term in data.get("terms", []))
+            signal_files.update(str(path) for path in data.get("files", []))
+        prefixes = tuple(definition["finding_prefixes"])
+        pack_findings = [finding_to_dict(gap) for gap in all_findings if gap.id.startswith(prefixes)]
+        rule_packs[key] = {
+            "label": definition["label"],
+            "detected": bool(signal_terms_found or pack_findings),
+            "signal_count": len(signal_terms_found),
+            "signals": sorted(signal_terms_found),
+            "files": sorted(signal_files)[:25],
+            "findings": pack_findings,
+            "finding_count": len(pack_findings),
+            "suggested_tests": definition["suggested_tests"],
+            "docs": definition["docs"],
+        }
+    return rule_packs
+
+
 def apply_suppressions(
     gaps: list[ReadinessGap],
     config: dict[str, object],
@@ -2434,6 +2984,7 @@ def generate_report(
     vault_test_coverage: dict[str, object],
     registry_metadata: dict[str, object],
     historical_patterns: list[HistoricalPattern],
+    rule_packs: dict[str, dict[str, object]],
     score: int,
     score_breakdown: dict[str, dict[str, object]],
     gaps: list[ReadinessGap],
@@ -2530,6 +3081,34 @@ def generate_report(
     lines.append("")
     if diff_data:
         lines.extend(render_diff_markdown(diff_data))
+    lines.append("## Rule Pack Coverage")
+    lines.append("")
+    rule_rows = [["Rule Pack", "Detected", "Findings", "Docs"]]
+    for pack in rule_packs.values():
+        rule_rows.append(
+            [
+                str(pack.get("label", "")),
+                "yes" if pack.get("detected") else "no",
+                str(pack.get("finding_count", 0)),
+                str(pack.get("docs", "")),
+            ]
+        )
+    lines.append(markdown_table(rule_rows))
+    lines.append("")
+    for pack in rule_packs.values():
+        if not pack.get("detected") and not pack.get("findings"):
+            continue
+        lines.append(f"### {pack.get('label', 'Rule Pack')}")
+        lines.append("")
+        lines.append(f"- Signals detected: `{pack.get('signal_count', 0)}`")
+        if pack.get("signals"):
+            lines.append(f"- Signal terms: `{', '.join(str(item) for item in pack.get('signals', [])[:20])}`")
+        lines.append(f"- Findings: `{pack.get('finding_count', 0)}`")
+        lines.append(f"- Docs: `{pack.get('docs', '')}`")
+        lines.append("- Suggested tests:")
+        for test in pack.get("suggested_tests", []):
+            lines.append(f"  - {test}")
+        lines.append("")
     lines.append("## Risk Signal Summary")
     lines.append("")
     for category in [
@@ -2702,12 +3281,16 @@ def generate_report(
     lines.append("## Generated Issue Checklist")
     lines.append("")
     checklist_output = generated_outputs.get("issue_checklist", "")
+    issue_plan_output = generated_outputs.get("issue_plan", "")
     if checklist_output:
         lines.append(f"- Generated checklist: `{checklist_output}`")
         lines.append("- Use this as a copyable GitHub Issue body or as a remediation tracker.")
     else:
         lines.append("- No issue checklist file was requested in this run.")
         lines.append("- To generate one: `python3 scripts/pre_audit_scan.py --root . --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md`")
+    if issue_plan_output:
+        lines.append(f"- Generated issue plan: `{issue_plan_output}`")
+        lines.append("- Issue plan JSON can be used with `scripts/create_github_issues.py` in dry-run, create, or update mode.")
     lines.append("")
     lines.append("## GitHub Action Outputs")
     lines.append("")
@@ -2767,6 +3350,7 @@ def json_report(
     classified: ClassifiedFiles,
     signals: dict[str, dict[str, object]],
     vault_test_coverage: dict[str, object],
+    rule_packs: dict[str, dict[str, object]],
     historical_patterns: list[HistoricalPattern],
     gaps: list[ReadinessGap],
     suppressed_gaps: list[ReadinessGap],
@@ -2800,6 +3384,7 @@ def json_report(
         },
         "signals": signals,
         "vault_rule_pack": vault_test_coverage,
+        "rule_packs": rule_packs,
         "historical_patterns": [item.__dict__ for item in historical_patterns],
         "findings": findings,
         "suppressed_findings": suppressed_findings,
@@ -2937,13 +3522,192 @@ def generate_comment_output(
     write_markdown(path, lines)
 
 
+def priority_slug(priority: str) -> str:
+    text = priority.lower()
+    if "critical" in text:
+        return "critical"
+    if "high" in text:
+        return "high"
+    if "medium" in text:
+        return "medium"
+    if "low" in text:
+        return "low"
+    return "informational"
+
+
+def issue_marker(finding_id: str) -> str:
+    return f"{ISSUE_MARKER_PREFIX}{finding_id} -->"
+
+
+def issue_title_for_gap(gap: ReadinessGap) -> str:
+    priority = priority_slug(gap.priority).title()
+    return f"[Arkheionx][{priority}] {gap.id} - {gap.title}"
+
+
+def issue_labels_for_gap(gap: ReadinessGap) -> list[str]:
+    labels = {
+        "arkheionx",
+        "pre-audit-readiness",
+        f"{priority_slug(gap.priority)}-readiness-gap",
+        gap.category.replace("_", "-"),
+    }
+    labels.update(tag.replace("_", "-") for tag in gap.tags[:6])
+    return sorted(label for label in labels if label)
+
+
+def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> str:
+    lines = [
+        issue_marker(gap.id),
+        "",
+        f"# Arkheionx readiness gap: {gap.id}",
+        "",
+        ISSUE_DISCLAIMER,
+        "",
+        "## Finding Summary",
+        "",
+        f"- ID: `{gap.id}`",
+        f"- Priority: `{gap.priority}`",
+        f"- Category: `{gap.category}`",
+        f"- Confidence: `{gap.confidence}`",
+        f"- Fingerprint: `{gap.fingerprint}`",
+        "",
+        "## Why It Matters",
+        "",
+        gap.why_it_matters or gap.detail,
+        "",
+        "## Historical Pattern Similarity",
+        "",
+        gap.historical_pattern_similarity or "Historical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.",
+        "",
+        "## Recommended Defensive Checks",
+        "",
+    ]
+    for check in gap.defensive_checks or [gap.recommendation]:
+        lines.append(f"- {check}")
+    lines.extend(["", "## Suggested Tests", ""])
+    for test in ([gap.suggested_test] if gap.suggested_test else [gap.recommendation]):
+        lines.append(f"- {test}")
+    lines.extend(
+        [
+            "",
+            "## Suggested Owner Notes",
+            "",
+            "- Assign this to the maintainer responsible for the affected contract or test area.",
+            "- Keep remediation defensive and local to this repository.",
+            "- Re-run Arkheionx after changes and compare against the latest baseline if available.",
+            "",
+            "## Acceptance Checklist",
+            "",
+            "- [ ] Add or update tests.",
+            "- [ ] Document assumptions.",
+            "- [ ] Review privileged roles if relevant.",
+            "- [ ] Re-run Arkheionx.",
+            "- [ ] Compare against baseline if relevant.",
+            "",
+            "## Generated Artifacts",
+            "",
+        ]
+    )
+    for label, path in generated_outputs.items():
+        if path:
+            lines.append(f"- {label.replace('_', ' ').title()}: `{path}`")
+    lines.extend(["", "## Safety Boundary", "", "Do not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue."])
+    return "\n".join(lines) + "\n"
+
+
+def summary_issue_body(
+    gaps: list[ReadinessGap],
+    score: int,
+    protocol_type: str,
+    generated_outputs: dict[str, str],
+) -> str:
+    lines = [
+        issue_marker("summary"),
+        "",
+        "# Arkheionx pre-audit readiness remediation plan",
+        "",
+        ISSUE_DISCLAIMER,
+        "",
+        f"- Score: `{score}/100`",
+        f"- Score band: `{score_band(score)}`",
+        f"- Protocol type: `{protocol_type}`",
+        f"- Active readiness gaps: `{len(gaps)}`",
+        "",
+        "## Top Readiness Gaps",
+        "",
+    ]
+    for gap in top_findings(gaps, 10):
+        lines.append(f"- [ ] `{gap.id}` - {gap.title} ({gap.priority})")
+    lines.extend(["", "## Generated Artifacts", ""])
+    for label, path in generated_outputs.items():
+        if path:
+            lines.append(f"- {label.replace('_', ' ').title()}: `{path}`")
+    lines.extend(["", "This plan is a readiness tracker, not a formal audit report."])
+    return "\n".join(lines) + "\n"
+
+
+def build_issue_plan(
+    root: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+    generated_outputs: dict[str, str],
+    grouping: str = "one-per-finding",
+) -> dict[str, object]:
+    issues = []
+    for gap in sorted(gaps, key=lambda item: (gap_priority_rank(item), item.id, item.title)):
+        issues.append(
+            {
+                "marker": issue_marker(gap.id),
+                "finding_id": gap.id,
+                "title": issue_title_for_gap(gap),
+                "labels": issue_labels_for_gap(gap),
+                "body": issue_body_for_gap(gap, generated_outputs),
+                "priority": gap.priority,
+                "category": gap.category,
+                "confidence": gap.confidence,
+                "fingerprint": gap.fingerprint,
+                "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+                "recommended_defensive_checks": gap.defensive_checks,
+                "disclaimer": ISSUE_DISCLAIMER,
+            }
+        )
+    return {
+        "tool": "Arkheionx Pre-Audit Scanner",
+        "version": VERSION,
+        "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
+        "repo_root": display_path(root),
+        "protocol_type": protocol_type,
+        "score": score,
+        "score_band": score_band(score),
+        "mode": "dry-run",
+        "issue_grouping": grouping,
+        "issues": issues,
+        "summary_issue": {
+            "marker": issue_marker("summary"),
+            "title": "[Arkheionx] Pre-audit readiness remediation plan",
+            "labels": ["arkheionx", "pre-audit-readiness", "remediation-plan"],
+            "body": summary_issue_body(gaps, score, protocol_type, generated_outputs),
+            "disclaimer": ISSUE_DISCLAIMER,
+        },
+        "disclaimer": ISSUE_DISCLAIMER,
+    }
+
+
+def write_issue_plan(path: Path, plan: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def generate_issue_checklist(
     path: Path,
     protocol_type: str,
     score: int,
     gaps: list[ReadinessGap],
     diff_data: dict[str, object] | None,
+    generated_outputs: dict[str, str] | None = None,
 ) -> None:
+    generated_outputs = generated_outputs or {}
     lines = [
         "# Arkheionx Generated Issue Checklist",
         "",
@@ -2986,6 +3750,8 @@ def generate_issue_checklist(
         lines.extend([f"## {heading}", ""])
         for gap in group_gaps:
             lines.append(f"- [ ] {gap.id} - {gap.recommendation}")
+            lines.append(f"  - Suggested issue title: `{issue_title_for_gap(gap)}`")
+            lines.append(f"  - Suggested labels: `{', '.join(issue_labels_for_gap(gap))}`")
             suggested = gap.suggested_test or gap.recommendation
             lines.append("  - Suggested tests:")
             lines.append(f"    - {suggested}")
@@ -3011,6 +3777,37 @@ def generate_issue_checklist(
     lines.extend(
         [
             "",
+            "## Convert This Checklist Into GitHub Issues",
+            "",
+        ]
+    )
+    issue_plan_path = generated_outputs.get("issue_plan", "")
+    if issue_plan_path:
+        lines.append(f"Issue plan: `{issue_plan_path}`")
+        lines.append("")
+        lines.extend(
+            [
+                "Dry run:",
+                "",
+                "```sh",
+                f"python3 scripts/create_github_issues.py --issue-plan {issue_plan_path} --mode dry-run",
+                "```",
+                "",
+                "Create issues:",
+                "",
+                "```sh",
+                f"python3 scripts/create_github_issues.py --issue-plan {issue_plan_path} --mode create --max-issues 5",
+                "```",
+                "",
+                "Only run issue creation in repositories you own or are authorized to manage.",
+                "",
+            ]
+        )
+    else:
+        lines.append("No issue plan path was provided for this run.")
+        lines.append("")
+    lines.extend(
+        [
             "## Notes",
             "",
             "This checklist is generated from static/local readiness signals. It is not a formal audit.",
@@ -3101,6 +3898,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--summary-output", default="", help="Optional GitHub Actions summary Markdown output path.")
     parser.add_argument("--comment-output", default="", help="Optional pull request comment Markdown output path.")
     parser.add_argument("--issue-checklist-output", default="", help="Optional generated issue checklist Markdown output path.")
+    parser.add_argument("--issue-plan-output", default="", help="Optional generated GitHub issue plan JSON output path.")
     parser.add_argument("--config", default=DEFAULT_CONFIG, help="Optional Arkheionx JSON config path.")
     parser.add_argument("--generate-invariant-skeletons", action="store_true", help="Generate safe Foundry invariant skeletons.")
     parser.add_argument("--fail-on-critical-readiness-gap", action="store_true", help="Exit 2 if critical readiness gaps are detected.")
@@ -3154,7 +3952,10 @@ def main(argv: list[str] | None = None) -> int:
         protocol_type,
     )
     apply_finding_metadata(gaps, signals, protocol_type)
+    add_rule_pack_gaps(gaps, contents, classified, signals)
+    apply_finding_metadata(gaps, signals, protocol_type)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
+    rule_packs = build_rule_packs(signals, gaps, suppressed_gaps)
     invariants = suggest_invariants(protocol_type, signals)
     skeleton_path = generate_invariant_skeleton(root) if args.generate_invariant_skeletons else None
 
@@ -3171,6 +3972,7 @@ def main(argv: list[str] | None = None) -> int:
     summary_output = resolve_output_path(args.summary_output)
     comment_output = resolve_output_path(args.comment_output)
     issue_checklist_output = resolve_output_path(args.issue_checklist_output)
+    issue_plan_output = resolve_output_path(args.issue_plan_output)
     generated_outputs = {
         "markdown_report": display_path(output),
         "json_report": display_path(json_output) if json_output else "",
@@ -3178,6 +3980,7 @@ def main(argv: list[str] | None = None) -> int:
         "summary": display_path(summary_output) if summary_output else "",
         "comment": display_path(comment_output) if comment_output else "",
         "issue_checklist": display_path(issue_checklist_output) if issue_checklist_output else "",
+        "issue_plan": display_path(issue_plan_output) if issue_plan_output else "",
         "baseline": display_path(baseline_output) if baseline_output else "",
         "diff_report": display_path(diff_output) if diff_output else "",
         "diff_json": display_path(diff_json_output) if diff_json_output else "",
@@ -3207,6 +4010,7 @@ def main(argv: list[str] | None = None) -> int:
         vault_test_coverage=vault_test_coverage,
         registry_metadata=registry_metadata,
         historical_patterns=historical_patterns,
+        rule_packs=rule_packs,
         score=score,
         score_breakdown=score_breakdown,
         gaps=gaps,
@@ -3221,8 +4025,10 @@ def main(argv: list[str] | None = None) -> int:
         diff_data=diff_data,
     )
 
+    if issue_plan_output:
+        write_issue_plan(issue_plan_output, build_issue_plan(root, protocol_type, score, gaps, generated_outputs))
     if issue_checklist_output:
-        generate_issue_checklist(issue_checklist_output, protocol_type, score, gaps, diff_data)
+        generate_issue_checklist(issue_checklist_output, protocol_type, score, gaps, diff_data, generated_outputs)
     if summary_output:
         generate_summary_output(summary_output, score, protocol_type, gaps, suppressed_gaps, generated_outputs, next_steps, max_top_gaps, diff_data)
     if comment_output:
@@ -3248,6 +4054,7 @@ def main(argv: list[str] | None = None) -> int:
                 classified,
                 signals,
                 vault_test_coverage,
+                rule_packs,
                 historical_patterns,
                 gaps,
                 suppressed_gaps,
@@ -3277,6 +4084,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Arkheionx PR comment body generated: {comment_output}")
     if issue_checklist_output:
         print(f"Arkheionx issue checklist generated: {issue_checklist_output}")
+    if issue_plan_output:
+        print(f"Arkheionx issue plan generated: {issue_plan_output}")
     if skeleton_path:
         print(f"Arkheionx invariant skeleton generated: {skeleton_path}")
     print(f"Readiness score: {score}/100 ({score_band(score)})")

@@ -1,0 +1,205 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "fingerprint": "d73c8a2c3e3055849cc2a36d",
+      "id": "ARK-TST-002",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "invariant-testing",
+        "staking"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "fingerprint": "28931344b387571d2cc7a0e0",
+      "id": "ARK-ORC-002",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "oracle-risk",
+        "price-assumptions"
+      ],
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "low",
+      "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+      "id": "ARK-VLT-009",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "vault-accounting",
+        "share-accounting"
+      ],
+      "title": "Vault accounting lacks visible roundtrip or conservation coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "low",
+      "fingerprint": "843d4f2224907dabc3816772",
+      "id": "ARK-REENT-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow"
+      ],
+      "title": "External-call value flow needs reentrancy review"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "fingerprint": "c0a40921efd524042b77b919",
+      "id": "ARK-RWD-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "fingerprint": "9aee372d5fc42a664ef7e458",
+      "id": "ARK-ORC-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "title": "Oracle-dependent logic without stale-price tests"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "fingerprint": "968c56ae1cd3dae1e2eae280",
+      "id": "ARK-ORC-005",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "documentation-readiness",
+        "oracle-rule-pack"
+      ],
+      "title": "Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "fingerprint": "13af6797121f94ff50563104",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "low",
+      "fingerprint": "c6c3deef7e721e9057a3f65a",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "fingerprint": "e7599f77df25242d8103622d",
+      "id": "ARK-RWD-002",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "fingerprint": "9362d8f81c0fd2384aea5bbb",
+      "id": "ARK-RWD-003",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "claim-flow",
+        "staking-rule-pack"
+      ],
+      "title": "Claim flow without double-claim prevention tests"
+    }
+  ],
+  "fingerprint_version": "0.5.0",
+  "generated_at": "2026-05-25T19:01:52+00:00",
+  "protocol_type": "staking",
+  "repo_root": "examples/oracle-staking-fixture",
+  "score": 65,
+  "score_band": "Improving",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.5.0"
+}

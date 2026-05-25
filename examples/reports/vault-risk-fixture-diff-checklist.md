@@ -15,12 +15,23 @@ Score: `58/100`
 - [ ] ARK-ORC-001 - Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.
 - [ ] ARK-VLT-007 - Add deposit, withdrawal, management, and performance fee tests where relevant.
 - [ ] ARK-VLT-008 - Add tests showing pause/emergency controls block risky flows and preserve documented exit or recovery paths.
+- [ ] ARK-ORC-002 - Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions.
+- [ ] ARK-ORC-004 - Add tests proving only documented roles can update oracle configuration.
+- [ ] ARK-ACC-001 - Add tests proving unauthorized users cannot call privileged setters or role-management functions.
+- [ ] ARK-ACC-003 - Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.
+- [ ] ARK-REENT-001 - Review state ordering and add local reentrant receiver tests around every value-flow path.
+- [ ] ARK-REENT-004 - Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.
+- [ ] ARK-RWD-004 - Add tests for stake, lock/cooldown, reward accrual, claim, and unstake lifecycle transitions.
 
 ## Documentation Tasks
 
 - [ ] Document admin role boundaries.
 - [ ] Document oracle and pricing assumptions.
 - [ ] Document known limitations and formal audit scope.
+
+## Convert This Checklist Into GitHub Issues
+
+No issue plan path was provided for this run.
 
 ## Notes
 

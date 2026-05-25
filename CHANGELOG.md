@@ -3,6 +3,41 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v0.5.0 - Unreleased
+
+### Added
+
+- Generated GitHub issue plan output for readiness findings.
+- Optional dry-run/create/update GitHub issue workflow.
+- Idempotent issue markers for duplicate prevention.
+- Oracle Rule Pack.
+- Access Control / Upgradeability Rule Pack.
+- Reentrancy / Value Flow Rule Pack.
+- Staking / Reward Accounting Rule Pack.
+- Rule pack documentation and oracle/staking example fixture.
+
+### Improved
+
+- Markdown report, JSON, SARIF, checklist, PR comment, and baseline/diff
+  integration with expanded rule-pack findings.
+- GitHub Action inputs for issue plan and optional issue workflows.
+- Generated issue checklist conversion path for remediation planning.
+- Monetization docs for Launch Report and Pre-Audit Sprint remediation plans.
+
+### Safety
+
+- Issue creation is disabled by default.
+- Dry-run mode makes no GitHub API calls.
+- Token and explicit create/update mode are required for real issue writes.
+- Generated issues are readiness tasks, not formal audit findings.
+
+### Known Limitations
+
+- Rule packs are heuristic.
+- No semantic Solidity call graph.
+- Issue creation depends on GitHub token permissions.
+- False positives remain possible.
+
 ## v0.4.1 - Unreleased
 
 ### Changed

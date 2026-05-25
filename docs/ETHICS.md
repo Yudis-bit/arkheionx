@@ -26,7 +26,7 @@ The Arkheionx pre-audit scanner:
 - does not test deployed contracts;
 - does not adapt historical PoCs to live targets;
 - does not collect secrets;
-- does not create remote issues.
+- does not create remote issues by default.
 
 The scanner may:
 
@@ -34,9 +34,14 @@ The scanner may:
 - identify missing tests;
 - map design patterns to historical exploit classes;
 - generate Markdown and JSON reports;
+- generate SARIF, baseline, diff, checklist, and issue-plan artifacts;
 - generate safe Foundry invariant skeletons;
 - recommend defensive review;
 - recommend formal audit.
+
+Optional GitHub issue creation is separate, explicit, token-based, capped by
+`--max-issues`, and intended only for repositories you own or are authorized to
+manage. Dry-run mode makes no GitHub API calls.
 
 ## Use
 

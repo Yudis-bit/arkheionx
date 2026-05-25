@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/mini-vault`
-- Generated at: `2026-05-25T13:16:18+00:00`
+- Generated at: `2026-05-25T18:53:56+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `high`
 - Files scanned: `5`
-- Scanner version: `0.4.0`
+- Scanner version: `0.5.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -25,11 +25,14 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 - Readiness score: **73/100**
 - Score band: **Improving**
-- Active readiness gaps: `2`
+- Active readiness gaps: `5`
 - Suppressed readiness gaps: `0`
 - Top readiness gaps:
+  - **ARK-REENT-001 (High readiness gap):** Value flow with external calls needs reentrancy review - Review state ordering and add local reentrant receiver tests around every value-flow path.
   - **ARK-VLT-001 (High readiness gap):** Vault accounting without invariant tests - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
   - **ARK-VLT-007 (Medium readiness gap):** Fee logic without fee accounting tests - Add deposit, withdrawal, management, and performance fee tests where relevant.
+  - **ARK-ACC-003 (Low readiness gap):** Admin role concentration not documented - Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.
+  - **ARK-REENT-004 (Low readiness gap):** External call path without documented ordering assumptions - Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.
@@ -59,10 +62,83 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 ## Top Readiness Gaps
 
-| ID          | Priority             | Category         | Title                                    |
-| ----------- | -------------------- | ---------------- | ---------------------------------------- |
-| ARK-VLT-001 | High readiness gap   | vault-accounting | Vault accounting without invariant tests |
-| ARK-VLT-007 | Medium readiness gap | vault-accounting | Fee logic without fee accounting tests   |
+| ID            | Priority             | Category              | Title                                                      |
+| ------------- | -------------------- | --------------------- | ---------------------------------------------------------- |
+| ARK-REENT-001 | High readiness gap   | reentrancy-value-flow | Value flow with external calls needs reentrancy review     |
+| ARK-VLT-001   | High readiness gap   | vault-accounting      | Vault accounting without invariant tests                   |
+| ARK-VLT-007   | Medium readiness gap | vault-accounting      | Fee logic without fee accounting tests                     |
+| ARK-ACC-003   | Low readiness gap    | access-control        | Admin role concentration not documented                    |
+| ARK-REENT-004 | Low readiness gap    | reentrancy-value-flow | External call path without documented ordering assumptions |
+
+## Rule Pack Coverage
+
+| Rule Pack                                 | Detected | Findings | Docs                                    |
+| ----------------------------------------- | -------- | -------- | --------------------------------------- |
+| Vault Rule Pack                           | yes      | 2        | docs/VAULT_RULE_PACK.md                 |
+| Oracle Rule Pack                          | yes      | 0        | docs/ORACLE_RULE_PACK.md                |
+| Access Control / Upgradeability Rule Pack | yes      | 1        | docs/ACCESS_CONTROL_RULE_PACK.md        |
+| Reentrancy / Value Flow Rule Pack         | yes      | 2        | docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md |
+| Staking / Reward Accounting Rule Pack     | yes      | 0        | docs/REWARD_ACCOUNTING_RULE_PACK.md     |
+
+### Vault Rule Pack
+
+- Signals detected: `15`
+- Signal terms: `assets, balanceOf, convertToAssets, convertToShares, decimals, deposit, mint, pause, setFee, shares, totalAssets, totalSupply, treasury, unpause, withdraw`
+- Findings: `2`
+- Docs: `docs/VAULT_RULE_PACK.md`
+- Suggested tests:
+  - totalAssets consistency
+  - deposit/withdraw roundtrip
+  - share conversion rounding
+  - strategy gain/loss lifecycle
+
+### Oracle Rule Pack
+
+- Signals detected: `1`
+- Signal terms: `decimals`
+- Findings: `0`
+- Docs: `docs/ORACLE_RULE_PACK.md`
+- Suggested tests:
+  - stale price rejection
+  - decimals normalization
+  - price bounds
+  - TWAP vs spot behavior
+
+### Access Control / Upgradeability Rule Pack
+
+- Signals detected: `5`
+- Signal terms: `onlyOwner, owner, pause, setFee, unpause`
+- Findings: `1`
+- Docs: `docs/ACCESS_CONTROL_RULE_PACK.md`
+- Suggested tests:
+  - unauthorized setter tests
+  - pause/emergency boundaries
+  - initializer once
+  - upgrade authorization
+
+### Reentrancy / Value Flow Rule Pack
+
+- Signals detected: `3`
+- Signal terms: `transfer, transferFrom, withdraw`
+- Findings: `2`
+- Docs: `docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`
+- Suggested tests:
+  - reentrant receiver mock
+  - state update ordering
+  - double claim prevention
+  - failed external call behavior
+
+### Staking / Reward Accounting Rule Pack
+
+- Signals detected: `4`
+- Signal terms: `decimals, fee, shares, withdraw`
+- Findings: `0`
+- Docs: `docs/REWARD_ACCOUNTING_RULE_PACK.md`
+- Suggested tests:
+  - reward conservation
+  - no overclaim
+  - index monotonicity
+  - stake/unstake/claim lifecycle
 
 ## Risk Signal Summary
 
@@ -110,13 +186,19 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 ### Reentrancy Value Flow
 
-- Detected signals: `transfer(, transferFrom`
+- Detected signals: `transfer, transferFrom, withdraw`
 - Files with signals: `2`
 - Example files: `src/MiniVault.sol, test/MiniVault.t.sol`
 
 ### Accounting Complexity
 
 - Detected signals: `decimals, fee`
+- Files with signals: `2`
+- Example files: `src/MiniVault.sol, test/MiniVault.t.sol`
+
+### Staking Rewards
+
+- Detected signals: `shares, withdraw`
 - Files with signals: `2`
 - Example files: `src/MiniVault.sol, test/MiniVault.t.sol`
 
@@ -194,7 +276,7 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
 ### Reentrancy-sensitive value flow review recommended
 
 - Confidence: `high`
-- Detected signals: `assets, balanceOf, convertToAssets, convertToShares, deposit, mint, shares, totalAssets, totalSupply, transfer(, transferFrom, withdraw`
+- Detected signals: `assets, balanceOf, convertToAssets, convertToShares, deposit, mint, shares, totalAssets, totalSupply, transfer, transferFrom, withdraw`
 - Why it matters: External calls around withdrawals, claims, callbacks, or token transfers have repeatedly exposed state-ordering assumptions.
 - Failed assumption class: External receivers cannot re-enter before internal accounting reaches a safe state.
 - Broken invariant class: Value flow remains single-entry and accounting is updated before control leaves the contract.
@@ -218,6 +300,20 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
   - Add tests showing pause/emergency controls behave as documented.
 - Suggested test/invariant: Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.
 - Search tags: `access-control-review, admin-risk, operational-security`
+
+### Reward accounting mismatch review recommended
+
+- Confidence: `medium`
+- Detected signals: `decimals, fee, shares, withdraw`
+- Why it matters: Reward indexes and accumulators are common sources of overclaim, underclaim, and precision drift when supply changes across epochs.
+- Failed assumption class: Reward index math always reflects actual funded rewards and stake weights.
+- Broken invariant class: Claimable rewards cannot exceed funded rewards beyond documented rounding.
+- Recommended defensive checks:
+  - Test claim conservation across multiple users.
+  - Test stake/unstake around reward updates.
+  - Check precision and rounding around small balances.
+- Suggested test/invariant: Invariant: total claimed plus remaining claimable never exceeds funded rewards beyond expected rounding.
+- Search tags: `reward-accounting, staking, index-math, precision`
 
 ## All Readiness Gaps
 
@@ -307,6 +403,127 @@ Suggested tests:
 
 Search tags: `fee-accounting, vault-accounting`
 
+### ARK-ACC-003 - Admin role concentration not documented
+
+- Priority: `Low readiness gap`
+- Confidence: `medium`
+- Category: `access-control`
+
+Detected signals:
+- `onlyOwner`
+- `owner`
+- `pause`
+- `setFee`
+- `unpause`
+
+Affected files:
+- `src/MiniVault.sol`
+- `test/MiniVault.t.sol`
+
+What was detected:
+
+Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.
+
+Why it matters:
+
+Role concentration affects operational risk and audit scope even when access control code is syntactically correct.
+
+Historical pattern similarity:
+
+Maps to operational control readiness classes.
+
+Recommended defensive checks:
+
+- role matrix
+- owner powers
+- timelock assumptions
+- multisig assumptions
+
+Suggested tests:
+
+- Add a role matrix to docs and unit tests for critical roles.
+
+Search tags: `access-control-review, documentation-readiness, access-control-rule-pack`
+
+### ARK-REENT-001 - Value flow with external calls needs reentrancy review
+
+- Priority: `High readiness gap`
+- Confidence: `medium`
+- Category: `reentrancy-value-flow`
+
+Detected signals:
+- `transfer`
+- `transferFrom`
+- `withdraw`
+
+Affected files:
+- `src/MiniVault.sol`
+- `test/MiniVault.t.sol`
+
+What was detected:
+
+Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.
+
+Why it matters:
+
+External calls can hand control to untrusted code before accounting reaches a safe state.
+
+Historical pattern similarity:
+
+Maps to reentrancy and callback-driven value-flow readiness classes.
+
+Recommended defensive checks:
+
+- state update before external call
+- reentrant receiver mock
+- failed external call behavior
+- single-claim guarantees
+
+Suggested tests:
+
+- Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry.
+
+Search tags: `reentrancy-review, value-flow, reentrancy-rule-pack`
+
+### ARK-REENT-004 - External call path without documented ordering assumptions
+
+- Priority: `Low readiness gap`
+- Confidence: `medium`
+- Category: `reentrancy-value-flow`
+
+Detected signals:
+- `transfer`
+- `transferFrom`
+- `withdraw`
+
+Affected files:
+- `src/MiniVault.sol`
+- `test/MiniVault.t.sol`
+
+What was detected:
+
+External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.
+
+Why it matters:
+
+Reviewers need clear state-ordering assumptions to evaluate external call safety.
+
+Historical pattern similarity:
+
+Maps to checks-effects-interactions and callback boundary readiness classes.
+
+Recommended defensive checks:
+
+- ordering documentation
+- callback assumptions
+- external call failure behavior
+
+Suggested tests:
+
+- Pair ordering documentation with a local receiver test that exercises the documented boundary.
+
+Search tags: `reentrancy-review, documentation-readiness, reentrancy-rule-pack`
+
 
 ## Suppressed Readiness Gaps
 
@@ -324,6 +541,11 @@ No readiness gaps were suppressed in this run.
 - **strategy balance drift handling** (`vault`): Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.
 - **withdrawal lifecycle conservation** (`vault`): Queued or delayed withdrawals should conserve shares/assets through request, cooldown, claim, and cancellation.
 - **pause behavior** (`vault`): Pause should block risky flows while preserving documented emergency exits.
+- **reward conservation** (`staking`): Total claimed plus remaining claimable should not exceed funded rewards beyond rounding.
+- **no overclaim** (`staking`): Users should not claim more than their funded and accrued share.
+- **index monotonicity** (`staking`): Reward indexes should be monotonic and supply-aware.
+- **stake/unstake roundtrip** (`staking`): Stake and unstake flows should preserve balances and reward accounting.
+- **reward accounting precision** (`staking`): Small balances and precision edges should not create systematic reward drift.
 - **unauthorized role rejection** (`access control`): Unauthorized users cannot call privileged setters or emergency functions.
 - **admin cannot bypass accounting** (`access control`): Owner/admin operations cannot silently break accounting invariants unless explicitly trusted and documented.
 - **pause blocks risky flows** (`access control`): Pause blocks documented risky flows and preserves expected recovery paths.
@@ -343,6 +565,8 @@ No readiness gaps were suppressed in this run.
 
 - Generated checklist: `examples/reports/mini-vault-issue-checklist.md`
 - Use this as a copyable GitHub Issue body or as a remediation tracker.
+- Generated issue plan: `examples/reports/mini-vault-issue-plan.json`
+- Issue plan JSON can be used with `scripts/create_github_issues.py` in dry-run, create, or update mode.
 
 ## GitHub Action Outputs
 
@@ -352,6 +576,7 @@ No readiness gaps were suppressed in this run.
 - Summary: `examples/reports/mini-vault-action-summary.md`
 - Comment: `examples/reports/mini-vault-pr-comment.md`
 - Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`
+- Issue Plan: `examples/reports/mini-vault-issue-plan.json`
 - Baseline: `examples/reports/mini-vault.baseline.json`
 
 ## Search Tags
