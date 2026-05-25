@@ -1,20 +1,52 @@
 # GitHub Action Usage
 
-The Arkheionx pre-audit action runs the local scanner inside GitHub Actions and
-writes a Markdown report into the workflow workspace.
+The Arkheionx pre-audit action is a GitHub-native readiness check for
+authorized repositories. It scans local files, writes Markdown/JSON artifacts,
+can generate a job summary, and can optionally post a concise pull request
+comment.
 
-It requires no secrets, no RPC endpoint, and no network access from the
-scanner itself.
+Default scans require no secrets, no RPC endpoint, and no live-chain access.
 
-## Basic Workflow
+## Minimal Workflow
+
+Use this in an external repository when you only want a manual readiness scan:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
 
 on:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pre-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.3.0
+        with:
+          protocol-type: auto
+```
+
+Until `v0.3.0` is tagged, use `@main` only if you intentionally want the
+current development branch.
+
+## Pull Request Summary Workflow
+
+This workflow writes a report, JSON, generated issue checklist, and GitHub
+Actions job summary without commenting on the pull request:
+
+```yaml
+name: Arkheionx Pre-Audit Scan
+
+on:
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   pre-audit:
@@ -27,15 +59,54 @@ jobs:
           protocol-type: "auto"
           output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
           json-output: "arkheionx-report.json"
-          generate-invariant-skeletons: "false"
-          fail-on-critical-readiness-gap: "false"
           summary: "true"
+          create-issue-checklist: "true"
 ```
+
+## Pull Request Comment Workflow
+
+PR comment mode is off by default. Enable it only when you want Arkheionx to
+post or update a pull request comment containing the score and top readiness
+gaps.
+
+```yaml
+name: Arkheionx PR Readiness
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pre-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+        with:
+          protocol-type: "auto"
+          json-output: "arkheionx-report.json"
+          pr-comment: "true"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-mode: "update"
+```
+
+Update mode searches for:
+
+```html
+<!-- arkheionx-pre-audit-comment -->
+```
+
+If a matching comment exists, Arkheionx updates it instead of posting a new
+comment.
 
 ## Vault Builder Workflow
 
-For ERC4626-like vaults, strategy vaults, and share/accounting systems, pin the
-protocol type to `vault` so the v0.2.0 Vault Rule Pack is used:
+For ERC4626-like vaults, strategy vaults, and share/accounting systems:
 
 ```yaml
 name: Arkheionx Vault Readiness
@@ -45,6 +116,11 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   vault-readiness:
     runs-on: ubuntu-latest
@@ -52,34 +128,28 @@ jobs:
       - uses: actions/checkout@v4
       - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
         with:
-          root: "."
           protocol-type: "vault"
           output: "ARKHEIONX_VAULT_READINESS_REPORT.md"
           json-output: "arkheionx-vault-report.json"
           generate-invariant-skeletons: "true"
-          fail-on-critical-readiness-gap: "false"
-          summary: "true"
+          create-issue-checklist: "true"
+          pr-comment: "true"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-The vault report includes a Vault Rule Pack coverage section and a
-`vault_rule_pack` object in JSON output.
+## Workflow With Config
 
-## Pull Request Workflow
-
-Use pull request scans to surface readiness gaps before code reaches `main`.
-The default is non-blocking. To make critical readiness gaps block a PR, set:
+Create `.arkheionx.json` in your repository to ignore paths, add local search
+tags, and document suppressions:
 
 ```yaml
-fail-on-critical-readiness-gap: "true"
+with:
+  config: ".arkheionx.json"
 ```
 
-This should be used carefully. Early-stage repositories may prefer reports
-first and enforcement later.
-
-## Manual Workflow
-
-The `workflow_dispatch` trigger lets maintainers run readiness scans on demand,
-for example before audit intake or before publishing a launch update.
+Suppressed findings are still shown under `Suppressed Readiness Gaps` in the
+report and in `suppressed_findings` in JSON. Suppression is not proof of
+safety.
 
 ## Local CLI Equivalent
 
@@ -88,46 +158,11 @@ python3 scripts/pre_audit_scan.py \
   --root . \
   --protocol-type auto \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
-  --json-output arkheionx-report.json
+  --json-output arkheionx-report.json \
+  --summary-output ARKHEIONX_ACTION_SUMMARY.md \
+  --comment-output ARKHEIONX_PR_COMMENT.md \
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
 ```
-
-## JSON Output
-
-Set `json-output` to write a machine-readable report:
-
-```yaml
-json-output: "arkheionx-report.json"
-```
-
-The JSON includes:
-
-- protocol type and confidence;
-- score and score band;
-- score breakdown;
-- scanned files;
-- risk signals;
-- historical pattern similarity;
-- readiness gaps;
-- suggested invariants;
-- next steps;
-- disclaimer.
-
-## Invariant Skeleton Generation
-
-To generate a safe Foundry skeleton:
-
-```yaml
-generate-invariant-skeletons: "true"
-```
-
-The action writes:
-
-```text
-test/invariant/ArkheionxReadinessInvariants.t.sol
-```
-
-The skeleton contains placeholders only. It has no live addresses, no RPC
-calls, and no exploit logic.
 
 ## Inputs
 
@@ -137,12 +172,53 @@ calls, and no exploit logic.
 | `protocol-type` | `auto` | `auto`, `vault`, `amm`, `lending`, `staking`, `oracle`, or `generic`. |
 | `output` | `ARKHEIONX_PRE_AUDIT_REPORT.md` | Markdown report path. |
 | `json-output` | empty | Optional JSON report path. |
+| `summary` | `true` | Write generated summary to the GitHub Actions job summary. |
+| `summary-output` | `ARKHEIONX_ACTION_SUMMARY.md` | Local summary Markdown path. |
+| `pr-comment` | `false` | Generate and optionally post/update a PR comment. |
+| `github-token` | empty | Token used only for optional PR comment mode. |
+| `comment-output` | `ARKHEIONX_PR_COMMENT.md` | Local PR comment body path. |
+| `comment-mode` | `update` | `update` existing marker comment or `append`. |
+| `create-issue-checklist` | `true` | Generate a copyable Markdown issue checklist. |
+| `issue-checklist-output` | `ARKHEIONX_ISSUE_CHECKLIST.md` | Checklist output path. |
+| `config` | `.arkheionx.json` | Optional config path. |
 | `generate-invariant-skeletons` | `false` | Create safe Foundry invariant skeletons. |
 | `fail-on-critical-readiness-gap` | `false` | Fail only when explicitly enabled. |
-| `create-issues` | `false` | Reserved for future local issue suggestions. No remote issues are created. |
-| `summary` | `true` | Write a short report excerpt to the GitHub Actions job summary. |
+| `create-issues` | `false` | Reserved. No remote issues are created. |
+| `verbose` | `false` | Print scanner details. |
+
+## JSON Output
+
+v0.3.0 JSON includes:
+
+- canonical `findings` with stable IDs;
+- `suppressed_findings`;
+- `summary` counts;
+- `generated_outputs`;
+- legacy-compatible `readiness_gaps`;
+- score, score band, score breakdown, signals, historical patterns, suggested
+  invariants, and disclaimer.
 
 ## Troubleshooting
+
+If the PR comment does not appear:
+
+- confirm `pr-comment: "true"`;
+- confirm `github-token: ${{ secrets.GITHUB_TOKEN }}`;
+- confirm workflow permissions include `pull-requests: write` and
+  `issues: write`;
+- remember fork PRs may restrict token permissions.
+
+If the report exists but is not committed:
+
+- this action writes artifacts into the workflow workspace;
+- upload them with `actions/upload-artifact` if you want to keep them after the
+  job.
+
+If the config is invalid:
+
+- the scanner continues;
+- the report includes `Configuration Warnings`;
+- fix `.arkheionx.json` before relying on suppressions.
 
 If no Solidity files are found:
 
@@ -150,25 +226,16 @@ If no Solidity files are found:
 - confirm contracts are committed;
 - confirm files are not only inside ignored build/cache folders.
 
-If the protocol type looks wrong:
+## Security Notes
 
-- set `protocol-type` manually;
-- open a `False Positive Report` issue with the scanned signals.
-
-If the score looks too high or too low:
-
-- read the score breakdown before relying on the total;
-- remember that this is a readiness heuristic, not a formal audit result.
-
-## Limitations
-
-The action does not:
+The default action path does not:
 
 - call RPC endpoints;
 - inspect deployed contracts;
 - submit transactions;
+- collect secrets;
 - create remote GitHub issues;
-- prove that a repository is secure.
+- prove a repository is secure.
 
-Use it as a pre-audit preparation step, then seek formal review before user
-funds are at risk.
+PR comment mode uses the GitHub API only when explicitly enabled and only to
+write a comment on the pull request running the workflow.

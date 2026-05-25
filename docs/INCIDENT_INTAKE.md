@@ -85,7 +85,7 @@ pattern for newer entries). Implement:
 Constraints:
 
 - No live-target instructions.
-- No drain helpers.
+- No asset-extraction helpers.
 - No private keys or RPC URLs in code.
 - Setup separated from exploit.
 

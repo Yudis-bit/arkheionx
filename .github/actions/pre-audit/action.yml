@@ -17,6 +17,42 @@ inputs:
     description: Optional JSON report output path.
     required: false
     default: ""
+  summary:
+    description: Write an Arkheionx summary to the GitHub Actions job summary.
+    required: false
+    default: "true"
+  summary-output:
+    description: Local Markdown path for generated GitHub Actions summary content.
+    required: false
+    default: "ARKHEIONX_ACTION_SUMMARY.md"
+  pr-comment:
+    description: Post or update an Arkheionx pull request comment.
+    required: false
+    default: "false"
+  github-token:
+    description: GitHub token used only for optional PR comment mode.
+    required: false
+    default: ""
+  comment-output:
+    description: Path for generated PR comment body.
+    required: false
+    default: "ARKHEIONX_PR_COMMENT.md"
+  comment-mode:
+    description: "PR comment mode: update or append."
+    required: false
+    default: "update"
+  create-issue-checklist:
+    description: Generate a Markdown issue checklist.
+    required: false
+    default: "true"
+  issue-checklist-output:
+    description: Generated issue checklist Markdown path.
+    required: false
+    default: "ARKHEIONX_ISSUE_CHECKLIST.md"
+  config:
+    description: Optional Arkheionx config file path.
+    required: false
+    default: ".arkheionx.json"
   generate-invariant-skeletons:
     description: Generate safe Foundry invariant skeletons.
     required: false
@@ -29,10 +65,10 @@ inputs:
     description: Reserved for future local issue suggestions. No remote issues are created.
     required: false
     default: "false"
-  summary:
-    description: Write a short Arkheionx report excerpt to the GitHub Actions job summary.
+  verbose:
+    description: Print scanner details.
     required: false
-    default: "true"
+    default: "false"
 runs:
   using: composite
   steps:
@@ -47,6 +83,22 @@ runs:
           ARGS+=(--json-output "${{ inputs.json-output }}")
         fi
 
+        if [ "${{ inputs.summary }}" = "true" ] && [ -n "${{ inputs.summary-output }}" ]; then
+          ARGS+=(--summary-output "${{ inputs.summary-output }}")
+        fi
+
+        if [ "${{ inputs.pr-comment }}" = "true" ] && [ -n "${{ inputs.comment-output }}" ]; then
+          ARGS+=(--comment-output "${{ inputs.comment-output }}")
+        fi
+
+        if [ "${{ inputs.create-issue-checklist }}" = "true" ] && [ -n "${{ inputs.issue-checklist-output }}" ]; then
+          ARGS+=(--issue-checklist-output "${{ inputs.issue-checklist-output }}")
+        fi
+
+        if [ -n "${{ inputs.config }}" ]; then
+          ARGS+=(--config "${{ inputs.config }}")
+        fi
+
         if [ "${{ inputs.generate-invariant-skeletons }}" = "true" ]; then
           ARGS+=(--generate-invariant-skeletons)
         fi
@@ -59,25 +111,37 @@ runs:
           ARGS+=(--create-issues)
         fi
 
+        if [ "${{ inputs.verbose }}" = "true" ]; then
+          ARGS+=(--verbose)
+        fi
+
         python3 "${{ github.action_path }}/../../../scripts/pre_audit_scan.py" "${ARGS[@]}"
+
         echo "Arkheionx report generated: ${{ inputs.output }}"
         if [ -n "${{ inputs.json-output }}" ]; then
           echo "Arkheionx JSON report generated: ${{ inputs.json-output }}"
         fi
-
-        if [ "${{ inputs.summary }}" = "true" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
-          {
-            echo "## Arkheionx Pre-Audit Scan"
-            echo ""
-            echo "- Markdown report: \`${{ inputs.output }}\`"
-            if [ -n "${{ inputs.json-output }}" ]; then
-              echo "- JSON report: \`${{ inputs.json-output }}\`"
-            fi
-            if [ -f "${{ inputs.output }}" ]; then
-              echo ""
-              grep -E "Readiness score:|Score band:|Protocol type:|Protocol confidence:" "${{ inputs.output }}" | head -12 || true
-            fi
-            echo ""
-            echo "This is a pre-audit readiness signal, not a formal audit or security guarantee."
-          } >> "$GITHUB_STEP_SUMMARY"
+        if [ "${{ inputs.summary }}" = "true" ]; then
+          echo "Arkheionx summary generated: ${{ inputs.summary-output }}"
         fi
+        if [ "${{ inputs.create-issue-checklist }}" = "true" ]; then
+          echo "Arkheionx issue checklist generated: ${{ inputs.issue-checklist-output }}"
+        fi
+        if [ "${{ inputs.pr-comment }}" = "true" ]; then
+          echo "Arkheionx PR comment body generated: ${{ inputs.comment-output }}"
+        fi
+
+        if [ "${{ inputs.summary }}" = "true" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ] && [ -f "${{ inputs.summary-output }}" ]; then
+          cat "${{ inputs.summary-output }}" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    - name: Post Arkheionx pull request comment
+      if: ${{ inputs.pr-comment == 'true' && inputs.github-token != '' }}
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        set -euo pipefail
+        python3 "${{ github.action_path }}/../../../scripts/post_pr_comment.py" \
+          --comment-file "${{ inputs.comment-output }}" \
+          --mode "${{ inputs.comment-mode }}" || true

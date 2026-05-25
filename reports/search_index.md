@@ -14,10 +14,13 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.2.0, vault rule pack, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.3.0, PR comment mode, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
-| GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, Markdown report, JSON report |
+| GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, PR comment, issue checklist |
+| PR comment mode | [`docs/PR_COMMENT_MODE.md`](../docs/PR_COMMENT_MODE.md) | pull-request, comment marker, GitHub token |
+| Generated issue checklist | [`docs/GENERATED_ISSUE_CHECKLIST.md`](../docs/GENERATED_ISSUE_CHECKLIST.md) | issue checklist, remediation, finding IDs |
+| Arkheionx config | [`docs/ARKHEIONX_CONFIG.md`](../docs/ARKHEIONX_CONFIG.md) | config, suppression, ignore paths |
 | Readiness score | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) | score bands, audit blockers, invariant testing |
 | Vault Rule Pack | [`docs/VAULT_RULE_PACK.md`](../docs/VAULT_RULE_PACK.md) | ERC4626, vault accounting, share accounting |
 | Indie builder offer | [`docs/INDIE_BUILDER_OFFER.md`](../docs/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
@@ -33,7 +36,12 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Vault-risk Markdown report | [`examples/reports/vault-risk-fixture-pre-audit-report.md`](../examples/reports/vault-risk-fixture-pre-audit-report.md) | vault readiness, ERC4626, readiness gaps |
 | Sample JSON report | [`examples/reports/mini-vault-pre-audit-report.json`](../examples/reports/mini-vault-pre-audit-report.json) | json-output, automation, example |
 | Vault-risk JSON report | [`examples/reports/vault-risk-fixture-pre-audit-report.json`](../examples/reports/vault-risk-fixture-pre-audit-report.json) | vault_rule_pack, json-output, example |
+| Mini-vault action summary | [`examples/reports/mini-vault-action-summary.md`](../examples/reports/mini-vault-action-summary.md) | GitHub Actions summary, score, top gaps |
+| Vault-risk PR comment | [`examples/reports/vault-risk-fixture-pr-comment.md`](../examples/reports/vault-risk-fixture-pr-comment.md) | PR comment, marker, top gaps |
+| Vault-risk issue checklist | [`examples/reports/vault-risk-fixture-issue-checklist.md`](../examples/reports/vault-risk-fixture-issue-checklist.md) | issue checklist, readiness remediation, finding IDs |
+| Arkheionx config example | [`examples/arkheionx.config.example.json`](../examples/arkheionx.config.example.json) | config, suppression, ignore paths |
 | Pre-audit scanner | [`scripts/pre_audit_scan.py`](../scripts/pre_audit_scan.py) | cli, scanner, standard-library |
+| PR comment poster | [`scripts/post_pr_comment.py`](../scripts/post_pr_comment.py) | GitHub API, PR comment, marker update |
 | Report template | [`templates/pre_audit_report.md`](../templates/pre_audit_report.md) | template, Markdown report, disclaimer |
 | Invariant skeleton template | [`templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol`](../templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol) | Foundry, invariant, skeleton |
 
@@ -57,6 +65,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `withdrawal queue` | requestWithdraw, claimWithdraw, cooldown, pendingWithdraw, liquidityBuffer | vault rule pack | request lifecycle, claim lifecycle, cancel lifecycle, liquidity buffer tests | withdrawal-queue, vault-lifecycle, liquidity-buffer |
 | `oracle-dependent vault` | LP token pricing, pool price, Chainlink vault, Yearn-style vault risk, Harvest-style oracle risk | vault rule pack | stale price rejection, pool price bounds, TWAP sanity check, decimals normalization | oracle-risk, vault-pricing, pool-pricing |
 | `vault invariant tests` | totalAssets invariant, share accounting invariant, fee accounting invariant, strategy loss invariant | vault rule pack | totalAssets consistency, deposit-withdraw roundtrip, fee accounting conservation, strategy loss handling | vault-invariant, foundry, invariant-testing |
+| `PR readiness comment` | pull request comment, GitHub Action comment, Arkheionx PR comment, readiness comment | GitHub Action UX | score summary, top readiness gaps, marker update mode | github-action, pull-request, pre-audit-readiness |
+| `generated issue checklist` | issue checklist, remediation checklist, launch checklist, readiness checklist | GitHub Action UX | finding IDs, suggested tests, documentation tasks | issue-checklist, audit-readiness, indie-defi |
+| `finding IDs` | ARK-VLT-001, ARK-ORC-001, stable readiness finding, readiness gap ID | report UX | JSON findings, Markdown gap sections, suppression by ID | finding-id, json-schema, report-ux |
+| `Arkheionx config` | .arkheionx.json, false positive suppression, ignore paths, suppress findings | configuration | suppressed_findings, ignore_paths, additional_search_tags | config, false-positive, local-static-analysis |
 
 ## Historical Memory Index
 
@@ -99,6 +111,10 @@ withdrawal queue
 fee accounting
 oracle-dependent vault
 vault invariant tests
+PR readiness comment
+generated issue checklist
+finding IDs
+.arkheionx.json
 oracle manipulation
 flash loan price manipulation
 reentrancy

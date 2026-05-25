@@ -26,7 +26,7 @@ labels: ["unsafe-content", "priority"]
       the same vulnerability.
 - [ ] Content includes operational detail not present in the cited
       public post-mortem.
-- [ ] Content reads as live-target framing (drain helper, scanner,
+- [ ] Content reads as live-target framing (asset-extraction helper, scanner,
       attacker automation).
 - [ ] Content includes private keys, RPC URLs, API keys, or other
       secrets.

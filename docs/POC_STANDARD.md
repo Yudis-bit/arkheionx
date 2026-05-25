@@ -23,7 +23,7 @@ A PoC is **not** any of:
 
 - Live attack tooling.
 - Generic scanners or exploit-discovery automation.
-- Drain helpers or generalized value-extraction utilities.
+- Asset-extraction helpers or generalized value-extraction utilities.
 - Anything aimed at production systems that are still vulnerable.
 
 If an incident is still under embargo or affects an unpatched live system,
@@ -105,7 +105,7 @@ A PoC must not:
 - Hardcode RPC URLs, private keys, or any operational credential.
 - Carry instructions to redeploy the exploit against a live network.
 - Include scanner logic or target enumeration.
-- Include "drain everything from address X" helpers.
+- Include "extract everything from address X" helpers.
 - Include MEV or front-running tooling against live mempools.
 
 If a contributor cannot reproduce an incident without crossing this

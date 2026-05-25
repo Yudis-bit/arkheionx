@@ -119,6 +119,24 @@ CTA:
 > Run the GitHub Action with `protocol-type: vault` and read the generated
 > Markdown report.
 
+## v0.3.0 GitHub Action UX Message
+
+Primary v0.3.0 message:
+
+> Arkheionx v0.3.0 makes pre-audit readiness visible where indie builders
+> already work: GitHub Actions summaries, optional PR comments, generated issue
+> checklists, stable finding IDs, and local config suppressions.
+
+Short version:
+
+> Run Arkheionx in a pull request and get a readiness score, top gaps, and a
+> remediation checklist without leaving GitHub.
+
+CTA:
+
+> Add the GitHub Action, keep PR comment mode off by default, then enable it
+> when your team wants readiness feedback directly in code review.
+
 ## Example X Posts
 
 0. Arkheionx v0.2.0 is vault-focused: ERC4626-like checks, share/accounting
@@ -163,6 +181,10 @@ CTA:
 
 10. Arkheionx is becoming a security memory layer: historical exploit research
     plus pre-audit readiness tooling for the next wave of DeFi builders.
+
+11. Arkheionx v0.3.0 adds the GitHub-native product loop: Action summary,
+    optional PR comment, stable finding IDs, generated issue checklist, and
+    local config suppression. Not an audit. A way to prepare for one.
 
 ## LinkedIn-Style Technical Posts
 

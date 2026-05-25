@@ -1,0 +1,21 @@
+<!-- arkheionx-pre-audit-comment -->
+
+## Arkheionx Pre-Audit Readiness
+
+Score: **58/100** - Early readiness
+Protocol type: `vault`
+
+Top readiness gaps:
+
+| ID          | Priority           | Gap                                                                   |
+| ----------- | ------------------ | --------------------------------------------------------------------- |
+| ARK-ORC-001 | High readiness gap | Oracle-dependent vault without stale-price or bounds tests            |
+| ARK-VLT-002 | High readiness gap | ERC4626-like interface without preview function tests                 |
+| ARK-VLT-003 | High readiness gap | Shares/assets conversion without rounding tests                       |
+| ARK-VLT-004 | High readiness gap | totalAssets external dependency without manipulation-resistance tests |
+| ARK-VLT-005 | High readiness gap | Strategy accounting without gain/loss tests                           |
+
+Full report: `examples/reports/vault-risk-fixture-config-report.md`
+Issue checklist: `examples/reports/vault-risk-fixture-config-checklist.md`
+
+Arkheionx is not a formal audit and not a security guarantee.

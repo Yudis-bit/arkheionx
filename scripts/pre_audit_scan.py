@@ -20,9 +20,11 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_CONFIG = ".arkheionx.json"
+COMMENT_MARKER = "<!-- arkheionx-pre-audit-comment -->"
 DISCLAIMER = (
     "This is an automated pre-audit readiness report. It is not a formal "
     "audit, does not prove the absence or presence of vulnerabilities, does "
@@ -483,12 +485,55 @@ class ReadinessGap:
     detail: str
     recommendation: str
     tags: list[str]
-    priority: str = "Medium"
+    priority: str = "Medium readiness gap"
+    id: str = ""
+    category: str = "generic"
+    confidence: str = "medium"
     detected: list[str] = field(default_factory=list)
+    affected_files: list[str] = field(default_factory=list)
     why_it_matters: str = ""
     historical_pattern_similarity: str = ""
     defensive_checks: list[str] = field(default_factory=list)
     suggested_test: str = ""
+    suppressible: bool = True
+    suppression: dict[str, str] = field(default_factory=dict)
+
+
+FINDING_RULES: list[tuple[str, str, str]] = [
+    ("No Solidity tests detected", "ARK-TST-001", "testing-readiness"),
+    ("No invariant tests detected for DeFi protocol shape", "ARK-TST-002", "testing-readiness"),
+    ("Vault accounting without invariant tests", "ARK-VLT-001", "vault-accounting"),
+    ("ERC4626-like interface without preview function tests", "ARK-VLT-002", "vault-accounting"),
+    ("Shares/assets conversion without rounding tests", "ARK-VLT-003", "vault-accounting"),
+    ("totalAssets external dependency without manipulation-resistance tests", "ARK-VLT-004", "vault-accounting"),
+    ("Strategy accounting without gain/loss tests", "ARK-VLT-005", "vault-strategy"),
+    ("Withdrawal queue/cooldown without lifecycle tests", "ARK-VLT-006", "vault-withdrawal"),
+    ("Fee logic without fee accounting tests", "ARK-VLT-007", "vault-accounting"),
+    ("Pause/emergency controls without operational tests", "ARK-VLT-008", "vault-operations"),
+    ("Oracle-dependent vault without stale-price or bounds tests", "ARK-ORC-001", "oracle-pricing"),
+    ("Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage", "ARK-ORC-002", "oracle-pricing"),
+    ("Admin setters without role-boundary tests", "ARK-ACC-001", "access-control"),
+    ("Admin setters need explicit authorization coverage", "ARK-ACC-002", "access-control"),
+    ("External-call value flow needs reentrancy review", "ARK-REENT-001", "reentrancy-value-flow"),
+    ("Upgradeable vault without initializer/upgrade tests", "ARK-UPG-001", "upgradeability-initialization"),
+    ("Upgradeability surface needs initializer review", "ARK-UPG-002", "upgradeability-initialization"),
+    ("Reward accounting needs conservation coverage", "ARK-RWD-001", "reward-accounting"),
+    ("AMM math needs invariant coverage", "ARK-AMM-001", "amm-invariant"),
+    ("Vault accounting lacks visible roundtrip or conservation coverage", "ARK-VLT-009", "vault-accounting"),
+]
+
+CATEGORY_PREFIXES: list[tuple[set[str], str, str]] = [
+    ({"vault-accounting", "erc4626", "share-accounting", "totalAssets", "fee-accounting"}, "ARK-VLT-900", "vault-accounting"),
+    ({"oracle-risk", "vault-pricing", "price-assumptions", "pool-price"}, "ARK-ORC-900", "oracle-pricing"),
+    ({"access-control-review", "admin-risk", "vault-admin"}, "ARK-ACC-900", "access-control"),
+    ({"reentrancy-review", "value-flow"}, "ARK-REENT-900", "reentrancy-value-flow"),
+    ({"upgradeability", "initializer", "proxy-review"}, "ARK-UPG-900", "upgradeability-initialization"),
+    ({"reward-accounting", "staking"}, "ARK-RWD-900", "reward-accounting"),
+    ({"amm-invariant", "liquidity"}, "ARK-AMM-900", "amm-invariant"),
+    ({"lending", "liquidation", "collateral"}, "ARK-LEND-900", "lending-liquidation"),
+    ({"cross-chain", "bridge-validation"}, "ARK-XCH-900", "cross-chain-validation"),
+    ({"testing", "audit-blocker", "invariant-testing"}, "ARK-TST-900", "testing-readiness"),
+]
 
 
 def rel(path: Path, root: Path) -> str:
@@ -503,6 +548,163 @@ def display_path(path: Path) -> str:
         return path.resolve().relative_to(Path.cwd().resolve()).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def finding_identity(title: str, tags: list[str]) -> tuple[str, str]:
+    for known_title, finding_id, category in FINDING_RULES:
+        if title == known_title:
+            return finding_id, category
+
+    tag_set = set(tags)
+    for trigger_tags, finding_id, category in CATEGORY_PREFIXES:
+        if tag_set & trigger_tags:
+            return finding_id, category
+    return "ARK-GEN-001", "generic"
+
+
+def priority_label(severity: str, priority: str | None = None) -> str:
+    label = priority or severity
+    if "readiness gap" in label.lower():
+        return label
+    return f"{label} readiness gap"
+
+
+def confidence_from_terms(terms: list[str]) -> str:
+    if len(terms) >= 8:
+        return "high"
+    if len(terms) >= 3:
+        return "medium"
+    return "low"
+
+
+def normalize_ignore_path(value: str) -> str:
+    return value.strip().replace("\\", "/").lstrip("./")
+
+
+def should_ignore_config_path(path: Path, root: Path, ignore_paths: Iterable[str]) -> bool:
+    relative = rel(path, root)
+    for raw in ignore_paths:
+        item = normalize_ignore_path(raw)
+        if not item:
+            continue
+        if item.endswith("/"):
+            if relative.startswith(item):
+                return True
+        elif relative == item or relative.startswith(item.rstrip("/") + "/"):
+            return True
+    return False
+
+
+def load_local_config(path: Path | None, root: Path) -> tuple[dict[str, object], list[str]]:
+    if path is None:
+        return {}, []
+    if path.is_absolute():
+        config_path = path
+    else:
+        cwd_candidate = Path.cwd() / path
+        root_candidate = root / path
+        config_path = cwd_candidate if cwd_candidate.exists() else root_candidate
+    if not config_path.exists():
+        return {}, []
+    try:
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return {}, [f"Could not parse Arkheionx config `{display_path(config_path)}`: {exc}"]
+    if not isinstance(data, dict):
+        return {}, [f"Arkheionx config `{display_path(config_path)}` must be a JSON object."]
+    return data, []
+
+
+def config_ignore_paths(config: dict[str, object]) -> list[str]:
+    raw = config.get("ignore_paths", [])
+    if not isinstance(raw, list):
+        return []
+    return [str(item) for item in raw if isinstance(item, str)]
+
+
+def config_suppressions(config: dict[str, object]) -> dict[str, dict[str, str]]:
+    raw = config.get("suppress_findings", [])
+    suppressions: dict[str, dict[str, str]] = {}
+    if not isinstance(raw, list):
+        return suppressions
+    for item in raw:
+        if not isinstance(item, dict) or not item.get("id"):
+            continue
+        finding_id = str(item.get("id", "")).strip()
+        suppressions[finding_id] = {
+            "reason": str(item.get("reason", "No reason provided.")),
+            "expires": str(item.get("expires", "")),
+        }
+    return suppressions
+
+
+def config_additional_tags(config: dict[str, object]) -> list[str]:
+    raw = config.get("additional_search_tags", [])
+    if not isinstance(raw, list):
+        return []
+    return sorted({str(item) for item in raw if isinstance(item, str) and item.strip()})
+
+
+def config_max_top_gaps(config: dict[str, object]) -> int:
+    report = config.get("report", {})
+    if not isinstance(report, dict):
+        return 5
+    try:
+        value = int(report.get("max_top_gaps", 5))
+    except (TypeError, ValueError):
+        return 5
+    return max(1, min(20, value))
+
+
+def resolve_output_path(raw_path: str) -> Path | None:
+    if not raw_path:
+        return None
+    path = Path(raw_path).expanduser()
+    if not path.is_absolute():
+        path = Path.cwd() / path
+    return path
+
+
+def gap_priority_rank(gap: ReadinessGap) -> int:
+    text = f"{gap.priority} {gap.severity}".lower()
+    if "critical" in text:
+        return 0
+    if "high" in text:
+        return 1
+    if "medium" in text:
+        return 2
+    if "low" in text:
+        return 3
+    return 4
+
+
+def top_findings(gaps: list[ReadinessGap], limit: int = 5) -> list[ReadinessGap]:
+    return sorted(gaps, key=lambda gap: (gap_priority_rank(gap), gap.id, gap.title))[:limit]
+
+
+def finding_counts(gaps: list[ReadinessGap], suppressed: list[ReadinessGap]) -> dict[str, int]:
+    counts = {
+        "total_readiness_gaps": len(gaps),
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0,
+        "suppressed": len(suppressed),
+    }
+    for gap in gaps:
+        text = f"{gap.priority} {gap.severity}".lower()
+        if "critical" in text:
+            counts["critical"] += 1
+        elif "high" in text:
+            counts["high"] += 1
+        elif "medium" in text:
+            counts["medium"] += 1
+        elif "low" in text:
+            counts["low"] += 1
+        else:
+            counts["informational"] += 1
+    return counts
 
 
 def is_workflow(path: Path) -> bool:
@@ -1109,12 +1311,19 @@ def add_gap(
     recommendation: str,
     tags: list[str],
     priority: str | None = None,
+    finding_id: str | None = None,
+    category: str | None = None,
+    confidence: str | None = None,
     detected: list[str] | None = None,
+    affected_files: list[str] | None = None,
     why_it_matters: str = "",
     historical_pattern_similarity: str = "",
     defensive_checks: list[str] | None = None,
     suggested_test: str = "",
+    suppressible: bool = True,
 ) -> None:
+    detected_signals = sorted(set(detected or []))
+    default_id, default_category = finding_identity(title, tags)
     gaps.append(
         ReadinessGap(
             severity=severity,
@@ -1122,12 +1331,17 @@ def add_gap(
             detail=detail,
             recommendation=recommendation,
             tags=tags,
-            priority=priority or severity.split(" ", 1)[0],
-            detected=detected or [],
+            priority=priority_label(severity, priority),
+            id=finding_id or default_id,
+            category=category or default_category,
+            confidence=confidence or confidence_from_terms(detected_signals),
+            detected=detected_signals,
+            affected_files=sorted(set(affected_files or []))[:10],
             why_it_matters=why_it_matters,
             historical_pattern_similarity=historical_pattern_similarity,
             defensive_checks=defensive_checks or [],
             suggested_test=suggested_test,
+            suppressible=suppressible,
         )
     )
 
@@ -1700,6 +1914,82 @@ def recommended_next_steps(gaps: list[ReadinessGap], protocol_type: str) -> list
     return unique[:5]
 
 
+def infer_affected_files(gap: ReadinessGap, signals: dict[str, dict[str, object]]) -> list[str]:
+    files: set[str] = set(gap.affected_files)
+    detected = set(gap.detected)
+    for data in signals.values():
+        terms = set(data.get("terms", []))
+        if detected and not (detected & terms):
+            continue
+        for path in data.get("files", [])[:10]:
+            files.add(str(path))
+    return sorted(files)[:10]
+
+
+def apply_finding_metadata(
+    gaps: list[ReadinessGap],
+    signals: dict[str, dict[str, object]],
+) -> list[ReadinessGap]:
+    seen: dict[str, int] = {}
+    for gap in gaps:
+        if not gap.id:
+            gap.id, gap.category = finding_identity(gap.title, gap.tags)
+        seen[gap.id] = seen.get(gap.id, 0) + 1
+        if seen[gap.id] > 1 and gap.id.endswith("-900"):
+            prefix = gap.id.rsplit("-", 1)[0]
+            gap.id = f"{prefix}-{900 + seen[gap.id]:03d}"
+        gap.affected_files = infer_affected_files(gap, signals)
+    return gaps
+
+
+def apply_suppressions(
+    gaps: list[ReadinessGap],
+    config: dict[str, object],
+) -> tuple[list[ReadinessGap], list[ReadinessGap]]:
+    suppressions = config_suppressions(config)
+    active: list[ReadinessGap] = []
+    suppressed: list[ReadinessGap] = []
+    for gap in gaps:
+        suppression = suppressions.get(gap.id)
+        if suppression and gap.suppressible:
+            gap.suppression = suppression
+            suppressed.append(gap)
+        else:
+            active.append(gap)
+    return active, suppressed
+
+
+def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
+    data: dict[str, object] = {
+        "id": gap.id,
+        "title": gap.title,
+        "category": gap.category,
+        "priority": gap.priority,
+        "severity": gap.severity,
+        "confidence": gap.confidence,
+        "detected_signals": gap.detected,
+        "affected_files": gap.affected_files,
+        "why_it_matters": gap.why_it_matters,
+        "historical_pattern_similarity": gap.historical_pattern_similarity,
+        "recommended_defensive_checks": gap.defensive_checks,
+        "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+        "recommendation": gap.recommendation,
+        "detail": gap.detail,
+        "tags": gap.tags,
+        "suppressible": gap.suppressible,
+    }
+    if gap.suppression:
+        data["suppression"] = gap.suppression
+    return data
+
+
+def gap_table_rows(gaps: list[ReadinessGap]) -> list[list[str]]:
+    rows = [["ID", "Priority", "Category", "Title"]]
+    for gap in gaps:
+        rows.append([gap.id, gap.priority, gap.category, gap.title])
+    return rows
+
+
 def suggest_invariants(
     protocol_type: str,
     signals: dict[str, dict[str, object]],
@@ -1788,9 +2078,14 @@ def generate_report(
     score: int,
     score_breakdown: dict[str, dict[str, object]],
     gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
     invariants: list[dict[str, str]],
     next_steps: list[str],
     skeleton_path: Path | None,
+    generated_outputs: dict[str, str],
+    config_warnings: list[str],
+    additional_search_tags: list[str],
+    max_top_gaps: int,
 ) -> None:
     generated_at = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -1815,6 +2110,9 @@ def generate_report(
             ]
         )
 
+    top_gaps = top_findings(gaps, max_top_gaps)
+    counts = finding_counts(gaps, suppressed_gaps)
+
     lines: list[str] = []
     lines.append("# Arkheionx Pre-Audit Readiness Report")
     lines.append("")
@@ -1837,13 +2135,21 @@ def generate_report(
     lines.append("")
     lines.append(f"- Readiness score: **{score}/100**")
     lines.append(f"- Score band: **{score_band(score)}**")
+    lines.append(f"- Active readiness gaps: `{counts['total_readiness_gaps']}`")
+    lines.append(f"- Suppressed readiness gaps: `{counts['suppressed']}`")
     lines.append("- Top readiness gaps:")
-    for gap in gaps[:5] or [ReadinessGap("Informational", "No major automated readiness gaps detected", "Manual review is still required.", "Proceed to manual review and formal audit planning.", ["manual-review"])]:
-        lines.append(f"  - **{gap.severity}:** {gap.title} — {gap.recommendation}")
+    for gap in top_gaps or [ReadinessGap("Informational", "No major automated readiness gaps detected", "Manual review is still required.", "Proceed to manual review and formal audit planning.", ["manual-review"], id="ARK-GEN-000", category="manual-review")]:
+        lines.append(f"  - **{gap.id} ({gap.priority}):** {gap.title} - {gap.recommendation}")
     lines.append("- Top recommended actions:")
     for step in next_steps[:5]:
         lines.append(f"  - {step}")
     lines.append("")
+    if config_warnings:
+        lines.append("## Configuration Warnings")
+        lines.append("")
+        for warning in config_warnings:
+            lines.append(f"- {warning}")
+        lines.append("")
     lines.append("## Detected Protocol Shape")
     lines.append("")
     lines.append(f"- Detected protocol type: `{protocol_type}`")
@@ -1854,6 +2160,13 @@ def generate_report(
     lines.append("## Readiness Score Breakdown")
     lines.append("")
     lines.append(markdown_table(score_rows))
+    lines.append("")
+    lines.append("## Top Readiness Gaps")
+    lines.append("")
+    if top_gaps:
+        lines.append(markdown_table(gap_table_rows(top_gaps)))
+    else:
+        lines.append("No active automated readiness gaps were detected. Manual review is still required.")
     lines.append("")
     lines.append("## Risk Signal Summary")
     lines.append("")
@@ -1933,28 +2246,70 @@ def generate_report(
     else:
         lines.append("No strong historical pattern similarity was detected by the automated scanner. Manual review is still recommended.")
         lines.append("")
-    lines.append("## Missing Invariant And Test Coverage")
+    lines.append("## All Readiness Gaps")
     lines.append("")
     if gaps:
         for gap in gaps:
-            lines.append(f"### {gap.severity}: {gap.title}")
+            lines.append(f"### {gap.id} - {gap.title}")
             lines.append("")
             lines.append(f"- Priority: `{gap.priority}`")
-            lines.append(f"- Detected: `{', '.join(gap.detected) if gap.detected else 'scanner signal'}`")
-            lines.append(f"- What was detected: {gap.detail}")
+            lines.append(f"- Confidence: `{gap.confidence}`")
+            lines.append(f"- Category: `{gap.category}`")
+            lines.append("")
+            lines.append("Detected signals:")
+            if gap.detected:
+                for term in gap.detected[:20]:
+                    lines.append(f"- `{term}`")
+            else:
+                lines.append("- scanner signal")
+            if gap.affected_files:
+                lines.append("")
+                lines.append("Affected files:")
+                for path in gap.affected_files[:10]:
+                    lines.append(f"- `{path}`")
+            lines.append("")
+            lines.append("What was detected:")
+            lines.append("")
+            lines.append(gap.detail)
+            lines.append("")
             if gap.why_it_matters:
-                lines.append(f"- Why it matters: {gap.why_it_matters}")
+                lines.append("Why it matters:")
+                lines.append("")
+                lines.append(gap.why_it_matters)
+                lines.append("")
             if gap.historical_pattern_similarity:
-                lines.append(f"- Historical pattern similarity: {gap.historical_pattern_similarity}")
+                lines.append("Historical pattern similarity:")
+                lines.append("")
+                lines.append(gap.historical_pattern_similarity)
+                lines.append("")
             if gap.defensive_checks:
-                lines.append("- Recommended defensive checks:")
+                lines.append("Recommended defensive checks:")
+                lines.append("")
                 for check in gap.defensive_checks:
-                    lines.append(f"  - {check}")
-            lines.append(f"- Suggested test: {gap.suggested_test or gap.recommendation}")
-            lines.append(f"- Search tags: `{', '.join(gap.tags)}`")
+                    lines.append(f"- {check}")
+                lines.append("")
+            lines.append("Suggested tests:")
+            lines.append("")
+            lines.append(f"- {gap.suggested_test or gap.recommendation}")
+            lines.append("")
+            lines.append(f"Search tags: `{', '.join(gap.tags)}`")
             lines.append("")
     else:
         lines.append("- No major automated gaps detected. This does not prove safety and should be followed by manual review.")
+    lines.append("")
+    lines.append("## Suppressed Readiness Gaps")
+    lines.append("")
+    if suppressed_gaps:
+        lines.append("Suppressed findings are not deleted. They are shown here for review and should be revisited before launch.")
+        lines.append("")
+        lines.append(markdown_table(gap_table_rows(suppressed_gaps)))
+        lines.append("")
+        for gap in suppressed_gaps:
+            reason = gap.suppression.get("reason", "No reason provided.")
+            expires = gap.suppression.get("expires", "")
+            lines.append(f"- **{gap.id} - {gap.title}:** {reason}" + (f" Expires: `{expires}`." if expires else ""))
+    else:
+        lines.append("No readiness gaps were suppressed in this run.")
     lines.append("")
     lines.append("## Suggested Foundry Invariant Skeletons")
     lines.append("")
@@ -1982,6 +2337,24 @@ def generate_report(
     for item in checklist:
         lines.append(f"- [ ] {item}")
     lines.append("")
+    lines.append("## Generated Issue Checklist")
+    lines.append("")
+    checklist_output = generated_outputs.get("issue_checklist", "")
+    if checklist_output:
+        lines.append(f"- Generated checklist: `{checklist_output}`")
+        lines.append("- Use this as a copyable GitHub Issue body or as a remediation tracker.")
+    else:
+        lines.append("- No issue checklist file was requested in this run.")
+        lines.append("- To generate one: `python3 scripts/pre_audit_scan.py --root . --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md`")
+    lines.append("")
+    lines.append("## GitHub Action Outputs")
+    lines.append("")
+    for label, path in generated_outputs.items():
+        if path:
+            lines.append(f"- {label.replace('_', ' ').title()}: `{path}`")
+    if not any(generated_outputs.values()):
+        lines.append("- No additional GitHub Action output files were requested.")
+    lines.append("")
     lines.append("## Search Tags")
     lines.append("")
     search_tags = [
@@ -2001,6 +2374,7 @@ def generate_report(
         "root-cause-analysis",
         "audit-preparation",
     ]
+    search_tags = sorted(set(search_tags + additional_search_tags))
     lines.append("`" + "`, `".join(search_tags) + "`")
     lines.append("")
     lines.append("## Recommended Next Steps")
@@ -2033,9 +2407,15 @@ def json_report(
     vault_test_coverage: dict[str, object],
     historical_patterns: list[HistoricalPattern],
     gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
     invariants: list[dict[str, str]],
     next_steps: list[str],
+    generated_outputs: dict[str, str],
+    config_warnings: list[str],
 ) -> dict[str, object]:
+    counts = finding_counts(gaps, suppressed_gaps)
+    findings = [finding_to_dict(item) for item in gaps]
+    suppressed_findings = [finding_to_dict(item) for item in suppressed_gaps]
     return {
         "tool": "Arkheionx Pre-Audit Scanner",
         "version": VERSION,
@@ -2046,6 +2426,7 @@ def json_report(
         "score": score,
         "score_band": score_band(score),
         "score_breakdown": score_breakdown,
+        "summary": counts,
         "files_scanned": {
             "solidity_sources": [rel(p, root) for p in classified.solidity_sources],
             "solidity_tests": [rel(p, root) for p in classified.solidity_tests],
@@ -2056,9 +2437,13 @@ def json_report(
         "signals": signals,
         "vault_rule_pack": vault_test_coverage,
         "historical_patterns": [item.__dict__ for item in historical_patterns],
-        "readiness_gaps": [item.__dict__ for item in gaps],
+        "findings": findings,
+        "suppressed_findings": suppressed_findings,
+        "readiness_gaps": findings,
         "suggested_invariants": invariants,
+        "generated_outputs": generated_outputs,
         "next_steps": next_steps,
+        "config_warnings": config_warnings,
         "disclaimer": DISCLAIMER,
     }
 
@@ -2066,6 +2451,150 @@ def json_report(
 def generate_json_report(path: Path, report: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_markdown(path: Path, lines: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def generate_summary_output(
+    path: Path,
+    score: int,
+    protocol_type: str,
+    gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
+    generated_outputs: dict[str, str],
+    next_steps: list[str],
+    max_top_gaps: int,
+) -> None:
+    counts = finding_counts(gaps, suppressed_gaps)
+    lines = [
+        "# Arkheionx Pre-Audit Readiness Summary",
+        "",
+        f"Score: **{score}/100** - {score_band(score)}",
+        f"Protocol type: `{protocol_type}`",
+        f"Top readiness gaps: `{len(top_findings(gaps, max_top_gaps))}`",
+        "",
+        "## Top Gaps",
+        "",
+    ]
+    if gaps:
+        lines.append(markdown_table([["ID", "Priority", "Title"]] + [[g.id, g.priority, g.title] for g in top_findings(gaps, max_top_gaps)]))
+    else:
+        lines.append("No active automated readiness gaps were detected. Manual review is still required.")
+    lines.extend(
+        [
+            "",
+            "## Counts",
+            "",
+            f"- Critical: `{counts['critical']}`",
+            f"- High: `{counts['high']}`",
+            f"- Medium: `{counts['medium']}`",
+            f"- Low: `{counts['low']}`",
+            f"- Suppressed: `{counts['suppressed']}`",
+            "",
+            "## Outputs",
+            "",
+        ]
+    )
+    for label, output_path in generated_outputs.items():
+        if output_path:
+            lines.append(f"- {label.replace('_', ' ').title()}: `{output_path}`")
+    lines.extend(["", "## Next Steps", ""])
+    for step in next_steps[:5]:
+        lines.append(f"- {step}")
+    lines.extend(["", "Arkheionx is not a formal audit and not a security guarantee."])
+    write_markdown(path, lines)
+
+
+def generate_comment_output(
+    path: Path,
+    score: int,
+    protocol_type: str,
+    gaps: list[ReadinessGap],
+    generated_outputs: dict[str, str],
+    max_top_gaps: int,
+) -> None:
+    lines = [
+        COMMENT_MARKER,
+        "",
+        "## Arkheionx Pre-Audit Readiness",
+        "",
+        f"Score: **{score}/100** - {score_band(score)}",
+        f"Protocol type: `{protocol_type}`",
+        "",
+        "Top readiness gaps:",
+        "",
+    ]
+    if gaps:
+        lines.append(markdown_table([["ID", "Priority", "Gap"]] + [[g.id, g.priority, g.title] for g in top_findings(gaps, max_top_gaps)]))
+    else:
+        lines.append("No active automated readiness gaps were detected. Manual review is still recommended.")
+    report_path = generated_outputs.get("markdown_report", "")
+    checklist_path = generated_outputs.get("issue_checklist", "")
+    if report_path or checklist_path:
+        lines.append("")
+    if report_path:
+        lines.append(f"Full report: `{report_path}`")
+    if checklist_path:
+        lines.append(f"Issue checklist: `{checklist_path}`")
+    lines.extend(["", "Arkheionx is not a formal audit and not a security guarantee."])
+    write_markdown(path, lines)
+
+
+def generate_issue_checklist(
+    path: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+) -> None:
+    lines = [
+        "# Arkheionx Generated Issue Checklist",
+        "",
+        "Generated from: pre-audit readiness scan",
+        f"Protocol type: `{protocol_type}`",
+        f"Score: `{score}/100`",
+        "",
+    ]
+
+    groups = [
+        ("Critical priority readiness gaps", "critical"),
+        ("High priority readiness gaps", "high"),
+        ("Medium priority readiness gaps", "medium"),
+        ("Low priority readiness gaps", "low"),
+    ]
+    for heading, keyword in groups:
+        group_gaps = [gap for gap in gaps if keyword in f"{gap.priority} {gap.severity}".lower()]
+        if not group_gaps:
+            continue
+        lines.extend([f"## {heading}", ""])
+        for gap in group_gaps:
+            lines.append(f"- [ ] {gap.id} - {gap.recommendation}")
+            suggested = gap.suggested_test or gap.recommendation
+            lines.append("  - Suggested tests:")
+            lines.append(f"    - {suggested}")
+            for check in gap.defensive_checks[:5]:
+                lines.append(f"    - {check}")
+        lines.append("")
+
+    documentation_tasks = [
+        "Document admin role boundaries.",
+        "Document oracle and pricing assumptions.",
+        "Document known limitations and formal audit scope.",
+    ]
+    lines.extend(["## Documentation Tasks", ""])
+    for task in documentation_tasks:
+        lines.append(f"- [ ] {task}")
+    lines.extend(
+        [
+            "",
+            "## Notes",
+            "",
+            "This checklist is generated from static/local readiness signals. It is not a formal audit.",
+        ]
+    )
+    write_markdown(path, lines)
 
 
 SKELETON = """// SPDX-License-Identifier: MIT
@@ -2142,6 +2671,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument("--output", default="ARKHEIONX_PRE_AUDIT_REPORT.md", help="Markdown report output path.")
     parser.add_argument("--json-output", default="", help="Optional JSON report output path.")
+    parser.add_argument("--summary-output", default="", help="Optional GitHub Actions summary Markdown output path.")
+    parser.add_argument("--comment-output", default="", help="Optional pull request comment Markdown output path.")
+    parser.add_argument("--issue-checklist-output", default="", help="Optional generated issue checklist Markdown output path.")
+    parser.add_argument("--config", default=DEFAULT_CONFIG, help="Optional Arkheionx JSON config path.")
     parser.add_argument("--generate-invariant-skeletons", action="store_true", help="Generate safe Foundry invariant skeletons.")
     parser.add_argument("--fail-on-critical-readiness-gap", action="store_true", help="Exit 2 if critical readiness gaps are detected.")
     parser.add_argument("--create-issues", action="store_true", help="Reserved for future local issue suggestions; no remote issues are created.")
@@ -2158,10 +2691,20 @@ def main(argv: list[str] | None = None) -> int:
     if args.create_issues and args.verbose:
         print("notice: --create-issues is reserved for future local issue suggestions; no remote issues are created.")
 
+    config_path = Path(args.config).expanduser() if args.config else None
+    config, config_warnings = load_local_config(config_path, root)
+    ignore_paths = config_ignore_paths(config)
+
     files = collect_files(root)
+    if ignore_paths:
+        files = [path for path in files if not should_ignore_config_path(path, root, ignore_paths)]
     classified = classify_files(files)
     contents = corpus(files)
-    protocol_type, protocol_confidence, protocol_scores = detect_protocol_type(contents, classified, args.protocol_type)
+    requested_protocol = args.protocol_type
+    configured_protocol = config.get("protocol_type")
+    if requested_protocol == "auto" and isinstance(configured_protocol, str) and configured_protocol in (set(PROTOCOL_WEIGHTS) | {"generic", "auto"}):
+        requested_protocol = configured_protocol
+    protocol_type, protocol_confidence, protocol_scores = detect_protocol_type(contents, classified, requested_protocol)
     signal_paths = [
         path
         for path in classified.solidity_sources + classified.solidity_tests + classified.configs
@@ -2180,12 +2723,29 @@ def main(argv: list[str] | None = None) -> int:
         test_readiness,
         protocol_type,
     )
+    apply_finding_metadata(gaps, signals)
+    gaps, suppressed_gaps = apply_suppressions(gaps, config)
     invariants = suggest_invariants(protocol_type, signals)
     skeleton_path = generate_invariant_skeleton(root) if args.generate_invariant_skeletons else None
 
-    output = Path(args.output)
-    if not output.is_absolute():
-        output = Path.cwd() / output
+    output = resolve_output_path(args.output)
+    if output is None:
+        print("error: --output cannot be empty", file=sys.stderr)
+        return 1
+    json_output = resolve_output_path(args.json_output)
+    summary_output = resolve_output_path(args.summary_output)
+    comment_output = resolve_output_path(args.comment_output)
+    issue_checklist_output = resolve_output_path(args.issue_checklist_output)
+    generated_outputs = {
+        "markdown_report": display_path(output),
+        "json_report": display_path(json_output) if json_output else "",
+        "summary": display_path(summary_output) if summary_output else "",
+        "comment": display_path(comment_output) if comment_output else "",
+        "issue_checklist": display_path(issue_checklist_output) if issue_checklist_output else "",
+    }
+    additional_search_tags = config_additional_tags(config)
+    max_top_gaps = config_max_top_gaps(config)
+
     generate_report(
         root=root,
         output=output,
@@ -2201,15 +2761,24 @@ def main(argv: list[str] | None = None) -> int:
         score=score,
         score_breakdown=score_breakdown,
         gaps=gaps,
+        suppressed_gaps=suppressed_gaps,
         invariants=invariants,
         next_steps=next_steps,
         skeleton_path=skeleton_path,
+        generated_outputs=generated_outputs,
+        config_warnings=config_warnings,
+        additional_search_tags=additional_search_tags,
+        max_top_gaps=max_top_gaps,
     )
 
-    if args.json_output:
-        json_output = Path(args.json_output)
-        if not json_output.is_absolute():
-            json_output = Path.cwd() / json_output
+    if issue_checklist_output:
+        generate_issue_checklist(issue_checklist_output, protocol_type, score, gaps)
+    if summary_output:
+        generate_summary_output(summary_output, score, protocol_type, gaps, suppressed_gaps, generated_outputs, next_steps, max_top_gaps)
+    if comment_output:
+        generate_comment_output(comment_output, score, protocol_type, gaps, generated_outputs, max_top_gaps)
+
+    if json_output:
         generate_json_report(
             json_output,
             json_report(
@@ -2223,15 +2792,24 @@ def main(argv: list[str] | None = None) -> int:
                 vault_test_coverage,
                 historical_patterns,
                 gaps,
+                suppressed_gaps,
                 invariants,
                 next_steps,
+                generated_outputs,
+                config_warnings,
             ),
         )
 
     critical_gaps = [gap for gap in gaps if gap.severity == "Critical readiness gap"]
     print(f"Arkheionx pre-audit report generated: {output}")
-    if args.json_output:
-        print(f"Arkheionx JSON report generated: {Path(args.json_output)}")
+    if json_output:
+        print(f"Arkheionx JSON report generated: {json_output}")
+    if summary_output:
+        print(f"Arkheionx summary generated: {summary_output}")
+    if comment_output:
+        print(f"Arkheionx PR comment body generated: {comment_output}")
+    if issue_checklist_output:
+        print(f"Arkheionx issue checklist generated: {issue_checklist_output}")
     if skeleton_path:
         print(f"Arkheionx invariant skeleton generated: {skeleton_path}")
     print(f"Readiness score: {score}/100 ({score_band(score)})")

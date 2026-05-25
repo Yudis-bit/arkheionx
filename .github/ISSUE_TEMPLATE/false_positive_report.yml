@@ -4,6 +4,13 @@ title: "[False Positive]: "
 labels: ["scanner-calibration", "false-positive"]
 body:
   - type: input
+    id: finding_id
+    attributes:
+      label: Finding ID
+      placeholder: ARK-VLT-001, ARK-ORC-001, ARK-TST-001
+    validations:
+      required: false
+  - type: input
     id: report_section
     attributes:
       label: Report section

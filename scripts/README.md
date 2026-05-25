@@ -15,7 +15,10 @@ python3 scripts/pre_audit_scan.py \
   --root . \
   --protocol-type auto \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
-  --json-output arkheionx-report.json
+  --json-output arkheionx-report.json \
+  --summary-output ARKHEIONX_ACTION_SUMMARY.md \
+  --comment-output ARKHEIONX_PR_COMMENT.md \
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
 ```
 
 Generate safe Foundry invariant skeletons:
@@ -33,6 +36,24 @@ python3 scripts/pre_audit_scan.py \
   --output ARKHEIONX_VAULT_READINESS_REPORT.md \
   --json-output arkheionx-vault-report.json
 ```
+
+v0.3.0 adds stable finding IDs, optional `.arkheionx.json` config,
+documented suppression, Actions summary output, PR comment body generation,
+and generated issue checklist output.
+
+## `post_pr_comment.py`
+
+Posts or updates the optional Arkheionx pull request comment when a GitHub
+workflow explicitly provides a token and `pr-comment: "true"`.
+
+```sh
+python3 scripts/post_pr_comment.py \
+  --comment-file ARKHEIONX_PR_COMMENT.md \
+  --mode update
+```
+
+It expects `GITHUB_TOKEN`, `GITHUB_REPOSITORY`, and `GITHUB_EVENT_PATH` from
+GitHub Actions. Missing context is skipped gracefully.
 
 ## `generate_search_index.py`
 

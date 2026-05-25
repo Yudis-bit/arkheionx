@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -129,6 +129,38 @@
       "related_patterns": ["vault accounting invariant readiness gap"],
       "related_checks": ["totalAssets consistency", "deposit-withdraw roundtrip", "fee accounting conservation", "strategy loss handling"],
       "search_tags": ["vault-invariant", "foundry", "invariant-testing"]
+    },
+    {
+      "term": "PR readiness comment",
+      "aliases": ["pull request comment", "GitHub Action comment", "Arkheionx PR comment", "readiness comment"],
+      "category": "GitHub Action UX",
+      "related_patterns": ["pre-audit readiness feedback loop"],
+      "related_checks": ["score summary", "top readiness gaps", "marker update mode"],
+      "search_tags": ["github-action", "pull-request", "pre-audit-readiness"]
+    },
+    {
+      "term": "generated issue checklist",
+      "aliases": ["issue checklist", "remediation checklist", "launch checklist", "readiness checklist"],
+      "category": "GitHub Action UX",
+      "related_patterns": ["readiness gap remediation planning"],
+      "related_checks": ["finding IDs", "suggested tests", "documentation tasks"],
+      "search_tags": ["issue-checklist", "audit-readiness", "indie-defi"]
+    },
+    {
+      "term": "finding IDs",
+      "aliases": ["ARK-VLT-001", "ARK-ORC-001", "stable readiness finding", "readiness gap ID"],
+      "category": "report UX",
+      "related_patterns": ["stable finding references"],
+      "related_checks": ["JSON findings", "Markdown gap sections", "suppression by ID"],
+      "search_tags": ["finding-id", "json-schema", "report-ux"]
+    },
+    {
+      "term": "Arkheionx config",
+      "aliases": [".arkheionx.json", "false positive suppression", "ignore paths", "suppress findings"],
+      "category": "configuration",
+      "related_patterns": ["documented false-positive suppression"],
+      "related_checks": ["suppressed_findings", "ignore_paths", "additional_search_tags"],
+      "search_tags": ["config", "false-positive", "local-static-analysis"]
     }
   ]
 }

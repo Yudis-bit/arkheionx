@@ -24,9 +24,12 @@ Best fit:
 Arkheionx helps turn local repository signals into a Markdown readiness report:
 
 - readiness score;
+- GitHub Actions summary;
+- optional PR Readiness Comment;
 - missing invariant plan;
 - historical exploit-pattern similarity;
-- prioritized fix checklist;
+- generated issue checklist;
+- prioritized fix checklist after manual review;
 - audit preparation notes;
 - formal audit recommendation.
 
@@ -40,6 +43,10 @@ Value:
 - readiness score;
 - Markdown report;
 - optional JSON report;
+- GitHub Actions summary;
+- optional PR Readiness Comment;
+- generated issue checklist;
+- stable finding IDs;
 - limited historical pattern mapping;
 - basic checklist;
 - optional safe Foundry invariant skeleton.
@@ -53,6 +60,7 @@ Use it from any authorized repository:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
     json-output: "arkheionx-report.json"
+    create-issue-checklist: "true"
 ```
 
 ## Launch Report
@@ -69,6 +77,7 @@ What you receive:
 
 - automated Arkheionx scan;
 - manual review of the generated report;
+- review of the generated issue checklist;
 - prioritized fix checklist;
 - Markdown report suitable for internal planning;
 - clear limitations and formal audit recommendation.
@@ -113,7 +122,7 @@ What you receive:
 - manual security readiness review;
 - historical exploit-pattern mapping;
 - missing invariant and test plan;
-- GitHub issue checklist;
+- generated GitHub issue checklist converted into a prioritized remediation plan;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 

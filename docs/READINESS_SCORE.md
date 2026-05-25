@@ -66,6 +66,17 @@ The scanner reports readiness gaps when it sees patterns such as:
 
 The gaps are review prompts. They are not confirmed vulnerabilities.
 
+v0.3.0 assigns stable finding IDs to readiness gaps. Examples:
+
+- `ARK-VLT-001` for vault accounting without invariant coverage;
+- `ARK-ORC-001` for oracle-dependent vault pricing gaps;
+- `ARK-TST-001` for missing Solidity tests;
+- `ARK-ACC-001` for admin role-boundary gaps.
+
+Use finding IDs in false-positive reports, PR comments, generated issue
+checklists, and `.arkheionx.json` suppressions. Suppression does not change the
+meaning of the score and does not prove safety.
+
 ## How To Improve The Score
 
 Practical improvements:

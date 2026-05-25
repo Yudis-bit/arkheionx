@@ -137,6 +137,53 @@ jobs:
 The action requires no secrets and no RPC endpoint. It scans local repository
 files only.
 
+## v0.3.0 GitHub Action UX
+
+Arkheionx v0.3.0 turns the action into a clearer GitHub-native feedback loop:
+
+- generated GitHub Actions job summary;
+- optional pull request comment mode;
+- generated issue checklist for remediation planning;
+- stable finding IDs such as `ARK-VLT-001`;
+- optional `.arkheionx.json` config for ignore paths and documented
+  suppressions.
+
+PR comment mode is opt-in:
+
+```yaml
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pre-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+        with:
+          protocol-type: "auto"
+          json-output: "arkheionx-report.json"
+          pr-comment: "true"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          create-issue-checklist: "true"
+```
+
+Config-enabled scan:
+
+```yaml
+with:
+  config: ".arkheionx.json"
+```
+
+Read:
+
+- [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
+- [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md)
+- [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
+- [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
+
 ## Quick Start: Local CLI
 
 ```sh
@@ -144,7 +191,10 @@ python3 scripts/pre_audit_scan.py \
   --root . \
   --protocol-type auto \
   --output ARKHEIONX_PRE_AUDIT_REPORT.md \
-  --json-output arkheionx-report.json
+  --json-output arkheionx-report.json \
+  --summary-output ARKHEIONX_ACTION_SUMMARY.md \
+  --comment-output ARKHEIONX_PR_COMMENT.md \
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
 ```
 
 Vault builders can force the v0.2.0 Vault Rule Pack:
@@ -175,6 +225,9 @@ See the committed examples:
 
 - Markdown: [`examples/reports/mini-vault-pre-audit-report.md`](examples/reports/mini-vault-pre-audit-report.md)
 - JSON: [`examples/reports/mini-vault-pre-audit-report.json`](examples/reports/mini-vault-pre-audit-report.json)
+- Actions summary: [`examples/reports/mini-vault-action-summary.md`](examples/reports/mini-vault-action-summary.md)
+- PR comment body: [`examples/reports/mini-vault-pr-comment.md`](examples/reports/mini-vault-pr-comment.md)
+- Issue checklist: [`examples/reports/mini-vault-issue-checklist.md`](examples/reports/mini-vault-issue-checklist.md)
 - Fixture: [`examples/mini-vault/`](examples/mini-vault/)
 - Vault Rule Pack Markdown: [`examples/reports/vault-risk-fixture-pre-audit-report.md`](examples/reports/vault-risk-fixture-pre-audit-report.md)
 - Vault Rule Pack JSON: [`examples/reports/vault-risk-fixture-pre-audit-report.json`](examples/reports/vault-risk-fixture-pre-audit-report.json)
@@ -314,6 +367,9 @@ Core standards:
 
 - [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md)
 - [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
+- [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md)
+- [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
+- [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
 - [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md)
 - [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md)
 - [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md)
@@ -380,13 +436,14 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   mini-vault demo.
 - **v0.2.0: vault rule pack.** Stronger vault accounting and ERC4626-specific
   readiness rules, vault-risk fixture, vault-specific scoring, report coverage,
-  and scanner tests. Prepared, not tagged.
-- **v0.3.0: PR comment mode and issue checklist.** GitHub-native feedback loop,
-  generated issue checklist, more rule packs, better historical mapping.
-- **v0.4: historical pattern mapping.** More precise mappings from registry
-  categories to readiness checks.
-- **v0.5: searchable memory layer.** Better generated search index and
-  metadata tags.
+  and scanner tests.
+- **v0.3.0: GitHub Action UX.** Actions summary, optional PR comment mode,
+  generated issue checklist, stable finding IDs, and local config suppression.
+  Prepared, not tagged.
+- **v0.4.0: SARIF and report diff mode.** SARIF output, PR diff-aware report
+  mode, and generated GitHub issue creation workflow proposal.
+- **v0.5.0: staking/reward and oracle rule packs.** More protocol-specific
+  checks and stronger historical pattern mapping.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.
 

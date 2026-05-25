@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - "scripts/pre_audit_scan.py"
+      - "scripts/post_pr_comment.py"
       - "tests/**"
       - ".github/actions/pre-audit/action.yml"
       - ".github/workflows/pre-audit-ci.yml"
       - "examples/mini-vault/**"
       - "examples/vault-risk-fixture/**"
+      - "examples/arkheionx.config.example.json"
       - "examples/reports/**"
       - "metadata/search_terms.json"
       - "reports/search_index.md"
@@ -36,6 +38,7 @@ jobs:
         run: |
           python3 -m py_compile scripts/pre_audit_scan.py
           python3 -m py_compile scripts/generate_search_index.py
+          python3 -m py_compile scripts/post_pr_comment.py
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
@@ -50,6 +53,9 @@ jobs:
             --protocol-type auto \
             --output examples/reports/mini-vault-pre-audit-report.md \
             --json-output examples/reports/mini-vault-pre-audit-report.json \
+            --summary-output examples/reports/mini-vault-action-summary.md \
+            --comment-output examples/reports/mini-vault-pr-comment.md \
+            --issue-checklist-output examples/reports/mini-vault-issue-checklist.md \
             --generate-invariant-skeletons
 
       - name: Run scanner directly against vault-risk-fixture
@@ -59,7 +65,22 @@ jobs:
             --protocol-type vault \
             --output examples/reports/vault-risk-fixture-pre-audit-report.md \
             --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
+            --summary-output examples/reports/vault-risk-fixture-action-summary.md \
+            --comment-output examples/reports/vault-risk-fixture-pr-comment.md \
+            --issue-checklist-output examples/reports/vault-risk-fixture-issue-checklist.md \
             --generate-invariant-skeletons
+
+      - name: Run scanner with config suppression
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/vault-risk-fixture \
+            --protocol-type vault \
+            --config examples/arkheionx.config.example.json \
+            --output examples/reports/vault-risk-fixture-config-report.md \
+            --json-output examples/reports/vault-risk-fixture-config-report.json \
+            --summary-output examples/reports/vault-risk-fixture-config-summary.md \
+            --comment-output examples/reports/vault-risk-fixture-config-comment.md \
+            --issue-checklist-output examples/reports/vault-risk-fixture-config-checklist.md
 
       - name: Run local GitHub Action wrapper
         uses: ./.github/actions/pre-audit
@@ -71,6 +92,10 @@ jobs:
           generate-invariant-skeletons: "false"
           fail-on-critical-readiness-gap: "false"
           summary: "true"
+          pr-comment: "true"
+          comment-output: "ARKHEIONX_PR_COMMENT.md"
+          create-issue-checklist: "true"
+          issue-checklist-output: "ARKHEIONX_ISSUE_CHECKLIST.md"
 
       - name: Verify report artifacts
         run: |
@@ -78,10 +103,24 @@ jobs:
           test -f examples/reports/mini-vault-pre-audit-report.json
           test -f examples/reports/vault-risk-fixture-pre-audit-report.md
           test -f examples/reports/vault-risk-fixture-pre-audit-report.json
+          test -f examples/reports/mini-vault-action-summary.md
+          test -f examples/reports/mini-vault-pr-comment.md
+          test -f examples/reports/mini-vault-issue-checklist.md
+          test -f examples/reports/vault-risk-fixture-action-summary.md
+          test -f examples/reports/vault-risk-fixture-pr-comment.md
+          test -f examples/reports/vault-risk-fixture-issue-checklist.md
+          test -f examples/reports/vault-risk-fixture-config-report.md
+          test -f examples/reports/vault-risk-fixture-config-report.json
+          test -f examples/reports/vault-risk-fixture-config-summary.md
+          test -f examples/reports/vault-risk-fixture-config-comment.md
+          test -f examples/reports/vault-risk-fixture-config-checklist.md
           test -f examples/mini-vault/test/invariant/ArkheionxReadinessInvariants.t.sol
           test -f examples/vault-risk-fixture/test/invariant/ArkheionxReadinessInvariants.t.sol
           test -f ARKHEIONX_PRE_AUDIT_REPORT.md
           test -f arkheionx-report.json
+          test -f ARKHEIONX_ACTION_SUMMARY.md
+          test -f ARKHEIONX_PR_COMMENT.md
+          test -f ARKHEIONX_ISSUE_CHECKLIST.md
 
       - name: Parse JSON output
         run: |
@@ -98,8 +137,25 @@ jobs:
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
               assert "vault_rule_pack" in data
+              assert "findings" in data
+              assert "summary" in data
+              assert "generated_outputs" in data
+              assert all(item["id"].startswith("ARK-") for item in data["findings"])
+          config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
+          assert config["suppressed_findings"]
           print("JSON valid")
           PY
+
+      - name: Verify v0.3 generated UX files
+        run: |
+          grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/mini-vault-pr-comment.md
+          grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/vault-risk-fixture-pr-comment.md
+          grep -q "<!-- arkheionx-pre-audit-comment -->" ARKHEIONX_PR_COMMENT.md
+          grep -q -- "- \\[ \\]" examples/reports/mini-vault-issue-checklist.md
+          grep -q -- "- \\[ \\]" examples/reports/vault-risk-fixture-issue-checklist.md
+          grep -q "Score:" examples/reports/mini-vault-action-summary.md
+          grep -q "Score:" examples/reports/vault-risk-fixture-action-summary.md
+          grep -q "Suppressed Readiness Gaps" examples/reports/vault-risk-fixture-config-report.md
 
       - name: Verify disclaimer is present
         run: |
@@ -133,6 +189,9 @@ jobs:
               Path("SERVICES.md"),
               Path("docs/PRE_AUDIT_READINESS_OS.md"),
               Path("docs/GITHUB_ACTION_USAGE.md"),
+              Path("docs/PR_COMMENT_MODE.md"),
+              Path("docs/GENERATED_ISSUE_CHECKLIST.md"),
+              Path("docs/ARKHEIONX_CONFIG.md"),
               Path("docs/READINESS_SCORE.md"),
               Path("docs/INDIE_BUILDER_OFFER.md"),
               Path("docs/SEARCH_GUIDE.md"),

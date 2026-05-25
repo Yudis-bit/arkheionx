@@ -173,6 +173,10 @@ ecosystem pack
 Vault Rule Pack
 Vault Launch Report
 Vault Pre-Audit Sprint
+PR readiness comment
+generated issue checklist
+finding IDs
+.arkheionx.json
 ```
 
 ## Search By Monetization Or Services
@@ -187,6 +191,9 @@ Pre-Audit Sprint
 Ecosystem Pack
 Research Sponsorship
 GitHub Action
+PR comment mode
+issue checklist
+config suppression
 services
 sponsorship
 monetization
@@ -200,6 +207,8 @@ rg -n "ERC4626|convertToShares|convertToAssets|previewDeposit|previewWithdraw" .
 rg -n "strategy accounting|withdrawalQueue|requestWithdraw|claimWithdraw|cooldown" .
 rg -n "oracle manipulation|stale|TWAP|latestRoundData" .
 rg -n "missing invariant|pre-audit readiness|audit blocker" .
+rg -n "ARK-VLT-001|ARK-ORC-001|finding IDs|suppressed_findings" .
+rg -n "PR readiness comment|generated issue checklist|.arkheionx.json" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

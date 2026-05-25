@@ -28,7 +28,7 @@ The most practical starter offer is an Assertion Hardening Sprint:
 - note what remains blocked by archival RPC or source quality
 
 This work is limited to historical, patched, or explicitly authorized targets.
-No live-target exploitation, no scanner work, no drain helpers, no bounty
+No live-target exploitation, no scanner work, no asset-extraction helpers, no bounty
 guarantees.
 
 If your PoC ends with logs but no hard assertions, that is exactly the kind of

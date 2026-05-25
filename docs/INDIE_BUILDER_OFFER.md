@@ -45,6 +45,9 @@ You receive:
 
 - a readiness score;
 - top readiness gaps;
+- stable finding IDs;
+- optional PR Readiness Comment;
+- generated issue checklist;
 - historical pattern similarity;
 - suggested invariant tests;
 - audit preparation checklist;
@@ -77,6 +80,7 @@ python3 scripts/pre_audit_scan.py \
   --protocol-type vault \
   --output ARKHEIONX_VAULT_READINESS_REPORT.md \
   --json-output arkheionx-vault-report.json \
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
   --generate-invariant-skeletons
 ```
 
@@ -96,7 +100,7 @@ Output:
 
 - automated scan;
 - manual review of generated report;
-- prioritized fix checklist;
+- generated issue checklist reviewed and turned into a prioritized fix list;
 - Markdown report;
 - clear limitations and formal audit recommendation.
 
@@ -135,7 +139,7 @@ Output:
 - manual security readiness review;
 - historical exploit-pattern mapping;
 - missing invariant plan;
-- GitHub issue checklist;
+- generated GitHub issue checklist reviewed and prioritized;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 

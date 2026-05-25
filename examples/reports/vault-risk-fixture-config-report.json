@@ -25,61 +25,6 @@
       ],
       "category": "vault-accounting",
       "confidence": "high",
-      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
-      "detected_signals": [
-        "asset()",
-        "assets",
-        "balanceOf",
-        "convertToAssets",
-        "convertToShares",
-        "deposit",
-        "maxDeposit",
-        "maxMint",
-        "maxRedeem",
-        "maxWithdraw",
-        "mint",
-        "previewDeposit",
-        "previewMint",
-        "previewRedeem",
-        "previewWithdraw",
-        "redeem",
-        "shares",
-        "strategy",
-        "totalAssets",
-        "totalSupply",
-        "withdraw"
-      ],
-      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
-      "id": "ARK-VLT-001",
-      "priority": "High readiness gap",
-      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
-      "recommended_defensive_checks": [
-        "deposit/withdraw roundtrip",
-        "convertToShares/convertToAssets consistency",
-        "donation/inflation resistance",
-        "rounding direction tests",
-        "totalAssets external dependency tests"
-      ],
-      "severity": "High readiness gap",
-      "suggested_tests": [
-        "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
-      ],
-      "suppressible": true,
-      "tags": [
-        "vault-accounting",
-        "invariant-testing",
-        "erc4626"
-      ],
-      "title": "Vault accounting without invariant tests",
-      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
-    },
-    {
-      "affected_files": [
-        "src/VaultRiskFixture.sol",
-        "test/VaultRiskFixture.t.sol"
-      ],
-      "category": "vault-accounting",
-      "confidence": "high",
       "detail": "Preview function signals were detected, but test files do not visibly cover previewDeposit, previewMint, previewWithdraw, or previewRedeem.",
       "detected_signals": [
         "asset()",
@@ -458,13 +403,13 @@
       "why_it_matters": "Emergency controls are launch-critical; they should behave predictably under stress without bypassing accounting assumptions."
     }
   ],
-  "generated_at": "2026-05-25T12:29:24+00:00",
+  "generated_at": "2026-05-25T12:29:30+00:00",
   "generated_outputs": {
-    "comment": "examples/reports/vault-risk-fixture-pr-comment.md",
-    "issue_checklist": "examples/reports/vault-risk-fixture-issue-checklist.md",
-    "json_report": "examples/reports/vault-risk-fixture-pre-audit-report.json",
-    "markdown_report": "examples/reports/vault-risk-fixture-pre-audit-report.md",
-    "summary": "examples/reports/vault-risk-fixture-action-summary.md"
+    "comment": "examples/reports/vault-risk-fixture-config-comment.md",
+    "issue_checklist": "examples/reports/vault-risk-fixture-config-checklist.md",
+    "json_report": "examples/reports/vault-risk-fixture-config-report.json",
+    "markdown_report": "examples/reports/vault-risk-fixture-config-report.md",
+    "summary": "examples/reports/vault-risk-fixture-config-summary.md"
   },
   "historical_patterns": [
     {
@@ -778,61 +723,6 @@
   "protocol_confidence": "manual",
   "protocol_type": "vault",
   "readiness_gaps": [
-    {
-      "affected_files": [
-        "src/VaultRiskFixture.sol",
-        "test/VaultRiskFixture.t.sol"
-      ],
-      "category": "vault-accounting",
-      "confidence": "high",
-      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
-      "detected_signals": [
-        "asset()",
-        "assets",
-        "balanceOf",
-        "convertToAssets",
-        "convertToShares",
-        "deposit",
-        "maxDeposit",
-        "maxMint",
-        "maxRedeem",
-        "maxWithdraw",
-        "mint",
-        "previewDeposit",
-        "previewMint",
-        "previewRedeem",
-        "previewWithdraw",
-        "redeem",
-        "shares",
-        "strategy",
-        "totalAssets",
-        "totalSupply",
-        "withdraw"
-      ],
-      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
-      "id": "ARK-VLT-001",
-      "priority": "High readiness gap",
-      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
-      "recommended_defensive_checks": [
-        "deposit/withdraw roundtrip",
-        "convertToShares/convertToAssets consistency",
-        "donation/inflation resistance",
-        "rounding direction tests",
-        "totalAssets external dependency tests"
-      ],
-      "severity": "High readiness gap",
-      "suggested_tests": [
-        "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
-      ],
-      "suppressible": true,
-      "tags": [
-        "vault-accounting",
-        "invariant-testing",
-        "erc4626"
-      ],
-      "title": "Vault accounting without invariant tests",
-      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
-    },
     {
       "affected_files": [
         "src/VaultRiskFixture.sol",
@@ -1746,14 +1636,74 @@
   ],
   "summary": {
     "critical": 0,
-    "high": 7,
+    "high": 6,
     "informational": 0,
     "low": 0,
     "medium": 2,
-    "suppressed": 0,
-    "total_readiness_gaps": 9
+    "suppressed": 1,
+    "total_readiness_gaps": 8
   },
-  "suppressed_findings": [],
+  "suppressed_findings": [
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "category": "vault-accounting",
+      "confidence": "high",
+      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+      "detected_signals": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+      "id": "ARK-VLT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+      "recommended_defensive_checks": [
+        "deposit/withdraw roundtrip",
+        "convertToShares/convertToAssets consistency",
+        "donation/inflation resistance",
+        "rounding direction tests",
+        "totalAssets external dependency tests"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
+      ],
+      "suppressible": true,
+      "suppression": {
+        "expires": "2026-12-31",
+        "reason": "Prototype fixture intentionally omits vault invariants so config suppression behavior can be demonstrated."
+      },
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests",
+      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
+    }
+  ],
   "tool": "Arkheionx Pre-Audit Scanner",
   "vault_rule_pack": {
     "coverage": {

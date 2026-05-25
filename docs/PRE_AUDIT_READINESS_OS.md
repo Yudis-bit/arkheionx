@@ -16,6 +16,11 @@ Arkheionx Readiness is:
 - a reusable GitHub Action;
 - a Markdown readiness report;
 - optional JSON output for automation;
+- GitHub Actions job summary output;
+- optional PR Readiness Comment;
+- generated issue checklist;
+- stable finding IDs;
+- optional local `.arkheionx.json` config;
 - safe Foundry invariant skeleton generation;
 - a bridge from historical DeFi failures to defensive builder checklists.
 
@@ -53,8 +58,9 @@ Short message:
    generic.
 4. It detects static risk signals and test-readiness signals.
 5. It maps the signals to historical pattern similarity using Arkheionx memory.
-6. It writes a Markdown report and optional JSON report.
-7. The builder uses the report as a pre-audit checklist.
+6. It writes Markdown, JSON, summary, PR comment body, and issue checklist
+   artifacts when requested.
+7. The builder uses the report and checklist as pre-audit planning material.
 8. If useful, the builder opens a GitHub issue for a Launch Report or
    Pre-Audit Sprint.
 
@@ -75,9 +81,12 @@ Main stages:
   handlers, static-analysis configs, and CI.
 - `map_historical_patterns`: maps signals to defensive historical classes.
 - `compute_readiness_score`: calculates a 100-point pre-audit score.
+- `finding IDs`: assigns stable IDs such as `ARK-VLT-001`.
 - `suggest_invariants`: recommends Foundry invariant themes.
 - `generate_report`: writes the Markdown dashboard.
 - `generate_json_report`: writes machine-readable output.
+- `generate_issue_checklist`: writes a copyable remediation checklist.
+- `generate_comment_output`: writes an optional PR comment body.
 
 ## Risk Signals
 

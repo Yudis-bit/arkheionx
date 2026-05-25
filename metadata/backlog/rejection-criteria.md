@@ -18,7 +18,7 @@ A candidate is rejected outright if any of the following apply:
 
 ### 1. Live-target framing
 
-The proposal reads as live attacker tooling: drain helpers, target
+The proposal reads as live attacker tooling: asset-extraction helpers, target
 scanners, attacker automation against production systems, detection
 evasion. Arkheionx Vault is defensive-only.
 

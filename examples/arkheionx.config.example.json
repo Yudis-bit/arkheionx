@@ -1,0 +1,27 @@
+{
+  "version": "0.3.0",
+  "protocol_type": "auto",
+  "ignore_paths": [
+    "lib/",
+    "test/mocks/"
+  ],
+  "suppress_findings": [
+    {
+      "id": "ARK-VLT-001",
+      "reason": "Prototype fixture intentionally omits vault invariants so config suppression behavior can be demonstrated.",
+      "expires": "2026-12-31"
+    },
+    {
+      "id": "ARK-DOC-001",
+      "reason": "Documentation is tracked in a private planning repository during prototype phase.",
+      "expires": "2026-12-31"
+    }
+  ],
+  "additional_search_tags": [
+    "indie-defi",
+    "vault-security"
+  ],
+  "report": {
+    "max_top_gaps": 5
+  }
+}

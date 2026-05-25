@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/mini-vault`
-- Generated at: `2026-05-25T08:16:43+00:00`
+- Generated at: `2026-05-25T12:29:18+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `high`
 - Files scanned: `5`
-- Scanner version: `0.2.0`
+- Scanner version: `0.3.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -25,9 +25,11 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 - Readiness score: **73/100**
 - Score band: **Improving**
+- Active readiness gaps: `2`
+- Suppressed readiness gaps: `0`
 - Top readiness gaps:
-  - **High readiness gap:** Vault accounting without invariant tests — Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
-  - **Medium readiness gap:** Fee logic without fee accounting tests — Add deposit, withdrawal, management, and performance fee tests where relevant.
+  - **ARK-VLT-001 (High readiness gap):** Vault accounting without invariant tests - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
+  - **ARK-VLT-007 (Medium readiness gap):** Fee logic without fee accounting tests - Add deposit, withdrawal, management, and performance fee tests where relevant.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.
@@ -54,6 +56,13 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 | Strategy Withdrawal Lifecycle Readiness | 10    | 10  | No strategy or queued-withdrawal lifecycle surface detected.                                                                                                                                                      |
 | Admin Operational Readiness             | 9     | 10  | Vault admin/operational surface is visible.; Role or unauthorized-call coverage signal detected.; Pause or emergency control signal detected.; Upgradeability is absent or initializer/upgrade terms are visible. |
 | Documentation Readiness                 | 5     | 5   | README detected.; Vault assumptions or limitations are documented.; Role, treasury, owner, or deployment terms are documented.                                                                                    |
+
+## Top Readiness Gaps
+
+| ID          | Priority             | Category         | Title                                    |
+| ----------- | -------------------- | ---------------- | ---------------------------------------- |
+| ARK-VLT-001 | High readiness gap   | vault-accounting | Vault accounting without invariant tests |
+| ARK-VLT-007 | Medium readiness gap | vault-accounting | Fee logic without fee accounting tests   |
 
 ## Risk Signal Summary
 
@@ -210,39 +219,98 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
 - Suggested test/invariant: Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.
 - Search tags: `access-control-review, admin-risk, operational-security`
 
-## Missing Invariant And Test Coverage
+## All Readiness Gaps
 
-### High readiness gap: Vault accounting without invariant tests
+### ARK-VLT-001 - Vault accounting without invariant tests
 
-- Priority: `High`
-- Detected: `assets, balanceOf, convertToAssets, convertToShares, deposit, mint, shares, totalAssets, totalSupply, withdraw`
-- What was detected: Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.
-- Why it matters: Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals.
-- Historical pattern similarity: Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.
-- Recommended defensive checks:
-  - deposit/withdraw roundtrip
-  - convertToShares/convertToAssets consistency
-  - donation/inflation resistance
-  - rounding direction tests
-  - totalAssets external dependency tests
-- Suggested test: Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
-- Search tags: `vault-accounting, invariant-testing, erc4626`
+- Priority: `High readiness gap`
+- Confidence: `high`
+- Category: `vault-accounting`
 
-### Medium readiness gap: Fee logic without fee accounting tests
+Detected signals:
+- `assets`
+- `balanceOf`
+- `convertToAssets`
+- `convertToShares`
+- `deposit`
+- `mint`
+- `shares`
+- `totalAssets`
+- `totalSupply`
+- `withdraw`
 
-- Priority: `Medium`
-- Detected: `fee`
-- What was detected: Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.
-- Why it matters: Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier.
-- Historical pattern similarity: Maps to accounting mismatch classes where protocol fees changed conservation assumptions.
-- Recommended defensive checks:
-  - fee bounds
-  - recipient accounting
-  - share conservation
-  - rounding with fees
-- Suggested test: Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations.
-- Search tags: `fee-accounting, vault-accounting`
+Affected files:
+- `src/MiniVault.sol`
+- `test/MiniVault.t.sol`
 
+What was detected:
+
+Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.
+
+Why it matters:
+
+Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals.
+
+Historical pattern similarity:
+
+Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.
+
+Recommended defensive checks:
+
+- deposit/withdraw roundtrip
+- convertToShares/convertToAssets consistency
+- donation/inflation resistance
+- rounding direction tests
+- totalAssets external dependency tests
+
+Suggested tests:
+
+- Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
+
+Search tags: `vault-accounting, invariant-testing, erc4626`
+
+### ARK-VLT-007 - Fee logic without fee accounting tests
+
+- Priority: `Medium readiness gap`
+- Confidence: `low`
+- Category: `vault-accounting`
+
+Detected signals:
+- `fee`
+
+Affected files:
+- `src/MiniVault.sol`
+- `test/MiniVault.t.sol`
+
+What was detected:
+
+Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.
+
+Why it matters:
+
+Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier.
+
+Historical pattern similarity:
+
+Maps to accounting mismatch classes where protocol fees changed conservation assumptions.
+
+Recommended defensive checks:
+
+- fee bounds
+- recipient accounting
+- share conservation
+- rounding with fees
+
+Suggested tests:
+
+- Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations.
+
+Search tags: `fee-accounting, vault-accounting`
+
+
+## Suppressed Readiness Gaps
+
+No readiness gaps were suppressed in this run.
 
 ## Suggested Foundry Invariant Skeletons
 
@@ -271,9 +339,22 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
 - [ ] Known limitations are written down for auditors.
 - [ ] A formal audit scope names contracts, commit hash, deployment assumptions, and out-of-scope areas.
 
+## Generated Issue Checklist
+
+- Generated checklist: `examples/reports/mini-vault-issue-checklist.md`
+- Use this as a copyable GitHub Issue body or as a remediation tracker.
+
+## GitHub Action Outputs
+
+- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`
+- Json Report: `examples/reports/mini-vault-pre-audit-report.json`
+- Summary: `examples/reports/mini-vault-action-summary.md`
+- Comment: `examples/reports/mini-vault-pr-comment.md`
+- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`
+
 ## Search Tags
 
-`arkheionx`, `pre-audit-readiness`, `indie-defi`, `defi-security`, `smart-contract-security`, `solidity-security`, `foundry`, `invariant-testing`, `oracle-risk`, `vault-accounting`, `reentrancy-review`, `access-control-review`, `historical-exploit-pattern`, `root-cause-analysis`, `audit-preparation`
+`access-control-review`, `arkheionx`, `audit-preparation`, `defi-security`, `foundry`, `historical-exploit-pattern`, `indie-defi`, `invariant-testing`, `oracle-risk`, `pre-audit-readiness`, `reentrancy-review`, `root-cause-analysis`, `smart-contract-security`, `solidity-security`, `vault-accounting`
 
 ## Recommended Next Steps
 
