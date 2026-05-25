@@ -3,10 +3,13 @@
 GitHub-native DeFi Security Memory and Pre-Audit Readiness OS for indie
 builders.
 
-Find exploit-pattern risks, missing invariants, and audit blockers before
-paying for a formal smart contract audit.
+> Find exploit-pattern risks, missing invariants, and audit blockers before
+> paying for a formal smart contract audit.
 
 > Not an audit. A way to prepare for one.
+
+Arkheionx is not a formal audit and not a security guarantee. It is a
+defensive readiness layer for authorized repositories.
 
 Arkheionx turns historical DeFi failures into practical GitHub-native readiness
 checks for the next generation of indie protocols. The repository remains an
@@ -17,23 +20,45 @@ knowledge base, and service surface for authorized defensive work.
 Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 [@Yudis-bit](https://github.com/Yudis-bit).
 
-## Two Audiences, One System
+## Start Here
 
-For indie builders:
+### If You Are An Indie DeFi Builder
 
-- run the pre-audit scanner locally or in GitHub Actions;
-- get a Markdown readiness report and optional JSON output;
-- identify missing invariants and audit blockers;
-- generate safe Foundry invariant skeletons;
-- prepare a cleaner formal audit scope.
+1. Add the GitHub Action to an authorized repository.
+2. Run a pre-audit readiness scan.
+3. Read the generated Markdown report.
+4. Review SARIF, PR comment, or issue-checklist output if enabled.
+5. Fix readiness gaps and missing invariants.
+6. Request a Launch Report or Pre-Audit Sprint only if you want manual
+   readiness support.
 
-For security researchers:
+### If You Are A Security Researcher
 
-- study historical exploit root causes;
-- improve PoC assertion quality;
-- contribute case metadata and taxonomy;
-- help grow the security memory layer;
-- keep verification claims honest.
+1. Explore the historical exploit archive.
+2. Review assertion standards and root-cause docs.
+3. Check maturity and verification status before making claims.
+4. Contribute defensive case improvements, metadata, or scanner calibration.
+
+## Latest Release
+
+Latest stable release: **v0.4.0 - SARIF Output and Baseline Diff Mode**.
+
+v0.4.0 adds:
+
+- SARIF 2.1.0 output for GitHub Code Scanning-compatible workflows;
+- compact baseline snapshots;
+- report diff mode for new, resolved, unchanged, changed, and suppressed
+  readiness gaps;
+- stable finding fingerprints;
+- optional CI thresholds that are disabled by default.
+
+| Release | Focus | Status |
+|---|---|---|
+| v0.1.0 | Pre-Audit Readiness OS MVP | Released |
+| v0.2.0 | Vault Rule Pack | Released |
+| v0.3.0 | GitHub Action UX + PR Comment Mode | Released |
+| v0.4.0 | SARIF Output + Baseline Diff Mode | Released |
+| v0.4.1 | Public polish and release consistency | In preparation |
 
 ## The Five Pillars
 
@@ -66,7 +91,7 @@ For security researchers:
 
 - Not a formal audit.
 - Not a security guarantee.
-- Not live exploitation tooling.
+- Not live-target abuse tooling.
 - Not a bounty guarantee.
 - Not an attack framework.
 - Not a replacement for professional review.
@@ -108,7 +133,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Add this to an authorized repository:
+Use `@v0.4.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -123,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
         with:
           root: "."
           protocol-type: "auto"
@@ -137,18 +162,14 @@ jobs:
 The action requires no secrets and no RPC endpoint. It scans local repository
 files only.
 
-## v0.3.0 GitHub Action UX
+Use `@main` only when you intentionally want the latest development changes.
 
-Arkheionx v0.3.0 turns the action into a clearer GitHub-native feedback loop:
+## Pull Request Comment Mode
 
-- generated GitHub Actions job summary;
-- optional pull request comment mode;
-- generated issue checklist for remediation planning;
-- stable finding IDs such as `ARK-VLT-001`;
-- optional `.arkheionx.json` config for ignore paths and documented
-  suppressions.
+PR comment mode is opt-in. It posts or updates a concise readiness comment on
+the pull request running the workflow.
 
-PR comment mode is opt-in:
+Stable example:
 
 ```yaml
 permissions:
@@ -161,7 +182,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -184,22 +205,13 @@ Read:
 - [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
 - [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
 
-## v0.4.0 SARIF And Baseline Diff Preview
+## SARIF And Baseline Diff
 
-Arkheionx v0.4.0 prepares the scanner for GitHub-native security workflows:
-
-- optional SARIF output for GitHub Code Scanning upload;
-- compact baseline JSON snapshots;
-- diff mode for new, resolved, unchanged, changed, and suppressed readiness
-  gaps;
-- stable finding fingerprints;
-- explicit CI gates that are disabled by default.
-
-SARIF results are readiness gaps, not confirmed vulnerabilities. Upload is a
-separate workflow step:
+SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
+SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -217,6 +229,22 @@ Read:
 - [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
 - [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md)
 - [`docs/CI_GATING.md`](docs/CI_GATING.md)
+
+Create a readiness baseline:
+
+```yaml
+with:
+  baseline-output: "arkheionx.baseline.json"
+```
+
+Compare a later scan against that baseline:
+
+```yaml
+with:
+  compare-baseline: "arkheionx.baseline.json"
+  diff-output: "ARKHEIONX_DIFF.md"
+  diff-json-output: "arkheionx-diff.json"
+```
 
 ## Quick Start: Local CLI
 
@@ -333,6 +361,19 @@ Output language is intentionally defensive: risk signal, readiness gap,
 historical pattern similarity, missing invariant, review recommended, audit
 blocker, and defensive check.
 
+## Output Artifacts
+
+| Artifact | Purpose |
+|---|---|
+| Markdown report | Human-readable readiness report and audit-prep checklist. |
+| JSON report | Machine-readable score, findings, signals, outputs, and metadata. |
+| SARIF report | GitHub Code Scanning-compatible readiness findings. |
+| Baseline JSON | Compact readiness snapshot for future comparison. |
+| Diff report | New, resolved, unchanged, changed, and suppressed readiness gaps. |
+| Actions summary | Short CI summary for GitHub Actions runs. |
+| PR comment body | Optional pull request feedback with top readiness gaps. |
+| Issue checklist | Copyable remediation checklist for GitHub Issues. |
+
 ## Search Arkheionx
 
 Start here:
@@ -402,24 +443,24 @@ Core standards:
 - [`docs/EXPLOIT_TAXONOMY.md`](docs/EXPLOIT_TAXONOMY.md)
 - [`docs/ROOT_CAUSE_PLAYBOOK.md`](docs/ROOT_CAUSE_PLAYBOOK.md)
 
-## Product Docs
+## Documentation Map
 
-- [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md)
-- [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
-- [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md)
-- [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
-- [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
-- [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
-- [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md)
-- [`docs/CI_GATING.md`](docs/CI_GATING.md)
-- [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md)
-- [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md)
-- [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md)
-- [`docs/MONETIZATION.md`](docs/MONETIZATION.md)
-- [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md)
-- [`docs/MARKETING_ENGINE.md`](docs/MARKETING_ENGINE.md)
-- [`docs/ROADMAP.md`](docs/ROADMAP.md)
-- [`SERVICES.md`](SERVICES.md)
+| Need | Document |
+|---|---|
+| Understand the system | [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md) |
+| Install the GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
+| Use PR comments | [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md) |
+| Generate issue checklists | [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md) |
+| Use SARIF / Code Scanning | [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md) |
+| Track baseline diff | [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md) |
+| Configure suppressions | [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md) |
+| Understand scoring | [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md) |
+| Run vault-specific checks | [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md) |
+| Find builder support paths | [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md) |
+| Request paid support | [`SERVICES.md`](SERVICES.md) |
+| Review monetization boundaries | [`docs/MONETIZATION.md`](docs/MONETIZATION.md) |
+| Sponsor public work | [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md) |
+| Check roadmap | [`docs/ROADMAP.md`](docs/ROADMAP.md) |
 
 ## Monetization And Support
 
@@ -483,7 +524,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   generated issue checklist, stable finding IDs, and local config suppression.
 - **v0.4.0: SARIF and baseline diff mode.** SARIF output, readiness
   baselines, new/resolved/unchanged gap tracking, and explicit CI thresholds.
-  Prepared, not tagged.
+- **v0.4.1: public polish and release consistency.** README onboarding,
+  stable `@v0.4.0` examples, and docs cleanup. In preparation.
 - **v0.5.0: generated GitHub issue workflow and rule-pack expansion.**
   Opt-in issue creation workflow proposal plus staking/reward and oracle rule
   packs.

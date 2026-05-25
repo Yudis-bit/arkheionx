@@ -13,9 +13,12 @@ committed artifacts support it.
 - [x] **v0.3.0: GitHub Action UX shipped.** GitHub Step Summary output,
       optional PR comment mode, generated issue checklist, stable finding IDs,
       local config suppression, and external repo onboarding docs.
-- [ ] **v0.4.0: SARIF output and report diff mode in progress.** SARIF output
+- [x] **v0.4.0: SARIF output and report diff mode released.** SARIF output
       marked as readiness notes/warnings, baseline JSON, diff-aware summaries,
       stable fingerprints, and optional readiness gates.
+- [ ] **v0.4.1: Public polish and release consistency in preparation.**
+      README onboarding, stable `@v0.4.0` examples, docs consistency checks,
+      and public first-impression cleanup.
 - [ ] **v0.5.0: Generated GitHub issue workflow and rule-pack expansion.**
       Safe opt-in issue creation workflow, staking/reward and oracle rule
       packs, and richer report dashboard artifacts.

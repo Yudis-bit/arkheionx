@@ -260,7 +260,7 @@ batch P0 #2 and P0 #3 in the same phase.
 - Editing `web/`, `SVM/`, `MoveVM/`.
 - Adding new PoCs.
 - Marking any PoC `verified` or upgrading any `reproducibility` field.
-- Adding live exploitation tooling.
+- Adding offensive live-target tooling.
 - Procuring archival RPC (out of phase scope; Phase 7
   acceptance bar in §8 stands).
 

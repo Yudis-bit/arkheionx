@@ -109,6 +109,11 @@ written reason in the release PR.
 ## README And Docs
 
 - [ ] README renders cleanly on GitHub.
+- [ ] README top section includes Start Here paths for builders and
+      researchers.
+- [ ] Latest release section names the current stable release accurately.
+- [ ] Stable GitHub Action examples use the latest released tag.
+- [ ] `@main` examples are labeled as development usage.
 - [ ] Quick Start YAML is valid.
 - [ ] Sample commands are readable.
 - [ ] Registry table remains between generated markers.
@@ -125,6 +130,32 @@ written reason in the release PR.
 - [ ] `docs/READINESS_SCORE.md` matches scanner scoring categories.
 - [ ] `SERVICES.md`, `docs/MONETIZATION.md`, and `docs/SPONSORSHIP.md` avoid
       formal-audit or guarantee claims.
+- [ ] Stale release phrases are absent:
+
+  ```sh
+  python3 - <<'PY'
+  from pathlib import Path
+
+  version = "v0" + ".4" + ".0"
+  phrases = [
+      version + " - " + "Unreleased",
+      "until " + version + " is tagged",
+      "prepared, " + "not tagged",
+      "prepared, " + "not released",
+      "upcoming " + version,
+      "planned " + version,
+  ]
+  for root in [Path("README.md"), Path("CHANGELOG.md"), Path("docs")]:
+      files = [root] if root.is_file() else root.rglob("*.md")
+      for path in files:
+          text = path.read_text(encoding="utf-8", errors="ignore")
+          for phrase in phrases:
+              if phrase.lower() in text.lower():
+                  raise SystemExit(f"stale release phrase: {path}: {phrase}")
+  PY
+  ```
+
+- [ ] v0.5.0 next milestone is visible in roadmap and release notes.
 
 ## Safety Scan
 

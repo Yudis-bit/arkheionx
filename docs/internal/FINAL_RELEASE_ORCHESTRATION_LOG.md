@@ -67,7 +67,7 @@ without overwriting in-progress work.
   deliberate **disclaimer** ("not the largest archive") which is kept.
   Internal phase logs reference the prohibition list itself; not
   rewritten.
-- No live exploitation tooling, scanners, asset-extraction helpers, or
+- No offensive live-target tooling, scanners, asset-extraction helpers, or
   private-key handling found on the public surface.
 - No secrets present. `.env.example` and `EVM/foundry.toml` reference
   RPC env-var names only.

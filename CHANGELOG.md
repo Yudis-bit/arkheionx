@@ -3,7 +3,24 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.4.0 - Unreleased
+## v0.4.1 - Unreleased
+
+### Changed
+
+- README first impression and public onboarding polish.
+- Release consistency across README, docs, roadmap, and changelog after
+  v0.4.0.
+- Stable GitHub Action examples updated to `@v0.4.0`.
+- Documentation navigation tightened for builders and security researchers.
+
+### Safety
+
+- No scanner behavior changes.
+- No new live-chain, RPC, transaction, deployed-contract, or secret-handling
+  behavior.
+- Defensive-only positioning preserved.
+
+## v0.4.0
 
 ### Added
 

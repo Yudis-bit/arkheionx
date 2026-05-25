@@ -16,7 +16,7 @@ OUTPUT_PATH = REPO_ROOT / "reports" / "search_index.md"
 
 STATIC_INDEX = [
     ("README landing page", "README.md", ["arkheionx", "pre-audit-readiness", "security-memory"]),
-    ("Changelog", "CHANGELOG.md", ["v0.4.0", "SARIF", "baseline diff", "release notes"]),
+    ("Changelog", "CHANGELOG.md", ["v0.4.1", "v0.4.0 released", "SARIF", "baseline diff", "release notes"]),
     ("Services", "SERVICES.md", ["Launch Report", "Pre-Audit Sprint", "Ecosystem Pack"]),
     ("Pre-Audit Readiness OS", "docs/PRE_AUDIT_READINESS_OS.md", ["scanner", "readiness gap", "historical pattern similarity"]),
     ("GitHub Action usage", "docs/GITHUB_ACTION_USAGE.md", ["github-action", "SARIF", "baseline diff", "PR comment"]),

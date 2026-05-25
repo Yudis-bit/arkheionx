@@ -5,7 +5,7 @@
 Phase 9 polishes the GitHub-facing surface of the Arkheionx Vault
 repository so a first-time visitor immediately understands what this
 repo is (an independent DeFi exploit PoC research archive) and what it
-is not (a live exploitation toolkit, an audit firm product, a generic
+is not (an offensive live-target toolkit, an audit firm product, a generic
 web3 hype project).
 
 Concretely, this phase:

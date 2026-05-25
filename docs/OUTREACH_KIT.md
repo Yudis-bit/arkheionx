@@ -17,7 +17,7 @@ Best early targets:
 Avoid early:
 
 - protocols in the middle of an active incident,
-- teams asking for urgent live exploitation help,
+- teams asking for urgent unauthorized live-target help,
 - buyers who only want a bounty outcome,
 - projects with no public source material.
 

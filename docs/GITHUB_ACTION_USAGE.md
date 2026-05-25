@@ -30,8 +30,15 @@ jobs:
           protocol-type: auto
 ```
 
-Until `v0.4.0` is tagged, use `@main` only if you intentionally want the
-current development branch.
+Use `@main` only if you intentionally want the latest development branch.
+
+Development usage:
+
+```yaml
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  with:
+    protocol-type: auto
+```
 
 ## Pull Request Summary Workflow
 
@@ -53,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
         with:
           root: "."
           protocol-type: "auto"
@@ -86,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -116,7 +123,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
     with:
       protocol-type: "auto"
       output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -186,7 +193,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
         with:
           protocol-type: "vault"
           output: "ARKHEIONX_VAULT_READINESS_REPORT.md"

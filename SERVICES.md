@@ -58,7 +58,7 @@ Value:
 Use it from any authorized repository:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
   with:
     root: "."
     protocol-type: "auto"

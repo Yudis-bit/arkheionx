@@ -78,7 +78,7 @@ Use one precise angle per message:
 Avoid:
 
 - teams in an active incident;
-- accounts requesting live exploitation;
+- accounts requesting unauthorized live-target activity;
 - people asking for private exploit adaptation;
 - projects with no public technical context;
 - buyers who only want a bounty outcome;

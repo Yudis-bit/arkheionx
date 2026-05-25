@@ -213,7 +213,7 @@ logs) all clean:
   `trusted by <Capital>`): zero hits on README and public `docs/`.
 - Stale `web/` references: only inside `RELEASE_CHECKLIST.md` itself,
   where the checklist instructs the next release to scan for them.
-- Live-target framings (`live exploit`, `asset-extraction helper`, `target scan`,
+- Live-target framings (`active-target exploit wording`, `asset-extraction helper`, `target scan`,
   `attacker automation`): only inside the prohibition lists themselves
   (rejection criteria, unsafe-content template, release checklist,
   intake doc, metadata schema). No instances in PoC source or PoC

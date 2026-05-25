@@ -212,7 +212,7 @@ A single sub-phase (Phase 6D) should land that patch, run the same validation ch
 
 - Modifying any file under `EVM/src/`, `EVM/templates/`, or any `EVM/test/` path other than `test/2017-11/Exploit_2017-11.t.sol`.
 - Modifying `web/`, `SVM/`, or `MoveVM/`.
-- Adding live exploitation tooling, mainnet attacker actions, or any non-fork execution path.
+- Adding offensive live-target tooling, mainnet attacker actions, or any non-fork execution path.
 - Marking any PoC `verified` or upgrading any `reproducibility` field.
 - Configuring archival RPC, paid providers, or any new endpoint.
 - Starting the Phase 6D patch on `2018-04-bec-token`.

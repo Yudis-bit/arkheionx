@@ -71,7 +71,8 @@ jobs:
           sarif_file: arkheionx.sarif.json
 ```
 
-Until `v0.4.0` is tagged, use `@main` only for development testing.
+Use `@main` only for development testing of changes after the latest stable
+release.
 
 ## Limitations
 

@@ -116,7 +116,7 @@ These values mirror `metadata/schema.json` and `docs/EXPLOIT_TAXONOMY.md`:
 | `template` | Skeleton, not yet a working PoC. |
 | `incomplete` | Code/metadata exists but is below the standard. |
 | `needs-verification` | Listed but not runtime-verified on this branch/environment. |
-| `embargoed` | Under disclosure embargo; do not include live exploit details. |
+| `embargoed` | Under disclosure embargo; do not include active-target exploit details. |
 
 ### Severity values
 

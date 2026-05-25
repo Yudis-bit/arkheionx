@@ -1,7 +1,55 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
+    {
+      "term": "Arkheionx",
+      "aliases": ["Arkheionx Security Memory", "Arkheionx Readiness", "pre-audit readiness OS", "GitHub-native security memory"],
+      "category": "product",
+      "related_patterns": ["historical exploit memory", "pre-audit readiness workflow"],
+      "related_checks": ["GitHub Action", "Markdown report", "SARIF output", "baseline diff"],
+      "search_tags": ["arkheionx", "security-memory", "pre-audit-readiness", "indie-defi"]
+    },
+    {
+      "term": "GitHub Action",
+      "aliases": ["pre-audit action", "Arkheionx action", "GitHub-native scanner", "Actions summary"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["local/static readiness scan in CI"],
+      "related_checks": ["Markdown report", "JSON report", "PR comment", "issue checklist", "SARIF"],
+      "search_tags": ["github-action", "ci", "pre-audit-readiness"]
+    },
+    {
+      "term": "security memory",
+      "aliases": ["DeFi security memory", "historical exploit memory", "root-cause knowledge base", "security knowledge base"],
+      "category": "research archive",
+      "related_patterns": ["historical exploit pattern", "broken invariant", "failed assumption"],
+      "related_checks": ["registry", "search index", "research dashboard", "PoC maturity index"],
+      "search_tags": ["security-memory", "root-cause-analysis", "exploit-research"]
+    },
+    {
+      "term": "readiness gap",
+      "aliases": ["audit blocker", "risk signal", "review recommended", "missing invariant"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["local/static readiness finding"],
+      "related_checks": ["finding ID", "finding fingerprint", "issue checklist", "baseline diff"],
+      "search_tags": ["readiness-gap", "audit-readiness", "defensive-review"]
+    },
+    {
+      "term": "historical exploit pattern",
+      "aliases": ["historical pattern similarity", "exploit primitive", "broken invariant", "failed assumption"],
+      "category": "research archive",
+      "related_patterns": ["root-cause mapping to defensive checks"],
+      "related_checks": ["registry metadata", "search guide", "scanner historical patterns"],
+      "search_tags": ["historical-exploit-pattern", "root-cause-analysis", "defi-security"]
+    },
+    {
+      "term": "indie DeFi",
+      "aliases": ["indie builder", "solo DeFi founder", "grant-funded builder", "small DAO"],
+      "category": "audience",
+      "related_patterns": ["pre-audit readiness before formal review"],
+      "related_checks": ["Launch Report", "Pre-Audit Sprint", "GitHub Action"],
+      "search_tags": ["indie-defi", "builder-security", "pre-audit"]
+    },
     {
       "term": "vault accounting",
       "aliases": ["share accounting", "totalAssets", "pricePerShare", "convertToShares", "convertToAssets"],

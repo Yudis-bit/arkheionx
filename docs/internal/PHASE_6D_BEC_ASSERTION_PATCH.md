@@ -231,5 +231,5 @@ Phase 6D stops here, per the one-PoC rule. The 6E commit should:
 - Editing `EVM/src/`, `EVM/templates/`, `web/`, `SVM/`, `MoveVM/`.
 - Marking any PoC `verified`.
 - Promoting `reproducibility` to `deterministic-confirmed`.
-- Adding live exploitation tooling.
+- Adding offensive live-target tooling.
 - Configuring or claiming archival RPC.

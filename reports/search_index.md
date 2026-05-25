@@ -14,7 +14,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.4.0, SARIF, baseline diff, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.4.1, v0.4.0 released, SARIF, baseline diff, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -55,6 +55,12 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 
 | Term | Aliases | Category | Related checks | Tags |
 |---|---|---|---|---|
+| `Arkheionx` | Arkheionx Security Memory, Arkheionx Readiness, pre-audit readiness OS, GitHub-native security memory | product | GitHub Action, Markdown report, SARIF output, baseline diff | arkheionx, security-memory, pre-audit-readiness, indie-defi |
+| `GitHub Action` | pre-audit action, Arkheionx action, GitHub-native scanner, Actions summary | GitHub-native workflow | Markdown report, JSON report, PR comment, issue checklist, SARIF | github-action, ci, pre-audit-readiness |
+| `security memory` | DeFi security memory, historical exploit memory, root-cause knowledge base, security knowledge base | research archive | registry, search index, research dashboard, PoC maturity index | security-memory, root-cause-analysis, exploit-research |
+| `readiness gap` | audit blocker, risk signal, review recommended, missing invariant | pre-audit readiness | finding ID, finding fingerprint, issue checklist, baseline diff | readiness-gap, audit-readiness, defensive-review |
+| `historical exploit pattern` | historical pattern similarity, exploit primitive, broken invariant, failed assumption | research archive | registry metadata, search guide, scanner historical patterns | historical-exploit-pattern, root-cause-analysis, defi-security |
+| `indie DeFi` | indie builder, solo DeFi founder, grant-funded builder, small DAO | audience | Launch Report, Pre-Audit Sprint, GitHub Action | indie-defi, builder-security, pre-audit |
 | `vault accounting` | share accounting, totalAssets, pricePerShare, convertToShares, convertToAssets | pre-audit readiness | totalAssets consistency, deposit-withdraw roundtrip, share price manipulation resistance | vault-security, invariant-testing, audit-readiness |
 | `oracle manipulation` | price manipulation, stale oracle, TWAP, latestRoundData, spot price | historical exploit pattern | stale price rejection, decimals normalization, price bounds, TWAP or sanity check | oracle-risk, price-assumptions, defi-security |
 | `reentrancy` | callback, external call, value flow, nonReentrant, checks effects interactions | historical exploit pattern | malicious local receiver test, state update order, callback boundary review | reentrancy-review, value-flow, smart-contract-security |

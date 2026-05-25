@@ -269,5 +269,5 @@ mandate. This document closes Phase 6E.
       `generate_verification_report.py --check`,
       `score_pocs.py --check` all pass after final regen.
 - [x] Verified count unchanged at **0**.
-- [x] No live exploitation tooling added.
+- [x] No offensive live-target tooling added.
 - [x] No deterministic-confirmed promotion.

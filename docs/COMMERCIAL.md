@@ -88,7 +88,7 @@ The commercial surface should be described as:
 
 It should not be described as:
 
-> A live exploit toolkit, an audit firm, a bounty guarantee, or a verified
+> An offensive live-target toolkit, an audit firm, a bounty guarantee, or a verified
 > exploit database.
 
 The public archive stays honest: verification counts, maturity levels, and
