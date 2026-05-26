@@ -48,10 +48,14 @@ committed artifacts support it.
       packs, release artifacts, and contribution workflow.
 - [x] **v1.0.1: Docs link validation hotfix released.**
       Documentation link validation and release consistency checks.
-- [ ] **v1.1.0: Feedback Loop and External Calibration current milestone.**
+- [x] **v1.1.0: Feedback Loop and External Calibration released.**
       Public feedback triage, false-positive and false-negative workflows,
       feedback dashboard, validation levels, and rule calibration backlog
       without unsupported adoption claims.
+- [ ] **v1.1.1: Public Surface Polish current patch milestone.**
+      README front-page clarity, repository About guidance, topic
+      recommendations, and onboarding path cleanup before the next major
+      service-packaging milestone.
 - [ ] **v1.2.0: Paid Offer Refinement.**
       Clearer Launch Report, Pre-Audit Sprint, and Contest Readiness service
       packaging tied to generated artifacts.

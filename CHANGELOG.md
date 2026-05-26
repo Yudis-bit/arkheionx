@@ -3,7 +3,24 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.1.0 - Unreleased
+## v1.1.1 - Unreleased
+
+### Improved
+
+- Polished README front page and public repository positioning.
+- Added GitHub repository surface guidance.
+- Updated recommended About description, topics, and resources.
+- Clarified Arkheionx's current identity as both a DeFi security memory system
+  and pre-audit readiness workflow.
+
+### Safety
+
+- Preserved "not an audit" positioning.
+- No live-chain/RPC behavior added.
+- No exploit automation added.
+- No fake adoption/customer claims added.
+
+## v1.1.0
 
 ### Added
 

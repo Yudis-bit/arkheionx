@@ -56,9 +56,10 @@ Arkheionx uses explicit validation levels so public language stays honest:
 | Level 4 | Public case study with permission. |
 | Level 5 | Multiple public independent evaluations. |
 
-Current status: v1.0.1 has internal demo and self-simulation coverage. v1.1.0
-adds workflow for external calibration. Do not claim broad adoption, customers,
-or production validation without committed public evidence and permission.
+Current status: v1.1.0 has internal demo and self-simulation coverage plus a
+structured workflow for external calibration. Do not claim broad adoption,
+customers, or production validation without committed public evidence and
+permission.
 
 Read [`VALIDATION_LEVELS.md`](VALIDATION_LEVELS.md).
 

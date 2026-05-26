@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # github_surface_setup.sh
 #
-# Apply repository description and topics for the Arkheionx Vault
+# Apply repository description, resource URL, and topics for the Arkheionx
 # repository (Yudis-bit/DeFi-Exploit-PoCs).
 #
 # Safe by default:
 #   - Dry-run unless --apply is passed.
 #   - Never changes visibility, never deletes anything, never pushes,
 #     never modifies code, never uploads secrets.
-#   - Only edits the repository description and topic list via gh CLI.
+#   - Only edits the repository description, homepage, and topic list via gh CLI.
 #
 # Usage:
 #   ./scripts/github_surface_setup.sh              # dry-run
@@ -19,21 +19,29 @@ set -euo pipefail
 
 REPO="Yudis-bit/DeFi-Exploit-PoCs"
 
-DESCRIPTION="Arkheionx Vault — independent DeFi exploit PoC archive focused on assertions, root-cause analysis, and fork verification readiness."
+DESCRIPTION="GitHub-native DeFi pre-audit readiness and security memory OS for finding readiness gaps before audits, contests, and bug bounty launches."
+HOMEPAGE="https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
 
 TOPICS=(
+  "arkheionx"
   "web3-security"
   "defi-security"
   "smart-contract-security"
   "smart-contract-auditing"
   "solidity"
   "foundry"
-  "exploit-poc"
-  "incident-analysis"
+  "forge"
+  "github-actions"
+  "sarif"
+  "pre-audit"
+  "audit-readiness"
   "security-research"
-  "reproducible-research"
   "root-cause-analysis"
-  "arkheionx"
+  "exploit-patterns"
+  "security-memory"
+  "rule-calibration"
+  "open-source-security"
+  "ethereum"
 )
 
 mode="dry-run"
@@ -51,6 +59,28 @@ case "${1:-}" in
     ;;
 esac
 
+echo "repo:        $REPO"
+echo "mode:        $mode"
+echo
+echo "description: $DESCRIPTION"
+echo "homepage:    $HOMEPAGE"
+echo "topics:"
+for t in "${TOPICS[@]}"; do
+  echo "  - $t"
+done
+echo
+
+if [ "$mode" = "dry-run" ]; then
+  echo "[dry-run] would run:"
+  echo "  gh repo edit $REPO --description \"\$DESCRIPTION\" --homepage \"\$HOMEPAGE\""
+  for t in "${TOPICS[@]}"; do
+    echo "  gh repo edit $REPO --add-topic $t"
+  done
+  echo
+  echo "to apply for real, re-run with: $0 --apply"
+  exit 0
+fi
+
 if ! command -v gh >/dev/null 2>&1; then
   echo "error: gh CLI not found in PATH." >&2
   echo "       install from https://cli.github.com/ and run 'gh auth login'." >&2
@@ -63,29 +93,8 @@ if ! gh auth status >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "repo:        $REPO"
-echo "mode:        $mode"
-echo
-echo "description: $DESCRIPTION"
-echo "topics:"
-for t in "${TOPICS[@]}"; do
-  echo "  - $t"
-done
-echo
-
-if [ "$mode" = "dry-run" ]; then
-  echo "[dry-run] would run:"
-  echo "  gh repo edit $REPO --description \"\$DESCRIPTION\""
-  for t in "${TOPICS[@]}"; do
-    echo "  gh repo edit $REPO --add-topic $t"
-  done
-  echo
-  echo "to apply for real, re-run with: $0 --apply"
-  exit 0
-fi
-
-echo "[apply] setting description..."
-gh repo edit "$REPO" --description "$DESCRIPTION"
+echo "[apply] setting description and homepage..."
+gh repo edit "$REPO" --description "$DESCRIPTION" --homepage "$HOMEPAGE"
 
 echo "[apply] adding topics..."
 for t in "${TOPICS[@]}"; do

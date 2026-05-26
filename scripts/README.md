@@ -1,7 +1,9 @@
 # Scripts
 
-Internal tooling for Arkheionx Vault. All scripts are pure-stdlib Python 3.11+
-and run from the repository root unless noted.
+Internal tooling for Arkheionx. The repository includes the historical
+Arkheionx Vault archive plus pre-audit readiness, security memory, reporting,
+and feedback calibration tooling. All scripts are pure-stdlib Python 3.11+ and
+run from the repository root unless noted.
 
 ## `pre_audit_scan.py`
 

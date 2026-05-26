@@ -1,98 +1,54 @@
 # Arkheionx
 
-GitHub-native DeFi Security Memory and Pre-Audit Readiness OS for indie
-builders.
+GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 
-> Find exploit-pattern risks, missing invariants, and audit blockers before
-> paying for a formal smart contract audit.
+**Not an audit. A way to prepare for one.**
 
-> Not an audit. A way to prepare for one.
+Arkheionx helps DeFi builders and security reviewers surface readiness gaps
+before audits, contests, and bug bounty launches.
 
-Arkheionx is not a formal audit and not a security guarantee. It is a
-defensive readiness layer for authorized repositories.
+`Stable: v1.1.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
-Arkheionx turns historical DeFi failures into practical GitHub-native readiness
-checks for the next generation of indie protocols. The repository remains an
-independent assertion-driven exploit PoC research archive, and now also acts as
-a local scanner, GitHub Action, Markdown reporting system, searchable security
-knowledge base, and service surface for authorized defensive work.
+It combines:
 
-Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
-[@Yudis-bit](https://github.com/Yudis-bit).
+- local/static DeFi readiness scanning;
+- evidence-backed findings;
+- SARIF output;
+- GitHub issue plans;
+- Launch / Contest / Sprint reports;
+- security memory graph;
+- historical exploit-pattern knowledge;
+- feedback and rule calibration workflows.
 
-## What Is Arkheionx?
-
-Arkheionx is a local, GitHub-native pre-audit readiness workflow for authorized
-DeFi repositories. It helps indie builders, security researchers, and ecosystem
-teams turn static repository evidence into readiness reports, SARIF, issue
-plans, launch artifacts, and searchable security memory before a formal audit
-or external review.
+Arkheionx started as an independent DeFi exploit PoC archive and now includes a
+pre-audit readiness workflow, security memory graph, reports, issue plans, and
+feedback calibration. Maintained by **Yudistira Putra**, creator of Arkheionx -
+`arkheionx` / [@Yudis-bit](https://github.com/Yudis-bit).
 
 ## Start Here
 
-### If You Are An Indie DeFi Builder
+| Goal | Link |
+|---|---|
+| Try it in 5 minutes | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
+| Run the CLI | [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) |
+| Use GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
+| Understand outputs | [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md) |
+| Search security memory | [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md) |
+| Give feedback | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](docs/PUBLIC_FEEDBACK_GUIDE.md) |
+| Report false positives | [`.github/ISSUE_TEMPLATE/false_positive.yml`](.github/ISSUE_TEMPLATE/false_positive.yml) |
 
-1. Add the GitHub Action to an authorized repository.
-2. Run a pre-audit readiness scan.
-3. Read the generated Markdown report.
-4. Review SARIF, PR comment, or issue-checklist output if enabled.
-5. Review generated issue plans and confidence/evidence notes if enabled.
-6. Fix readiness gaps and missing invariants.
-7. Request a Launch Report or Pre-Audit Sprint only if you want manual
-   readiness support.
-
-### If You Are A Security Researcher
-
-1. Explore the historical exploit archive.
-2. Review assertion standards and root-cause docs.
-3. Check maturity and verification status before making claims.
-4. Contribute defensive case improvements, metadata, or scanner calibration.
-
-## Try Arkheionx In 5 Minutes
-
-Run the built-in oracle/staking demo fixture and generate the public demo
-artifact bundle:
+Quick demo:
 
 ```sh
-python3 scripts/pre_audit_scan.py \
-  --root examples/oracle-staking-fixture \
-  --protocol-type auto \
-  --output examples/reports/demo-pre-audit-report.md \
-  --json-output examples/reports/demo-report.json \
-  --sarif-output examples/reports/demo.sarif.json \
-  --baseline-output examples/reports/demo.baseline.json \
-  --issue-plan-output examples/reports/demo-issue-plan.json \
-  --issue-checklist-output examples/reports/demo-issue-checklist.md \
-  --launch-report-output examples/reports/demo-launch-report.md \
-  --sprint-plan-output examples/reports/demo-sprint-plan.md \
-  --sprint-days 5 \
-  --contest-readiness-output examples/reports/demo-contest-readiness.md \
-  --executive-summary-output examples/reports/demo-executive-summary.md \
-  --remediation-roadmap-output examples/reports/demo-remediation-roadmap.md
+make demo
 ```
 
-Optional dry-run issue workflow:
-
-```sh
-python3 scripts/create_github_issues.py \
-  --issue-plan examples/reports/demo-issue-plan.json \
-  --mode dry-run \
-  --dry-run-output examples/reports/demo-issue-dry-run.md
-```
-
-Dry-run makes no GitHub API calls. The demo uses toy fixtures only and has no
-live-chain behavior.
-
-Arkheionx ignores its own generated reports and artifacts by default when
-scanning a repository. This prevents previous scan outputs from affecting
-future readiness scores.
-
-Read [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and
-[`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md).
+The demo uses toy fixtures only. Dry-run issue workflows make no GitHub API
+calls.
 
 ## Run On Your Own Repo
 
-Run Arkheionx only on repositories you own or are authorized to review:
+Use Arkheionx only on repositories you own or are authorized to review:
 
 ```sh
 python3 scripts/pre_audit_scan.py \
@@ -104,23 +60,34 @@ python3 scripts/pre_audit_scan.py \
   --issue-plan-output reports/ARKHEIONX_ISSUE_PLAN.json
 ```
 
-Local scans require Python 3. They do not require RPC, private keys, mnemonics,
-or a GitHub token.
+Local scans require Python 3. They do not require RPC, private keys,
+mnemonics, or a GitHub token.
 
-## What You Get
+## What It Produces
 
 | Output | Purpose |
 |---|---|
-| Executive Summary | Quick founder/dev overview. |
 | Pre-Audit Report | Technical readiness findings with evidence. |
 | JSON Report | Machine-readable readiness output. |
 | SARIF | GitHub Code Scanning-compatible readiness signals. |
 | Issue Plan | GitHub-native remediation tasks. |
 | Launch Report | Founder/client-facing readiness summary. |
 | Sprint Plan | Day-by-day remediation workflow. |
-| Contest Readiness | Prep for bounty, contest, or external review scope. |
+| Contest Readiness | Prep for authorized contest or review scope. |
 | Remediation Roadmap | Prioritized work plan. |
 | Security Memory Search | Finding-to-pattern knowledge lookup. |
+
+## Safety Boundaries
+
+- Use only on repositories you own or are authorized to review.
+- Local/static analysis only.
+- No RPC, live-chain calls, transaction execution, or deployed-contract
+  scanning.
+- No private key, mnemonic, token, or secret handling.
+- No exploit automation, bounty guarantee, or formal audit claim.
+
+Arkheionx ignores its own generated reports and artifacts by default so
+previous outputs do not affect future readiness scores.
 
 ## Security Memory Graph
 
@@ -159,10 +126,10 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.0.1 - Docs Link Validation Hotfix**.
+Latest stable release: **v1.1.0 - Feedback Loop and External Calibration**.
 
-v1.0.1 keeps the v1.0 stable surface and adds a docs-link validation hotfix on
-top of:
+v1.1.0 adds structured feedback and calibration workflows on top of the stable
+readiness surface:
 
 - documented CLI and GitHub Action surfaces;
 - JSON schemas for stable outputs;
@@ -187,11 +154,12 @@ top of:
 | v0.9.2 | Generated artifact ignore and self-ingestion guard | Released |
 | v1.0.0 | Stable public release + schema freeze | Released |
 | v1.0.1 | Docs link validation hotfix | Released |
-| v1.1.0 | Feedback Loop + External Calibration | Prepared, not tagged |
+| v1.1.0 | Feedback Loop + External Calibration | Released |
+| v1.1.1 | Public surface polish | Prepared, not tagged |
 
-## Stable v1.0.x Surface
+## Stable v1.1.x Surface
 
-Arkheionx v1.0.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.1.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -200,13 +168,13 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.0.1`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.1.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Feedback and Calibration
 
-v1.1.0 prepares a structured feedback loop for false positives, false
-negatives, report quality, GitHub Action feedback, and rule calibration.
+v1.1.0 adds a structured feedback loop for false positives, false negatives,
+report quality, GitHub Action feedback, and rule calibration.
 
 Start here:
 
@@ -289,7 +257,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.0.1` for stable usage:
+Use `@v1.1.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -304,7 +272,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0
         with:
           root: "."
           protocol-type: "auto"
@@ -338,7 +306,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -367,7 +335,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -418,7 +386,7 @@ python3 scripts/pre_audit_scan.py \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
-See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.0.x CLI
+See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.1.x CLI
 surface.
 
 Vault builders can force the v0.2.0 Vault Rule Pack:
@@ -604,19 +572,25 @@ Foundry invariant testing
 Recommended GitHub topics:
 
 ```text
+arkheionx
 defi-security
+web3-security
 smart-contract-security
-solidity-security
+solidity
 foundry
+forge
+github-actions
+sarif
 pre-audit
 audit-readiness
-invariant-testing
-exploit-research
+security-research
 root-cause-analysis
-web3-security
-indie-defi
-security-tools
-github-action
+exploit-patterns
+security-memory
+rule-calibration
+smart-contract-auditing
+open-source-security
+ethereum
 ```
 
 ## Research Standard
@@ -645,54 +619,51 @@ Core standards:
 
 ## Documentation Map
 
-| Need | Document |
-|---|---|
-| Try the demo quickly | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
-| Evaluate public demo workflow | [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md) |
-| Share public feedback safely | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](docs/PUBLIC_FEEDBACK_GUIDE.md) |
-| Understand feedback loop | [`docs/FEEDBACK_LOOP.md`](docs/FEEDBACK_LOOP.md) |
-| Triage feedback | [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](docs/FEEDBACK_TRIAGE_WORKFLOW.md) |
-| Understand validation levels | [`docs/VALIDATION_LEVELS.md`](docs/VALIDATION_LEVELS.md) |
-| View feedback dashboard | [`reports/feedback_dashboard.md`](reports/feedback_dashboard.md) |
-| View calibration backlog | [`reports/rule_calibration_backlog.md`](reports/rule_calibration_backlog.md) |
-| Use stable CLI flags | [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) |
-| Review stable schemas | [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md) |
-| Name output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md) |
-| Read demo case studies | [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md) |
-| Understand the system | [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md) |
-| Install the GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
-| Use PR comments | [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md) |
-| Generate issue checklists | [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md) |
-| Generate issue plans | [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md) |
-| Use SARIF / Code Scanning | [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md) |
-| Track baseline diff | [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md) |
-| Understand semantic-lite evidence | [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md) |
-| Use optional Slither enrichment | [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md) |
-| Understand generated artifact ignores | [`docs/GENERATED_ARTIFACT_IGNORE.md`](docs/GENERATED_ARTIFACT_IGNORE.md) |
-| Reduce false positives | [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md) |
-| Review rule calibration | [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md) |
-| Use the security memory graph | [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md) |
-| Search local knowledge | [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md) |
-| Update finding knowledge mappings | [`docs/FINDING_KNOWLEDGE_MAP.md`](docs/FINDING_KNOWLEDGE_MAP.md) |
-| Browse generated memory graph | [`reports/security_memory_graph.md`](reports/security_memory_graph.md) |
-| Share external feedback | [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md) |
-| Generate Launch Reports | [`docs/LAUNCH_REPORT_OS.md`](docs/LAUNCH_REPORT_OS.md) |
-| Run Pre-Audit Sprints | [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](docs/PRE_AUDIT_SPRINT_WORKFLOW.md) |
-| Prepare contest readiness | [`docs/CONTEST_READINESS_MODE.md`](docs/CONTEST_READINESS_MODE.md) |
-| Understand delivery artifacts | [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md) |
-| Configure suppressions | [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md) |
-| Understand scoring | [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md) |
-| Run vault-specific checks | [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md) |
-| Understand all rule packs | [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md) |
-| Use oracle checks | [`docs/ORACLE_RULE_PACK.md`](docs/ORACLE_RULE_PACK.md) |
-| Use access/upgradeability checks | [`docs/ACCESS_CONTROL_RULE_PACK.md`](docs/ACCESS_CONTROL_RULE_PACK.md) |
-| Use reentrancy/value-flow checks | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) |
-| Use reward accounting checks | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](docs/REWARD_ACCOUNTING_RULE_PACK.md) |
-| Find builder support paths | [`docs/business/INDIE_BUILDER_OFFER.md`](docs/business/INDIE_BUILDER_OFFER.md) |
-| Request paid support | [`SERVICES.md`](SERVICES.md) |
-| Review monetization boundaries | [`docs/business/MONETIZATION.md`](docs/business/MONETIZATION.md) |
-| Sponsor public work | [`docs/business/SPONSORSHIP.md`](docs/business/SPONSORSHIP.md) |
-| Check roadmap | [`docs/ROADMAP.md`](docs/ROADMAP.md) |
+### Start
+
+- [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
+- [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
+- [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
+- [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md)
+
+### Outputs
+
+- [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md)
+- [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
+- [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md)
+- [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
+- [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md)
+- [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md)
+
+### Analysis
+
+- [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md)
+- [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md)
+- [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md)
+- [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md)
+- [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md)
+- [`docs/FINDING_KNOWLEDGE_MAP.md`](docs/FINDING_KNOWLEDGE_MAP.md)
+
+### Feedback
+
+- [`docs/FEEDBACK_LOOP.md`](docs/FEEDBACK_LOOP.md)
+- [`docs/PUBLIC_FEEDBACK_GUIDE.md`](docs/PUBLIC_FEEDBACK_GUIDE.md)
+- [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](docs/FEEDBACK_TRIAGE_WORKFLOW.md)
+- [`docs/VALIDATION_LEVELS.md`](docs/VALIDATION_LEVELS.md)
+- [`reports/feedback_dashboard.md`](reports/feedback_dashboard.md)
+
+### Safety
+
+- [`docs/ETHICS.md`](docs/ETHICS.md)
+- [`docs/SECURITY.md`](docs/SECURITY.md)
+- [`docs/GENERATED_ARTIFACT_IGNORE.md`](docs/GENERATED_ARTIFACT_IGNORE.md)
+- [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md)
+- [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md)
+
+### Repository Surface
+
+- [`docs/GITHUB_REPO_SURFACE.md`](docs/GITHUB_REPO_SURFACE.md)
+- [`docs/ROADMAP.md`](docs/ROADMAP.md)
 
 ## Monetization And Support
 
@@ -783,6 +754,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   schema freeze, calibrated rules, release artifacts, contribution workflow.
 - **v1.1.0: feedback loop and external calibration.** Structured templates,
   calibration backlog, feedback dashboard, and validation language.
+- **v1.1.1: public surface polish.** README front-page clarity, repository
+  About guidance, topics, and onboarding path cleanup.
 
 Archive milestones remain honest:
 

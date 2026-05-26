@@ -14,6 +14,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
+| GitHub repository surface | [`docs/GITHUB_REPO_SURFACE.md`](../docs/GITHUB_REPO_SURFACE.md) | GitHub repo surface, repository about, public surface polish |
 | Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v1.0.0, stable public release, release notes |
 | CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, v1.0.0 |
 | Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
@@ -129,6 +130,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Term | Aliases | Category | Related checks | Tags |
 |---|---|---|---|---|
 | `Arkheionx` | Arkheionx Security Memory, Arkheionx Readiness, pre-audit readiness OS, GitHub-native security memory | product | GitHub Action, Markdown report, SARIF output, baseline diff | arkheionx, security-memory, pre-audit-readiness, indie-defi |
+| `GitHub repo surface` | repository about, repository topics, public surface polish, GitHub About description | public surface | docs/GITHUB_REPO_SURFACE.md, README.md, scripts/github_surface_setup.sh | github-repo-surface, repository-about, public-surface-polish |
+| `security memory OS` | DeFi Security Memory OS, Arkheionx positioning, pre-audit readiness OS | product positioning | README.md, docs/GITHUB_REPO_SURFACE.md, docs/SECURITY_MEMORY_GRAPH.md | security-memory-os, arkheionx-positioning, pre-audit-readiness |
 | `GitHub Action` | pre-audit action, Arkheionx action, GitHub-native scanner, Actions summary | GitHub-native workflow | Markdown report, JSON report, PR comment, issue checklist, SARIF | github-action, ci, pre-audit-readiness |
 | `security memory` | DeFi security memory, historical exploit memory, root-cause knowledge base, security knowledge base | research archive | registry, search index, research dashboard, PoC maturity index | security-memory, root-cause-analysis, exploit-research |
 | `readiness gap` | audit blocker, risk signal, review recommended, missing invariant | pre-audit readiness | finding ID, finding fingerprint, issue checklist, baseline diff | readiness-gap, audit-readiness, defensive-review |
@@ -374,4 +377,9 @@ public feedback guide
 validation levels
 GitHub Action feedback
 report quality feedback
+GitHub repo surface
+repository about
+public surface polish
+security memory OS
+Arkheionx positioning
 ```

@@ -16,6 +16,7 @@ OUTPUT_PATH = REPO_ROOT / "reports" / "search_index.md"
 
 STATIC_INDEX = [
     ("README landing page", "README.md", ["arkheionx", "pre-audit-readiness", "security-memory"]),
+    ("GitHub repository surface", "docs/GITHUB_REPO_SURFACE.md", ["GitHub repo surface", "repository about", "public surface polish"]),
     ("Changelog", "CHANGELOG.md", ["v1.0.0", "stable public release", "release notes"]),
     ("CLI reference", "docs/CLI_REFERENCE.md", ["CLI reference", "stable flags", "v1.0.0"]),
     ("Schema reference", "docs/SCHEMA_REFERENCE.md", ["schema freeze", "JSON Schema", "stable outputs"]),
@@ -344,6 +345,11 @@ def render() -> str:
             "validation levels",
             "GitHub Action feedback",
             "report quality feedback",
+            "GitHub repo surface",
+            "repository about",
+            "public surface polish",
+            "security memory OS",
+            "Arkheionx positioning",
             "```",
             "",
         ]

@@ -4,11 +4,14 @@ Maintained by Yudistira Putra (`arkheionx` / `Yudis-bit`).
 
 ## Name
 
-The canonical name of this project is **Arkheionx Vault**.
+The canonical public name of this project is **Arkheionx**.
+
+**Arkheionx Vault** remains useful when referring specifically to the historical
+PoC archive and security-memory layer.
 
 The repository slug stays `DeFi-Exploit-PoCs` for backwards compatibility with
-existing links and clones, but every public-facing surface (README, web app,
-release notes, issue templates) refers to the project by its brand name.
+existing links and clones, but public-facing surfaces should describe the full
+project as a GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 
 ## Identity
 
@@ -18,15 +21,17 @@ release notes, issue templates) refers to the project by its brand name.
 
 ## Archetype
 
-Arkheionx Vault is an **archive**, not a product.
+Arkheionx is a **defensive security memory and pre-audit readiness system**.
+It includes the Arkheionx Vault archive, but the public surface should no
+longer make the repository look archive-only.
 
-- Archives preserve. Products sell.
-- Archives are precise. Products promise.
-- Archives are evaluated on rigor and reproducibility. Products are evaluated
-  on growth.
+- Security memory preserves historical pattern context.
+- Readiness tooling helps authorized repositories prepare for review.
+- Reports, issue plans, and feedback workflows stay local/static and
+  defensive.
 
-The brand should read as a research notebook published in public, not a
-landing page.
+The brand should read as practical, evidence-backed security tooling published
+in public, not a hype-driven landing page.
 
 ## Tone
 
@@ -77,7 +82,8 @@ it. The brand never runs ahead of the work.
 ## Commercial language
 
 Commercial pages may offer scoped research work only when the deliverable is
-concrete: assertion hardening, historical reproduction review, root-cause
+concrete: Launch Reports, Pre-Audit Sprints, Contest Readiness Packs, rule
+calibration, assertion hardening, historical reproduction review, root-cause
 writing, verification planning, or auditor training.
 
 Use:
@@ -86,6 +92,8 @@ Use:
 - "assertion hardening for historical PoCs"
 - "training based on public post-mortems"
 - "sponsorship funds archive maintenance and verification work"
+- "pre-audit readiness review based on generated artifacts"
+- "report-quality and rule-calibration support"
 
 Avoid:
 

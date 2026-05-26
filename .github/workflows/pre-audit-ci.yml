@@ -87,7 +87,7 @@ jobs:
         run: |
           python3 scripts/check_docs_links.py --check
           python3 scripts/check_version_consistency.py --check
-          python3 scripts/check_safety_wording.py
+          python3 scripts/check_safety_wording.py --strict
 
       - name: Run scanner unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"

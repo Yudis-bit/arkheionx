@@ -4,9 +4,10 @@ Conventions for files, names, and prose.
 
 ## Repository naming
 
-- **Brand name (public):** Arkheionx Vault.
+- **Brand name (public):** Arkheionx.
+- **Archive/security-memory layer:** Arkheionx Vault.
 - **Repo slug (URL):** `DeFi-Exploit-PoCs`. Kept for backwards compatibility
-  with existing clones; the README and web app use the brand name.
+  with existing clones; the README and public docs use the brand name.
 - **Maintainer attribution:** Yudistira Putra (`arkheionx` /
   [@Yudis-bit](https://github.com/Yudis-bit)).
 
