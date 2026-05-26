@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
         with:
           protocol-type: auto
 ```
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
         with:
           root: "."
           protocol-type: "auto"
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -123,7 +123,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
     with:
       protocol-type: "auto"
       output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -197,7 +197,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
     with:
       protocol-type: "auto"
       create-github-issues: "true"
@@ -248,7 +248,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
         with:
           protocol-type: "vault"
           output: "ARKHEIONX_VAULT_READINESS_REPORT.md"
@@ -292,7 +292,7 @@ automatically:
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
     with:
       protocol-type: "auto"
       slither: "true"
@@ -306,6 +306,23 @@ is explicitly set. You can also pass an existing local Slither JSON file:
 with:
   slither-json: "slither-report.json"
 ```
+
+## Delivery Artifact Workflow
+
+v0.7.0 development builds can generate client-ready delivery artifacts:
+
+```yaml
+with:
+  launch-report-output: "ARKHEIONX_LAUNCH_REPORT.md"
+  sprint-plan-output: "ARKHEIONX_SPRINT_PLAN.md"
+  sprint-days: "5"
+  contest-readiness-output: "ARKHEIONX_CONTEST_READINESS.md"
+  executive-summary-output: "ARKHEIONX_EXECUTIVE_SUMMARY.md"
+  remediation-roadmap-output: "ARKHEIONX_REMEDIATION_ROADMAP.md"
+```
+
+These files are readiness deliverables. They are not formal audit reports and
+do not guarantee security.
 
 ## Local CLI Equivalent
 
@@ -321,6 +338,12 @@ python3 scripts/pre_audit_scan.py \
   --comment-output ARKHEIONX_PR_COMMENT.md \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json \
+  --launch-report-output ARKHEIONX_LAUNCH_REPORT.md \
+  --sprint-plan-output ARKHEIONX_SPRINT_PLAN.md \
+  --sprint-days 5 \
+  --contest-readiness-output ARKHEIONX_CONTEST_READINESS.md \
+  --executive-summary-output ARKHEIONX_EXECUTIVE_SUMMARY.md \
+  --remediation-roadmap-output ARKHEIONX_REMEDIATION_ROADMAP.md \
   --min-confidence-for-issue-plan medium
 ```
 
@@ -355,6 +378,12 @@ python3 scripts/pre_audit_scan.py \
 | `issue-labels` | empty | Comma-separated extra labels. |
 | `issue-assignees` | empty | Comma-separated assignees. |
 | `issue-dry-run-output` | `ARKHEIONX_ISSUE_DRY_RUN.md` | Optional dry-run Markdown output. |
+| `launch-report-output` | empty | Optional Launch Readiness Report Markdown output. |
+| `sprint-plan-output` | empty | Optional Pre-Audit Sprint Plan Markdown output. |
+| `sprint-days` | `5` | Sprint length: `3`, `5`, `7`, or `10`. |
+| `contest-readiness-output` | empty | Optional Contest Readiness Report Markdown output. |
+| `executive-summary-output` | empty | Optional one-page executive summary Markdown output. |
+| `remediation-roadmap-output` | empty | Optional remediation roadmap Markdown output. |
 | `semantic-lite` | `true` | Enable semantic-lite Solidity structure extraction. |
 | `slither` | `false` | Enable optional local Slither integration if available. |
 | `slither-json` | empty | Optional pre-generated Slither JSON file. |
@@ -373,7 +402,8 @@ python3 scripts/pre_audit_scan.py \
 
 ## JSON Output
 
-v0.6.0 JSON includes the v0.4/v0.5 fields plus evidence metadata:
+v0.7.0 development JSON includes the v0.4/v0.5/v0.6 fields plus delivery
+metadata:
 
 - canonical `findings` with stable IDs;
 - stable finding fingerprints;
@@ -385,6 +415,8 @@ v0.6.0 JSON includes the v0.4/v0.5 fields plus evidence metadata:
 - `suppressed_findings`;
 - `summary` counts;
 - `generated_outputs`;
+- `delivery_outputs`;
+- `delivery_summary`;
 - legacy-compatible `readiness_gaps`;
 - score, score band, score breakdown, signals, historical patterns, suggested
   invariants, and disclaimer.

@@ -23,13 +23,17 @@ committed artifacts support it.
       Structured issue plans, dry-run/create/update issue workflow, oracle,
       access/upgradeability, reentrancy/value-flow, and reward accounting rule
       packs.
-- [ ] **v0.6.0: Semantic-lite Solidity extraction and false-positive reduction in progress.**
+- [x] **v0.6.0: Semantic-lite Solidity extraction and false-positive reduction shipped.**
       Evidence-based findings, optional local Slither integration, source
       structure extraction, smarter affected-function mapping, SARIF location
       improvements, and rule calibration.
-- [ ] **v0.7.0: Launch Report OS and Contest Readiness Mode.** Delivery
-      workflow for Launch Reports and Pre-Audit Sprints, contest-readiness
-      artifact templates, and tighter remediation tracking.
+- [ ] **v0.7.0: Launch Report OS and Contest Readiness Mode in progress.**
+      Client-facing Launch Reports, Pre-Audit Sprint plans, Contest Readiness
+      reports, executive summaries, remediation roadmaps, and paid-service
+      delivery workflow artifacts.
+- [ ] **v0.8.0: External validation, public demos, and rule calibration.**
+      Public demo repositories, case-study style sample reports, external
+      feedback loops, and evidence-based rule tuning.
 - [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
       interface, calibrated rule packs, release artifacts, and contribution
       workflow.

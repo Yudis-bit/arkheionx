@@ -53,15 +53,15 @@ you want Slither enrichment:
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
     with:
       protocol-type: auto
       slither: "true"
       slither-output: arkheionx-slither-summary.json
 ```
 
-Use `@main` for v0.6 development testing until the release is tagged. Stable
-users should pin the latest released Arkheionx tag.
+Use the latest released Arkheionx tag for stable workflows. Use `@main` only
+when intentionally testing unreleased development changes.
 
 ## How Arkheionx Uses Slither
 

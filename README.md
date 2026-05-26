@@ -42,17 +42,17 @@ Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 
 ## Latest Release
 
-Latest stable release: **v0.5.0 - GitHub Issue Workflow and Rule Pack Expansion**.
+Latest stable release: **v0.6.0 - Semantic-Lite Analysis and False-Positive Reduction**.
 
-v0.5.0 adds:
+v0.6.0 adds:
 
-- generated issue-plan JSON;
-- dry-run GitHub issue workflow with deterministic markers;
-- optional create/update issue workflow for authorized repositories;
-- Oracle Rule Pack;
-- Access Control / Upgradeability Rule Pack;
-- Reentrancy / Value Flow Rule Pack;
-- Staking / Reward Accounting Rule Pack.
+- semantic-lite Solidity structure extraction;
+- evidence-backed readiness findings;
+- confidence reasons and detection sources;
+- optional local Slither enrichment;
+- test coverage mapping;
+- false-positive reduction for weak keyword-only signals;
+- better SARIF locations and issue-plan evidence summaries.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -62,7 +62,8 @@ v0.5.0 adds:
 | v0.4.0 | SARIF Output + Baseline Diff Mode | Released |
 | v0.4.1 | Public polish and release consistency | Released |
 | v0.5.0 | Generated issue workflow + rule-pack expansion | Released |
-| v0.6.0 | Semantic-lite analysis + false-positive reduction | In progress |
+| v0.6.0 | Semantic-lite analysis + false-positive reduction | Released |
+| v0.7.0 | Launch Report OS + Sprint + Contest Readiness | In progress |
 
 ## The Five Pillars
 
@@ -137,7 +138,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v0.5.0` for stable usage:
+Use `@v0.6.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -152,7 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
         with:
           root: "."
           protocol-type: "auto"
@@ -186,7 +187,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -215,7 +216,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -346,27 +347,28 @@ It checks for readiness gaps around:
 
 Read [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md).
 
-## v0.6.0 Development Preview
+## v0.7.0 Development Preview
 
-The next milestone focuses on semantic-lite Solidity extraction, evidence-based
-findings, optional local Slither enrichment, and false-positive reduction.
+The next milestone focuses on client-ready delivery artifacts: Launch Reports,
+Pre-Audit Sprint plans, Contest Readiness reports, executive summaries, and
+remediation roadmaps.
 Development usage is available from `@main`; stable users should remain on
-`@v0.5.0` until v0.6.0 is released.
+`@v0.6.0` until v0.7.0 is released.
 
-Current v0.6 work includes:
+Current v0.7 work includes:
 
-- semantic-lite contract/function extraction;
-- evidence records for each readiness finding;
-- confidence reasons and detection sources;
-- test coverage mapping for rule packs;
-- optional local Slither JSON or Slither execution;
-- better SARIF locations and issue-plan evidence summaries.
+- Launch Readiness Report output;
+- Pre-Audit Sprint Plan output;
+- Contest Readiness Report output;
+- one-page executive summary output;
+- remediation roadmap output.
 
 Read:
 
-- [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md)
-- [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md)
-- [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md)
+- [`docs/LAUNCH_REPORT_OS.md`](docs/LAUNCH_REPORT_OS.md)
+- [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](docs/PRE_AUDIT_SPRINT_WORKFLOW.md)
+- [`docs/CONTEST_READINESS_MODE.md`](docs/CONTEST_READINESS_MODE.md)
+- [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md)
 
 ## What The Scanner Checks
 
@@ -402,6 +404,11 @@ blocker, and defensive check.
 | PR comment body | Optional pull request feedback with top readiness gaps. |
 | Issue checklist | Copyable remediation checklist for GitHub Issues. |
 | Issue plan | Structured remediation issue plan for optional dry-run/create/update workflows. |
+| Launch Report | Client-facing launch readiness report. |
+| Sprint Plan | 3/5/7/10 day Pre-Audit Sprint plan. |
+| Contest Readiness | Scope and researcher onboarding preparation report. |
+| Executive Summary | Short founder/stakeholder summary. |
+| Remediation Roadmap | Phase-based remediation task roadmap. |
 
 ## Search Arkheionx
 
@@ -486,6 +493,10 @@ Core standards:
 | Understand semantic-lite evidence | [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md) |
 | Use optional Slither enrichment | [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md) |
 | Reduce false positives | [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md) |
+| Generate Launch Reports | [`docs/LAUNCH_REPORT_OS.md`](docs/LAUNCH_REPORT_OS.md) |
+| Run Pre-Audit Sprints | [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](docs/PRE_AUDIT_SPRINT_WORKFLOW.md) |
+| Prepare contest readiness | [`docs/CONTEST_READINESS_MODE.md`](docs/CONTEST_READINESS_MODE.md) |
+| Understand delivery artifacts | [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md) |
 | Configure suppressions | [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md) |
 | Understand scoring | [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md) |
 | Run vault-specific checks | [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md) |
@@ -509,6 +520,7 @@ Core standards:
 | Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
 | Launch Report | USD 299-499 | Manual review of generated report, evidence, issue plan, and prioritized fix checklist. |
 | Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, evidence-based GitHub issue plan/checklist. |
+| Contest Readiness Pack | USD 500-1,500 | Scope checklist, researcher onboarding checklist, and pre-contest remediation priorities. |
 | Vault Launch Report | USD 299-499 | Vault Rule Pack review and prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 | Vault-focused invariant, strategy, oracle, and withdrawal lifecycle plan. |
 | Ecosystem Pack | USD 5,000-20,000/month | Bulk readiness reports and builder security clinic. |
@@ -569,7 +581,10 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   and staking/reward rule packs.
 - **v0.6.0: semantic-lite and false-positive reduction.** Evidence-based
   findings, confidence reasons, optional local Slither enrichment, and better
-  affected-function/SARIF location mapping. In progress.
+  affected-function/SARIF location mapping.
+- **v0.7.0: Launch Report OS and Contest Readiness.** Client-facing delivery
+  artifacts, sprint plans, executive summaries, and remediation roadmaps. In
+  progress.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.
 

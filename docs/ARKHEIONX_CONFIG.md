@@ -98,6 +98,11 @@ Low-confidence findings remain visible in reports. If
 keyword-only findings out of generated issue plans and lists them as excluded
 low-confidence findings in the issue-plan JSON.
 
+Delivery artifacts such as Launch Reports, sprint plans, contest readiness
+reports, executive summaries, and remediation roadmaps inherit the same active
+and suppressed finding model. Suppression remains visible and should be
+explained before any client-facing handoff.
+
 ## Ignore Paths
 
 Use `ignore_paths` for generated code, mocks, vendored dependencies, or

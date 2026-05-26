@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/oracle-staking-fixture`
-- Generated at: `2026-05-26T01:04:36+00:00`
+- Generated at: `2026-05-26T01:31:35+00:00`
 - Protocol type: `staking`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `0.6.0`
+- Scanner version: `0.7.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -855,6 +855,11 @@ No readiness gaps were suppressed in this run.
 - Issue Checklist: `examples/reports/oracle-staking-fixture-issue-checklist.md`
 - Issue Plan: `examples/reports/oracle-staking-fixture-issue-plan.json`
 - Baseline: `examples/reports/oracle-staking-fixture.baseline.json`
+- Launch Report: `examples/reports/oracle-staking-fixture-launch-report.md`
+- Sprint Plan: `examples/reports/oracle-staking-fixture-sprint-plan.md`
+- Contest Readiness: `examples/reports/oracle-staking-fixture-contest-readiness.md`
+- Executive Summary: `examples/reports/oracle-staking-fixture-executive-summary.md`
+- Remediation Roadmap: `examples/reports/oracle-staking-fixture-remediation-roadmap.md`
 
 ## Search Tags
 

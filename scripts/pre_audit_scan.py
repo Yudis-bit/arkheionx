@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.6.0"
+VERSION = "0.7.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
@@ -4218,6 +4218,8 @@ def json_report(
     invariants: list[dict[str, str]],
     next_steps: list[str],
     generated_outputs: dict[str, str],
+    delivery_outputs: dict[str, str],
+    delivery_summary_data: dict[str, object],
     config_warnings: list[str],
     diff_data: dict[str, object] | None,
 ) -> dict[str, object]:
@@ -4255,6 +4257,8 @@ def json_report(
         "readiness_gaps": findings,
         "suggested_invariants": invariants,
         "generated_outputs": generated_outputs,
+        "delivery_outputs": delivery_outputs,
+        "delivery_summary": delivery_summary_data,
         "diff": diff_data or empty_diff_data(),
         "next_steps": next_steps,
         "config_warnings": config_warnings,
@@ -4717,6 +4721,529 @@ def generate_issue_checklist(
     write_markdown(path, lines)
 
 
+DELIVERY_NOTICE = (
+    "This is not a formal audit. It does not guarantee security. It does not "
+    "confirm the absence or presence of vulnerabilities. It is a defensive "
+    "pre-audit readiness artifact for authorized repositories."
+)
+
+
+def status_from_score(score: int) -> str:
+    if score < 40:
+        return "Needs work"
+    if score < 60:
+        return "Needs review"
+    if score < 75:
+        return "Improving"
+    if score < 90:
+        return "Ready-ish"
+    return "Strong pre-audit hygiene"
+
+
+def area_status(area: str, gaps: list[ReadinessGap], score: int) -> tuple[str, str]:
+    area_terms = {
+        "testing": ["test", "invariant", "fuzz"],
+        "oracle": ["oracle", "price"],
+        "access": ["access", "admin", "upgrade"],
+        "reentrancy": ["reentrancy", "value flow", "external call"],
+        "reward": ["reward", "staking"],
+        "vault": ["vault", "erc4626", "accounting"],
+        "documentation": ["documentation", "docs"],
+    }
+    terms = area_terms.get(area, [area])
+    matching = [
+        gap
+        for gap in gaps
+        if any(term in f"{gap.id} {gap.title} {gap.category} {' '.join(gap.tags)}".lower() for term in terms)
+    ]
+    if not matching:
+        return ("Covered / not strongly signaled", "No active high-signal readiness gap was generated for this area.")
+    high = [gap for gap in matching if is_high_or_critical(gap)]
+    if high:
+        return ("Needs review", f"{len(high)} high/critical readiness gap(s) detected.")
+    if score >= 75:
+        return ("Improving", f"{len(matching)} lower-priority readiness gap(s) remain.")
+    return ("Needs work", f"{len(matching)} readiness gap(s) detected.")
+
+
+def launch_readiness_status(score: int, gaps: list[ReadinessGap]) -> str:
+    if any("critical" in gap.priority.lower() for gap in gaps):
+        return "Not ready"
+    if score < 50 or any(is_high_or_critical(gap) and gap.confidence == "high" for gap in gaps):
+        return "Needs hardening"
+    if score < 75:
+        return "Improving"
+    return "Ready-ish for formal audit preparation"
+
+
+def contest_readiness_status(score: int, gaps: list[ReadinessGap]) -> str:
+    high_confidence = [gap for gap in gaps if gap.confidence == "high" and is_high_or_critical(gap)]
+    if score < 45 or len(high_confidence) >= 3:
+        return "Not ready"
+    if score < 65 or high_confidence:
+        return "Needs hardening"
+    if score < 80:
+        return "Improving"
+    if score < 90:
+        return "Ready for limited review"
+    return "Ready for broader review"
+
+
+def recommended_next_step(score: int, gaps: list[ReadinessGap]) -> str:
+    top = top_findings(gaps, 1)
+    if top:
+        return f"Address `{top[0].id}` first, then re-run Arkheionx and compare against a baseline."
+    if score < 75:
+        return "Improve tests, invariants, and documentation, then re-run Arkheionx."
+    return "Prepare the formal audit package and keep tracking readiness with baselines."
+
+
+def remediation_phase(gap: ReadinessGap) -> str:
+    text = f"{gap.priority} {gap.confidence} {gap.category} {gap.title}".lower()
+    if "critical" in text or ("high" in text and gap.confidence == "high"):
+        return "Phase 1 - Launch blockers"
+    if "high" in text or "medium" in text:
+        return "Phase 2 - High-priority readiness gaps"
+    if "documentation" in text or "docs" in text:
+        return "Phase 3 - Documentation and test hardening"
+    return "Phase 4 - Before formal audit / contest"
+
+
+def effort_estimate(gap: ReadinessGap) -> str:
+    text = f"{gap.title} {gap.category} {gap.suggested_test}".lower()
+    if any(term in text for term in ["invariant", "strategy", "upgrade", "oracle", "reward conservation", "withdrawal"]):
+        return "Large"
+    if any(term in text for term in ["test", "access", "role", "document", "pause"]):
+        return "Medium"
+    if "low" in gap.priority.lower() or gap.confidence == "low":
+        return "Small"
+    return "Unknown"
+
+
+def delivery_summary(score: int, protocol_type: str, gaps: list[ReadinessGap]) -> dict[str, object]:
+    phases = sorted({remediation_phase(gap) for gap in gaps})
+    return {
+        "recommended_next_step": recommended_next_step(score, gaps),
+        "launch_readiness_status": launch_readiness_status(score, gaps),
+        "contest_readiness_status": contest_readiness_status(score, gaps),
+        "protocol_type": protocol_type,
+        "top_remediation_phases": phases,
+    }
+
+
+def delivery_artifact_table(generated_outputs: dict[str, str]) -> list[str]:
+    rows = [["Artifact", "Path"]]
+    labels = [
+        "markdown_report",
+        "json_report",
+        "sarif_report",
+        "baseline",
+        "diff_report",
+        "issue_checklist",
+        "issue_plan",
+        "executive_summary",
+        "remediation_roadmap",
+        "launch_report",
+        "sprint_plan",
+        "contest_readiness",
+    ]
+    for label in labels:
+        path = generated_outputs.get(label, "")
+        if path:
+            rows.append([label.replace("_", " ").title(), f"`{path}`"])
+    return [markdown_table(rows)] if len(rows) > 1 else ["No additional artifact paths were requested."]
+
+
+def render_top_delivery_gaps(gaps: list[ReadinessGap], limit: int = 8) -> list[str]:
+    lines: list[str] = []
+    for gap in top_findings(gaps, limit):
+        lines.extend(
+            [
+                f"### {gap.id} - {gap.title}",
+                "",
+                f"- Priority: `{gap.priority}`",
+                f"- Confidence: `{gap.confidence}`",
+                f"- Evidence summary: {gap.evidence_summary or 'Local/static signal evidence.'}",
+                f"- Why it matters: {gap.why_it_matters or gap.detail}",
+                f"- Recommended remediation: {gap.recommendation}",
+                "",
+            ]
+        )
+    if not lines:
+        lines.append("No active automated readiness gaps were detected. Manual review is still required.")
+        lines.append("")
+    return lines
+
+
+def roadmap_tasks_by_phase(gaps: list[ReadinessGap]) -> dict[str, list[ReadinessGap]]:
+    phases = {
+        "Phase 1 - Launch blockers": [],
+        "Phase 2 - High-priority readiness gaps": [],
+        "Phase 3 - Documentation and test hardening": [],
+        "Phase 4 - Before formal audit / contest": [],
+    }
+    for gap in top_findings(gaps, 20):
+        phases.setdefault(remediation_phase(gap), []).append(gap)
+    return phases
+
+
+def generate_launch_report(
+    path: Path,
+    root: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+    analysis_quality_data: dict[str, object],
+    generated_outputs: dict[str, str],
+) -> None:
+    lines = [
+        "# Arkheionx Launch Readiness Report",
+        "",
+        "## Important Notice",
+        "",
+        DELIVERY_NOTICE,
+        "",
+        "## Executive Summary",
+        "",
+        f"- Project path: `{display_path(root)}`",
+        f"- Protocol type: `{protocol_type}`",
+        f"- Readiness score: `{score}/100`",
+        f"- Score band: `{score_band(score)}`",
+        f"- Analysis date: `{dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()}`",
+        f"- Scanner version: `{VERSION}`",
+        f"- Semantic-lite status: `{analysis_quality_data.get('semantic_lite', 'enabled')}`",
+        f"- Slither status: `{analysis_quality_data.get('slither', 'disabled')}`",
+        f"- Launch readiness status: `{launch_readiness_status(score, gaps)}`",
+        f"- Recommended next action: {recommended_next_step(score, gaps)}",
+        "",
+        "Top readiness themes:",
+    ]
+    for gap in top_findings(gaps, 5):
+        lines.append(f"- `{gap.id}` - {gap.title} ({gap.priority}, {gap.confidence} confidence)")
+    if not gaps:
+        lines.append("- No active automated readiness gap detected. Manual review remains required.")
+    lines.extend(["", "## Launch Readiness Snapshot", ""])
+    rows = [["Area", "Status", "Notes"]]
+    for label, key in [
+        ("Testing readiness", "testing"),
+        ("Invariant coverage", "testing"),
+        ("Oracle assumptions", "oracle"),
+        ("Access control", "access"),
+        ("Reentrancy/value flow", "reentrancy"),
+        ("Reward accounting", "reward"),
+        ("Vault accounting", "vault"),
+        ("Documentation", "documentation"),
+    ]:
+        status, notes = area_status(key, gaps, score)
+        rows.append([label, status, notes])
+    lines.append(markdown_table(rows))
+    lines.extend(["", "## Top Readiness Gaps", ""])
+    lines.extend(render_top_delivery_gaps(gaps, 8))
+    lines.extend(["## Recommended Remediation Roadmap", ""])
+    for phase, phase_gaps in roadmap_tasks_by_phase(gaps).items():
+        lines.extend([f"### {phase}", ""])
+        if phase_gaps:
+            for gap in phase_gaps:
+                lines.append(f"- [ ] `{gap.id}` - {gap.recommendation}")
+        else:
+            lines.append("- No automated task assigned to this phase.")
+        lines.append("")
+    lines.extend(
+        [
+            "## Suggested Pre-Launch Checklist",
+            "",
+            "- [ ] Fix launch blockers.",
+            "- [ ] Add missing invariants.",
+            "- [ ] Add oracle staleness/bounds tests if applicable.",
+            "- [ ] Add access-control negative tests if applicable.",
+            "- [ ] Add reentrancy/value-flow tests if applicable.",
+            "- [ ] Add reward/vault accounting conservation tests if applicable.",
+            "- [ ] Re-run Arkheionx and compare baseline.",
+            "- [ ] Prepare formal audit package.",
+            "",
+            "## Generated Artifacts",
+            "",
+        ]
+    )
+    lines.extend(delivery_artifact_table(generated_outputs))
+    lines.extend(["", "## Limitations", "", DELIVERY_NOTICE, "Formal audit remains recommended before mainnet, material TVL, or user funds."])
+    write_markdown(path, lines)
+
+
+def sprint_schedule(days: int) -> list[tuple[str, str]]:
+    schedules = {
+        3: [
+            ("Day 1", "Launch blockers and issue plan triage."),
+            ("Day 2", "Tests/invariants plus access, oracle, and reentrancy gaps."),
+            ("Day 3", "Re-run, diff, documentation, and audit package."),
+        ],
+        5: [
+            ("Day 1", "Triage, owner assignment, and baseline snapshot."),
+            ("Day 2", "High-priority tests and invariants."),
+            ("Day 3", "Accounting, oracle, access, and value-flow hardening."),
+            ("Day 4", "Documentation, issue closure, and baseline diff."),
+            ("Day 5", "Final readiness report and audit handoff package."),
+        ],
+        7: [
+            ("Day 1", "Triage, scope confirmation, owner assignment."),
+            ("Day 2", "Launch blockers and high-confidence findings."),
+            ("Day 3", "Accounting and invariant implementation."),
+            ("Day 4", "Oracle, access-control, and upgradeability review."),
+            ("Day 5", "Reentrancy/value-flow and reward lifecycle tests."),
+            ("Day 6", "Documentation, limitations, and issue-plan cleanup."),
+            ("Day 7", "Final scan, baseline diff, and audit handoff package."),
+        ],
+        10: [
+            ("Day 1", "Triage, scope confirmation, and baseline snapshot."),
+            ("Day 2", "Launch blockers."),
+            ("Day 3", "High-confidence invariant work."),
+            ("Day 4", "Accounting and precision tests."),
+            ("Day 5", "Oracle/pricing assumption tests."),
+            ("Day 6", "Access-control, upgradeability, and emergency flows."),
+            ("Day 7", "Reentrancy/value-flow and reward lifecycle review."),
+            ("Day 8", "Documentation, known limitations, and scope package."),
+            ("Day 9", "Re-run Arkheionx, compare baseline, close issues."),
+            ("Day 10", "Final readiness report and audit/contest handoff."),
+        ],
+    }
+    return schedules[days]
+
+
+def generate_sprint_plan(
+    path: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+    rule_packs: dict[str, dict[str, object]],
+    analysis_quality_data: dict[str, object],
+    generated_outputs: dict[str, str],
+    days: int,
+) -> None:
+    high_confidence = [gap for gap in gaps if gap.confidence == "high"]
+    lines = [
+        "# Arkheionx Pre-Audit Sprint Plan",
+        "",
+        "## Important Notice",
+        "",
+        "Not a formal audit. Not a security guarantee. A defensive remediation planning document.",
+        "",
+        "## Sprint Goal",
+        "",
+        "Prepare this repository for a stronger formal audit, contest, or bug bounty readiness review.",
+        "",
+        "## Sprint Inputs",
+        "",
+        f"- Readiness score: `{score}/100`",
+        f"- Score band: `{score_band(score)}`",
+        f"- Number of findings: `{len(gaps)}`",
+        f"- Number of high confidence findings: `{len(high_confidence)}`",
+        f"- Number of issue-plan tasks: `{len(gaps)}`",
+        f"- Rule packs detected: `{', '.join(name for name, pack in rule_packs.items() if pack.get('detected')) or 'none'}`",
+        f"- Baseline available: `{'yes' if generated_outputs.get('baseline') else 'no'}`",
+        f"- Semantic-lite enabled: `{analysis_quality_data.get('semantic_lite', 'enabled')}`",
+        "",
+        "## Day-by-Day Plan",
+        "",
+    ]
+    for day, task in sprint_schedule(days):
+        lines.append(f"- **{day}:** {task}")
+    lines.extend(["", "## Sprint Backlog", ""])
+    for phase, phase_gaps in roadmap_tasks_by_phase(gaps).items():
+        lines.extend([f"### {phase}", ""])
+        if not phase_gaps:
+            lines.append("- No automated backlog item assigned.")
+        for gap in phase_gaps:
+            lines.extend(
+                [
+                    f"- [ ] `{gap.id}` - {issue_title_for_gap(gap)}",
+                    "  - Suggested owner: `TBD`",
+                    f"  - Expected output: {gap.suggested_test or gap.recommendation}",
+                    "  - Acceptance checklist:",
+                    "    - [ ] Tests or docs updated.",
+                    "    - [ ] Arkheionx re-run completed.",
+                    "    - [ ] Remaining assumptions documented.",
+                ]
+            )
+        lines.append("")
+    lines.extend(
+        [
+            "## Sprint Exit Criteria",
+            "",
+            "- [ ] All high-confidence high-priority gaps addressed or documented.",
+            "- [ ] Invariant tests added where applicable.",
+            "- [ ] Oracle/access/reentrancy/reward/vault assumptions documented.",
+            "- [ ] Issue plan reviewed.",
+            "- [ ] Baseline diff generated.",
+            "- [ ] Remaining risks documented.",
+            "- [ ] Formal audit package prepared.",
+            "",
+            "## What This Sprint Does Not Do",
+            "",
+            "- It does not replace a formal audit.",
+            "- It does not guarantee security.",
+            "- It does not test deployed contracts.",
+            "- It does not run live-chain transactions.",
+        ]
+    )
+    write_markdown(path, lines)
+
+
+def generate_contest_readiness(
+    path: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+) -> None:
+    high_confidence = [gap for gap in gaps if gap.confidence == "high"]
+    docs_gaps = [gap for gap in gaps if "doc" in f"{gap.category} {gap.title}".lower()]
+    invariant_gaps = [gap for gap in gaps if "invariant" in f"{gap.title} {gap.recommendation}".lower()]
+    lines = [
+        "# Arkheionx Contest Readiness Report",
+        "",
+        "## Important Notice",
+        "",
+        "This is not a contest strategy document for exploiting systems. This is a defensive readiness document for authorized maintainers preparing a repository for external security review.",
+        "It is not a formal audit, not a security guarantee, and not a bounty guarantee.",
+        "",
+        "## Contest Readiness Summary",
+        "",
+        f"- Protocol type: `{protocol_type}`",
+        f"- Readiness score: `{score}/100`",
+        f"- High-confidence gaps: `{len(high_confidence)}`",
+        f"- Documentation gaps: `{len(docs_gaps)}`",
+        f"- Missing invariants: `{len(invariant_gaps)}`",
+        f"- Scope clarity: `Needs maintainer confirmation`",
+        f"- Researcher onboarding readiness: `{status_from_score(score)}`",
+        f"- Suggested contest readiness status: `{contest_readiness_status(score, gaps)}`",
+        "",
+        "## Scope Preparation Checklist",
+        "",
+        "- [ ] Contracts in scope listed.",
+        "- [ ] Contracts out of scope listed.",
+        "- [ ] Known limitations documented.",
+        "- [ ] Privileged roles documented.",
+        "- [ ] Oracle assumptions documented.",
+        "- [ ] Upgradeability assumptions documented.",
+        "- [ ] Test commands documented.",
+        "- [ ] Existing known issues documented.",
+        "- [ ] Previous audit reports linked if applicable.",
+        "- [ ] Emergency/admin procedures documented.",
+        "",
+        "## Researcher Onboarding Checklist",
+        "",
+        "- [ ] Build instructions work locally.",
+        "- [ ] Test instructions work locally.",
+        "- [ ] Architecture overview exists.",
+        "- [ ] Invariants are documented.",
+        "- [ ] Key state machines are documented.",
+        "- [ ] Threat model assumptions are documented.",
+        "- [ ] Known false positives are documented.",
+        "",
+        "## Pre-Contest Remediation Priorities",
+        "",
+    ]
+    lines.extend(render_top_delivery_gaps(gaps, 8))
+    lines.extend(["## What To Fix Before Opening A Contest", ""])
+    groups = {
+        "Must fix before contest": [gap for gap in gaps if is_high_or_critical(gap) and gap.confidence in {"high", "medium"}],
+        "Should fix before contest": [gap for gap in gaps if "medium" in gap.priority.lower()],
+        "Document before contest": docs_gaps,
+        "Acceptable to defer with explicit notes": [gap for gap in gaps if gap.confidence == "low"],
+    }
+    for heading, group in groups.items():
+        lines.extend([f"### {heading}", ""])
+        if group:
+            for gap in group[:8]:
+                lines.append(f"- `{gap.id}` - {gap.title}")
+        else:
+            lines.append("- No automated item assigned.")
+        lines.append("")
+    lines.extend(
+        [
+            "## Contest Safety Notes",
+            "",
+            "- No exploit instructions.",
+            "- No bounty guarantee.",
+            "- No live target testing.",
+            "- Respect platform rules.",
+        ]
+    )
+    write_markdown(path, lines)
+
+
+def generate_executive_summary(
+    path: Path,
+    root: Path,
+    protocol_type: str,
+    score: int,
+    gaps: list[ReadinessGap],
+) -> None:
+    lines = [
+        "# Arkheionx Executive Readiness Summary",
+        "",
+        DELIVERY_NOTICE,
+        "",
+        f"- Project path: `{display_path(root)}`",
+        f"- Protocol type: `{protocol_type}`",
+        f"- Readiness score: `{score}/100`",
+        f"- Score band: `{score_band(score)}`",
+        f"- Launch readiness status: `{launch_readiness_status(score, gaps)}`",
+        f"- Contest readiness status: `{contest_readiness_status(score, gaps)}`",
+        "",
+        "## Top Themes",
+        "",
+    ]
+    for gap in top_findings(gaps, 5):
+        lines.append(f"- `{gap.id}` - {gap.title} ({gap.priority}, {gap.confidence} confidence)")
+    if not gaps:
+        lines.append("- No active automated readiness gap detected. Manual review remains required.")
+    lines.extend(["", "## Top 3 Actions", ""])
+    for gap in top_findings(gaps, 3):
+        lines.append(f"- {gap.recommendation}")
+    if not gaps:
+        lines.append("- Prepare formal audit scope and continue manual review.")
+    lines.extend(["", "## Next Recommended Step", "", recommended_next_step(score, gaps)])
+    write_markdown(path, lines)
+
+
+def generate_remediation_roadmap(
+    path: Path,
+    gaps: list[ReadinessGap],
+    generated_outputs: dict[str, str],
+) -> None:
+    lines = [
+        "# Arkheionx Remediation Roadmap",
+        "",
+        DELIVERY_NOTICE,
+        "",
+        "| Task ID | Finding ID | Phase | Priority | Confidence | Effort | Expected Output |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for index, gap in enumerate(top_findings(gaps, 30), 1):
+        lines.append(
+            f"| ARK-TASK-{index:03d} | `{gap.id}` | {remediation_phase(gap)} | {gap.priority} | {gap.confidence} | {effort_estimate(gap)} | {gap.suggested_test or gap.recommendation} |"
+        )
+    if not gaps:
+        lines.append("| ARK-TASK-000 | `none` | Manual review | Informational | medium | Unknown | Prepare audit scope and manual review plan. |")
+    lines.extend(["", "## Acceptance Criteria", ""])
+    for gap in top_findings(gaps, 12):
+        lines.extend(
+            [
+                f"### {gap.id} - {gap.title}",
+                "",
+                f"- Evidence summary: {gap.evidence_summary or 'Local/static signal evidence.'}",
+                "- [ ] Tests or documentation updated.",
+                "- [ ] Assumptions documented.",
+                "- [ ] Arkheionx re-run completed.",
+                "- [ ] Baseline diff reviewed if available.",
+                "",
+            ]
+        )
+    lines.extend(["## Related Artifacts", ""])
+    lines.extend(delivery_artifact_table(generated_outputs))
+    write_markdown(path, lines)
+
+
 SKELETON = """// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
@@ -4800,6 +5327,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--comment-output", default="", help="Optional pull request comment Markdown output path.")
     parser.add_argument("--issue-checklist-output", default="", help="Optional generated issue checklist Markdown output path.")
     parser.add_argument("--issue-plan-output", default="", help="Optional generated GitHub issue plan JSON output path.")
+    parser.add_argument("--launch-report-output", default="", help="Optional Launch Readiness Report Markdown output path.")
+    parser.add_argument("--sprint-plan-output", default="", help="Optional Pre-Audit Sprint Plan Markdown output path.")
+    parser.add_argument("--sprint-days", type=int, choices=[3, 5, 7, 10], default=5, help="Pre-Audit Sprint length in days.")
+    parser.add_argument("--contest-readiness-output", default="", help="Optional Contest Readiness Report Markdown output path.")
+    parser.add_argument("--executive-summary-output", default="", help="Optional one-page executive summary Markdown output path.")
+    parser.add_argument("--remediation-roadmap-output", default="", help="Optional remediation roadmap Markdown output path.")
     parser.add_argument("--semantic-lite", dest="semantic_lite", action="store_true", default=True, help="Enable semantic-lite Solidity structure extraction.")
     parser.add_argument("--no-semantic-lite", dest="semantic_lite", action="store_false", help="Disable semantic-lite Solidity structure extraction.")
     parser.add_argument("--slither", action="store_true", help="Enable optional local Slither integration if available.")
@@ -4909,6 +5442,18 @@ def main(argv: list[str] | None = None) -> int:
     comment_output = resolve_output_path(args.comment_output)
     issue_checklist_output = resolve_output_path(args.issue_checklist_output)
     issue_plan_output = resolve_output_path(args.issue_plan_output)
+    launch_report_output = resolve_output_path(args.launch_report_output)
+    sprint_plan_output = resolve_output_path(args.sprint_plan_output)
+    contest_readiness_output = resolve_output_path(args.contest_readiness_output)
+    executive_summary_output = resolve_output_path(args.executive_summary_output)
+    remediation_roadmap_output = resolve_output_path(args.remediation_roadmap_output)
+    delivery_outputs = {
+        "launch_report": display_path(launch_report_output) if launch_report_output else "",
+        "sprint_plan": display_path(sprint_plan_output) if sprint_plan_output else "",
+        "contest_readiness": display_path(contest_readiness_output) if contest_readiness_output else "",
+        "executive_summary": display_path(executive_summary_output) if executive_summary_output else "",
+        "remediation_roadmap": display_path(remediation_roadmap_output) if remediation_roadmap_output else "",
+    }
     generated_outputs = {
         "markdown_report": display_path(output),
         "json_report": display_path(json_output) if json_output else "",
@@ -4921,7 +5466,13 @@ def main(argv: list[str] | None = None) -> int:
         "baseline": display_path(baseline_output) if baseline_output else "",
         "diff_report": display_path(diff_output) if diff_output else "",
         "diff_json": display_path(diff_json_output) if diff_json_output else "",
+        "launch_report": delivery_outputs["launch_report"],
+        "sprint_plan": delivery_outputs["sprint_plan"],
+        "contest_readiness": delivery_outputs["contest_readiness"],
+        "executive_summary": delivery_outputs["executive_summary"],
+        "remediation_roadmap": delivery_outputs["remediation_roadmap"],
     }
+    delivery_summary_data = delivery_summary(score, protocol_type, gaps)
     additional_search_tags = config_additional_tags(config)
     max_top_gaps = config_max_top_gaps(config)
     diff_data: dict[str, object] | None = None
@@ -4981,6 +5532,16 @@ def main(argv: list[str] | None = None) -> int:
         generate_summary_output(summary_output, score, protocol_type, gaps, suppressed_gaps, generated_outputs, next_steps, max_top_gaps, diff_data)
     if comment_output:
         generate_comment_output(comment_output, score, protocol_type, gaps, generated_outputs, max_top_gaps, diff_data)
+    if launch_report_output:
+        generate_launch_report(launch_report_output, root, protocol_type, score, gaps, quality, generated_outputs)
+    if sprint_plan_output:
+        generate_sprint_plan(sprint_plan_output, protocol_type, score, gaps, rule_packs, quality, generated_outputs, args.sprint_days)
+    if contest_readiness_output:
+        generate_contest_readiness(contest_readiness_output, protocol_type, score, gaps)
+    if executive_summary_output:
+        generate_executive_summary(executive_summary_output, root, protocol_type, score, gaps)
+    if remediation_roadmap_output:
+        generate_remediation_roadmap(remediation_roadmap_output, gaps, generated_outputs)
     if baseline_output:
         write_baseline(baseline_output, build_baseline(root, protocol_type, score, gaps, suppressed_gaps))
     if diff_output and diff_data:
@@ -5012,6 +5573,8 @@ def main(argv: list[str] | None = None) -> int:
                 invariants,
                 next_steps,
                 generated_outputs,
+                delivery_outputs,
+                delivery_summary_data,
                 config_warnings,
                 diff_data,
             ),
@@ -5037,6 +5600,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Arkheionx issue checklist generated: {issue_checklist_output}")
     if issue_plan_output:
         print(f"Arkheionx issue plan generated: {issue_plan_output}")
+    if launch_report_output:
+        print(f"Arkheionx launch report generated: {launch_report_output}")
+    if sprint_plan_output:
+        print(f"Arkheionx sprint plan generated: {sprint_plan_output}")
+    if contest_readiness_output:
+        print(f"Arkheionx contest readiness report generated: {contest_readiness_output}")
+    if executive_summary_output:
+        print(f"Arkheionx executive summary generated: {executive_summary_output}")
+    if remediation_roadmap_output:
+        print(f"Arkheionx remediation roadmap generated: {remediation_roadmap_output}")
     if slither_output:
         print(f"Arkheionx Slither summary generated: {slither_output}")
     if skeleton_path:

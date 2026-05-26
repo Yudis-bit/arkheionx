@@ -90,6 +90,10 @@ or weak keyword-only evidence can reduce priority. This affects issue-plan
 selection and reviewer focus, but it does not turn the score into a security
 guarantee.
 
+v0.7.0 delivery artifacts use the score to choose launch-readiness status,
+contest-readiness status, recommended next step, sprint priorities, and
+remediation phases. These labels are planning aids, not safety claims.
+
 ## How To Improve The Score
 
 Practical improvements:

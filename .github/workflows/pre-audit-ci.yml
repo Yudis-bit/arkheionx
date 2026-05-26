@@ -90,7 +90,13 @@ jobs:
             --sarif-output examples/reports/oracle-staking-fixture.sarif.json \
             --baseline-output examples/reports/oracle-staking-fixture.baseline.json \
             --issue-checklist-output examples/reports/oracle-staking-fixture-issue-checklist.md \
-            --issue-plan-output examples/reports/oracle-staking-fixture-issue-plan.json
+            --issue-plan-output examples/reports/oracle-staking-fixture-issue-plan.json \
+            --launch-report-output examples/reports/oracle-staking-fixture-launch-report.md \
+            --sprint-plan-output examples/reports/oracle-staking-fixture-sprint-plan.md \
+            --sprint-days 5 \
+            --contest-readiness-output examples/reports/oracle-staking-fixture-contest-readiness.md \
+            --executive-summary-output examples/reports/oracle-staking-fixture-executive-summary.md \
+            --remediation-roadmap-output examples/reports/oracle-staking-fixture-remediation-roadmap.md
 
       - name: Run scanner directly against semantic-lite-fixture
         run: |
@@ -168,6 +174,12 @@ jobs:
           create-github-issues: "true"
           issue-create-mode: "dry-run"
           issue-dry-run-output: "ARKHEIONX_ISSUE_DRY_RUN.md"
+          launch-report-output: "ARKHEIONX_LAUNCH_REPORT.md"
+          sprint-plan-output: "ARKHEIONX_SPRINT_PLAN.md"
+          sprint-days: "5"
+          contest-readiness-output: "ARKHEIONX_CONTEST_READINESS.md"
+          executive-summary-output: "ARKHEIONX_EXECUTIVE_SUMMARY.md"
+          remediation-roadmap-output: "ARKHEIONX_REMEDIATION_ROADMAP.md"
 
       - name: Verify report artifacts
         run: |
@@ -194,6 +206,11 @@ jobs:
           test -f examples/reports/oracle-staking-fixture.baseline.json
           test -f examples/reports/oracle-staking-fixture-issue-checklist.md
           test -f examples/reports/oracle-staking-fixture-issue-plan.json
+          test -f examples/reports/oracle-staking-fixture-launch-report.md
+          test -f examples/reports/oracle-staking-fixture-sprint-plan.md
+          test -f examples/reports/oracle-staking-fixture-contest-readiness.md
+          test -f examples/reports/oracle-staking-fixture-executive-summary.md
+          test -f examples/reports/oracle-staking-fixture-remediation-roadmap.md
           test -f examples/reports/oracle-staking-fixture-slither-attempt-report.md
           test -f examples/reports/oracle-staking-fixture-slither-attempt-report.json
           test -f examples/reports/semantic-lite-fixture-pre-audit-report.md
@@ -226,6 +243,11 @@ jobs:
           test -f ARKHEIONX_ISSUE_CHECKLIST.md
           test -f ARKHEIONX_ISSUE_PLAN.json
           test -f ARKHEIONX_ISSUE_DRY_RUN.md
+          test -f ARKHEIONX_LAUNCH_REPORT.md
+          test -f ARKHEIONX_SPRINT_PLAN.md
+          test -f ARKHEIONX_CONTEST_READINESS.md
+          test -f ARKHEIONX_EXECUTIVE_SUMMARY.md
+          test -f ARKHEIONX_REMEDIATION_ROADMAP.md
 
       - name: Parse JSON output
         run: |
@@ -253,6 +275,8 @@ jobs:
               assert "analysis_quality" in data
               assert "semantic_lite" in data
               assert "slither" in data
+              assert "delivery_outputs" in data
+              assert "delivery_summary" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
               assert all(item["fingerprint"] for item in data["findings"])
               assert all("confidence_reason" in item for item in data["findings"])
@@ -313,6 +337,11 @@ jobs:
           grep -q "Baseline Diff" examples/reports/vault-risk-fixture-diff-report.md
           grep -q "Diff vs baseline" examples/reports/vault-risk-fixture-diff-comment.md
           grep -q "Score:" examples/reports/vault-risk-fixture-diff-summary.md
+          grep -q "Executive Summary" examples/reports/oracle-staking-fixture-launch-report.md
+          grep -q "Day 1" examples/reports/oracle-staking-fixture-sprint-plan.md
+          grep -q "Day 5" examples/reports/oracle-staking-fixture-sprint-plan.md
+          grep -q "Scope Preparation Checklist" examples/reports/oracle-staking-fixture-contest-readiness.md
+          grep -q "Phase 1" examples/reports/oracle-staking-fixture-remediation-roadmap.md
 
       - name: Verify disclaimer is present
         run: |
@@ -324,6 +353,11 @@ jobs:
           grep -qi "Rule Pack Coverage" examples/reports/oracle-staking-fixture-pre-audit-report.md
           grep -qi "Analysis Quality" examples/reports/semantic-lite-fixture-pre-audit-report.md
           grep -qi "Evidence" examples/reports/semantic-lite-fixture-pre-audit-report.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-launch-report.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-sprint-plan.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-contest-readiness.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-executive-summary.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-remediation-roadmap.md
 
       - name: Verify unsafe marketing phrases are absent
         run: |

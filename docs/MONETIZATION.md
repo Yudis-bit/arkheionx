@@ -23,8 +23,9 @@ The repository itself is the product:
 | Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, optional SARIF, baseline diff artifacts, Actions summary, optional PR Readiness Comment, generated issue checklist, generated issue plan. |
 | Indie Builder Sponsor | USD 29/month | Recognition if desired, early rule previews, priority Q&A in GitHub Discussions, monthly readiness tips. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
-| Launch Report | USD 299-499 one time | Automated scan, manual report/evidence review, prioritized fix checklist, Markdown readiness report. |
-| Pre-Audit Sprint | USD 1,000-2,000 one time | Manual readiness review, historical pattern mapping, missing invariant plan, evidence-based GitHub issue checklist. |
+| Launch Readiness Report | USD 299-499 one time | Generated Launch Report, executive summary, remediation roadmap, manual report/evidence review, prioritized fix checklist. |
+| Pre-Audit Sprint | USD 1,000-2,000 one time | Generated sprint plan, manual readiness review, issue-plan triage, remediation roadmap, final readiness summary. |
+| Contest Readiness Pack | USD 500-1,500 one time | Contest Readiness Report, scope checklist, researcher onboarding checklist, and pre-contest remediation priorities. |
 | Vault Launch Report | USD 299-499 one time | Vault Rule Pack report, manual gap review, prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 one time | Vault-focused readiness review, strategy/oracle/withdrawal checklist, invariant plan. |
 | Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and a portfolio-level Markdown dashboard. |
@@ -53,6 +54,8 @@ The free tier creates trust and distribution:
 - optional SARIF output for GitHub Code Scanning-compatible workflows.
 - baseline comparison to track whether remediation is improving readiness.
 - generated issue checklist and issue plan that can become a remediation tracker.
+- optional delivery artifacts: Launch Report, sprint plan, Contest Readiness
+  Report, executive summary, and remediation roadmap.
 - semantic-lite evidence and confidence reasons that help reduce noisy follow-up.
 - optional PR Readiness Comment for code-review visibility.
 
@@ -89,13 +92,16 @@ Value:
 This tier should be capacity-limited. Do not promise response times the
 maintainer cannot sustain.
 
-## Launch Report
+## Launch Readiness Report
 
 Price: USD 299-499 one time.
 
 Value:
 
 - automated scan;
+- generated Launch Report;
+- one-page executive summary;
+- remediation roadmap;
 - manual review of generated report;
 - manual review of semantic-lite evidence and confidence reasons;
 - interpretation of baseline/diff output when available;
@@ -169,6 +175,7 @@ Price: USD 1,000-2,000 one time.
 Value:
 
 - automated scan;
+- generated Pre-Audit Sprint Plan;
 - manual readiness review;
 - historical exploit-pattern mapping;
 - missing invariant plan;
@@ -176,11 +183,28 @@ Value:
 - generated GitHub issue checklist converted into a prioritized remediation plan;
 - generated GitHub issue plan reviewed and organized into owner-ready tasks;
 - evidence-based prioritization using affected functions where available;
+- remediation roadmap and sprint exit criteria;
 - final Markdown report;
 - optional follow-up comments.
 
 Best for teams that already have working code and are preparing for audit
 intake.
+
+## Contest Readiness Pack
+
+Price: USD 500-1,500 one time.
+
+Value:
+
+- generated Contest Readiness Report;
+- scope checklist for contracts in and out of review;
+- researcher onboarding checklist;
+- pre-contest remediation priorities;
+- known limitations documentation prompts;
+- optional baseline/diff interpretation before opening external review.
+
+This is defensive preparation for authorized maintainers. It does not automate
+contest research, promise bounty outcomes, or replace platform rules.
 
 ## Ecosystem Pack
 
@@ -197,7 +221,9 @@ Target buyers:
 Value:
 
 - bulk readiness reports;
+- multiple Launch Readiness Reports when scoped;
 - standardized generated issue plans for participating builders;
+- ecosystem-level remediation summary artifacts as Markdown;
 - monthly security clinic;
 - portfolio-level Markdown dashboard;
 - private GitHub Discussion support;

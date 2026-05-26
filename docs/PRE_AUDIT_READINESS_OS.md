@@ -24,6 +24,8 @@ Arkheionx Readiness is:
 - SARIF, baseline, and diff artifacts when requested;
 - semantic-lite evidence, confidence reasons, and detection sources;
 - optional local Slither enrichment when explicitly enabled;
+- optional delivery artifacts: Launch Report, Pre-Audit Sprint Plan, Contest
+  Readiness Report, executive summary, and remediation roadmap;
 - optional local `.arkheionx.json` config;
 - safe Foundry invariant skeleton generation;
 - a bridge from historical DeFi failures to defensive builder checklists.
@@ -63,11 +65,11 @@ Short message:
 4. It detects static risk signals and test-readiness signals.
 5. It maps the signals to historical pattern similarity using Arkheionx memory.
 6. It writes Markdown, JSON, SARIF, baseline, summary, PR comment body,
-   issue checklist, and issue plan artifacts when requested.
-7. The builder uses the report, checklist, and issue plan as pre-audit planning
-   material.
-8. If useful, the builder opens a GitHub issue for a Launch Report or
-   Pre-Audit Sprint.
+   issue checklist, issue plan, and delivery artifacts when requested.
+7. The builder uses the report, checklist, issue plan, Launch Report, sprint
+   plan, or contest readiness output as pre-audit planning material.
+8. If useful, the builder opens a GitHub issue for manual Launch Readiness
+   Report, Pre-Audit Sprint, or Contest Readiness support.
 
 No website, backend, dashboard, secrets, or RPC endpoints are required.
 
@@ -97,6 +99,10 @@ Main stages:
 - `generate_issue_checklist`: writes a copyable remediation checklist.
 - `build_issue_plan`: writes structured remediation issue tasks.
 - `generate_comment_output`: writes an optional PR comment body.
+- `generate_launch_report`: writes a client-facing launch readiness report.
+- `generate_sprint_plan`: writes a Pre-Audit Sprint workflow.
+- `generate_contest_readiness`: writes contest/scope preparation guidance.
+- `generate_remediation_roadmap`: writes phase-based remediation tasks.
 
 ## Risk Signals
 

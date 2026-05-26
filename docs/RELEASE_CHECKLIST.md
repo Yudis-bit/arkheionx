@@ -125,6 +125,22 @@ written reason in the release PR.
 - [ ] `docs/SEMANTIC_LITE_ANALYSIS.md`, `docs/SLITHER_INTEGRATION.md`, and
       `docs/FALSE_POSITIVE_REDUCTION.md` are linked from README.
 
+## v0.7 Delivery Artifact Checks
+
+- [ ] Launch Report Markdown generated and includes `Executive Summary`.
+- [ ] Pre-Audit Sprint Plan generated and includes the selected day schedule.
+- [ ] Contest Readiness Report generated and includes the scope checklist.
+- [ ] Executive Summary generated and fits a short stakeholder handoff format.
+- [ ] Remediation Roadmap generated and groups tasks by phase.
+- [ ] All delivery artifacts include defensive disclaimers.
+- [ ] JSON output includes `delivery_outputs` and `delivery_summary`.
+- [ ] GitHub Action exposes delivery output inputs.
+- [ ] `docs/LAUNCH_REPORT_OS.md`, `docs/PRE_AUDIT_SPRINT_WORKFLOW.md`,
+      `docs/CONTEST_READINESS_MODE.md`, and `docs/DELIVERY_ARTIFACTS.md` are
+      linked from README.
+- [ ] `SERVICES.md` and `docs/MONETIZATION.md` describe delivery artifacts as
+      readiness support, not formal audit services.
+
 ## Search And Registry
 
 - [ ] `python3 scripts/generate_search_index.py --check`
@@ -184,7 +200,8 @@ written reason in the release PR.
   PY
   ```
 
-- [ ] v0.5.0 next milestone is visible in roadmap and release notes.
+- [ ] v0.7.0 or the next active milestone is visible in roadmap and release
+      notes.
 
 ## Safety Scan
 

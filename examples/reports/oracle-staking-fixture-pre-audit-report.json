@@ -12,6 +12,24 @@
     "warnings": []
   },
   "config_warnings": [],
+  "delivery_outputs": {
+    "contest_readiness": "examples/reports/oracle-staking-fixture-contest-readiness.md",
+    "executive_summary": "examples/reports/oracle-staking-fixture-executive-summary.md",
+    "launch_report": "examples/reports/oracle-staking-fixture-launch-report.md",
+    "remediation_roadmap": "examples/reports/oracle-staking-fixture-remediation-roadmap.md",
+    "sprint_plan": "examples/reports/oracle-staking-fixture-sprint-plan.md"
+  },
+  "delivery_summary": {
+    "contest_readiness_status": "Improving",
+    "launch_readiness_status": "Improving",
+    "protocol_type": "staking",
+    "recommended_next_step": "Address `ARK-TST-002` first, then re-run Arkheionx and compare against a baseline.",
+    "top_remediation_phases": [
+      "Phase 1 - Launch blockers",
+      "Phase 2 - High-priority readiness gaps",
+      "Phase 4 - Before formal audit / contest"
+    ]
+  },
   "diff": {
     "baseline_path": "",
     "changed": [],
@@ -1091,18 +1109,23 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-26T01:04:36+00:00",
+  "generated_at": "2026-05-26T01:31:35+00:00",
   "generated_outputs": {
     "baseline": "examples/reports/oracle-staking-fixture.baseline.json",
     "comment": "",
+    "contest_readiness": "examples/reports/oracle-staking-fixture-contest-readiness.md",
     "diff_json": "",
     "diff_report": "",
+    "executive_summary": "examples/reports/oracle-staking-fixture-executive-summary.md",
     "issue_checklist": "examples/reports/oracle-staking-fixture-issue-checklist.md",
     "issue_plan": "examples/reports/oracle-staking-fixture-issue-plan.json",
     "json_report": "examples/reports/oracle-staking-fixture-pre-audit-report.json",
+    "launch_report": "examples/reports/oracle-staking-fixture-launch-report.md",
     "markdown_report": "examples/reports/oracle-staking-fixture-pre-audit-report.md",
+    "remediation_roadmap": "examples/reports/oracle-staking-fixture-remediation-roadmap.md",
     "sarif_report": "examples/reports/oracle-staking-fixture.sarif.json",
     "slither_summary": "",
+    "sprint_plan": "examples/reports/oracle-staking-fixture-sprint-plan.md",
     "summary": ""
   },
   "historical_patterns": [
@@ -4356,5 +4379,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.6.0"
+  "version": "0.7.0"
 }

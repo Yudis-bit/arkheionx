@@ -3,7 +3,37 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.6.0 - Unreleased
+## v0.7.0 - Unreleased
+
+### Added
+
+- Launch Report output.
+- Pre-Audit Sprint plan output.
+- Contest Readiness report output.
+- Executive summary output.
+- Remediation roadmap output.
+- Delivery artifact documentation.
+
+### Improved
+
+- Monetization and service delivery alignment.
+- GitHub Action delivery output inputs.
+- Client-facing report structure.
+- Contest and pre-audit preparation workflows.
+
+### Safety
+
+- Delivery artifacts are readiness documents, not formal audit reports.
+- No live-chain scanning, RPC, exploit automation, or bounty guarantee.
+- Contest Readiness Mode is defensive and intended for authorized maintainers.
+
+### Known Limitations
+
+- Delivery artifacts are generated from heuristic readiness findings.
+- Manual review is still required.
+- Formal audit remains recommended before handling real user funds.
+
+## v0.6.0
 
 ### Added
 

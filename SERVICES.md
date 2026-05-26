@@ -33,6 +33,8 @@ Arkheionx helps turn local repository signals into a Markdown readiness report:
 - generated issue checklist;
 - generated GitHub issue plan for remediation tracking;
 - confidence reasons and evidence summaries for findings;
+- optional Launch Report, executive summary, remediation roadmap, sprint plan,
+  and contest readiness artifacts when generated in v0.7 workflows;
 - prioritized fix checklist after manual review;
 - audit preparation notes;
 - formal audit recommendation.
@@ -61,7 +63,7 @@ Value:
 Use it from any authorized repository:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
   with:
     root: "."
     protocol-type: "auto"
@@ -70,7 +72,7 @@ Use it from any authorized repository:
     create-issue-checklist: "true"
 ```
 
-## Launch Report
+## Launch Readiness Report
 
 Price range: USD 299-499 one time.
 
@@ -83,6 +85,9 @@ Best for:
 What you receive:
 
 - automated Arkheionx scan;
+- generated Launch Readiness Report;
+- one-page executive summary;
+- prioritized remediation roadmap;
 - manual review of the generated report;
 - baseline/diff interpretation when previous scan artifacts are available;
 - review of the generated issue checklist;
@@ -129,6 +134,7 @@ Best for:
 What you receive:
 
 - automated scan;
+- generated Pre-Audit Sprint Plan;
 - manual security readiness review;
 - historical exploit-pattern mapping;
 - missing invariant and test plan;
@@ -136,10 +142,36 @@ What you receive:
 - generated GitHub issue checklist converted into a prioritized remediation plan;
 - generated issue plan reviewed and organized into owner-ready tasks;
 - evidence-based prioritization using affected files/functions when available;
+- daily checklist and sprint exit criteria;
+- final readiness summary;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 
 This is defensive readiness work. It does not certify protocol safety.
+
+## Contest Readiness Pack
+
+Price range: USD 500-1,500 one time.
+
+Best for:
+
+- protocol teams preparing for a bug bounty launch, audit contest, or public
+  security review;
+- maintainers who need cleaner scope documentation before external researchers
+  review the code;
+- teams that want researcher onboarding gaps fixed before a competitive review.
+
+What you receive:
+
+- generated Contest Readiness Report;
+- scope preparation checklist;
+- researcher onboarding checklist;
+- pre-contest remediation priorities;
+- known limitations documentation prompts;
+- optional baseline/diff interpretation if prior scan artifacts exist.
+
+This is defensive contest preparation for authorized maintainers. It is not a
+bug bounty guarantee, exploit strategy document, or formal audit.
 
 ## Vault Pre-Audit Sprint
 
@@ -180,9 +212,11 @@ Best for:
 What you receive:
 
 - bulk readiness reports for participating repositories;
+- multiple Launch Readiness Reports when scoped;
+- standardized readiness scoring across participating builders;
 - standardized issue plans for participating builders;
 - monthly security clinic;
-- portfolio-level Markdown dashboard;
+- portfolio-level Markdown dashboard and remediation summary artifacts;
 - private GitHub Discussion support if configured;
 - training session for builders;
 - no website or SaaS dashboard required.

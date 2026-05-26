@@ -1,6 +1,6 @@
 # GitHub Issue Workflow
 
-Arkheionx v0.5.0 can convert readiness findings into a GitHub-native issue
+Arkheionx v0.6.0 can convert readiness findings into a GitHub-native issue
 plan. Optional issue creation is disabled by default and should be used only in
 repositories you own or are authorized to manage.
 
@@ -90,7 +90,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
     with:
       protocol-type: auto
       issue-plan-output: ARKHEIONX_ISSUE_PLAN.json
@@ -109,6 +109,11 @@ A Launch Report can review the issue plan and convert it into a prioritized
 readiness plan. A Pre-Audit Sprint can help a team work through the generated
 tasks, inspect evidence/confidence reasons, and compare progress with baseline
 diff mode.
+
+In v0.7 workflows, the same issue plan can feed a generated Launch Report,
+Pre-Audit Sprint Plan, Contest Readiness Report, executive summary, and
+remediation roadmap. These artifacts are planning aids for authorized
+maintainers, not formal audit findings.
 
 ## Safety Boundaries
 

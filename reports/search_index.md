@@ -14,8 +14,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.6.0, semantic-lite, false-positive reduction, release notes |
-| Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Ecosystem Pack |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.7.0, delivery artifacts, launch report, release notes |
+| Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
 | PR comment mode | [`docs/PR_COMMENT_MODE.md`](../docs/PR_COMMENT_MODE.md) | pull-request, comment marker, GitHub token |
@@ -27,6 +27,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
 | Slither integration | [`docs/SLITHER_INTEGRATION.md`](../docs/SLITHER_INTEGRATION.md) | Slither, Slither JSON, local static analysis |
 | False-positive reduction | [`docs/FALSE_POSITIVE_REDUCTION.md`](../docs/FALSE_POSITIVE_REDUCTION.md) | false positives, confidence scoring, keyword-only downgrade |
+| Launch Report OS | [`docs/LAUNCH_REPORT_OS.md`](../docs/LAUNCH_REPORT_OS.md) | Launch Report, client-ready report, audit handoff package |
+| Pre-Audit Sprint Workflow | [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](../docs/PRE_AUDIT_SPRINT_WORKFLOW.md) | Pre-Audit Sprint, sprint plan, remediation backlog |
+| Contest Readiness Mode | [`docs/CONTEST_READINESS_MODE.md`](../docs/CONTEST_READINESS_MODE.md) | Contest Readiness, scope checklist, researcher onboarding |
+| Delivery Artifacts | [`docs/DELIVERY_ARTIFACTS.md`](../docs/DELIVERY_ARTIFACTS.md) | delivery artifacts, executive summary, remediation roadmap |
 | CI gating | [`docs/CI_GATING.md`](../docs/CI_GATING.md) | fail threshold, fail-score-below, CI readiness gate |
 | Readiness score | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) | score bands, audit blockers, invariant testing |
 | Vault Rule Pack | [`docs/VAULT_RULE_PACK.md`](../docs/VAULT_RULE_PACK.md) | ERC4626, vault accounting, share accounting |
@@ -55,6 +59,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Vault-risk issue checklist | [`examples/reports/vault-risk-fixture-issue-checklist.md`](../examples/reports/vault-risk-fixture-issue-checklist.md) | issue checklist, readiness remediation, finding IDs |
 | Vault-risk issue plan | [`examples/reports/vault-risk-fixture-issue-plan.json`](../examples/reports/vault-risk-fixture-issue-plan.json) | issue plan, remediation issue, GitHub issue workflow |
 | Oracle staking issue plan | [`examples/reports/oracle-staking-fixture-issue-plan.json`](../examples/reports/oracle-staking-fixture-issue-plan.json) | oracle rule pack, reward accounting, issue plan |
+| Oracle staking launch report | [`examples/reports/oracle-staking-fixture-launch-report.md`](../examples/reports/oracle-staking-fixture-launch-report.md) | Launch Report, executive summary, launch readiness |
+| Oracle staking sprint plan | [`examples/reports/oracle-staking-fixture-sprint-plan.md`](../examples/reports/oracle-staking-fixture-sprint-plan.md) | Pre-Audit Sprint, sprint checklist, remediation plan |
+| Oracle staking contest readiness | [`examples/reports/oracle-staking-fixture-contest-readiness.md`](../examples/reports/oracle-staking-fixture-contest-readiness.md) | Contest Readiness, scope checklist, researcher onboarding |
+| Oracle staking remediation roadmap | [`examples/reports/oracle-staking-fixture-remediation-roadmap.md`](../examples/reports/oracle-staking-fixture-remediation-roadmap.md) | remediation roadmap, launch blockers, audit handoff |
 | Vault-risk SARIF report | [`examples/reports/vault-risk-fixture.sarif.json`](../examples/reports/vault-risk-fixture.sarif.json) | SARIF, Code Scanning, readiness result |
 | Vault-risk baseline | [`examples/reports/vault-risk-fixture.baseline.json`](../examples/reports/vault-risk-fixture.baseline.json) | baseline, finding fingerprint, readiness snapshot |
 | Vault-risk diff report | [`examples/reports/vault-risk-fixture-diff.md`](../examples/reports/vault-risk-fixture-diff.md) | baseline diff, new resolved unchanged, remediation tracking |
@@ -113,6 +121,12 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `evidence-based findings` | finding evidence, confidence reason, detection sources, affected functions | analysis quality | semantic-lite evidence, test coverage evidence, Slither evidence, keyword evidence | finding-evidence, confidence-scoring, readiness-gap |
 | `Slither integration` | Slither JSON, slither analyzer, optional Slither, local Slither | analysis quality | --slither, --slither-json, --slither-output, --slither-strict | slither-integration, slither-json, local-static-analysis |
 | `false positive reduction` | keyword-only downgrade, low-confidence findings, noise reduction, confidence scoring | analysis quality | downgrade_keyword_only, min_confidence_for_issue_plan, test coverage mapping | false-positive-reduction, low-confidence, evidence-based |
+| `Launch Report OS` | Launch Readiness Report, launch report, client-ready report, audit handoff package | delivery artifact | executive summary, remediation roadmap, generated artifacts, formal audit preparation | launch-report, client-ready-report, pre-audit-readiness |
+| `Pre-Audit Sprint` | sprint plan, pre-audit sprint workflow, remediation sprint, sprint checklist | delivery artifact | 3 day sprint, 5 day sprint, 7 day sprint, 10 day sprint, sprint exit criteria | pre-audit-sprint, remediation-roadmap, delivery-artifacts |
+| `Contest Readiness Mode` | Contest Readiness Report, pre-contest readiness, bug bounty readiness, audit contest preparation | delivery artifact | scope checklist, researcher onboarding checklist, known limitations, pre-contest priorities | contest-readiness, scope-checklist, researcher-onboarding |
+| `remediation roadmap` | phase-based remediation, readiness roadmap, remediation phases, owner-ready tasks | delivery artifact | launch blockers, high-priority gaps, documentation hardening, audit handoff | remediation-roadmap, issue-plan, launch-readiness |
+| `executive summary` | founder summary, stakeholder summary, one-page summary, grant update | delivery artifact | top themes, top actions, readiness status, recommended next step | executive-summary, founder-ready, delivery-artifacts |
+| `delivery artifacts` | client-ready artifacts, Launch Report, Sprint Plan, Contest Readiness Report | delivery workflow | Markdown report, JSON report, SARIF, issue plan, launch report | delivery-artifacts, github-native, service-delivery |
 
 ## Historical Memory Index
 
@@ -197,6 +211,20 @@ SARIF locations
 finding evidence
 low-confidence findings
 keyword-only downgrade
+Launch Report OS
+Launch Readiness Report
+Pre-Audit Sprint
+Contest Readiness Mode
+Contest Readiness Report
+remediation roadmap
+executive summary
+client-ready report
+audit handoff package
+researcher onboarding checklist
+scope checklist
+pre-contest readiness
+bug bounty readiness
+delivery artifacts
 oracle manipulation
 flash loan price manipulation
 reentrancy

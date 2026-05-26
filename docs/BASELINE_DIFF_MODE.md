@@ -41,7 +41,8 @@ python3 scripts/pre_audit_scan.py \
 ```
 
 When a baseline is provided, the Markdown report, JSON report, summary, PR
-comment body, and generated issue checklist include diff context.
+comment body, generated issue checklist, issue plan, and v0.7 delivery
+artifacts can include diff context for remediation tracking.
 
 ## Fingerprints
 

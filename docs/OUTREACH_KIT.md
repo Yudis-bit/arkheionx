@@ -32,8 +32,8 @@ Short:
 Builder version:
 
 > Arkheionx helps indie DeFi teams turn pre-audit readiness gaps into
-> GitHub-native reports, issue plans, and remediation checklists. Not an audit.
-> A way to prepare for one.
+> GitHub-native reports, issue plans, remediation roadmaps, and sprint-ready
+> checklists. Not an audit. A way to prepare for one.
 
 Long:
 
@@ -50,10 +50,14 @@ Pre-Audit Readiness OS.
 
 I noticed your team is building in DeFi and appears to be moving toward audit
 readiness. Arkheionx can generate a local/static readiness report, baseline
-diff, and GitHub issue plan from your repository.
+diff, GitHub issue plan, executive summary, and remediation roadmap from your
+repository.
 
-- Launch Report: manual review of the generated readiness report and issue plan
-- Pre-Audit Sprint: missing invariant plan plus prioritized remediation tasks
+- Launch Readiness Report: manual review of the generated readiness report,
+  executive summary, remediation roadmap, and issue plan
+- Pre-Audit Sprint: sprint plan, missing invariant plan, and prioritized
+  remediation tasks
+- Contest Readiness Pack: scope checklist and researcher onboarding checklist
 - Research support: assertion hardening or root-cause writeups
 
 The work is defensive, authorized-only, and not a formal audit. Would a dry-run
@@ -69,14 +73,17 @@ Hi <name>,
 
 I maintain Arkheionx, a GitHub-native DeFi Security Memory and Pre-Audit
 Readiness OS. It combines a defensive historical exploit archive with a local
-scanner that generates readiness reports, SARIF, baseline diffs, and issue
-plans for authorized repositories.
+scanner that generates readiness reports, SARIF, baseline diffs, issue plans,
+executive summaries, remediation roadmaps, and contest-readiness checklists for
+authorized repositories.
 
 I am offering a small number of scoped engagements:
 
-1. Launch Report: manual review of generated readiness gaps and issue plan
-2. Pre-Audit Sprint: missing invariant plan plus prioritized remediation tasks
-3. Assertion hardening or root-cause training for historical cases
+1. Launch Readiness Report: manual review of generated readiness gaps, issue
+   plan, executive summary, and remediation roadmap
+2. Pre-Audit Sprint: sprint plan plus prioritized remediation tasks
+3. Contest Readiness Pack: scope and researcher onboarding checklist
+4. Assertion hardening or root-cause training for historical cases
 
 This is not a formal audit, not live-target work, and not a security guarantee.
 It is for teams that want cleaner audit preparation inside GitHub.
@@ -97,9 +104,9 @@ Quick follow-up. The most practical starter format is:
 
 Launch Report
 - run Arkheionx locally on the authorized repository
-- review readiness gaps and generated issue plan
+- review readiness gaps, generated issue plan, and evidence summaries
 - prioritize missing invariants and documentation tasks
-- deliver a Markdown readiness report
+- deliver a Launch Report, executive summary, and remediation roadmap
 
 Typical range: USD 299-499 depending on scope.
 
@@ -115,6 +122,8 @@ I am opening a few paid slots around Arkheionx.
 The work is defensive and GitHub-native:
 - readiness reports for authorized repositories
 - generated issue plans from readiness gaps
+- executive summaries and remediation roadmaps
+- contest-readiness scope and onboarding checklists
 - missing invariant planning
 - assertion hardening for historical PoCs
 

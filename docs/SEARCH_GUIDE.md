@@ -206,6 +206,17 @@ Slither JSON
 false positive reduction
 keyword-only downgrade
 low-confidence findings
+Launch Report OS
+Launch Readiness Report
+Pre-Audit Sprint
+Contest Readiness Mode
+Contest Readiness Report
+executive summary
+remediation roadmap
+delivery artifacts
+scope checklist
+researcher onboarding checklist
+audit handoff package
 ```
 
 ## Search By Monetization Or Services
@@ -219,6 +230,8 @@ Launch Report
 Pre-Audit Sprint
 Ecosystem Pack
 Research Sponsorship
+Contest Readiness Pack
+Launch Readiness Report
 GitHub Action
 PR comment mode
 issue checklist
@@ -229,6 +242,9 @@ SARIF output
 baseline diff
 CI gating
 GitHub Code Scanning
+delivery artifacts
+executive summary
+remediation roadmap
 services
 sponsorship
 monetization
@@ -250,6 +266,8 @@ rg -n "issue marker|duplicate prevention|issue creation dry-run|GitHub issue wor
 rg -n "semantic-lite|Solidity structure extraction|finding evidence|confidence_reason" .
 rg -n "Slither integration|slither-json|slither-output|slither-strict" .
 rg -n "false positive reduction|keyword-only downgrade|low-confidence findings" .
+rg -n "Launch Report OS|Pre-Audit Sprint|Contest Readiness Mode|delivery artifacts" .
+rg -n "executive summary|remediation roadmap|scope checklist|researcher onboarding checklist" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

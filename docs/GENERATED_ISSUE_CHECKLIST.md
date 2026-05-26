@@ -72,9 +72,11 @@ avoid duplicates.
 ## Paid Service Bridge
 
 For Launch Reports and Pre-Audit Sprints, the generated checklist and issue plan
-can become the first draft of a prioritized remediation plan. Manual review can
-review confidence reasons, remove false positives, clarify priority, add
-context, and align the work with a formal audit scope.
+can become the first draft of a prioritized remediation plan. In v0.7 delivery
+workflows, they can also feed the Launch Report, sprint plan, executive summary,
+contest readiness report, and remediation roadmap. Manual review can review
+confidence reasons, remove false positives, clarify priority, add context, and
+align the work with a formal audit scope.
 
 ## Limitations
 

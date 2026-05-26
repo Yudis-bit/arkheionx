@@ -1,5 +1,5 @@
 {
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -353,6 +353,54 @@
       "related_patterns": ["downgraded keyword-only readiness signal"],
       "related_checks": ["downgrade_keyword_only", "min_confidence_for_issue_plan", "test coverage mapping"],
       "search_tags": ["false-positive-reduction", "low-confidence", "evidence-based"]
+    },
+    {
+      "term": "Launch Report OS",
+      "aliases": ["Launch Readiness Report", "launch report", "client-ready report", "audit handoff package"],
+      "category": "delivery artifact",
+      "related_patterns": ["client-facing readiness deliverable"],
+      "related_checks": ["executive summary", "remediation roadmap", "generated artifacts", "formal audit preparation"],
+      "search_tags": ["launch-report", "client-ready-report", "pre-audit-readiness"]
+    },
+    {
+      "term": "Pre-Audit Sprint",
+      "aliases": ["sprint plan", "pre-audit sprint workflow", "remediation sprint", "sprint checklist"],
+      "category": "delivery artifact",
+      "related_patterns": ["readiness findings converted into sprint backlog"],
+      "related_checks": ["3 day sprint", "5 day sprint", "7 day sprint", "10 day sprint", "sprint exit criteria"],
+      "search_tags": ["pre-audit-sprint", "remediation-roadmap", "delivery-artifacts"]
+    },
+    {
+      "term": "Contest Readiness Mode",
+      "aliases": ["Contest Readiness Report", "pre-contest readiness", "bug bounty readiness", "audit contest preparation"],
+      "category": "delivery artifact",
+      "related_patterns": ["authorized external review preparation"],
+      "related_checks": ["scope checklist", "researcher onboarding checklist", "known limitations", "pre-contest priorities"],
+      "search_tags": ["contest-readiness", "scope-checklist", "researcher-onboarding"]
+    },
+    {
+      "term": "remediation roadmap",
+      "aliases": ["phase-based remediation", "readiness roadmap", "remediation phases", "owner-ready tasks"],
+      "category": "delivery artifact",
+      "related_patterns": ["readiness gaps grouped into launch phases"],
+      "related_checks": ["launch blockers", "high-priority gaps", "documentation hardening", "audit handoff"],
+      "search_tags": ["remediation-roadmap", "issue-plan", "launch-readiness"]
+    },
+    {
+      "term": "executive summary",
+      "aliases": ["founder summary", "stakeholder summary", "one-page summary", "grant update"],
+      "category": "delivery artifact",
+      "related_patterns": ["non-technical readiness handoff"],
+      "related_checks": ["top themes", "top actions", "readiness status", "recommended next step"],
+      "search_tags": ["executive-summary", "founder-ready", "delivery-artifacts"]
+    },
+    {
+      "term": "delivery artifacts",
+      "aliases": ["client-ready artifacts", "Launch Report", "Sprint Plan", "Contest Readiness Report"],
+      "category": "delivery workflow",
+      "related_patterns": ["scanner output converted into service deliverables"],
+      "related_checks": ["Markdown report", "JSON report", "SARIF", "issue plan", "launch report"],
+      "search_tags": ["delivery-artifacts", "github-native", "service-delivery"]
     }
   ]
 }

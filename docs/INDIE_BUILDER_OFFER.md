@@ -41,7 +41,9 @@ python3 scripts/pre_audit_scan.py \
   --json-output arkheionx-report.json \
   --sarif-output arkheionx.sarif.json \
   --baseline-output arkheionx.baseline.json \
-  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
+  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json \
+  --executive-summary-output ARKHEIONX_EXECUTIVE_SUMMARY.md \
+  --remediation-roadmap-output ARKHEIONX_REMEDIATION_ROADMAP.md
 ```
 
 You receive:
@@ -55,6 +57,7 @@ You receive:
 - optional PR Readiness Comment;
 - generated issue checklist;
 - generated issue plan for owner-ready remediation tasks;
+- optional executive summary and remediation roadmap artifacts;
 - evidence summaries, confidence reasons, and detection sources;
 - historical pattern similarity;
 - suggested invariant tests;
@@ -99,7 +102,7 @@ python3 scripts/pre_audit_scan.py \
 
 Vault builders should read [`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md).
 
-### Launch Report
+### Launch Readiness Report
 
 Price range: USD 299-499 one time.
 
@@ -112,6 +115,9 @@ Best for:
 Output:
 
 - automated scan;
+- generated Launch Report;
+- one-page executive summary;
+- remediation roadmap;
 - manual review of generated report;
 - baseline/diff interpretation if prior scan output is available;
 - generated issue checklist reviewed and turned into a prioritized fix list;
@@ -152,6 +158,7 @@ Best for:
 Output:
 
 - automated scan;
+- generated Pre-Audit Sprint Plan;
 - manual security readiness review;
 - historical exploit-pattern mapping;
 - missing invariant plan;
@@ -159,8 +166,33 @@ Output:
 - generated GitHub issue checklist reviewed and prioritized;
 - generated GitHub issue plan converted into owner-ready tasks;
 - evidence-based prioritization using affected files/functions when available;
+- remediation roadmap and sprint exit criteria;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
+
+### Contest Readiness Pack
+
+Price range: USD 500-1,500 one time.
+
+Best for:
+
+- teams preparing for a bug bounty launch, audit contest, or public security
+  review;
+- maintainers who need a cleaner scope package before external researchers
+  review the repository;
+- founders who want known limitations, privileged roles, oracle assumptions,
+  and test instructions documented before review begins.
+
+Output:
+
+- generated Contest Readiness Report;
+- scope preparation checklist;
+- researcher onboarding checklist;
+- pre-contest remediation priorities;
+- known limitations documentation prompts.
+
+This is defensive preparation for authorized maintainers. It does not promise
+contest outcomes or replace a formal audit.
 
 ### Vault Pre-Audit Sprint
 
