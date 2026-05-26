@@ -1,0 +1,274 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
+      "category": "testing-readiness",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "40c41c40ed1466cdd9635ca9",
+      "id": "ARK-TST-002",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "invariant-testing",
+        "staking"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "4caf35ffd1a44272525bbdab",
+      "id": "ARK-ORC-002",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "price-assumptions"
+      ],
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "vault-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "fingerprint": "455b182ea87d56a4a492118e",
+      "id": "ARK-VLT-009",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "vault-accounting",
+        "share-accounting"
+      ],
+      "title": "Vault accounting lacks visible roundtrip or conservation coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "02dd029123ec6087d21f1f1d",
+      "id": "ARK-REENT-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow"
+      ],
+      "title": "External-call value flow needs reentrancy review"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
+      "category": "reward-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "1c316cdf88792a7e2b1e566e",
+      "id": "ARK-RWD-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "27199688c1b60c42d92a6d05",
+      "id": "ARK-ORC-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "title": "Oracle-dependent logic without stale-price tests"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "e5f500ac09dd007865613478",
+      "id": "ARK-ORC-005",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "documentation-readiness",
+        "oracle-rule-pack"
+      ],
+      "title": "Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "c612302ce98632d634d45e31",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "7e2acd399b5366b913e3e8a9",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "64ba736c260ec0865f0a87c1",
+      "id": "ARK-RWD-002",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "3c91794e0a66202839c5df60",
+      "id": "ARK-RWD-003",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "claim-flow",
+        "staking-rule-pack"
+      ],
+      "title": "Claim flow without double-claim prevention tests"
+    }
+  ],
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-26T10:41:58+00:00",
+  "protocol_type": "staking",
+  "repo_root": "examples/oracle-staking-fixture",
+  "score": 65,
+  "score_band": "Improving",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.8.0"
+}

@@ -12,7 +12,7 @@ of order — assume reposts strip context.
 
 ## Constraints
 
-Read [`docs/LAUNCH_PLAN.md`](../LAUNCH_PLAN.md) before writing the
+Read [`docs/launch/LAUNCH_PLAN.md`](LAUNCH_PLAN.md) before writing the
 thread. Do not include:
 
 - Banned phrases ("largest", "world-class", "industry-leading",

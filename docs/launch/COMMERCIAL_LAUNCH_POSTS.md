@@ -105,7 +105,7 @@ Sponsors do not influence findings, severity, category, or verification status.
 They fund public defensive research.
 
 Sponsor prospectus:
-<link to docs/SPONSOR_PROSPECTUS.md>
+<link to docs/business/SPONSOR_PROSPECTUS.md>
 ```
 
 ## Workshop Offer

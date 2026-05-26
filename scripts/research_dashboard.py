@@ -30,7 +30,7 @@ OUT = REPO / "reports" / "research_dashboard.md"
 sys.path.insert(0, str(REPO / "scripts"))
 from poc_maturity_index import maturity_level, next_action  # noqa: E402
 
-# Milestones from docs/EXPANSION_PLAN.md, evaluated against current truth.
+# Milestones from docs/launch/EXPANSION_PLAN.md, evaluated against current truth.
 # Progress is reported honestly: an L4 entry counts as "verified", an L2
 # assertion-hardened entry counts toward the assertion-hardening lane.
 MILESTONES = [
@@ -245,7 +245,7 @@ def render(entries: list[dict]) -> str:
     lines.append("")
     lines.append(
         "Milestones are quality gates, not dates. See "
-        "[`docs/EXPANSION_PLAN.md`](../docs/EXPANSION_PLAN.md) for the "
+        "[`docs/launch/EXPANSION_PLAN.md`](../docs/launch/EXPANSION_PLAN.md) for the "
         "definition of each lane."
     )
     lines.append("")

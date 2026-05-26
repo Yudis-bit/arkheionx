@@ -39,6 +39,12 @@ Arkheionx helps turn local repository signals into a Markdown readiness report:
 - audit preparation notes;
 - formal audit recommendation.
 
+Before requesting paid work, builders can inspect the public demo flow:
+
+- [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md);
+- [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md);
+- [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md).
+
 ## Free GitHub Action
 
 Price: Free.
@@ -63,7 +69,7 @@ Value:
 Use it from any authorized repository:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
   with:
     root: "."
     protocol-type: "auto"
@@ -96,6 +102,9 @@ What you receive:
 - prioritized fix checklist;
 - Markdown report suitable for internal planning;
 - clear limitations and formal audit recommendation.
+
+Sample output structure is visible in the oracle/staking demo case study and
+the `examples/reports/demo-*` artifact bundle.
 
 This is a launch preparation report, not a formal audit.
 
@@ -147,6 +156,9 @@ What you receive:
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 
+The public demo sprint plan shows the structure before any paid engagement is
+requested.
+
 This is defensive readiness work. It does not certify protocol safety.
 
 ## Contest Readiness Pack
@@ -169,6 +181,9 @@ What you receive:
 - pre-contest remediation priorities;
 - known limitations documentation prompts;
 - optional baseline/diff interpretation if prior scan artifacts exist.
+
+The public demo Contest Readiness report shows the scope and researcher
+onboarding checklist structure.
 
 This is defensive contest preparation for authorized maintainers. It is not a
 bug bounty guarantee, exploit strategy document, or formal audit.

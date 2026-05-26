@@ -47,7 +47,7 @@ Goal: make the public surface easy to understand and easy to buy.
 
 Goal: use technical content to create buyer conversations.
 
-- Publish 5 short posts from `docs/CONTENT_PLAYBOOK.md`.
+- Publish 5 short posts from `docs/marketing/CONTENT_PLAYBOOK.md`.
 - Publish one deeper writeup: "How to turn a weak exploit replay into hard
   assertions."
 - Send 20 personalized messages.

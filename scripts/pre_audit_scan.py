@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent

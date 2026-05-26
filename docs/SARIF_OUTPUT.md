@@ -31,7 +31,7 @@ does not confirm exploitable vulnerabilities.
 Suppressed findings are not emitted as normal SARIF results. Suppression counts
 and suppressed IDs appear in run properties.
 
-v0.6.0 locations prefer semantic-lite evidence first, optional Slither evidence
+v0.6.0 and later locations prefer semantic-lite evidence first, optional Slither evidence
 second, affected files third, and README fallback only when no code evidence is
 available.
 
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           protocol-type: auto
           output: ARKHEIONX_PRE_AUDIT_REPORT.md

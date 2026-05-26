@@ -1,0 +1,77 @@
+name: External Validation Feedback
+description: Share feedback from trying Arkheionx on demos or authorized repositories.
+title: "[External Feedback]: "
+labels: ["external-feedback", "validation", "product-feedback"]
+body:
+  - type: dropdown
+    id: user_role
+    attributes:
+      label: User role
+      options:
+        - indie builder
+        - researcher
+        - auditor
+        - ecosystem / grant team
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: repo_type
+    attributes:
+      label: Repository type
+      options:
+        - vault
+        - oracle
+        - staking / reward
+        - AMM / DEX
+        - bridge
+        - NFT / marketplace
+        - demo fixture
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: what_worked
+    attributes:
+      label: What worked?
+      placeholder: Which output or workflow was useful?
+    validations:
+      required: true
+  - type: textarea
+    id: what_confusing
+    attributes:
+      label: What was confusing?
+      placeholder: Installation, report wording, score, findings, SARIF, issue plan, delivery artifacts, etc.
+  - type: textarea
+    id: useful_output
+    attributes:
+      label: Which output was useful?
+      placeholder: Pre-audit report, SARIF, issue plan, Launch Report, Sprint Plan, Contest Readiness, roadmap.
+  - type: textarea
+    id: noisy_finding
+    attributes:
+      label: Which finding was noisy?
+      placeholder: Finding ID, rule pack, evidence summary, or sanitized report section.
+  - type: dropdown
+    id: paid_work_relevance
+    attributes:
+      label: Would Launch Report / Sprint / Contest Readiness be useful?
+      options:
+        - "yes"
+        - "maybe"
+        - "no"
+        - "not sure"
+  - type: textarea
+    id: suggestions
+    attributes:
+      label: Suggested improvement
+      placeholder: What would make Arkheionx easier to try, trust, or share?
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I am sharing only public, authorized, or sanitized information.
+          required: true
+        - label: I did not include private keys, mnemonics, secrets, or undisclosed active-incident details.
+          required: true

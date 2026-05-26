@@ -1,0 +1,63 @@
+name: arkheionx-demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  demo:
+    name: run public Arkheionx demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Arkheionx demo scan
+        uses: ./.github/actions/pre-audit
+        with:
+          root: "examples/oracle-staking-fixture"
+          protocol-type: "auto"
+          output: "examples/reports/demo-pre-audit-report.md"
+          json-output: "examples/reports/demo-report.json"
+          sarif-output: "examples/reports/demo.sarif.json"
+          baseline-output: "examples/reports/demo.baseline.json"
+          issue-plan-output: "examples/reports/demo-issue-plan.json"
+          issue-checklist-output: "examples/reports/demo-issue-checklist.md"
+          launch-report-output: "examples/reports/demo-launch-report.md"
+          sprint-plan-output: "examples/reports/demo-sprint-plan.md"
+          sprint-days: "5"
+          contest-readiness-output: "examples/reports/demo-contest-readiness.md"
+          executive-summary-output: "examples/reports/demo-executive-summary.md"
+          remediation-roadmap-output: "examples/reports/demo-remediation-roadmap.md"
+          create-github-issues: "false"
+          pr-comment: "false"
+
+      - name: Dry-run issue workflow
+        run: |
+          python3 scripts/create_github_issues.py \
+            --issue-plan examples/reports/demo-issue-plan.json \
+            --mode dry-run \
+            --dry-run-output examples/reports/demo-issue-dry-run.md
+
+      - name: Upload demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: arkheionx-demo-artifacts
+          path: |
+            examples/reports/demo-pre-audit-report.md
+            examples/reports/demo-report.json
+            examples/reports/demo.sarif.json
+            examples/reports/demo.baseline.json
+            examples/reports/demo-issue-plan.json
+            examples/reports/demo-issue-checklist.md
+            examples/reports/demo-launch-report.md
+            examples/reports/demo-sprint-plan.md
+            examples/reports/demo-contest-readiness.md
+            examples/reports/demo-executive-summary.md
+            examples/reports/demo-remediation-roadmap.md
+            examples/reports/demo-issue-dry-run.md

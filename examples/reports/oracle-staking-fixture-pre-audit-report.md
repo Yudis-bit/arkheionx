@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/oracle-staking-fixture`
-- Generated at: `2026-05-26T01:31:35+00:00`
+- Generated at: `2026-05-26T01:50:21+00:00`
 - Protocol type: `staking`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `0.7.0`
+- Scanner version: `0.8.0`
 
 | File class       | Count |
 | ---------------- | ----- |

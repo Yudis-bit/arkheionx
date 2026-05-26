@@ -40,19 +40,78 @@ Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 3. Check maturity and verification status before making claims.
 4. Contribute defensive case improvements, metadata, or scanner calibration.
 
+## Try Arkheionx In 5 Minutes
+
+Run the built-in oracle/staking demo fixture and generate the public demo
+artifact bundle:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root examples/oracle-staking-fixture \
+  --protocol-type auto \
+  --output examples/reports/demo-pre-audit-report.md \
+  --json-output examples/reports/demo-report.json \
+  --sarif-output examples/reports/demo.sarif.json \
+  --baseline-output examples/reports/demo.baseline.json \
+  --issue-plan-output examples/reports/demo-issue-plan.json \
+  --issue-checklist-output examples/reports/demo-issue-checklist.md \
+  --launch-report-output examples/reports/demo-launch-report.md \
+  --sprint-plan-output examples/reports/demo-sprint-plan.md \
+  --sprint-days 5 \
+  --contest-readiness-output examples/reports/demo-contest-readiness.md \
+  --executive-summary-output examples/reports/demo-executive-summary.md \
+  --remediation-roadmap-output examples/reports/demo-remediation-roadmap.md
+```
+
+Optional dry-run issue workflow:
+
+```sh
+python3 scripts/create_github_issues.py \
+  --issue-plan examples/reports/demo-issue-plan.json \
+  --mode dry-run \
+  --dry-run-output examples/reports/demo-issue-dry-run.md
+```
+
+Dry-run makes no GitHub API calls. The demo uses toy fixtures only and has no
+live-chain behavior.
+
+Read [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and
+[`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md).
+
+## What You Get
+
+| Output | Purpose |
+|---|---|
+| Pre-Audit Report | Technical readiness findings with evidence. |
+| SARIF | GitHub Code Scanning-compatible readiness signals. |
+| Issue Plan | GitHub-native remediation tasks. |
+| Launch Report | Founder/client-facing readiness summary. |
+| Sprint Plan | Day-by-day remediation workflow. |
+| Contest Readiness | Prep for bounty, contest, or external review scope. |
+| Remediation Roadmap | Prioritized work plan. |
+
+## Demo Case Study
+
+Start with the internal toy case studies:
+
+- [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md)
+- [`docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md`](docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md)
+
+These are reproducible demo case studies, not real protocol validation or
+customer claims.
+
 ## Latest Release
 
-Latest stable release: **v0.6.0 - Semantic-Lite Analysis and False-Positive Reduction**.
+Latest stable release: **v0.7.0 - Launch Report OS and Contest Readiness Mode**.
 
-v0.6.0 adds:
+v0.7.0 adds:
 
-- semantic-lite Solidity structure extraction;
-- evidence-backed readiness findings;
-- confidence reasons and detection sources;
-- optional local Slither enrichment;
-- test coverage mapping;
-- false-positive reduction for weak keyword-only signals;
-- better SARIF locations and issue-plan evidence summaries.
+- Launch Readiness Report output;
+- Pre-Audit Sprint Plan output;
+- Contest Readiness Report output;
+- Executive Summary output;
+- Remediation Roadmap output;
+- delivery artifact documentation and CI validation.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -63,7 +122,8 @@ v0.6.0 adds:
 | v0.4.1 | Public polish and release consistency | Released |
 | v0.5.0 | Generated issue workflow + rule-pack expansion | Released |
 | v0.6.0 | Semantic-lite analysis + false-positive reduction | Released |
-| v0.7.0 | Launch Report OS + Sprint + Contest Readiness | In progress |
+| v0.7.0 | Launch Report OS + Sprint + Contest Readiness | Released |
+| v0.8.0 | External validation + public demos + rule calibration | In progress |
 
 ## The Five Pillars
 
@@ -138,7 +198,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v0.6.0` for stable usage:
+Use `@v0.7.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -153,7 +213,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           root: "."
           protocol-type: "auto"
@@ -187,7 +247,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -216,7 +276,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -347,28 +407,27 @@ It checks for readiness gaps around:
 
 Read [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md).
 
-## v0.7.0 Development Preview
+## v0.8.0 Development Preview
 
-The next milestone focuses on client-ready delivery artifacts: Launch Reports,
-Pre-Audit Sprint plans, Contest Readiness reports, executive summaries, and
-remediation roadmaps.
-Development usage is available from `@main`; stable users should remain on
-`@v0.6.0` until v0.7.0 is released.
+The next milestone focuses on external evaluation: five-minute demos,
+reproducible toy case studies, rule calibration notes, false-positive review,
+and external feedback workflows.
+Development usage is available from `@main`; stable users should pin `@v0.7.0`.
 
-Current v0.7 work includes:
+Current v0.8 work includes:
 
-- Launch Readiness Report output;
-- Pre-Audit Sprint Plan output;
-- Contest Readiness Report output;
-- one-page executive summary output;
-- remediation roadmap output.
+- Try Arkheionx in 5 minutes guide;
+- public demo GitHub Actions workflow;
+- oracle/staking demo case study;
+- before/after readiness case study;
+- rule calibration and external feedback templates.
 
 Read:
 
-- [`docs/LAUNCH_REPORT_OS.md`](docs/LAUNCH_REPORT_OS.md)
-- [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](docs/PRE_AUDIT_SPRINT_WORKFLOW.md)
-- [`docs/CONTEST_READINESS_MODE.md`](docs/CONTEST_READINESS_MODE.md)
-- [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md)
+- [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
+- [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md)
+- [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md)
+- [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md)
 
 ## What The Scanner Checks
 
@@ -483,6 +542,9 @@ Core standards:
 
 | Need | Document |
 |---|---|
+| Try the demo quickly | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
+| Evaluate public demo workflow | [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md) |
+| Read demo case studies | [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md) |
 | Understand the system | [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md) |
 | Install the GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
 | Use PR comments | [`docs/PR_COMMENT_MODE.md`](docs/PR_COMMENT_MODE.md) |
@@ -493,6 +555,8 @@ Core standards:
 | Understand semantic-lite evidence | [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md) |
 | Use optional Slither enrichment | [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md) |
 | Reduce false positives | [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md) |
+| Review rule calibration | [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md) |
+| Share external feedback | [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md) |
 | Generate Launch Reports | [`docs/LAUNCH_REPORT_OS.md`](docs/LAUNCH_REPORT_OS.md) |
 | Run Pre-Audit Sprints | [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](docs/PRE_AUDIT_SPRINT_WORKFLOW.md) |
 | Prepare contest readiness | [`docs/CONTEST_READINESS_MODE.md`](docs/CONTEST_READINESS_MODE.md) |
@@ -505,10 +569,10 @@ Core standards:
 | Use access/upgradeability checks | [`docs/ACCESS_CONTROL_RULE_PACK.md`](docs/ACCESS_CONTROL_RULE_PACK.md) |
 | Use reentrancy/value-flow checks | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) |
 | Use reward accounting checks | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](docs/REWARD_ACCOUNTING_RULE_PACK.md) |
-| Find builder support paths | [`docs/INDIE_BUILDER_OFFER.md`](docs/INDIE_BUILDER_OFFER.md) |
+| Find builder support paths | [`docs/business/INDIE_BUILDER_OFFER.md`](docs/business/INDIE_BUILDER_OFFER.md) |
 | Request paid support | [`SERVICES.md`](SERVICES.md) |
-| Review monetization boundaries | [`docs/MONETIZATION.md`](docs/MONETIZATION.md) |
-| Sponsor public work | [`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md) |
+| Review monetization boundaries | [`docs/business/MONETIZATION.md`](docs/business/MONETIZATION.md) |
+| Sponsor public work | [`docs/business/SPONSORSHIP.md`](docs/business/SPONSORSHIP.md) |
 | Check roadmap | [`docs/ROADMAP.md`](docs/ROADMAP.md) |
 
 ## Monetization And Support
@@ -528,7 +592,7 @@ Core standards:
 | Research Sponsorship | Flexible | Fund public exploit-memory and readiness-rule work. |
 
 Use [`SERVICES.md`](SERVICES.md) for requests and
-[`docs/SPONSORSHIP.md`](docs/SPONSORSHIP.md) for sponsor boundaries.
+[`docs/business/SPONSORSHIP.md`](docs/business/SPONSORSHIP.md) for sponsor boundaries.
 
 ## Ethics
 
@@ -583,7 +647,9 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   findings, confidence reasons, optional local Slither enrichment, and better
   affected-function/SARIF location mapping.
 - **v0.7.0: Launch Report OS and Contest Readiness.** Client-facing delivery
-  artifacts, sprint plans, executive summaries, and remediation roadmaps. In
+  artifacts, sprint plans, executive summaries, and remediation roadmaps.
+- **v0.8.0: external validation and public demos.** Five-minute demo workflow,
+  demo case studies, rule calibration notes, and feedback templates. In
   progress.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.

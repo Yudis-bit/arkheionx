@@ -10,8 +10,8 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 - Protocol type: `staking`
 - Readiness score: `65/100`
 - Score band: `Improving`
-- Analysis date: `2026-05-26T01:31:35+00:00`
-- Scanner version: `0.7.0`
+- Analysis date: `2026-05-26T01:50:21+00:00`
+- Scanner version: `0.8.0`
 - Semantic-lite status: `enabled`
 - Slither status: `disabled`
 - Launch readiness status: `Improving`

@@ -27,22 +27,22 @@ jobs:
         run: |
           set -e
           required=(
-            docs/BRAND.md
+            docs/marketing/BRAND.md
             docs/CASE_STUDY_SAMPLE.md
-            docs/COMMERCIAL.md
+            docs/business/COMMERCIAL.md
             docs/CONTRIBUTING.md
-            docs/CONTENT_PLAYBOOK.md
+            docs/marketing/CONTENT_PLAYBOOK.md
             docs/ETHICS.md
             docs/METADATA_SCHEMA.md
-            docs/MONETIZATION.md
-            docs/OUTREACH_KIT.md
+            docs/business/MONETIZATION.md
+            docs/marketing/OUTREACH_KIT.md
             docs/POC_MATURITY_MODEL.md
-            docs/PROPOSAL_TEMPLATE.md
+            docs/business/PROPOSAL_TEMPLATE.md
             docs/RELEASE_PROCESS.md
             docs/RELEASE_CHECKLIST.md
-            docs/SPONSOR_PROSPECTUS.md
-            docs/SPONSORSHIP.md
-            docs/LAUNCH_PLAN.md
+            docs/business/SPONSOR_PROSPECTUS.md
+            docs/business/SPONSORSHIP.md
+            docs/launch/LAUNCH_PLAN.md
             docs/REPRODUCIBILITY.md
             docs/RESEARCH_STANDARD.md
             docs/ROADMAP.md
@@ -77,13 +77,13 @@ jobs:
           set -e
           # Scope: README + docs/, but NOT docs/internal/ (phase logs may
           # legitimately mention these phrases when documenting the
-          # prohibition itself), NOT docs/BRAND.md (defines the list),
+          # prohibition itself), NOT docs/marketing/BRAND.md (defines the list),
           # NOT release/checklist templates that list the guardrail,
           # NOT metadata/backlog/rejection-criteria.md (lists the bans).
           targets=$(git ls-files 'README.md' 'docs/*.md' \
             ':!docs/internal/**' \
-            ':!docs/BRAND.md' \
-            ':!docs/LAUNCH_PLAN.md' \
+            ':!docs/marketing/BRAND.md' \
+            ':!docs/launch/LAUNCH_PLAN.md' \
             ':!docs/RELEASE_CHECKLIST.md' \
             ':!docs/launch/**')
           banned='\b(world-class|industry-leading|military-grade|trusted by [A-Z])'

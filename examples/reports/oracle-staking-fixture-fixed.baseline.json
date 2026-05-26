@@ -1,0 +1,135 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/OracleRewardFixtureFixed.sol",
+        "test/OracleRewardFixtureFixed.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
+      "category": "testing-readiness",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "bc78499c0563871bd802dce7",
+      "id": "ARK-TST-002",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "invariant-testing",
+        "staking"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixtureFixed.sol",
+        "test/OracleRewardFixtureFixed.t.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
+      "category": "reward-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "3067da9adceebd7969c53eac",
+      "id": "ARK-RWD-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixtureFixed.sol",
+        "test/OracleRewardFixtureFixed.t.sol"
+      ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setHeartbeat",
+        "setOracle",
+        "setPriceBounds"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "0849cdc18a5fa588e32841c5",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixtureFixed.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "c122f3f6d72d8af912e9a556",
+      "id": "ARK-REENT-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixtureFixed.sol"
+      ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "6dceefb2f6f3c23eb196ee61",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions"
+    }
+  ],
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-26T10:38:30+00:00",
+  "protocol_type": "staking",
+  "repo_root": "examples/oracle-staking-fixture-fixed",
+  "score": 83,
+  "score_band": "Near audit-ready",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.8.0"
+}

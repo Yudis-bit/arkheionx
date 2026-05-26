@@ -1109,7 +1109,7 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-26T01:31:35+00:00",
+  "generated_at": "2026-05-26T01:50:21+00:00",
   "generated_outputs": {
     "baseline": "examples/reports/oracle-staking-fixture.baseline.json",
     "comment": "",
@@ -4379,5 +4379,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.7.0"
+  "version": "0.8.0"
 }

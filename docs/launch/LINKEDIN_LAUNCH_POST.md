@@ -13,7 +13,7 @@ lie**.
 ## Constraints
 
 Before writing the post, re-read
-[`docs/LAUNCH_PLAN.md`](../LAUNCH_PLAN.md) and
+[`docs/launch/LAUNCH_PLAN.md`](LAUNCH_PLAN.md) and
 [`metadata/backlog/rejection-criteria.md`](../../metadata/backlog/rejection-criteria.md).
 
 The post must not contain:

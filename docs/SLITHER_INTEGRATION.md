@@ -1,6 +1,6 @@
 # Slither Integration
 
-Arkheionx v0.6.0 can optionally enrich readiness findings with local Slither
+Arkheionx v0.6.0 and later can optionally enrich readiness findings with local Slither
 output. Slither is not required, not installed automatically, and not used by
 default.
 
@@ -53,7 +53,7 @@ you want Slither enrichment:
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
     with:
       protocol-type: auto
       slither: "true"

@@ -150,7 +150,7 @@ that does not match Lanes 1–7.
 
 ## How lanes interact with milestones
 
-The milestones in [`docs/EXPANSION_PLAN.md`](../../docs/EXPANSION_PLAN.md)
+The milestones in [`docs/launch/EXPANSION_PLAN.md`](../../docs/launch/EXPANSION_PLAN.md)
 gate by quality, not by lane balance. Lanes only set triage order.
 That said, M3 (100 PoCs) declares a quality bar of "every taxonomy
 category has at least one verified entry" — the lanes here are the

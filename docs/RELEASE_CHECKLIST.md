@@ -138,8 +138,23 @@ written reason in the release PR.
 - [ ] `docs/LAUNCH_REPORT_OS.md`, `docs/PRE_AUDIT_SPRINT_WORKFLOW.md`,
       `docs/CONTEST_READINESS_MODE.md`, and `docs/DELIVERY_ARTIFACTS.md` are
       linked from README.
-- [ ] `SERVICES.md` and `docs/MONETIZATION.md` describe delivery artifacts as
+- [ ] `SERVICES.md` and `docs/business/MONETIZATION.md` describe delivery artifacts as
       readiness support, not formal audit services.
+
+## v0.8 Demo And Validation Checks
+
+- [ ] `docs/TRY_IN_5_MINUTES.md` exists and the command runs locally.
+- [ ] `docs/PUBLIC_DEMO_WORKFLOW.md` explains local and GitHub Action demos.
+- [ ] `.github/workflows/arkheionx-demo.yml` is manual-only and creates no
+      GitHub issues.
+- [ ] Demo artifacts generated under `examples/reports/demo-*`.
+- [ ] Demo issue dry-run says no GitHub API calls were made.
+- [ ] `docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md` exists.
+- [ ] Before/after case study or template exists.
+- [ ] `docs/RULE_CALIBRATION.md` and `reports/rule_calibration_summary.md`
+      explain confidence, evidence, and false-positive handling.
+- [ ] False-positive calibration and external validation issue templates exist.
+- [ ] Launch/outreach posts avoid fake adoption, customer, or audit claims.
 
 ## Search And Registry
 
@@ -173,7 +188,7 @@ written reason in the release PR.
 - [ ] `docs/CI_GATING.md` documents fail thresholds and false-positive
       caution.
 - [ ] `docs/READINESS_SCORE.md` matches scanner scoring categories.
-- [ ] `SERVICES.md`, `docs/MONETIZATION.md`, and `docs/SPONSORSHIP.md` avoid
+- [ ] `SERVICES.md`, `docs/business/MONETIZATION.md`, and `docs/business/SPONSORSHIP.md` avoid
       formal-audit or guarantee claims.
 - [ ] Stale release phrases are absent:
 

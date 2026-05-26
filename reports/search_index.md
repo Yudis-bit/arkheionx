@@ -14,7 +14,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.7.0, delivery artifacts, launch report, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.8.0, public demo, rule calibration, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -27,6 +27,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
 | Slither integration | [`docs/SLITHER_INTEGRATION.md`](../docs/SLITHER_INTEGRATION.md) | Slither, Slither JSON, local static analysis |
 | False-positive reduction | [`docs/FALSE_POSITIVE_REDUCTION.md`](../docs/FALSE_POSITIVE_REDUCTION.md) | false positives, confidence scoring, keyword-only downgrade |
+| Try in 5 minutes | [`docs/TRY_IN_5_MINUTES.md`](../docs/TRY_IN_5_MINUTES.md) | try Arkheionx in 5 minutes, quick demo, demo reports |
+| Public demo workflow | [`docs/PUBLIC_DEMO_WORKFLOW.md`](../docs/PUBLIC_DEMO_WORKFLOW.md) | public demo workflow, demo GitHub Action workflow, demo artifacts |
+| Rule calibration | [`docs/RULE_CALIBRATION.md`](../docs/RULE_CALIBRATION.md) | rule calibration, false positive calibration, confidence model |
+| False-positive review workflow | [`docs/FALSE_POSITIVE_REVIEW_WORKFLOW.md`](../docs/FALSE_POSITIVE_REVIEW_WORKFLOW.md) | false positive review, calibration workflow, downgrade logic |
+| External validation | [`docs/EXTERNAL_VALIDATION.md`](../docs/EXTERNAL_VALIDATION.md) | external validation, feedback workflow, sanitized reports |
 | Launch Report OS | [`docs/LAUNCH_REPORT_OS.md`](../docs/LAUNCH_REPORT_OS.md) | Launch Report, client-ready report, audit handoff package |
 | Pre-Audit Sprint Workflow | [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](../docs/PRE_AUDIT_SPRINT_WORKFLOW.md) | Pre-Audit Sprint, sprint plan, remediation backlog |
 | Contest Readiness Mode | [`docs/CONTEST_READINESS_MODE.md`](../docs/CONTEST_READINESS_MODE.md) | Contest Readiness, scope checklist, researcher onboarding |
@@ -39,16 +44,22 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Access Control Rule Pack | [`docs/ACCESS_CONTROL_RULE_PACK.md`](../docs/ACCESS_CONTROL_RULE_PACK.md) | access control, upgradeability, initializer |
 | Reentrancy Value Flow Rule Pack | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](../docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) | reentrancy, external calls, claim flow |
 | Reward Accounting Rule Pack | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](../docs/REWARD_ACCOUNTING_RULE_PACK.md) | staking, reward accounting, accumulator |
-| Indie builder offer | [`docs/INDIE_BUILDER_OFFER.md`](../docs/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
+| Indie builder offer | [`docs/business/INDIE_BUILDER_OFFER.md`](../docs/business/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
 | Search guide | [`docs/SEARCH_GUIDE.md`](../docs/SEARCH_GUIDE.md) | search tags, root-cause analysis, broken invariant |
-| Marketing engine | [`docs/MARKETING_ENGINE.md`](../docs/MARKETING_ENGINE.md) | growth, positioning, GitHub-only funnel |
-| Monetization | [`docs/MONETIZATION.md`](../docs/MONETIZATION.md) | sponsors, revenue ladder, services |
-| Sponsorship | [`docs/SPONSORSHIP.md`](../docs/SPONSORSHIP.md) | funding, research sponsorship, public work |
+| Marketing engine | [`docs/marketing/MARKETING_ENGINE.md`](../docs/marketing/MARKETING_ENGINE.md) | growth, positioning, GitHub-only funnel |
+| Monetization | [`docs/business/MONETIZATION.md`](../docs/business/MONETIZATION.md) | sponsors, revenue ladder, services |
+| Sponsorship | [`docs/business/SPONSORSHIP.md`](../docs/business/SPONSORSHIP.md) | funding, research sponsorship, public work |
 | Ethics | [`docs/ETHICS.md`](../docs/ETHICS.md) | defensive-only, authorized review, no live targeting |
 | Roadmap | [`docs/ROADMAP.md`](../docs/ROADMAP.md) | release roadmap, rule packs, GitHub-native |
+| Oracle staking demo case study | [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](../docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md) | oracle staking demo, case study, public demo |
+| Oracle staking before/after case study | [`docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md`](../docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md) | before after case study, fixed fixture, remediation demo |
+| Rule calibration summary | [`reports/rule_calibration_summary.md`](../reports/rule_calibration_summary.md) | rule calibration, common false positives, downgrade logic |
+| Case study template | [`templates/case_study_template.md`](../templates/case_study_template.md) | case study template, before after, readiness case study |
+| v0.8 launch posts | [`docs/launch/V0_8_LAUNCH_POSTS.md`](../docs/launch/V0_8_LAUNCH_POSTS.md) | launch post, outreach kit, public demo |
 | Mini-vault fixture | [`examples/mini-vault/README.md`](../examples/mini-vault/README.md) | vault, fixture, scanner demo |
 | Vault-risk fixture | [`examples/vault-risk-fixture/README.md`](../examples/vault-risk-fixture/README.md) | ERC4626, strategy vault, Vault Rule Pack |
 | Oracle staking fixture | [`examples/oracle-staking-fixture/README.md`](../examples/oracle-staking-fixture/README.md) | oracle, staking, reward rule pack |
+| Oracle staking fixed fixture | [`examples/oracle-staking-fixture-fixed/README.md`](../examples/oracle-staking-fixture-fixed/README.md) | oracle, staking, before after, fixed fixture |
 | Semantic-lite fixture | [`examples/semantic-lite-fixture/README.md`](../examples/semantic-lite-fixture/README.md) | semantic-lite, false-positive reduction, evidence |
 | Sample Markdown report | [`examples/reports/mini-vault-pre-audit-report.md`](../examples/reports/mini-vault-pre-audit-report.md) | readiness report, vault, example |
 | Vault-risk Markdown report | [`examples/reports/vault-risk-fixture-pre-audit-report.md`](../examples/reports/vault-risk-fixture-pre-audit-report.md) | vault readiness, ERC4626, readiness gaps |
@@ -63,6 +74,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Oracle staking sprint plan | [`examples/reports/oracle-staking-fixture-sprint-plan.md`](../examples/reports/oracle-staking-fixture-sprint-plan.md) | Pre-Audit Sprint, sprint checklist, remediation plan |
 | Oracle staking contest readiness | [`examples/reports/oracle-staking-fixture-contest-readiness.md`](../examples/reports/oracle-staking-fixture-contest-readiness.md) | Contest Readiness, scope checklist, researcher onboarding |
 | Oracle staking remediation roadmap | [`examples/reports/oracle-staking-fixture-remediation-roadmap.md`](../examples/reports/oracle-staking-fixture-remediation-roadmap.md) | remediation roadmap, launch blockers, audit handoff |
+| Demo pre-audit report | [`examples/reports/demo-pre-audit-report.md`](../examples/reports/demo-pre-audit-report.md) | public demo reports, demo protocol, readiness report |
+| Demo launch report | [`examples/reports/demo-launch-report.md`](../examples/reports/demo-launch-report.md) | Launch Report, public demo, client-ready report |
+| Demo contest readiness | [`examples/reports/demo-contest-readiness.md`](../examples/reports/demo-contest-readiness.md) | Contest Readiness, scope checklist, public demo |
+| Demo issue plan | [`examples/reports/demo-issue-plan.json`](../examples/reports/demo-issue-plan.json) | issue plan JSON, demo artifact, remediation |
+| Oracle staking fixed report | [`examples/reports/oracle-staking-fixture-fixed-pre-audit-report.md`](../examples/reports/oracle-staking-fixture-fixed-pre-audit-report.md) | before after case study, fixed fixture, readiness improvement |
 | Vault-risk SARIF report | [`examples/reports/vault-risk-fixture.sarif.json`](../examples/reports/vault-risk-fixture.sarif.json) | SARIF, Code Scanning, readiness result |
 | Vault-risk baseline | [`examples/reports/vault-risk-fixture.baseline.json`](../examples/reports/vault-risk-fixture.baseline.json) | baseline, finding fingerprint, readiness snapshot |
 | Vault-risk diff report | [`examples/reports/vault-risk-fixture-diff.md`](../examples/reports/vault-risk-fixture-diff.md) | baseline diff, new resolved unchanged, remediation tracking |
@@ -127,6 +143,14 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `remediation roadmap` | phase-based remediation, readiness roadmap, remediation phases, owner-ready tasks | delivery artifact | launch blockers, high-priority gaps, documentation hardening, audit handoff | remediation-roadmap, issue-plan, launch-readiness |
 | `executive summary` | founder summary, stakeholder summary, one-page summary, grant update | delivery artifact | top themes, top actions, readiness status, recommended next step | executive-summary, founder-ready, delivery-artifacts |
 | `delivery artifacts` | client-ready artifacts, Launch Report, Sprint Plan, Contest Readiness Report | delivery workflow | Markdown report, JSON report, SARIF, issue plan, launch report | delivery-artifacts, github-native, service-delivery |
+| `try Arkheionx in 5 minutes` | five minute demo, quick demo, demo scan, try in 5 minutes | public demo | demo reports, demo issue dry-run, toy fixture | try-in-5-minutes, public-demo, onboarding |
+| `public demo workflow` | demo GitHub Action workflow, arkheionx-demo.yml, demo artifacts, public demo reports | public demo | upload artifact, no issue creation, no token required | public-demo-workflow, github-action, demo-artifacts |
+| `oracle staking demo` | demo protocol, oracle staking fixture, reproducible readiness demo | case study | oracle rule pack, reward accounting rule pack, case study | oracle-staking-demo, case-study, rule-calibration |
+| `before after case study` | before/after remediation, fixed fixture, readiness improvement demo | case study | before report, after report, score comparison, evidence improvements | before-after, case-study, remediation |
+| `rule calibration` | calibration summary, false positive calibration, confidence calibration | analysis quality | confidence model, downgrade logic, common false positives | rule-calibration, false-positive-review, confidence-scoring |
+| `external validation feedback` | external feedback, validation feedback, public feedback, feedback workflow | community feedback | external validation issue template, false positive issue template, no secrets | external-validation, feedback, open-source-growth |
+| `case study template` | case_study_template.md, generated case study, case study outline | case study | scope, score, top findings, evidence examples, limitations | case-study-template, documentation, demo |
+| `launch post` | launch posts, outreach kit, v0.8 launch posts, release announcement draft | growth | no fake adoption, no guarantee claims, demo workflow CTA | launch-post, outreach-kit, public-demo |
 
 ## Historical Memory Index
 
@@ -225,6 +249,22 @@ scope checklist
 pre-contest readiness
 bug bounty readiness
 delivery artifacts
+try Arkheionx in 5 minutes
+public demo workflow
+demo protocol
+oracle staking demo
+before after case study
+external validation
+rule calibration
+false positive calibration
+false positive review workflow
+external validation feedback
+public demo reports
+case study template
+launch post
+outreach kit
+demo GitHub Action workflow
+reproducible readiness demo
 oracle manipulation
 flash loan price manipulation
 reentrancy

@@ -47,6 +47,10 @@ to fix under time pressure:
 
 Arkheionx helps builders find those gaps before audit intake.
 
+New users can evaluate the workflow through the local public demo in
+[`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md). The demo uses toy fixtures and
+does not claim real-world validation.
+
 Core message:
 
 > Find exploit-pattern risks, missing invariants, and audit blockers before

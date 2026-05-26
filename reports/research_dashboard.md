@@ -41,7 +41,7 @@ Linked artifacts:
 - **100 structured PoCs** — 18 / 100 (18%) `█░░░░░░░░░`
 - **300+ taxonomy-covered entries** — 18 / 300 (6%) `░░░░░░░░░░`
 
-Milestones are quality gates, not dates. See [`docs/EXPANSION_PLAN.md`](../docs/EXPANSION_PLAN.md) for the definition of each lane.
+Milestones are quality gates, not dates. See [`docs/launch/EXPANSION_PLAN.md`](../docs/launch/EXPANSION_PLAN.md) for the definition of each lane.
 
 ## Distributions
 

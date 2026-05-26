@@ -27,13 +27,16 @@ committed artifacts support it.
       Evidence-based findings, optional local Slither integration, source
       structure extraction, smarter affected-function mapping, SARIF location
       improvements, and rule calibration.
-- [ ] **v0.7.0: Launch Report OS and Contest Readiness Mode in progress.**
+- [x] **v0.7.0: Launch Report OS and Contest Readiness Mode shipped.**
       Client-facing Launch Reports, Pre-Audit Sprint plans, Contest Readiness
       reports, executive summaries, remediation roadmaps, and paid-service
       delivery workflow artifacts.
-- [ ] **v0.8.0: External validation, public demos, and rule calibration.**
+- [ ] **v0.8.0: External validation, public demos, and rule calibration in progress.**
       Public demo repositories, case-study style sample reports, external
       feedback loops, and evidence-based rule tuning.
+- [ ] **v0.9.0: Public feedback iteration and real-world evaluation workflow.**
+      Protocol-pack expansion, feedback-driven calibration, sanitized external
+      evaluation workflows, and stronger demo-to-service handoff artifacts.
 - [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
       interface, calibrated rule packs, release artifacts, and contribution
       workflow.

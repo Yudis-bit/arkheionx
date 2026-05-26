@@ -217,6 +217,17 @@ delivery artifacts
 scope checklist
 researcher onboarding checklist
 audit handoff package
+try Arkheionx in 5 minutes
+public demo workflow
+demo protocol
+oracle staking demo
+before after case study
+external validation
+rule calibration
+false positive calibration
+external validation feedback
+case study template
+demo GitHub Action workflow
 ```
 
 ## Search By Monetization Or Services
@@ -245,6 +256,9 @@ GitHub Code Scanning
 delivery artifacts
 executive summary
 remediation roadmap
+public demo workflow
+rule calibration
+external validation feedback
 services
 sponsorship
 monetization
@@ -268,6 +282,8 @@ rg -n "Slither integration|slither-json|slither-output|slither-strict" .
 rg -n "false positive reduction|keyword-only downgrade|low-confidence findings" .
 rg -n "Launch Report OS|Pre-Audit Sprint|Contest Readiness Mode|delivery artifacts" .
 rg -n "executive summary|remediation roadmap|scope checklist|researcher onboarding checklist" .
+rg -n "try Arkheionx in 5 minutes|public demo workflow|oracle staking demo" .
+rg -n "before after case study|rule calibration|external validation feedback" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

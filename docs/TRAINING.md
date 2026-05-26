@@ -99,4 +99,4 @@ protocol's published security channel.
 - [`COMMERCIAL.md`](COMMERCIAL.md) — scoped commercial work.
 - [`CASE_STUDY_SAMPLE.md`](CASE_STUDY_SAMPLE.md) — example case-study output.
 - [`CONTENT_PLAYBOOK.md`](CONTENT_PLAYBOOK.md) — public teaching topics.
-- [`PROPOSAL_TEMPLATE.md`](PROPOSAL_TEMPLATE.md) — engagement template.
+- [`PROPOSAL_TEMPLATE.md`](../business/PROPOSAL_TEMPLATE.md) — engagement template.

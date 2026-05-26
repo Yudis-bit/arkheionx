@@ -1,6 +1,6 @@
 # GitHub Issue Workflow
 
-Arkheionx v0.6.0 can convert readiness findings into a GitHub-native issue
+Arkheionx v0.7.0 can convert readiness findings into a GitHub-native issue
 plan. Optional issue creation is disabled by default and should be used only in
 repositories you own or are authorized to manage.
 
@@ -90,7 +90,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
     with:
       protocol-type: auto
       issue-plan-output: ARKHEIONX_ISSUE_PLAN.json

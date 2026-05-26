@@ -3,7 +3,40 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.7.0 - Unreleased
+## v0.8.0 - Unreleased
+
+### Added
+
+- Try Arkheionx in 5 minutes guide.
+- Public demo workflow.
+- Oracle/staking demo case study.
+- Toy before/after readiness case study.
+- Rule calibration documentation.
+- False-positive calibration workflow.
+- External validation feedback workflow.
+- Demo launch and outreach material.
+
+### Improved
+
+- README demo-first onboarding.
+- External user evaluation path.
+- Rule calibration visibility.
+- Demo artifact discoverability.
+- Service explanation through reproducible examples.
+
+### Safety
+
+- Demo workflows are local/static and use toy fixtures.
+- No live-chain scanning, RPC, exploit automation, or bounty guarantee.
+- No fake adoption, customer, or partnership claims.
+
+### Known Limitations
+
+- Demo case studies are internal toy examples.
+- External validation still requires real user feedback.
+- Rule calibration remains heuristic.
+
+## v0.7.0
 
 ### Added
 

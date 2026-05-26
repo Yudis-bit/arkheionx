@@ -1,5 +1,5 @@
 {
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -401,6 +401,70 @@
       "related_patterns": ["scanner output converted into service deliverables"],
       "related_checks": ["Markdown report", "JSON report", "SARIF", "issue plan", "launch report"],
       "search_tags": ["delivery-artifacts", "github-native", "service-delivery"]
+    },
+    {
+      "term": "try Arkheionx in 5 minutes",
+      "aliases": ["five minute demo", "quick demo", "demo scan", "try in 5 minutes"],
+      "category": "public demo",
+      "related_patterns": ["reproducible local readiness demo"],
+      "related_checks": ["demo reports", "demo issue dry-run", "toy fixture"],
+      "search_tags": ["try-in-5-minutes", "public-demo", "onboarding"]
+    },
+    {
+      "term": "public demo workflow",
+      "aliases": ["demo GitHub Action workflow", "arkheionx-demo.yml", "demo artifacts", "public demo reports"],
+      "category": "public demo",
+      "related_patterns": ["workflow_dispatch demo artifact generation"],
+      "related_checks": ["upload artifact", "no issue creation", "no token required"],
+      "search_tags": ["public-demo-workflow", "github-action", "demo-artifacts"]
+    },
+    {
+      "term": "oracle staking demo",
+      "aliases": ["demo protocol", "oracle staking fixture", "reproducible readiness demo"],
+      "category": "case study",
+      "related_patterns": ["toy oracle and reward accounting readiness workflow"],
+      "related_checks": ["oracle rule pack", "reward accounting rule pack", "case study"],
+      "search_tags": ["oracle-staking-demo", "case-study", "rule-calibration"]
+    },
+    {
+      "term": "before after case study",
+      "aliases": ["before/after remediation", "fixed fixture", "readiness improvement demo"],
+      "category": "case study",
+      "related_patterns": ["toy remediation comparison"],
+      "related_checks": ["before report", "after report", "score comparison", "evidence improvements"],
+      "search_tags": ["before-after", "case-study", "remediation"]
+    },
+    {
+      "term": "rule calibration",
+      "aliases": ["calibration summary", "false positive calibration", "confidence calibration"],
+      "category": "analysis quality",
+      "related_patterns": ["evidence-based rule tuning"],
+      "related_checks": ["confidence model", "downgrade logic", "common false positives"],
+      "search_tags": ["rule-calibration", "false-positive-review", "confidence-scoring"]
+    },
+    {
+      "term": "external validation feedback",
+      "aliases": ["external feedback", "validation feedback", "public feedback", "feedback workflow"],
+      "category": "community feedback",
+      "related_patterns": ["sanitized user feedback for calibration"],
+      "related_checks": ["external validation issue template", "false positive issue template", "no secrets"],
+      "search_tags": ["external-validation", "feedback", "open-source-growth"]
+    },
+    {
+      "term": "case study template",
+      "aliases": ["case_study_template.md", "generated case study", "case study outline"],
+      "category": "case study",
+      "related_patterns": ["structured readiness case study"],
+      "related_checks": ["scope", "score", "top findings", "evidence examples", "limitations"],
+      "search_tags": ["case-study-template", "documentation", "demo"]
+    },
+    {
+      "term": "launch post",
+      "aliases": ["launch posts", "outreach kit", "v0.8 launch posts", "release announcement draft"],
+      "category": "growth",
+      "related_patterns": ["honest public launch communication"],
+      "related_checks": ["no fake adoption", "no guarantee claims", "demo workflow CTA"],
+      "search_tags": ["launch-post", "outreach-kit", "public-demo"]
     }
   ]
 }

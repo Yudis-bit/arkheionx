@@ -68,6 +68,6 @@ they need to be tracked: which incidents have been triaged, which were
 rejected and why, which are blocked on archival RPC, which are blocked
 on taxonomy review. The backlog is the place that record lives.
 
-It is sized to the goals in [`docs/EXPANSION_PLAN.md`](../../docs/EXPANSION_PLAN.md).
+It is sized to the goals in [`docs/launch/EXPANSION_PLAN.md`](../../docs/launch/EXPANSION_PLAN.md).
 The structure is the system that needs to be ready before mass intake;
 the entries themselves are added one at a time, with sources.

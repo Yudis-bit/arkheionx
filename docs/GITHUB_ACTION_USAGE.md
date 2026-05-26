@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           protocol-type: auto
 ```
@@ -39,6 +39,14 @@ Development usage:
   with:
     protocol-type: auto
 ```
+
+## Public Demo Workflow
+
+This repository includes `.github/workflows/arkheionx-demo.yml`. It is
+`workflow_dispatch` only, scans `examples/oracle-staking-fixture`, uploads demo
+artifacts, and does not create GitHub issues.
+
+For local demo commands, see [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md).
 
 ## Pull Request Summary Workflow
 
@@ -60,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           root: "."
           protocol-type: "auto"
@@ -93,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -123,7 +131,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
     with:
       protocol-type: "auto"
       output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -197,7 +205,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
     with:
       protocol-type: "auto"
       create-github-issues: "true"
@@ -248,7 +256,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
         with:
           protocol-type: "vault"
           output: "ARKHEIONX_VAULT_READINESS_REPORT.md"
@@ -292,7 +300,7 @@ automatically:
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.6.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
     with:
       protocol-type: "auto"
       slither: "true"
@@ -309,7 +317,7 @@ with:
 
 ## Delivery Artifact Workflow
 
-v0.7.0 development builds can generate client-ready delivery artifacts:
+v0.7.0 and later builds can generate client-ready delivery artifacts:
 
 ```yaml
 with:
@@ -402,8 +410,8 @@ python3 scripts/pre_audit_scan.py \
 
 ## JSON Output
 
-v0.7.0 development JSON includes the v0.4/v0.5/v0.6 fields plus delivery
-metadata:
+v0.7.0 and later JSON includes the v0.4/v0.5/v0.6 fields plus delivery
+metadata when delivery outputs are requested:
 
 - canonical `findings` with stable IDs;
 - stable finding fingerprints;

@@ -8,10 +8,13 @@ on:
       - "scripts/create_github_issues.py"
       - "tests/**"
       - ".github/actions/pre-audit/action.yml"
+      - ".github/workflows/arkheionx-demo.yml"
       - ".github/workflows/pre-audit-ci.yml"
+      - ".github/ISSUE_TEMPLATE/**"
       - "examples/mini-vault/**"
       - "examples/vault-risk-fixture/**"
       - "examples/oracle-staking-fixture/**"
+      - "examples/oracle-staking-fixture-fixed/**"
       - "examples/semantic-lite-fixture/**"
       - "examples/arkheionx.config.example.json"
       - "examples/reports/**"
@@ -98,6 +101,35 @@ jobs:
             --executive-summary-output examples/reports/oracle-staking-fixture-executive-summary.md \
             --remediation-roadmap-output examples/reports/oracle-staking-fixture-remediation-roadmap.md
 
+      - name: Run public demo scan
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture \
+            --protocol-type auto \
+            --output examples/reports/demo-pre-audit-report.md \
+            --json-output examples/reports/demo-report.json \
+            --sarif-output examples/reports/demo.sarif.json \
+            --baseline-output examples/reports/demo.baseline.json \
+            --issue-plan-output examples/reports/demo-issue-plan.json \
+            --issue-checklist-output examples/reports/demo-issue-checklist.md \
+            --launch-report-output examples/reports/demo-launch-report.md \
+            --sprint-plan-output examples/reports/demo-sprint-plan.md \
+            --sprint-days 5 \
+            --contest-readiness-output examples/reports/demo-contest-readiness.md \
+            --executive-summary-output examples/reports/demo-executive-summary.md \
+            --remediation-roadmap-output examples/reports/demo-remediation-roadmap.md
+
+      - name: Run scanner against oracle-staking fixed fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture-fixed \
+            --protocol-type auto \
+            --output examples/reports/oracle-staking-fixture-fixed-pre-audit-report.md \
+            --json-output examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json \
+            --baseline-output examples/reports/oracle-staking-fixture-fixed.baseline.json \
+            --launch-report-output examples/reports/oracle-staking-fixture-fixed-launch-report.md \
+            --remediation-roadmap-output examples/reports/oracle-staking-fixture-fixed-remediation-roadmap.md
+
       - name: Run scanner directly against semantic-lite-fixture
         run: |
           python3 scripts/pre_audit_scan.py \
@@ -125,6 +157,14 @@ jobs:
             --issue-plan examples/reports/vault-risk-fixture-issue-plan.json \
             --mode dry-run \
             --dry-run-output examples/reports/vault-risk-fixture-issue-dry-run.md \
+            --max-issues 5
+
+      - name: Dry-run public demo issue workflow
+        run: |
+          python3 scripts/create_github_issues.py \
+            --issue-plan examples/reports/demo-issue-plan.json \
+            --mode dry-run \
+            --dry-run-output examples/reports/demo-issue-dry-run.md \
             --max-issues 5
 
       - name: Run scanner diff mode against vault-risk baseline
@@ -211,6 +251,23 @@ jobs:
           test -f examples/reports/oracle-staking-fixture-contest-readiness.md
           test -f examples/reports/oracle-staking-fixture-executive-summary.md
           test -f examples/reports/oracle-staking-fixture-remediation-roadmap.md
+          test -f examples/reports/demo-pre-audit-report.md
+          test -f examples/reports/demo-report.json
+          test -f examples/reports/demo.sarif.json
+          test -f examples/reports/demo.baseline.json
+          test -f examples/reports/demo-issue-plan.json
+          test -f examples/reports/demo-issue-checklist.md
+          test -f examples/reports/demo-launch-report.md
+          test -f examples/reports/demo-sprint-plan.md
+          test -f examples/reports/demo-contest-readiness.md
+          test -f examples/reports/demo-executive-summary.md
+          test -f examples/reports/demo-remediation-roadmap.md
+          test -f examples/reports/demo-issue-dry-run.md
+          test -f examples/reports/oracle-staking-fixture-fixed-pre-audit-report.md
+          test -f examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json
+          test -f examples/reports/oracle-staking-fixture-fixed.baseline.json
+          test -f examples/reports/oracle-staking-fixture-fixed-launch-report.md
+          test -f examples/reports/oracle-staking-fixture-fixed-remediation-roadmap.md
           test -f examples/reports/oracle-staking-fixture-slither-attempt-report.md
           test -f examples/reports/oracle-staking-fixture-slither-attempt-report.json
           test -f examples/reports/semantic-lite-fixture-pre-audit-report.md
@@ -258,6 +315,8 @@ jobs:
               "examples/reports/mini-vault-pre-audit-report.json",
               "examples/reports/vault-risk-fixture-pre-audit-report.json",
               "examples/reports/oracle-staking-fixture-pre-audit-report.json",
+              "examples/reports/demo-report.json",
+              "examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json",
               "examples/reports/semantic-lite-fixture-pre-audit-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
@@ -290,6 +349,7 @@ jobs:
               "examples/reports/mini-vault-issue-plan.json",
               "examples/reports/vault-risk-fixture-issue-plan.json",
               "examples/reports/oracle-staking-fixture-issue-plan.json",
+              "examples/reports/demo-issue-plan.json",
               "examples/reports/semantic-lite-fixture-issue-plan.json",
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
@@ -342,6 +402,17 @@ jobs:
           grep -q "Day 5" examples/reports/oracle-staking-fixture-sprint-plan.md
           grep -q "Scope Preparation Checklist" examples/reports/oracle-staking-fixture-contest-readiness.md
           grep -q "Phase 1" examples/reports/oracle-staking-fixture-remediation-roadmap.md
+          grep -q "No GitHub API calls were made." examples/reports/demo-issue-dry-run.md
+          grep -q "Executive Summary" examples/reports/demo-launch-report.md
+          grep -q "Scope Preparation Checklist" examples/reports/demo-contest-readiness.md
+          grep -q "Phase 1" examples/reports/demo-remediation-roadmap.md
+          test -f docs/TRY_IN_5_MINUTES.md
+          test -f docs/PUBLIC_DEMO_WORKFLOW.md
+          test -f docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md
+          test -f docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md
+          test -f .github/ISSUE_TEMPLATE/false_positive_calibration.yml
+          test -f .github/ISSUE_TEMPLATE/external_validation_feedback.yml
+          test -f .github/workflows/arkheionx-demo.yml
 
       - name: Verify disclaimer is present
         run: |
@@ -358,6 +429,9 @@ jobs:
           grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-contest-readiness.md
           grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-executive-summary.md
           grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-remediation-roadmap.md
+          grep -qi "not a formal audit" examples/reports/demo-launch-report.md
+          grep -qi "not a formal audit" examples/reports/demo-sprint-plan.md
+          grep -qi "not a formal audit" examples/reports/demo-contest-readiness.md
 
       - name: Verify unsafe marketing phrases are absent
         run: |
@@ -377,6 +451,9 @@ jobs:
               "attack " + "live protocol",
               "weapon" + "ize",
               "exploit " + "any protocol",
+              "guaranteed " + "bounty",
+              "guaranteed " + "findings",
+              "auto " + "exploit",
           ]
           roots = [
               Path("README.md"),
@@ -388,11 +465,11 @@ jobs:
               Path("docs/GENERATED_ISSUE_CHECKLIST.md"),
               Path("docs/ARKHEIONX_CONFIG.md"),
               Path("docs/READINESS_SCORE.md"),
-              Path("docs/INDIE_BUILDER_OFFER.md"),
+              Path("docs/business/INDIE_BUILDER_OFFER.md"),
               Path("docs/SEARCH_GUIDE.md"),
-              Path("docs/MARKETING_ENGINE.md"),
-              Path("docs/MONETIZATION.md"),
-              Path("docs/SPONSORSHIP.md"),
+              Path("docs/marketing/MARKETING_ENGINE.md"),
+              Path("docs/business/MONETIZATION.md"),
+              Path("docs/business/SPONSORSHIP.md"),
               Path("docs/ETHICS.md"),
               Path(".github/actions"),
               Path("templates"),
