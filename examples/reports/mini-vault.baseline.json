@@ -5,12 +5,20 @@
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "totalAssets",
+        "withdraw"
+      ],
       "category": "vault-accounting",
-      "confidence": "high",
-      "fingerprint": "0efe79b4c594d0c69d06787b",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "0dccaf3c13545c7e8d43b993",
       "id": "ARK-VLT-001",
-      "priority": "High readiness gap",
-      "severity": "High readiness gap",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
       "tags": [
         "vault-accounting",
         "invariant-testing",
@@ -23,9 +31,17 @@
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "totalAssets",
+        "withdraw"
+      ],
       "category": "vault-accounting",
-      "confidence": "low",
-      "fingerprint": "f469763c155a4851c647534a",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "90fe322f47f8eca0090e0355",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -40,9 +56,15 @@
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "pause",
+        "setFee",
+        "unpause"
+      ],
       "category": "access-control",
       "confidence": "medium",
-      "fingerprint": "61734a0b8340c3a5e0311823",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "7ab76a5b5fecbd04052b1270",
       "id": "ARK-ACC-003",
       "priority": "Low readiness gap",
       "severity": "Low readiness gap",
@@ -58,9 +80,14 @@
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "deposit",
+        "withdraw"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "medium",
-      "fingerprint": "c7702243b98ca713849747c2",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "28c32f39fe406951065b4b38",
       "id": "ARK-REENT-001",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -76,9 +103,14 @@
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "deposit",
+        "withdraw"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "medium",
-      "fingerprint": "a694c676706044a9ea675c45",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "49e5e1d2a4d311133f75bc42",
       "id": "ARK-REENT-004",
       "priority": "Low readiness gap",
       "severity": "Low readiness gap",
@@ -90,13 +122,13 @@
       "title": "External call path without documented ordering assumptions"
     }
   ],
-  "fingerprint_version": "0.5.0",
-  "generated_at": "2026-05-25T18:53:56+00:00",
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-25T19:28:59+00:00",
   "protocol_type": "vault",
   "repo_root": "examples/mini-vault",
   "score": 73,
   "score_band": "Improving",
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "0.5.0"
+  "version": "0.6.0"
 }

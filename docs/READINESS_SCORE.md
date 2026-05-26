@@ -84,6 +84,12 @@ questions:
 - baseline diff shows what changed since a previous scan;
 - resolved means "not detected now," not "formally proven fixed."
 
+v0.6.0 adds semantic-lite evidence and confidence calibration. Stronger
+function-level evidence can increase confidence, while matching test coverage
+or weak keyword-only evidence can reduce priority. This affects issue-plan
+selection and reviewer focus, but it does not turn the score into a security
+guarantee.
+
 ## How To Improve The Score
 
 Practical improvements:

@@ -1,0 +1,479 @@
+{
+  "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+  "excluded_low_confidence_findings": [
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Reward/index/claim signals were detected without invariant testing.",
+      "detected_signals": [],
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "54cd39477c53bb7443ba5838",
+      "historical_pattern_similarity": "",
+      "id": "ARK-RWD-001",
+      "priority": "Low readiness gap",
+      "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+      "recommended_defensive_checks": [],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+      "detected_signals": [
+        "reward"
+      ],
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "reward",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "reward",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "7c0443e45adb3c16c781842f",
+      "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+      "id": "ARK-RWD-002",
+      "priority": "Low readiness gap",
+      "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+      "recommended_defensive_checks": [
+        "index monotonicity",
+        "rounding dust",
+        "small balance behavior",
+        "multi-user precision"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests",
+      "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+    },
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
+      "detected_signals": [],
+      "detection_sources": [
+        "keyword"
+      ],
+      "evidence": [
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": "src/DocsOnlyPlanning.sol: Keyword signal matched this readiness finding.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "acc817416129437c66600a42",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
+      "priority": "Low readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+      "recommended_defensive_checks": [],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "invariant-testing",
+        "oracle"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": ""
+    }
+  ],
+  "generated_at": "2026-05-25T19:28:59+00:00",
+  "issue_grouping": "one-per-finding",
+  "issues": [
+    {
+      "affected_functions": [
+        "setOracle"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-ACC-001 -->\n\n# Arkheionx readiness gap: ARK-ACC-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ACC-001`\n- Priority: `Medium readiness gap`\n- Category: `access-control`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `1f02c9f34064d430717a1f1f`\n\n## Evidence\n\n- `src/RealOracleConsumer.sol:25` in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`\n- `test/documentation coverage`: No semantic-lite access control test coverage terms were detected.\n- `src/DocsOnlyPlanning.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, setOracle`\n- `src/RealOracleConsumer.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, setOracle`\n- `test/RealOracleConsumer.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, setOracle`\n\n## Why It Matters\n\nPrivileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions.\n\n## Historical Pattern Similarity\n\nMaps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.\n\n## Recommended Defensive Checks\n\n- unauthorized setter tests\n- role grant/revoke tests\n- pause role tests\n- timelock/multisig assumptions\n\n## Suggested Tests\n\n- For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/semantic-lite-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/semantic-lite-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/semantic-lite-fixture.sarif.json`\n- Issue Checklist: `examples/reports/semantic-lite-fixture-issue-checklist.md`\n- Issue Plan: `examples/reports/semantic-lite-fixture-issue-plan.json`\n- Baseline: `examples/reports/semantic-lite-fixture.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "setOracle",
+          "line": 25,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite access control test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "finding_id": "ARK-ACC-001",
+      "fingerprint": "1f02c9f34064d430717a1f1f",
+      "labels": [
+        "access-control",
+        "access-control-review",
+        "access-control-rule-pack",
+        "admin-risk",
+        "arkheionx",
+        "medium-readiness-gap",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ACC-001 -->",
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "title": "[Arkheionx][Medium] ARK-ACC-001 - Privileged setters without role-boundary tests"
+    },
+    {
+      "affected_functions": [
+        "readPrice"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-ORC-004 -->\n\n# Arkheionx readiness gap: ARK-ORC-004\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-004`\n- Priority: `Medium readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `673e60ba1c3c272848c09a70`\n\n## Evidence\n\n- `src/RealOracleConsumer.sol:29` in `readPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`\n- `test/documentation coverage`: Matching test coverage terms detected: bounds, decimals, oracle, price, stale, updatedat.\n- `src/DocsOnlyPlanning.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle`\n- `src/RealOracleConsumer.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle`\n- `test/RealOracleConsumer.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle`\n\n## Why It Matters\n\nOracle configuration changes can alter all downstream accounting assumptions.\n\n## Historical Pattern Similarity\n\nMaps to privileged control and oracle configuration readiness classes.\n\n## Recommended Defensive Checks\n\n- unauthorized setOracle reverts\n- trusted role documentation\n- fallback oracle controls\n\n## Suggested Tests\n\n- Assert unprivileged callers cannot change oracle or fallback oracle configuration.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/semantic-lite-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/semantic-lite-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/semantic-lite-fixture.sarif.json`\n- Issue Checklist: `examples/reports/semantic-lite-fixture-issue-checklist.md`\n- Issue Plan: `examples/reports/semantic-lite-fixture-issue-plan.json`\n- Baseline: `examples/reports/semantic-lite-fixture.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "readPrice",
+          "line": 29,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: bounds, decimals, oracle, price, stale, updatedat.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/RealOracleConsumer.sol in `readPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "finding_id": "ARK-ORC-004",
+      "fingerprint": "673e60ba1c3c272848c09a70",
+      "labels": [
+        "access-control-review",
+        "arkheionx",
+        "medium-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-004 -->",
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "title": "[Arkheionx][Medium] ARK-ORC-004 - Oracle setter/admin path without role-boundary tests"
+    },
+    {
+      "affected_functions": [
+        "setOracle"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-ACC-003 -->\n\n# Arkheionx readiness gap: ARK-ACC-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ACC-003`\n- Priority: `Low readiness gap`\n- Category: `access-control`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `caa87340c6161447d26261eb`\n\n## Evidence\n\n- `src/RealOracleConsumer.sol:25` in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`\n- `test/documentation coverage`: No semantic-lite access control test coverage terms were detected.\n- `src/DocsOnlyPlanning.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, setOracle`\n- `src/RealOracleConsumer.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, setOracle`\n- `test/RealOracleConsumer.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, setOracle`\n\n## Why It Matters\n\nRole concentration affects operational risk and audit scope even when access control code is syntactically correct.\n\n## Historical Pattern Similarity\n\nMaps to operational control readiness classes.\n\n## Recommended Defensive Checks\n\n- role matrix\n- owner powers\n- timelock assumptions\n- multisig assumptions\n\n## Suggested Tests\n\n- Add a role matrix to docs and unit tests for critical roles.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/semantic-lite-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/semantic-lite-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/semantic-lite-fixture.sarif.json`\n- Issue Checklist: `examples/reports/semantic-lite-fixture-issue-checklist.md`\n- Issue Plan: `examples/reports/semantic-lite-fixture-issue-plan.json`\n- Baseline: `examples/reports/semantic-lite-fixture.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "setOracle",
+          "line": 25,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite access control test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "finding_id": "ARK-ACC-003",
+      "fingerprint": "caa87340c6161447d26261eb",
+      "labels": [
+        "access-control",
+        "access-control-review",
+        "access-control-rule-pack",
+        "arkheionx",
+        "documentation-readiness",
+        "low-readiness-gap",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ACC-003 -->",
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "title": "[Arkheionx][Low] ARK-ACC-003 - Admin role concentration not documented"
+    }
+  ],
+  "min_confidence": "medium",
+  "mode": "dry-run",
+  "protocol_type": "oracle",
+  "repo_root": "examples/semantic-lite-fixture",
+  "score": 58,
+  "score_band": "Early readiness",
+  "summary_issue": {
+    "body": "<!-- arkheionx-issue:summary -->\n\n# Arkheionx pre-audit readiness remediation plan\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n- Score: `58/100`\n- Score band: `Early readiness`\n- Protocol type: `oracle`\n- Active readiness gaps: `6`\n\n## Top Readiness Gaps\n\n- [ ] `ARK-ACC-001` - Privileged setters without role-boundary tests (Medium readiness gap)\n- [ ] `ARK-ORC-004` - Oracle setter/admin path without role-boundary tests (Medium readiness gap)\n- [ ] `ARK-ACC-003` - Admin role concentration not documented (Low readiness gap)\n- [ ] `ARK-RWD-001` - Reward accounting needs conservation coverage (Low readiness gap)\n- [ ] `ARK-RWD-002` - Accumulator/index logic without precision/rounding tests (Low readiness gap)\n- [ ] `ARK-TST-002` - No invariant tests detected for DeFi protocol shape (Low readiness gap)\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/semantic-lite-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/semantic-lite-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/semantic-lite-fixture.sarif.json`\n- Issue Checklist: `examples/reports/semantic-lite-fixture-issue-checklist.md`\n- Issue Plan: `examples/reports/semantic-lite-fixture-issue-plan.json`\n- Baseline: `examples/reports/semantic-lite-fixture.baseline.json`\n\nThis plan is a readiness tracker, not a formal audit report.\n",
+    "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+    "labels": [
+      "arkheionx",
+      "pre-audit-readiness",
+      "remediation-plan"
+    ],
+    "marker": "<!-- arkheionx-issue:summary -->",
+    "title": "[Arkheionx] Pre-audit readiness remediation plan"
+  },
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.6.0"
+}

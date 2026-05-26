@@ -35,7 +35,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -44,16 +44,29 @@
             "text": "Vault accounting without invariant tests: Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "7643a0cb79cbbb4d13183229"
+            "arkheionxFingerprint": "d474ed51fd47af909b7de386"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
@@ -76,7 +89,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -85,16 +98,29 @@
             "text": "ERC4626-like interface without preview function tests: Add tests that preview functions match actual state-changing outcomes within documented rounding bounds. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "26cb37c1e06daceb0c36ea66"
+            "arkheionxFingerprint": "4699c77d2310718cb78ca2c0"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to share/accounting mismatch classes where quoted and realized vault state diverge.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "For each preview function, compare the previewed shares/assets with the actual deposit, mint, withdraw, or redeem result."
@@ -117,7 +143,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -126,16 +152,29 @@
             "text": "Shares/assets conversion without rounding tests: Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "a505bf602ba213841d23a764"
+            "arkheionxFingerprint": "2543fa93b9f4489b285e5d07"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical arithmetic and accounting mismatch classes where precision assumptions failed.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Fuzz assets and shares across small, large, and decimal-edge values and assert conversion error stays within documented bounds."
@@ -158,7 +197,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -167,16 +206,29 @@
             "text": "totalAssets external dependency without manipulation-resistance tests: Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "2c9993713d0fbb88ffa98bd1"
+            "arkheionxFingerprint": "72f63eeec0f9b95321aaae3d"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to Harvest/Yearn-style vault readiness classes where pricing or strategy state influenced share accounting.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Mock external strategy or price state and assert totalAssets, share price, and withdrawal accounting remain within documented policy."
@@ -199,7 +251,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -208,16 +260,29 @@
             "text": "Strategy accounting without gain/loss tests: Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "7c2f4109500fcbf428eaa6db"
+            "arkheionxFingerprint": "4a76e66745f3e45b5e8a32aa"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-strategy",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to strategy debt/gain/loss accounting readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Use a local mock strategy that reports gain and loss, then assert totalAssets and share accounting follow documented policy."
@@ -240,7 +305,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -249,16 +314,29 @@
             "text": "Withdrawal queue/cooldown without lifecycle tests: Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "a07b033b53b02c1d05f4244a"
+            "arkheionxFingerprint": "3e2b22e5dc8e31cae397c485"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-withdrawal",
             "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to vault lifecycle readiness classes where exit accounting or liquidity assumptions can break.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Test the full withdrawal lifecycle and assert shares/assets are conserved across request, cooldown, claim, and cancellation."
@@ -281,7 +359,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 242
                 }
               }
             }
@@ -290,16 +368,27 @@
             "text": "Oracle-dependent vault without stale-price or bounds tests: Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "d6e5fb8d0598b843faca8367"
+            "arkheionxFingerprint": "2a76f44f8e1a1f7d34c242b8"
           },
           "properties": {
+            "affected_functions": [
+              "getPrice"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 4,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical vault/oracle and pool-price manipulation readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Use local mock oracles/pools to test stale, out-of-bounds, decimals, and spot-price scenarios without live-chain calls."
@@ -322,7 +411,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -331,12 +420,25 @@
             "text": "Fee logic without fee accounting tests: Add deposit, withdrawal, management, and performance fee tests where relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "6fd9e73019a0aeca8ddd1fc5"
+            "arkheionxFingerprint": "7f72d71494f71983fafe142d"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
             "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -362,7 +464,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 63
                 }
               }
             }
@@ -371,12 +473,25 @@
             "text": "Pause/emergency controls without operational tests: Add tests showing pause/emergency controls block risky flows and preserve documented exit or recovery paths. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "829fbda42c03968c59c0fcc5"
+            "arkheionxFingerprint": "cebac95341fc47229d46feb4"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "previewDeposit",
+              "previewMint",
+              "totalAssets"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-operations",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to operational readiness classes where emergency behavior changes core state transitions.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -403,7 +518,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 242
                 }
               }
             }
@@ -412,12 +527,23 @@
             "text": "Oracle decimals or normalization not covered by tests: Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "60725ca11edcd2f1efcb8648"
+            "arkheionxFingerprint": "4226f4a7f7d39a3169f349ca"
           },
           "properties": {
+            "affected_functions": [
+              "getPrice"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 4,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to arithmetic and oracle normalization failure classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -445,7 +571,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 242
                 }
               }
             }
@@ -454,12 +580,23 @@
             "text": "Oracle setter/admin path without role-boundary tests: Add tests proving only documented roles can update oracle configuration. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "11765a572891d4866dca0594"
+            "arkheionxFingerprint": "90c5089a8e8d398207a33b44"
           },
           "properties": {
+            "affected_functions": [
+              "getPrice"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 4,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -486,7 +623,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 168
                 }
               }
             }
@@ -495,12 +632,25 @@
             "text": "Privileged setters without role-boundary tests: Add tests proving unauthorized users cannot call privileged setters or role-management functions. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "8fb546c50f0c77fbe211b141"
+            "arkheionxFingerprint": "873e0dd81bdb487c66494a7b"
           },
           "properties": {
+            "affected_functions": [
+              "allocate",
+              "harvest",
+              "rebalance",
+              "report",
+              "withdrawFromStrategy"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "access-control",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -527,7 +677,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 168
                 }
               }
             }
@@ -536,12 +686,25 @@
             "text": "Admin role concentration not documented: Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "fff2c4a9c55e4afa54795b57"
+            "arkheionxFingerprint": "9c0f87f7015c0acdf10e7e29"
           },
           "properties": {
+            "affected_functions": [
+              "allocate",
+              "harvest",
+              "rebalance",
+              "report",
+              "withdrawFromStrategy"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "access-control",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to operational control readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -568,7 +731,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 115
                 }
               }
             }
@@ -577,12 +740,25 @@
             "text": "Value flow with external calls needs reentrancy review: Review state ordering and add local reentrant receiver tests around every value-flow path. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "bb769afb79bc059d289e0686"
+            "arkheionxFingerprint": "024b820efcb241936e75e157"
           },
           "properties": {
+            "affected_functions": [
+              "claimWithdraw",
+              "deposit",
+              "mint",
+              "requestWithdraw",
+              "withdraw"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reentrancy-value-flow",
-            "confidence": "medium",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -609,7 +785,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 115
                 }
               }
             }
@@ -618,12 +794,25 @@
             "text": "External call path without documented ordering assumptions: Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "1d78f58bf70ff5520a005d67"
+            "arkheionxFingerprint": "28cce94cfe9d588f2d3119f8"
           },
           "properties": {
+            "affected_functions": [
+              "claimWithdraw",
+              "deposit",
+              "mint",
+              "requestWithdraw",
+              "withdraw"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reentrancy-value-flow",
-            "confidence": "medium",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -650,7 +839,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 154
                 }
               }
             }
@@ -659,12 +848,23 @@
             "text": "Lock/cooldown reward lifecycle not tested: Add tests for stake, lock/cooldown, reward accrual, claim, and unstake lifecycle transitions. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "a4c3d9faf9a66e4e0e4bb32d"
+            "arkheionxFingerprint": "8c351dd4a656aea8a7f8eacc"
           },
           "properties": {
+            "affected_functions": [
+              "claimWithdraw"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reward-accounting",
-            "confidence": "medium",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 4,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to reward lifecycle and state-transition readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -1088,7 +1288,7 @@
               }
             }
           ],
-          "semanticVersion": "0.5.0"
+          "semanticVersion": "0.6.0"
         }
       }
     }

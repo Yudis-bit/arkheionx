@@ -16,16 +16,20 @@ committed artifacts support it.
 - [x] **v0.4.0: SARIF output and report diff mode released.** SARIF output
       marked as readiness notes/warnings, baseline JSON, diff-aware summaries,
       stable fingerprints, and optional readiness gates.
-- [ ] **v0.4.1: Public polish and release consistency in preparation.**
-      README onboarding, stable `@v0.4.0` examples, docs consistency checks,
-      and public first-impression cleanup.
-- [ ] **v0.5.0: Generated GitHub issue workflow and rule-pack expansion in progress.**
+- [x] **v0.4.1: Public polish and release consistency shipped.**
+      README onboarding, stable action examples, docs consistency checks, and
+      public first-impression cleanup.
+- [x] **v0.5.0: Generated GitHub issue workflow and rule-pack expansion shipped.**
       Structured issue plans, dry-run/create/update issue workflow, oracle,
       access/upgradeability, reentrancy/value-flow, and reward accounting rule
       packs.
-- [ ] **v0.6.0: Semantic-lite Solidity extraction and false-positive reduction.**
-      Slither integration where available, source-structure extraction, smarter
-      affected-file mapping, and rule calibration.
+- [ ] **v0.6.0: Semantic-lite Solidity extraction and false-positive reduction in progress.**
+      Evidence-based findings, optional local Slither integration, source
+      structure extraction, smarter affected-function mapping, SARIF location
+      improvements, and rule calibration.
+- [ ] **v0.7.0: Launch Report OS and Contest Readiness Mode.** Delivery
+      workflow for Launch Reports and Pre-Audit Sprints, contest-readiness
+      artifact templates, and tighter remediation tracking.
 - [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
       interface, calibrated rule packs, release artifacts, and contribution
       workflow.

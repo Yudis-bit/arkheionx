@@ -174,6 +174,24 @@ CTA:
 > Generate an Arkheionx issue plan and use it as the starting point for a
 > Launch Report or Pre-Audit Sprint remediation plan.
 
+## v0.6.0 Semantic-Lite Message
+
+Primary v0.6.0 message:
+
+> Arkheionx v0.6.0 makes readiness findings more evidence-based: semantic-lite
+> Solidity extraction, confidence reasons, detection sources, optional local
+> Slither enrichment, and lower noise from weak keyword-only matches.
+
+Builder angle:
+
+> Fewer noisy readiness tasks, clearer affected files/functions, and issue
+> plans that explain why each task exists.
+
+Anti-hype boundary:
+
+> Semantic-lite improves prioritization. It is not a formal audit, not a full
+> Solidity compiler, and not proof of safety.
+
 ## Example X Posts
 
 0. Arkheionx v0.2.0 is vault-focused: ERC4626-like checks, share/accounting

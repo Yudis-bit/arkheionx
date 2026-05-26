@@ -111,6 +111,20 @@ written reason in the release PR.
 - [ ] `docs/GITHUB_ISSUE_WORKFLOW.md` documents permissions, dry-run, create,
       update, duplicate prevention, and safety boundaries.
 
+## v0.6 Semantic-Lite And False-Positive Checks
+
+- [ ] JSON reports include `analysis_quality`.
+- [ ] JSON reports include `semantic_lite` contracts/functions when enabled.
+- [ ] Findings include `evidence`, `confidence_reason`, and
+      `detection_sources`.
+- [ ] Low-confidence keyword-only findings are visible but downgraded.
+- [ ] Issue plans include confidence reasons and top evidence.
+- [ ] SARIF locations prefer semantic-lite or Slither evidence where available.
+- [ ] Slither absence is graceful unless strict mode is explicitly enabled.
+- [ ] `--slither-json` works with a local mock/provided JSON file.
+- [ ] `docs/SEMANTIC_LITE_ANALYSIS.md`, `docs/SLITHER_INTEGRATION.md`, and
+      `docs/FALSE_POSITIVE_REDUCTION.md` are linked from README.
+
 ## Search And Registry
 
 - [ ] `python3 scripts/generate_search_index.py --check`

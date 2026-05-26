@@ -5,9 +5,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "testing-readiness",
-      "confidence": "low",
-      "fingerprint": "d73c8a2c3e3055849cc2a36d",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "40c41c40ed1466cdd9635ca9",
       "id": "ARK-TST-002",
       "priority": "High readiness gap",
       "severity": "High readiness gap",
@@ -22,12 +30,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "low",
-      "fingerprint": "28931344b387571d2cc7a0e0",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "4caf35ffd1a44272525bbdab",
       "id": "ARK-ORC-002",
-      "priority": "High readiness gap",
-      "severity": "High readiness gap",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
       "tags": [
         "oracle-risk",
         "price-assumptions"
@@ -39,12 +52,14 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [],
       "category": "vault-accounting",
       "confidence": "low",
-      "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "fingerprint": "455b182ea87d56a4a492118e",
       "id": "ARK-VLT-009",
-      "priority": "High readiness gap",
-      "severity": "High readiness gap",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
       "tags": [
         "vault-accounting",
         "share-accounting"
@@ -56,9 +71,15 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "low",
-      "fingerprint": "843d4f2224907dabc3816772",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "02dd029123ec6087d21f1f1d",
       "id": "ARK-REENT-001",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -73,9 +94,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
-      "confidence": "low",
-      "fingerprint": "c0a40921efd524042b77b919",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "1c316cdf88792a7e2b1e566e",
       "id": "ARK-RWD-001",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -90,12 +119,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "high",
-      "fingerprint": "9aee372d5fc42a664ef7e458",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "27199688c1b60c42d92a6d05",
       "id": "ARK-ORC-001",
-      "priority": "High readiness gap",
-      "severity": "High readiness gap",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
       "tags": [
         "oracle-risk",
         "oracle-rule-pack",
@@ -108,9 +142,14 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "high",
-      "fingerprint": "968c56ae1cd3dae1e2eae280",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "e5f500ac09dd007865613478",
       "id": "ARK-ORC-005",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -126,9 +165,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
       "category": "access-control",
-      "confidence": "medium",
-      "fingerprint": "13af6797121f94ff50563104",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "c612302ce98632d634d45e31",
       "id": "ARK-ACC-003",
       "priority": "Low readiness gap",
       "severity": "Low readiness gap",
@@ -143,9 +190,15 @@
       "affected_files": [
         "src/OracleRewardFixture.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "low",
-      "fingerprint": "c6c3deef7e721e9057a3f65a",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "7e2acd399b5366b913e3e8a9",
       "id": "ARK-REENT-004",
       "priority": "Low readiness gap",
       "severity": "Low readiness gap",
@@ -161,9 +214,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
       "confidence": "high",
-      "fingerprint": "e7599f77df25242d8103622d",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "64ba736c260ec0865f0a87c1",
       "id": "ARK-RWD-002",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -179,9 +240,17 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
       "confidence": "high",
-      "fingerprint": "9362d8f81c0fd2384aea5bbb",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "3c91794e0a66202839c5df60",
       "id": "ARK-RWD-003",
       "priority": "Medium readiness gap",
       "severity": "Medium readiness gap",
@@ -193,13 +262,13 @@
       "title": "Claim flow without double-claim prevention tests"
     }
   ],
-  "fingerprint_version": "0.5.0",
-  "generated_at": "2026-05-25T19:01:52+00:00",
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-26T01:04:36+00:00",
   "protocol_type": "staking",
   "repo_root": "examples/oracle-staking-fixture",
   "score": 65,
   "score_band": "Improving",
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "0.5.0"
+  "version": "0.6.0"
 }

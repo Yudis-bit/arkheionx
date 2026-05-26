@@ -40,12 +40,15 @@ class IssuePlanTests(unittest.TestCase):
             )
 
             plan = json.loads(plan_path.read_text(encoding="utf-8"))
-            self.assertEqual(plan["version"], "0.5.0")
+            self.assertEqual(plan["version"], "0.6.0")
             self.assertTrue(plan["issues"])
             first = plan["issues"][0]
             self.assertTrue(first["marker"].startswith("<!-- arkheionx-issue:ARK-"))
             self.assertIn("not a formal audit finding", first["body"])
             self.assertIn("does not confirm a vulnerability", first["body"])
+            self.assertIn("confidence_reason", first)
+            self.assertIn("evidence", first)
+            self.assertIn("## Evidence", first["body"])
             self.assertIn("arkheionx", first["labels"])
             self.assertIn("pre-audit-readiness", first["labels"])
             self.assertIn("Convert This Checklist Into GitHub Issues", checklist_path.read_text(encoding="utf-8"))
@@ -131,4 +134,3 @@ class IssuePlanTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -28,7 +28,7 @@ Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 2. Run a pre-audit readiness scan.
 3. Read the generated Markdown report.
 4. Review SARIF, PR comment, or issue-checklist output if enabled.
-5. Review generated issue plans if enabled.
+5. Review generated issue plans and confidence/evidence notes if enabled.
 6. Fix readiness gaps and missing invariants.
 7. Request a Launch Report or Pre-Audit Sprint only if you want manual
    readiness support.
@@ -42,16 +42,17 @@ Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 
 ## Latest Release
 
-Latest stable release: **v0.4.0 - SARIF Output and Baseline Diff Mode**.
+Latest stable release: **v0.5.0 - GitHub Issue Workflow and Rule Pack Expansion**.
 
-v0.4.0 adds:
+v0.5.0 adds:
 
-- SARIF 2.1.0 output for GitHub Code Scanning-compatible workflows;
-- compact baseline snapshots;
-- report diff mode for new, resolved, unchanged, changed, and suppressed
-  readiness gaps;
-- stable finding fingerprints;
-- optional CI thresholds that are disabled by default.
+- generated issue-plan JSON;
+- dry-run GitHub issue workflow with deterministic markers;
+- optional create/update issue workflow for authorized repositories;
+- Oracle Rule Pack;
+- Access Control / Upgradeability Rule Pack;
+- Reentrancy / Value Flow Rule Pack;
+- Staking / Reward Accounting Rule Pack.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -59,8 +60,9 @@ v0.4.0 adds:
 | v0.2.0 | Vault Rule Pack | Released |
 | v0.3.0 | GitHub Action UX + PR Comment Mode | Released |
 | v0.4.0 | SARIF Output + Baseline Diff Mode | Released |
-| v0.4.1 | Public polish and release consistency | In preparation |
-| v0.5.0 | Generated issue workflow + rule-pack expansion | In progress |
+| v0.4.1 | Public polish and release consistency | Released |
+| v0.5.0 | Generated issue workflow + rule-pack expansion | Released |
+| v0.6.0 | Semantic-lite analysis + false-positive reduction | In progress |
 
 ## The Five Pillars
 
@@ -135,7 +137,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v0.4.0` for stable usage:
+Use `@v0.5.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -150,7 +152,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           root: "."
           protocol-type: "auto"
@@ -184,7 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -213,7 +215,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -344,26 +346,27 @@ It checks for readiness gaps around:
 
 Read [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md).
 
-## v0.5.0 Development Preview
+## v0.6.0 Development Preview
 
-The next milestone focuses on generated GitHub issue workflows and expanded
-rule packs. Development usage is available from `@main`; stable users should
-remain on `@v0.4.0` until v0.5.0 is released.
+The next milestone focuses on semantic-lite Solidity extraction, evidence-based
+findings, optional local Slither enrichment, and false-positive reduction.
+Development usage is available from `@main`; stable users should remain on
+`@v0.5.0` until v0.6.0 is released.
 
-Current v0.5 work includes:
+Current v0.6 work includes:
 
-- generated issue-plan JSON;
-- dry-run issue workflow with deterministic markers;
-- optional create/update workflow for authorized repositories;
-- Oracle Rule Pack;
-- Access Control / Upgradeability Rule Pack;
-- Reentrancy / Value Flow Rule Pack;
-- Staking / Reward Accounting Rule Pack.
+- semantic-lite contract/function extraction;
+- evidence records for each readiness finding;
+- confidence reasons and detection sources;
+- test coverage mapping for rule packs;
+- optional local Slither JSON or Slither execution;
+- better SARIF locations and issue-plan evidence summaries.
 
 Read:
 
-- [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md)
-- [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md)
+- [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md)
+- [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md)
+- [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md)
 
 ## What The Scanner Checks
 
@@ -480,6 +483,9 @@ Core standards:
 | Generate issue plans | [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md) |
 | Use SARIF / Code Scanning | [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md) |
 | Track baseline diff | [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md) |
+| Understand semantic-lite evidence | [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md) |
+| Use optional Slither enrichment | [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md) |
+| Reduce false positives | [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md) |
 | Configure suppressions | [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md) |
 | Understand scoring | [`docs/READINESS_SCORE.md`](docs/READINESS_SCORE.md) |
 | Run vault-specific checks | [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md) |
@@ -501,8 +507,8 @@ Core standards:
 | Free GitHub Action | Free | Basic readiness scan, Markdown report, optional SARIF, baseline diff artifacts, and issue plan output. |
 | Indie Builder Sponsor | USD 29/month | Support public tooling, early previews, priority Q&A. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
-| Launch Report | USD 299-499 | Manual review of generated report, issue plan, and prioritized fix checklist. |
-| Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, GitHub issue plan/checklist. |
+| Launch Report | USD 299-499 | Manual review of generated report, evidence, issue plan, and prioritized fix checklist. |
+| Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, evidence-based GitHub issue plan/checklist. |
 | Vault Launch Report | USD 299-499 | Vault Rule Pack review and prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 | Vault-focused invariant, strategy, oracle, and withdrawal lifecycle plan. |
 | Ecosystem Pack | USD 5,000-20,000/month | Bulk readiness reports and builder security clinic. |
@@ -557,10 +563,13 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v0.4.0: SARIF and baseline diff mode.** SARIF output, readiness
   baselines, new/resolved/unchanged gap tracking, and explicit CI thresholds.
 - **v0.4.1: public polish and release consistency.** README onboarding,
-  stable `@v0.4.0` examples, and docs cleanup. In preparation.
+  stable action examples, and docs cleanup.
 - **v0.5.0: generated GitHub issue workflow and rule-pack expansion.**
   Opt-in issue workflow plus oracle, access/upgradeability, reentrancy/value-flow,
   and staking/reward rule packs.
+- **v0.6.0: semantic-lite and false-positive reduction.** Evidence-based
+  findings, confidence reasons, optional local Slither enrichment, and better
+  affected-function/SARIF location mapping. In progress.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.
 

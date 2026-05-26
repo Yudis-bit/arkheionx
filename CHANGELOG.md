@@ -3,7 +3,49 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.5.0 - Unreleased
+## v0.6.0 - Unreleased
+
+### Added
+
+- Semantic-lite Solidity structure extraction for contracts, functions,
+  modifiers, state variables, selected calls, and test coverage terms.
+- Evidence records for readiness findings.
+- Confidence reasons, evidence summaries, detection sources, affected
+  contracts, and affected functions.
+- Optional local Slither integration through `--slither` or
+  `--slither-json`.
+- Test coverage mapping for oracle, access-control, reentrancy/value-flow,
+  reward-accounting, and vault readiness areas.
+- False-positive reduction documentation.
+
+### Improved
+
+- SARIF locations now prefer semantic-lite or Slither evidence locations.
+- Rule-pack findings are calibrated using evidence and mapped test coverage.
+- Issue plans include confidence reasons and top evidence.
+- Markdown reports include an Analysis Quality section and evidence per
+  finding.
+- JSON schema includes `analysis_quality`, `semantic_lite`, and `slither`
+  metadata.
+
+### Safety
+
+- Slither is optional and local only.
+- Slither absence does not break normal scans unless strict mode is explicitly
+  enabled.
+- No RPC, live-chain calls, transaction execution, deployed-contract scanning,
+  or secret handling were added.
+- Findings remain readiness signals, not vulnerability confirmations.
+
+### Known Limitations
+
+- Semantic-lite extraction is heuristic and not a full Solidity AST.
+- Slither is optional and not required in CI.
+- False positives remain possible.
+- Manual review is still required before launch, mainnet, or formal audit
+  intake.
+
+## v0.5.0
 
 ### Added
 
@@ -38,7 +80,7 @@ maintainer explicitly cuts them.
 - Issue creation depends on GitHub token permissions.
 - False positives remain possible.
 
-## v0.4.1 - Unreleased
+## v0.4.1
 
 ### Changed
 

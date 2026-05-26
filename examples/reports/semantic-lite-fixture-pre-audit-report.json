@@ -1,0 +1,2283 @@
+{
+  "analysis_quality": {
+    "fuzz_tests": false,
+    "invariant_tests": false,
+    "keyword_scan": "enabled",
+    "semantic_contracts": 3,
+    "semantic_lite": "enabled",
+    "semantic_test_files": 1,
+    "slither": "disabled",
+    "slither_detector_count": 0,
+    "test_coverage_mapping": "enabled",
+    "warnings": []
+  },
+  "config_warnings": [],
+  "diff": {
+    "baseline_path": "",
+    "changed": [],
+    "counts": {
+      "changed": 0,
+      "new": 0,
+      "resolved": 0,
+      "suppressed": 0,
+      "unchanged": 0
+    },
+    "new": [],
+    "resolved": [],
+    "suppressed_findings": [],
+    "unchanged": [],
+    "warnings": []
+  },
+  "disclaimer": "This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.",
+  "files_scanned": {
+    "configs": [
+      "foundry.toml"
+    ],
+    "docs": [
+      "README.md"
+    ],
+    "solidity_sources": [
+      "src/DocsOnlyPlanning.sol",
+      "src/RealOracleConsumer.sol"
+    ],
+    "solidity_tests": [
+      "test/RealOracleConsumer.t.sol"
+    ],
+    "workflows": []
+  },
+  "findings": [
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
+      "detected_signals": [],
+      "detection_sources": [
+        "keyword"
+      ],
+      "evidence": [
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": "src/DocsOnlyPlanning.sol: Keyword signal matched this readiness finding.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "acc817416129437c66600a42",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
+      "priority": "Low readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+      "recommended_defensive_checks": [],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "invariant-testing",
+        "oracle"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": ""
+    },
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Reward/index/claim signals were detected without invariant testing.",
+      "detected_signals": [],
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "54cd39477c53bb7443ba5838",
+      "historical_pattern_similarity": "",
+      "id": "ARK-RWD-001",
+      "priority": "Low readiness gap",
+      "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+      "recommended_defensive_checks": [],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_contracts": [
+        "RealOracleConsumer"
+      ],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "readPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "latestRoundData",
+        "maxPrice",
+        "minPrice",
+        "oracle",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "readPrice",
+          "line": 29,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: bounds, decimals, oracle, price, stale, updatedat.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/RealOracleConsumer.sol in `readPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "673e60ba1c3c272848c09a70",
+      "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests",
+      "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "RealOracleConsumer"
+      ],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "setOracle"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "setOracle",
+          "line": 25,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite access control test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "1f02c9f34064d430717a1f1f",
+      "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests",
+      "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "RealOracleConsumer"
+      ],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "setOracle"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "setOracle",
+          "line": 25,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite access control test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "caa87340c6161447d26261eb",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+      "detected_signals": [
+        "reward"
+      ],
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "reward",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "reward",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "7c0443e45adb3c16c781842f",
+      "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+      "id": "ARK-RWD-002",
+      "priority": "Low readiness gap",
+      "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+      "recommended_defensive_checks": [
+        "index monotonicity",
+        "rounding dust",
+        "small balance behavior",
+        "multi-user precision"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests",
+      "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+    }
+  ],
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-25T19:28:59+00:00",
+  "generated_outputs": {
+    "baseline": "examples/reports/semantic-lite-fixture.baseline.json",
+    "comment": "",
+    "diff_json": "",
+    "diff_report": "",
+    "issue_checklist": "examples/reports/semantic-lite-fixture-issue-checklist.md",
+    "issue_plan": "examples/reports/semantic-lite-fixture-issue-plan.json",
+    "json_report": "examples/reports/semantic-lite-fixture-pre-audit-report.json",
+    "markdown_report": "examples/reports/semantic-lite-fixture-pre-audit-report.md",
+    "sarif_report": "examples/reports/semantic-lite-fixture.sarif.json",
+    "slither_summary": "",
+    "summary": ""
+  },
+  "historical_patterns": [
+    {
+      "broken_invariant_class": "Admin actions cannot silently bypass accounting, oracle, or user-safety invariants.",
+      "confidence": "medium",
+      "defensive_checks": [
+        "Document every privileged role and setter.",
+        "Add unauthorized-call tests for each privileged function.",
+        "Add tests showing pause/emergency controls behave as documented."
+      ],
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ],
+      "failed_assumption_class": "Privileged actors can only perform documented, intended operations.",
+      "name": "Privileged control and operational risk review recommended",
+      "search_tags": [
+        "access-control-review",
+        "admin-risk",
+        "operational-security"
+      ],
+      "suggested_test": "Invariant: unprivileged callers cannot change fees, oracles, strategies, treasury, pause state, or upgrade target.",
+      "why_it_matters": "Admin setters, emergency controls, fee updates, and governance execution paths can become launch blockers if role boundaries are unclear or untested."
+    },
+    {
+      "broken_invariant_class": "Claimable rewards cannot exceed funded rewards beyond documented rounding.",
+      "confidence": "low",
+      "defensive_checks": [
+        "Test claim conservation across multiple users.",
+        "Test stake/unstake around reward updates.",
+        "Check precision and rounding around small balances."
+      ],
+      "detected_signals": [
+        "decimals",
+        "reward"
+      ],
+      "failed_assumption_class": "Reward index math always reflects actual funded rewards and stake weights.",
+      "name": "Reward accounting mismatch review recommended",
+      "search_tags": [
+        "reward-accounting",
+        "staking",
+        "index-math",
+        "precision"
+      ],
+      "suggested_test": "Invariant: total claimed plus remaining claimable never exceeds funded rewards beyond expected rounding.",
+      "why_it_matters": "Reward indexes and accumulators are common sources of overclaim, underclaim, and precision drift when supply changes across epochs."
+    }
+  ],
+  "next_steps": [
+    "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
+    "Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.",
+    "Run a formal smart contract audit before mainnet launch or before handling real user funds."
+  ],
+  "protocol_confidence": "high",
+  "protocol_type": "oracle",
+  "readiness_gaps": [
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
+      "detected_signals": [],
+      "detection_sources": [
+        "keyword"
+      ],
+      "evidence": [
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": "src/DocsOnlyPlanning.sol: Keyword signal matched this readiness finding.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "acc817416129437c66600a42",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
+      "priority": "Low readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+      "recommended_defensive_checks": [],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "invariant-testing",
+        "oracle"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": ""
+    },
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Reward/index/claim signals were detected without invariant testing.",
+      "detected_signals": [],
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "54cd39477c53bb7443ba5838",
+      "historical_pattern_similarity": "",
+      "id": "ARK-RWD-001",
+      "priority": "Low readiness gap",
+      "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+      "recommended_defensive_checks": [],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage",
+      "why_it_matters": ""
+    },
+    {
+      "affected_contracts": [
+        "RealOracleConsumer"
+      ],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "readPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "latestRoundData",
+        "maxPrice",
+        "minPrice",
+        "oracle",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "readPrice",
+          "line": 29,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: bounds, decimals, oracle, price, stale, updatedat.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/RealOracleConsumer.sol in `readPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "673e60ba1c3c272848c09a70",
+      "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests",
+      "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "RealOracleConsumer"
+      ],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "setOracle"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "setOracle",
+          "line": 25,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite access control test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "1f02c9f34064d430717a1f1f",
+      "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests",
+      "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "RealOracleConsumer"
+      ],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "setOracle"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "RealOracleConsumer",
+          "file": "src/RealOracleConsumer.sol",
+          "function": "setOracle",
+          "line": 25,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite access control test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "src/RealOracleConsumer.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, setOracle",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "caa87340c6161447d26261eb",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_contracts": [],
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+      "detected_signals": [
+        "reward"
+      ],
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/DocsOnlyPlanning.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "reward",
+          "type": "keyword"
+        },
+        {
+          "file": "test/RealOracleConsumer.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "reward",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "7c0443e45adb3c16c781842f",
+      "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+      "id": "ARK-RWD-002",
+      "priority": "Low readiness gap",
+      "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+      "recommended_defensive_checks": [
+        "index monotonicity",
+        "rounding dust",
+        "small balance behavior",
+        "multi-user precision"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests",
+      "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+    }
+  ],
+  "repo_root": "examples/semantic-lite-fixture",
+  "rule_packs": {
+    "access_control_upgradeability": {
+      "detected": true,
+      "docs": "docs/ACCESS_CONTROL_RULE_PACK.md",
+      "files": [
+        "src/RealOracleConsumer.sol"
+      ],
+      "finding_count": 2,
+      "findings": [
+        {
+          "affected_contracts": [
+            "RealOracleConsumer"
+          ],
+          "affected_files": [
+            "src/DocsOnlyPlanning.sol",
+            "src/RealOracleConsumer.sol",
+            "test/RealOracleConsumer.t.sol"
+          ],
+          "affected_functions": [
+            "setOracle"
+          ],
+          "category": "access-control",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+          "detected_signals": [
+            "onlyOwner",
+            "owner",
+            "setOracle"
+          ],
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "RealOracleConsumer",
+              "file": "src/RealOracleConsumer.sol",
+              "function": "setOracle",
+              "line": 25,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite access control test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/DocsOnlyPlanning.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "onlyOwner, owner, setOracle",
+              "type": "keyword"
+            },
+            {
+              "file": "src/RealOracleConsumer.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "onlyOwner, owner, setOracle",
+              "type": "keyword"
+            },
+            {
+              "file": "test/RealOracleConsumer.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "onlyOwner, owner, setOracle",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "1f02c9f34064d430717a1f1f",
+          "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+          "id": "ARK-ACC-001",
+          "priority": "Medium readiness gap",
+          "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+          "recommended_defensive_checks": [
+            "unauthorized setter tests",
+            "role grant/revoke tests",
+            "pause role tests",
+            "timelock/multisig assumptions"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+          ],
+          "suppressible": true,
+          "tags": [
+            "access-control-review",
+            "admin-risk",
+            "access-control-rule-pack"
+          ],
+          "title": "Privileged setters without role-boundary tests",
+          "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+        },
+        {
+          "affected_contracts": [
+            "RealOracleConsumer"
+          ],
+          "affected_files": [
+            "src/DocsOnlyPlanning.sol",
+            "src/RealOracleConsumer.sol",
+            "test/RealOracleConsumer.t.sol"
+          ],
+          "affected_functions": [
+            "setOracle"
+          ],
+          "category": "access-control",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+          "detected_signals": [
+            "onlyOwner",
+            "owner",
+            "setOracle"
+          ],
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "RealOracleConsumer",
+              "file": "src/RealOracleConsumer.sol",
+              "function": "setOracle",
+              "line": 25,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite access control test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/DocsOnlyPlanning.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "onlyOwner, owner, setOracle",
+              "type": "keyword"
+            },
+            {
+              "file": "src/RealOracleConsumer.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "onlyOwner, owner, setOracle",
+              "type": "keyword"
+            },
+            {
+              "file": "test/RealOracleConsumer.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "onlyOwner, owner, setOracle",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/RealOracleConsumer.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "caa87340c6161447d26261eb",
+          "historical_pattern_similarity": "Maps to operational control readiness classes.",
+          "id": "ARK-ACC-003",
+          "priority": "Low readiness gap",
+          "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+          "recommended_defensive_checks": [
+            "role matrix",
+            "owner powers",
+            "timelock assumptions",
+            "multisig assumptions"
+          ],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Add a role matrix to docs and unit tests for critical roles."
+          ],
+          "suppressible": true,
+          "tags": [
+            "access-control-review",
+            "documentation-readiness",
+            "access-control-rule-pack"
+          ],
+          "title": "Admin role concentration not documented",
+          "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+        }
+      ],
+      "label": "Access Control / Upgradeability Rule Pack",
+      "signal_count": 3,
+      "signals": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ],
+      "suggested_tests": [
+        "unauthorized setter tests",
+        "pause/emergency boundaries",
+        "initializer once",
+        "upgrade authorization"
+      ]
+    },
+    "oracle": {
+      "detected": true,
+      "docs": "docs/ORACLE_RULE_PACK.md",
+      "files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "finding_count": 1,
+      "findings": [
+        {
+          "affected_contracts": [
+            "RealOracleConsumer"
+          ],
+          "affected_files": [
+            "src/DocsOnlyPlanning.sol",
+            "src/RealOracleConsumer.sol",
+            "test/RealOracleConsumer.t.sol"
+          ],
+          "affected_functions": [
+            "readPrice"
+          ],
+          "category": "oracle-pricing",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+          "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+          "detected_signals": [
+            "AggregatorV3Interface",
+            "answer",
+            "answeredInRound",
+            "decimals",
+            "latestRoundData",
+            "maxPrice",
+            "minPrice",
+            "oracle",
+            "priceFeed",
+            "roundId",
+            "setOracle",
+            "updatedAt"
+          ],
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "RealOracleConsumer",
+              "file": "src/RealOracleConsumer.sol",
+              "function": "readPrice",
+              "line": 29,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "Matching test coverage terms detected: bounds, decimals, oracle, price, stale, updatedat.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/DocsOnlyPlanning.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+              "type": "keyword"
+            },
+            {
+              "file": "src/RealOracleConsumer.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+              "type": "keyword"
+            },
+            {
+              "file": "test/RealOracleConsumer.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, latestRoundData, maxPrice, minPrice, oracle",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/RealOracleConsumer.sol in `readPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "673e60ba1c3c272848c09a70",
+          "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+          "id": "ARK-ORC-004",
+          "priority": "Medium readiness gap",
+          "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+          "recommended_defensive_checks": [
+            "unauthorized setOracle reverts",
+            "trusted role documentation",
+            "fallback oracle controls"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+          ],
+          "suppressible": true,
+          "tags": [
+            "oracle-risk",
+            "access-control-review",
+            "oracle-rule-pack"
+          ],
+          "title": "Oracle setter/admin path without role-boundary tests",
+          "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+        }
+      ],
+      "label": "Oracle Rule Pack",
+      "signal_count": 12,
+      "signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "latestRoundData",
+        "maxPrice",
+        "minPrice",
+        "oracle",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "suggested_tests": [
+        "stale price rejection",
+        "decimals normalization",
+        "price bounds",
+        "TWAP vs spot behavior"
+      ]
+    },
+    "reentrancy_value_flow": {
+      "detected": false,
+      "docs": "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+      "files": [],
+      "finding_count": 0,
+      "findings": [],
+      "label": "Reentrancy / Value Flow Rule Pack",
+      "signal_count": 0,
+      "signals": [],
+      "suggested_tests": [
+        "reentrant receiver mock",
+        "state update ordering",
+        "double claim prevention",
+        "failed external call behavior"
+      ]
+    },
+    "reward_accounting": {
+      "detected": true,
+      "docs": "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+      "files": [
+        "src/DocsOnlyPlanning.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "finding_count": 2,
+      "findings": [
+        {
+          "affected_contracts": [],
+          "affected_files": [
+            "src/DocsOnlyPlanning.sol",
+            "src/RealOracleConsumer.sol",
+            "test/RealOracleConsumer.t.sol"
+          ],
+          "affected_functions": [],
+          "category": "reward-accounting",
+          "confidence": "low",
+          "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+          "detail": "Reward/index/claim signals were detected without invariant testing.",
+          "detected_signals": [],
+          "detection_sources": [
+            "keyword",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite reward test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/DocsOnlyPlanning.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            },
+            {
+              "file": "src/RealOracleConsumer.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            },
+            {
+              "file": "test/RealOracleConsumer.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 4,
+          "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+          "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+          "fingerprint": "54cd39477c53bb7443ba5838",
+          "historical_pattern_similarity": "",
+          "id": "ARK-RWD-001",
+          "priority": "Low readiness gap",
+          "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
+          "recommended_defensive_checks": [],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Add reward conservation and no-overclaim tests across multiple users and timing boundaries."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reward-accounting",
+            "precision"
+          ],
+          "title": "Reward accounting needs conservation coverage",
+          "why_it_matters": ""
+        },
+        {
+          "affected_contracts": [],
+          "affected_files": [
+            "src/DocsOnlyPlanning.sol",
+            "test/RealOracleConsumer.t.sol"
+          ],
+          "affected_functions": [],
+          "category": "reward-accounting",
+          "confidence": "low",
+          "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+          "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
+          "detected_signals": [
+            "reward"
+          ],
+          "detection_sources": [
+            "keyword",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite reward test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/DocsOnlyPlanning.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "reward",
+              "type": "keyword"
+            },
+            {
+              "file": "test/RealOracleConsumer.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "reward",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 3,
+          "evidence_summary": ": No semantic-lite reward test coverage terms were detected.",
+          "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+          "fingerprint": "7c0443e45adb3c16c781842f",
+          "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+          "id": "ARK-RWD-002",
+          "priority": "Low readiness gap",
+          "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
+          "recommended_defensive_checks": [
+            "index monotonicity",
+            "rounding dust",
+            "small balance behavior",
+            "multi-user precision"
+          ],
+          "severity": "Low readiness gap",
+          "suggested_tests": [
+            "Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards."
+          ],
+          "suppressible": true,
+          "tags": [
+            "reward-accounting",
+            "precision",
+            "staking-rule-pack"
+          ],
+          "title": "Accumulator/index logic without precision/rounding tests",
+          "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
+        }
+      ],
+      "label": "Staking / Reward Accounting Rule Pack",
+      "signal_count": 2,
+      "signals": [
+        "decimals",
+        "reward"
+      ],
+      "suggested_tests": [
+        "reward conservation",
+        "no overclaim",
+        "index monotonicity",
+        "stake/unstake/claim lifecycle"
+      ]
+    },
+    "vault": {
+      "detected": true,
+      "docs": "docs/VAULT_RULE_PACK.md",
+      "files": [
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "finding_count": 0,
+      "findings": [],
+      "label": "Vault Rule Pack",
+      "signal_count": 2,
+      "signals": [
+        "decimals",
+        "setOracle"
+      ],
+      "suggested_tests": [
+        "totalAssets consistency",
+        "deposit/withdraw roundtrip",
+        "share conversion rounding",
+        "strategy gain/loss lifecycle"
+      ]
+    }
+  },
+  "score": 58,
+  "score_band": "Early readiness",
+  "score_breakdown": {
+    "defi_risk_coverage": {
+      "max": 20,
+      "notes": [
+        "Oracle assumptions have at least some documented or tested controls.",
+        "Role or admin boundaries have some visible coverage."
+      ],
+      "score": 9
+    },
+    "documentation_readiness": {
+      "max": 10,
+      "notes": [
+        "README detected.",
+        "Assumptions, invariants, or limitations are documented.",
+        "Deployment or role information appears in docs/code comments."
+      ],
+      "score": 8
+    },
+    "invariant_fuzz_readiness": {
+      "max": 20,
+      "notes": [],
+      "score": 0
+    },
+    "operational_admin_readiness": {
+      "max": 15,
+      "notes": [
+        "Access-control surface is visible.",
+        "Upgradeability is absent or has visible documentation/test terms.",
+        "Privileged setters or owner boundaries are visible for review."
+      ],
+      "score": 9
+    },
+    "repository_structure": {
+      "max": 15,
+      "notes": [
+        "Solidity sources detected.",
+        "Recognized build or analysis config detected.",
+        "Clear src/test/docs structure detected."
+      ],
+      "score": 12
+    },
+    "test_presence": {
+      "max": 20,
+      "notes": [
+        "Solidity test files detected.",
+        "Assert usage detected.",
+        "Foundry or Hardhat test environment detected.",
+        "Protocol-specific terms appear in the testable codebase."
+      ],
+      "score": 20
+    }
+  },
+  "semantic_lite": {
+    "contracts": [
+      {
+        "file": "src/DocsOnlyPlanning.sol",
+        "functions": [
+          {
+            "body_excerpt_hash": "3b6b7ce65fc05dbb",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 9,
+            "line_start": 7,
+            "modifiers": [],
+            "name": "readNote",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "note"
+            ],
+            "snippet": "",
+            "visibility": "unspecified",
+            "writes_state": []
+          }
+        ],
+        "inherits": [],
+        "kind": "contract",
+        "line_end": 10,
+        "line_start": 4,
+        "name": "DocsOnlyPlanning",
+        "state_variables": [
+          "note"
+        ]
+      },
+      {
+        "file": "src/RealOracleConsumer.sol",
+        "functions": [],
+        "inherits": [],
+        "kind": "interface",
+        "line_end": 9,
+        "line_start": 4,
+        "name": "AggregatorV3Interface",
+        "state_variables": []
+      },
+      {
+        "file": "src/RealOracleConsumer.sol",
+        "functions": [
+          {
+            "body_excerpt_hash": "23aae315229ace1b",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 27,
+            "line_start": 25,
+            "modifiers": [
+              "onlyOwner"
+            ],
+            "name": "setOracle",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "priceFeed"
+            ],
+            "snippet": "priceFeed = newFeed;",
+            "visibility": "external",
+            "writes_state": [
+              "priceFeed"
+            ]
+          },
+          {
+            "body_excerpt_hash": "c9c50d7288a849dd",
+            "calls": [
+              "latestRoundData",
+              "uint256"
+            ],
+            "external_calls": [],
+            "line_end": 34,
+            "line_start": 29,
+            "modifiers": [],
+            "name": "readPrice",
+            "oracle_calls": [
+              "latestRoundData"
+            ],
+            "payable": false,
+            "reads_state": [
+              "priceFeed"
+            ],
+            "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+            "visibility": "unspecified",
+            "writes_state": []
+          }
+        ],
+        "inherits": [],
+        "kind": "contract",
+        "line_end": 35,
+        "line_start": 11,
+        "name": "RealOracleConsumer",
+        "state_variables": [
+          "owner",
+          "priceFeed"
+        ]
+      }
+    ],
+    "enabled": true,
+    "signals": {
+      "contract_count": 3,
+      "function_count": 3,
+      "has_admin_setters": true,
+      "has_external_value_flow": false,
+      "has_fuzz_tests": false,
+      "has_invariant_tests": false,
+      "has_oracle_calls": true,
+      "has_reward_accounting": false,
+      "has_upgradeability": false,
+      "has_vault_functions": false,
+      "test_coverage": {
+        "access_control": [],
+        "oracle": [
+          "bounds",
+          "decimals",
+          "oracle",
+          "price",
+          "stale",
+          "updatedat"
+        ],
+        "reentrancy": [],
+        "reward": [],
+        "vault": []
+      }
+    },
+    "test_files": [
+      {
+        "coverage_terms": {
+          "access_control": [],
+          "oracle": [
+            "bounds",
+            "decimals",
+            "oracle",
+            "price",
+            "stale",
+            "updatedat"
+          ],
+          "reentrancy": [],
+          "reward": [],
+          "vault": []
+        },
+        "file": "test/RealOracleConsumer.t.sol",
+        "fuzz_functions": [],
+        "invariant_functions": [],
+        "test_functions": [
+          "testOracleDecimalsBoundsPlanning",
+          "testStaleOracleUpdatedAtHandlingIsDocumented"
+        ]
+      }
+    ],
+    "warnings": []
+  },
+  "signals": {
+    "access_control": {
+      "counts": {
+        "onlyOwner": 2,
+        "owner": 4,
+        "setOracle": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/RealOracleConsumer.sol"
+      ],
+      "terms": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ]
+    },
+    "access_upgrade_rule_pack": {
+      "counts": {
+        "onlyOwner": 2,
+        "owner": 4,
+        "setOracle": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/RealOracleConsumer.sol"
+      ],
+      "terms": [
+        "onlyOwner",
+        "owner",
+        "setOracle"
+      ]
+    },
+    "accounting_complexity": {
+      "counts": {
+        "decimals": 2,
+        "reward": 1
+      },
+      "file_count": 2,
+      "files": [
+        "src/DocsOnlyPlanning.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "terms": [
+        "decimals",
+        "reward"
+      ]
+    },
+    "amm": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "bridge_cross_chain": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "governance": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "lending": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "oracle": {
+      "counts": {
+        "AggregatorV3Interface": 4,
+        "answer": 5,
+        "answeredInRound": 1,
+        "decimals": 2,
+        "latestRoundData": 2,
+        "maxPrice": 2,
+        "minPrice": 2,
+        "oracle": 1,
+        "priceFeed": 4,
+        "roundId": 1,
+        "setOracle": 2,
+        "updatedAt": 6
+      },
+      "file_count": 3,
+      "files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "terms": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "latestRoundData",
+        "maxPrice",
+        "minPrice",
+        "oracle",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ]
+    },
+    "oracle_rule_pack": {
+      "counts": {
+        "AggregatorV3Interface": 4,
+        "answer": 5,
+        "answeredInRound": 1,
+        "decimals": 2,
+        "latestRoundData": 2,
+        "maxPrice": 2,
+        "minPrice": 2,
+        "oracle": 1,
+        "priceFeed": 4,
+        "roundId": 1,
+        "setOracle": 1,
+        "updatedAt": 6
+      },
+      "file_count": 3,
+      "files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "terms": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "latestRoundData",
+        "maxPrice",
+        "minPrice",
+        "oracle",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ]
+    },
+    "reentrancy_rule_pack": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "reentrancy_value_flow": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "reward_rule_pack": {
+      "counts": {
+        "reward": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/DocsOnlyPlanning.sol"
+      ],
+      "terms": [
+        "reward"
+      ]
+    },
+    "staking_rewards": {
+      "counts": {
+        "reward": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/DocsOnlyPlanning.sol"
+      ],
+      "terms": [
+        "reward"
+      ]
+    },
+    "upgradeability": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_accounting": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_accounting_risk": {
+      "counts": {
+        "decimals": 2
+      },
+      "file_count": 1,
+      "files": [
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "terms": [
+        "decimals"
+      ]
+    },
+    "vault_admin_ops": {
+      "counts": {
+        "setOracle": 1
+      },
+      "file_count": 1,
+      "files": [
+        "src/RealOracleConsumer.sol"
+      ],
+      "terms": [
+        "setOracle"
+      ]
+    },
+    "vault_erc4626": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_pricing": {
+      "counts": {
+        "decimals": 2,
+        "latestRoundData": 2,
+        "oracle": 1,
+        "priceFeed": 4
+      },
+      "file_count": 3,
+      "files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "terms": [
+        "decimals",
+        "latestRoundData",
+        "oracle",
+        "priceFeed"
+      ]
+    },
+    "vault_strategy": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    },
+    "vault_withdrawal_liquidity": {
+      "counts": {},
+      "file_count": 0,
+      "files": [],
+      "terms": []
+    }
+  },
+  "slither": {
+    "available": false,
+    "detectors": [],
+    "enabled": false,
+    "source": "disabled",
+    "warnings": []
+  },
+  "suggested_invariants": [
+    {
+      "category": "oracle",
+      "description": "Stale oracle rounds should be rejected or handled according to documented policy.",
+      "name": "stale price rejection"
+    },
+    {
+      "category": "oracle",
+      "description": "Price decimals should be normalized consistently before accounting decisions.",
+      "name": "decimals normalization"
+    },
+    {
+      "category": "oracle",
+      "description": "Outlier prices should hit documented bounds or review paths.",
+      "name": "price bounds"
+    },
+    {
+      "category": "oracle",
+      "description": "Spot price dependence should be bounded by TWAP, sanity checks, or explicit assumptions.",
+      "name": "TWAP or sanity check"
+    },
+    {
+      "category": "oracle",
+      "description": "Only authorized roles should change oracle configuration.",
+      "name": "oracle update access control"
+    },
+    {
+      "category": "staking",
+      "description": "Total claimed plus remaining claimable should not exceed funded rewards beyond rounding.",
+      "name": "reward conservation"
+    },
+    {
+      "category": "staking",
+      "description": "Users should not claim more than their funded and accrued share.",
+      "name": "no overclaim"
+    },
+    {
+      "category": "staking",
+      "description": "Reward indexes should be monotonic and supply-aware.",
+      "name": "index monotonicity"
+    },
+    {
+      "category": "staking",
+      "description": "Stake and unstake flows should preserve balances and reward accounting.",
+      "name": "stake/unstake roundtrip"
+    },
+    {
+      "category": "staking",
+      "description": "Small balances and precision edges should not create systematic reward drift.",
+      "name": "reward accounting precision"
+    },
+    {
+      "category": "access control",
+      "description": "Unauthorized users cannot call privileged setters or emergency functions.",
+      "name": "unauthorized role rejection"
+    },
+    {
+      "category": "access control",
+      "description": "Owner/admin operations cannot silently break accounting invariants unless explicitly trusted and documented.",
+      "name": "admin cannot bypass accounting"
+    },
+    {
+      "category": "access control",
+      "description": "Pause blocks documented risky flows and preserves expected recovery paths.",
+      "name": "pause blocks risky flows"
+    },
+    {
+      "category": "access control",
+      "description": "Upgrade authorization works as intended and cannot be triggered by untrusted callers.",
+      "name": "upgrade authorization"
+    }
+  ],
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "informational": 0,
+    "low": 4,
+    "medium": 2,
+    "suppressed": 0,
+    "total_readiness_gaps": 6
+  },
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "vault_rule_pack": {
+    "coverage": {
+      "decimals_rounding": true,
+      "deposit": false,
+      "donation_inflation": false,
+      "emergency_pause": false,
+      "fee": false,
+      "fuzz": false,
+      "invariant": false,
+      "mint": false,
+      "oracle_pricing": false,
+      "preview_functions": false,
+      "roundtrip": false,
+      "share_conversion": false,
+      "strategy_loss": false,
+      "total_assets": false,
+      "withdraw": false,
+      "withdrawal_lifecycle": false
+    },
+    "covered_count": 1,
+    "matched_terms": {
+      "decimals_rounding": [
+        "decimals"
+      ],
+      "deposit": [],
+      "donation_inflation": [],
+      "emergency_pause": [],
+      "fee": [],
+      "fuzz": [],
+      "invariant": [],
+      "mint": [],
+      "oracle_pricing": [],
+      "preview_functions": [],
+      "roundtrip": [],
+      "share_conversion": [],
+      "strategy_loss": [],
+      "total_assets": [],
+      "withdraw": [],
+      "withdrawal_lifecycle": []
+    },
+    "test_files_considered": 1,
+    "total_checks": 16
+  },
+  "version": "0.6.0"
+}

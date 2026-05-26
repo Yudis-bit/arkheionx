@@ -6,19 +6,30 @@
     "new": 0,
     "resolved": 0,
     "suppressed": 0,
-    "unchanged": 2
+    "unchanged": 5
   },
   "new": [],
   "resolved": [],
   "suppressed_findings": [],
   "unchanged": [
     {
+      "affected_contracts": [
+        "MiniVault"
+      ],
       "affected_files": [
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "totalAssets",
+        "withdraw"
+      ],
       "category": "vault-accounting",
-      "confidence": "high",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
       "detected_signals": [
         "assets",
@@ -32,10 +43,63 @@
         "totalSupply",
         "withdraw"
       ],
-      "fingerprint": "9421bc5897caf05fb6b2bd6d",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "totalAssets",
+          "line": 43,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToShares",
+          "line": 47,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToAssets",
+          "line": 54,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/MiniVault.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "0dccaf3c13545c7e8d43b993",
       "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
       "id": "ARK-VLT-001",
-      "priority": "High readiness gap",
+      "priority": "Medium readiness gap",
       "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
       "recommended_defensive_checks": [
         "deposit/withdraw roundtrip",
@@ -44,7 +108,7 @@
         "rounding direction tests",
         "totalAssets external dependency tests"
       ],
-      "severity": "High readiness gap",
+      "severity": "Medium readiness gap",
       "suggested_tests": [
         "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
       ],
@@ -58,17 +122,81 @@
       "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
     },
     {
+      "affected_contracts": [
+        "MiniVault"
+      ],
       "affected_files": [
         "src/MiniVault.sol",
         "test/MiniVault.t.sol"
       ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "totalAssets",
+        "withdraw"
+      ],
       "category": "vault-accounting",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
       "detected_signals": [
         "fee"
       ],
-      "fingerprint": "1b5cbd6e82091eea30e0f4c1",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "totalAssets",
+          "line": 43,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToShares",
+          "line": 47,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToAssets",
+          "line": 54,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/MiniVault.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "90fe322f47f8eca0090e0355",
       "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
       "id": "ARK-VLT-007",
       "priority": "Medium readiness gap",
@@ -90,6 +218,300 @@
       ],
       "title": "Fee logic without fee accounting tests",
       "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+    },
+    {
+      "affected_contracts": [
+        "MiniVault"
+      ],
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "affected_functions": [
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "setFee",
+          "line": 95,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "pause",
+          "line": 101,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "unpause",
+          "line": 106,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: owner, prank.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/MiniVault.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, pause, setFee, unpause",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/MiniVault.sol in `setFee`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "7ab76a5b5fecbd04052b1270",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_contracts": [
+        "MiniVault"
+      ],
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "affected_functions": [
+        "deposit",
+        "withdraw"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/MiniVault.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        },
+        {
+          "file": "test/MiniVault.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/MiniVault.sol in `deposit`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "28c32f39fe406951065b4b38",
+      "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+      "recommended_defensive_checks": [
+        "state update before external call",
+        "reentrant receiver mock",
+        "failed external call behavior",
+        "single-claim guarantees"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review",
+      "why_it_matters": "External calls can hand control to untrusted code before accounting reaches a safe state."
+    },
+    {
+      "affected_contracts": [
+        "MiniVault"
+      ],
+      "affected_files": [
+        "src/MiniVault.sol",
+        "test/MiniVault.t.sol"
+      ],
+      "affected_functions": [
+        "deposit",
+        "withdraw"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/MiniVault.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        },
+        {
+          "file": "test/MiniVault.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/MiniVault.sol in `deposit`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "49e5e1d2a4d311133f75bc42",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     }
   ],
   "warnings": []

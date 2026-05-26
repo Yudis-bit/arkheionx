@@ -15,7 +15,7 @@
           "new": 0,
           "resolved": 0,
           "suppressed": 0,
-          "unchanged": 2
+          "unchanged": 5
         },
         "not_formal_audit": true,
         "protocol_type": "vault",
@@ -35,7 +35,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 43
                 }
               }
             }
@@ -44,16 +44,29 @@
             "text": "Vault accounting without invariant tests: Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "9421bc5897caf05fb6b2bd6d"
+            "arkheionxFingerprint": "0dccaf3c13545c7e8d43b993"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "deposit",
+              "totalAssets",
+              "withdraw"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
@@ -76,7 +89,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 43
                 }
               }
             }
@@ -85,12 +98,25 @@
             "text": "Fee logic without fee accounting tests: Add deposit, withdrawal, management, and performance fee tests where relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "1b5cbd6e82091eea30e0f4c1"
+            "arkheionxFingerprint": "90fe322f47f8eca0090e0355"
           },
           "properties": {
+            "affected_functions": [
+              "convertToAssets",
+              "convertToShares",
+              "deposit",
+              "totalAssets",
+              "withdraw"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
-            "confidence": "low",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -105,6 +131,166 @@
             ]
           },
           "ruleId": "ARK-VLT-007"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/MiniVault.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 95
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Admin role concentration not documented: Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "7ab76a5b5fecbd04052b1270"
+          },
+          "properties": {
+            "affected_functions": [
+              "pause",
+              "setFee",
+              "unpause"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "access-control",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
+            "historical_pattern_similarity": "Maps to operational control readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Add a role matrix to docs and unit tests for critical roles."
+            ],
+            "tags": [
+              "access-control-review",
+              "documentation-readiness",
+              "access-control-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ACC-003"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/MiniVault.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 61
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Value flow with external calls needs reentrancy review: Review state ordering and add local reentrant receiver tests around every value-flow path. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "28c32f39fe406951065b4b38"
+          },
+          "properties": {
+            "affected_functions": [
+              "deposit",
+              "withdraw"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reentrancy-value-flow",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
+            "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "High readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+            ],
+            "tags": [
+              "reentrancy-review",
+              "value-flow",
+              "reentrancy-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-REENT-001"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/MiniVault.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 61
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "External call path without documented ordering assumptions: Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "49e5e1d2a4d311133f75bc42"
+          },
+          "properties": {
+            "affected_functions": [
+              "deposit",
+              "withdraw"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reentrancy-value-flow",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
+            "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+            ],
+            "tags": [
+              "reentrancy-review",
+              "documentation-readiness",
+              "reentrancy-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-REENT-004"
         }
       ],
       "tool": {
@@ -160,9 +346,84 @@
               "shortDescription": {
                 "text": "Fee logic without fee accounting tests"
               }
+            },
+            {
+              "fullDescription": {
+                "text": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- role matrix\n- owner powers\n- timelock assumptions\n- multisig assumptions",
+                "text": "Defensive readiness checks:\n- role matrix\n- owner powers\n- timelock assumptions\n- multisig assumptions"
+              },
+              "id": "ARK-ACC-003",
+              "name": "admin-role-concentration-not-documented",
+              "properties": {
+                "category": "access-control",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "access-control-review",
+                  "documentation-readiness",
+                  "access-control-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Admin role concentration not documented"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- state update before external call\n- reentrant receiver mock\n- failed external call behavior\n- single-claim guarantees",
+                "text": "Defensive readiness checks:\n- state update before external call\n- reentrant receiver mock\n- failed external call behavior\n- single-claim guarantees"
+              },
+              "id": "ARK-REENT-001",
+              "name": "value-flow-with-external-calls-needs-reentrancy-review",
+              "properties": {
+                "category": "reentrancy-value-flow",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "reentrancy-review",
+                  "value-flow",
+                  "reentrancy-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Value flow with external calls needs reentrancy review"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior",
+                "text": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior"
+              },
+              "id": "ARK-REENT-004",
+              "name": "external-call-path-without-documented-ordering-assumptions",
+              "properties": {
+                "category": "reentrancy-value-flow",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "reentrancy-review",
+                  "documentation-readiness",
+                  "reentrancy-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "External call path without documented ordering assumptions"
+              }
             }
           ],
-          "semanticVersion": "0.4.0"
+          "semanticVersion": "0.6.0"
         }
       }
     }

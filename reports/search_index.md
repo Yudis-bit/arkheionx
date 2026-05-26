@@ -14,7 +14,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.5.0, issue workflow, rule packs, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.6.0, semantic-lite, false-positive reduction, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -24,6 +24,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Arkheionx config | [`docs/ARKHEIONX_CONFIG.md`](../docs/ARKHEIONX_CONFIG.md) | config, suppression, ignore paths |
 | SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
 | Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
+| Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
+| Slither integration | [`docs/SLITHER_INTEGRATION.md`](../docs/SLITHER_INTEGRATION.md) | Slither, Slither JSON, local static analysis |
+| False-positive reduction | [`docs/FALSE_POSITIVE_REDUCTION.md`](../docs/FALSE_POSITIVE_REDUCTION.md) | false positives, confidence scoring, keyword-only downgrade |
 | CI gating | [`docs/CI_GATING.md`](../docs/CI_GATING.md) | fail threshold, fail-score-below, CI readiness gate |
 | Readiness score | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) | score bands, audit blockers, invariant testing |
 | Vault Rule Pack | [`docs/VAULT_RULE_PACK.md`](../docs/VAULT_RULE_PACK.md) | ERC4626, vault accounting, share accounting |
@@ -42,6 +45,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Mini-vault fixture | [`examples/mini-vault/README.md`](../examples/mini-vault/README.md) | vault, fixture, scanner demo |
 | Vault-risk fixture | [`examples/vault-risk-fixture/README.md`](../examples/vault-risk-fixture/README.md) | ERC4626, strategy vault, Vault Rule Pack |
 | Oracle staking fixture | [`examples/oracle-staking-fixture/README.md`](../examples/oracle-staking-fixture/README.md) | oracle, staking, reward rule pack |
+| Semantic-lite fixture | [`examples/semantic-lite-fixture/README.md`](../examples/semantic-lite-fixture/README.md) | semantic-lite, false-positive reduction, evidence |
 | Sample Markdown report | [`examples/reports/mini-vault-pre-audit-report.md`](../examples/reports/mini-vault-pre-audit-report.md) | readiness report, vault, example |
 | Vault-risk Markdown report | [`examples/reports/vault-risk-fixture-pre-audit-report.md`](../examples/reports/vault-risk-fixture-pre-audit-report.md) | vault readiness, ERC4626, readiness gaps |
 | Sample JSON report | [`examples/reports/mini-vault-pre-audit-report.json`](../examples/reports/mini-vault-pre-audit-report.json) | json-output, automation, example |
@@ -105,6 +109,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `access control rule pack` | ARK-ACC, upgradeability rule pack, ARK-UPG, privileged setters | rule pack | role-boundary tests, initializer tests, upgrade authorization, emergency constraints | access-control-rule-pack, upgradeability, admin-risk |
 | `reentrancy value flow rule pack` | ARK-REENT, external call review, claim flow tests, callback path | rule pack | state transition tests, double claim prevention, callback receiver mock, external call ordering | reentrancy-rule-pack, value-flow, defensive-review |
 | `reward accounting rule pack` | ARK-RWD, staking rule pack, rewardPerToken, accumulator | rule pack | reward conservation, no overclaim, accumulator monotonicity, emission update constraints | reward-accounting-rule-pack, staking, precision |
+| `semantic-lite analysis` | Solidity structure extraction, semantic lite, function evidence, local parser | analysis quality | contracts, functions, modifiers, state variables, test coverage mapping | semantic-lite, solidity-structure, false-positive-reduction |
+| `evidence-based findings` | finding evidence, confidence reason, detection sources, affected functions | analysis quality | semantic-lite evidence, test coverage evidence, Slither evidence, keyword evidence | finding-evidence, confidence-scoring, readiness-gap |
+| `Slither integration` | Slither JSON, slither analyzer, optional Slither, local Slither | analysis quality | --slither, --slither-json, --slither-output, --slither-strict | slither-integration, slither-json, local-static-analysis |
+| `false positive reduction` | keyword-only downgrade, low-confidence findings, noise reduction, confidence scoring | analysis quality | downgrade_keyword_only, min_confidence_for_issue_plan, test coverage mapping | false-positive-reduction, low-confidence, evidence-based |
 
 ## Historical Memory Index
 
@@ -175,6 +183,20 @@ reentrancy value flow rule pack
 reward accounting rule pack
 staking rule pack
 issue plan JSON
+semantic-lite analysis
+Solidity structure extraction
+false positive reduction
+evidence-based findings
+confidence scoring
+detection sources
+Slither integration
+Slither JSON
+test coverage mapping
+affected functions
+SARIF locations
+finding evidence
+low-confidence findings
+keyword-only downgrade
 oracle manipulation
 flash loan price manipulation
 reentrancy

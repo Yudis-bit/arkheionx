@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/vault-risk-fixture`
-- Generated at: `2026-05-25T18:53:56+00:00`
+- Generated at: `2026-05-25T19:29:13+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `manual`
 - Files scanned: `5`
-- Scanner version: `0.5.0`
+- Scanner version: `0.6.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -21,6 +21,18 @@
 
 This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.
 
+## Analysis Quality
+
+| Source                   | Status   |
+| ------------------------ | -------- |
+| Keyword scan             | enabled  |
+| Semantic-lite extraction | enabled  |
+| Semantic contracts       | 4        |
+| Semantic test files      | 1        |
+| Slither                  | disabled |
+| Slither detectors        | 0        |
+| Test coverage mapping    | enabled  |
+
 ## Executive Summary
 
 - Readiness score: **58/100**
@@ -28,11 +40,11 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 - Active readiness gaps: `16`
 - Suppressed readiness gaps: `0`
 - Top readiness gaps:
-  - **ARK-ORC-001 (High readiness gap):** Oracle-dependent vault without stale-price or bounds tests - Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.
   - **ARK-REENT-001 (High readiness gap):** Value flow with external calls needs reentrancy review - Review state ordering and add local reentrant receiver tests around every value-flow path.
-  - **ARK-VLT-001 (High readiness gap):** Vault accounting without invariant tests - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
-  - **ARK-VLT-002 (High readiness gap):** ERC4626-like interface without preview function tests - Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.
-  - **ARK-VLT-003 (High readiness gap):** Shares/assets conversion without rounding tests - Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.
+  - **ARK-ACC-001 (Medium readiness gap):** Privileged setters without role-boundary tests - Add tests proving unauthorized users cannot call privileged setters or role-management functions.
+  - **ARK-ORC-001 (Medium readiness gap):** Oracle-dependent vault without stale-price or bounds tests - Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.
+  - **ARK-ORC-002 (Medium readiness gap):** Oracle decimals or normalization not covered by tests - Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions.
+  - **ARK-ORC-004 (Medium readiness gap):** Oracle setter/admin path without role-boundary tests - Add tests proving only documented roles can update oracle configuration.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
@@ -62,13 +74,13 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 ## Top Readiness Gaps
 
-| ID            | Priority           | Category              | Title                                                      |
-| ------------- | ------------------ | --------------------- | ---------------------------------------------------------- |
-| ARK-ORC-001   | High readiness gap | oracle-pricing        | Oracle-dependent vault without stale-price or bounds tests |
-| ARK-REENT-001 | High readiness gap | reentrancy-value-flow | Value flow with external calls needs reentrancy review     |
-| ARK-VLT-001   | High readiness gap | vault-accounting      | Vault accounting without invariant tests                   |
-| ARK-VLT-002   | High readiness gap | vault-accounting      | ERC4626-like interface without preview function tests      |
-| ARK-VLT-003   | High readiness gap | vault-accounting      | Shares/assets conversion without rounding tests            |
+| ID            | Priority             | Category              | Title                                                      |
+| ------------- | -------------------- | --------------------- | ---------------------------------------------------------- |
+| ARK-REENT-001 | High readiness gap   | reentrancy-value-flow | Value flow with external calls needs reentrancy review     |
+| ARK-ACC-001   | Medium readiness gap | access-control        | Privileged setters without role-boundary tests             |
+| ARK-ORC-001   | Medium readiness gap | oracle-pricing        | Oracle-dependent vault without stale-price or bounds tests |
+| ARK-ORC-002   | Medium readiness gap | oracle-pricing        | Oracle decimals or normalization not covered by tests      |
+| ARK-ORC-004   | Medium readiness gap | oracle-pricing        | Oracle setter/admin path without role-boundary tests       |
 
 ## Baseline Diff
 
@@ -416,9 +428,18 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
 
 ### ARK-VLT-001 - Vault accounting without invariant tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `asset()`
@@ -474,9 +495,18 @@ Search tags: `vault-accounting, invariant-testing, erc4626`
 
 ### ARK-VLT-002 - ERC4626-like interface without preview function tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `asset()`
@@ -530,9 +560,18 @@ Search tags: `erc4626, preview-functions, vault-accounting`
 
 ### ARK-VLT-003 - Shares/assets conversion without rounding tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `asset()`
@@ -587,9 +626,18 @@ Search tags: `share-accounting, rounding, precision`
 
 ### ARK-VLT-004 - totalAssets external dependency without manipulation-resistance tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `allocate`
@@ -644,9 +692,18 @@ Search tags: `totalAssets, strategy-accounting, oracle-risk`
 
 ### ARK-VLT-005 - Strategy accounting without gain/loss tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-strategy`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `allocate`
@@ -693,9 +750,18 @@ Search tags: `strategy-accounting, gain-loss, vault-lifecycle`
 
 ### ARK-VLT-006 - Withdrawal queue/cooldown without lifecycle tests
 
-- Priority: `High readiness gap`
+- Priority: `Medium readiness gap`
 - Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-withdrawal`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `cancelWithdraw`
@@ -738,9 +804,17 @@ Search tags: `withdrawal-queue, liquidity, vault-lifecycle`
 
 ### ARK-ORC-001 - Oracle-dependent vault without stale-price or bounds tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
+
+Evidence:
+- `src/VaultRiskFixture.sol:242` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
+- `test/documentation coverage`: Matching test coverage terms detected: price, updatedat.
+- `src/VaultRiskFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
+- `test/VaultRiskFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
 
 Detected signals:
 - `answer`
@@ -786,7 +860,16 @@ Search tags: `oracle-risk, vault-pricing, pool-price`
 
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `depositFee`
@@ -827,8 +910,17 @@ Search tags: `fee-accounting, vault-accounting`
 ### ARK-VLT-008 - Pause/emergency controls without operational tests
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-operations`
+
+Evidence:
+- `src/VaultRiskFixture.sol:63` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/VaultRiskFixture.sol:69` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/VaultRiskFixture.sol:76` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/VaultRiskFixture.sol:83` in `previewDeposit`: Solidity function shape matches this readiness finding. Snippet: `previewDeposit`
+- `src/VaultRiskFixture.sol:87` in `previewMint`: Solidity function shape matches this readiness finding. Snippet: `previewMint`
 
 Detected signals:
 - `emergencyWithdraw`
@@ -877,8 +969,16 @@ Search tags: `pause, emergency-controls, vault-operations`
 ### ARK-ORC-002 - Oracle decimals or normalization not covered by tests
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
+
+Evidence:
+- `src/VaultRiskFixture.sol:242` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
+- `test/documentation coverage`: Matching test coverage terms detected: price, updatedat.
+- `src/VaultRiskFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
+- `test/VaultRiskFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
 
 Detected signals:
 - `answer`
@@ -922,8 +1022,16 @@ Search tags: `oracle-risk, decimals, precision, oracle-rule-pack`
 ### ARK-ORC-004 - Oracle setter/admin path without role-boundary tests
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
+
+Evidence:
+- `src/VaultRiskFixture.sol:242` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
+- `test/documentation coverage`: Matching test coverage terms detected: price, updatedat.
+- `src/VaultRiskFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
+- `test/VaultRiskFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
 
 Detected signals:
 - `answer`
@@ -966,8 +1074,17 @@ Search tags: `oracle-risk, access-control-review, oracle-rule-pack`
 ### ARK-ACC-001 - Privileged setters without role-boundary tests
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `access-control`
+
+Evidence:
+- `src/VaultRiskFixture.sol:168` in `allocate`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:172` in `withdrawFromStrategy`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:176` in `harvest`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:185` in `rebalance`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:187` in `report`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
 
 Detected signals:
 - `emergencyWithdraw`
@@ -1014,8 +1131,17 @@ Search tags: `access-control-review, admin-risk, access-control-rule-pack`
 ### ARK-ACC-003 - Admin role concentration not documented
 
 - Priority: `Low readiness gap`
-- Confidence: `high`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `access-control`
+
+Evidence:
+- `src/VaultRiskFixture.sol:168` in `allocate`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:172` in `withdrawFromStrategy`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:176` in `harvest`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:185` in `rebalance`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/VaultRiskFixture.sol:187` in `report`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
 
 Detected signals:
 - `emergencyWithdraw`
@@ -1062,8 +1188,17 @@ Search tags: `access-control-review, documentation-readiness, access-control-rul
 ### ARK-REENT-001 - Value flow with external calls needs reentrancy review
 
 - Priority: `High readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/VaultRiskFixture.sol:115` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/VaultRiskFixture.sol:124` in `mint`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/VaultRiskFixture.sol:131` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets - feeAssets), "TRANSFER_FAILED");`
+- `src/VaultRiskFixture.sol:148` in `requestWithdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(balanceOf[msg.sender] >= shares, "INSUFFICIENT_SHARES");`
+- `src/VaultRiskFixture.sol:154` in `claimWithdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(msg.sender, assets), "TRANSFER_FAILED");`
 
 Detected signals:
 - `redeem`
@@ -1103,8 +1238,17 @@ Search tags: `reentrancy-review, value-flow, reentrancy-rule-pack`
 ### ARK-REENT-004 - External call path without documented ordering assumptions
 
 - Priority: `Low readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/VaultRiskFixture.sol:115` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/VaultRiskFixture.sol:124` in `mint`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/VaultRiskFixture.sol:131` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets - feeAssets), "TRANSFER_FAILED");`
+- `src/VaultRiskFixture.sol:148` in `requestWithdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(balanceOf[msg.sender] >= shares, "INSUFFICIENT_SHARES");`
+- `src/VaultRiskFixture.sol:154` in `claimWithdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(msg.sender, assets), "TRANSFER_FAILED");`
 
 Detected signals:
 - `redeem`
@@ -1143,8 +1287,16 @@ Search tags: `reentrancy-review, documentation-readiness, reentrancy-rule-pack`
 ### ARK-RWD-004 - Lock/cooldown reward lifecycle not tested
 
 - Priority: `Low readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `reward-accounting`
+
+Evidence:
+- `src/VaultRiskFixture.sol:154` in `claimWithdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(msg.sender, assets), "TRANSFER_FAILED");`
+- `test/documentation coverage`: No semantic-lite reward test coverage terms were detected.
+- `src/VaultRiskFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `cooldown, shares, withdraw`
+- `test/VaultRiskFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `cooldown, shares, withdraw`
 
 Detected signals:
 - `cooldown`

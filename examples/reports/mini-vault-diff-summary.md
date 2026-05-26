@@ -2,28 +2,31 @@
 
 Score: **73/100** - Improving
 Protocol type: `vault`
-Top readiness gaps: `2`
+Top readiness gaps: `5`
 
 ## Top Gaps
 
-| ID          | Priority             | Title                                    |
-| ----------- | -------------------- | ---------------------------------------- |
-| ARK-VLT-001 | High readiness gap   | Vault accounting without invariant tests |
-| ARK-VLT-007 | Medium readiness gap | Fee logic without fee accounting tests   |
+| ID            | Priority             | Title                                                      |
+| ------------- | -------------------- | ---------------------------------------------------------- |
+| ARK-REENT-001 | High readiness gap   | Value flow with external calls needs reentrancy review     |
+| ARK-VLT-001   | Medium readiness gap | Vault accounting without invariant tests                   |
+| ARK-VLT-007   | Medium readiness gap | Fee logic without fee accounting tests                     |
+| ARK-ACC-003   | Low readiness gap    | Admin role concentration not documented                    |
+| ARK-REENT-004 | Low readiness gap    | External call path without documented ordering assumptions |
 
 ## Counts
 
 - Critical: `0`
 - High: `1`
-- Medium: `1`
-- Low: `0`
+- Medium: `2`
+- Low: `2`
 - Suppressed: `0`
 
 ## Baseline Diff
 
 - New readiness gaps: `0`
 - Resolved readiness gaps: `0`
-- Unchanged readiness gaps: `2`
+- Unchanged readiness gaps: `5`
 - Changed readiness gaps: `0`
 - Diff report: `examples/reports/mini-vault-diff.md`
 

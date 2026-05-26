@@ -6,16 +6,6 @@ Score: `73/100`
 
 ## High priority readiness gaps
 
-- [ ] ARK-VLT-001 - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-001 - Vault accounting without invariant tests`
-  - Suggested labels: `arkheionx, erc4626, high-readiness-gap, invariant-testing, pre-audit-readiness, vault-accounting`
-  - Suggested tests:
-    - Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
-    - deposit/withdraw roundtrip
-    - convertToShares/convertToAssets consistency
-    - donation/inflation resistance
-    - rounding direction tests
-    - totalAssets external dependency tests
 - [ ] ARK-REENT-001 - Review state ordering and add local reentrant receiver tests around every value-flow path.
   - Suggested issue title: `[Arkheionx][High] ARK-REENT-001 - Value flow with external calls needs reentrancy review`
   - Suggested labels: `arkheionx, high-readiness-gap, pre-audit-readiness, reentrancy-review, reentrancy-rule-pack, reentrancy-value-flow, value-flow`
@@ -28,6 +18,16 @@ Score: `73/100`
 
 ## Medium priority readiness gaps
 
+- [ ] ARK-VLT-001 - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-001 - Vault accounting without invariant tests`
+  - Suggested labels: `arkheionx, erc4626, invariant-testing, medium-readiness-gap, pre-audit-readiness, vault-accounting`
+  - Suggested tests:
+    - Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
+    - deposit/withdraw roundtrip
+    - convertToShares/convertToAssets consistency
+    - donation/inflation resistance
+    - rounding direction tests
+    - totalAssets external dependency tests
 - [ ] ARK-VLT-007 - Add deposit, withdrawal, management, and performance fee tests where relevant.
   - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-007 - Fee logic without fee accounting tests`
   - Suggested labels: `arkheionx, fee-accounting, medium-readiness-gap, pre-audit-readiness, vault-accounting`

@@ -32,6 +32,7 @@ Arkheionx helps turn local repository signals into a Markdown readiness report:
 - historical exploit-pattern similarity;
 - generated issue checklist;
 - generated GitHub issue plan for remediation tracking;
+- confidence reasons and evidence summaries for findings;
 - prioritized fix checklist after manual review;
 - audit preparation notes;
 - formal audit recommendation.
@@ -60,7 +61,7 @@ Value:
 Use it from any authorized repository:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
   with:
     root: "."
     protocol-type: "auto"
@@ -86,6 +87,7 @@ What you receive:
 - baseline/diff interpretation when previous scan artifacts are available;
 - review of the generated issue checklist;
 - review of the generated issue plan;
+- review of semantic-lite evidence and confidence reasons;
 - prioritized fix checklist;
 - Markdown report suitable for internal planning;
 - clear limitations and formal audit recommendation.
@@ -133,6 +135,7 @@ What you receive:
 - baseline/diff review to track remediation progress across scans;
 - generated GitHub issue checklist converted into a prioritized remediation plan;
 - generated issue plan reviewed and organized into owner-ready tasks;
+- evidence-based prioritization using affected files/functions when available;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 

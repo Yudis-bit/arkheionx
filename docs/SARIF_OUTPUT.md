@@ -23,9 +23,17 @@ does not confirm exploitable vulnerabilities.
   - `confidence`
   - `historical_pattern_similarity`
   - `suggested_tests`
+  - `confidence_reason`
+  - `detection_sources`
+  - `evidence_count`
+  - `affected_functions`
 
 Suppressed findings are not emitted as normal SARIF results. Suppression counts
 and suppressed IDs appear in run properties.
+
+v0.6.0 locations prefer semantic-lite evidence first, optional Slither evidence
+second, affected files third, and README fallback only when no code evidence is
+available.
 
 ## Local Command
 
@@ -59,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           protocol-type: auto
           output: ARKHEIONX_PRE_AUDIT_REPORT.md
@@ -76,8 +84,9 @@ release.
 
 ## Limitations
 
-- Locations are heuristic and point to the first affected file when available.
-- Arkheionx does not perform semantic call graph analysis yet.
+- Locations prefer semantic-lite or optional Slither evidence when available,
+  then fall back to affected files.
+- Arkheionx does not perform a full semantic Solidity call graph.
 - GitHub Code Scanning display language may look security-oriented, but
   Arkheionx SARIF results remain pre-audit readiness findings.
 - Upload requires `security-events: write`.

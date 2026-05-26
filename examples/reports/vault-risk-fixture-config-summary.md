@@ -6,20 +6,20 @@ Top readiness gaps: `5`
 
 ## Top Gaps
 
-| ID          | Priority           | Title                                                                 |
-| ----------- | ------------------ | --------------------------------------------------------------------- |
-| ARK-ORC-001 | High readiness gap | Oracle-dependent vault without stale-price or bounds tests            |
-| ARK-VLT-002 | High readiness gap | ERC4626-like interface without preview function tests                 |
-| ARK-VLT-003 | High readiness gap | Shares/assets conversion without rounding tests                       |
-| ARK-VLT-004 | High readiness gap | totalAssets external dependency without manipulation-resistance tests |
-| ARK-VLT-005 | High readiness gap | Strategy accounting without gain/loss tests                           |
+| ID            | Priority             | Title                                                      |
+| ------------- | -------------------- | ---------------------------------------------------------- |
+| ARK-REENT-001 | High readiness gap   | Value flow with external calls needs reentrancy review     |
+| ARK-ACC-001   | Medium readiness gap | Privileged setters without role-boundary tests             |
+| ARK-ORC-001   | Medium readiness gap | Oracle-dependent vault without stale-price or bounds tests |
+| ARK-ORC-002   | Medium readiness gap | Oracle decimals or normalization not covered by tests      |
+| ARK-ORC-004   | Medium readiness gap | Oracle setter/admin path without role-boundary tests       |
 
 ## Counts
 
 - Critical: `0`
-- High: `6`
-- Medium: `2`
-- Low: `0`
+- High: `1`
+- Medium: `11`
+- Low: `3`
 - Suppressed: `1`
 
 ## Outputs

@@ -196,6 +196,16 @@ oracle rule pack
 access control rule pack
 reentrancy value flow rule pack
 reward accounting rule pack
+semantic-lite analysis
+Solidity structure extraction
+evidence-based findings
+confidence scoring
+detection sources
+Slither integration
+Slither JSON
+false positive reduction
+keyword-only downgrade
+low-confidence findings
 ```
 
 ## Search By Monetization Or Services
@@ -237,6 +247,9 @@ rg -n "SARIF|Code Scanning|baseline diff|finding fingerprint|fail-score-below" .
 rg -n "PR readiness comment|generated issue checklist|generated issue plan|.arkheionx.json" .
 rg -n "oracle rule pack|access control rule pack|reentrancy value flow|reward accounting rule pack" .
 rg -n "issue marker|duplicate prevention|issue creation dry-run|GitHub issue workflow" .
+rg -n "semantic-lite|Solidity structure extraction|finding evidence|confidence_reason" .
+rg -n "Slither integration|slither-json|slither-output|slither-strict" .
+rg -n "false positive reduction|keyword-only downgrade|low-confidence findings" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

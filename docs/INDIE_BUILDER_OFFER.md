@@ -55,6 +55,7 @@ You receive:
 - optional PR Readiness Comment;
 - generated issue checklist;
 - generated issue plan for owner-ready remediation tasks;
+- evidence summaries, confidence reasons, and detection sources;
 - historical pattern similarity;
 - suggested invariant tests;
 - audit preparation checklist;
@@ -115,6 +116,7 @@ Output:
 - baseline/diff interpretation if prior scan output is available;
 - generated issue checklist reviewed and turned into a prioritized fix list;
 - generated issue plan reviewed for safe remediation tasks;
+- semantic-lite evidence and confidence reasons reviewed for prioritization;
 - Markdown report;
 - clear limitations and formal audit recommendation.
 
@@ -156,6 +158,7 @@ Output:
 - diff-mode review to track remediation progress;
 - generated GitHub issue checklist reviewed and prioritized;
 - generated GitHub issue plan converted into owner-ready tasks;
+- evidence-based prioritization using affected files/functions when available;
 - final Markdown report;
 - optional follow-up comments if capacity allows.
 

@@ -5,7 +5,9 @@ plan. Optional issue creation is disabled by default and should be used only in
 repositories you own or are authorized to manage.
 
 Generated issues are remediation tasks. They are not formal audit findings and
-do not confirm vulnerabilities.
+do not confirm vulnerabilities. v0.6 issue plans include confidence reasons,
+top evidence, detection sources, and affected functions when semantic-lite or
+optional Slither evidence is available.
 
 ## Recommended Flow
 
@@ -23,8 +25,13 @@ python3 scripts/pre_audit_scan.py \
   --protocol-type auto \
   --json-output arkheionx-report.json \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json \
-  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md
+  --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
+  --min-confidence-for-issue-plan medium
 ```
+
+The default issue-plan threshold is conservative: low-confidence,
+keyword-only findings remain in the report but are listed as excluded
+low-confidence findings in the issue plan.
 
 ## Dry Run
 
@@ -83,7 +90,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
     with:
       protocol-type: auto
       issue-plan-output: ARKHEIONX_ISSUE_PLAN.json
@@ -100,7 +107,8 @@ generated plan.
 
 A Launch Report can review the issue plan and convert it into a prioritized
 readiness plan. A Pre-Audit Sprint can help a team work through the generated
-tasks and compare progress with baseline diff mode.
+tasks, inspect evidence/confidence reasons, and compare progress with baseline
+diff mode.
 
 ## Safety Boundaries
 
@@ -110,4 +118,3 @@ tasks and compare progress with baseline diff mode.
 - max issue limits reduce noise,
 - generated issues include disclaimers,
 - no exploit steps or live-chain behavior are added.
-

@@ -23,8 +23,8 @@ The repository itself is the product:
 | Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, optional SARIF, baseline diff artifacts, Actions summary, optional PR Readiness Comment, generated issue checklist, generated issue plan. |
 | Indie Builder Sponsor | USD 29/month | Recognition if desired, early rule previews, priority Q&A in GitHub Discussions, monthly readiness tips. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
-| Launch Report | USD 299-499 one time | Automated scan, manual report review, prioritized fix checklist, Markdown readiness report. |
-| Pre-Audit Sprint | USD 1,000-2,000 one time | Manual readiness review, historical pattern mapping, missing invariant plan, GitHub issue checklist. |
+| Launch Report | USD 299-499 one time | Automated scan, manual report/evidence review, prioritized fix checklist, Markdown readiness report. |
+| Pre-Audit Sprint | USD 1,000-2,000 one time | Manual readiness review, historical pattern mapping, missing invariant plan, evidence-based GitHub issue checklist. |
 | Vault Launch Report | USD 299-499 one time | Vault Rule Pack report, manual gap review, prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 one time | Vault-focused readiness review, strategy/oracle/withdrawal checklist, invariant plan. |
 | Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and a portfolio-level Markdown dashboard. |
@@ -53,6 +53,7 @@ The free tier creates trust and distribution:
 - optional SARIF output for GitHub Code Scanning-compatible workflows.
 - baseline comparison to track whether remediation is improving readiness.
 - generated issue checklist and issue plan that can become a remediation tracker.
+- semantic-lite evidence and confidence reasons that help reduce noisy follow-up.
 - optional PR Readiness Comment for code-review visibility.
 
 Conversion happens when a builder wants help interpreting or improving the
@@ -96,6 +97,7 @@ Value:
 
 - automated scan;
 - manual review of generated report;
+- manual review of semantic-lite evidence and confidence reasons;
 - interpretation of baseline/diff output when available;
 - manual review of generated issue checklist;
 - manual review of generated issue plan;
@@ -173,6 +175,7 @@ Value:
 - diff-mode review to track new, resolved, and unchanged readiness gaps;
 - generated GitHub issue checklist converted into a prioritized remediation plan;
 - generated GitHub issue plan reviewed and organized into owner-ready tasks;
+- evidence-based prioritization using affected functions where available;
 - final Markdown report;
 - optional follow-up comments.
 

@@ -1,8 +1,8 @@
 # Generated Issue Checklist
 
 Arkheionx can generate a copyable Markdown checklist from readiness findings.
-In v0.5.0 development builds, the checklist can also reference a structured
-issue plan used by the optional GitHub issue workflow.
+The checklist can also reference a structured issue plan used by the optional
+GitHub issue workflow.
 
 Default output:
 
@@ -16,6 +16,7 @@ ARKHEIONX_ISSUE_CHECKLIST.md
 - High, medium, and low priority readiness gaps.
 - Stable finding IDs such as `ARK-VLT-001`.
 - Suggested defensive tests.
+- Confidence and evidence context through linked issue-plan output.
 - Documentation tasks.
 - Suggested issue titles and labels when an issue plan is generated.
 - A reminder that the checklist is not a formal audit.
@@ -72,8 +73,8 @@ avoid duplicates.
 
 For Launch Reports and Pre-Audit Sprints, the generated checklist and issue plan
 can become the first draft of a prioritized remediation plan. Manual review can
-remove false positives, clarify priority, add context, and align the work with a
-formal audit scope.
+review confidence reasons, remove false positives, clarify priority, add
+context, and align the work with a formal audit scope.
 
 ## Limitations
 

@@ -1,6 +1,6 @@
 # Arkheionx Config
 
-Arkheionx v0.3.0 supports an optional JSON config file:
+Arkheionx supports an optional JSON config file:
 
 ```text
 .arkheionx.json
@@ -31,6 +31,13 @@ The config is intentionally simple and dependency-free.
   ],
   "report": {
     "max_top_gaps": 5
+  },
+  "analysis": {
+    "semantic_lite": true,
+    "slither": false,
+    "min_confidence_for_issue_plan": "medium",
+    "downgrade_keyword_only": true,
+    "max_evidence_per_finding": 5
   }
 }
 ```
@@ -47,6 +54,11 @@ See [`../examples/arkheionx.config.example.json`](../examples/arkheionx.config.e
 | `ignore_paths` | Paths excluded from scanner collection. |
 | `additional_search_tags` | Extra tags added to reports. |
 | `report.max_top_gaps` | Number of top gaps shown in summaries and comments. |
+| `analysis.semantic_lite` | Enable semantic-lite Solidity structure extraction. Defaults to `true`. |
+| `analysis.slither` | Enable optional local Slither integration. Defaults to `false`. |
+| `analysis.min_confidence_for_issue_plan` | Minimum finding confidence included in generated issue plans. Defaults to `medium`. |
+| `analysis.downgrade_keyword_only` | Downgrade weak keyword-only findings. Defaults to `true`. |
+| `analysis.max_evidence_per_finding` | Maximum evidence records shown per finding. Defaults to `5`. |
 
 ## Suppression Rules
 
@@ -75,6 +87,17 @@ findings, but they remain visible in Markdown and JSON. Suppression can affect
 explicit gates such as `--fail-on-unsuppressed-high`; it should never be used
 to hide launch-critical work without a written reason.
 
+## Analysis Tuning
+
+Semantic-lite extraction is enabled by default because it improves evidence,
+affected-function reporting, SARIF locations, and false-positive reduction.
+Slither is disabled by default because it is an optional local dependency.
+
+Low-confidence findings remain visible in reports. If
+`min_confidence_for_issue_plan` is set to `medium`, Arkheionx keeps
+keyword-only findings out of generated issue plans and lists them as excluded
+low-confidence findings in the issue-plan JSON.
+
 ## Ignore Paths
 
 Use `ignore_paths` for generated code, mocks, vendored dependencies, or
@@ -94,7 +117,7 @@ config files.
 
 ## Limitations
 
-- JSON only for v0.3.0.
+- JSON only.
 - No remote policy service.
 - No organization-level config inheritance.
 - No guarantee that a suppressed finding is safe.

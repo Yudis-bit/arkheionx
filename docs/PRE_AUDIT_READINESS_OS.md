@@ -22,6 +22,8 @@ Arkheionx Readiness is:
 - generated issue plan for optional GitHub issue workflows;
 - stable finding IDs;
 - SARIF, baseline, and diff artifacts when requested;
+- semantic-lite evidence, confidence reasons, and detection sources;
+- optional local Slither enrichment when explicitly enabled;
 - optional local `.arkheionx.json` config;
 - safe Foundry invariant skeleton generation;
 - a bridge from historical DeFi failures to defensive builder checklists.
@@ -82,6 +84,10 @@ Main stages:
 - `detect_signals`: identifies local risk signals from code and configs.
 - `detect_test_readiness`: checks tests, assertions, invariant/fuzz signals,
   handlers, static-analysis configs, and CI.
+- `extract_solidity_structure`: performs semantic-lite contract/function/test
+  extraction for evidence and false-positive reduction.
+- `slither_analysis`: optionally normalizes local Slither output when provided
+  or explicitly requested.
 - `map_historical_patterns`: maps signals to defensive historical classes.
 - `compute_readiness_score`: calculates a 100-point pre-audit score.
 - `finding IDs`: assigns stable IDs such as `ARK-VLT-001`.
@@ -150,7 +156,7 @@ can also over-report risk signals when terms appear in harmless contexts.
 
 Known limitations:
 
-- no semantic Solidity analysis yet;
+- semantic-lite extraction is heuristic and not a full Solidity AST;
 - no call graph;
 - no symbolic execution;
 - no deployed-contract review;

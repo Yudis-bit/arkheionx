@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/mini-vault`
-- Generated at: `2026-05-25T18:53:56+00:00`
+- Generated at: `2026-05-25T19:28:59+00:00`
 - Protocol type: `vault`
 - Protocol confidence: `high`
 - Files scanned: `5`
-- Scanner version: `0.5.0`
+- Scanner version: `0.6.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -21,6 +21,18 @@
 
 This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.
 
+## Analysis Quality
+
+| Source                   | Status   |
+| ------------------------ | -------- |
+| Keyword scan             | enabled  |
+| Semantic-lite extraction | enabled  |
+| Semantic contracts       | 2        |
+| Semantic test files      | 1        |
+| Slither                  | disabled |
+| Slither detectors        | 0        |
+| Test coverage mapping    | enabled  |
+
 ## Executive Summary
 
 - Readiness score: **73/100**
@@ -29,7 +41,7 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 - Suppressed readiness gaps: `0`
 - Top readiness gaps:
   - **ARK-REENT-001 (High readiness gap):** Value flow with external calls needs reentrancy review - Review state ordering and add local reentrant receiver tests around every value-flow path.
-  - **ARK-VLT-001 (High readiness gap):** Vault accounting without invariant tests - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
+  - **ARK-VLT-001 (Medium readiness gap):** Vault accounting without invariant tests - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
   - **ARK-VLT-007 (Medium readiness gap):** Fee logic without fee accounting tests - Add deposit, withdrawal, management, and performance fee tests where relevant.
   - **ARK-ACC-003 (Low readiness gap):** Admin role concentration not documented - Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.
   - **ARK-REENT-004 (Low readiness gap):** External call path without documented ordering assumptions - Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.
@@ -65,7 +77,7 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 | ID            | Priority             | Category              | Title                                                      |
 | ------------- | -------------------- | --------------------- | ---------------------------------------------------------- |
 | ARK-REENT-001 | High readiness gap   | reentrancy-value-flow | Value flow with external calls needs reentrancy review     |
-| ARK-VLT-001   | High readiness gap   | vault-accounting      | Vault accounting without invariant tests                   |
+| ARK-VLT-001   | Medium readiness gap | vault-accounting      | Vault accounting without invariant tests                   |
 | ARK-VLT-007   | Medium readiness gap | vault-accounting      | Fee logic without fee accounting tests                     |
 | ARK-ACC-003   | Low readiness gap    | access-control        | Admin role concentration not documented                    |
 | ARK-REENT-004 | Low readiness gap    | reentrancy-value-flow | External call path without documented ordering assumptions |
@@ -319,9 +331,18 @@ The v0.2.0 vault rule pack checks ERC4626-like share accounting, totalAssets ass
 
 ### ARK-VLT-001 - Vault accounting without invariant tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/MiniVault.sol:43` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/MiniVault.sol:47` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/MiniVault.sol:54` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), "TRANSFER_FAILED");`
 
 Detected signals:
 - `assets`
@@ -368,8 +389,17 @@ Search tags: `vault-accounting, invariant-testing, erc4626`
 ### ARK-VLT-007 - Fee logic without fee accounting tests
 
 - Priority: `Medium readiness gap`
-- Confidence: `low`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `vault-accounting`
+
+Evidence:
+- `src/MiniVault.sol:43` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`
+- `src/MiniVault.sol:47` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`
+- `src/MiniVault.sol:54` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`
+- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), "TRANSFER_FAILED");`
 
 Detected signals:
 - `fee`
@@ -407,7 +437,16 @@ Search tags: `fee-accounting, vault-accounting`
 
 - Priority: `Low readiness gap`
 - Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `access-control`
+
+Evidence:
+- `src/MiniVault.sol:95` in `setFee`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/MiniVault.sol:101` in `pause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/MiniVault.sol:106` in `unpause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `test/documentation coverage`: Matching test coverage terms detected: owner, prank.
+- `src/MiniVault.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, pause, setFee, unpause`
 
 Detected signals:
 - `onlyOwner`
@@ -448,8 +487,17 @@ Search tags: `access-control-review, documentation-readiness, access-control-rul
 ### ARK-REENT-001 - Value flow with external calls needs reentrancy review
 
 - Priority: `High readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), "TRANSFER_FAILED");`
+- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.
+- `src/MiniVault.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`
+- `test/MiniVault.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`
 
 Detected signals:
 - `transfer`
@@ -488,8 +536,17 @@ Search tags: `reentrancy-review, value-flow, reentrancy-rule-pack`
 ### ARK-REENT-004 - External call path without documented ordering assumptions
 
 - Priority: `Low readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), "TRANSFER_FROM_FAILED");`
+- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), "TRANSFER_FAILED");`
+- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.
+- `src/MiniVault.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`
+- `test/MiniVault.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`
 
 Detected signals:
 - `transfer`

@@ -6,72 +6,6 @@ Score: `58/100`
 
 ## High priority readiness gaps
 
-- [ ] ARK-VLT-001 - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-001 - Vault accounting without invariant tests`
-  - Suggested labels: `arkheionx, erc4626, high-readiness-gap, invariant-testing, pre-audit-readiness, vault-accounting`
-  - Suggested tests:
-    - Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
-    - deposit/withdraw roundtrip
-    - convertToShares/convertToAssets consistency
-    - donation/inflation resistance
-    - rounding direction tests
-    - totalAssets external dependency tests
-- [ ] ARK-VLT-002 - Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-002 - ERC4626-like interface without preview function tests`
-  - Suggested labels: `arkheionx, erc4626, high-readiness-gap, pre-audit-readiness, preview-functions, vault-accounting`
-  - Suggested tests:
-    - For each preview function, compare the previewed shares/assets with the actual deposit, mint, withdraw, or redeem result.
-    - preview/action equivalence
-    - rounding direction tests
-    - max function boundary tests
-- [ ] ARK-VLT-003 - Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-003 - Shares/assets conversion without rounding tests`
-  - Suggested labels: `arkheionx, high-readiness-gap, pre-audit-readiness, precision, rounding, share-accounting, vault-accounting`
-  - Suggested tests:
-    - Fuzz assets and shares across small, large, and decimal-edge values and assert conversion error stays within documented bounds.
-    - small amount tests
-    - decimals normalization
-    - mulDiv/precision review
-    - conversion reversibility
-- [ ] ARK-VLT-004 - Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-004 - totalAssets external dependency without manipulation-resistance tests`
-  - Suggested labels: `arkheionx, high-readiness-gap, oracle-risk, pre-audit-readiness, strategy-accounting, totalAssets, vault-accounting`
-  - Suggested tests:
-    - Mock external strategy or price state and assert totalAssets, share price, and withdrawal accounting remain within documented policy.
-    - donation tests
-    - mock strategy gain/loss
-    - stale/bounded oracle tests
-    - share price drift checks
-- [ ] ARK-VLT-005 - Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-005 - Strategy accounting without gain/loss tests`
-  - Suggested labels: `arkheionx, gain-loss, high-readiness-gap, pre-audit-readiness, strategy-accounting, vault-lifecycle, vault-strategy`
-  - Suggested tests:
-    - Use a local mock strategy that reports gain and loss, then assert totalAssets and share accounting follow documented policy.
-    - gain report
-    - loss report
-    - debt update
-    - withdrawFromStrategy
-    - strategy migration
-- [ ] ARK-VLT-006 - Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-006 - Withdrawal queue/cooldown without lifecycle tests`
-  - Suggested labels: `arkheionx, high-readiness-gap, liquidity, pre-audit-readiness, vault-lifecycle, vault-withdrawal, withdrawal-queue`
-  - Suggested tests:
-    - Test the full withdrawal lifecycle and assert shares/assets are conserved across request, cooldown, claim, and cancellation.
-    - requestWithdraw
-    - claimWithdraw
-    - cancelWithdraw
-    - cooldown
-    - available liquidity
-- [ ] ARK-ORC-001 - Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.
-  - Suggested issue title: `[Arkheionx][High] ARK-ORC-001 - Oracle-dependent vault without stale-price or bounds tests`
-  - Suggested labels: `arkheionx, high-readiness-gap, oracle-pricing, oracle-risk, pool-price, pre-audit-readiness, vault-pricing`
-  - Suggested tests:
-    - Use local mock oracles/pools to test stale, out-of-bounds, decimals, and spot-price scenarios without live-chain calls.
-    - stale price rejection
-    - decimals normalization
-    - TWAP/sanity check
-    - bounds
-    - oracle setter roles
 - [ ] ARK-REENT-001 - Review state ordering and add local reentrant receiver tests around every value-flow path.
   - Suggested issue title: `[Arkheionx][High] ARK-REENT-001 - Value flow with external calls needs reentrancy review`
   - Suggested labels: `arkheionx, high-readiness-gap, pre-audit-readiness, reentrancy-review, reentrancy-rule-pack, reentrancy-value-flow, value-flow`
@@ -84,6 +18,72 @@ Score: `58/100`
 
 ## Medium priority readiness gaps
 
+- [ ] ARK-VLT-001 - Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-001 - Vault accounting without invariant tests`
+  - Suggested labels: `arkheionx, erc4626, invariant-testing, medium-readiness-gap, pre-audit-readiness, vault-accounting`
+  - Suggested tests:
+    - Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.
+    - deposit/withdraw roundtrip
+    - convertToShares/convertToAssets consistency
+    - donation/inflation resistance
+    - rounding direction tests
+    - totalAssets external dependency tests
+- [ ] ARK-VLT-002 - Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-002 - ERC4626-like interface without preview function tests`
+  - Suggested labels: `arkheionx, erc4626, medium-readiness-gap, pre-audit-readiness, preview-functions, vault-accounting`
+  - Suggested tests:
+    - For each preview function, compare the previewed shares/assets with the actual deposit, mint, withdraw, or redeem result.
+    - preview/action equivalence
+    - rounding direction tests
+    - max function boundary tests
+- [ ] ARK-VLT-003 - Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-003 - Shares/assets conversion without rounding tests`
+  - Suggested labels: `arkheionx, medium-readiness-gap, pre-audit-readiness, precision, rounding, share-accounting, vault-accounting`
+  - Suggested tests:
+    - Fuzz assets and shares across small, large, and decimal-edge values and assert conversion error stays within documented bounds.
+    - small amount tests
+    - decimals normalization
+    - mulDiv/precision review
+    - conversion reversibility
+- [ ] ARK-VLT-004 - Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-004 - totalAssets external dependency without manipulation-resistance tests`
+  - Suggested labels: `arkheionx, medium-readiness-gap, oracle-risk, pre-audit-readiness, strategy-accounting, totalAssets, vault-accounting`
+  - Suggested tests:
+    - Mock external strategy or price state and assert totalAssets, share price, and withdrawal accounting remain within documented policy.
+    - donation tests
+    - mock strategy gain/loss
+    - stale/bounded oracle tests
+    - share price drift checks
+- [ ] ARK-VLT-005 - Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-005 - Strategy accounting without gain/loss tests`
+  - Suggested labels: `arkheionx, gain-loss, medium-readiness-gap, pre-audit-readiness, strategy-accounting, vault-lifecycle, vault-strategy`
+  - Suggested tests:
+    - Use a local mock strategy that reports gain and loss, then assert totalAssets and share accounting follow documented policy.
+    - gain report
+    - loss report
+    - debt update
+    - withdrawFromStrategy
+    - strategy migration
+- [ ] ARK-VLT-006 - Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-006 - Withdrawal queue/cooldown without lifecycle tests`
+  - Suggested labels: `arkheionx, liquidity, medium-readiness-gap, pre-audit-readiness, vault-lifecycle, vault-withdrawal, withdrawal-queue`
+  - Suggested tests:
+    - Test the full withdrawal lifecycle and assert shares/assets are conserved across request, cooldown, claim, and cancellation.
+    - requestWithdraw
+    - claimWithdraw
+    - cancelWithdraw
+    - cooldown
+    - available liquidity
+- [ ] ARK-ORC-001 - Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-ORC-001 - Oracle-dependent vault without stale-price or bounds tests`
+  - Suggested labels: `arkheionx, medium-readiness-gap, oracle-pricing, oracle-risk, pool-price, pre-audit-readiness, vault-pricing`
+  - Suggested tests:
+    - Use local mock oracles/pools to test stale, out-of-bounds, decimals, and spot-price scenarios without live-chain calls.
+    - stale price rejection
+    - decimals normalization
+    - TWAP/sanity check
+    - bounds
+    - oracle setter roles
 - [ ] ARK-VLT-007 - Add deposit, withdrawal, management, and performance fee tests where relevant.
   - Suggested issue title: `[Arkheionx][Medium] ARK-VLT-007 - Fee logic without fee accounting tests`
   - Suggested labels: `arkheionx, fee-accounting, medium-readiness-gap, pre-audit-readiness, vault-accounting`

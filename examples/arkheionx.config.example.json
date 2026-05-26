@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.6.0",
   "protocol_type": "auto",
   "ignore_paths": [
     "lib/",
@@ -23,5 +23,12 @@
   ],
   "report": {
     "max_top_gaps": 5
+  },
+  "analysis": {
+    "semantic_lite": true,
+    "slither": false,
+    "min_confidence_for_issue_plan": "medium",
+    "downgrade_keyword_only": true,
+    "max_evidence_per_finding": 5
   }
 }

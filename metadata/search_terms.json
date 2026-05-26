@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -321,6 +321,38 @@
       "related_patterns": ["reward accounting mismatch review recommended"],
       "related_checks": ["reward conservation", "no overclaim", "accumulator monotonicity", "emission update constraints"],
       "search_tags": ["reward-accounting-rule-pack", "staking", "precision"]
+    },
+    {
+      "term": "semantic-lite analysis",
+      "aliases": ["Solidity structure extraction", "semantic lite", "function evidence", "local parser"],
+      "category": "analysis quality",
+      "related_patterns": ["evidence-based readiness finding"],
+      "related_checks": ["contracts", "functions", "modifiers", "state variables", "test coverage mapping"],
+      "search_tags": ["semantic-lite", "solidity-structure", "false-positive-reduction"]
+    },
+    {
+      "term": "evidence-based findings",
+      "aliases": ["finding evidence", "confidence reason", "detection sources", "affected functions"],
+      "category": "analysis quality",
+      "related_patterns": ["readiness finding with source evidence"],
+      "related_checks": ["semantic-lite evidence", "test coverage evidence", "Slither evidence", "keyword evidence"],
+      "search_tags": ["finding-evidence", "confidence-scoring", "readiness-gap"]
+    },
+    {
+      "term": "Slither integration",
+      "aliases": ["Slither JSON", "slither analyzer", "optional Slither", "local Slither"],
+      "category": "analysis quality",
+      "related_patterns": ["local static analyzer evidence enrichment"],
+      "related_checks": ["--slither", "--slither-json", "--slither-output", "--slither-strict"],
+      "search_tags": ["slither-integration", "slither-json", "local-static-analysis"]
+    },
+    {
+      "term": "false positive reduction",
+      "aliases": ["keyword-only downgrade", "low-confidence findings", "noise reduction", "confidence scoring"],
+      "category": "analysis quality",
+      "related_patterns": ["downgraded keyword-only readiness signal"],
+      "related_checks": ["downgrade_keyword_only", "min_confidence_for_issue_plan", "test coverage mapping"],
+      "search_tags": ["false-positive-reduction", "low-confidence", "evidence-based"]
     }
   ]
 }

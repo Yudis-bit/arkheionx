@@ -1,4 +1,16 @@
 {
+  "analysis_quality": {
+    "fuzz_tests": false,
+    "invariant_tests": false,
+    "keyword_scan": "enabled",
+    "semantic_contracts": 3,
+    "semantic_lite": "enabled",
+    "semantic_test_files": 1,
+    "slither": "disabled",
+    "slither_detector_count": 0,
+    "test_coverage_mapping": "enabled",
+    "warnings": []
+  },
   "config_warnings": [],
   "diff": {
     "baseline_path": "",
@@ -34,15 +46,79 @@
   },
   "findings": [
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "testing-readiness",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
       "detected_signals": [],
-      "fingerprint": "d73c8a2c3e3055849cc2a36d",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "40c41c40ed1466cdd9635ca9",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
       "priority": "High readiness gap",
@@ -61,21 +137,81 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
       "detected_signals": [],
-      "fingerprint": "28931344b387571d2cc7a0e0",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: oracle.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "4caf35ffd1a44272525bbdab",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
-      "priority": "High readiness gap",
+      "priority": "Medium readiness gap",
       "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [],
-      "severity": "High readiness gap",
+      "severity": "Medium readiness gap",
       "suggested_tests": [
         "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
       ],
@@ -88,21 +224,57 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [],
       "category": "vault-accounting",
       "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
       "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
       "detected_signals": [],
-      "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite vault test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": ": No semantic-lite vault test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "455b182ea87d56a4a492118e",
       "historical_pattern_similarity": "",
       "id": "ARK-VLT-009",
-      "priority": "High readiness gap",
+      "priority": "Low readiness gap",
       "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
       "recommended_defensive_checks": [],
-      "severity": "High readiness gap",
+      "severity": "Low readiness gap",
       "suggested_tests": [
         "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
       ],
@@ -115,15 +287,77 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
       "detected_signals": [],
-      "fingerprint": "843d4f2224907dabc3816772",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `stake`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "02dd029123ec6087d21f1f1d",
       "historical_pattern_similarity": "",
       "id": "ARK-REENT-001",
       "priority": "Medium readiness gap",
@@ -142,15 +376,79 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Reward/index/claim signals were detected without invariant testing.",
       "detected_signals": [],
-      "fingerprint": "c0a40921efd524042b77b919",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "1c316cdf88792a7e2b1e566e",
       "historical_pattern_similarity": "",
       "id": "ARK-RWD-001",
       "priority": "Medium readiness gap",
@@ -169,12 +467,20 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "high",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -189,10 +495,62 @@
         "setOracle",
         "updatedAt"
       ],
-      "fingerprint": "9aee372d5fc42a664ef7e458",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: oracle.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "27199688c1b60c42d92a6d05",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
-      "priority": "High readiness gap",
+      "priority": "Medium readiness gap",
       "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
       "recommended_defensive_checks": [
         "stale round rejection",
@@ -200,7 +558,7 @@
         "updatedAt validation",
         "answeredInRound handling"
       ],
-      "severity": "High readiness gap",
+      "severity": "Medium readiness gap",
       "suggested_tests": [
         "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
       ],
@@ -214,12 +572,20 @@
       "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "high",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -234,7 +600,59 @@
         "setOracle",
         "updatedAt"
       ],
-      "fingerprint": "968c56ae1cd3dae1e2eae280",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: oracle.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "e5f500ac09dd007865613478",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
       "priority": "Medium readiness gap",
@@ -259,12 +677,23 @@
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
       "category": "access-control",
-      "confidence": "medium",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
       "detected_signals": [
         "onlyOwner",
@@ -274,7 +703,60 @@
         "setTreasury",
         "unpause"
       ],
-      "fingerprint": "13af6797121f94ff50563104",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setOracle",
+          "line": 47,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setEmissionRate",
+          "line": 51,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setTreasury",
+          "line": 55,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "pause",
+          "line": 59,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unpause",
+          "line": 63,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "c612302ce98632d634d45e31",
       "historical_pattern_similarity": "Maps to operational control readiness classes.",
       "id": "ARK-ACC-003",
       "priority": "Low readiness gap",
@@ -299,17 +781,79 @@
       "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
       "detected_signals": [
         "transfer",
         "transferFrom"
       ],
-      "fingerprint": "c6c3deef7e721e9057a3f65a",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `stake`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "7e2acd399b5366b913e3e8a9",
       "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
       "id": "ARK-REENT-004",
       "priority": "Low readiness gap",
@@ -333,12 +877,23 @@
       "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
       "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
       "detected_signals": [
         "accumulator",
@@ -351,7 +906,60 @@
         "totalStaked",
         "unstake"
       ],
-      "fingerprint": "e7599f77df25242d8103622d",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "64ba736c260ec0865f0a87c1",
       "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
       "id": "ARK-RWD-002",
       "priority": "Medium readiness gap",
@@ -376,12 +984,23 @@
       "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
       "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
       "detected_signals": [
         "accumulator",
@@ -394,7 +1013,60 @@
         "totalStaked",
         "unstake"
       ],
-      "fingerprint": "9362d8f81c0fd2384aea5bbb",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "3c91794e0a66202839c5df60",
       "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
       "id": "ARK-RWD-003",
       "priority": "Medium readiness gap",
@@ -418,8 +1090,8 @@
       "why_it_matters": "Claim flows depend on updating accrued state at exactly the right time."
     }
   ],
-  "fingerprint_version": "0.5.0",
-  "generated_at": "2026-05-25T19:01:52+00:00",
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-26T01:04:36+00:00",
   "generated_outputs": {
     "baseline": "examples/reports/oracle-staking-fixture.baseline.json",
     "comment": "",
@@ -430,6 +1102,7 @@
     "json_report": "examples/reports/oracle-staking-fixture-pre-audit-report.json",
     "markdown_report": "examples/reports/oracle-staking-fixture-pre-audit-report.md",
     "sarif_report": "examples/reports/oracle-staking-fixture.sarif.json",
+    "slither_summary": "",
     "summary": ""
   },
   "historical_patterns": [
@@ -621,15 +1294,79 @@
   "protocol_type": "staking",
   "readiness_gaps": [
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "testing-readiness",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
       "detected_signals": [],
-      "fingerprint": "d73c8a2c3e3055849cc2a36d",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "40c41c40ed1466cdd9635ca9",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
       "priority": "High readiness gap",
@@ -648,21 +1385,81 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
       "detected_signals": [],
-      "fingerprint": "28931344b387571d2cc7a0e0",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: oracle.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "4caf35ffd1a44272525bbdab",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
-      "priority": "High readiness gap",
+      "priority": "Medium readiness gap",
       "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [],
-      "severity": "High readiness gap",
+      "severity": "Medium readiness gap",
       "suggested_tests": [
         "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
       ],
@@ -675,21 +1472,57 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [],
       "category": "vault-accounting",
       "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
       "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
       "detected_signals": [],
-      "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite vault test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 3,
+      "evidence_summary": ": No semantic-lite vault test coverage terms were detected.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "455b182ea87d56a4a492118e",
       "historical_pattern_similarity": "",
       "id": "ARK-VLT-009",
-      "priority": "High readiness gap",
+      "priority": "Low readiness gap",
       "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
       "recommended_defensive_checks": [],
-      "severity": "High readiness gap",
+      "severity": "Low readiness gap",
       "suggested_tests": [
         "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
       ],
@@ -702,15 +1535,77 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
       "detected_signals": [],
-      "fingerprint": "843d4f2224907dabc3816772",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `stake`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "02dd029123ec6087d21f1f1d",
       "historical_pattern_similarity": "",
       "id": "ARK-REENT-001",
       "priority": "Medium readiness gap",
@@ -729,15 +1624,79 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Reward/index/claim signals were detected without invariant testing.",
       "detected_signals": [],
-      "fingerprint": "c0a40921efd524042b77b919",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "1c316cdf88792a7e2b1e566e",
       "historical_pattern_similarity": "",
       "id": "ARK-RWD-001",
       "priority": "Medium readiness gap",
@@ -756,12 +1715,20 @@
       "why_it_matters": ""
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "high",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -776,10 +1743,62 @@
         "setOracle",
         "updatedAt"
       ],
-      "fingerprint": "9aee372d5fc42a664ef7e458",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: oracle.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "27199688c1b60c42d92a6d05",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
-      "priority": "High readiness gap",
+      "priority": "Medium readiness gap",
       "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
       "recommended_defensive_checks": [
         "stale round rejection",
@@ -787,7 +1806,7 @@
         "updatedAt validation",
         "answeredInRound handling"
       ],
-      "severity": "High readiness gap",
+      "severity": "Medium readiness gap",
       "suggested_tests": [
         "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
       ],
@@ -801,12 +1820,20 @@
       "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
       "category": "oracle-pricing",
-      "confidence": "high",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
       "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -821,7 +1848,59 @@
         "setOracle",
         "updatedAt"
       ],
-      "fingerprint": "968c56ae1cd3dae1e2eae280",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: oracle.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "e5f500ac09dd007865613478",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
       "priority": "Medium readiness gap",
@@ -846,12 +1925,23 @@
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
       "category": "access-control",
-      "confidence": "medium",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
       "detected_signals": [
         "onlyOwner",
@@ -861,7 +1951,60 @@
         "setTreasury",
         "unpause"
       ],
-      "fingerprint": "13af6797121f94ff50563104",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setOracle",
+          "line": 47,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setEmissionRate",
+          "line": 51,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setTreasury",
+          "line": 55,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "pause",
+          "line": 59,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unpause",
+          "line": 63,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "c612302ce98632d634d45e31",
       "historical_pattern_similarity": "Maps to operational control readiness classes.",
       "id": "ARK-ACC-003",
       "priority": "Low readiness gap",
@@ -886,17 +2029,79 @@
       "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "stake",
+        "unstake"
+      ],
       "category": "reentrancy-value-flow",
-      "confidence": "low",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
       "detected_signals": [
         "transfer",
         "transferFrom"
       ],
-      "fingerprint": "c6c3deef7e721e9057a3f65a",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `stake`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "7e2acd399b5366b913e3e8a9",
       "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
       "id": "ARK-REENT-004",
       "priority": "Low readiness gap",
@@ -920,12 +2125,23 @@
       "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
       "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
       "detected_signals": [
         "accumulator",
@@ -938,7 +2154,60 @@
         "totalStaked",
         "unstake"
       ],
-      "fingerprint": "e7599f77df25242d8103622d",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "64ba736c260ec0865f0a87c1",
       "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
       "id": "ARK-RWD-002",
       "priority": "Medium readiness gap",
@@ -963,12 +2232,23 @@
       "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
     },
     {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
       "affected_files": [
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
+      "affected_functions": [
+        "claimReward",
+        "earned",
+        "rewardPerToken",
+        "stake",
+        "unstake"
+      ],
       "category": "reward-accounting",
       "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
       "detected_signals": [
         "accumulator",
@@ -981,7 +2261,60 @@
         "totalStaked",
         "unstake"
       ],
-      "fingerprint": "9362d8f81c0fd2384aea5bbb",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "earned",
+          "line": 81,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "stake",
+          "line": 86,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unstake",
+          "line": 94,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "claimReward",
+          "line": 101,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "3c91794e0a66202839c5df60",
       "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
       "id": "ARK-RWD-003",
       "priority": "Medium readiness gap",
@@ -1016,12 +2349,23 @@
       "finding_count": 1,
       "findings": [
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "pause",
+            "setEmissionRate",
+            "setOracle",
+            "setTreasury",
+            "unpause"
+          ],
           "category": "access-control",
-          "confidence": "medium",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
           "detected_signals": [
             "onlyOwner",
@@ -1031,7 +2375,60 @@
             "setTreasury",
             "unpause"
           ],
-          "fingerprint": "13af6797121f94ff50563104",
+          "detection_sources": [
+            "semantic-lite"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "setOracle",
+              "line": 47,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "setEmissionRate",
+              "line": 51,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "setTreasury",
+              "line": 55,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "pause",
+              "line": 59,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unpause",
+              "line": 63,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "c612302ce98632d634d45e31",
           "historical_pattern_similarity": "Maps to operational control readiness classes.",
           "id": "ARK-ACC-003",
           "priority": "Low readiness gap",
@@ -1083,21 +2480,81 @@
       "finding_count": 3,
       "findings": [
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "getPrice",
+            "rewardPerToken"
+          ],
           "category": "oracle-pricing",
-          "confidence": "low",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
           "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
           "detected_signals": [],
-          "fingerprint": "28931344b387571d2cc7a0e0",
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "getPrice",
+              "line": 67,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "Matching test coverage terms detected: oracle.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            },
+            {
+              "file": "test/OracleRewardFixture.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "4caf35ffd1a44272525bbdab",
           "historical_pattern_similarity": "",
           "id": "ARK-ORC-002",
-          "priority": "High readiness gap",
+          "priority": "Medium readiness gap",
           "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
           "recommended_defensive_checks": [],
-          "severity": "High readiness gap",
+          "severity": "Medium readiness gap",
           "suggested_tests": [
             "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
           ],
@@ -1110,12 +2567,20 @@
           "why_it_matters": ""
         },
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "getPrice",
+            "rewardPerToken"
+          ],
           "category": "oracle-pricing",
-          "confidence": "high",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
           "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
           "detected_signals": [
             "AggregatorV3Interface",
@@ -1130,10 +2595,62 @@
             "setOracle",
             "updatedAt"
           ],
-          "fingerprint": "9aee372d5fc42a664ef7e458",
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "getPrice",
+              "line": 67,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "Matching test coverage terms detected: oracle.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+              "type": "keyword"
+            },
+            {
+              "file": "test/OracleRewardFixture.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "27199688c1b60c42d92a6d05",
           "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
           "id": "ARK-ORC-001",
-          "priority": "High readiness gap",
+          "priority": "Medium readiness gap",
           "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
           "recommended_defensive_checks": [
             "stale round rejection",
@@ -1141,7 +2658,7 @@
             "updatedAt validation",
             "answeredInRound handling"
           ],
-          "severity": "High readiness gap",
+          "severity": "Medium readiness gap",
           "suggested_tests": [
             "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
           ],
@@ -1155,12 +2672,20 @@
           "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
         },
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "getPrice",
+            "rewardPerToken"
+          ],
           "category": "oracle-pricing",
-          "confidence": "high",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
           "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
           "detected_signals": [
             "AggregatorV3Interface",
@@ -1175,7 +2700,59 @@
             "setOracle",
             "updatedAt"
           ],
-          "fingerprint": "968c56ae1cd3dae1e2eae280",
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "getPrice",
+              "line": 67,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "Matching test coverage terms detected: oracle.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+              "type": "keyword"
+            },
+            {
+              "file": "test/OracleRewardFixture.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "e5f500ac09dd007865613478",
           "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
           "id": "ARK-ORC-005",
           "priority": "Medium readiness gap",
@@ -1231,15 +2808,77 @@
       "finding_count": 2,
       "findings": [
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "claimReward",
+            "stake",
+            "unstake"
+          ],
           "category": "reentrancy-value-flow",
-          "confidence": "low",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "External call or token transfer terms were detected without guard or reentrancy-review signals.",
           "detected_signals": [],
-          "fingerprint": "843d4f2224907dabc3816772",
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "stake",
+              "line": 86,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unstake",
+              "line": 94,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "claimReward",
+              "line": 101,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `stake`: Solidity function contains external value-flow call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "02dd029123ec6087d21f1f1d",
           "historical_pattern_similarity": "",
           "id": "ARK-REENT-001",
           "priority": "Medium readiness gap",
@@ -1258,17 +2897,79 @@
           "why_it_matters": ""
         },
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol"
           ],
+          "affected_functions": [
+            "claimReward",
+            "stake",
+            "unstake"
+          ],
           "category": "reentrancy-value-flow",
-          "confidence": "low",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
           "detected_signals": [
             "transfer",
             "transferFrom"
           ],
-          "fingerprint": "c6c3deef7e721e9057a3f65a",
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "stake",
+              "line": 86,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unstake",
+              "line": 94,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "claimReward",
+              "line": 101,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "transfer, transferFrom",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `stake`: Solidity function contains external value-flow call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "7e2acd399b5366b913e3e8a9",
           "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
           "id": "ARK-REENT-004",
           "priority": "Low readiness gap",
@@ -1315,15 +3016,79 @@
       "finding_count": 3,
       "findings": [
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "claimReward",
+            "earned",
+            "rewardPerToken",
+            "stake",
+            "unstake"
+          ],
           "category": "reward-accounting",
-          "confidence": "low",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "Reward/index/claim signals were detected without invariant testing.",
           "detected_signals": [],
-          "fingerprint": "c0a40921efd524042b77b919",
+          "detection_sources": [
+            "semantic-lite"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "earned",
+              "line": 81,
+              "reason": "Solidity function shape matches this readiness finding.",
+              "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "stake",
+              "line": 86,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unstake",
+              "line": 94,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "claimReward",
+              "line": 101,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+              "type": "semantic-lite"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "1c316cdf88792a7e2b1e566e",
           "historical_pattern_similarity": "",
           "id": "ARK-RWD-001",
           "priority": "Medium readiness gap",
@@ -1342,12 +3107,23 @@
           "why_it_matters": ""
         },
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "claimReward",
+            "earned",
+            "rewardPerToken",
+            "stake",
+            "unstake"
+          ],
           "category": "reward-accounting",
           "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
           "detected_signals": [
             "accumulator",
@@ -1360,7 +3136,60 @@
             "totalStaked",
             "unstake"
           ],
-          "fingerprint": "e7599f77df25242d8103622d",
+          "detection_sources": [
+            "semantic-lite"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "earned",
+              "line": 81,
+              "reason": "Solidity function shape matches this readiness finding.",
+              "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "stake",
+              "line": 86,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unstake",
+              "line": 94,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "claimReward",
+              "line": 101,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+              "type": "semantic-lite"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "64ba736c260ec0865f0a87c1",
           "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
           "id": "ARK-RWD-002",
           "priority": "Medium readiness gap",
@@ -1385,12 +3214,23 @@
           "why_it_matters": "Index and accumulator math can leak value or strand rewards through rounding across many users."
         },
         {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [
+            "claimReward",
+            "earned",
+            "rewardPerToken",
+            "stake",
+            "unstake"
+          ],
           "category": "reward-accounting",
           "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
           "detected_signals": [
             "accumulator",
@@ -1403,7 +3243,60 @@
             "totalStaked",
             "unstake"
           ],
-          "fingerprint": "9362d8f81c0fd2384aea5bbb",
+          "detection_sources": [
+            "semantic-lite"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "earned",
+              "line": 81,
+              "reason": "Solidity function shape matches this readiness finding.",
+              "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "stake",
+              "line": 86,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unstake",
+              "line": 94,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "claimReward",
+              "line": 101,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+              "type": "semantic-lite"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "3c91794e0a66202839c5df60",
           "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
           "id": "ARK-RWD-003",
           "priority": "Medium readiness gap",
@@ -1457,21 +3350,57 @@
       "finding_count": 1,
       "findings": [
         {
+          "affected_contracts": [],
           "affected_files": [
             "src/OracleRewardFixture.sol",
             "test/OracleRewardFixture.t.sol"
           ],
+          "affected_functions": [],
           "category": "vault-accounting",
           "confidence": "low",
+          "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
           "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
           "detected_signals": [],
-          "fingerprint": "5f6e9eda57d929bb6b3f50a6",
+          "detection_sources": [
+            "keyword",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite vault test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            },
+            {
+              "file": "test/OracleRewardFixture.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 3,
+          "evidence_summary": ": No semantic-lite vault test coverage terms were detected.",
+          "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+          "fingerprint": "455b182ea87d56a4a492118e",
           "historical_pattern_similarity": "",
           "id": "ARK-VLT-009",
-          "priority": "High readiness gap",
+          "priority": "Low readiness gap",
           "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
           "recommended_defensive_checks": [],
-          "severity": "High readiness gap",
+          "severity": "Low readiness gap",
           "suggested_tests": [
             "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
           ],
@@ -1560,6 +3489,388 @@
       ],
       "score": 20
     }
+  },
+  "semantic_lite": {
+    "contracts": [
+      {
+        "file": "src/OracleRewardFixture.sol",
+        "functions": [],
+        "inherits": [],
+        "kind": "interface",
+        "line_end": 11,
+        "line_start": 4,
+        "name": "AggregatorV3Interface",
+        "state_variables": []
+      },
+      {
+        "file": "src/OracleRewardFixture.sol",
+        "functions": [],
+        "inherits": [],
+        "kind": "interface",
+        "line_end": 16,
+        "line_start": 13,
+        "name": "IERC20Like",
+        "state_variables": []
+      },
+      {
+        "file": "src/OracleRewardFixture.sol",
+        "functions": [
+          {
+            "body_excerpt_hash": "23aae315229ace1b",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 49,
+            "line_start": 47,
+            "modifiers": [
+              "onlyOwner"
+            ],
+            "name": "setOracle",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "priceFeed"
+            ],
+            "snippet": "priceFeed = newFeed;",
+            "visibility": "external",
+            "writes_state": [
+              "priceFeed"
+            ]
+          },
+          {
+            "body_excerpt_hash": "d8a708f254ce5b27",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 53,
+            "line_start": 51,
+            "modifiers": [
+              "onlyOwner"
+            ],
+            "name": "setEmissionRate",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "emissionRate"
+            ],
+            "snippet": "emissionRate = newEmissionRate;",
+            "visibility": "external",
+            "writes_state": [
+              "emissionRate"
+            ]
+          },
+          {
+            "body_excerpt_hash": "ef1481e3fb78f954",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 57,
+            "line_start": 55,
+            "modifiers": [
+              "onlyOwner"
+            ],
+            "name": "setTreasury",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "treasury"
+            ],
+            "snippet": "treasury = newTreasury;",
+            "visibility": "external",
+            "writes_state": [
+              "treasury"
+            ]
+          },
+          {
+            "body_excerpt_hash": "6005c1b1ba33f59b",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 61,
+            "line_start": 59,
+            "modifiers": [
+              "onlyOwner"
+            ],
+            "name": "pause",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "paused"
+            ],
+            "snippet": "paused = true;",
+            "visibility": "external",
+            "writes_state": [
+              "paused"
+            ]
+          },
+          {
+            "body_excerpt_hash": "564a11939986e0d7",
+            "calls": [],
+            "external_calls": [],
+            "line_end": 65,
+            "line_start": 63,
+            "modifiers": [
+              "onlyOwner"
+            ],
+            "name": "unpause",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "paused"
+            ],
+            "snippet": "paused = false;",
+            "visibility": "external",
+            "writes_state": [
+              "paused"
+            ]
+          },
+          {
+            "body_excerpt_hash": "d7459e0df3c496ff",
+            "calls": [
+              "latestRoundData",
+              "uint256"
+            ],
+            "external_calls": [],
+            "line_end": 72,
+            "line_start": 67,
+            "modifiers": [],
+            "name": "getPrice",
+            "oracle_calls": [
+              "latestRoundData"
+            ],
+            "payable": false,
+            "reads_state": [
+              "priceFeed"
+            ],
+            "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+            "visibility": "unspecified",
+            "writes_state": []
+          },
+          {
+            "body_excerpt_hash": "1639ff971e299a87",
+            "calls": [
+              "getPrice"
+            ],
+            "external_calls": [],
+            "line_end": 79,
+            "line_start": 74,
+            "modifiers": [],
+            "name": "rewardPerToken",
+            "oracle_calls": [
+              "getPrice"
+            ],
+            "payable": false,
+            "reads_state": [
+              "emissionRate",
+              "rewardPerTokenStored",
+              "totalStaked"
+            ],
+            "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+            "visibility": "unspecified",
+            "writes_state": [
+              "totalStaked"
+            ]
+          },
+          {
+            "body_excerpt_hash": "26b4994eec97afe4",
+            "calls": [
+              "rewardPerToken"
+            ],
+            "external_calls": [],
+            "line_end": 84,
+            "line_start": 81,
+            "modifiers": [],
+            "name": "earned",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "balanceOf",
+              "pendingReward",
+              "userRewardPerTokenPaid"
+            ],
+            "snippet": "+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);",
+            "visibility": "unspecified",
+            "writes_state": [
+              "balanceOf",
+              "pendingReward",
+              "userRewardPerTokenPaid"
+            ]
+          },
+          {
+            "body_excerpt_hash": "7be1709124ce669a",
+            "calls": [
+              "_updateReward",
+              "address",
+              "transferFrom"
+            ],
+            "external_calls": [
+              "send",
+              "transfer",
+              "transferFrom"
+            ],
+            "line_end": 92,
+            "line_start": 86,
+            "modifiers": [],
+            "name": "stake",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "balanceOf",
+              "paused",
+              "stakingToken",
+              "totalStaked"
+            ],
+            "snippet": "require(stakingToken.transferFrom(msg.sender, address(this), amount), \"transferFrom\");",
+            "visibility": "external",
+            "writes_state": [
+              "balanceOf",
+              "totalStaked"
+            ]
+          },
+          {
+            "body_excerpt_hash": "0d79441960ae516b",
+            "calls": [
+              "_updateReward",
+              "transfer"
+            ],
+            "external_calls": [
+              "send",
+              "transfer"
+            ],
+            "line_end": 99,
+            "line_start": 94,
+            "modifiers": [],
+            "name": "unstake",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "balanceOf",
+              "stakingToken",
+              "totalStaked"
+            ],
+            "snippet": "require(stakingToken.transfer(msg.sender, amount), \"transfer\");",
+            "visibility": "external",
+            "writes_state": [
+              "balanceOf",
+              "totalStaked"
+            ]
+          },
+          {
+            "body_excerpt_hash": "1e920b06d9ba8589",
+            "calls": [
+              "_updateReward",
+              "transfer"
+            ],
+            "external_calls": [
+              "send",
+              "transfer"
+            ],
+            "line_end": 107,
+            "line_start": 101,
+            "modifiers": [],
+            "name": "claimReward",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "accumulator",
+              "pendingReward",
+              "stakingToken"
+            ],
+            "snippet": "require(stakingToken.transfer(msg.sender, reward), \"reward transfer\");",
+            "visibility": "external",
+            "writes_state": [
+              "accumulator",
+              "pendingReward"
+            ]
+          },
+          {
+            "body_excerpt_hash": "e02141ce07b4fd71",
+            "calls": [
+              "earned",
+              "rewardPerToken"
+            ],
+            "external_calls": [],
+            "line_end": 113,
+            "line_start": 109,
+            "modifiers": [],
+            "name": "_updateReward",
+            "oracle_calls": [],
+            "payable": false,
+            "reads_state": [
+              "pendingReward",
+              "rewardPerTokenStored",
+              "userRewardPerTokenPaid"
+            ],
+            "snippet": "pendingReward[account] = earned(account);",
+            "visibility": "internal",
+            "writes_state": [
+              "pendingReward",
+              "rewardPerTokenStored",
+              "userRewardPerTokenPaid"
+            ]
+          }
+        ],
+        "inherits": [],
+        "kind": "contract",
+        "line_end": 114,
+        "line_start": 18,
+        "name": "OracleRewardFixture",
+        "state_variables": [
+          "accumulator",
+          "balanceOf",
+          "emissionRate",
+          "owner",
+          "paused",
+          "pendingReward",
+          "priceFeed",
+          "rewardPerTokenStored",
+          "stakingToken",
+          "totalStaked",
+          "treasury",
+          "userRewardPerTokenPaid"
+        ]
+      }
+    ],
+    "enabled": true,
+    "signals": {
+      "contract_count": 3,
+      "function_count": 12,
+      "has_admin_setters": true,
+      "has_external_value_flow": true,
+      "has_fuzz_tests": false,
+      "has_invariant_tests": false,
+      "has_oracle_calls": true,
+      "has_reward_accounting": true,
+      "has_upgradeability": false,
+      "has_vault_functions": false,
+      "test_coverage": {
+        "access_control": [],
+        "oracle": [
+          "oracle"
+        ],
+        "reentrancy": [],
+        "reward": [],
+        "vault": []
+      }
+    },
+    "test_files": [
+      {
+        "coverage_terms": {
+          "access_control": [],
+          "oracle": [
+            "oracle"
+          ],
+          "reentrancy": [],
+          "reward": [],
+          "vault": []
+        },
+        "file": "test/OracleRewardFixture.t.sol",
+        "fuzz_functions": [],
+        "invariant_functions": [],
+        "test_functions": [
+          "test_placeholderClaimDoesNotRevert",
+          "test_placeholderOracleAnswerIsPositive",
+          "test_placeholderStakeAccounting"
+        ]
+      }
+    ],
+    "warnings": []
   },
   "signals": {
     "access_control": {
@@ -1894,6 +4205,13 @@
       "terms": []
     }
   },
+  "slither": {
+    "available": false,
+    "detectors": [],
+    "enabled": false,
+    "source": "disabled",
+    "warnings": []
+  },
   "suggested_invariants": [
     {
       "category": "vault",
@@ -1988,10 +4306,10 @@
   ],
   "summary": {
     "critical": 0,
-    "high": 4,
+    "high": 1,
     "informational": 0,
-    "low": 2,
-    "medium": 5,
+    "low": 3,
+    "medium": 7,
     "suppressed": 0,
     "total_readiness_gaps": 11
   },
@@ -2038,5 +4356,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.5.0"
+  "version": "0.6.0"
 }

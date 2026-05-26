@@ -8,7 +8,7 @@ Compared against: `examples/reports/mini-vault.baseline.json`
 | ------------------------- | ----- |
 | New readiness gaps        | 0     |
 | Resolved readiness gaps   | 0     |
-| Unchanged readiness gaps  | 2     |
+| Unchanged readiness gaps  | 5     |
 | Changed readiness gaps    | 0     |
 | Suppressed readiness gaps | 0     |
 
@@ -24,6 +24,9 @@ Compared against: `examples/reports/mini-vault.baseline.json`
 
 - `ARK-VLT-001` - Vault accounting without invariant tests
 - `ARK-VLT-007` - Fee logic without fee accounting tests
+- `ARK-ACC-003` - Admin role concentration not documented
+- `ARK-REENT-001` - Value flow with external calls needs reentrancy review
+- `ARK-REENT-004` - External call path without documented ordering assumptions
 
 ### Changed readiness gaps
 

@@ -18,10 +18,11 @@ formal audit. They are designed to help authorized maintainers prepare for one.
 
 ## How Rule Packs Work
 
-Arkheionx reads local repository files and detects term-based signals such as
+Arkheionx reads local repository files and detects signals such as
 `latestRoundData`, `convertToShares`, `onlyOwner`, `claimReward`, or
-`nonReentrant`. The scanner then compares those signals against visible test,
-documentation, and configuration coverage.
+`nonReentrant`. In v0.6.0, semantic-lite extraction adds function-level
+evidence and test coverage mapping so weak keyword-only findings can be
+downgraded instead of treated like stronger Solidity evidence.
 
 When a gap is detected, Arkheionx emits a readiness finding with:
 
@@ -32,14 +33,16 @@ When a gap is detected, Arkheionx emits a readiness finding with:
 - historical pattern similarity,
 - recommended defensive checks,
 - suggested tests,
+- evidence records,
+- confidence reasons,
+- detection sources,
 - GitHub issue-plan metadata.
 
 ## What Rule Packs Do Not Prove
 
-Rule packs do not provide semantic Solidity analysis, call graph verification,
-stateful exploit confirmation, or formal audit coverage. They intentionally do
-not call live chains, scan deployed contracts, submit transactions, or produce
-exploit payloads.
+Rule packs do not provide full semantic Solidity analysis, call graph
+verification, stateful exploit confirmation, or formal audit coverage. They
+intentionally do not call live chains, scan deployed contracts, submit
+transactions, or produce exploit payloads.
 
 Use rule pack findings as a pre-audit readiness map.
-

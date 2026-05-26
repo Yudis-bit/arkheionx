@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/oracle-staking-fixture`
-- Generated at: `2026-05-25T19:01:52+00:00`
+- Generated at: `2026-05-26T01:04:36+00:00`
 - Protocol type: `staking`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `0.5.0`
+- Scanner version: `0.6.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -21,6 +21,18 @@
 
 This is an automated pre-audit readiness report. It is not a formal audit, does not prove the absence or presence of vulnerabilities, does not authorize live-target testing, and should only be used on repositories you own or are authorized to review. A formal audit is recommended before handling real user funds.
 
+## Analysis Quality
+
+| Source                   | Status   |
+| ------------------------ | -------- |
+| Keyword scan             | enabled  |
+| Semantic-lite extraction | enabled  |
+| Semantic contracts       | 3        |
+| Semantic test files      | 1        |
+| Slither                  | disabled |
+| Slither detectors        | 0        |
+| Test coverage mapping    | enabled  |
+
 ## Executive Summary
 
 - Readiness score: **65/100**
@@ -28,11 +40,11 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 - Active readiness gaps: `11`
 - Suppressed readiness gaps: `0`
 - Top readiness gaps:
-  - **ARK-ORC-001 (High readiness gap):** Oracle-dependent logic without stale-price tests - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
-  - **ARK-ORC-002 (High readiness gap):** Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - **ARK-TST-002 (High readiness gap):** No invariant tests detected for DeFi protocol shape - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
-  - **ARK-VLT-009 (High readiness gap):** Vault accounting lacks visible roundtrip or conservation coverage - Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.
+  - **ARK-ORC-001 (Medium readiness gap):** Oracle-dependent logic without stale-price tests - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
+  - **ARK-ORC-002 (Medium readiness gap):** Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - **ARK-ORC-005 (Medium readiness gap):** Missing price bounds or fallback assumptions documentation - Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.
+  - **ARK-REENT-001 (Medium readiness gap):** External-call value flow needs reentrancy review - Review state update order and add local malicious-receiver tests where callbacks are possible.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
@@ -60,13 +72,13 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 ## Top Readiness Gaps
 
-| ID          | Priority             | Category          | Title                                                                  |
-| ----------- | -------------------- | ----------------- | ---------------------------------------------------------------------- |
-| ARK-ORC-001 | High readiness gap   | oracle-pricing    | Oracle-dependent logic without stale-price tests                       |
-| ARK-ORC-002 | High readiness gap   | oracle-pricing    | Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage |
-| ARK-TST-002 | High readiness gap   | testing-readiness | No invariant tests detected for DeFi protocol shape                    |
-| ARK-VLT-009 | High readiness gap   | vault-accounting  | Vault accounting lacks visible roundtrip or conservation coverage      |
-| ARK-ORC-005 | Medium readiness gap | oracle-pricing    | Missing price bounds or fallback assumptions documentation             |
+| ID            | Priority             | Category              | Title                                                                  |
+| ------------- | -------------------- | --------------------- | ---------------------------------------------------------------------- |
+| ARK-TST-002   | High readiness gap   | testing-readiness     | No invariant tests detected for DeFi protocol shape                    |
+| ARK-ORC-001   | Medium readiness gap | oracle-pricing        | Oracle-dependent logic without stale-price tests                       |
+| ARK-ORC-002   | Medium readiness gap | oracle-pricing        | Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage |
+| ARK-ORC-005   | Medium readiness gap | oracle-pricing        | Missing price bounds or fallback assumptions documentation             |
+| ARK-REENT-001 | Medium readiness gap | reentrancy-value-flow | External-call value flow needs reentrancy review                       |
 
 ## Rule Pack Coverage
 
@@ -309,8 +321,17 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 ### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
 
 - Priority: `High readiness gap`
-- Confidence: `low`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `testing-readiness`
+
+Evidence:
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `src/OracleRewardFixture.sol:81` in `earned`: Solidity function shape matches this readiness finding. Snippet: `+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);`
+- `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
+- `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
+- `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
 
 Detected signals:
 - scanner signal
@@ -331,9 +352,18 @@ Search tags: `invariant-testing, staking`
 
 ### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
 
-- Priority: `High readiness gap`
-- Confidence: `low`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
+
+Evidence:
+- `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `test/documentation coverage`: Matching test coverage terms detected: oracle.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding.
+- `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding.
 
 Detected signals:
 - scanner signal
@@ -354,9 +384,20 @@ Search tags: `oracle-risk, price-assumptions`
 
 ### ARK-VLT-009 - Vault accounting lacks visible roundtrip or conservation coverage
 
-- Priority: `High readiness gap`
+- Priority: `Low readiness gap`
 - Confidence: `low`
+- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
+- Detection sources: `keyword, test-coverage`
 - Category: `vault-accounting`
+
+Evidence:
+- `test/documentation coverage`: No semantic-lite vault test coverage terms were detected.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding.
+- `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding.
+
+False-positive notes:
+
+Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
 
 Detected signals:
 - scanner signal
@@ -378,8 +419,17 @@ Search tags: `vault-accounting, share-accounting`
 ### ARK-REENT-001 - External-call value flow needs reentrancy review
 
 - Priority: `Medium readiness gap`
-- Confidence: `low`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
+- `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
+- `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
+- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding.
 
 Detected signals:
 - scanner signal
@@ -401,8 +451,17 @@ Search tags: `reentrancy-review, value-flow`
 ### ARK-RWD-001 - Reward accounting needs conservation coverage
 
 - Priority: `Medium readiness gap`
-- Confidence: `low`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `reward-accounting`
+
+Evidence:
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `src/OracleRewardFixture.sol:81` in `earned`: Solidity function shape matches this readiness finding. Snippet: `+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);`
+- `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
+- `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
+- `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
 
 Detected signals:
 - scanner signal
@@ -423,9 +482,18 @@ Search tags: `reward-accounting, precision`
 
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
+
+Evidence:
+- `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `test/documentation coverage`: Matching test coverage terms detected: oracle.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
+- `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
 
 Detected signals:
 - `AggregatorV3Interface`
@@ -472,8 +540,17 @@ Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 ### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
+
+Evidence:
+- `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `test/documentation coverage`: Matching test coverage terms detected: oracle.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
+- `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
 
 Detected signals:
 - `AggregatorV3Interface`
@@ -520,8 +597,17 @@ Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 ### ARK-ACC-003 - Admin role concentration not documented
 
 - Priority: `Low readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `access-control`
+
+Evidence:
+- `src/OracleRewardFixture.sol:47` in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:51` in `setEmissionRate`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:55` in `setTreasury`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:59` in `pause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:63` in `unpause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
 
 Detected signals:
 - `onlyOwner`
@@ -563,8 +649,17 @@ Search tags: `access-control-review, documentation-readiness, access-control-rul
 ### ARK-REENT-004 - External call path without documented ordering assumptions
 
 - Priority: `Low readiness gap`
-- Confidence: `low`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
+- `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
+- `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
+- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom`
 
 Detected signals:
 - `transfer`
@@ -601,7 +696,16 @@ Search tags: `reentrancy-review, documentation-readiness, reentrancy-rule-pack`
 
 - Priority: `Medium readiness gap`
 - Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `reward-accounting`
+
+Evidence:
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `src/OracleRewardFixture.sol:81` in `earned`: Solidity function shape matches this readiness finding. Snippet: `+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);`
+- `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
+- `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
+- `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
 
 Detected signals:
 - `accumulator`
@@ -647,7 +751,16 @@ Search tags: `reward-accounting, precision, staking-rule-pack`
 
 - Priority: `Medium readiness gap`
 - Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
 - Category: `reward-accounting`
+
+Evidence:
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `src/OracleRewardFixture.sol:81` in `earned`: Solidity function shape matches this readiness finding. Snippet: `+ ((balanceOf[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18);`
+- `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
+- `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
+- `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
 
 Detected signals:
 - `accumulator`

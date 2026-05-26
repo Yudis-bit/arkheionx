@@ -4,6 +4,10 @@ Arkheionx v0.3.0 can generate a concise pull request comment with the readiness
 score, protocol type, top readiness gaps, report path, and generated issue
 checklist path.
 
+v0.6 reports and issue plans carry fuller evidence and confidence reasons. The
+PR comment stays intentionally short and links maintainers back to the
+Markdown/JSON artifacts for detailed evidence.
+
 PR comment mode is off by default.
 
 ## What It Does

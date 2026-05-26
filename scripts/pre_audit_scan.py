@@ -15,14 +15,16 @@ import hashlib
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.5.0"
-FINGERPRINT_VERSION = "0.5.0"
+VERSION = "0.6.0"
+FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ".arkheionx.json"
@@ -582,6 +584,13 @@ class ReadinessGap:
     suggested_test: str = ""
     suppressible: bool = True
     suppression: dict[str, str] = field(default_factory=dict)
+    evidence: list[dict[str, object]] = field(default_factory=list)
+    evidence_summary: str = ""
+    confidence_reason: str = ""
+    detection_sources: list[str] = field(default_factory=list)
+    affected_functions: list[str] = field(default_factory=list)
+    affected_contracts: list[str] = field(default_factory=list)
+    false_positive_notes: str = ""
 
 
 FINDING_RULES: list[tuple[str, str, str]] = [
@@ -784,6 +793,25 @@ def config_max_top_gaps(config: dict[str, object]) -> int:
     except (TypeError, ValueError):
         return 5
     return max(1, min(20, value))
+
+
+def config_analysis(config: dict[str, object]) -> dict[str, object]:
+    raw = config.get("analysis", {})
+    analysis = raw if isinstance(raw, dict) else {}
+    min_confidence = str(analysis.get("min_confidence_for_issue_plan", "medium")).lower()
+    if min_confidence not in {"low", "medium", "high"}:
+        min_confidence = "low"
+    try:
+        max_evidence = int(analysis.get("max_evidence_per_finding", 5))
+    except (TypeError, ValueError):
+        max_evidence = 5
+    return {
+        "semantic_lite": bool(analysis.get("semantic_lite", True)),
+        "slither": bool(analysis.get("slither", False)),
+        "min_confidence_for_issue_plan": min_confidence,
+        "downgrade_keyword_only": bool(analysis.get("downgrade_keyword_only", True)),
+        "max_evidence_per_finding": max(1, min(20, max_evidence)),
+    }
 
 
 def resolve_output_path(raw_path: str) -> Path | None:
@@ -1113,6 +1141,469 @@ def detect_vault_test_coverage(
         "covered_count": sum(1 for value in coverage.values() if value),
         "total_checks": len(coverage),
         "test_files_considered": len(usable_tests),
+    }
+
+
+def line_for_offset(text: str, offset: int) -> int:
+    return text.count("\n", 0, max(0, offset)) + 1
+
+
+def find_matching_brace(text: str, open_index: int) -> int:
+    depth = 0
+    in_string = ""
+    escaped = False
+    for index in range(open_index, len(text)):
+        char = text[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == in_string:
+                in_string = ""
+            continue
+        if char in {'"', "'"}:
+            in_string = char
+            continue
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return index
+    return len(text) - 1
+
+
+def normalize_signature_tail(tail: str) -> list[str]:
+    stop_words = {
+        "external",
+        "public",
+        "internal",
+        "private",
+        "payable",
+        "view",
+        "pure",
+        "virtual",
+        "override",
+        "returns",
+        "return",
+        "memory",
+        "calldata",
+        "storage",
+    }
+    cleaned = re.sub(r"\([^)]*\)", " ", tail)
+    tokens = re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", cleaned)
+    return [token for token in tokens if token not in stop_words]
+
+
+def extract_state_variables(contract_body: str) -> list[str]:
+    without_functions = re.sub(r"\b(function|constructor)\b[\s\S]*?{[\s\S]*?}", "", contract_body)
+    variables: set[str] = set()
+    for match in re.finditer(
+        r"^\s*(?:mapping\s*\([^;]+?\)|[A-Za-z_][A-Za-z0-9_<>,\[\].]*)\s+"
+        r"(?:(?:public|private|internal|external|immutable|constant|override)\s+)*"
+        r"([A-Za-z_][A-Za-z0-9_]*)\s*(?:=|;)",
+        without_functions,
+        flags=re.MULTILINE,
+    ):
+        name = match.group(1)
+        if name not in {"function", "returns", "modifier", "event", "error", "struct"}:
+            variables.add(name)
+    return sorted(variables)
+
+
+def extract_calls(function_body: str) -> list[str]:
+    ignored = {"if", "for", "while", "require", "assert", "revert", "emit", "return", "new", "delete"}
+    calls = {
+        match.group(1)
+        for match in re.finditer(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(", function_body)
+        if match.group(1) not in ignored
+    }
+    dot_calls = {
+        match.group(1)
+        for match in re.finditer(r"\.([A-Za-z_][A-Za-z0-9_]*)\s*\(", function_body)
+        if match.group(1) not in ignored
+    }
+    return sorted(calls | dot_calls)
+
+
+def extract_snippet(body: str, terms: Iterable[str]) -> str:
+    for term in terms:
+        index = body.lower().find(term.lower())
+        if index != -1:
+            start = max(0, body.rfind("\n", 0, index) + 1)
+            end = body.find("\n", index)
+            if end == -1:
+                end = min(len(body), index + 120)
+            return re.sub(r"\s+", " ", body[start:end].strip())[:180]
+    return ""
+
+
+def parse_functions_from_body(
+    contract_body: str,
+    file_text: str,
+    body_offset: int,
+    state_variables: list[str],
+) -> list[dict[str, object]]:
+    functions: list[dict[str, object]] = []
+    pattern = re.compile(r"\b(function|constructor)\s+([A-Za-z_][A-Za-z0-9_]*)?\s*\([^;{]*\)\s*([^;{]*){", re.MULTILINE)
+    for match in pattern.finditer(contract_body):
+        open_index = body_offset + match.end() - 1
+        close_index = find_matching_brace(file_text, open_index)
+        body = file_text[open_index + 1 : close_index]
+        name = match.group(2) or "constructor"
+        tail = match.group(3) or ""
+        visibility = "unspecified"
+        for candidate in ["external", "public", "internal", "private"]:
+            if re.search(rf"\b{candidate}\b", tail):
+                visibility = candidate
+                break
+        modifiers = normalize_signature_tail(tail)
+        calls = extract_calls(body)
+        external_terms = [
+            "transferFrom",
+            "safeTransferFrom",
+            "safeTransfer",
+            "transfer",
+            "send",
+            ".call(",
+            "call{",
+            "delegatecall",
+            "flashLoan",
+            "executeOperation",
+        ]
+        oracle_terms = [
+            "latestRoundData",
+            "latestAnswer",
+            "getPrice",
+            "getReserves",
+            "observe",
+            "consult",
+            "sqrtPriceX96",
+        ]
+        writes_state = [
+            variable
+            for variable in state_variables
+            if re.search(rf"\b{re.escape(variable)}\b\s*(?:=|\+=|-=|\*=|/=|\+\+|--|\[)", body)
+        ]
+        reads_state = [variable for variable in state_variables if re.search(rf"\b{re.escape(variable)}\b", body)]
+        external_calls = [term for term in external_terms if term in body or term.replace(".", "") in calls]
+        oracle_calls = [term for term in oracle_terms if term in body or term in calls]
+        line_start = line_for_offset(file_text, body_offset + match.start())
+        line_end = line_for_offset(file_text, close_index)
+        functions.append(
+            {
+                "name": name,
+                "visibility": visibility,
+                "modifiers": modifiers,
+                "payable": bool(re.search(r"\bpayable\b", tail)),
+                "line_start": line_start,
+                "line_end": line_end,
+                "body_excerpt_hash": hashlib.sha256(body.strip().encode("utf-8")).hexdigest()[:16],
+                "calls": calls[:40],
+                "external_calls": sorted(set(external_calls)),
+                "oracle_calls": sorted(set(oracle_calls)),
+                "writes_state": sorted(set(writes_state)),
+                "reads_state": sorted(set(reads_state)),
+                "snippet": extract_snippet(body, list(oracle_terms) + list(external_terms) + list(writes_state)),
+            }
+        )
+    return functions
+
+
+def parse_contracts_from_solidity(text: str, path: Path, root: Path) -> list[dict[str, object]]:
+    contracts: list[dict[str, object]] = []
+    pattern = re.compile(r"\b(abstract\s+contract|contract|interface|library)\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s+is\s+([^{]+))?\s*{")
+    for match in pattern.finditer(text):
+        open_index = match.end() - 1
+        close_index = find_matching_brace(text, open_index)
+        body = text[open_index + 1 : close_index]
+        inherits = []
+        if match.group(3):
+            inherits = [item.strip().split()[0] for item in match.group(3).split(",") if item.strip()]
+        state_variables = extract_state_variables(body)
+        functions = parse_functions_from_body(body, text, open_index + 1, state_variables)
+        contracts.append(
+            {
+                "name": match.group(2),
+                "file": rel(path, root),
+                "kind": match.group(1).replace("abstract ", ""),
+                "inherits": inherits,
+                "line_start": line_for_offset(text, match.start()),
+                "line_end": line_for_offset(text, close_index),
+                "state_variables": state_variables,
+                "functions": functions,
+            }
+        )
+    return contracts
+
+
+def parse_test_file(text: str, path: Path, root: Path) -> dict[str, object]:
+    test_functions = re.findall(r"\bfunction\s+(test[A-Za-z0-9_]*)\s*\(", text)
+    invariant_functions = [name for name in re.findall(r"\bfunction\s+([A-Za-z0-9_]*invariant[A-Za-z0-9_]*)\s*\(", text, flags=re.IGNORECASE)]
+    fuzz_functions = [name for name in test_functions if "fuzz" in name.lower()]
+    lower = text.lower()
+    coverage_terms = {
+        "oracle": ["stale", "updatedat", "heartbeat", "decimals", "bounds", "twap", "spot", "oracle", "price"],
+        "access_control": ["unauthorized", "onlyowner", "reverts", "prank", "owner", "role", "admin", "grantrole", "revokerole"],
+        "reentrancy": ["reentrant", "attacker", "callback", "malicious", "receiver", "double claim", "doubleclaim"],
+        "reward": ["multi-user", "multiuser", "conservation", "claim twice", "claimtwice", "accumulator", "rewardpertoken", "epoch"],
+        "vault": ["deposit", "withdraw", "redeem", "donation", "rounding", "totalassets", "preview", "invariant"],
+    }
+    coverage = {
+        key: sorted({term for term in terms if term in lower})
+        for key, terms in coverage_terms.items()
+    }
+    return {
+        "file": rel(path, root),
+        "test_functions": sorted(set(test_functions)),
+        "invariant_functions": sorted(set(invariant_functions)),
+        "fuzz_functions": sorted(set(fuzz_functions)),
+        "coverage_terms": coverage,
+    }
+
+
+def flatten_semantic_functions(semantic: dict[str, object]) -> list[dict[str, object]]:
+    functions: list[dict[str, object]] = []
+    for contract in semantic.get("contracts", []):
+        if not isinstance(contract, dict):
+            continue
+        for function in contract.get("functions", []):
+            if isinstance(function, dict):
+                item = dict(function)
+                item["contract"] = contract.get("name", "")
+                item["file"] = contract.get("file", "")
+                functions.append(item)
+    return functions
+
+
+def semantic_signal_summary(contracts: list[dict[str, object]], test_files: list[dict[str, object]]) -> dict[str, object]:
+    functions: list[dict[str, object]] = []
+    state_variables: set[str] = set()
+    inherited: set[str] = set()
+    for contract in contracts:
+        state_variables.update(str(item) for item in contract.get("state_variables", []))
+        inherited.update(str(item) for item in contract.get("inherits", []))
+        for function in contract.get("functions", []):
+            if isinstance(function, dict):
+                functions.append(function)
+    function_names = {str(function.get("name", "")).lower() for function in functions}
+    public_or_external = [
+        function
+        for function in functions
+        if function.get("visibility") in {"public", "external"}
+    ]
+    admin_prefixes = ("set", "update", "configure", "pause", "unpause", "rescue", "sweep", "upgrade", "initialize")
+    admin_setters = [
+        function
+        for function in public_or_external
+        if str(function.get("name", "")).lower().startswith(admin_prefixes)
+        or any(str(modifier).lower() in {"onlyowner", "onlyrole"} for modifier in function.get("modifiers", []))
+    ]
+    value_flow = [
+        function
+        for function in functions
+        if function.get("external_calls")
+        and (
+            any(term in str(function.get("name", "")).lower() for term in ["withdraw", "redeem", "claim", "refund", "unstake", "payout"])
+            or bool(function.get("writes_state"))
+        )
+    ]
+    reward_state = any(term in variable.lower() for variable in state_variables for term in ["reward", "accumulator", "index", "emission", "staked"])
+    vault_functions = {"deposit", "withdraw", "redeem", "mint", "totalassets", "converttoshares", "converttoassets", "previewdeposit", "previewwithdraw"}
+    tests_by_pack = {"oracle": set(), "access_control": set(), "reentrancy": set(), "reward": set(), "vault": set()}
+    for test_file in test_files:
+        coverage_terms = test_file.get("coverage_terms", {})
+        if isinstance(coverage_terms, dict):
+            for key in tests_by_pack:
+                terms = coverage_terms.get(key, [])
+                if isinstance(terms, list):
+                    tests_by_pack[key].update(str(term) for term in terms)
+    return {
+        "contract_count": len(contracts),
+        "function_count": len(functions),
+        "has_oracle_calls": any(function.get("oracle_calls") for function in functions),
+        "has_admin_setters": bool(admin_setters),
+        "has_external_value_flow": bool(value_flow),
+        "has_reward_accounting": reward_state or bool(function_names & {"stake", "unstake", "claim", "claimreward", "earned", "rewardpertoken", "notifyrewardamount"}),
+        "has_vault_functions": bool(function_names & vault_functions),
+        "has_upgradeability": bool(inherited & {"UUPSUpgradeable", "TransparentUpgradeableProxy"}) or any("upgrade" in str(function.get("name", "")).lower() or "initializer" in [str(mod).lower() for mod in function.get("modifiers", [])] for function in functions),
+        "has_invariant_tests": any(test_file.get("invariant_functions") for test_file in test_files),
+        "has_fuzz_tests": any(test_file.get("fuzz_functions") for test_file in test_files),
+        "test_coverage": {key: sorted(values) for key, values in tests_by_pack.items()},
+    }
+
+
+def extract_solidity_structure(
+    contents: dict[Path, str],
+    classified: ClassifiedFiles,
+    root: Path,
+    enabled: bool = True,
+) -> dict[str, object]:
+    if not enabled:
+        return {
+            "enabled": False,
+            "contracts": [],
+            "test_files": [],
+            "signals": {},
+            "warnings": [],
+        }
+    contracts: list[dict[str, object]] = []
+    test_files: list[dict[str, object]] = []
+    warnings: list[str] = []
+    for path in classified.solidity_sources:
+        try:
+            contracts.extend(parse_contracts_from_solidity(contents.get(path, ""), path, root))
+        except Exception as exc:  # Defensive parser: never fail the scan.
+            warnings.append(f"semantic-lite parse warning for `{rel(path, root)}`: {exc}")
+    for path in classified.solidity_tests:
+        if is_placeholder_skeleton(contents.get(path, "")):
+            continue
+        try:
+            test_files.append(parse_test_file(contents.get(path, ""), path, root))
+        except Exception as exc:
+            warnings.append(f"semantic-lite test parse warning for `{rel(path, root)}`: {exc}")
+    return {
+        "enabled": True,
+        "contracts": contracts,
+        "test_files": test_files,
+        "signals": semantic_signal_summary(contracts, test_files),
+        "warnings": warnings,
+    }
+
+
+def normalize_slither_detector(item: dict[str, object], root: Path) -> dict[str, object]:
+    elements: list[dict[str, object]] = []
+    for element in item.get("elements", []) if isinstance(item.get("elements", []), list) else []:
+        if not isinstance(element, dict):
+            continue
+        source_mapping = element.get("source_mapping", {})
+        filename = ""
+        line = 1
+        if isinstance(source_mapping, dict):
+            filename = str(source_mapping.get("filename_relative") or source_mapping.get("filename") or "")
+            try:
+                lines = source_mapping.get("lines", [1])
+                line = int(lines[0] if isinstance(lines, list) and lines else 1)
+            except (TypeError, ValueError):
+                line = 1
+        elements.append(
+            {
+                "name": str(element.get("name", "")),
+                "type": str(element.get("type", "")),
+                "file": filename,
+                "line": line,
+            }
+        )
+    return {
+        "check": str(item.get("check", "")),
+        "impact": str(item.get("impact", "")),
+        "confidence": str(item.get("confidence", "")),
+        "description": str(item.get("description", ""))[:500],
+        "elements": elements[:10],
+    }
+
+
+def normalize_slither_json(data: dict[str, object], root: Path, source: str) -> dict[str, object]:
+    raw_detectors = []
+    results = data.get("results", {})
+    if isinstance(results, dict) and isinstance(results.get("detectors"), list):
+        raw_detectors = results.get("detectors", [])
+    elif isinstance(data.get("detectors"), list):
+        raw_detectors = data.get("detectors", [])
+    detectors = [
+        normalize_slither_detector(item, root)
+        for item in raw_detectors
+        if isinstance(item, dict)
+    ]
+    return {
+        "enabled": True,
+        "available": True,
+        "source": source,
+        "detectors": detectors,
+        "warnings": [],
+    }
+
+
+def load_slither_json(path: Path, root: Path) -> dict[str, object]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return {
+            "enabled": True,
+            "available": False,
+            "source": "provided",
+            "detectors": [],
+            "warnings": [f"Could not parse Slither JSON `{display_path(path)}`: {exc}"],
+        }
+    return normalize_slither_json(data, root, "provided")
+
+
+def run_slither(root: Path, timeout: int) -> dict[str, object]:
+    slither_path = shutil.which("slither")
+    if not slither_path:
+        return {
+            "enabled": True,
+            "available": False,
+            "source": "unavailable",
+            "detectors": [],
+            "warnings": ["Slither was requested but `slither` was not found on PATH."],
+        }
+    output_path = root / ".arkheionx-slither.json"
+    try:
+        completed = subprocess.run(
+            [slither_path, str(root), "--json", str(output_path)],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            timeout=max(1, timeout),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {
+            "enabled": True,
+            "available": True,
+            "source": "generated",
+            "detectors": [],
+            "warnings": [f"Slither execution failed or timed out: {exc}"],
+        }
+    warnings = []
+    if completed.returncode not in {0, 255}:
+        warnings.append(f"Slither exited with code {completed.returncode}. Arkheionx continued with available output.")
+    if not output_path.exists():
+        warnings.append("Slither did not produce JSON output.")
+        return {
+            "enabled": True,
+            "available": True,
+            "source": "generated",
+            "detectors": [],
+            "warnings": warnings,
+        }
+    summary = load_slither_json(output_path, root)
+    summary["source"] = "generated"
+    summary["warnings"] = list(summary.get("warnings", [])) + warnings
+    try:
+        output_path.unlink()
+    except OSError:
+        pass
+    return summary
+
+
+def slither_analysis(
+    root: Path,
+    enable_slither: bool,
+    slither_json: Path | None,
+    timeout: int,
+) -> dict[str, object]:
+    if slither_json:
+        return load_slither_json(slither_json, root)
+    if enable_slither:
+        return run_slither(root, timeout)
+    return {
+        "enabled": False,
+        "available": False,
+        "source": "disabled",
+        "detectors": [],
+        "warnings": [],
     }
 
 
@@ -2523,6 +3014,299 @@ def build_rule_packs(
     return rule_packs
 
 
+CONFIDENCE_ORDER = {"low": 0, "medium": 1, "high": 2}
+
+
+def confidence_meets(value: str, minimum: str) -> bool:
+    return CONFIDENCE_ORDER.get(value.lower(), 0) >= CONFIDENCE_ORDER.get(minimum.lower(), 0)
+
+
+def downgrade_priority(priority: str, target: str = "Low") -> str:
+    if "critical" in priority.lower() or "high" in priority.lower() or "medium" in priority.lower():
+        return f"{target} readiness gap"
+    return priority
+
+
+def semantic_functions_for_gap(gap: ReadinessGap, semantic: dict[str, object]) -> list[dict[str, object]]:
+    functions = flatten_semantic_functions(semantic)
+    category = gap.category.lower()
+    title = gap.title.lower()
+
+    def name_has(function: dict[str, object], terms: Iterable[str]) -> bool:
+        name = str(function.get("name", "")).lower()
+        return any(term in name for term in terms)
+
+    if "oracle" in category or "oracle" in title:
+        return [function for function in functions if function.get("oracle_calls")]
+    if "reentrancy" in category or "value flow" in title:
+        return [
+            function
+            for function in functions
+            if function.get("external_calls")
+            and (name_has(function, ["withdraw", "redeem", "claim", "refund", "unstake", "payout"]) or function.get("writes_state"))
+        ]
+    if "access" in category or "admin" in title or "privileged" in title:
+        return [
+            function
+            for function in functions
+            if function.get("visibility") in {"public", "external"}
+            and (
+                name_has(function, ["set", "update", "configure", "pause", "unpause", "rescue", "sweep"])
+                or any(str(modifier).lower() in {"onlyowner", "onlyrole"} for modifier in function.get("modifiers", []))
+            )
+        ]
+    if "upgrade" in category or "initializer" in title:
+        return [
+            function
+            for function in functions
+            if name_has(function, ["upgrade", "initialize"])
+            or any("initializer" in str(modifier).lower() for modifier in function.get("modifiers", []))
+        ]
+    if "reward" in category or "reward" in title or "staking" in gap.tags:
+        return [
+            function
+            for function in functions
+            if name_has(function, ["stake", "unstake", "claim", "reward", "earned", "notify"])
+            or any("reward" in str(item).lower() or "accumulator" in str(item).lower() for item in function.get("reads_state", []) + function.get("writes_state", []))
+        ]
+    if "vault" in category or "vault" in title or "erc4626" in gap.tags:
+        return [
+            function
+            for function in functions
+            if name_has(function, ["deposit", "withdraw", "redeem", "mint", "totalassets", "convert", "preview"])
+        ]
+    return []
+
+
+def semantic_evidence_from_function(gap: ReadinessGap, function: dict[str, object]) -> dict[str, object]:
+    if function.get("oracle_calls"):
+        reason = "Solidity function contains oracle or price-feed call evidence."
+        snippet = str(function.get("snippet") or ", ".join(str(item) for item in function.get("oracle_calls", [])))
+    elif function.get("external_calls"):
+        reason = "Solidity function contains external value-flow call evidence."
+        snippet = str(function.get("snippet") or ", ".join(str(item) for item in function.get("external_calls", [])))
+    elif function.get("modifiers"):
+        reason = "Solidity function contains access-control or lifecycle modifier evidence."
+        snippet = ", ".join(str(item) for item in function.get("modifiers", []))
+    else:
+        reason = "Solidity function shape matches this readiness finding."
+        snippet = str(function.get("snippet") or function.get("name", ""))
+    return {
+        "type": "semantic-lite",
+        "file": str(function.get("file", "")),
+        "contract": str(function.get("contract", "")),
+        "function": str(function.get("name", "")),
+        "line": int(function.get("line_start", 1) or 1),
+        "snippet": snippet[:180],
+        "reason": reason,
+    }
+
+
+def test_coverage_for_gap(gap: ReadinessGap, semantic: dict[str, object]) -> tuple[bool, str]:
+    signals = semantic.get("signals", {})
+    coverage = signals.get("test_coverage", {}) if isinstance(signals, dict) else {}
+    if not isinstance(coverage, dict):
+        return False, ""
+    category = gap.category.lower()
+    title = gap.title.lower()
+    mapping = [
+        ("oracle", ["oracle", "stale", "price"]),
+        ("access_control", ["access", "admin", "privileged", "upgrade", "initializer"]),
+        ("reentrancy", ["reentrancy", "value flow", "external call", "claim/refund"]),
+        ("reward", ["reward", "staking", "accumulator", "claim flow"]),
+        ("vault", ["vault", "erc4626", "share", "totalassets"]),
+    ]
+    for key, terms in mapping:
+        if any(term in category or term in title for term in terms):
+            matched = coverage.get(key, [])
+            if isinstance(matched, list) and matched:
+                return True, f"Matching test coverage terms detected: {', '.join(str(item) for item in matched[:8])}."
+            return False, f"No semantic-lite {key.replace('_', ' ')} test coverage terms were detected."
+    return False, ""
+
+
+def slither_evidence_for_gap(gap: ReadinessGap, slither: dict[str, object]) -> list[dict[str, object]]:
+    detectors = slither.get("detectors", [])
+    if not isinstance(detectors, list):
+        return []
+    category = gap.category.lower()
+    keywords: list[str] = []
+    if "reentrancy" in category:
+        keywords = ["reentrancy"]
+    elif "access" in category:
+        keywords = ["access", "controlled", "owner", "privilege"]
+    elif "upgrade" in category:
+        keywords = ["upgrade", "initialize", "proxy"]
+    elif "oracle" in category:
+        keywords = ["oracle", "price", "timestamp"]
+    elif "reward" in category:
+        keywords = ["divide", "precision", "erc20"]
+    evidence = []
+    for detector in detectors:
+        if not isinstance(detector, dict):
+            continue
+        text = f"{detector.get('check', '')} {detector.get('description', '')}".lower()
+        if keywords and not any(keyword in text for keyword in keywords):
+            continue
+        element = {}
+        elements = detector.get("elements", [])
+        if isinstance(elements, list) and elements and isinstance(elements[0], dict):
+            element = elements[0]
+        evidence.append(
+            {
+                "type": "slither",
+                "file": str(element.get("file", "")),
+                "function": str(element.get("name", "")),
+                "line": int(element.get("line", 1) or 1),
+                "snippet": str(detector.get("check", "")),
+                "reason": f"Optional local Slither detector signal: {detector.get('impact', '')}/{detector.get('confidence', '')}.",
+            }
+        )
+    return evidence[:3]
+
+
+def keyword_evidence_for_gap(gap: ReadinessGap) -> list[dict[str, object]]:
+    evidence = []
+    for path in gap.affected_files[:3]:
+        evidence.append(
+            {
+                "type": "keyword",
+                "file": path,
+                "function": "",
+                "line": 1,
+                "snippet": ", ".join(gap.detected[:8]),
+                "reason": "Keyword signal matched this readiness finding.",
+            }
+        )
+    return evidence
+
+
+def finding_has_semantic_support(gap: ReadinessGap, semantic: dict[str, object]) -> bool:
+    signals = semantic.get("signals", {}) if isinstance(semantic.get("signals"), dict) else {}
+    category = gap.category.lower()
+    title = gap.title.lower()
+    if "oracle" in category or "oracle" in title:
+        return bool(signals.get("has_oracle_calls"))
+    if "reentrancy" in category or "value flow" in title:
+        return bool(signals.get("has_external_value_flow"))
+    if "access" in category or "admin" in title or "privileged" in title:
+        return bool(signals.get("has_admin_setters"))
+    if "upgrade" in category:
+        return bool(signals.get("has_upgradeability"))
+    if "reward" in category or "reward" in title:
+        return bool(signals.get("has_reward_accounting"))
+    if "vault" in category or "vault" in title:
+        return bool(signals.get("has_vault_functions"))
+    return False
+
+
+def confidence_reason_for(
+    has_semantic: bool,
+    has_test_coverage: bool,
+    slither_evidence: list[dict[str, object]],
+    keyword_only: bool,
+) -> str:
+    if has_semantic and not has_test_coverage:
+        return "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found."
+    if has_semantic and has_test_coverage:
+        return "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced."
+    if slither_evidence:
+        return "Optional local Slither evidence was attached to this readiness finding."
+    if keyword_only:
+        return "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation."
+    return "Evidence was derived from local/static repository signals."
+
+
+def attach_evidence_and_calibrate(
+    gaps: list[ReadinessGap],
+    semantic: dict[str, object],
+    slither: dict[str, object],
+    analysis_config: dict[str, object],
+    protocol_type: str,
+) -> list[ReadinessGap]:
+    max_evidence = int(analysis_config.get("max_evidence_per_finding", 5))
+    downgrade_keyword_only = bool(analysis_config.get("downgrade_keyword_only", True))
+    for gap in gaps:
+        semantic_functions = semantic_functions_for_gap(gap, semantic) if semantic.get("enabled") else []
+        semantic_evidence = [semantic_evidence_from_function(gap, function) for function in semantic_functions[:max_evidence]]
+        has_test_coverage, coverage_note = test_coverage_for_gap(gap, semantic)
+        test_evidence: list[dict[str, object]] = []
+        if coverage_note:
+            test_evidence.append(
+                {
+                    "type": "test-coverage",
+                    "file": "",
+                    "function": "",
+                    "line": 1,
+                    "snippet": "",
+                    "reason": coverage_note,
+                }
+            )
+        slither_items = slither_evidence_for_gap(gap, slither)
+        keyword_items = keyword_evidence_for_gap(gap)
+        evidence = (semantic_evidence + test_evidence + slither_items + keyword_items)[:max_evidence]
+        gap.evidence = evidence
+        gap.detection_sources = sorted({str(item.get("type", "")) for item in evidence if item.get("type")})
+        gap.affected_functions = sorted({str(item.get("function", "")) for item in evidence if item.get("function")})
+        gap.affected_contracts = sorted({str(item.get("contract", "")) for item in evidence if item.get("contract")})
+        if evidence:
+            first = evidence[0]
+            location = str(first.get("file", ""))
+            function = str(first.get("function", ""))
+            gap.evidence_summary = f"{location}" + (f" in `{function}`" if function else "")
+            if first.get("reason"):
+                gap.evidence_summary += f": {first.get('reason')}"
+        has_semantic = bool(semantic_evidence) or finding_has_semantic_support(gap, semantic)
+        keyword_only = not has_semantic and not slither_items
+        if has_semantic and not has_test_coverage:
+            gap.confidence = "high" if gap.confidence != "low" else "medium"
+        elif has_semantic and has_test_coverage:
+            gap.confidence = "medium"
+            if "high" in gap.priority.lower():
+                gap.priority = "Medium readiness gap"
+                gap.severity = "Medium readiness gap"
+        elif keyword_only and downgrade_keyword_only:
+            gap.confidence = "low"
+            gap.priority = downgrade_priority(gap.priority, "Low")
+            if "critical" in gap.severity.lower() or "high" in gap.severity.lower() or "medium" in gap.severity.lower():
+                gap.severity = "Low readiness gap"
+            gap.false_positive_notes = (
+                "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks."
+            )
+        gap.confidence_reason = confidence_reason_for(has_semantic, has_test_coverage, slither_items, keyword_only)
+        gap.fingerprint = compute_finding_fingerprint(gap, protocol_type)
+    return gaps
+
+
+def analysis_quality(
+    semantic: dict[str, object],
+    slither: dict[str, object],
+    test_readiness: dict[str, object],
+) -> dict[str, object]:
+    slither_status = "disabled"
+    if slither.get("enabled") and slither.get("available"):
+        slither_status = f"enabled ({slither.get('source', 'unknown')})"
+    elif slither.get("enabled"):
+        slither_status = "unavailable"
+    return {
+        "keyword_scan": "enabled",
+        "semantic_lite": "enabled" if semantic.get("enabled") else "disabled",
+        "semantic_contracts": len(semantic.get("contracts", [])) if isinstance(semantic.get("contracts"), list) else 0,
+        "semantic_test_files": len(semantic.get("test_files", [])) if isinstance(semantic.get("test_files"), list) else 0,
+        "slither": slither_status,
+        "slither_detector_count": len(slither.get("detectors", [])) if isinstance(slither.get("detectors"), list) else 0,
+        "test_coverage_mapping": "enabled",
+        "invariant_tests": bool(test_readiness.get("invariant_tests")),
+        "fuzz_tests": bool(test_readiness.get("fuzz_tests")),
+        "warnings": list(semantic.get("warnings", [])) + list(slither.get("warnings", [])),
+    }
+
+
+def write_slither_summary(path: Path, summary: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def apply_suppressions(
     gaps: list[ReadinessGap],
     config: dict[str, object],
@@ -2549,8 +3333,16 @@ def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
         "priority": gap.priority,
         "severity": gap.severity,
         "confidence": gap.confidence,
+        "confidence_reason": gap.confidence_reason,
+        "evidence": gap.evidence,
+        "evidence_summary": gap.evidence_summary,
+        "evidence_count": len(gap.evidence),
+        "detection_sources": gap.detection_sources,
         "detected_signals": gap.detected,
         "affected_files": gap.affected_files,
+        "affected_functions": gap.affected_functions,
+        "affected_contracts": gap.affected_contracts,
+        "false_positive_notes": gap.false_positive_notes,
         "why_it_matters": gap.why_it_matters,
         "historical_pattern_similarity": gap.historical_pattern_similarity,
         "recommended_defensive_checks": gap.defensive_checks,
@@ -2580,8 +3372,10 @@ def baseline_finding_dict(gap: ReadinessGap) -> dict[str, object]:
         "priority": gap.priority,
         "severity": gap.severity,
         "confidence": gap.confidence,
+        "confidence_reason": gap.confidence_reason,
         "fingerprint": gap.fingerprint,
         "affected_files": gap.affected_files,
+        "affected_functions": gap.affected_functions,
         "tags": gap.tags,
     }
 
@@ -2792,11 +3586,27 @@ def sarif_level(gap: ReadinessGap) -> str:
 
 
 def sarif_location(gap: ReadinessGap, root: Path) -> dict[str, object]:
-    uri = gap.affected_files[0] if gap.affected_files else ("README.md" if (root / "README.md").exists() else ".")
+    best_evidence = next(
+        (
+            item
+            for item in gap.evidence
+            if item.get("type") in {"semantic-lite", "slither"} and item.get("file")
+        ),
+        None,
+    )
+    if best_evidence:
+        uri = str(best_evidence.get("file", ""))
+        try:
+            line = int(best_evidence.get("line", 1) or 1)
+        except (TypeError, ValueError):
+            line = 1
+    else:
+        uri = gap.affected_files[0] if gap.affected_files else ("README.md" if (root / "README.md").exists() else ".")
+        line = 1
     return {
         "physicalLocation": {
             "artifactLocation": {"uri": uri, "uriBaseId": "%SRCROOT%"},
-            "region": {"startLine": 1},
+            "region": {"startLine": max(1, line)},
         }
     }
 
@@ -2836,6 +3646,11 @@ def finding_to_sarif_result(gap: ReadinessGap, root: Path) -> dict[str, object]:
         "properties": {
             "priority": gap.priority,
             "confidence": gap.confidence,
+            "confidence_reason": gap.confidence_reason,
+            "evidence_count": len(gap.evidence),
+            "detection_sources": gap.detection_sources,
+            "affected_functions": gap.affected_functions,
+            "false_positive_notes": gap.false_positive_notes,
             "category": gap.category,
             "historical_pattern_similarity": gap.historical_pattern_similarity,
             "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
@@ -2985,6 +3800,7 @@ def generate_report(
     registry_metadata: dict[str, object],
     historical_patterns: list[HistoricalPattern],
     rule_packs: dict[str, dict[str, object]],
+    analysis_quality_data: dict[str, object],
     score: int,
     score_breakdown: dict[str, dict[str, object]],
     gaps: list[ReadinessGap],
@@ -3041,6 +3857,28 @@ def generate_report(
     lines.append("## Disclaimer")
     lines.append("")
     lines.append(DISCLAIMER)
+    lines.append("")
+    lines.append("## Analysis Quality")
+    lines.append("")
+    lines.append(
+        markdown_table(
+            [
+                ["Source", "Status"],
+                ["Keyword scan", str(analysis_quality_data.get("keyword_scan", "enabled"))],
+                ["Semantic-lite extraction", str(analysis_quality_data.get("semantic_lite", "enabled"))],
+                ["Semantic contracts", str(analysis_quality_data.get("semantic_contracts", 0))],
+                ["Semantic test files", str(analysis_quality_data.get("semantic_test_files", 0))],
+                ["Slither", str(analysis_quality_data.get("slither", "disabled"))],
+                ["Slither detectors", str(analysis_quality_data.get("slither_detector_count", 0))],
+                ["Test coverage mapping", str(analysis_quality_data.get("test_coverage_mapping", "enabled"))],
+            ]
+        )
+    )
+    if analysis_quality_data.get("warnings"):
+        lines.append("")
+        lines.append("Analysis warnings:")
+        for warning in analysis_quality_data.get("warnings", []):
+            lines.append(f"- {warning}")
     lines.append("")
     lines.append("## Executive Summary")
     lines.append("")
@@ -3195,8 +4033,28 @@ def generate_report(
             lines.append("")
             lines.append(f"- Priority: `{gap.priority}`")
             lines.append(f"- Confidence: `{gap.confidence}`")
+            lines.append(f"- Confidence reason: {gap.confidence_reason or 'Local/static signals were used.'}")
+            lines.append(f"- Detection sources: `{', '.join(gap.detection_sources) or 'keyword'}`")
             lines.append(f"- Category: `{gap.category}`")
             lines.append("")
+            if gap.evidence:
+                lines.append("Evidence:")
+                for item in gap.evidence[:5]:
+                    location = str(item.get("file", ""))
+                    function = str(item.get("function", ""))
+                    line = item.get("line", 1)
+                    snippet = str(item.get("snippet", ""))
+                    reason = str(item.get("reason", ""))
+                    label = f"`{location}:{line}`" if location else "`test/documentation coverage`"
+                    if function:
+                        label += f" in `{function}`"
+                    lines.append(f"- {label}: {reason}" + (f" Snippet: `{snippet}`" if snippet else ""))
+                lines.append("")
+            if gap.false_positive_notes:
+                lines.append("False-positive notes:")
+                lines.append("")
+                lines.append(gap.false_positive_notes)
+                lines.append("")
             lines.append("Detected signals:")
             if gap.detected:
                 for term in gap.detected[:20]:
@@ -3351,6 +4209,9 @@ def json_report(
     signals: dict[str, dict[str, object]],
     vault_test_coverage: dict[str, object],
     rule_packs: dict[str, dict[str, object]],
+    semantic: dict[str, object],
+    slither: dict[str, object],
+    analysis_quality_data: dict[str, object],
     historical_patterns: list[HistoricalPattern],
     gaps: list[ReadinessGap],
     suppressed_gaps: list[ReadinessGap],
@@ -3383,6 +4244,9 @@ def json_report(
             "workflows": [rel(p, root) for p in classified.workflows],
         },
         "signals": signals,
+        "analysis_quality": analysis_quality_data,
+        "semantic_lite": semantic,
+        "slither": slither,
         "vault_rule_pack": vault_test_coverage,
         "rule_packs": rule_packs,
         "historical_patterns": [item.__dict__ for item in historical_patterns],
@@ -3552,6 +4416,8 @@ def issue_labels_for_gap(gap: ReadinessGap) -> list[str]:
         gap.category.replace("_", "-"),
     }
     labels.update(tag.replace("_", "-") for tag in gap.tags[:6])
+    if gap.confidence == "low":
+        labels.add("low-confidence")
     return sorted(label for label in labels if label)
 
 
@@ -3569,19 +4435,42 @@ def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> 
         f"- Priority: `{gap.priority}`",
         f"- Category: `{gap.category}`",
         f"- Confidence: `{gap.confidence}`",
+        f"- Confidence reason: {gap.confidence_reason or 'Local/static evidence was used.'}",
         f"- Fingerprint: `{gap.fingerprint}`",
         "",
-        "## Why It Matters",
-        "",
-        gap.why_it_matters or gap.detail,
-        "",
-        "## Historical Pattern Similarity",
-        "",
-        gap.historical_pattern_similarity or "Historical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.",
-        "",
-        "## Recommended Defensive Checks",
+        "## Evidence",
         "",
     ]
+    if gap.evidence:
+        for item in gap.evidence[:5]:
+            location = str(item.get("file", ""))
+            function = str(item.get("function", ""))
+            line = item.get("line", 1)
+            reason = str(item.get("reason", ""))
+            snippet = str(item.get("snippet", ""))
+            label = f"`{location}:{line}`" if location else "`test/documentation coverage`"
+            if function:
+                label += f" in `{function}`"
+            lines.append(f"- {label}: {reason}" + (f" Snippet: `{snippet}`" if snippet else ""))
+    else:
+        lines.append("- No structured evidence was attached. Manual review recommended.")
+    if gap.false_positive_notes:
+        lines.extend(["", "False-positive notes:", "", gap.false_positive_notes])
+    lines.extend(
+        [
+            "",
+            "## Why It Matters",
+            "",
+            gap.why_it_matters or gap.detail,
+            "",
+            "## Historical Pattern Similarity",
+            "",
+            gap.historical_pattern_similarity or "Historical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.",
+            "",
+            "## Recommended Defensive Checks",
+            "",
+        ]
+    )
     for check in gap.defensive_checks or [gap.recommendation]:
         lines.append(f"- {check}")
     lines.extend(["", "## Suggested Tests", ""])
@@ -3653,9 +4542,14 @@ def build_issue_plan(
     gaps: list[ReadinessGap],
     generated_outputs: dict[str, str],
     grouping: str = "one-per-finding",
+    min_confidence: str = "low",
 ) -> dict[str, object]:
     issues = []
+    excluded = []
     for gap in sorted(gaps, key=lambda item: (gap_priority_rank(item), item.id, item.title)):
+        if not confidence_meets(gap.confidence, min_confidence):
+            excluded.append(finding_to_dict(gap))
+            continue
         issues.append(
             {
                 "marker": issue_marker(gap.id),
@@ -3666,6 +4560,11 @@ def build_issue_plan(
                 "priority": gap.priority,
                 "category": gap.category,
                 "confidence": gap.confidence,
+                "confidence_reason": gap.confidence_reason,
+                "evidence_summary": gap.evidence_summary,
+                "evidence": gap.evidence[:5],
+                "detection_sources": gap.detection_sources,
+                "affected_functions": gap.affected_functions,
                 "fingerprint": gap.fingerprint,
                 "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
                 "recommended_defensive_checks": gap.defensive_checks,
@@ -3682,7 +4581,9 @@ def build_issue_plan(
         "score_band": score_band(score),
         "mode": "dry-run",
         "issue_grouping": grouping,
+        "min_confidence": min_confidence,
         "issues": issues,
+        "excluded_low_confidence_findings": excluded,
         "summary_issue": {
             "marker": issue_marker("summary"),
             "title": "[Arkheionx] Pre-audit readiness remediation plan",
@@ -3899,6 +4800,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--comment-output", default="", help="Optional pull request comment Markdown output path.")
     parser.add_argument("--issue-checklist-output", default="", help="Optional generated issue checklist Markdown output path.")
     parser.add_argument("--issue-plan-output", default="", help="Optional generated GitHub issue plan JSON output path.")
+    parser.add_argument("--semantic-lite", dest="semantic_lite", action="store_true", default=True, help="Enable semantic-lite Solidity structure extraction.")
+    parser.add_argument("--no-semantic-lite", dest="semantic_lite", action="store_false", help="Disable semantic-lite Solidity structure extraction.")
+    parser.add_argument("--slither", action="store_true", help="Enable optional local Slither integration if available.")
+    parser.add_argument("--slither-json", default="", help="Optional pre-generated Slither JSON file.")
+    parser.add_argument("--slither-output", default="", help="Optional normalized Arkheionx Slither summary output path.")
+    parser.add_argument("--slither-timeout", type=int, default=60, help="Slither timeout in seconds.")
+    parser.add_argument("--slither-strict", action="store_true", help="Fail if Slither is requested but unavailable or fails.")
+    parser.add_argument("--min-confidence-for-issue-plan", default="", choices=["", "low", "medium", "high"], help="Minimum finding confidence included in generated issue plans.")
     parser.add_argument("--config", default=DEFAULT_CONFIG, help="Optional Arkheionx JSON config path.")
     parser.add_argument("--generate-invariant-skeletons", action="store_true", help="Generate safe Foundry invariant skeletons.")
     parser.add_argument("--fail-on-critical-readiness-gap", action="store_true", help="Exit 2 if critical readiness gaps are detected.")
@@ -3922,6 +4831,13 @@ def main(argv: list[str] | None = None) -> int:
     config_path = Path(args.config).expanduser() if args.config else None
     config, config_warnings = load_local_config(config_path, root)
     ignore_paths = config_ignore_paths(config)
+    analysis_config = config_analysis(config)
+    if args.semantic_lite is False:
+        analysis_config["semantic_lite"] = False
+    if args.slither:
+        analysis_config["slither"] = True
+    if args.min_confidence_for_issue_plan:
+        analysis_config["min_confidence_for_issue_plan"] = args.min_confidence_for_issue_plan
 
     files = collect_files(root)
     if ignore_paths:
@@ -3941,6 +4857,25 @@ def main(argv: list[str] | None = None) -> int:
     signals = detect_signals(contents, root, signal_paths or contents.keys())
     test_readiness = detect_test_readiness(contents, classified, root)
     vault_test_coverage = detect_vault_test_coverage(contents, classified)
+    semantic = extract_solidity_structure(contents, classified, root, bool(analysis_config.get("semantic_lite", True)))
+    slither_json_path = resolve_output_path(args.slither_json)
+    slither = slither_analysis(
+        root,
+        bool(analysis_config.get("slither", False)),
+        slither_json_path,
+        args.slither_timeout,
+    )
+    slither_output = resolve_output_path(args.slither_output)
+    if slither_output:
+        write_slither_summary(slither_output, slither)
+    if args.slither_strict and slither.get("enabled") and (not slither.get("available") or slither.get("warnings")):
+        print("error: Slither strict mode requested but Slither evidence was unavailable or produced warnings.", file=sys.stderr)
+        for warning in slither.get("warnings", []):
+            print(f"slither: {warning}", file=sys.stderr)
+        return 1
+    config_warnings.extend(str(warning) for warning in semantic.get("warnings", []))
+    config_warnings.extend(str(warning) for warning in slither.get("warnings", []))
+    quality = analysis_quality(semantic, slither, test_readiness)
     registry_metadata = load_existing_registry_metadata(root)
     historical_patterns = map_historical_patterns(signals, test_readiness)
     score, score_breakdown, gaps, next_steps = compute_readiness_score(
@@ -3954,6 +4889,7 @@ def main(argv: list[str] | None = None) -> int:
     apply_finding_metadata(gaps, signals, protocol_type)
     add_rule_pack_gaps(gaps, contents, classified, signals)
     apply_finding_metadata(gaps, signals, protocol_type)
+    attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
     rule_packs = build_rule_packs(signals, gaps, suppressed_gaps)
     invariants = suggest_invariants(protocol_type, signals)
@@ -3981,6 +4917,7 @@ def main(argv: list[str] | None = None) -> int:
         "comment": display_path(comment_output) if comment_output else "",
         "issue_checklist": display_path(issue_checklist_output) if issue_checklist_output else "",
         "issue_plan": display_path(issue_plan_output) if issue_plan_output else "",
+        "slither_summary": display_path(slither_output) if slither_output else "",
         "baseline": display_path(baseline_output) if baseline_output else "",
         "diff_report": display_path(diff_output) if diff_output else "",
         "diff_json": display_path(diff_json_output) if diff_json_output else "",
@@ -4011,6 +4948,7 @@ def main(argv: list[str] | None = None) -> int:
         registry_metadata=registry_metadata,
         historical_patterns=historical_patterns,
         rule_packs=rule_packs,
+        analysis_quality_data=quality,
         score=score,
         score_breakdown=score_breakdown,
         gaps=gaps,
@@ -4026,7 +4964,17 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     if issue_plan_output:
-        write_issue_plan(issue_plan_output, build_issue_plan(root, protocol_type, score, gaps, generated_outputs))
+        write_issue_plan(
+            issue_plan_output,
+            build_issue_plan(
+                root,
+                protocol_type,
+                score,
+                gaps,
+                generated_outputs,
+                min_confidence=str(analysis_config.get("min_confidence_for_issue_plan", "low")),
+            ),
+        )
     if issue_checklist_output:
         generate_issue_checklist(issue_checklist_output, protocol_type, score, gaps, diff_data, generated_outputs)
     if summary_output:
@@ -4055,6 +5003,9 @@ def main(argv: list[str] | None = None) -> int:
                 signals,
                 vault_test_coverage,
                 rule_packs,
+                semantic,
+                slither,
+                quality,
                 historical_patterns,
                 gaps,
                 suppressed_gaps,
@@ -4086,6 +5037,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Arkheionx issue checklist generated: {issue_checklist_output}")
     if issue_plan_output:
         print(f"Arkheionx issue plan generated: {issue_plan_output}")
+    if slither_output:
+        print(f"Arkheionx Slither summary generated: {slither_output}")
     if skeleton_path:
         print(f"Arkheionx invariant skeleton generated: {skeleton_path}")
     print(f"Readiness score: {score}/100 ({score_band(score)})")

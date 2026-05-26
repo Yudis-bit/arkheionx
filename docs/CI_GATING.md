@@ -52,3 +52,8 @@ team to work down existing findings.
 Threshold failures are readiness gates. They are not vulnerability
 confirmations and should be reviewed with context. False positives should be
 reported through the False Positive Report issue template.
+
+v0.6.0 confidence reasons and detection sources make gates easier to review.
+For early teams, prefer score thresholds or `fail-on-new-high` over blocking on
+all high gaps. Low-confidence keyword-only findings should usually be reviewed
+before they become CI blockers.

@@ -11,28 +11,14 @@ Score: `65/100`
   - Suggested labels: `arkheionx, high-readiness-gap, invariant-testing, pre-audit-readiness, staking, testing-readiness`
   - Suggested tests:
     - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
-- [ ] ARK-ORC-002 - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-  - Suggested issue title: `[Arkheionx][High] ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage`
-  - Suggested labels: `arkheionx, high-readiness-gap, oracle-pricing, oracle-risk, pre-audit-readiness, price-assumptions`
-  - Suggested tests:
-    - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-- [ ] ARK-VLT-009 - Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.
-  - Suggested issue title: `[Arkheionx][High] ARK-VLT-009 - Vault accounting lacks visible roundtrip or conservation coverage`
-  - Suggested labels: `arkheionx, high-readiness-gap, pre-audit-readiness, share-accounting, vault-accounting`
-  - Suggested tests:
-    - Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.
-- [ ] ARK-ORC-001 - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
-  - Suggested issue title: `[Arkheionx][High] ARK-ORC-001 - Oracle-dependent logic without stale-price tests`
-  - Suggested labels: `arkheionx, high-readiness-gap, oracle-pricing, oracle-risk, oracle-rule-pack, pre-audit-readiness`
-  - Suggested tests:
-    - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
-    - stale round rejection
-    - heartbeat checks
-    - updatedAt validation
-    - answeredInRound handling
 
 ## Medium priority readiness gaps
 
+- [ ] ARK-ORC-002 - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage`
+  - Suggested labels: `arkheionx, medium-readiness-gap, oracle-pricing, oracle-risk, pre-audit-readiness, price-assumptions`
+  - Suggested tests:
+    - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
 - [ ] ARK-REENT-001 - Review state update order and add local malicious-receiver tests where callbacks are possible.
   - Suggested issue title: `[Arkheionx][Medium] ARK-REENT-001 - External-call value flow needs reentrancy review`
   - Suggested labels: `arkheionx, medium-readiness-gap, pre-audit-readiness, reentrancy-review, reentrancy-value-flow, value-flow`
@@ -43,6 +29,15 @@ Score: `65/100`
   - Suggested labels: `arkheionx, medium-readiness-gap, pre-audit-readiness, precision, reward-accounting`
   - Suggested tests:
     - Add reward conservation and no-overclaim tests across multiple users and timing boundaries.
+- [ ] ARK-ORC-001 - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
+  - Suggested issue title: `[Arkheionx][Medium] ARK-ORC-001 - Oracle-dependent logic without stale-price tests`
+  - Suggested labels: `arkheionx, medium-readiness-gap, oracle-pricing, oracle-risk, oracle-rule-pack, pre-audit-readiness`
+  - Suggested tests:
+    - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+    - stale round rejection
+    - heartbeat checks
+    - updatedAt validation
+    - answeredInRound handling
 - [ ] ARK-ORC-005 - Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.
   - Suggested issue title: `[Arkheionx][Medium] ARK-ORC-005 - Missing price bounds or fallback assumptions documentation`
   - Suggested labels: `arkheionx, documentation-readiness, medium-readiness-gap, oracle-pricing, oracle-risk, oracle-rule-pack, pre-audit-readiness`
@@ -72,6 +67,11 @@ Score: `65/100`
 
 ## Low priority readiness gaps
 
+- [ ] ARK-VLT-009 - Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.
+  - Suggested issue title: `[Arkheionx][Low] ARK-VLT-009 - Vault accounting lacks visible roundtrip or conservation coverage`
+  - Suggested labels: `arkheionx, low-confidence, low-readiness-gap, pre-audit-readiness, share-accounting, vault-accounting`
+  - Suggested tests:
+    - Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.
 - [ ] ARK-ACC-003 - Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.
   - Suggested issue title: `[Arkheionx][Low] ARK-ACC-003 - Admin role concentration not documented`
   - Suggested labels: `access-control, access-control-review, access-control-rule-pack, arkheionx, documentation-readiness, low-readiness-gap, pre-audit-readiness`

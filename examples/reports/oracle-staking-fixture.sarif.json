@@ -27,7 +27,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 74
                 }
               }
             }
@@ -36,12 +36,25 @@
             "text": "No invariant tests detected for DeFi protocol shape: Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "d73c8a2c3e3055849cc2a36d"
+            "arkheionxFingerprint": "40c41c40ed1466cdd9635ca9"
           },
           "properties": {
+            "affected_functions": [
+              "claimReward",
+              "earned",
+              "rewardPerToken",
+              "stake",
+              "unstake"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "testing-readiness",
-            "confidence": "low",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -67,7 +80,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 67
                 }
               }
             }
@@ -76,16 +89,28 @@
             "text": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "28931344b387571d2cc7a0e0"
+            "arkheionxFingerprint": "4caf35ffd1a44272525bbdab"
           },
           "properties": {
+            "affected_functions": [
+              "getPrice",
+              "rewardPerToken"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "low",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
@@ -98,7 +123,7 @@
           "ruleId": "ARK-ORC-002"
         },
         {
-          "level": "warning",
+          "level": "note",
           "locations": [
             {
               "physicalLocation": {
@@ -116,16 +141,24 @@
             "text": "Vault accounting lacks visible roundtrip or conservation coverage: Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "5f6e9eda57d929bb6b3f50a6"
+            "arkheionxFingerprint": "455b182ea87d56a4a492118e"
           },
           "properties": {
+            "affected_functions": [],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
             "confidence": "low",
+            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "detection_sources": [
+              "keyword",
+              "test-coverage"
+            ],
+            "evidence_count": 3,
+            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants."
@@ -147,7 +180,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 86
                 }
               }
             }
@@ -156,12 +189,25 @@
             "text": "External-call value flow needs reentrancy review: Review state update order and add local malicious-receiver tests where callbacks are possible. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "843d4f2224907dabc3816772"
+            "arkheionxFingerprint": "02dd029123ec6087d21f1f1d"
           },
           "properties": {
+            "affected_functions": [
+              "claimReward",
+              "stake",
+              "unstake"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reentrancy-value-flow",
-            "confidence": "low",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -187,7 +233,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 74
                 }
               }
             }
@@ -196,12 +242,25 @@
             "text": "Reward accounting needs conservation coverage: Add reward conservation and no-overclaim tests across multiple users and timing boundaries. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "c0a40921efd524042b77b919"
+            "arkheionxFingerprint": "1c316cdf88792a7e2b1e566e"
           },
           "properties": {
+            "affected_functions": [
+              "claimReward",
+              "earned",
+              "rewardPerToken",
+              "stake",
+              "unstake"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reward-accounting",
-            "confidence": "low",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -227,7 +286,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 67
                 }
               }
             }
@@ -236,16 +295,28 @@
             "text": "Oracle-dependent logic without stale-price tests: Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "9aee372d5fc42a664ef7e458"
+            "arkheionxFingerprint": "27199688c1b60c42d92a6d05"
           },
           "properties": {
+            "affected_functions": [
+              "getPrice",
+              "rewardPerToken"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "High readiness gap",
+            "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
@@ -268,7 +339,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 67
                 }
               }
             }
@@ -277,12 +348,24 @@
             "text": "Missing price bounds or fallback assumptions documentation: Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "968c56ae1cd3dae1e2eae280"
+            "arkheionxFingerprint": "e5f500ac09dd007865613478"
           },
           "properties": {
+            "affected_functions": [
+              "getPrice",
+              "rewardPerToken"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "high",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -309,7 +392,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 47
                 }
               }
             }
@@ -318,12 +401,25 @@
             "text": "Admin role concentration not documented: Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "13af6797121f94ff50563104"
+            "arkheionxFingerprint": "c612302ce98632d634d45e31"
           },
           "properties": {
+            "affected_functions": [
+              "pause",
+              "setEmissionRate",
+              "setOracle",
+              "setTreasury",
+              "unpause"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "access-control",
-            "confidence": "medium",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to operational control readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -350,7 +446,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 86
                 }
               }
             }
@@ -359,12 +455,25 @@
             "text": "External call path without documented ordering assumptions: Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "c6c3deef7e721e9057a3f65a"
+            "arkheionxFingerprint": "7e2acd399b5366b913e3e8a9"
           },
           "properties": {
+            "affected_functions": [
+              "claimReward",
+              "stake",
+              "unstake"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reentrancy-value-flow",
-            "confidence": "low",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -391,7 +500,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 74
                 }
               }
             }
@@ -400,12 +509,25 @@
             "text": "Accumulator/index logic without precision/rounding tests: Add precision, dust, rounding, and small-balance tests for accumulator or index logic. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "e7599f77df25242d8103622d"
+            "arkheionxFingerprint": "64ba736c260ec0865f0a87c1"
           },
           "properties": {
+            "affected_functions": [
+              "claimReward",
+              "earned",
+              "rewardPerToken",
+              "stake",
+              "unstake"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reward-accounting",
             "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -432,7 +554,7 @@
                   "uriBaseId": "%SRCROOT%"
                 },
                 "region": {
-                  "startLine": 1
+                  "startLine": 74
                 }
               }
             }
@@ -441,12 +563,25 @@
             "text": "Claim flow without double-claim prevention tests: Add tests proving users cannot claim the same reward entitlement twice. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
-            "arkheionxFingerprint": "9362d8f81c0fd2384aea5bbb"
+            "arkheionxFingerprint": "3c91794e0a66202839c5df60"
           },
           "properties": {
+            "affected_functions": [
+              "claimReward",
+              "earned",
+              "rewardPerToken",
+              "stake",
+              "unstake"
+            ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reward-accounting",
             "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
@@ -740,7 +875,7 @@
               }
             }
           ],
-          "semanticVersion": "0.5.0"
+          "semanticVersion": "0.6.0"
         }
       }
     }

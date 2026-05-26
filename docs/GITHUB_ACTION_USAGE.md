@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           protocol-type: auto
 ```
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           root: "."
           protocol-type: "auto"
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -123,7 +123,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
     with:
       protocol-type: "auto"
       output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -197,7 +197,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
     with:
       protocol-type: "auto"
       create-github-issues: "true"
@@ -248,7 +248,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.4.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.5.0
         with:
           protocol-type: "vault"
           output: "ARKHEIONX_VAULT_READINESS_REPORT.md"
@@ -273,6 +273,40 @@ Suppressed findings are still shown under `Suppressed Readiness Gaps` in the
 report and in `suppressed_findings` in JSON. Suppression is not proof of
 safety.
 
+## Semantic-Lite And Optional Slither
+
+Semantic-lite extraction is enabled by default. It attaches evidence,
+confidence reasons, detection sources, and affected functions to readiness
+findings.
+
+```yaml
+with:
+  semantic-lite: "true"
+  min-confidence-for-issue-plan: "low"
+```
+
+Slither enrichment is optional and local. Arkheionx does not install Slither
+automatically:
+
+```yaml
+steps:
+  - uses: actions/checkout@v4
+  - run: pipx install slither-analyzer
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@main
+    with:
+      protocol-type: "auto"
+      slither: "true"
+      slither-output: "arkheionx-slither-summary.json"
+```
+
+If Slither is unavailable, Arkheionx continues unless `slither-strict: "true"`
+is explicitly set. You can also pass an existing local Slither JSON file:
+
+```yaml
+with:
+  slither-json: "slither-report.json"
+```
+
 ## Local CLI Equivalent
 
 ```sh
@@ -286,7 +320,8 @@ python3 scripts/pre_audit_scan.py \
   --summary-output ARKHEIONX_ACTION_SUMMARY.md \
   --comment-output ARKHEIONX_PR_COMMENT.md \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
-  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
+  --issue-plan-output ARKHEIONX_ISSUE_PLAN.json \
+  --min-confidence-for-issue-plan medium
 ```
 
 ## Inputs
@@ -320,6 +355,13 @@ python3 scripts/pre_audit_scan.py \
 | `issue-labels` | empty | Comma-separated extra labels. |
 | `issue-assignees` | empty | Comma-separated assignees. |
 | `issue-dry-run-output` | `ARKHEIONX_ISSUE_DRY_RUN.md` | Optional dry-run Markdown output. |
+| `semantic-lite` | `true` | Enable semantic-lite Solidity structure extraction. |
+| `slither` | `false` | Enable optional local Slither integration if available. |
+| `slither-json` | empty | Optional pre-generated Slither JSON file. |
+| `slither-output` | empty | Optional normalized Arkheionx Slither summary output path. |
+| `slither-timeout` | `60` | Slither timeout in seconds. |
+| `slither-strict` | `false` | Fail if Slither is requested but unavailable or fails. |
+| `min-confidence-for-issue-plan` | `low` | Minimum confidence included in generated issue plans. |
 | `config` | `.arkheionx.json` | Optional config path. |
 | `generate-invariant-skeletons` | `false` | Create safe Foundry invariant skeletons. |
 | `fail-on-critical-readiness-gap` | `false` | Fail only when explicitly enabled. |
@@ -331,11 +373,14 @@ python3 scripts/pre_audit_scan.py \
 
 ## JSON Output
 
-v0.4.0 JSON includes:
+v0.6.0 JSON includes the v0.4/v0.5 fields plus evidence metadata:
 
 - canonical `findings` with stable IDs;
 - stable finding fingerprints;
 - `fingerprint_version`;
+- `analysis_quality`;
+- `semantic_lite`;
+- `slither`;
 - `diff` data when `compare-baseline` is used;
 - `suppressed_findings`;
 - `summary` counts;
