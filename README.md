@@ -102,16 +102,18 @@ customer claims.
 
 ## Latest Release
 
-Latest stable release: **v0.7.0 - Launch Report OS and Contest Readiness Mode**.
+Latest stable release: **v0.8.0 - Public Demo Workflow and Validation Artifacts**.
 
-v0.7.0 adds:
+v0.8.0 adds:
 
-- Launch Readiness Report output;
-- Pre-Audit Sprint Plan output;
-- Contest Readiness Report output;
-- Executive Summary output;
-- Remediation Roadmap output;
-- delivery artifact documentation and CI validation.
+- Try Arkheionx in 5 Minutes guide;
+- public demo GitHub Actions workflow;
+- reproducible toy demo case studies;
+- before/after readiness example;
+- rule calibration documentation;
+- false-positive review workflow;
+- external validation feedback workflow;
+- demo reports and artifacts.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -123,7 +125,7 @@ v0.7.0 adds:
 | v0.5.0 | Generated issue workflow + rule-pack expansion | Released |
 | v0.6.0 | Semantic-lite analysis + false-positive reduction | Released |
 | v0.7.0 | Launch Report OS + Sprint + Contest Readiness | Released |
-| v0.8.0 | External validation + public demos + rule calibration | In progress |
+| v0.8.0 | External validation + public demos + rule calibration | Released |
 
 ## The Five Pillars
 
@@ -198,7 +200,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v0.7.0` for stable usage:
+Use `@v0.8.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -213,7 +215,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.8.0
         with:
           root: "."
           protocol-type: "auto"
@@ -247,7 +249,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.8.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -276,7 +278,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.8.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -407,26 +409,29 @@ It checks for readiness gaps around:
 
 Read [`docs/VAULT_RULE_PACK.md`](docs/VAULT_RULE_PACK.md).
 
-## v0.8.0 Development Preview
+## v0.8.0 Public Demo Workflow
 
-The next milestone focuses on external evaluation: five-minute demos,
+Arkheionx v0.8.0 focuses on external evaluation: five-minute demos,
 reproducible toy case studies, rule calibration notes, false-positive review,
 and external feedback workflows.
-Development usage is available from `@main`; stable users should pin `@v0.7.0`.
 
-Current v0.8 work includes:
+v0.8.0 includes:
 
-- Try Arkheionx in 5 minutes guide;
+- Try Arkheionx in 5 Minutes guide;
 - public demo GitHub Actions workflow;
 - oracle/staking demo case study;
 - before/after readiness case study;
-- rule calibration and external feedback templates.
+- rule calibration documentation;
+- false-positive review workflow;
+- external validation feedback templates;
+- honest launch and outreach material.
 
 Read:
 
 - [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
 - [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md)
 - [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md)
+- [`docs/FALSE_POSITIVE_REVIEW_WORKFLOW.md`](docs/FALSE_POSITIVE_REVIEW_WORKFLOW.md)
 - [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md)
 
 ## What The Scanner Checks
@@ -649,8 +654,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v0.7.0: Launch Report OS and Contest Readiness.** Client-facing delivery
   artifacts, sprint plans, executive summaries, and remediation roadmaps.
 - **v0.8.0: external validation and public demos.** Five-minute demo workflow,
-  demo case studies, rule calibration notes, and feedback templates. In
-  progress.
+  demo case studies, rule calibration notes, feedback templates, and public
+  demo artifacts.
 - **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
   calibrated rules, release artifacts, contribution workflow.
 
