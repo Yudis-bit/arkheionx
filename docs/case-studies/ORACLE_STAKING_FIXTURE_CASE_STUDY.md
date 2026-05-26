@@ -94,3 +94,18 @@ See [Oracle Staking Before/After](ORACLE_STAKING_BEFORE_AFTER.md).
 - It does not prove Arkheionx has external users or customers.
 - It does not replace a formal audit.
 - It does not confirm exploitable vulnerabilities.
+
+## Related Knowledge Search
+
+Use the v0.9.0 security memory graph to connect the demo findings to defensive
+test ideas and historical pattern categories:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "reward overclaim"
+python3 scripts/search_knowledge.py "missing invariant"
+```
+
+Related findings include `ARK-ORC-001`, `ARK-RWD-001`, and `ARK-TST-002`.
+These mappings explain readiness context only; they do not claim the toy
+fixture has the same issue as any historical protocol.

@@ -87,3 +87,18 @@ The score improvement is a demo signal. It does not prove security.
 
 Run the normal demo scan against both fixture directories and compare JSON
 scores, finding IDs, confidence reasons, and generated delivery artifacts.
+
+## Related Knowledge Search
+
+Use the v0.9.0 local search helper to inspect the related knowledge behind the
+before/after findings:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "reward accounting invariant"
+python3 scripts/search_knowledge.py "access control failure"
+```
+
+The results point to rule-pack docs, suggested defensive tests, and historical
+pattern categories used for calibration. They are not vulnerability
+confirmation.

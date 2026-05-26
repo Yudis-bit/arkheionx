@@ -38,3 +38,18 @@ The rule pack is heuristic. It cannot prove oracle safety, liquidity depth,
 manipulation resistance, or integration correctness. Use findings to guide
 review and formal audit preparation.
 
+## Related Security Memory
+
+- Finding IDs: `ARK-ORC-001`, `ARK-ORC-002`, `ARK-ORC-003`, `ARK-ORC-004`, `ARK-ORC-005`
+- Historical patterns: oracle stale price, spot or reserve price manipulation,
+  pool-price accounting assumptions.
+- Suggested searches:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "Chainlink updatedAt"
+python3 scripts/search_knowledge.py "spot price manipulation"
+```
+
+Use these results as defensive test inspiration, not vulnerability
+confirmation.

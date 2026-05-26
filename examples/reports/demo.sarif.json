@@ -56,6 +56,46 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "",
+            "knowledge": {
+              "broken_invariants": [
+                "protocol-specific-conservation-invariant",
+                "authorization-or-lifecycle-invariant"
+              ],
+              "failed_assumptions": [
+                "unit-tests-cover-compositional-state",
+                "happy-path-tests-cover-adversarial-sequences"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/READINESS_SCORE.md",
+                "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+              ],
+              "related_patterns": [
+                "pattern-missing-invariant-coverage",
+                "pattern-assumption-not-encoded-in-tests"
+              ],
+              "related_pocs": [
+                "poc-2020-08-opyn",
+                "poc-2020-09-bzx-ifusdc",
+                "poc-2021-10-indexed-finance"
+              ],
+              "root_causes": [
+                "critical-assumption-only-documented-or-implicit",
+                "state-machine-not-fuzzed"
+              ],
+              "rule_pack": "testing",
+              "search_terms": [
+                "missing invariant",
+                "audit blocker",
+                "stateful fuzz",
+                "invariant testing"
+              ],
+              "suggested_tests": [
+                "foundry-invariant-skeleton",
+                "stateful-fuzz-sequence",
+                "roundtrip-or-conservation-invariant"
+              ]
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "High readiness gap",
@@ -108,6 +148,14 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -156,6 +204,14 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Low readiness gap",
@@ -209,6 +265,45 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "",
+            "knowledge": {
+              "broken_invariants": [
+                "single-claim-or-withdrawal",
+                "state-updated-before-external-value-flow"
+              ],
+              "failed_assumptions": [
+                "token-transfer-does-not-yield-control",
+                "claim-or-withdraw-path-cannot-repeat"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+                "docs/RULE_PACKS.md"
+              ],
+              "related_patterns": [
+                "pattern-external-call-before-state-update",
+                "pattern-callback-capable-token"
+              ],
+              "related_pocs": [
+                "poc-2018-10-spankchain",
+                "poc-2020-04-uniswap-imbtc",
+                "poc-2021-03-dodo-crowdpool"
+              ],
+              "root_causes": [
+                "external-control-before-state-finalization",
+                "callback-assumption-failure"
+              ],
+              "rule_pack": "reentrancy_value_flow",
+              "search_terms": [
+                "reentrancy value flow",
+                "callback capable token",
+                "claim refund flow"
+              ],
+              "suggested_tests": [
+                "reentrant-receiver-mock",
+                "state-update-before-external-call-test",
+                "double-claim-prevention"
+              ]
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -262,6 +357,47 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "",
+            "knowledge": {
+              "broken_invariants": [
+                "total-claimed-less-than-or-equal-funded",
+                "no-double-claim",
+                "reward-index-monotonicity"
+              ],
+              "failed_assumptions": [
+                "distributed-rewards-never-exceed-funded-rewards",
+                "reward-index-is-monotonic-and-bounded"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+                "docs/RULE_PACKS.md"
+              ],
+              "related_patterns": [
+                "pattern-reward-overclaim",
+                "pattern-accounting-index-drift"
+              ],
+              "related_pocs": [
+                "poc-2020-12-warp-finance",
+                "poc-2020-08-opyn",
+                "poc-2020-09-bzx-ifusdc"
+              ],
+              "root_causes": [
+                "stale-reward-index",
+                "unbounded-claim-accounting",
+                "missing-multi-user-conservation-test"
+              ],
+              "rule_pack": "reward_accounting",
+              "search_terms": [
+                "reward overclaim",
+                "accumulator precision",
+                "reward accounting invariant"
+              ],
+              "suggested_tests": [
+                "reward-conservation-multi-user",
+                "claim-twice-reverts-or-noops",
+                "rewardPerToken-monotonicity"
+              ]
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -314,6 +450,53 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+            "knowledge": {
+              "broken_invariants": [
+                "accounting-value-uses-valid-price",
+                "collateral-value-is-bounded",
+                "share-price-uses-trusted-input"
+              ],
+              "failed_assumptions": [
+                "oracle-price-is-current",
+                "oracle-answer-is-normalized",
+                "pool-price-is-manipulation-resistant"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/ORACLE_RULE_PACK.md",
+                "docs/RULE_PACKS.md",
+                "docs/SEARCH_GUIDE.md"
+              ],
+              "related_patterns": [
+                "pattern-oracle-stale-price",
+                "pattern-spot-price-manipulation",
+                "pattern-pool-price-accounting"
+              ],
+              "related_pocs": [
+                "poc-2025-11-moonwell",
+                "poc-2020-10-harvest",
+                "poc-2021-02-yearn-v1-dai"
+              ],
+              "root_causes": [
+                "missing-oracle-freshness-validation",
+                "implicit-price-trust",
+                "missing-price-bounds"
+              ],
+              "rule_pack": "oracle",
+              "search_terms": [
+                "oracle stale price",
+                "Chainlink updatedAt",
+                "heartbeat validation",
+                "price bounds",
+                "TWAP vs spot"
+              ],
+              "suggested_tests": [
+                "stale-round-rejection",
+                "heartbeat-bound-test",
+                "decimal-normalization-test",
+                "price-bounds-test"
+              ]
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -367,6 +550,14 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -421,6 +612,14 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to operational control readiness classes.",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Low readiness gap",
@@ -475,6 +674,14 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Low readiness gap",
@@ -529,6 +736,14 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -583,6 +798,14 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -875,7 +1098,7 @@
               }
             }
           ],
-          "semanticVersion": "0.8.0"
+          "semanticVersion": "0.9.0"
         }
       }
     }

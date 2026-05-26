@@ -6,6 +6,8 @@ on:
       - "scripts/pre_audit_scan.py"
       - "scripts/post_pr_comment.py"
       - "scripts/create_github_issues.py"
+      - "scripts/generate_knowledge_graph.py"
+      - "scripts/search_knowledge.py"
       - "tests/**"
       - ".github/actions/pre-audit/action.yml"
       - ".github/workflows/arkheionx-demo.yml"
@@ -19,7 +21,12 @@ on:
       - "examples/arkheionx.config.example.json"
       - "examples/reports/**"
       - "metadata/search_terms.json"
+      - "metadata/security_memory_graph.json"
+      - "metadata/finding_knowledge_map.json"
+      - "metadata/rule_calibration_matrix.json"
       - "reports/search_index.md"
+      - "reports/security_memory_graph.md"
+      - "reports/security_memory_graph_summary.md"
       - "templates/**"
       - "docs/**"
       - "README.md"
@@ -46,9 +53,17 @@ jobs:
           python3 -m py_compile scripts/generate_search_index.py
           python3 -m py_compile scripts/post_pr_comment.py
           python3 -m py_compile scripts/create_github_issues.py
+          python3 -m py_compile scripts/generate_knowledge_graph.py
+          python3 -m py_compile scripts/search_knowledge.py
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
+
+      - name: Verify security memory graph is current
+        run: |
+          python3 scripts/generate_knowledge_graph.py --check
+          python3 scripts/search_knowledge.py "oracle stale price"
+          python3 scripts/search_knowledge.py "missing invariant" --json
 
       - name: Run scanner unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"
@@ -336,11 +351,13 @@ jobs:
               assert "slither" in data
               assert "delivery_outputs" in data
               assert "delivery_summary" in data
+              assert "knowledge" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
               assert all(item["fingerprint"] for item in data["findings"])
               assert all("confidence_reason" in item for item in data["findings"])
               assert all("detection_sources" in item for item in data["findings"])
               assert all("evidence" in item for item in data["findings"])
+              assert all("knowledge" in item for item in data["findings"])
           oracle = json.load(open("examples/reports/oracle-staking-fixture-pre-audit-report.json", encoding="utf-8"))
           oracle_ids = {item["id"] for item in oracle["findings"]}
           assert "ARK-ORC-001" in oracle_ids
@@ -359,6 +376,14 @@ jobs:
               assert all("not a formal audit finding" in issue["body"] for issue in plan["issues"])
               assert all("confidence_reason" in issue for issue in plan["issues"])
               assert all("evidence" in issue for issue in plan["issues"])
+              assert all("related_knowledge" in issue for issue in plan["issues"])
+          for path in [
+              "metadata/security_memory_graph.json",
+              "metadata/finding_knowledge_map.json",
+              "metadata/rule_calibration_matrix.json",
+          ]:
+              payload = json.load(open(path, encoding="utf-8"))
+              assert payload
           config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
           assert config["suppressed_findings"]
           for path in [
@@ -413,6 +438,13 @@ jobs:
           test -f .github/ISSUE_TEMPLATE/false_positive_calibration.yml
           test -f .github/ISSUE_TEMPLATE/external_validation_feedback.yml
           test -f .github/workflows/arkheionx-demo.yml
+          test -f metadata/security_memory_graph.json
+          test -f metadata/finding_knowledge_map.json
+          test -f metadata/rule_calibration_matrix.json
+          test -f reports/security_memory_graph.md
+          test -f reports/security_memory_graph_summary.md
+          grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
+          grep -q "Related Knowledge" examples/reports/demo-issue-plan.json
 
       - name: Verify disclaimer is present
         run: |

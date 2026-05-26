@@ -17,7 +17,7 @@
     "executive_summary": "examples/reports/demo-executive-summary.md",
     "launch_report": "examples/reports/demo-launch-report.md",
     "remediation_roadmap": "examples/reports/demo-remediation-roadmap.md",
-    "sprint_plan": "examples/reports/demo-sprint-plan.md"
+    "sprint_plan": ""
   },
   "delivery_summary": {
     "contest_readiness_status": "Improving",
@@ -139,6 +139,46 @@
       "fingerprint": "40c41c40ed1466cdd9635ca9",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
+      "knowledge": {
+        "broken_invariants": [
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
+        ],
+        "failed_assumptions": [
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+        ],
+        "related_patterns": [
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
+        ],
+        "related_pocs": [
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
+        ],
+        "root_causes": [
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
+        ],
+        "rule_pack": "testing",
+        "search_terms": [
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
+        ],
+        "suggested_tests": [
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
+        ]
+      },
       "priority": "High readiness gap",
       "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
       "recommended_defensive_checks": [],
@@ -226,6 +266,14 @@
       "fingerprint": "4caf35ffd1a44272525bbdab",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [],
@@ -289,6 +337,14 @@
       "fingerprint": "455b182ea87d56a4a492118e",
       "historical_pattern_similarity": "",
       "id": "ARK-VLT-009",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Low readiness gap",
       "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
       "recommended_defensive_checks": [],
@@ -378,6 +434,45 @@
       "fingerprint": "02dd029123ec6087d21f1f1d",
       "historical_pattern_similarity": "",
       "id": "ARK-REENT-001",
+      "knowledge": {
+        "broken_invariants": [
+          "single-claim-or-withdrawal",
+          "state-updated-before-external-value-flow"
+        ],
+        "failed_assumptions": [
+          "token-transfer-does-not-yield-control",
+          "claim-or-withdraw-path-cannot-repeat"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-external-call-before-state-update",
+          "pattern-callback-capable-token"
+        ],
+        "related_pocs": [
+          "poc-2018-10-spankchain",
+          "poc-2020-04-uniswap-imbtc",
+          "poc-2021-03-dodo-crowdpool"
+        ],
+        "root_causes": [
+          "external-control-before-state-finalization",
+          "callback-assumption-failure"
+        ],
+        "rule_pack": "reentrancy_value_flow",
+        "search_terms": [
+          "reentrancy value flow",
+          "callback capable token",
+          "claim refund flow"
+        ],
+        "suggested_tests": [
+          "reentrant-receiver-mock",
+          "state-update-before-external-call-test",
+          "double-claim-prevention"
+        ]
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
       "recommended_defensive_checks": [],
@@ -469,6 +564,47 @@
       "fingerprint": "1c316cdf88792a7e2b1e566e",
       "historical_pattern_similarity": "",
       "id": "ARK-RWD-001",
+      "knowledge": {
+        "broken_invariants": [
+          "total-claimed-less-than-or-equal-funded",
+          "no-double-claim",
+          "reward-index-monotonicity"
+        ],
+        "failed_assumptions": [
+          "distributed-rewards-never-exceed-funded-rewards",
+          "reward-index-is-monotonic-and-bounded"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-reward-overclaim",
+          "pattern-accounting-index-drift"
+        ],
+        "related_pocs": [
+          "poc-2020-12-warp-finance",
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc"
+        ],
+        "root_causes": [
+          "stale-reward-index",
+          "unbounded-claim-accounting",
+          "missing-multi-user-conservation-test"
+        ],
+        "rule_pack": "reward_accounting",
+        "search_terms": [
+          "reward overclaim",
+          "accumulator precision",
+          "reward accounting invariant"
+        ],
+        "suggested_tests": [
+          "reward-conservation-multi-user",
+          "claim-twice-reverts-or-noops",
+          "rewardPerToken-monotonicity"
+        ]
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
       "recommended_defensive_checks": [],
@@ -568,6 +704,53 @@
       "fingerprint": "27199688c1b60c42d92a6d05",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
+      "knowledge": {
+        "broken_invariants": [
+          "accounting-value-uses-valid-price",
+          "collateral-value-is-bounded",
+          "share-price-uses-trusted-input"
+        ],
+        "failed_assumptions": [
+          "oracle-price-is-current",
+          "oracle-answer-is-normalized",
+          "pool-price-is-manipulation-resistant"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ORACLE_RULE_PACK.md",
+          "docs/RULE_PACKS.md",
+          "docs/SEARCH_GUIDE.md"
+        ],
+        "related_patterns": [
+          "pattern-oracle-stale-price",
+          "pattern-spot-price-manipulation",
+          "pattern-pool-price-accounting"
+        ],
+        "related_pocs": [
+          "poc-2025-11-moonwell",
+          "poc-2020-10-harvest",
+          "poc-2021-02-yearn-v1-dai"
+        ],
+        "root_causes": [
+          "missing-oracle-freshness-validation",
+          "implicit-price-trust",
+          "missing-price-bounds"
+        ],
+        "rule_pack": "oracle",
+        "search_terms": [
+          "oracle stale price",
+          "Chainlink updatedAt",
+          "heartbeat validation",
+          "price bounds",
+          "TWAP vs spot"
+        ],
+        "suggested_tests": [
+          "stale-round-rejection",
+          "heartbeat-bound-test",
+          "decimal-normalization-test",
+          "price-bounds-test"
+        ]
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
       "recommended_defensive_checks": [
@@ -673,6 +856,14 @@
       "fingerprint": "e5f500ac09dd007865613478",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
       "recommended_defensive_checks": [
@@ -777,6 +968,14 @@
       "fingerprint": "c612302ce98632d634d45e31",
       "historical_pattern_similarity": "Maps to operational control readiness classes.",
       "id": "ARK-ACC-003",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Low readiness gap",
       "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
       "recommended_defensive_checks": [
@@ -874,6 +1073,14 @@
       "fingerprint": "7e2acd399b5366b913e3e8a9",
       "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
       "id": "ARK-REENT-004",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Low readiness gap",
       "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
       "recommended_defensive_checks": [
@@ -980,6 +1187,14 @@
       "fingerprint": "64ba736c260ec0865f0a87c1",
       "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
       "id": "ARK-RWD-002",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
       "recommended_defensive_checks": [
@@ -1087,6 +1302,14 @@
       "fingerprint": "3c91794e0a66202839c5df60",
       "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
       "id": "ARK-RWD-003",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
       "recommended_defensive_checks": [
@@ -1109,7 +1332,7 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-26T10:41:58+00:00",
+  "generated_at": "2026-05-26T12:51:57+00:00",
   "generated_outputs": {
     "baseline": "examples/reports/demo.baseline.json",
     "comment": "",
@@ -1125,7 +1348,7 @@
     "remediation_roadmap": "examples/reports/demo-remediation-roadmap.md",
     "sarif_report": "examples/reports/demo.sarif.json",
     "slither_summary": "",
-    "sprint_plan": "examples/reports/demo-sprint-plan.md",
+    "sprint_plan": "",
     "summary": ""
   },
   "historical_patterns": [
@@ -1306,6 +1529,27 @@
       "why_it_matters": "Reward indexes and accumulators are common sources of overclaim, underclaim, and precision drift when supply changes across epochs."
     }
   ],
+  "knowledge": {
+    "finding_knowledge_map": "metadata/finding_knowledge_map.json",
+    "finding_map_version": "0.9.0",
+    "mapped_findings": [
+      "ARK-ACC-001",
+      "ARK-AMM-001",
+      "ARK-DOC-001",
+      "ARK-LEND-900",
+      "ARK-ORC-001",
+      "ARK-ORC-003",
+      "ARK-REENT-001",
+      "ARK-RWD-001",
+      "ARK-TST-002",
+      "ARK-UPG-001",
+      "ARK-VLT-001",
+      "ARK-VLT-003",
+      "ARK-XCH-900"
+    ],
+    "rule_calibration_matrix": "metadata/rule_calibration_matrix.json",
+    "security_memory_graph": "metadata/security_memory_graph.json"
+  },
   "next_steps": [
     "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
     "Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.",
@@ -1392,6 +1636,46 @@
       "fingerprint": "40c41c40ed1466cdd9635ca9",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
+      "knowledge": {
+        "broken_invariants": [
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
+        ],
+        "failed_assumptions": [
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+        ],
+        "related_patterns": [
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
+        ],
+        "related_pocs": [
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
+        ],
+        "root_causes": [
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
+        ],
+        "rule_pack": "testing",
+        "search_terms": [
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
+        ],
+        "suggested_tests": [
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
+        ]
+      },
       "priority": "High readiness gap",
       "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
       "recommended_defensive_checks": [],
@@ -1479,6 +1763,14 @@
       "fingerprint": "4caf35ffd1a44272525bbdab",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [],
@@ -1542,6 +1834,14 @@
       "fingerprint": "455b182ea87d56a4a492118e",
       "historical_pattern_similarity": "",
       "id": "ARK-VLT-009",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Low readiness gap",
       "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
       "recommended_defensive_checks": [],
@@ -1631,6 +1931,45 @@
       "fingerprint": "02dd029123ec6087d21f1f1d",
       "historical_pattern_similarity": "",
       "id": "ARK-REENT-001",
+      "knowledge": {
+        "broken_invariants": [
+          "single-claim-or-withdrawal",
+          "state-updated-before-external-value-flow"
+        ],
+        "failed_assumptions": [
+          "token-transfer-does-not-yield-control",
+          "claim-or-withdraw-path-cannot-repeat"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-external-call-before-state-update",
+          "pattern-callback-capable-token"
+        ],
+        "related_pocs": [
+          "poc-2018-10-spankchain",
+          "poc-2020-04-uniswap-imbtc",
+          "poc-2021-03-dodo-crowdpool"
+        ],
+        "root_causes": [
+          "external-control-before-state-finalization",
+          "callback-assumption-failure"
+        ],
+        "rule_pack": "reentrancy_value_flow",
+        "search_terms": [
+          "reentrancy value flow",
+          "callback capable token",
+          "claim refund flow"
+        ],
+        "suggested_tests": [
+          "reentrant-receiver-mock",
+          "state-update-before-external-call-test",
+          "double-claim-prevention"
+        ]
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
       "recommended_defensive_checks": [],
@@ -1722,6 +2061,47 @@
       "fingerprint": "1c316cdf88792a7e2b1e566e",
       "historical_pattern_similarity": "",
       "id": "ARK-RWD-001",
+      "knowledge": {
+        "broken_invariants": [
+          "total-claimed-less-than-or-equal-funded",
+          "no-double-claim",
+          "reward-index-monotonicity"
+        ],
+        "failed_assumptions": [
+          "distributed-rewards-never-exceed-funded-rewards",
+          "reward-index-is-monotonic-and-bounded"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-reward-overclaim",
+          "pattern-accounting-index-drift"
+        ],
+        "related_pocs": [
+          "poc-2020-12-warp-finance",
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc"
+        ],
+        "root_causes": [
+          "stale-reward-index",
+          "unbounded-claim-accounting",
+          "missing-multi-user-conservation-test"
+        ],
+        "rule_pack": "reward_accounting",
+        "search_terms": [
+          "reward overclaim",
+          "accumulator precision",
+          "reward accounting invariant"
+        ],
+        "suggested_tests": [
+          "reward-conservation-multi-user",
+          "claim-twice-reverts-or-noops",
+          "rewardPerToken-monotonicity"
+        ]
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
       "recommended_defensive_checks": [],
@@ -1821,6 +2201,53 @@
       "fingerprint": "27199688c1b60c42d92a6d05",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
+      "knowledge": {
+        "broken_invariants": [
+          "accounting-value-uses-valid-price",
+          "collateral-value-is-bounded",
+          "share-price-uses-trusted-input"
+        ],
+        "failed_assumptions": [
+          "oracle-price-is-current",
+          "oracle-answer-is-normalized",
+          "pool-price-is-manipulation-resistant"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ORACLE_RULE_PACK.md",
+          "docs/RULE_PACKS.md",
+          "docs/SEARCH_GUIDE.md"
+        ],
+        "related_patterns": [
+          "pattern-oracle-stale-price",
+          "pattern-spot-price-manipulation",
+          "pattern-pool-price-accounting"
+        ],
+        "related_pocs": [
+          "poc-2025-11-moonwell",
+          "poc-2020-10-harvest",
+          "poc-2021-02-yearn-v1-dai"
+        ],
+        "root_causes": [
+          "missing-oracle-freshness-validation",
+          "implicit-price-trust",
+          "missing-price-bounds"
+        ],
+        "rule_pack": "oracle",
+        "search_terms": [
+          "oracle stale price",
+          "Chainlink updatedAt",
+          "heartbeat validation",
+          "price bounds",
+          "TWAP vs spot"
+        ],
+        "suggested_tests": [
+          "stale-round-rejection",
+          "heartbeat-bound-test",
+          "decimal-normalization-test",
+          "price-bounds-test"
+        ]
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
       "recommended_defensive_checks": [
@@ -1926,6 +2353,14 @@
       "fingerprint": "e5f500ac09dd007865613478",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
       "recommended_defensive_checks": [
@@ -2030,6 +2465,14 @@
       "fingerprint": "c612302ce98632d634d45e31",
       "historical_pattern_similarity": "Maps to operational control readiness classes.",
       "id": "ARK-ACC-003",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Low readiness gap",
       "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
       "recommended_defensive_checks": [
@@ -2127,6 +2570,14 @@
       "fingerprint": "7e2acd399b5366b913e3e8a9",
       "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
       "id": "ARK-REENT-004",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Low readiness gap",
       "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
       "recommended_defensive_checks": [
@@ -2233,6 +2684,14 @@
       "fingerprint": "64ba736c260ec0865f0a87c1",
       "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
       "id": "ARK-RWD-002",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
       "recommended_defensive_checks": [
@@ -2340,6 +2799,14 @@
       "fingerprint": "3c91794e0a66202839c5df60",
       "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
       "id": "ARK-RWD-003",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
       "priority": "Medium readiness gap",
       "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
       "recommended_defensive_checks": [
@@ -2454,6 +2921,14 @@
           "fingerprint": "c612302ce98632d634d45e31",
           "historical_pattern_similarity": "Maps to operational control readiness classes.",
           "id": "ARK-ACC-003",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Low readiness gap",
           "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
           "recommended_defensive_checks": [
@@ -2574,6 +3049,14 @@
           "fingerprint": "4caf35ffd1a44272525bbdab",
           "historical_pattern_similarity": "",
           "id": "ARK-ORC-002",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
           "recommended_defensive_checks": [],
@@ -2673,6 +3156,53 @@
           "fingerprint": "27199688c1b60c42d92a6d05",
           "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
           "id": "ARK-ORC-001",
+          "knowledge": {
+            "broken_invariants": [
+              "accounting-value-uses-valid-price",
+              "collateral-value-is-bounded",
+              "share-price-uses-trusted-input"
+            ],
+            "failed_assumptions": [
+              "oracle-price-is-current",
+              "oracle-answer-is-normalized",
+              "pool-price-is-manipulation-resistant"
+            ],
+            "finding_map_version": "0.9.0",
+            "related_docs": [
+              "docs/ORACLE_RULE_PACK.md",
+              "docs/RULE_PACKS.md",
+              "docs/SEARCH_GUIDE.md"
+            ],
+            "related_patterns": [
+              "pattern-oracle-stale-price",
+              "pattern-spot-price-manipulation",
+              "pattern-pool-price-accounting"
+            ],
+            "related_pocs": [
+              "poc-2025-11-moonwell",
+              "poc-2020-10-harvest",
+              "poc-2021-02-yearn-v1-dai"
+            ],
+            "root_causes": [
+              "missing-oracle-freshness-validation",
+              "implicit-price-trust",
+              "missing-price-bounds"
+            ],
+            "rule_pack": "oracle",
+            "search_terms": [
+              "oracle stale price",
+              "Chainlink updatedAt",
+              "heartbeat validation",
+              "price bounds",
+              "TWAP vs spot"
+            ],
+            "suggested_tests": [
+              "stale-round-rejection",
+              "heartbeat-bound-test",
+              "decimal-normalization-test",
+              "price-bounds-test"
+            ]
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
           "recommended_defensive_checks": [
@@ -2778,6 +3308,14 @@
           "fingerprint": "e5f500ac09dd007865613478",
           "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
           "id": "ARK-ORC-005",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
           "recommended_defensive_checks": [
@@ -2904,6 +3442,45 @@
           "fingerprint": "02dd029123ec6087d21f1f1d",
           "historical_pattern_similarity": "",
           "id": "ARK-REENT-001",
+          "knowledge": {
+            "broken_invariants": [
+              "single-claim-or-withdrawal",
+              "state-updated-before-external-value-flow"
+            ],
+            "failed_assumptions": [
+              "token-transfer-does-not-yield-control",
+              "claim-or-withdraw-path-cannot-repeat"
+            ],
+            "finding_map_version": "0.9.0",
+            "related_docs": [
+              "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+              "docs/RULE_PACKS.md"
+            ],
+            "related_patterns": [
+              "pattern-external-call-before-state-update",
+              "pattern-callback-capable-token"
+            ],
+            "related_pocs": [
+              "poc-2018-10-spankchain",
+              "poc-2020-04-uniswap-imbtc",
+              "poc-2021-03-dodo-crowdpool"
+            ],
+            "root_causes": [
+              "external-control-before-state-finalization",
+              "callback-assumption-failure"
+            ],
+            "rule_pack": "reentrancy_value_flow",
+            "search_terms": [
+              "reentrancy value flow",
+              "callback capable token",
+              "claim refund flow"
+            ],
+            "suggested_tests": [
+              "reentrant-receiver-mock",
+              "state-update-before-external-call-test",
+              "double-claim-prevention"
+            ]
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
           "recommended_defensive_checks": [],
@@ -2995,6 +3572,14 @@
           "fingerprint": "7e2acd399b5366b913e3e8a9",
           "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
           "id": "ARK-REENT-004",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Low readiness gap",
           "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
           "recommended_defensive_checks": [
@@ -3114,6 +3699,47 @@
           "fingerprint": "1c316cdf88792a7e2b1e566e",
           "historical_pattern_similarity": "",
           "id": "ARK-RWD-001",
+          "knowledge": {
+            "broken_invariants": [
+              "total-claimed-less-than-or-equal-funded",
+              "no-double-claim",
+              "reward-index-monotonicity"
+            ],
+            "failed_assumptions": [
+              "distributed-rewards-never-exceed-funded-rewards",
+              "reward-index-is-monotonic-and-bounded"
+            ],
+            "finding_map_version": "0.9.0",
+            "related_docs": [
+              "docs/REWARD_ACCOUNTING_RULE_PACK.md",
+              "docs/RULE_PACKS.md"
+            ],
+            "related_patterns": [
+              "pattern-reward-overclaim",
+              "pattern-accounting-index-drift"
+            ],
+            "related_pocs": [
+              "poc-2020-12-warp-finance",
+              "poc-2020-08-opyn",
+              "poc-2020-09-bzx-ifusdc"
+            ],
+            "root_causes": [
+              "stale-reward-index",
+              "unbounded-claim-accounting",
+              "missing-multi-user-conservation-test"
+            ],
+            "rule_pack": "reward_accounting",
+            "search_terms": [
+              "reward overclaim",
+              "accumulator precision",
+              "reward accounting invariant"
+            ],
+            "suggested_tests": [
+              "reward-conservation-multi-user",
+              "claim-twice-reverts-or-noops",
+              "rewardPerToken-monotonicity"
+            ]
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
           "recommended_defensive_checks": [],
@@ -3215,6 +3841,14 @@
           "fingerprint": "64ba736c260ec0865f0a87c1",
           "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
           "id": "ARK-RWD-002",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
           "recommended_defensive_checks": [
@@ -3322,6 +3956,14 @@
           "fingerprint": "3c91794e0a66202839c5df60",
           "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
           "id": "ARK-RWD-003",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Medium readiness gap",
           "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
           "recommended_defensive_checks": [
@@ -3420,6 +4062,14 @@
           "fingerprint": "455b182ea87d56a4a492118e",
           "historical_pattern_similarity": "",
           "id": "ARK-VLT-009",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
           "priority": "Low readiness gap",
           "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
           "recommended_defensive_checks": [],
@@ -4379,5 +5029,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.8.0"
+  "version": "0.9.0"
 }

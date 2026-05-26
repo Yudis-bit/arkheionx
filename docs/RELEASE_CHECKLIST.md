@@ -154,7 +154,7 @@ written reason in the release PR.
 - [ ] `docs/RULE_CALIBRATION.md` and `reports/rule_calibration_summary.md`
       explain confidence, evidence, and false-positive handling.
 - [ ] False-positive calibration and external validation issue templates exist.
-- [ ] Launch/outreach posts avoid fake adoption, customer, or audit claims.
+- [ ] Launch/outreach posts avoid unsupported traction, user, or audit claims.
 
 ## Search And Registry
 
@@ -217,6 +217,23 @@ written reason in the release PR.
 
 - [ ] v0.7.0 or the next active milestone is visible in roadmap and release
       notes.
+
+## v0.9.0 Security Memory Checks
+
+- [ ] `metadata/security_memory_graph.json` exists and parses.
+- [ ] `metadata/finding_knowledge_map.json` exists and parses.
+- [ ] `metadata/rule_calibration_matrix.json` exists and parses.
+- [ ] `reports/security_memory_graph.md` exists.
+- [ ] `python3 scripts/generate_knowledge_graph.py --check` passes.
+- [ ] `python3 scripts/search_knowledge.py "oracle stale price"` returns
+      `ARK-ORC-001`.
+- [ ] `python3 scripts/search_knowledge.py "missing invariant" --json`
+      returns valid JSON.
+- [ ] Generated reports include `Related Knowledge`.
+- [ ] Generated issue plans include `Related Knowledge`.
+- [ ] Search index and search metadata include v0.9 knowledge graph paths.
+- [ ] Docs explain that historical similarity is not vulnerability
+      confirmation.
 
 ## Safety Scan
 

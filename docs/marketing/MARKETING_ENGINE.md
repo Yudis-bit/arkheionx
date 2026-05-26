@@ -227,7 +227,7 @@ Builder angle:
 
 Anti-hype boundary:
 
-> Demo case studies are internal toy examples. They are not customer claims,
+> Demo case studies are internal toy examples. They are not user evidence,
 > formal audit evidence, or proof of protocol safety.
 
 ## Example X Posts

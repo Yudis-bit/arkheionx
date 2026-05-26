@@ -14,7 +14,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.8.0, public demo, rule calibration, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.9.0, security memory graph, search upgrade, release notes |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -46,6 +46,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Reward Accounting Rule Pack | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](../docs/REWARD_ACCOUNTING_RULE_PACK.md) | staking, reward accounting, accumulator |
 | Indie builder offer | [`docs/business/INDIE_BUILDER_OFFER.md`](../docs/business/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
 | Search guide | [`docs/SEARCH_GUIDE.md`](../docs/SEARCH_GUIDE.md) | search tags, root-cause analysis, broken invariant |
+| Security Memory Graph | [`docs/SECURITY_MEMORY_GRAPH.md`](../docs/SECURITY_MEMORY_GRAPH.md) | security memory graph, finding knowledge map, historical pattern similarity |
+| Search Knowledge | [`docs/SEARCH_KNOWLEDGE.md`](../docs/SEARCH_KNOWLEDGE.md) | search_knowledge.py, oracle stale price, local search helper |
+| Finding Knowledge Map | [`docs/FINDING_KNOWLEDGE_MAP.md`](../docs/FINDING_KNOWLEDGE_MAP.md) | finding knowledge map, suggested defensive tests, failed assumptions |
 | Marketing engine | [`docs/marketing/MARKETING_ENGINE.md`](../docs/marketing/MARKETING_ENGINE.md) | growth, positioning, GitHub-only funnel |
 | Monetization | [`docs/business/MONETIZATION.md`](../docs/business/MONETIZATION.md) | sponsors, revenue ladder, services |
 | Sponsorship | [`docs/business/SPONSORSHIP.md`](../docs/business/SPONSORSHIP.md) | funding, research sponsorship, public work |
@@ -54,6 +57,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Oracle staking demo case study | [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](../docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md) | oracle staking demo, case study, public demo |
 | Oracle staking before/after case study | [`docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md`](../docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md) | before after case study, fixed fixture, remediation demo |
 | Rule calibration summary | [`reports/rule_calibration_summary.md`](../reports/rule_calibration_summary.md) | rule calibration, common false positives, downgrade logic |
+| Security memory graph report | [`reports/security_memory_graph.md`](../reports/security_memory_graph.md) | security memory graph, finding to pattern map, historical PoC nodes |
+| Security memory graph summary | [`reports/security_memory_graph_summary.md`](../reports/security_memory_graph_summary.md) | security memory graph, mapped findings, mapped patterns |
+| Security memory graph JSON | [`metadata/security_memory_graph.json`](../metadata/security_memory_graph.json) | security memory graph, nodes, edges |
+| Finding knowledge map JSON | [`metadata/finding_knowledge_map.json`](../metadata/finding_knowledge_map.json) | finding knowledge map, related patterns, suggested tests |
+| Rule calibration matrix JSON | [`metadata/rule_calibration_matrix.json`](../metadata/rule_calibration_matrix.json) | rule calibration matrix, confidence requirements, downgrade conditions |
 | Case study template | [`templates/case_study_template.md`](../templates/case_study_template.md) | case study template, before after, readiness case study |
 | v0.8 launch posts | [`docs/launch/V0_8_LAUNCH_POSTS.md`](../docs/launch/V0_8_LAUNCH_POSTS.md) | launch post, outreach kit, public demo |
 | Mini-vault fixture | [`examples/mini-vault/README.md`](../examples/mini-vault/README.md) | vault, fixture, scanner demo |
@@ -86,6 +94,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Pre-audit scanner | [`scripts/pre_audit_scan.py`](../scripts/pre_audit_scan.py) | cli, scanner, standard-library |
 | PR comment poster | [`scripts/post_pr_comment.py`](../scripts/post_pr_comment.py) | GitHub API, PR comment, marker update |
 | GitHub issue creator | [`scripts/create_github_issues.py`](../scripts/create_github_issues.py) | GitHub API, issue plan, dry-run |
+| Knowledge graph generator | [`scripts/generate_knowledge_graph.py`](../scripts/generate_knowledge_graph.py) | security memory graph, knowledge graph, check mode |
+| Knowledge search helper | [`scripts/search_knowledge.py`](../scripts/search_knowledge.py) | search knowledge, oracle stale price, local search |
 | Report template | [`templates/pre_audit_report.md`](../templates/pre_audit_report.md) | template, Markdown report, disclaimer |
 | Invariant skeleton template | [`templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol`](../templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol) | Foundry, invariant, skeleton |
 
@@ -150,7 +160,16 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `rule calibration` | calibration summary, false positive calibration, confidence calibration | analysis quality | confidence model, downgrade logic, common false positives | rule-calibration, false-positive-review, confidence-scoring |
 | `external validation feedback` | external feedback, validation feedback, public feedback, feedback workflow | community feedback | external validation issue template, false positive issue template, no secrets | external-validation, feedback, open-source-growth |
 | `case study template` | case_study_template.md, generated case study, case study outline | case study | scope, score, top findings, evidence examples, limitations | case-study-template, documentation, demo |
-| `launch post` | launch posts, outreach kit, v0.8 launch posts, release announcement draft | growth | no fake adoption, no guarantee claims, demo workflow CTA | launch-post, outreach-kit, public-demo |
+| `launch post` | launch posts, outreach kit, v0.8 launch posts, release announcement draft | growth | no unsupported traction claims, no guarantee claims, demo workflow CTA | launch-post, outreach-kit, public-demo |
+| `security memory graph` | finding knowledge map, local knowledge graph, security memory map | security memory | metadata/security_memory_graph.json, reports/security_memory_graph.md, search_knowledge.py | security-memory-graph, knowledge-map, local-static-analysis |
+| `finding knowledge map` | finding-to-pattern mapping, ARK finding map, readiness knowledge map | security memory | ARK-ORC-001, ARK-VLT-001, related_pocs, suggested_tests | finding-knowledge-map, finding-id, historical-pattern-similarity |
+| `rule calibration matrix` | calibration matrix, confidence matrix, rule confidence requirements | analysis quality | high confidence requires, downgrade conditions, common false positives | rule-calibration-matrix, confidence-scoring, false-positive-reduction |
+| `oracle stale price` | Chainlink updatedAt, heartbeat validation, stale round, oracle freshness | security memory | ARK-ORC-001, stale round rejection, heartbeat bound test | oracle-stale-price, chainlink, historical-pattern |
+| `vault donation attack` | share inflation, donation sensitivity, first deposit attack class | security memory | ARK-VLT-001, ARK-VLT-003, donation resistance, share accounting invariant | vault-donation, share-accounting, vault-security |
+| `reentrancy value flow` | callback capable token, external call before state update, claim refund flow | security memory | ARK-REENT-001, reentrant receiver mock, double claim prevention | reentrancy-value-flow, callback, defensive-test |
+| `reward overclaim` | accumulator precision, reward conservation, claim twice | security memory | ARK-RWD-001, reward conservation, rewardPerToken monotonicity | reward-overclaim, staking, accounting-invariant |
+| `initializer protection` | upgrade authorization, proxy initializer, initializer runs once | security memory | ARK-UPG-001, ARK-ACC-001, initializer cannot run twice | initializer-protection, upgradeability, access-control |
+| `broken invariant mapping` | failed assumption mapping, exploit primitive mapping, suggested defensive tests | security memory | security memory graph, finding knowledge map, rule calibration matrix | broken-invariant, failed-assumption, suggested-tests |
 
 ## Historical Memory Index
 
@@ -265,6 +284,31 @@ launch post
 outreach kit
 demo GitHub Action workflow
 reproducible readiness demo
+security memory graph
+finding knowledge map
+historical pattern similarity
+exploit primitive mapping
+broken invariant mapping
+failed assumption mapping
+suggested defensive tests
+rule calibration matrix
+oracle stale price
+Chainlink updatedAt
+heartbeat validation
+vault donation attack
+share accounting invariant
+reentrancy value flow
+callback capable token
+reward overclaim
+accumulator precision
+access control failure
+initializer protection
+upgrade authorization
+liquidation boundary
+AMM invariant
+cross chain replay
+contest readiness search
+launch report knowledge
 oracle manipulation
 flash loan price manipulation
 reentrancy

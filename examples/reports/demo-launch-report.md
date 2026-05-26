@@ -10,8 +10,8 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 - Protocol type: `staking`
 - Readiness score: `65/100`
 - Score band: `Improving`
-- Analysis date: `2026-05-26T10:41:58+00:00`
-- Scanner version: `0.8.0`
+- Analysis date: `2026-05-26T12:51:57+00:00`
+- Scanner version: `0.9.0`
 - Semantic-lite status: `enabled`
 - Slither status: `disabled`
 - Launch readiness status: `Improving`
@@ -47,6 +47,12 @@ Top readiness themes:
 - Why it matters: Protocol-like value flows were detected, but no invariant/property testing signal was found.
 - Recommended remediation: Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
 
+Related Knowledge:
+- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
+- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
+- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
+- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol
+
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
 - Priority: `Medium readiness gap`
@@ -54,6 +60,12 @@ Top readiness themes:
 - Evidence summary: src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.
 - Why it matters: Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions.
 - Recommended remediation: Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
+
+Related Knowledge:
+- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
+- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
+- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
+- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md
 
 ### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
 
@@ -79,6 +91,12 @@ Top readiness themes:
 - Why it matters: External call or token transfer terms were detected without guard or reentrancy-review signals.
 - Recommended remediation: Review state update order and add local malicious-receiver tests where callbacks are possible.
 
+Related Knowledge:
+- Historical patterns: pattern-external-call-before-state-update, pattern-callback-capable-token
+- Suggested defensive tests: reentrant-receiver-mock, state-update-before-external-call-test, double-claim-prevention
+- Related PoCs: poc-2018-10-spankchain, poc-2020-04-uniswap-imbtc, poc-2021-03-dodo-crowdpool
+- Docs: docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md, docs/RULE_PACKS.md
+
 ### ARK-RWD-001 - Reward accounting needs conservation coverage
 
 - Priority: `Medium readiness gap`
@@ -86,6 +104,12 @@ Top readiness themes:
 - Evidence summary: src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.
 - Why it matters: Reward/index/claim signals were detected without invariant testing.
 - Recommended remediation: Add reward conservation and no-overclaim tests across multiple users and timing boundaries.
+
+Related Knowledge:
+- Historical patterns: pattern-reward-overclaim, pattern-accounting-index-drift
+- Suggested defensive tests: reward-conservation-multi-user, claim-twice-reverts-or-noops, rewardPerToken-monotonicity
+- Related PoCs: poc-2020-12-warp-finance, poc-2020-08-opyn, poc-2020-09-bzx-ifusdc
+- Docs: docs/REWARD_ACCOUNTING_RULE_PACK.md, docs/RULE_PACKS.md
 
 ### ARK-RWD-002 - Accumulator/index logic without precision/rounding tests
 
@@ -102,6 +126,32 @@ Top readiness themes:
 - Evidence summary: src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.
 - Why it matters: Claim flows depend on updating accrued state at exactly the right time.
 - Recommended remediation: Add tests proving users cannot claim the same reward entitlement twice.
+
+## Relevant Security Memory
+
+### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
+
+Related Knowledge:
+- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
+- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
+- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
+- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol
+
+### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
+
+Related Knowledge:
+- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
+- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
+- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
+- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md
+
+### ARK-REENT-001 - External-call value flow needs reentrancy review
+
+Related Knowledge:
+- Historical patterns: pattern-external-call-before-state-update, pattern-callback-capable-token
+- Suggested defensive tests: reentrant-receiver-mock, state-update-before-external-call-test, double-claim-prevention
+- Related PoCs: poc-2018-10-spankchain, poc-2020-04-uniswap-imbtc, poc-2021-03-dodo-crowdpool
+- Docs: docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md, docs/RULE_PACKS.md
 
 ## Recommended Remediation Roadmap
 
@@ -153,7 +203,6 @@ Top readiness themes:
 | Executive Summary   | `examples/reports/demo-executive-summary.md`   |
 | Remediation Roadmap | `examples/reports/demo-remediation-roadmap.md` |
 | Launch Report       | `examples/reports/demo-launch-report.md`       |
-| Sprint Plan         | `examples/reports/demo-sprint-plan.md`         |
 | Contest Readiness   | `examples/reports/demo-contest-readiness.md`   |
 
 ## Limitations

@@ -47,6 +47,9 @@ Arkheionx should usually downgrade when:
 
 ## Rule Pack Calibration Notes
 
+Machine-readable calibration lives in
+[`metadata/rule_calibration_matrix.json`](../metadata/rule_calibration_matrix.json).
+
 | Rule Pack | High-Confidence Evidence | Common False Positives |
 |---|---|---|
 | Vault | `deposit`, `withdraw`, `totalAssets`, share conversion functions, and no invariant/roundtrip tests. | Docs mentioning shares without vault code. |
@@ -76,3 +79,23 @@ See [`FALSE_POSITIVE_REVIEW_WORKFLOW.md`](FALSE_POSITIVE_REVIEW_WORKFLOW.md).
 - Do not add rules that require RPC or live targets.
 - Keep language defensive and evidence-based.
 - Update examples and tests when calibration changes.
+
+## v0.9.0 Security Memory Link
+
+Rule calibration now feeds the security memory graph:
+
+- finding family -> rule pack;
+- rule pack -> finding IDs;
+- finding IDs -> historical pattern categories;
+- findings -> suggested defensive tests.
+
+Run:
+
+```sh
+python3 scripts/generate_knowledge_graph.py --check
+python3 scripts/search_knowledge.py "oracle stale price"
+```
+
+Historical pattern similarity is used for explanation and test inspiration. It
+does not mean a scanned repository has the same vulnerability as any historical
+case.

@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.9.0",
+  "description": "Arkheionx heuristic calibration matrix for readiness finding families. This matrix documents confidence requirements, downgrade logic, common false positives, and manual review prompts.",
+  "families": [
+    {
+      "finding_family": "ARK-VLT",
+      "rule_pack": "vault",
+      "high_confidence_requires": ["Solidity-level deposit/withdraw/share accounting evidence", "missing invariant or roundtrip test coverage", "totalAssets, convertToShares, convertToAssets, or fee/strategy context"],
+      "medium_confidence_requires": ["vault terms in Solidity files", "partial accounting or lifecycle test gap"],
+      "low_confidence_conditions": ["keyword-only documentation mention", "ambiguous shares/assets terms without function context"],
+      "downgrade_conditions": ["matching invariant or fuzz tests detected", "explicit rounding, donation, or totalAssets assumptions documented"],
+      "common_false_positives": ["documentation uses vault language for product planning", "mock-only ERC4626 references", "imported library handles accounting but local tests are elsewhere"],
+      "recommended_manual_review": ["Check whether accounting invariants are implemented in inherited contracts", "Check low-supply and donation behavior", "Check whether external strategies affect totalAssets"]
+    },
+    {
+      "finding_family": "ARK-ORC",
+      "rule_pack": "oracle",
+      "high_confidence_requires": ["Solidity-level oracle call evidence", "missing stale/freshness test coverage", "oracle-dependent value or accounting context"],
+      "medium_confidence_requires": ["oracle terms in Solidity files", "partial stale, bounds, or decimals coverage gap"],
+      "low_confidence_conditions": ["keyword-only documentation mention", "mock oracle in tests only", "price variable without external price source"],
+      "downgrade_conditions": ["stale oracle tests detected", "bounds, decimals, heartbeat, or TWAP assumptions documented and tested"],
+      "common_false_positives": ["docs mention oracle but contract does not use one", "test-only priceFeed mocks", "oracle validation implemented in imported adapter"],
+      "recommended_manual_review": ["Check latestRoundData updatedAt handling", "Check decimals normalization", "Check whether spot prices can be moved in the same transaction"]
+    },
+    {
+      "finding_family": "ARK-ACC",
+      "rule_pack": "access_control",
+      "high_confidence_requires": ["external/public privileged setter evidence", "missing unauthorized caller tests", "role/admin/owner path changes critical state"],
+      "medium_confidence_requires": ["admin role terms in Solidity files", "partial negative test coverage gap"],
+      "low_confidence_conditions": ["owner appears only in docs or tests", "ambiguous operator variable with no setter"],
+      "downgrade_conditions": ["unauthorized caller tests detected", "timelock/multisig assumptions documented", "role boundary tests present"],
+      "common_false_positives": ["Ownable imported but unused", "admin-only mock helper in tests", "deployment scripts not in runtime scope"],
+      "recommended_manual_review": ["Check all config setters", "Check guardian/emergency roles", "Check transferOwnership and role handoff behavior"]
+    },
+    {
+      "finding_family": "ARK-UPG",
+      "rule_pack": "upgradeability",
+      "high_confidence_requires": ["initializer/proxy/UUPS evidence", "missing initializer or upgrade authorization tests", "runtime upgrade surface in source"],
+      "medium_confidence_requires": ["upgrade terms in Solidity files", "storage or initializer documentation gap"],
+      "low_confidence_conditions": ["proxy term appears only in docs", "unused upgradeable imports"],
+      "downgrade_conditions": ["initializer replay tests detected", "upgrade authorization tests detected", "storage layout assumptions documented"],
+      "common_false_positives": ["proxy references in deployment docs only", "inherited upgradeable base with tests in another package"],
+      "recommended_manual_review": ["Check initializer can run once", "Check upgradeTo authorization", "Check storage gap/layout assumptions"]
+    },
+    {
+      "finding_family": "ARK-REENT",
+      "rule_pack": "reentrancy_value_flow",
+      "high_confidence_requires": ["Solidity external call or token transfer in withdraw/claim/refund path", "state transition or value-flow context", "missing reentrant receiver or double-claim tests"],
+      "medium_confidence_requires": ["external call and value-flow terms in Solidity", "partial state-transition test gap"],
+      "low_confidence_conditions": ["transfer appears only in docs or tests", "read-only external call with no state mutation"],
+      "downgrade_conditions": ["nonReentrant evidence plus ordering tests", "reentrant receiver tests detected", "documented checks-effects-interactions ordering"],
+      "common_false_positives": ["safeTransfer in test fixture only", "view calls to external adapters", "documentation mentions reentrancy as a threat model item"],
+      "recommended_manual_review": ["Check state update before external calls", "Check callback-capable token assumptions", "Check failed external call handling"]
+    },
+    {
+      "finding_family": "ARK-RWD",
+      "rule_pack": "reward_accounting",
+      "high_confidence_requires": ["staking/reward state and claim function evidence", "missing conservation or double-claim tests", "reward accumulator/index context"],
+      "medium_confidence_requires": ["reward terms in Solidity files", "partial lifecycle test coverage gap"],
+      "low_confidence_conditions": ["reward appears only in docs", "token name contains reward but no accounting logic"],
+      "downgrade_conditions": ["multi-user conservation tests detected", "claim-twice tests detected", "accumulator precision tests detected"],
+      "common_false_positives": ["marketing docs mention rewards", "mock reward token references", "simple fixed reward with external verified module"],
+      "recommended_manual_review": ["Check total claimed <= funded rewards", "Check rewardPerToken monotonicity", "Check admin emission updates"]
+    },
+    {
+      "finding_family": "ARK-TST",
+      "rule_pack": "testing",
+      "high_confidence_requires": ["DeFi protocol shape detected", "no invariant or fuzz tests detected", "accounting, oracle, value-flow, or privileged state context"],
+      "medium_confidence_requires": ["tests exist but lack rule-pack coverage terms", "protocol complexity signals detected"],
+      "low_confidence_conditions": ["generic repository with few Solidity signals", "tests stored outside scanned root"],
+      "downgrade_conditions": ["Foundry invariant tests detected", "fuzz tests detected", "documented external test suite path"],
+      "common_false_positives": ["tests live in a package ignored by scan config", "invariant tests generated under nonstandard naming"],
+      "recommended_manual_review": ["Confirm test root paths", "Check stateful fuzz coverage", "Map invariants to rule-pack findings"]
+    },
+    {
+      "finding_family": "ARK-DOC",
+      "rule_pack": "documentation",
+      "high_confidence_requires": ["critical assumptions detected in code", "missing docs or scope files", "contest/audit handoff artifact absent"],
+      "medium_confidence_requires": ["partial docs with missing role/oracle/upgrade assumptions"],
+      "low_confidence_conditions": ["docs exist but scanner cannot classify content", "private docs intentionally excluded"],
+      "downgrade_conditions": ["scope checklist present", "assumption tables present", "known limitations documented"],
+      "common_false_positives": ["private planning repo contains docs", "README intentionally points to external docs"],
+      "recommended_manual_review": ["Check privileged role docs", "Check oracle assumptions docs", "Check build/test instructions"]
+    },
+    {
+      "finding_family": "ARK-AMM",
+      "rule_pack": "amm",
+      "high_confidence_requires": ["swap/liquidity/reserve math evidence", "missing invariant or slippage boundary tests", "pool accounting context"],
+      "medium_confidence_requires": ["AMM terms in Solidity files", "partial reserve or liquidity test gap"],
+      "low_confidence_conditions": ["AMM appears only in docs", "interface-only references"],
+      "downgrade_conditions": ["swap invariant tests detected", "liquidity proportionality tests detected", "bounds documented"],
+      "common_false_positives": ["AMM adapter imports only", "test mocks for external DEX"],
+      "recommended_manual_review": ["Check constant-product or stableswap invariant", "Check reserve manipulation boundaries", "Check slippage and rounding"]
+    },
+    {
+      "finding_family": "ARK-LEND",
+      "rule_pack": "lending",
+      "high_confidence_requires": ["borrow/repay/collateral/liquidation evidence", "missing solvency or boundary tests", "oracle or interest index context"],
+      "medium_confidence_requires": ["lending terms in Solidity files", "partial collateral/debt test gap"],
+      "low_confidence_conditions": ["lending appears only in docs", "interface-only references"],
+      "downgrade_conditions": ["collateral-debt invariant tests detected", "liquidation boundary tests detected", "oracle shock tests detected"],
+      "common_false_positives": ["borrow/repay terms in comments", "adapter-only integrations"],
+      "recommended_manual_review": ["Check collateral/debt conservation", "Check bad-debt boundaries", "Check oracle and interest index assumptions"]
+    },
+    {
+      "finding_family": "ARK-XCH",
+      "rule_pack": "cross_chain",
+      "high_confidence_requires": ["cross-chain message execution evidence", "missing source/replay validation tests", "trusted endpoint or relayer context"],
+      "medium_confidence_requires": ["bridge/message terms in Solidity files", "partial endpoint documentation gap"],
+      "low_confidence_conditions": ["bridge appears only in docs", "off-chain integration reference only"],
+      "downgrade_conditions": ["trusted source tests detected", "replay rejection tests detected", "endpoint assumptions documented"],
+      "common_false_positives": ["message term used for events", "cross-chain docs without runtime code"],
+      "recommended_manual_review": ["Check source chain and sender validation", "Check nonce/replay handling", "Check endpoint configuration"]
+    }
+  ]
+}

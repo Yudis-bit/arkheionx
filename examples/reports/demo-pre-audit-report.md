@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/oracle-staking-fixture`
-- Generated at: `2026-05-26T10:41:58+00:00`
+- Generated at: `2026-05-26T12:51:57+00:00`
 - Protocol type: `staking`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `0.8.0`
+- Scanner version: `0.9.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -344,6 +344,13 @@ What was detected:
 
 Protocol-like value flows were detected, but no invariant/property testing signal was found.
 
+Related Knowledge:
+
+- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
+- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
+- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
+- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol
+
 Suggested tests:
 
 - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
@@ -442,6 +449,13 @@ What was detected:
 
 External call or token transfer terms were detected without guard or reentrancy-review signals.
 
+Related Knowledge:
+
+- Historical patterns: pattern-external-call-before-state-update, pattern-callback-capable-token
+- Suggested defensive tests: reentrant-receiver-mock, state-update-before-external-call-test, double-claim-prevention
+- Related PoCs: poc-2018-10-spankchain, poc-2020-04-uniswap-imbtc, poc-2021-03-dodo-crowdpool
+- Docs: docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md, docs/RULE_PACKS.md
+
 Suggested tests:
 
 - Review state update order and add local malicious-receiver tests where callbacks are possible.
@@ -473,6 +487,13 @@ Affected files:
 What was detected:
 
 Reward/index/claim signals were detected without invariant testing.
+
+Related Knowledge:
+
+- Historical patterns: pattern-reward-overclaim, pattern-accounting-index-drift
+- Suggested defensive tests: reward-conservation-multi-user, claim-twice-reverts-or-noops, rewardPerToken-monotonicity
+- Related PoCs: poc-2020-12-warp-finance, poc-2020-08-opyn, poc-2020-09-bzx-ifusdc
+- Docs: docs/REWARD_ACCOUNTING_RULE_PACK.md, docs/RULE_PACKS.md
 
 Suggested tests:
 
@@ -530,6 +551,13 @@ Recommended defensive checks:
 - heartbeat checks
 - updatedAt validation
 - answeredInRound handling
+
+Related Knowledge:
+
+- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
+- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
+- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
+- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md
 
 Suggested tests:
 
@@ -856,7 +884,6 @@ No readiness gaps were suppressed in this run.
 - Issue Plan: `examples/reports/demo-issue-plan.json`
 - Baseline: `examples/reports/demo.baseline.json`
 - Launch Report: `examples/reports/demo-launch-report.md`
-- Sprint Plan: `examples/reports/demo-sprint-plan.md`
 - Contest Readiness: `examples/reports/demo-contest-readiness.md`
 - Executive Summary: `examples/reports/demo-executive-summary.md`
 - Remediation Roadmap: `examples/reports/demo-remediation-roadmap.md`

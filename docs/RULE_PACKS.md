@@ -46,3 +46,20 @@ intentionally do not call live chains, scan deployed contracts, submit
 transactions, or produce exploit payloads.
 
 Use rule pack findings as a pre-audit readiness map.
+
+## v0.9.0 Knowledge Map
+
+Rule packs are now connected to `metadata/finding_knowledge_map.json` and
+`metadata/security_memory_graph.json`.
+
+Search examples:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "vault accounting invariant"
+python3 scripts/search_knowledge.py "reentrancy value flow"
+python3 scripts/search_knowledge.py "missing invariant"
+```
+
+The results show related finding IDs, historical pattern categories, suggested
+defensive tests, and docs. They are readiness context only.

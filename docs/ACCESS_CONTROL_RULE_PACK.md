@@ -37,3 +37,18 @@ It emits readiness gaps, not formal audit findings.
 The scanner cannot determine whether a real multisig policy is operationally
 safe. It only highlights missing local tests and documentation signals.
 
+## Related Security Memory
+
+- Finding IDs: `ARK-ACC-001`, `ARK-ACC-002`, `ARK-ACC-003`, `ARK-UPG-001`, `ARK-UPG-002`
+- Historical patterns: unprotected initializer, privileged operation boundary,
+  upgrade authorization gap.
+- Suggested searches:
+
+```sh
+python3 scripts/search_knowledge.py "admin setter risk"
+python3 scripts/search_knowledge.py "initializer protection"
+python3 scripts/search_knowledge.py "upgrade authorization"
+```
+
+Use these mappings to plan authorization tests and documentation, not to claim
+a confirmed access-control bug.

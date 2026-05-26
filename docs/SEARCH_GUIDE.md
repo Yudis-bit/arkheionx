@@ -7,6 +7,28 @@ and generated indexes all carry searchable security language.
 Use GitHub search, local `rg`, or the generated index at
 [`reports/search_index.md`](../reports/search_index.md).
 
+For v0.9.0 security-memory search, use the local helper:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "vault accounting invariant"
+python3 scripts/search_knowledge.py "missing invariant" --json
+```
+
+The helper searches `metadata/security_memory_graph.json`,
+`metadata/finding_knowledge_map.json`, `metadata/search_terms.json`, and
+`reports/search_index.md`.
+
+## Quick Knowledge Search Recipes
+
+| Query | Use When | Start Here |
+|---|---|---|
+| `oracle stale price` | Checking oracle freshness assumptions. | `ARK-ORC-001`, `docs/ORACLE_RULE_PACK.md` |
+| `vault donation attack` | Checking vault share/accounting assumptions. | `ARK-VLT-*`, `docs/VAULT_RULE_PACK.md` |
+| `reentrancy value flow` | Checking withdraw, claim, refund, or transfer paths. | `ARK-REENT-*`, `docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md` |
+| `missing invariant` | Checking test readiness. | `ARK-TST-*`, `docs/READINESS_SCORE.md` |
+| `contest readiness` | Preparing external review. | `docs/CONTEST_READINESS_MODE.md` |
+
 ## Search By Exploit Primitive
 
 Examples:
@@ -228,6 +250,26 @@ false positive calibration
 external validation feedback
 case study template
 demo GitHub Action workflow
+security memory graph
+finding knowledge map
+historical pattern similarity
+exploit primitive mapping
+broken invariant mapping
+failed assumption mapping
+suggested defensive tests
+rule calibration matrix
+oracle stale price
+vault donation attack
+share accounting invariant
+reentrancy value flow
+callback capable token
+reward overclaim
+accumulator precision
+initializer protection
+upgrade authorization
+liquidation boundary
+AMM invariant
+cross chain replay
 ```
 
 ## Search By Monetization Or Services
@@ -284,6 +326,9 @@ rg -n "Launch Report OS|Pre-Audit Sprint|Contest Readiness Mode|delivery artifac
 rg -n "executive summary|remediation roadmap|scope checklist|researcher onboarding checklist" .
 rg -n "try Arkheionx in 5 minutes|public demo workflow|oracle staking demo" .
 rg -n "before after case study|rule calibration|external validation feedback" .
+rg -n "security memory graph|finding knowledge map|historical pattern similarity" .
+rg -n "oracle stale price|vault donation attack|share accounting invariant" .
+rg -n "reward overclaim|accumulator precision|reentrancy value flow" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

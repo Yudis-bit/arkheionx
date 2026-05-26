@@ -31,3 +31,23 @@ confirmed vulnerabilities.
 - No full Solidity call graph exists yet.
 - False positives remain possible.
 - Manual review is still required.
+
+## v0.9.0 Matrix Outputs
+
+Machine-readable calibration now lives in:
+
+- `metadata/rule_calibration_matrix.json`
+- `metadata/finding_knowledge_map.json`
+- `metadata/security_memory_graph.json`
+
+Each major family documents high-confidence requirements, medium-confidence
+requirements, low-confidence conditions, downgrade conditions, common false
+positives, and recommended manual review prompts.
+
+Search examples:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "vault donation attack"
+python3 scripts/search_knowledge.py "reward overclaim"
+```

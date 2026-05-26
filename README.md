@@ -90,6 +90,31 @@ Read [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and
 | Contest Readiness | Prep for bounty, contest, or external review scope. |
 | Remediation Roadmap | Prioritized work plan. |
 
+## Security Memory Graph
+
+Arkheionx v0.9.0 connects readiness findings to historical exploit patterns,
+broken invariants, failed assumptions, suggested defensive tests, and related
+docs through a local security memory graph.
+
+Search examples:
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "vault accounting invariant"
+python3 scripts/search_knowledge.py "missing invariant"
+```
+
+Outputs may include related findings, rule packs, historical patterns,
+historical PoC metadata, suggested tests, and docs. This is defensive context,
+not vulnerability confirmation.
+
+Read:
+
+- [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md)
+- [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md)
+- [`docs/FINDING_KNOWLEDGE_MAP.md`](docs/FINDING_KNOWLEDGE_MAP.md)
+- [`reports/security_memory_graph.md`](reports/security_memory_graph.md)
+
 ## Demo Case Study
 
 Start with the internal toy case studies:
@@ -98,7 +123,7 @@ Start with the internal toy case studies:
 - [`docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md`](docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md)
 
 These are reproducible demo case studies, not real protocol validation or
-customer claims.
+evidence of users.
 
 ## Latest Release
 
@@ -126,6 +151,7 @@ v0.8.0 adds:
 | v0.6.0 | Semantic-lite analysis + false-positive reduction | Released |
 | v0.7.0 | Launch Report OS + Sprint + Contest Readiness | Released |
 | v0.8.0 | External validation + public demos + rule calibration | Released |
+| v0.9.0 | Security Memory Graph + search upgrade | Prepared, not released |
 
 ## The Five Pillars
 
@@ -479,8 +505,13 @@ blocker, and defensive check.
 Start here:
 
 - [`docs/SEARCH_GUIDE.md`](docs/SEARCH_GUIDE.md)
+- [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md)
 - [`reports/search_index.md`](reports/search_index.md)
+- [`reports/security_memory_graph.md`](reports/security_memory_graph.md)
 - [`metadata/search_terms.json`](metadata/search_terms.json)
+- [`metadata/security_memory_graph.json`](metadata/security_memory_graph.json)
+- [`metadata/finding_knowledge_map.json`](metadata/finding_knowledge_map.json)
+- [`metadata/rule_calibration_matrix.json`](metadata/rule_calibration_matrix.json)
 - [`metadata/registry.json`](metadata/registry.json)
 
 Search examples:
@@ -561,6 +592,10 @@ Core standards:
 | Use optional Slither enrichment | [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md) |
 | Reduce false positives | [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md) |
 | Review rule calibration | [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md) |
+| Use the security memory graph | [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md) |
+| Search local knowledge | [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md) |
+| Update finding knowledge mappings | [`docs/FINDING_KNOWLEDGE_MAP.md`](docs/FINDING_KNOWLEDGE_MAP.md) |
+| Browse generated memory graph | [`reports/security_memory_graph.md`](reports/security_memory_graph.md) |
 | Share external feedback | [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md) |
 | Generate Launch Reports | [`docs/LAUNCH_REPORT_OS.md`](docs/LAUNCH_REPORT_OS.md) |
 | Run Pre-Audit Sprints | [`docs/PRE_AUDIT_SPRINT_WORKFLOW.md`](docs/PRE_AUDIT_SPRINT_WORKFLOW.md) |

@@ -119,5 +119,4 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 | Executive Summary   | `examples/reports/demo-executive-summary.md`   |
 | Remediation Roadmap | `examples/reports/demo-remediation-roadmap.md` |
 | Launch Report       | `examples/reports/demo-launch-report.md`       |
-| Sprint Plan         | `examples/reports/demo-sprint-plan.md`         |
 | Contest Readiness   | `examples/reports/demo-contest-readiness.md`   |

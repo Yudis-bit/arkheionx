@@ -1,5 +1,5 @@
 {
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -463,8 +463,80 @@
       "aliases": ["launch posts", "outreach kit", "v0.8 launch posts", "release announcement draft"],
       "category": "growth",
       "related_patterns": ["honest public launch communication"],
-      "related_checks": ["no fake adoption", "no guarantee claims", "demo workflow CTA"],
+      "related_checks": ["no unsupported traction claims", "no guarantee claims", "demo workflow CTA"],
       "search_tags": ["launch-post", "outreach-kit", "public-demo"]
+    },
+    {
+      "term": "security memory graph",
+      "aliases": ["finding knowledge map", "local knowledge graph", "security memory map"],
+      "category": "security memory",
+      "related_patterns": ["historical pattern similarity", "broken invariant mapping", "failed assumption mapping"],
+      "related_checks": ["metadata/security_memory_graph.json", "reports/security_memory_graph.md", "search_knowledge.py"],
+      "search_tags": ["security-memory-graph", "knowledge-map", "local-static-analysis"]
+    },
+    {
+      "term": "finding knowledge map",
+      "aliases": ["finding-to-pattern mapping", "ARK finding map", "readiness knowledge map"],
+      "category": "security memory",
+      "related_patterns": ["finding ID mapped to historical pattern"],
+      "related_checks": ["ARK-ORC-001", "ARK-VLT-001", "related_pocs", "suggested_tests"],
+      "search_tags": ["finding-knowledge-map", "finding-id", "historical-pattern-similarity"]
+    },
+    {
+      "term": "rule calibration matrix",
+      "aliases": ["calibration matrix", "confidence matrix", "rule confidence requirements"],
+      "category": "analysis quality",
+      "related_patterns": ["false positive reduction", "keyword-only downgrade"],
+      "related_checks": ["high confidence requires", "downgrade conditions", "common false positives"],
+      "search_tags": ["rule-calibration-matrix", "confidence-scoring", "false-positive-reduction"]
+    },
+    {
+      "term": "oracle stale price",
+      "aliases": ["Chainlink updatedAt", "heartbeat validation", "stale round", "oracle freshness"],
+      "category": "security memory",
+      "related_patterns": ["oracle stale price or freshness assumption failure"],
+      "related_checks": ["ARK-ORC-001", "stale round rejection", "heartbeat bound test"],
+      "search_tags": ["oracle-stale-price", "chainlink", "historical-pattern"]
+    },
+    {
+      "term": "vault donation attack",
+      "aliases": ["share inflation", "donation sensitivity", "first deposit attack class"],
+      "category": "security memory",
+      "related_patterns": ["vault share inflation or donation sensitivity"],
+      "related_checks": ["ARK-VLT-001", "ARK-VLT-003", "donation resistance", "share accounting invariant"],
+      "search_tags": ["vault-donation", "share-accounting", "vault-security"]
+    },
+    {
+      "term": "reentrancy value flow",
+      "aliases": ["callback capable token", "external call before state update", "claim refund flow"],
+      "category": "security memory",
+      "related_patterns": ["external call before state update", "callback capable token assumption"],
+      "related_checks": ["ARK-REENT-001", "reentrant receiver mock", "double claim prevention"],
+      "search_tags": ["reentrancy-value-flow", "callback", "defensive-test"]
+    },
+    {
+      "term": "reward overclaim",
+      "aliases": ["accumulator precision", "reward conservation", "claim twice"],
+      "category": "security memory",
+      "related_patterns": ["reward overclaim or emission accounting mismatch"],
+      "related_checks": ["ARK-RWD-001", "reward conservation", "rewardPerToken monotonicity"],
+      "search_tags": ["reward-overclaim", "staking", "accounting-invariant"]
+    },
+    {
+      "term": "initializer protection",
+      "aliases": ["upgrade authorization", "proxy initializer", "initializer runs once"],
+      "category": "security memory",
+      "related_patterns": ["unprotected initializer", "upgrade authorization gap"],
+      "related_checks": ["ARK-UPG-001", "ARK-ACC-001", "initializer cannot run twice"],
+      "search_tags": ["initializer-protection", "upgradeability", "access-control"]
+    },
+    {
+      "term": "broken invariant mapping",
+      "aliases": ["failed assumption mapping", "exploit primitive mapping", "suggested defensive tests"],
+      "category": "security memory",
+      "related_patterns": ["historical PoC to readiness finding mapping"],
+      "related_checks": ["security memory graph", "finding knowledge map", "rule calibration matrix"],
+      "search_tags": ["broken-invariant", "failed-assumption", "suggested-tests"]
     }
   ]
 }

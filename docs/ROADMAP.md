@@ -31,15 +31,16 @@ committed artifacts support it.
       Client-facing Launch Reports, Pre-Audit Sprint plans, Contest Readiness
       reports, executive summaries, remediation roadmaps, and paid-service
       delivery workflow artifacts.
-- [ ] **v0.8.0: External validation, public demos, and rule calibration in progress.**
-      Public demo repositories, case-study style sample reports, external
-      feedback loops, and evidence-based rule tuning.
-- [ ] **v0.9.0: Public feedback iteration and real-world evaluation workflow.**
-      Protocol-pack expansion, feedback-driven calibration, sanitized external
-      evaluation workflows, and stronger demo-to-service handoff artifacts.
-- [ ] **v1.0: Stable GitHub-native pre-audit kit.** Documented CLI/action
-      interface, calibrated rule packs, release artifacts, and contribution
-      workflow.
+- [x] **v0.8.0: External validation, public demos, and rule calibration shipped.**
+      Public demo workflow, case-study style sample reports, external feedback
+      templates, false-positive calibration workflow, and honest outreach
+      material.
+- [ ] **v0.9.0: Security Memory Graph and search upgrade in progress.**
+      Finding knowledge map, local security memory graph, rule calibration
+      matrix, search helper CLI, and Related Knowledge report integration.
+- [ ] **v1.0.0: Stable public release, schema freeze, and production-ready documentation.**
+      Stable CLI/action interface, schema freeze, docs freeze, calibrated rule
+      packs, release artifacts, and contribution workflow.
 
 ## Archive Roadmap
 

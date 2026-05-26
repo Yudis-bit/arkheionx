@@ -44,6 +44,17 @@ python3 scripts/create_github_issues.py \
 
 Dry-run mode makes no GitHub API calls.
 
+## Search The Security Memory Graph
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "missing invariant" --json
+```
+
+These commands show related finding IDs, historical pattern categories,
+suggested defensive tests, and local docs for the demo findings. They do not
+confirm vulnerabilities.
+
 ## Expected Output Files
 
 | Output | Purpose |

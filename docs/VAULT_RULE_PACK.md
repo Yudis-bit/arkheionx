@@ -179,3 +179,19 @@ The vault rule pack does not prove:
 
 It is a practical pre-audit preparation layer. Formal audit is still
 recommended before handling real user funds.
+
+## Related Security Memory
+
+- Finding IDs: `ARK-VLT-001` through `ARK-VLT-009`
+- Historical patterns: vault accounting drift, share inflation or donation
+  sensitivity, pool-price accounting assumptions.
+- Suggested searches:
+
+```sh
+python3 scripts/search_knowledge.py "vault accounting invariant"
+python3 scripts/search_knowledge.py "vault donation attack"
+python3 scripts/search_knowledge.py "share accounting invariant"
+```
+
+Search results connect this rule pack to suggested defensive tests and related
+historical pattern categories.

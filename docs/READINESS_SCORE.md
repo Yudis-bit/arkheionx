@@ -142,3 +142,15 @@ bugs. A repository can score poorly because it uses naming patterns the scanner
 does not understand yet.
 
 Use the score to prioritize preparation, not to claim safety.
+
+## Security Memory Context
+
+In v0.9.0, readiness findings may include Related Knowledge from
+`metadata/finding_knowledge_map.json`.
+
+This can connect a score-impacting finding to historical pattern categories,
+root-cause classes, failed assumptions, broken invariants, suggested defensive
+tests, and related docs.
+
+Historical similarity explains why a readiness check exists. It does not mean a
+scanned repository has the same vulnerability as a historical PoC.

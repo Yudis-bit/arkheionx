@@ -35,3 +35,17 @@ It emits pre-audit readiness tasks, not vulnerability confirmations.
 The rule pack is heuristic. It cannot validate economic design, reward solvency,
 or all edge cases without deeper manual review and formal audit preparation.
 
+## Related Security Memory
+
+- Finding IDs: `ARK-RWD-001`, `ARK-RWD-002`, `ARK-RWD-003`, `ARK-RWD-004`, `ARK-RWD-005`
+- Historical patterns: reward overclaim, accounting index drift, stale reward
+  state.
+- Suggested searches:
+
+```sh
+python3 scripts/search_knowledge.py "reward overclaim"
+python3 scripts/search_knowledge.py "accumulator precision"
+```
+
+Use results to prioritize conservation, double-claim, and accumulator
+monotonicity tests.

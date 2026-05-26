@@ -3,7 +3,42 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.8.0 - Unreleased
+## v0.9.0 - Unreleased
+
+### Added
+
+- Security memory graph JSON.
+- Finding knowledge map.
+- Rule calibration matrix.
+- Knowledge graph Markdown report.
+- Local search helper CLI.
+- Finding-to-pattern mapping.
+- Related Knowledge sections in reports and issue plans.
+- Security memory graph documentation.
+- Search knowledge documentation.
+
+### Improved
+
+- Search index and search metadata.
+- Rule pack docs and calibration discoverability.
+- Case study knowledge links.
+- Report explainability.
+- Historical pattern similarity wording.
+
+### Safety
+
+- Knowledge graph is local/static.
+- Historical similarity does not imply the scanned repo has the same
+  vulnerability.
+- No live-chain calls, RPC, exploit automation, or vulnerability confirmation.
+
+### Known Limitations
+
+- Mapping is curated and heuristic.
+- Historical references are educational readiness context.
+- Manual review remains required.
+
+## v0.8.0
 
 ### Added
 

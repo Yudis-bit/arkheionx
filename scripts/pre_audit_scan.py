@@ -23,10 +23,11 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+KNOWLEDGE_MAP_PATH = PACKAGE_ROOT / "metadata" / "finding_knowledge_map.json"
 DEFAULT_CONFIG = ".arkheionx.json"
 COMMENT_MARKER = "<!-- arkheionx-pre-audit-comment -->"
 ISSUE_MARKER_PREFIX = "<!-- arkheionx-issue:"
@@ -661,6 +662,63 @@ def display_path(path: Path) -> str:
         return path.resolve().relative_to(Path.cwd().resolve()).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def load_finding_knowledge_map() -> dict[str, dict[str, object]]:
+    try:
+        payload = json.loads(KNOWLEDGE_MAP_PATH.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    findings = payload.get("findings", {})
+    if not isinstance(findings, dict):
+        return {}
+    return {str(key): value for key, value in findings.items() if isinstance(value, dict)}
+
+
+def related_knowledge_for_id(finding_id: str) -> dict[str, object]:
+    knowledge = load_finding_knowledge_map().get(finding_id, {})
+    if not knowledge:
+        return {
+            "finding_map_version": "0.9.0",
+            "related_patterns": [],
+            "related_pocs": [],
+            "suggested_tests": [],
+            "related_docs": [],
+            "search_terms": [],
+        }
+    return {
+        "finding_map_version": "0.9.0",
+        "rule_pack": knowledge.get("rule_pack", ""),
+        "related_patterns": knowledge.get("historical_patterns", []),
+        "root_causes": knowledge.get("root_causes", []),
+        "failed_assumptions": knowledge.get("failed_assumptions", []),
+        "broken_invariants": knowledge.get("broken_invariants", []),
+        "related_pocs": knowledge.get("related_pocs", []),
+        "suggested_tests": knowledge.get("suggested_tests", []),
+        "related_docs": knowledge.get("related_docs", []),
+        "search_terms": knowledge.get("search_terms", []),
+    }
+
+
+def compact_related_knowledge_lines(finding_id: str) -> list[str]:
+    knowledge = related_knowledge_for_id(finding_id)
+    patterns = [str(item) for item in knowledge.get("related_patterns", [])[:3]]
+    tests = [str(item) for item in knowledge.get("suggested_tests", [])[:3]]
+    pocs = [str(item) for item in knowledge.get("related_pocs", [])[:3]]
+    docs = [str(item) for item in knowledge.get("related_docs", [])[:3]]
+    lines: list[str] = []
+    if not any([patterns, tests, pocs, docs]):
+        return lines
+    lines.append("Related Knowledge:")
+    if patterns:
+        lines.append(f"- Historical patterns: {', '.join(patterns)}")
+    if tests:
+        lines.append(f"- Suggested defensive tests: {', '.join(tests)}")
+    if pocs:
+        lines.append(f"- Related PoCs: {', '.join(pocs)}")
+    if docs:
+        lines.append(f"- Docs: {', '.join(docs)}")
+    return lines
 
 
 def finding_identity(title: str, tags: list[str]) -> tuple[str, str]:
@@ -3347,6 +3405,7 @@ def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
         "historical_pattern_similarity": gap.historical_pattern_similarity,
         "recommended_defensive_checks": gap.defensive_checks,
         "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+        "knowledge": related_knowledge_for_id(gap.id),
         "recommendation": gap.recommendation,
         "detail": gap.detail,
         "tags": gap.tags,
@@ -3653,6 +3712,7 @@ def finding_to_sarif_result(gap: ReadinessGap, root: Path) -> dict[str, object]:
             "false_positive_notes": gap.false_positive_notes,
             "category": gap.category,
             "historical_pattern_similarity": gap.historical_pattern_similarity,
+            "knowledge": related_knowledge_for_id(gap.id),
             "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
             "tags": gap.tags,
             "arkheionx_kind": "pre-audit-readiness",
@@ -4087,6 +4147,13 @@ def generate_report(
                 for check in gap.defensive_checks:
                     lines.append(f"- {check}")
                 lines.append("")
+            related_lines = compact_related_knowledge_lines(gap.id)
+            if related_lines:
+                lines.append("Related Knowledge:")
+                lines.append("")
+                for item in related_lines[1:]:
+                    lines.append(item)
+                lines.append("")
             lines.append("Suggested tests:")
             lines.append("")
             lines.append(f"- {gap.suggested_test or gap.recommendation}")
@@ -4252,6 +4319,13 @@ def json_report(
         "vault_rule_pack": vault_test_coverage,
         "rule_packs": rule_packs,
         "historical_patterns": [item.__dict__ for item in historical_patterns],
+        "knowledge": {
+            "finding_map_version": "0.9.0",
+            "mapped_findings": sorted(load_finding_knowledge_map().keys()),
+            "security_memory_graph": "metadata/security_memory_graph.json",
+            "finding_knowledge_map": "metadata/finding_knowledge_map.json",
+            "rule_calibration_matrix": "metadata/rule_calibration_matrix.json",
+        },
         "findings": findings,
         "suppressed_findings": suppressed_findings,
         "readiness_gaps": findings,
@@ -4460,6 +4534,10 @@ def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> 
         lines.append("- No structured evidence was attached. Manual review recommended.")
     if gap.false_positive_notes:
         lines.extend(["", "False-positive notes:", "", gap.false_positive_notes])
+    related_lines = compact_related_knowledge_lines(gap.id)
+    if related_lines:
+        lines.extend(["", "## Related Knowledge", ""])
+        lines.extend(related_lines[1:])
     lines.extend(
         [
             "",
@@ -4565,6 +4643,7 @@ def build_issue_plan(
                 "category": gap.category,
                 "confidence": gap.confidence,
                 "confidence_reason": gap.confidence_reason,
+                "related_knowledge": related_knowledge_for_id(gap.id),
                 "evidence_summary": gap.evidence_summary,
                 "evidence": gap.evidence[:5],
                 "detection_sources": gap.detection_sources,
@@ -4869,6 +4948,10 @@ def render_top_delivery_gaps(gaps: list[ReadinessGap], limit: int = 8) -> list[s
                 "",
             ]
         )
+        related_lines = compact_related_knowledge_lines(gap.id)
+        if related_lines:
+            lines.extend(related_lines)
+            lines.append("")
     if not lines:
         lines.append("No active automated readiness gaps were detected. Manual review is still required.")
         lines.append("")
@@ -4939,6 +5022,19 @@ def generate_launch_report(
     lines.append(markdown_table(rows))
     lines.extend(["", "## Top Readiness Gaps", ""])
     lines.extend(render_top_delivery_gaps(gaps, 8))
+    lines.extend(["## Relevant Security Memory", ""])
+    memory_added = False
+    for gap in top_findings(gaps, 5):
+        related_lines = compact_related_knowledge_lines(gap.id)
+        if related_lines:
+            memory_added = True
+            lines.append(f"### {gap.id} - {gap.title}")
+            lines.append("")
+            lines.extend(related_lines)
+            lines.append("")
+    if not memory_added:
+        lines.append("No curated related-knowledge mapping was available for the top findings in this run.")
+        lines.append("")
     lines.extend(["## Recommended Remediation Roadmap", ""])
     for phase, phase_gaps in roadmap_tasks_by_phase(gaps).items():
         lines.extend([f"### {phase}", ""])
@@ -5143,6 +5239,19 @@ def generate_contest_readiness(
         "",
     ]
     lines.extend(render_top_delivery_gaps(gaps, 8))
+    lines.extend(["## Historical Pattern Similarity", ""])
+    memory_added = False
+    for gap in top_findings(gaps, 5):
+        related_lines = compact_related_knowledge_lines(gap.id)
+        if related_lines:
+            memory_added = True
+            lines.append(f"### {gap.id} - {gap.title}")
+            lines.append("")
+            lines.extend(related_lines)
+            lines.append("")
+    if not memory_added:
+        lines.append("No curated related-knowledge mapping was available for the top findings in this run.")
+        lines.append("")
     lines.extend(["## What To Fix Before Opening A Contest", ""])
     groups = {
         "Must fix before contest": [gap for gap in gaps if is_high_or_critical(gap) and gap.confidence in {"high", "medium"}],
