@@ -43,6 +43,7 @@
     },
     "new": [],
     "resolved": [],
+    "schema_version": "1.0.0",
     "suppressed_findings": [],
     "unchanged": [],
     "warnings": []
@@ -1082,7 +1083,7 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-26T15:11:21+00:00",
+  "generated_at": "2026-05-26T15:46:07+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -3378,6 +3379,7 @@
     ],
     "include_generated_artifacts": false
   },
+  "schema_version": "1.0.0",
   "score": 55,
   "score_band": "Early readiness",
   "score_breakdown": {
@@ -4029,5 +4031,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.9.2"
+  "version": "1.0.0"
 }

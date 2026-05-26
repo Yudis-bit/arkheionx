@@ -24,7 +24,8 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.9.2"
+VERSION = "1.0.0"
+SCHEMA_VERSION = "1.0.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
@@ -3854,6 +3855,7 @@ def build_baseline(
     return {
         "tool": "Arkheionx Pre-Audit Scanner",
         "version": VERSION,
+        "schema_version": SCHEMA_VERSION,
         "fingerprint_version": FINGERPRINT_VERSION,
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "repo_root": display_path(root),
@@ -3903,6 +3905,7 @@ def diff_counts(diff_data: dict[str, object]) -> dict[str, int]:
 
 def empty_diff_data() -> dict[str, object]:
     return {
+        "schema_version": SCHEMA_VERSION,
         "baseline_path": "",
         "new": [],
         "resolved": [],
@@ -3962,6 +3965,7 @@ def compare_findings(
     new = [item for index, item in enumerate(unmatched_current) if index not in changed_curr_ids]
     resolved = [item for index, item in enumerate(unmatched_previous) if index not in changed_prev_ids]
     diff_data: dict[str, object] = {
+        "schema_version": SCHEMA_VERSION,
         "baseline_path": display_path(baseline_path),
         "new": new,
         "resolved": resolved,
@@ -4738,6 +4742,7 @@ def json_report(
     return {
         "tool": "Arkheionx Pre-Audit Scanner",
         "version": VERSION,
+        "schema_version": SCHEMA_VERSION,
         "fingerprint_version": FINGERPRINT_VERSION,
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "repo_root": display_path(root),
@@ -5112,6 +5117,7 @@ def build_issue_plan(
     return {
         "tool": "Arkheionx Pre-Audit Scanner",
         "version": VERSION,
+        "schema_version": SCHEMA_VERSION,
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "repo_root": display_path(root),
         "protocol_type": protocol_type,

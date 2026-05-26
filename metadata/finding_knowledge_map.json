@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.9.0",
+  "schema_version": "1.0.0",
   "description": "Curated Arkheionx map from readiness finding IDs to historical security memory, failed assumptions, broken invariants, suggested defensive tests, and local docs.",
   "findings": {
     "ARK-VLT-001": {

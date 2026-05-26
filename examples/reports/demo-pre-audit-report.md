@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/oracle-staking-fixture`
-- Generated at: `2026-05-26T12:51:57+00:00`
+- Generated at: `2026-05-26T15:46:19+00:00`
 - Protocol type: `staking`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `0.9.0`
+- Scanner version: `1.0.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -16,6 +16,13 @@
 | Docs             | 1     |
 | Configs          | 1     |
 | Workflows        | 0     |
+
+## Scan Source Summary
+
+- Files considered: `4`
+- Files scanned: `4`
+- Files ignored: `0`
+- Generated Arkheionx artifacts ignored: `0`
 
 ## Disclaimer
 
@@ -32,25 +39,33 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 | Slither                  | disabled |
 | Slither detectors        | 0        |
 | Test coverage mapping    | enabled  |
+| Negative evidence        | 2        |
 
 ## Executive Summary
 
-- Readiness score: **65/100**
-- Score band: **Improving**
-- Active readiness gaps: `11`
+- Readiness score: **52/100**
+- Score band: **Early readiness**
+- Active readiness gaps: `13`
 - Suppressed readiness gaps: `0`
 - Top readiness gaps:
+  - **ARK-ORC-001 (High readiness gap):** Oracle-dependent logic without stale-price tests - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
+  - **ARK-ORC-002 (High readiness gap):** Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - **ARK-TST-002 (High readiness gap):** No invariant tests detected for DeFi protocol shape - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
-  - **ARK-ORC-001 (Medium readiness gap):** Oracle-dependent logic without stale-price tests - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
-  - **ARK-ORC-002 (Medium readiness gap):** Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-  - **ARK-ORC-005 (Medium readiness gap):** Missing price bounds or fallback assumptions documentation - Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.
-  - **ARK-REENT-001 (Medium readiness gap):** External-call value flow needs reentrancy review - Review state update order and add local malicious-receiver tests where callbacks are possible.
+  - **ARK-ACC-001 (Medium readiness gap):** Privileged setters without role-boundary tests - Add tests proving unauthorized users cannot call privileged setters or role-management functions.
+  - **ARK-ORC-004 (Medium readiness gap):** Oracle setter/admin path without role-boundary tests - Add tests proving only documented roles can update oracle configuration.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
   - Add deposit/withdraw roundtrip, totalAssets consistency, and donation/inflation-resistance tests.
   - Add convertToShares/convertToAssets rounding tests and preview/action equivalence checks for ERC4626-like flows.
   - Review state update order and add malicious local receiver tests for callback-capable flows.
+
+## Negative Evidence
+
+Arkheionx found coverage terms in missing/negative context. These statements are not counted as positive test coverage.
+
+- `README.md:12` `invariant` - Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz` - Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
 
 ## Detected Protocol Shape
 
@@ -64,29 +79,29 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 | Category                    | Score | Max | Notes                                                                                                                                                                                                                                                                                |
 | --------------------------- | ----- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Repository Structure        | 12    | 15  | Solidity sources detected.; Recognized build or analysis config detected.; Clear src/test/docs structure detected.                                                                                                                                                                   |
-| Test Presence               | 20    | 20  | Solidity test files detected.; Assert usage detected.; Foundry or Hardhat test environment detected.; Protocol-specific terms appear in the testable codebase.                                                                                                                       |
-| Invariant Fuzz Readiness    | 3     | 20  | Edge-case testing terms detected.                                                                                                                                                                                                                                                    |
-| Defi Risk Coverage          | 7     | 20  | Role or admin boundaries have some visible coverage.; Protocol-specific checklist or property coverage detected.                                                                                                                                                                     |
-| Documentation Readiness     | 8     | 10  | README detected.; Assumptions, invariants, or limitations are documented.; Deployment or role information appears in docs/code comments.                                                                                                                                             |
+| Test Presence               | 15    | 20  | Solidity test files detected.; Assert usage detected.; Foundry or Hardhat test environment detected.                                                                                                                                                                                 |
+| Invariant Fuzz Readiness    | 0     | 20  | No positive signal detected.                                                                                                                                                                                                                                                         |
+| Defi Risk Coverage          | 3     | 20  | Role or admin boundaries have some visible coverage.; Negative coverage statements detected; removed 1 readiness point(s) from this category.                                                                                                                                        |
+| Documentation Readiness     | 7     | 10  | README detected.; Assumptions, invariants, or limitations are documented.; Deployment or role information appears in docs/code comments.; Negative coverage statements detected; removed 1 readiness point(s) from this category.                                                    |
 | Operational Admin Readiness | 15    | 15  | Access-control surface is visible.; Emergency control or incident terms detected.; Upgradeability is absent or has visible documentation/test terms.; Privileged setters or owner boundaries are visible for review.; Monitoring, incident, limitation, or emergency notes detected. |
 
 ## Top Readiness Gaps
 
-| ID            | Priority             | Category              | Title                                                                  |
-| ------------- | -------------------- | --------------------- | ---------------------------------------------------------------------- |
-| ARK-TST-002   | High readiness gap   | testing-readiness     | No invariant tests detected for DeFi protocol shape                    |
-| ARK-ORC-001   | Medium readiness gap | oracle-pricing        | Oracle-dependent logic without stale-price tests                       |
-| ARK-ORC-002   | Medium readiness gap | oracle-pricing        | Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage |
-| ARK-ORC-005   | Medium readiness gap | oracle-pricing        | Missing price bounds or fallback assumptions documentation             |
-| ARK-REENT-001 | Medium readiness gap | reentrancy-value-flow | External-call value flow needs reentrancy review                       |
+| ID          | Priority             | Category          | Title                                                                  |
+| ----------- | -------------------- | ----------------- | ---------------------------------------------------------------------- |
+| ARK-ORC-001 | High readiness gap   | oracle-pricing    | Oracle-dependent logic without stale-price tests                       |
+| ARK-ORC-002 | High readiness gap   | oracle-pricing    | Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage |
+| ARK-TST-002 | High readiness gap   | testing-readiness | No invariant tests detected for DeFi protocol shape                    |
+| ARK-ACC-001 | Medium readiness gap | access-control    | Privileged setters without role-boundary tests                         |
+| ARK-ORC-004 | Medium readiness gap | oracle-pricing    | Oracle setter/admin path without role-boundary tests                   |
 
 ## Rule Pack Coverage
 
 | Rule Pack                                 | Detected | Findings | Docs                                    |
 | ----------------------------------------- | -------- | -------- | --------------------------------------- |
 | Vault Rule Pack                           | yes      | 1        | docs/VAULT_RULE_PACK.md                 |
-| Oracle Rule Pack                          | yes      | 3        | docs/ORACLE_RULE_PACK.md                |
-| Access Control / Upgradeability Rule Pack | yes      | 1        | docs/ACCESS_CONTROL_RULE_PACK.md        |
+| Oracle Rule Pack                          | yes      | 4        | docs/ORACLE_RULE_PACK.md                |
+| Access Control / Upgradeability Rule Pack | yes      | 2        | docs/ACCESS_CONTROL_RULE_PACK.md        |
 | Reentrancy / Value Flow Rule Pack         | yes      | 2        | docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md |
 | Staking / Reward Accounting Rule Pack     | yes      | 3        | docs/REWARD_ACCOUNTING_RULE_PACK.md     |
 
@@ -106,7 +121,7 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 - Signals detected: `11`
 - Signal terms: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed, roundId, setOracle, updatedAt`
-- Findings: `3`
+- Findings: `4`
 - Docs: `docs/ORACLE_RULE_PACK.md`
 - Suggested tests:
   - stale price rejection
@@ -118,7 +133,7 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 - Signals detected: `6`
 - Signal terms: `onlyOwner, owner, pause, setOracle, setTreasury, unpause`
-- Findings: `1`
+- Findings: `2`
 - Docs: `docs/ACCESS_CONTROL_RULE_PACK.md`
 - Suggested tests:
   - unauthorized setter tests
@@ -227,7 +242,9 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 - Echidna: `False`
 - Slither: `False`
 - Ci Workflow: `False`
-- Edge Case Tests: `True`
+- Edge Case Tests: `False`
+- Negative Evidence Count: `2`
+- Negative Evidence Terms: `['fuzz', 'invariant']`
 - Test files: `test/OracleRewardFixture.t.sol`
 
 ## Historical Exploit-Pattern Similarity
@@ -322,8 +339,8 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 - Priority: `High readiness gap`
 - Confidence: `medium`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `semantic-lite`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.
+- Detection sources: `negative-test-coverage, semantic-lite`
 - Category: `testing-readiness`
 
 Evidence:
@@ -332,6 +349,14 @@ Evidence:
 - `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
 - `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
 - `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+
+False-positive notes:
+
+Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.
 
 Detected signals:
 - scanner signal
@@ -359,16 +384,16 @@ Search tags: `invariant-testing, staking`
 
 ### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
 
-- Priority: `Medium readiness gap`
+- Priority: `High readiness gap`
 - Confidence: `medium`
-- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
 - Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
 
 Evidence:
 - `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
 - `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
-- `test/documentation coverage`: Matching test coverage terms detected: oracle.
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
 - `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding.
 - `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding.
 
@@ -393,14 +418,17 @@ Search tags: `oracle-risk, price-assumptions`
 
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword, test-coverage`
+- Confidence reason: Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage.
+- Detection sources: `keyword, negative-test-coverage, test-coverage`
 - Category: `vault-accounting`
 
 Evidence:
 - `test/documentation coverage`: No semantic-lite vault test coverage terms were detected.
 - `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding.
 - `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding.
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
 
 False-positive notes:
 
@@ -503,18 +531,26 @@ Search tags: `reward-accounting, precision`
 
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
-- Priority: `Medium readiness gap`
-- Confidence: `medium`
-- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
-- Detection sources: `keyword, semantic-lite, test-coverage`
+- Priority: `High readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.
+- Detection sources: `keyword, negative-test-coverage, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
 
 Evidence:
 - `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
 - `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
-- `test/documentation coverage`: Matching test coverage terms detected: oracle.
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
 - `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
 - `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+
+False-positive notes:
+
+Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.
 
 Detected signals:
 - `AggregatorV3Interface`
@@ -565,18 +601,82 @@ Suggested tests:
 
 Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 
+### ARK-ORC-004 - Oracle setter/admin path without role-boundary tests
+
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.
+- Detection sources: `keyword, negative-test-coverage, semantic-lite, test-coverage`
+- Category: `oracle-pricing`
+
+Evidence:
+- `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
+- `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
+- `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
+- `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+
+False-positive notes:
+
+Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.
+
+Detected signals:
+- `AggregatorV3Interface`
+- `answer`
+- `answeredInRound`
+- `decimals`
+- `getPrice`
+- `latestAnswer`
+- `latestRoundData`
+- `priceFeed`
+- `roundId`
+- `setOracle`
+- `updatedAt`
+
+Affected files:
+- `src/OracleRewardFixture.sol`
+- `test/OracleRewardFixture.t.sol`
+
+What was detected:
+
+Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.
+
+Why it matters:
+
+Oracle configuration changes can alter all downstream accounting assumptions.
+
+Historical pattern similarity:
+
+Maps to privileged control and oracle configuration readiness classes.
+
+Recommended defensive checks:
+
+- unauthorized setOracle reverts
+- trusted role documentation
+- fallback oracle controls
+
+Suggested tests:
+
+- Assert unprivileged callers cannot change oracle or fallback oracle configuration.
+
+Search tags: `oracle-risk, access-control-review, oracle-rule-pack`
+
 ### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
 
 - Priority: `Medium readiness gap`
-- Confidence: `medium`
-- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
 - Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
 
 Evidence:
 - `src/OracleRewardFixture.sol:67` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();`
 - `src/OracleRewardFixture.sol:74` in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence. Snippet: `return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;`
-- `test/documentation coverage`: Matching test coverage terms detected: oracle.
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
 - `src/OracleRewardFixture.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
 - `test/OracleRewardFixture.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed`
 
@@ -621,6 +721,73 @@ Suggested tests:
 - Add documentation plus local tests showing fallback and out-of-bounds price behavior.
 
 Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
+
+### ARK-ACC-001 - Privileged setters without role-boundary tests
+
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.
+- Detection sources: `negative-test-coverage, semantic-lite`
+- Category: `access-control`
+
+Evidence:
+- `src/OracleRewardFixture.sol:47` in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:51` in `setEmissionRate`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:55` in `setTreasury`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:59` in `pause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+- `src/OracleRewardFixture.sol:63` in `unpause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+
+False-positive notes:
+
+Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.
+
+Detected signals:
+- `onlyOwner`
+- `owner`
+- `pause`
+- `setOracle`
+- `setTreasury`
+- `unpause`
+
+Affected files:
+- `src/OracleRewardFixture.sol`
+- `test/OracleRewardFixture.t.sol`
+
+What was detected:
+
+Privileged setter or role-management signals were detected without visible unauthorized-call coverage.
+
+Why it matters:
+
+Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions.
+
+Historical pattern similarity:
+
+Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.
+
+Recommended defensive checks:
+
+- unauthorized setter tests
+- role grant/revoke tests
+- pause role tests
+- timelock/multisig assumptions
+
+Related Knowledge:
+
+- Historical patterns: pattern-unprotected-initializer, pattern-privileged-operation-boundary
+- Suggested defensive tests: unauthorized-setter-reverts, role-boundary-negative-tests, admin-change-event-and-bounds-test
+- Related PoCs: poc-2017-07-parity-multisig, poc-2020-06-balancer-deflationary, poc-2022-02-dexible
+- Docs: docs/ACCESS_CONTROL_RULE_PACK.md, docs/RULE_PACKS.md
+
+Suggested tests:
+
+- For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.
+
+Search tags: `access-control-review, admin-risk, access-control-rule-pack`
 
 ### ARK-ACC-003 - Admin role concentration not documented
 
@@ -724,8 +891,8 @@ Search tags: `reentrancy-review, documentation-readiness, reentrancy-rule-pack`
 
 - Priority: `Medium readiness gap`
 - Confidence: `high`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `semantic-lite`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.
+- Detection sources: `negative-test-coverage, semantic-lite`
 - Category: `reward-accounting`
 
 Evidence:
@@ -734,6 +901,14 @@ Evidence:
 - `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
 - `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
 - `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+
+False-positive notes:
+
+Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.
 
 Detected signals:
 - `accumulator`
@@ -779,8 +954,8 @@ Search tags: `reward-accounting, precision, staking-rule-pack`
 
 - Priority: `Medium readiness gap`
 - Confidence: `high`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `semantic-lite`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.
+- Detection sources: `negative-test-coverage, semantic-lite`
 - Category: `reward-accounting`
 
 Evidence:
@@ -789,6 +964,14 @@ Evidence:
 - `src/OracleRewardFixture.sol:86` in `stake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transferFrom(msg.sender, address(this), amount), "transferFrom");`
 - `src/OracleRewardFixture.sol:94` in `unstake`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, amount), "transfer");`
 - `src/OracleRewardFixture.sol:101` in `claimReward`: Solidity function contains external value-flow call evidence. Snippet: `require(stakingToken.transfer(msg.sender, reward), "reward transfer");`
+
+Negative evidence:
+- `README.md:12` `invariant`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+- `README.md:12` `fuzz`: Coverage term appears in negative context. Snippet: `- missing invariant and fuzz coverage.`
+
+False-positive notes:
+
+Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.
 
 Detected signals:
 - `accumulator`
@@ -884,6 +1067,7 @@ No readiness gaps were suppressed in this run.
 - Issue Plan: `examples/reports/demo-issue-plan.json`
 - Baseline: `examples/reports/demo.baseline.json`
 - Launch Report: `examples/reports/demo-launch-report.md`
+- Sprint Plan: `examples/reports/demo-sprint-plan.md`
 - Contest Readiness: `examples/reports/demo-contest-readiness.md`
 - Executive Summary: `examples/reports/demo-executive-summary.md`
 - Remediation Roadmap: `examples/reports/demo-remediation-roadmap.md`

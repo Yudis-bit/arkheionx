@@ -8,7 +8,12 @@ on:
       - "scripts/create_github_issues.py"
       - "scripts/generate_knowledge_graph.py"
       - "scripts/search_knowledge.py"
+      - "scripts/check_docs_links.py"
+      - "scripts/check_version_consistency.py"
+      - "scripts/check_safety_wording.py"
       - "tests/**"
+      - "schemas/**"
+      - "Makefile"
       - ".github/actions/pre-audit/action.yml"
       - ".github/workflows/arkheionx-demo.yml"
       - ".github/workflows/pre-audit-ci.yml"
@@ -55,6 +60,9 @@ jobs:
           python3 -m py_compile scripts/create_github_issues.py
           python3 -m py_compile scripts/generate_knowledge_graph.py
           python3 -m py_compile scripts/search_knowledge.py
+          python3 -m py_compile scripts/check_docs_links.py
+          python3 -m py_compile scripts/check_version_consistency.py
+          python3 -m py_compile scripts/check_safety_wording.py
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
@@ -64,6 +72,12 @@ jobs:
           python3 scripts/generate_knowledge_graph.py --check
           python3 scripts/search_knowledge.py "oracle stale price"
           python3 scripts/search_knowledge.py "missing invariant" --json
+
+      - name: Verify v1 documentation and release consistency
+        run: |
+          python3 scripts/check_docs_links.py --check
+          python3 scripts/check_version_consistency.py --check
+          python3 scripts/check_safety_wording.py
 
       - name: Run scanner unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"
@@ -360,6 +374,8 @@ jobs:
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
+              assert data["version"] == "1.0.0"
+              assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
               assert "vault_rule_pack" in data
@@ -394,6 +410,8 @@ jobs:
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
+              assert plan["version"] == "1.0.0"
+              assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
               assert all("not a formal audit finding" in issue["body"] for issue in plan["issues"])
@@ -430,8 +448,10 @@ jobs:
               assert sarif["runs"][0]["results"][0]["properties"]["not_a_vulnerability_confirmation"] is True
               assert sarif["runs"][0]["results"][0]["locations"]
           baseline = json.load(open("examples/reports/vault-risk-fixture.baseline.json", encoding="utf-8"))
+          assert baseline["schema_version"] == "1.0.0"
           assert baseline["findings"] and all(item["fingerprint"] for item in baseline["findings"])
           diff = json.load(open("examples/reports/vault-risk-fixture-diff.json", encoding="utf-8"))
+          assert diff["schema_version"] == "1.0.0"
           assert "counts" in diff and "unchanged" in diff["counts"]
           print("JSON valid")
           PY

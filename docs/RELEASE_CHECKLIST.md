@@ -245,6 +245,35 @@ written reason in the release PR.
       unless source files changed.
 - [ ] `tests/test_generated_artifact_ignore.py` passes.
 
+## v1.0.0 Stable Public Release Checks
+
+- [ ] README names v1.0.0 as the latest stable release.
+- [ ] README documents what Arkheionx is, who it is for, what it produces, and
+      how to try it in five minutes.
+- [ ] Stable GitHub Action examples use `@v1.0.0`.
+- [ ] `docs/CLI_REFERENCE.md` exists and matches `scripts/pre_audit_scan.py --help`.
+- [ ] `docs/GITHUB_ACTION_USAGE.md` documents stable v1.0.0 inputs.
+- [ ] `docs/SCHEMA_REFERENCE.md` exists.
+- [ ] JSON schemas exist under `schemas/` and parse successfully.
+- [ ] `docs/OUTPUT_ARTIFACTS.md` documents recommended names and generated
+      artifact ignore behavior.
+- [ ] `docs/V1_0_RELEASE_NOTES_DRAFT.md` exists.
+- [ ] Generated artifacts are ignored by default.
+- [ ] Negative evidence fixture passes.
+- [ ] Self-ingestion fixture passes.
+- [ ] `python3 scripts/generate_knowledge_graph.py --check` passes.
+- [ ] `python3 scripts/check_docs_links.py --check` passes.
+- [ ] `python3 scripts/check_version_consistency.py --check` passes.
+- [ ] `python3 scripts/check_safety_wording.py` runs.
+- [ ] Unit tests pass.
+- [ ] Search index is up to date.
+- [ ] Registry and metadata checks pass.
+- [ ] `git diff --check` passes.
+- [ ] No live-chain/RPC behavior added.
+- [ ] No exploit automation added.
+- [ ] No fake adoption, customer, or external-validation claims added.
+- [ ] Release notes drafted but no tag/release/push performed.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

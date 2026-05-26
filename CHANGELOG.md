@@ -3,7 +3,49 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.9.2 - Unreleased
+## v1.0.0 - Unreleased
+
+### Added
+
+- Stable public release documentation.
+- CLI reference for the v1.0.0 scanner surface.
+- Schema reference and JSON schemas for stable outputs.
+- Output artifact naming guide.
+- Documentation link checker.
+- Version consistency checker.
+- Safety wording checker.
+- v1.0.0 release notes draft.
+
+### Improved
+
+- README onboarding and latest-release positioning.
+- GitHub Action usage docs and stable input reference.
+- Try-in-5-minutes flow with `make demo`.
+- Release checklist for stable public release preparation.
+- CI validation hooks for docs, version, and safety checks.
+
+### Stability
+
+- CLI surface documented as stable for v1.0.0.
+- GitHub Action inputs documented as stable for v1.0.0.
+- Main JSON output schemas documented.
+- Generated artifacts remain ignored by default.
+- Negative evidence and self-ingestion regression coverage preserved.
+
+### Safety
+
+- No live-chain/RPC behavior added.
+- No exploit automation added.
+- Findings remain readiness signals, not vulnerability confirmations.
+
+### Known Limitations
+
+- Static/heuristic analysis only.
+- Manual review remains required.
+- Optional Slither enrichment depends on local installation or provided JSON.
+- v1.0 schemas cover the main output shape, not every future optional field.
+
+## v0.9.2
 
 ### Fixed
 

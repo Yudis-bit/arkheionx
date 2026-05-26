@@ -20,6 +20,14 @@ knowledge base, and service surface for authorized defensive work.
 Maintained by **Yudistira Putra**, creator of Arkheionx - `arkheionx` /
 [@Yudis-bit](https://github.com/Yudis-bit).
 
+## What Is Arkheionx?
+
+Arkheionx is a local, GitHub-native pre-audit readiness workflow for authorized
+DeFi repositories. It helps indie builders, security researchers, and ecosystem
+teams turn static repository evidence into readiness reports, SARIF, issue
+plans, launch artifacts, and searchable security memory before a formal audit
+or external review.
+
 ## Start Here
 
 ### If You Are An Indie DeFi Builder
@@ -82,17 +90,37 @@ future readiness scores.
 Read [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and
 [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md).
 
+## Run On Your Own Repo
+
+Run Arkheionx only on repositories you own or are authorized to review:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root /path/to/your/repo \
+  --protocol-type auto \
+  --output reports/ARKHEIONX_PRE_AUDIT_REPORT.md \
+  --json-output reports/arkheionx-report.json \
+  --sarif-output reports/arkheionx.sarif.json \
+  --issue-plan-output reports/ARKHEIONX_ISSUE_PLAN.json
+```
+
+Local scans require Python 3. They do not require RPC, private keys, mnemonics,
+or a GitHub token.
+
 ## What You Get
 
 | Output | Purpose |
 |---|---|
+| Executive Summary | Quick founder/dev overview. |
 | Pre-Audit Report | Technical readiness findings with evidence. |
+| JSON Report | Machine-readable readiness output. |
 | SARIF | GitHub Code Scanning-compatible readiness signals. |
 | Issue Plan | GitHub-native remediation tasks. |
 | Launch Report | Founder/client-facing readiness summary. |
 | Sprint Plan | Day-by-day remediation workflow. |
 | Contest Readiness | Prep for bounty, contest, or external review scope. |
 | Remediation Roadmap | Prioritized work plan. |
+| Security Memory Search | Finding-to-pattern knowledge lookup. |
 
 ## Security Memory Graph
 
@@ -131,18 +159,16 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v0.8.0 - Public Demo Workflow and Validation Artifacts**.
+Latest stable release: **v1.0.0 - Stable Public Release**.
 
-v0.8.0 adds:
+v1.0.0 stabilizes:
 
-- Try Arkheionx in 5 Minutes guide;
-- public demo GitHub Actions workflow;
-- reproducible toy demo case studies;
-- before/after readiness example;
-- rule calibration documentation;
-- false-positive review workflow;
-- external validation feedback workflow;
-- demo reports and artifacts.
+- documented CLI and GitHub Action surfaces;
+- JSON schemas for stable outputs;
+- output artifact naming conventions;
+- generated artifact ignore and negative-evidence safeguards;
+- security memory graph/search workflows;
+- production-ready public documentation and release checklist.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -155,7 +181,24 @@ v0.8.0 adds:
 | v0.6.0 | Semantic-lite analysis + false-positive reduction | Released |
 | v0.7.0 | Launch Report OS + Sprint + Contest Readiness | Released |
 | v0.8.0 | External validation + public demos + rule calibration | Released |
-| v0.9.0 | Security Memory Graph + search upgrade | Prepared, not released |
+| v0.9.0 | Security Memory Graph + search upgrade | Released |
+| v0.9.1 | Negative evidence and score calibration | Released |
+| v0.9.2 | Generated artifact ignore and self-ingestion guard | Released |
+| v1.0.0 | Stable public release + schema freeze | Prepared, not tagged |
+
+## Stable v1.0.0 Surface
+
+Arkheionx v1.0.0 treats these surfaces as stable unless a future changelog
+explicitly says otherwise:
+
+- CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
+- GitHub Action inputs documented in [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
+- Main JSON output shapes documented in [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md).
+- SARIF 2.1.0 readiness output behavior.
+- Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
+
+Stable GitHub Action examples use `@v1.0.0`. Use `@main` only for development
+or testing unreleased changes.
 
 ## The Five Pillars
 
@@ -211,7 +254,7 @@ Honest snapshot from the current branch. Numeric values are regenerated from
 | Strong static assertions | 7 |
 | Medium static assertions | 4 |
 | Weak static assertions | 7 |
-| Public-RPC smoke attempted | 2 |
+| Not-run/no-RPC entries | 18 |
 | Needs verification | 18 |
 | EVM / Foundry | active |
 | SVM / Anchor | scaffold only |
@@ -230,7 +273,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v0.8.0` for stable usage:
+Use `@v1.0.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -245,7 +288,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.8.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0
         with:
           root: "."
           protocol-type: "auto"
@@ -279,7 +322,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.8.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -308,7 +351,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.8.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -358,6 +401,9 @@ python3 scripts/pre_audit_scan.py \
   --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
+
+See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.0.0 CLI
+surface.
 
 Vault builders can force the v0.2.0 Vault Rule Pack:
 
@@ -504,6 +550,9 @@ blocker, and defensive check.
 | Executive Summary | Short founder/stakeholder summary. |
 | Remediation Roadmap | Phase-based remediation task roadmap. |
 
+Recommended output names and generated-artifact ignore behavior are documented
+in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
+
 ## Search Arkheionx
 
 Start here:
@@ -584,6 +633,9 @@ Core standards:
 |---|---|
 | Try the demo quickly | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
 | Evaluate public demo workflow | [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md) |
+| Use stable CLI flags | [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) |
+| Review stable schemas | [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md) |
+| Name output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md) |
 | Read demo case studies | [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md) |
 | Understand the system | [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md) |
 | Install the GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
@@ -643,6 +695,13 @@ Use [`SERVICES.md`](SERVICES.md) for requests and
 
 Arkheionx is defensive only.
 
+## Safety Boundaries
+
+Arkheionx performs local/static repository analysis. It does not make RPC
+calls, scan deployed contracts, submit transactions, collect secrets, or create
+remote GitHub issues unless the separate issue workflow is explicitly enabled
+with a token in an authorized repository.
+
 - Use only on repositories you own or are authorized to review.
 - No live-target testing without authorization.
 - No chain calls or RPC in the scanner.
@@ -696,8 +755,10 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v0.8.0: external validation and public demos.** Five-minute demo workflow,
   demo case studies, rule calibration notes, feedback templates, and public
   demo artifacts.
-- **v1.0: stable GitHub-native pre-audit kit.** Documented interfaces,
-  calibrated rules, release artifacts, contribution workflow.
+- **v0.9.0-v0.9.2: security memory and calibration.** Security memory graph,
+  local search, negative evidence calibration, and self-ingestion guard.
+- **v1.0.0: stable GitHub-native pre-audit kit.** Documented interfaces,
+  schema freeze, calibrated rules, release artifacts, contribution workflow.
 
 Archive milestones remain honest:
 

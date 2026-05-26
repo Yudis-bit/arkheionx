@@ -14,7 +14,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Surface | Path | Search tags |
 |---|---|---|
 | README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v0.9.0, security memory graph, search upgrade, release notes |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v1.0.0, stable public release, release notes |
+| CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, v1.0.0 |
+| Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
+| Output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](../docs/OUTPUT_ARTIFACTS.md) | output naming, generated artifacts, reports directory |
+| v1.0 release notes draft | [`docs/V1_0_RELEASE_NOTES_DRAFT.md`](../docs/V1_0_RELEASE_NOTES_DRAFT.md) | v1.0.0, release notes, stable public release |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -96,6 +100,17 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | GitHub issue creator | [`scripts/create_github_issues.py`](../scripts/create_github_issues.py) | GitHub API, issue plan, dry-run |
 | Knowledge graph generator | [`scripts/generate_knowledge_graph.py`](../scripts/generate_knowledge_graph.py) | security memory graph, knowledge graph, check mode |
 | Knowledge search helper | [`scripts/search_knowledge.py`](../scripts/search_knowledge.py) | search knowledge, oracle stale price, local search |
+| Docs link checker | [`scripts/check_docs_links.py`](../scripts/check_docs_links.py) | docs link check, release validation, v1.0.0 |
+| Version consistency checker | [`scripts/check_version_consistency.py`](../scripts/check_version_consistency.py) | version consistency, release validation, v1.0.0 |
+| Safety wording checker | [`scripts/check_safety_wording.py`](../scripts/check_safety_wording.py) | safety wording, release validation, defensive |
+| Make demo | [`Makefile`](../Makefile) | make demo, make validate, try in 5 minutes |
+| Pre-audit report schema | [`schemas/pre-audit-report.schema.json`](../schemas/pre-audit-report.schema.json) | JSON schema, pre-audit report, schema freeze |
+| Issue plan schema | [`schemas/issue-plan.schema.json`](../schemas/issue-plan.schema.json) | JSON schema, issue plan, schema freeze |
+| Baseline schema | [`schemas/baseline.schema.json`](../schemas/baseline.schema.json) | JSON schema, baseline, schema freeze |
+| Diff schema | [`schemas/diff.schema.json`](../schemas/diff.schema.json) | JSON schema, diff, schema freeze |
+| Security memory graph schema | [`schemas/security-memory-graph.schema.json`](../schemas/security-memory-graph.schema.json) | JSON schema, security memory graph, schema freeze |
+| Finding knowledge map schema | [`schemas/finding-knowledge-map.schema.json`](../schemas/finding-knowledge-map.schema.json) | JSON schema, finding knowledge map, schema freeze |
+| Rule calibration matrix schema | [`schemas/rule-calibration-matrix.schema.json`](../schemas/rule-calibration-matrix.schema.json) | JSON schema, rule calibration matrix, schema freeze |
 | Report template | [`templates/pre_audit_report.md`](../templates/pre_audit_report.md) | template, Markdown report, disclaimer |
 | Invariant skeleton template | [`templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol`](../templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol) | Foundry, invariant, skeleton |
 
@@ -170,6 +185,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `reward overclaim` | accumulator precision, reward conservation, claim twice | security memory | ARK-RWD-001, reward conservation, rewardPerToken monotonicity | reward-overclaim, staking, accounting-invariant |
 | `initializer protection` | upgrade authorization, proxy initializer, initializer runs once | security memory | ARK-UPG-001, ARK-ACC-001, initializer cannot run twice | initializer-protection, upgradeability, access-control |
 | `broken invariant mapping` | failed assumption mapping, exploit primitive mapping, suggested defensive tests | security memory | security memory graph, finding knowledge map, rule calibration matrix | broken-invariant, failed-assumption, suggested-tests |
+| `stable public release` | v1.0.0, schema freeze, production-ready documentation | release | CLI reference, GitHub Action stable inputs, schema reference | v1.0.0, stable-release, schema-freeze |
+| `CLI reference` | stable CLI flags, pre_audit_scan.py help, scanner interface | documentation | --root, --json-output, --sarif-output, --issue-plan-output | cli-reference, stable-flags, pre-audit-scanner |
+| `JSON schema` | schema reference, pre-audit report schema, issue plan schema, baseline schema | schema | schemas/pre-audit-report.schema.json, schemas/issue-plan.schema.json | json-schema, schema-freeze, stable-output |
+| `output artifact naming` | recommended output names, generated artifacts, reports directory | documentation | ARKHEIONX_PRE_AUDIT_REPORT.md, arkheionx-report.json, arkheionx.sarif.json | output-artifacts, generated-artifacts, reports |
 
 ## Historical Memory Index
 

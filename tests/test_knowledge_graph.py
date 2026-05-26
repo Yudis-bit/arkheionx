@@ -13,7 +13,7 @@ class KnowledgeGraphTests(unittest.TestCase):
         graph_path = REPO_ROOT / "metadata/security_memory_graph.json"
         self.assertTrue(graph_path.exists())
         graph = json.loads(graph_path.read_text(encoding="utf-8"))
-        self.assertEqual(graph["schema_version"], "0.9.0")
+        self.assertEqual(graph["schema_version"], "1.0.0")
         self.assertTrue(graph["nodes"])
         self.assertTrue(graph["edges"])
         node_ids = {node["id"] for node in graph["nodes"]}

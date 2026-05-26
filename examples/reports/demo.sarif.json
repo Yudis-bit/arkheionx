@@ -11,8 +11,8 @@
         "defensive_only": true,
         "not_formal_audit": true,
         "protocol_type": "staking",
-        "score": 65,
-        "score_band": "Improving",
+        "score": 52,
+        "score_band": "Early readiness",
         "suppressed_count": 0,
         "suppressed_finding_ids": []
       },
@@ -49,12 +49,13 @@
             "arkheionx_kind": "pre-audit-readiness",
             "category": "testing-readiness",
             "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
             "detection_sources": [
+              "negative-test-coverage",
               "semantic-lite"
             ],
             "evidence_count": 5,
-            "false_positive_notes": "",
+            "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
             "historical_pattern_similarity": "",
             "knowledge": {
               "broken_invariants": [
@@ -96,6 +97,7 @@
                 "roundtrip-or-conservation-invariant"
               ]
             },
+            "negative_evidence_count": 2,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "High readiness gap",
@@ -139,7 +141,7 @@
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
             "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
             "detection_sources": [
               "keyword",
               "semantic-lite",
@@ -156,9 +158,10 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 0,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "Medium readiness gap",
+            "priority": "High readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
@@ -196,9 +199,10 @@
             "arkheionx_kind": "pre-audit-readiness",
             "category": "vault-accounting",
             "confidence": "low",
-            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "confidence_reason": "Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage.",
             "detection_sources": [
               "keyword",
+              "negative-test-coverage",
               "test-coverage"
             ],
             "evidence_count": 3,
@@ -212,6 +216,7 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 1,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Low readiness gap",
@@ -304,6 +309,7 @@
                 "double-claim-prevention"
               ]
             },
+            "negative_evidence_count": 0,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -398,6 +404,7 @@
                 "rewardPerToken-monotonicity"
               ]
             },
+            "negative_evidence_count": 0,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -440,15 +447,16 @@
             ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
             "detection_sources": [
               "keyword",
+              "negative-test-coverage",
               "semantic-lite",
               "test-coverage"
             ],
             "evidence_count": 5,
-            "false_positive_notes": "",
+            "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
             "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
             "knowledge": {
               "broken_invariants": [
@@ -497,9 +505,10 @@
                 "price-bounds-test"
               ]
             },
+            "negative_evidence_count": 2,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
-            "priority": "Medium readiness gap",
+            "priority": "High readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
               "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
@@ -511,6 +520,69 @@
             ]
           },
           "ruleId": "ARK-ORC-001"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/OracleRewardFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 67
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Oracle setter/admin path without role-boundary tests: Add tests proving only documented roles can update oracle configuration. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "af66ea06e033ac6f10d9286d"
+          },
+          "properties": {
+            "affected_functions": [
+              "getPrice",
+              "rewardPerToken"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+            "detection_sources": [
+              "keyword",
+              "negative-test-coverage",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+            "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
+            "negative_evidence_count": 2,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+            ],
+            "tags": [
+              "oracle-risk",
+              "access-control-review",
+              "oracle-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ORC-004"
         },
         {
           "level": "warning",
@@ -540,8 +612,8 @@
             ],
             "arkheionx_kind": "pre-audit-readiness",
             "category": "oracle-pricing",
-            "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
             "detection_sources": [
               "keyword",
               "semantic-lite",
@@ -558,6 +630,7 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 0,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -572,6 +645,102 @@
             ]
           },
           "ruleId": "ARK-ORC-005"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/OracleRewardFixture.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 47
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Privileged setters without role-boundary tests: Add tests proving unauthorized users cannot call privileged setters or role-management functions. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "39c27921af24bdb1b34eca12"
+          },
+          "properties": {
+            "affected_functions": [
+              "pause",
+              "setEmissionRate",
+              "setOracle",
+              "setTreasury",
+              "unpause"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "access-control",
+            "confidence": "high",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+            "detection_sources": [
+              "negative-test-coverage",
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+            "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+            "knowledge": {
+              "broken_invariants": [
+                "unauthorized-user-cannot-change-critical-config",
+                "admin-actions-are-bounded-and-documented"
+              ],
+              "failed_assumptions": [
+                "only-authorized-callers-can-change-critical-state",
+                "admin-surface-is-obvious"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/ACCESS_CONTROL_RULE_PACK.md",
+                "docs/RULE_PACKS.md"
+              ],
+              "related_patterns": [
+                "pattern-unprotected-initializer",
+                "pattern-privileged-operation-boundary"
+              ],
+              "related_pocs": [
+                "poc-2017-07-parity-multisig",
+                "poc-2020-06-balancer-deflationary",
+                "poc-2022-02-dexible"
+              ],
+              "root_causes": [
+                "missing-negative-access-tests",
+                "implicit-admin-trust",
+                "unclear-role-boundary"
+              ],
+              "rule_pack": "access_control",
+              "search_terms": [
+                "admin setter risk",
+                "onlyOwner negative test",
+                "access control failure"
+              ],
+              "suggested_tests": [
+                "unauthorized-setter-reverts",
+                "role-boundary-negative-tests",
+                "admin-change-event-and-bounds-test"
+              ]
+            },
+            "negative_evidence_count": 2,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "suggested_tests": [
+              "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+            ],
+            "tags": [
+              "access-control-review",
+              "admin-risk",
+              "access-control-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ACC-001"
         },
         {
           "level": "note",
@@ -620,6 +789,7 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 0,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Low readiness gap",
@@ -682,6 +852,7 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 0,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Low readiness gap",
@@ -729,12 +900,13 @@
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reward-accounting",
             "confidence": "high",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
             "detection_sources": [
+              "negative-test-coverage",
               "semantic-lite"
             ],
             "evidence_count": 5,
-            "false_positive_notes": "",
+            "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
             "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
             "knowledge": {
               "finding_map_version": "0.9.0",
@@ -744,6 +916,7 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 2,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -791,12 +964,13 @@
             "arkheionx_kind": "pre-audit-readiness",
             "category": "reward-accounting",
             "confidence": "high",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
             "detection_sources": [
+              "negative-test-coverage",
               "semantic-lite"
             ],
             "evidence_count": 5,
-            "false_positive_notes": "",
+            "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
             "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
             "knowledge": {
               "finding_map_version": "0.9.0",
@@ -806,6 +980,7 @@
               "search_terms": [],
               "suggested_tests": []
             },
+            "negative_evidence_count": 2,
             "not_a_vulnerability_confirmation": true,
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
@@ -974,6 +1149,31 @@
             },
             {
               "fullDescription": {
+                "text": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- unauthorized setOracle reverts\n- trusted role documentation\n- fallback oracle controls",
+                "text": "Defensive readiness checks:\n- unauthorized setOracle reverts\n- trusted role documentation\n- fallback oracle controls"
+              },
+              "id": "ARK-ORC-004",
+              "name": "oracle-setter/admin-path-without-role-boundary-tests",
+              "properties": {
+                "category": "oracle-pricing",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "oracle-risk",
+                  "access-control-review",
+                  "oracle-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Oracle setter/admin path without role-boundary tests"
+              }
+            },
+            {
+              "fullDescription": {
                 "text": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions."
               },
               "help": {
@@ -995,6 +1195,31 @@
               },
               "shortDescription": {
                 "text": "Missing price bounds or fallback assumptions documentation"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- unauthorized setter tests\n- role grant/revoke tests\n- pause role tests\n- timelock/multisig assumptions",
+                "text": "Defensive readiness checks:\n- unauthorized setter tests\n- role grant/revoke tests\n- pause role tests\n- timelock/multisig assumptions"
+              },
+              "id": "ARK-ACC-001",
+              "name": "privileged-setters-without-role-boundary-tests",
+              "properties": {
+                "category": "access-control",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "tags": [
+                  "access-control-review",
+                  "admin-risk",
+                  "access-control-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Privileged setters without role-boundary tests"
               }
             },
             {
@@ -1098,7 +1323,7 @@
               }
             }
           ],
-          "semanticVersion": "0.9.0"
+          "semanticVersion": "1.0.0"
         }
       }
     }

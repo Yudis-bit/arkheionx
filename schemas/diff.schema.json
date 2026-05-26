@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/schemas/diff.schema.json",
+  "title": "Arkheionx Diff",
+  "type": "object",
+  "required": ["schema_version", "baseline_path", "new", "resolved", "unchanged", "changed", "counts"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "baseline_path": { "type": "string" },
+    "new": { "type": "array" },
+    "resolved": { "type": "array" },
+    "unchanged": { "type": "array" },
+    "changed": { "type": "array" },
+    "suppressed_findings": { "type": "array" },
+    "counts": { "type": "object" },
+    "warnings": { "type": "array" }
+  },
+  "additionalProperties": true
+}

@@ -35,12 +35,26 @@ committed artifacts support it.
       Public demo workflow, case-study style sample reports, external feedback
       templates, false-positive calibration workflow, and honest outreach
       material.
-- [ ] **v0.9.0: Security Memory Graph and search upgrade in progress.**
+- [x] **v0.9.0: Security Memory Graph and search upgrade released.**
       Finding knowledge map, local security memory graph, rule calibration
       matrix, search helper CLI, and Related Knowledge report integration.
+- [x] **v0.9.1: Negative evidence detection and score calibration released.**
+      Missing-test comments no longer inflate coverage evidence or readiness
+      scores.
+- [x] **v0.9.2: Generated artifact ignore and self-ingestion guard released.**
+      Previous Arkheionx outputs are ignored as source evidence by default.
 - [ ] **v1.0.0: Stable public release, schema freeze, and production-ready documentation.**
       Stable CLI/action interface, schema freeze, docs freeze, calibrated rule
       packs, release artifacts, and contribution workflow.
+- [ ] **v1.1.0: Feedback Loop and External Calibration.**
+      Public feedback triage, false-positive calibration workflow, and
+      real-world evaluation notes without unsupported adoption claims.
+- [ ] **v1.2.0: Paid Offer Refinement.**
+      Clearer Launch Report, Pre-Audit Sprint, and Contest Readiness service
+      packaging tied to generated artifacts.
+- [ ] **v1.3.0: Ecosystem Pack.**
+      Multi-repository readiness workflows and standardized Markdown reporting
+      for authorized ecosystem support.
 
 ## Archive Roadmap
 

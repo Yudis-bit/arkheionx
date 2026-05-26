@@ -537,6 +537,38 @@
       "related_patterns": ["historical PoC to readiness finding mapping"],
       "related_checks": ["security memory graph", "finding knowledge map", "rule calibration matrix"],
       "search_tags": ["broken-invariant", "failed-assumption", "suggested-tests"]
+    },
+    {
+      "term": "stable public release",
+      "aliases": ["v1.0.0", "schema freeze", "production-ready documentation"],
+      "category": "release",
+      "related_patterns": ["stable pre-audit readiness workflow"],
+      "related_checks": ["CLI reference", "GitHub Action stable inputs", "schema reference"],
+      "search_tags": ["v1.0.0", "stable-release", "schema-freeze"]
+    },
+    {
+      "term": "CLI reference",
+      "aliases": ["stable CLI flags", "pre_audit_scan.py help", "scanner interface"],
+      "category": "documentation",
+      "related_patterns": ["stable local/static scanner workflow"],
+      "related_checks": ["--root", "--json-output", "--sarif-output", "--issue-plan-output"],
+      "search_tags": ["cli-reference", "stable-flags", "pre-audit-scanner"]
+    },
+    {
+      "term": "JSON schema",
+      "aliases": ["schema reference", "pre-audit report schema", "issue plan schema", "baseline schema"],
+      "category": "schema",
+      "related_patterns": ["machine-readable readiness output"],
+      "related_checks": ["schemas/pre-audit-report.schema.json", "schemas/issue-plan.schema.json"],
+      "search_tags": ["json-schema", "schema-freeze", "stable-output"]
+    },
+    {
+      "term": "output artifact naming",
+      "aliases": ["recommended output names", "generated artifacts", "reports directory"],
+      "category": "documentation",
+      "related_patterns": ["self-ingestion guard", "generated artifact ignore"],
+      "related_checks": ["ARKHEIONX_PRE_AUDIT_REPORT.md", "arkheionx-report.json", "arkheionx.sarif.json"],
+      "search_tags": ["output-artifacts", "generated-artifacts", "reports"]
     }
   ]
 }

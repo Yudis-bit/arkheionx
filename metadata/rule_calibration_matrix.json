@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.9.0",
+  "schema_version": "1.0.0",
   "description": "Arkheionx heuristic calibration matrix for readiness finding families. This matrix documents confidence requirements, downgrade logic, common false positives, and manual review prompts.",
   "families": [
     {

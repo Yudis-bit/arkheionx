@@ -3,6 +3,7 @@
     "fuzz_tests": false,
     "invariant_tests": false,
     "keyword_scan": "enabled",
+    "negative_evidence_count": 2,
     "semantic_contracts": 3,
     "semantic_lite": "enabled",
     "semantic_test_files": 1,
@@ -17,13 +18,13 @@
     "executive_summary": "examples/reports/demo-executive-summary.md",
     "launch_report": "examples/reports/demo-launch-report.md",
     "remediation_roadmap": "examples/reports/demo-remediation-roadmap.md",
-    "sprint_plan": ""
+    "sprint_plan": "examples/reports/demo-sprint-plan.md"
   },
   "delivery_summary": {
-    "contest_readiness_status": "Improving",
-    "launch_readiness_status": "Improving",
+    "contest_readiness_status": "Needs hardening",
+    "launch_readiness_status": "Needs hardening",
     "protocol_type": "staking",
-    "recommended_next_step": "Address `ARK-TST-002` first, then re-run Arkheionx and compare against a baseline.",
+    "recommended_next_step": "Address `ARK-ORC-001` first, then re-run Arkheionx and compare against a baseline.",
     "top_remediation_phases": [
       "Phase 1 - Launch blockers",
       "Phase 2 - High-priority readiness gaps",
@@ -42,6 +43,7 @@
     },
     "new": [],
     "resolved": [],
+    "schema_version": "1.0.0",
     "suppressed_findings": [],
     "unchanged": [],
     "warnings": []
@@ -80,10 +82,11 @@
       ],
       "category": "testing-readiness",
       "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
       "detected_signals": [],
       "detection_sources": [
+        "negative-test-coverage",
         "semantic-lite"
       ],
       "evidence": [
@@ -135,7 +138,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "40c41c40ed1466cdd9635ca9",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
@@ -179,6 +182,25 @@
           "roundtrip-or-conservation-invariant"
         ]
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
       "priority": "High readiness gap",
       "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
       "recommended_defensive_checks": [],
@@ -208,7 +230,7 @@
       ],
       "category": "oracle-pricing",
       "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
       "detected_signals": [],
       "detection_sources": [
@@ -239,7 +261,7 @@
           "file": "",
           "function": "",
           "line": 1,
-          "reason": "Matching test coverage terms detected: oracle.",
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
           "snippet": "",
           "type": "test-coverage"
         },
@@ -274,10 +296,12 @@
         "search_terms": [],
         "suggested_tests": []
       },
-      "priority": "Medium readiness gap",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "High readiness gap",
       "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [],
-      "severity": "Medium readiness gap",
+      "severity": "High readiness gap",
       "suggested_tests": [
         "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
       ],
@@ -298,11 +322,12 @@
       "affected_functions": [],
       "category": "vault-accounting",
       "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "confidence_reason": "Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage.",
       "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
       "detected_signals": [],
       "detection_sources": [
         "keyword",
+        "negative-test-coverage",
         "test-coverage"
       ],
       "evidence": [
@@ -345,6 +370,17 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 1,
       "priority": "Low readiness gap",
       "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
       "recommended_defensive_checks": [],
@@ -473,6 +509,8 @@
           "double-claim-prevention"
         ]
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Medium readiness gap",
       "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
       "recommended_defensive_checks": [],
@@ -605,6 +643,8 @@
           "rewardPerToken-monotonicity"
         ]
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Medium readiness gap",
       "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
       "recommended_defensive_checks": [],
@@ -633,8 +673,8 @@
         "rewardPerToken"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -651,6 +691,7 @@
       ],
       "detection_sources": [
         "keyword",
+        "negative-test-coverage",
         "semantic-lite",
         "test-coverage"
       ],
@@ -677,7 +718,7 @@
           "file": "",
           "function": "",
           "line": 1,
-          "reason": "Matching test coverage terms detected: oracle.",
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
           "snippet": "",
           "type": "test-coverage"
         },
@@ -700,7 +741,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "27199688c1b60c42d92a6d05",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
@@ -751,7 +792,26 @@
           "price-bounds-test"
         ]
       },
-      "priority": "Medium readiness gap",
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
+      "priority": "High readiness gap",
       "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
       "recommended_defensive_checks": [
         "stale round rejection",
@@ -759,7 +819,7 @@
         "updatedAt validation",
         "answeredInRound handling"
       ],
-      "severity": "Medium readiness gap",
+      "severity": "High readiness gap",
       "suggested_tests": [
         "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
       ],
@@ -785,8 +845,140 @@
         "rewardPerToken"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+      "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "negative-test-coverage",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+      "fingerprint": "af66ea06e033ac6f10d9286d",
+      "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+      "id": "ARK-ORC-004",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests",
+      "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -829,7 +1021,7 @@
           "file": "",
           "function": "",
           "line": 1,
-          "reason": "Matching test coverage terms detected: oracle.",
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
           "snippet": "",
           "type": "test-coverage"
         },
@@ -864,6 +1056,8 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Medium readiness gap",
       "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
       "recommended_defensive_checks": [
@@ -884,6 +1078,170 @@
       ],
       "title": "Missing price bounds or fallback assumptions documentation",
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+    },
+    {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+      "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "detection_sources": [
+        "negative-test-coverage",
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setOracle",
+          "line": 47,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setEmissionRate",
+          "line": 51,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setTreasury",
+          "line": 55,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "pause",
+          "line": 59,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unpause",
+          "line": 63,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+      "fingerprint": "39c27921af24bdb1b34eca12",
+      "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+      "id": "ARK-ACC-001",
+      "knowledge": {
+        "broken_invariants": [
+          "unauthorized-user-cannot-change-critical-config",
+          "admin-actions-are-bounded-and-documented"
+        ],
+        "failed_assumptions": [
+          "only-authorized-callers-can-change-critical-state",
+          "admin-surface-is-obvious"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ACCESS_CONTROL_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-unprotected-initializer",
+          "pattern-privileged-operation-boundary"
+        ],
+        "related_pocs": [
+          "poc-2017-07-parity-multisig",
+          "poc-2020-06-balancer-deflationary",
+          "poc-2022-02-dexible"
+        ],
+        "root_causes": [
+          "missing-negative-access-tests",
+          "implicit-admin-trust",
+          "unclear-role-boundary"
+        ],
+        "rule_pack": "access_control",
+        "search_terms": [
+          "admin setter risk",
+          "onlyOwner negative test",
+          "access control failure"
+        ],
+        "suggested_tests": [
+          "unauthorized-setter-reverts",
+          "role-boundary-negative-tests",
+          "admin-change-event-and-bounds-test"
+        ]
+      },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests",
+      "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
     },
     {
       "affected_contracts": [
@@ -976,6 +1334,8 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Low readiness gap",
       "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
       "recommended_defensive_checks": [
@@ -1081,6 +1441,8 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Low readiness gap",
       "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
       "recommended_defensive_checks": [
@@ -1118,7 +1480,7 @@
       ],
       "category": "reward-accounting",
       "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
       "detected_signals": [
         "accumulator",
@@ -1132,6 +1494,7 @@
         "unstake"
       ],
       "detection_sources": [
+        "negative-test-coverage",
         "semantic-lite"
       ],
       "evidence": [
@@ -1183,7 +1546,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "64ba736c260ec0865f0a87c1",
       "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
       "id": "ARK-RWD-002",
@@ -1195,6 +1558,25 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
       "priority": "Medium readiness gap",
       "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
       "recommended_defensive_checks": [
@@ -1233,7 +1615,7 @@
       ],
       "category": "reward-accounting",
       "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
       "detected_signals": [
         "accumulator",
@@ -1247,6 +1629,7 @@
         "unstake"
       ],
       "detection_sources": [
+        "negative-test-coverage",
         "semantic-lite"
       ],
       "evidence": [
@@ -1298,7 +1681,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "3c91794e0a66202839c5df60",
       "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
       "id": "ARK-RWD-003",
@@ -1310,6 +1693,25 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
       "priority": "Medium readiness gap",
       "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
       "recommended_defensive_checks": [
@@ -1332,7 +1734,7 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-26T12:51:57+00:00",
+  "generated_at": "2026-05-26T15:46:19+00:00",
   "generated_outputs": {
     "baseline": "examples/reports/demo.baseline.json",
     "comment": "",
@@ -1348,7 +1750,7 @@
     "remediation_roadmap": "examples/reports/demo-remediation-roadmap.md",
     "sarif_report": "examples/reports/demo.sarif.json",
     "slither_summary": "",
-    "sprint_plan": "",
+    "sprint_plan": "examples/reports/demo-sprint-plan.md",
     "summary": ""
   },
   "historical_patterns": [
@@ -1550,6 +1952,24 @@
     "rule_calibration_matrix": "metadata/rule_calibration_matrix.json",
     "security_memory_graph": "metadata/security_memory_graph.json"
   },
+  "negative_evidence": [
+    {
+      "file": "README.md",
+      "line": 12,
+      "reason": "Coverage term appears in negative context.",
+      "snippet": "- missing invariant and fuzz coverage.",
+      "term": "invariant",
+      "type": "negative-test-coverage"
+    },
+    {
+      "file": "README.md",
+      "line": 12,
+      "reason": "Coverage term appears in negative context.",
+      "snippet": "- missing invariant and fuzz coverage.",
+      "term": "fuzz",
+      "type": "negative-test-coverage"
+    }
+  ],
   "next_steps": [
     "Add Foundry invariant tests for accounting, roles, and value-flow boundaries.",
     "Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.",
@@ -1577,10 +1997,11 @@
       ],
       "category": "testing-readiness",
       "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
       "detected_signals": [],
       "detection_sources": [
+        "negative-test-coverage",
         "semantic-lite"
       ],
       "evidence": [
@@ -1632,7 +2053,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "40c41c40ed1466cdd9635ca9",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
@@ -1676,6 +2097,25 @@
           "roundtrip-or-conservation-invariant"
         ]
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
       "priority": "High readiness gap",
       "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
       "recommended_defensive_checks": [],
@@ -1705,7 +2145,7 @@
       ],
       "category": "oracle-pricing",
       "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
       "detected_signals": [],
       "detection_sources": [
@@ -1736,7 +2176,7 @@
           "file": "",
           "function": "",
           "line": 1,
-          "reason": "Matching test coverage terms detected: oracle.",
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
           "snippet": "",
           "type": "test-coverage"
         },
@@ -1771,10 +2211,12 @@
         "search_terms": [],
         "suggested_tests": []
       },
-      "priority": "Medium readiness gap",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "High readiness gap",
       "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [],
-      "severity": "Medium readiness gap",
+      "severity": "High readiness gap",
       "suggested_tests": [
         "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
       ],
@@ -1795,11 +2237,12 @@
       "affected_functions": [],
       "category": "vault-accounting",
       "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "confidence_reason": "Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage.",
       "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
       "detected_signals": [],
       "detection_sources": [
         "keyword",
+        "negative-test-coverage",
         "test-coverage"
       ],
       "evidence": [
@@ -1842,6 +2285,17 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 1,
       "priority": "Low readiness gap",
       "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
       "recommended_defensive_checks": [],
@@ -1970,6 +2424,8 @@
           "double-claim-prevention"
         ]
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Medium readiness gap",
       "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
       "recommended_defensive_checks": [],
@@ -2102,6 +2558,8 @@
           "rewardPerToken-monotonicity"
         ]
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Medium readiness gap",
       "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
       "recommended_defensive_checks": [],
@@ -2130,8 +2588,8 @@
         "rewardPerToken"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -2148,6 +2606,7 @@
       ],
       "detection_sources": [
         "keyword",
+        "negative-test-coverage",
         "semantic-lite",
         "test-coverage"
       ],
@@ -2174,7 +2633,7 @@
           "file": "",
           "function": "",
           "line": 1,
-          "reason": "Matching test coverage terms detected: oracle.",
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
           "snippet": "",
           "type": "test-coverage"
         },
@@ -2197,7 +2656,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "27199688c1b60c42d92a6d05",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
@@ -2248,7 +2707,26 @@
           "price-bounds-test"
         ]
       },
-      "priority": "Medium readiness gap",
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
+      "priority": "High readiness gap",
       "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
       "recommended_defensive_checks": [
         "stale round rejection",
@@ -2256,7 +2734,7 @@
         "updatedAt validation",
         "answeredInRound handling"
       ],
-      "severity": "Medium readiness gap",
+      "severity": "High readiness gap",
       "suggested_tests": [
         "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
       ],
@@ -2282,8 +2760,140 @@
         "rewardPerToken"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+      "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+      "detected_signals": [
+        "AggregatorV3Interface",
+        "answer",
+        "answeredInRound",
+        "decimals",
+        "getPrice",
+        "latestAnswer",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "negative-test-coverage",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "getPrice",
+          "line": 67,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "rewardPerToken",
+          "line": 74,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/OracleRewardFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        },
+        {
+          "file": "test/OracleRewardFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+      "fingerprint": "af66ea06e033ac6f10d9286d",
+      "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+      "id": "ARK-ORC-004",
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests",
+      "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
       "detected_signals": [
         "AggregatorV3Interface",
@@ -2326,7 +2936,7 @@
           "file": "",
           "function": "",
           "line": 1,
-          "reason": "Matching test coverage terms detected: oracle.",
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
           "snippet": "",
           "type": "test-coverage"
         },
@@ -2361,6 +2971,8 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Medium readiness gap",
       "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
       "recommended_defensive_checks": [
@@ -2381,6 +2993,170 @@
       ],
       "title": "Missing price bounds or fallback assumptions documentation",
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+    },
+    {
+      "affected_contracts": [
+        "OracleRewardFixture"
+      ],
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+      "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+      "detected_signals": [
+        "onlyOwner",
+        "owner",
+        "pause",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "detection_sources": [
+        "negative-test-coverage",
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setOracle",
+          "line": 47,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setEmissionRate",
+          "line": 51,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "setTreasury",
+          "line": 55,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "pause",
+          "line": 59,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "OracleRewardFixture",
+          "file": "src/OracleRewardFixture.sol",
+          "function": "unpause",
+          "line": 63,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+      "fingerprint": "39c27921af24bdb1b34eca12",
+      "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+      "id": "ARK-ACC-001",
+      "knowledge": {
+        "broken_invariants": [
+          "unauthorized-user-cannot-change-critical-config",
+          "admin-actions-are-bounded-and-documented"
+        ],
+        "failed_assumptions": [
+          "only-authorized-callers-can-change-critical-state",
+          "admin-surface-is-obvious"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ACCESS_CONTROL_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-unprotected-initializer",
+          "pattern-privileged-operation-boundary"
+        ],
+        "related_pocs": [
+          "poc-2017-07-parity-multisig",
+          "poc-2020-06-balancer-deflationary",
+          "poc-2022-02-dexible"
+        ],
+        "root_causes": [
+          "missing-negative-access-tests",
+          "implicit-admin-trust",
+          "unclear-role-boundary"
+        ],
+        "rule_pack": "access_control",
+        "search_terms": [
+          "admin setter risk",
+          "onlyOwner negative test",
+          "access control failure"
+        ],
+        "suggested_tests": [
+          "unauthorized-setter-reverts",
+          "role-boundary-negative-tests",
+          "admin-change-event-and-bounds-test"
+        ]
+      },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests",
+      "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
     },
     {
       "affected_contracts": [
@@ -2473,6 +3249,8 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Low readiness gap",
       "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
       "recommended_defensive_checks": [
@@ -2578,6 +3356,8 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
       "priority": "Low readiness gap",
       "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
       "recommended_defensive_checks": [
@@ -2615,7 +3395,7 @@
       ],
       "category": "reward-accounting",
       "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
       "detected_signals": [
         "accumulator",
@@ -2629,6 +3409,7 @@
         "unstake"
       ],
       "detection_sources": [
+        "negative-test-coverage",
         "semantic-lite"
       ],
       "evidence": [
@@ -2680,7 +3461,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "64ba736c260ec0865f0a87c1",
       "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
       "id": "ARK-RWD-002",
@@ -2692,6 +3473,25 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
       "priority": "Medium readiness gap",
       "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
       "recommended_defensive_checks": [
@@ -2730,7 +3530,7 @@
       ],
       "category": "reward-accounting",
       "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
       "detected_signals": [
         "accumulator",
@@ -2744,6 +3544,7 @@
         "unstake"
       ],
       "detection_sources": [
+        "negative-test-coverage",
         "semantic-lite"
       ],
       "evidence": [
@@ -2795,7 +3596,7 @@
       ],
       "evidence_count": 5,
       "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
+      "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
       "fingerprint": "3c91794e0a66202839c5df60",
       "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
       "id": "ARK-RWD-003",
@@ -2807,6 +3608,25 @@
         "search_terms": [],
         "suggested_tests": []
       },
+      "negative_evidence": [
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "invariant",
+          "type": "negative-test-coverage"
+        },
+        {
+          "file": "README.md",
+          "line": 12,
+          "reason": "Coverage term appears in negative context.",
+          "snippet": "- missing invariant and fuzz coverage.",
+          "term": "fuzz",
+          "type": "negative-test-coverage"
+        }
+      ],
+      "negative_evidence_count": 2,
       "priority": "Medium readiness gap",
       "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
       "recommended_defensive_checks": [
@@ -2836,8 +3656,172 @@
       "files": [
         "src/OracleRewardFixture.sol"
       ],
-      "finding_count": 1,
+      "finding_count": 2,
       "findings": [
+        {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "affected_functions": [
+            "pause",
+            "setEmissionRate",
+            "setOracle",
+            "setTreasury",
+            "unpause"
+          ],
+          "category": "access-control",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+          "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+          "detected_signals": [
+            "onlyOwner",
+            "owner",
+            "pause",
+            "setOracle",
+            "setTreasury",
+            "unpause"
+          ],
+          "detection_sources": [
+            "negative-test-coverage",
+            "semantic-lite"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "setOracle",
+              "line": 47,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "setEmissionRate",
+              "line": 51,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "setTreasury",
+              "line": 55,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "pause",
+              "line": 59,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "unpause",
+              "line": 63,
+              "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+              "snippet": "onlyOwner",
+              "type": "semantic-lite"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.",
+          "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+          "fingerprint": "39c27921af24bdb1b34eca12",
+          "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+          "id": "ARK-ACC-001",
+          "knowledge": {
+            "broken_invariants": [
+              "unauthorized-user-cannot-change-critical-config",
+              "admin-actions-are-bounded-and-documented"
+            ],
+            "failed_assumptions": [
+              "only-authorized-callers-can-change-critical-state",
+              "admin-surface-is-obvious"
+            ],
+            "finding_map_version": "0.9.0",
+            "related_docs": [
+              "docs/ACCESS_CONTROL_RULE_PACK.md",
+              "docs/RULE_PACKS.md"
+            ],
+            "related_patterns": [
+              "pattern-unprotected-initializer",
+              "pattern-privileged-operation-boundary"
+            ],
+            "related_pocs": [
+              "poc-2017-07-parity-multisig",
+              "poc-2020-06-balancer-deflationary",
+              "poc-2022-02-dexible"
+            ],
+            "root_causes": [
+              "missing-negative-access-tests",
+              "implicit-admin-trust",
+              "unclear-role-boundary"
+            ],
+            "rule_pack": "access_control",
+            "search_terms": [
+              "admin setter risk",
+              "onlyOwner negative test",
+              "access control failure"
+            ],
+            "suggested_tests": [
+              "unauthorized-setter-reverts",
+              "role-boundary-negative-tests",
+              "admin-change-event-and-bounds-test"
+            ]
+          },
+          "negative_evidence": [
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "invariant",
+              "type": "negative-test-coverage"
+            },
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "fuzz",
+              "type": "negative-test-coverage"
+            }
+          ],
+          "negative_evidence_count": 2,
+          "priority": "Medium readiness gap",
+          "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+          "recommended_defensive_checks": [
+            "unauthorized setter tests",
+            "role grant/revoke tests",
+            "pause role tests",
+            "timelock/multisig assumptions"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+          ],
+          "suppressible": true,
+          "tags": [
+            "access-control-review",
+            "admin-risk",
+            "access-control-rule-pack"
+          ],
+          "title": "Privileged setters without role-boundary tests",
+          "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+        },
         {
           "affected_contracts": [
             "OracleRewardFixture"
@@ -2929,6 +3913,8 @@
             "search_terms": [],
             "suggested_tests": []
           },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
           "priority": "Low readiness gap",
           "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
           "recommended_defensive_checks": [
@@ -2975,7 +3961,7 @@
         "src/OracleRewardFixture.sol",
         "test/OracleRewardFixture.t.sol"
       ],
-      "finding_count": 3,
+      "finding_count": 4,
       "findings": [
         {
           "affected_contracts": [
@@ -2991,7 +3977,7 @@
           ],
           "category": "oracle-pricing",
           "confidence": "medium",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
           "detected_signals": [],
           "detection_sources": [
@@ -3022,7 +4008,7 @@
               "file": "",
               "function": "",
               "line": 1,
-              "reason": "Matching test coverage terms detected: oracle.",
+              "reason": "No semantic-lite oracle test coverage terms were detected.",
               "snippet": "",
               "type": "test-coverage"
             },
@@ -3057,10 +4043,12 @@
             "search_terms": [],
             "suggested_tests": []
           },
-          "priority": "Medium readiness gap",
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
+          "priority": "High readiness gap",
           "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
           "recommended_defensive_checks": [],
-          "severity": "Medium readiness gap",
+          "severity": "High readiness gap",
           "suggested_tests": [
             "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
           ],
@@ -3085,8 +4073,8 @@
             "rewardPerToken"
           ],
           "category": "oracle-pricing",
-          "confidence": "medium",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
           "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
           "detected_signals": [
             "AggregatorV3Interface",
@@ -3103,6 +4091,7 @@
           ],
           "detection_sources": [
             "keyword",
+            "negative-test-coverage",
             "semantic-lite",
             "test-coverage"
           ],
@@ -3129,7 +4118,7 @@
               "file": "",
               "function": "",
               "line": 1,
-              "reason": "Matching test coverage terms detected: oracle.",
+              "reason": "No semantic-lite oracle test coverage terms were detected.",
               "snippet": "",
               "type": "test-coverage"
             },
@@ -3152,7 +4141,7 @@
           ],
           "evidence_count": 5,
           "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-          "false_positive_notes": "",
+          "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
           "fingerprint": "27199688c1b60c42d92a6d05",
           "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
           "id": "ARK-ORC-001",
@@ -3203,7 +4192,26 @@
               "price-bounds-test"
             ]
           },
-          "priority": "Medium readiness gap",
+          "negative_evidence": [
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "invariant",
+              "type": "negative-test-coverage"
+            },
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "fuzz",
+              "type": "negative-test-coverage"
+            }
+          ],
+          "negative_evidence_count": 2,
+          "priority": "High readiness gap",
           "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
           "recommended_defensive_checks": [
             "stale round rejection",
@@ -3211,7 +4219,7 @@
             "updatedAt validation",
             "answeredInRound handling"
           ],
-          "severity": "Medium readiness gap",
+          "severity": "High readiness gap",
           "suggested_tests": [
             "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
           ],
@@ -3237,8 +4245,140 @@
             "rewardPerToken"
           ],
           "category": "oracle-pricing",
-          "confidence": "medium",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+          "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+          "detected_signals": [
+            "AggregatorV3Interface",
+            "answer",
+            "answeredInRound",
+            "decimals",
+            "getPrice",
+            "latestAnswer",
+            "latestRoundData",
+            "priceFeed",
+            "roundId",
+            "setOracle",
+            "updatedAt"
+          ],
+          "detection_sources": [
+            "keyword",
+            "negative-test-coverage",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "getPrice",
+              "line": 67,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,, uint256 updatedAt,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "OracleRewardFixture",
+              "file": "src/OracleRewardFixture.sol",
+              "function": "rewardPerToken",
+              "line": 74,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return rewardPerTokenStored + (emissionRate * getPrice()) / totalStaked;",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite oracle test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/OracleRewardFixture.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+              "type": "keyword"
+            },
+            {
+              "file": "test/OracleRewardFixture.t.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "AggregatorV3Interface, answer, answeredInRound, decimals, getPrice, latestAnswer, latestRoundData, priceFeed",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
+          "fingerprint": "af66ea06e033ac6f10d9286d",
+          "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+          "id": "ARK-ORC-004",
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
+          "negative_evidence": [
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "invariant",
+              "type": "negative-test-coverage"
+            },
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "fuzz",
+              "type": "negative-test-coverage"
+            }
+          ],
+          "negative_evidence_count": 2,
+          "priority": "Medium readiness gap",
+          "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+          "recommended_defensive_checks": [
+            "unauthorized setOracle reverts",
+            "trusted role documentation",
+            "fallback oracle controls"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+          ],
+          "suppressible": true,
+          "tags": [
+            "oracle-risk",
+            "access-control-review",
+            "oracle-rule-pack"
+          ],
+          "title": "Oracle setter/admin path without role-boundary tests",
+          "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+        },
+        {
+          "affected_contracts": [
+            "OracleRewardFixture"
+          ],
+          "affected_files": [
+            "src/OracleRewardFixture.sol",
+            "test/OracleRewardFixture.t.sol"
+          ],
+          "affected_functions": [
+            "getPrice",
+            "rewardPerToken"
+          ],
+          "category": "oracle-pricing",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
           "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
           "detected_signals": [
             "AggregatorV3Interface",
@@ -3281,7 +4421,7 @@
               "file": "",
               "function": "",
               "line": 1,
-              "reason": "Matching test coverage terms detected: oracle.",
+              "reason": "No semantic-lite oracle test coverage terms were detected.",
               "snippet": "",
               "type": "test-coverage"
             },
@@ -3316,6 +4456,8 @@
             "search_terms": [],
             "suggested_tests": []
           },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
           "priority": "Medium readiness gap",
           "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
           "recommended_defensive_checks": [
@@ -3481,6 +4623,8 @@
               "double-claim-prevention"
             ]
           },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
           "priority": "Medium readiness gap",
           "recommendation": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
           "recommended_defensive_checks": [],
@@ -3580,6 +4724,8 @@
             "search_terms": [],
             "suggested_tests": []
           },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
           "priority": "Low readiness gap",
           "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
           "recommended_defensive_checks": [
@@ -3740,6 +4886,8 @@
               "rewardPerToken-monotonicity"
             ]
           },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
           "priority": "Medium readiness gap",
           "recommendation": "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
           "recommended_defensive_checks": [],
@@ -3772,7 +4920,7 @@
           ],
           "category": "reward-accounting",
           "confidence": "high",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
           "detail": "Accumulator, index, rewardPerToken, precision, or share signals were detected without visible precision/rounding tests.",
           "detected_signals": [
             "accumulator",
@@ -3786,6 +4934,7 @@
             "unstake"
           ],
           "detection_sources": [
+            "negative-test-coverage",
             "semantic-lite"
           ],
           "evidence": [
@@ -3837,7 +4986,7 @@
           ],
           "evidence_count": 5,
           "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-          "false_positive_notes": "",
+          "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
           "fingerprint": "64ba736c260ec0865f0a87c1",
           "historical_pattern_similarity": "Maps to precision and accounting mismatch readiness classes.",
           "id": "ARK-RWD-002",
@@ -3849,6 +4998,25 @@
             "search_terms": [],
             "suggested_tests": []
           },
+          "negative_evidence": [
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "invariant",
+              "type": "negative-test-coverage"
+            },
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "fuzz",
+              "type": "negative-test-coverage"
+            }
+          ],
+          "negative_evidence_count": 2,
           "priority": "Medium readiness gap",
           "recommendation": "Add precision, dust, rounding, and small-balance tests for accumulator or index logic.",
           "recommended_defensive_checks": [
@@ -3887,7 +5055,7 @@
           ],
           "category": "reward-accounting",
           "confidence": "high",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
           "detail": "Claim or claimReward signals were detected without visible repeated-claim or overclaim tests.",
           "detected_signals": [
             "accumulator",
@@ -3901,6 +5069,7 @@
             "unstake"
           ],
           "detection_sources": [
+            "negative-test-coverage",
             "semantic-lite"
           ],
           "evidence": [
@@ -3952,7 +5121,7 @@
           ],
           "evidence_count": 5,
           "evidence_summary": "src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.",
-          "false_positive_notes": "",
+          "false_positive_notes": "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding.",
           "fingerprint": "3c91794e0a66202839c5df60",
           "historical_pattern_similarity": "Maps to duplicate-claim and reward accounting mismatch classes.",
           "id": "ARK-RWD-003",
@@ -3964,6 +5133,25 @@
             "search_terms": [],
             "suggested_tests": []
           },
+          "negative_evidence": [
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "invariant",
+              "type": "negative-test-coverage"
+            },
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "fuzz",
+              "type": "negative-test-coverage"
+            }
+          ],
+          "negative_evidence_count": 2,
           "priority": "Medium readiness gap",
           "recommendation": "Add tests proving users cannot claim the same reward entitlement twice.",
           "recommended_defensive_checks": [
@@ -4023,11 +5211,12 @@
           "affected_functions": [],
           "category": "vault-accounting",
           "confidence": "low",
-          "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+          "confidence_reason": "Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage.",
           "detail": "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
           "detected_signals": [],
           "detection_sources": [
             "keyword",
+            "negative-test-coverage",
             "test-coverage"
           ],
           "evidence": [
@@ -4070,6 +5259,17 @@
             "search_terms": [],
             "suggested_tests": []
           },
+          "negative_evidence": [
+            {
+              "file": "README.md",
+              "line": 12,
+              "reason": "Coverage term appears in negative context.",
+              "snippet": "- missing invariant and fuzz coverage.",
+              "term": "invariant",
+              "type": "negative-test-coverage"
+            }
+          ],
+          "negative_evidence_count": 1,
           "priority": "Low readiness gap",
           "recommendation": "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
           "recommended_defensive_checks": [],
@@ -4105,32 +5305,42 @@
       ]
     }
   },
-  "score": 65,
-  "score_band": "Improving",
+  "scan_sources": {
+    "files_considered": 4,
+    "files_ignored": 0,
+    "files_scanned": 4,
+    "generated_artifacts_ignored": 0,
+    "ignored_by_reason": {},
+    "ignored_generated_artifact_paths": [],
+    "ignored_paths": [],
+    "include_generated_artifacts": false
+  },
+  "schema_version": "1.0.0",
+  "score": 52,
+  "score_band": "Early readiness",
   "score_breakdown": {
     "defi_risk_coverage": {
       "max": 20,
       "notes": [
         "Role or admin boundaries have some visible coverage.",
-        "Protocol-specific checklist or property coverage detected."
+        "Negative coverage statements detected; removed 1 readiness point(s) from this category."
       ],
-      "score": 7
+      "score": 3
     },
     "documentation_readiness": {
       "max": 10,
       "notes": [
         "README detected.",
         "Assumptions, invariants, or limitations are documented.",
-        "Deployment or role information appears in docs/code comments."
+        "Deployment or role information appears in docs/code comments.",
+        "Negative coverage statements detected; removed 1 readiness point(s) from this category."
       ],
-      "score": 8
+      "score": 7
     },
     "invariant_fuzz_readiness": {
       "max": 20,
-      "notes": [
-        "Edge-case testing terms detected."
-      ],
-      "score": 3
+      "notes": [],
+      "score": 0
     },
     "operational_admin_readiness": {
       "max": 15,
@@ -4157,10 +5367,9 @@
       "notes": [
         "Solidity test files detected.",
         "Assert usage detected.",
-        "Foundry or Hardhat test environment detected.",
-        "Protocol-specific terms appear in the testable codebase."
+        "Foundry or Hardhat test environment detected."
       ],
-      "score": 20
+      "score": 15
     }
   },
   "semantic_lite": {
@@ -4514,9 +5723,7 @@
       "has_vault_functions": false,
       "test_coverage": {
         "access_control": [],
-        "oracle": [
-          "oracle"
-        ],
+        "oracle": [],
         "reentrancy": [],
         "reward": [],
         "vault": []
@@ -4526,9 +5733,7 @@
       {
         "coverage_terms": {
           "access_control": [],
-          "oracle": [
-            "oracle"
-          ],
+          "oracle": [],
           "reentrancy": [],
           "reward": [],
           "vault": []
@@ -4979,12 +6184,12 @@
   ],
   "summary": {
     "critical": 0,
-    "high": 1,
+    "high": 3,
     "informational": 0,
     "low": 3,
     "medium": 7,
     "suppressed": 0,
-    "total_readiness_gaps": 11
+    "total_readiness_gaps": 13
   },
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
@@ -5029,5 +6234,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "0.9.0"
+  "version": "1.0.0"
 }

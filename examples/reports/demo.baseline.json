@@ -14,7 +14,7 @@
       ],
       "category": "testing-readiness",
       "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "fingerprint": "40c41c40ed1466cdd9635ca9",
       "id": "ARK-TST-002",
       "priority": "High readiness gap",
@@ -36,11 +36,11 @@
       ],
       "category": "oracle-pricing",
       "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "fingerprint": "4caf35ffd1a44272525bbdab",
       "id": "ARK-ORC-002",
-      "priority": "Medium readiness gap",
-      "severity": "Medium readiness gap",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
       "tags": [
         "oracle-risk",
         "price-assumptions"
@@ -55,7 +55,7 @@
       "affected_functions": [],
       "category": "vault-accounting",
       "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "confidence_reason": "Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage.",
       "fingerprint": "455b182ea87d56a4a492118e",
       "id": "ARK-VLT-009",
       "priority": "Low readiness gap",
@@ -124,12 +124,12 @@
         "rewardPerToken"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "fingerprint": "27199688c1b60c42d92a6d05",
       "id": "ARK-ORC-001",
-      "priority": "Medium readiness gap",
-      "severity": "Medium readiness gap",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
       "tags": [
         "oracle-risk",
         "oracle-rule-pack",
@@ -147,8 +147,31 @@
         "rewardPerToken"
       ],
       "category": "oracle-pricing",
-      "confidence": "medium",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+      "fingerprint": "af66ea06e033ac6f10d9286d",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice",
+        "rewardPerToken"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
       "fingerprint": "e5f500ac09dd007865613478",
       "id": "ARK-ORC-005",
       "priority": "Medium readiness gap",
@@ -159,6 +182,32 @@
         "oracle-rule-pack"
       ],
       "title": "Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "affected_files": [
+        "src/OracleRewardFixture.sol",
+        "test/OracleRewardFixture.t.sol"
+      ],
+      "affected_functions": [
+        "pause",
+        "setEmissionRate",
+        "setOracle",
+        "setTreasury",
+        "unpause"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
+      "fingerprint": "39c27921af24bdb1b34eca12",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests"
     },
     {
       "affected_files": [
@@ -223,7 +272,7 @@
       ],
       "category": "reward-accounting",
       "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "fingerprint": "64ba736c260ec0865f0a87c1",
       "id": "ARK-RWD-002",
       "priority": "Medium readiness gap",
@@ -249,7 +298,7 @@
       ],
       "category": "reward-accounting",
       "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found.",
       "fingerprint": "3c91794e0a66202839c5df60",
       "id": "ARK-RWD-003",
       "priority": "Medium readiness gap",
@@ -263,12 +312,13 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-26T12:51:57+00:00",
+  "generated_at": "2026-05-26T15:46:19+00:00",
   "protocol_type": "staking",
   "repo_root": "examples/oracle-staking-fixture",
-  "score": 65,
-  "score_band": "Improving",
+  "schema_version": "1.0.0",
+  "score": 52,
+  "score_band": "Early readiness",
   "suppressed_findings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "0.9.0"
+  "version": "1.0.0"
 }

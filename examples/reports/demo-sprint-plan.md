@@ -10,11 +10,11 @@ Prepare this repository for a stronger formal audit, contest, or bug bounty read
 
 ## Sprint Inputs
 
-- Readiness score: `65/100`
-- Score band: `Improving`
-- Number of findings: `11`
-- Number of high confidence findings: `3`
-- Number of issue-plan tasks: `11`
+- Readiness score: `52/100`
+- Score band: `Early readiness`
+- Number of findings: `13`
+- Number of high confidence findings: `7`
+- Number of issue-plan tasks: `13`
 - Rule packs detected: `vault, oracle, access_control_upgradeability, reentrancy_value_flow, reward_accounting`
 - Baseline available: `yes`
 - Semantic-lite enabled: `enabled`
@@ -31,6 +31,34 @@ Prepare this repository for a stronger formal audit, contest, or bug bounty read
 
 ### Phase 1 - Launch blockers
 
+- [ ] `ARK-ORC-001` - [Arkheionx][High] ARK-ORC-001 - Oracle-dependent logic without stale-price tests
+  - Suggested owner: `TBD`
+  - Expected output: Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+  - Acceptance checklist:
+    - [ ] Tests or docs updated.
+    - [ ] Arkheionx re-run completed.
+    - [ ] Remaining assumptions documented.
+- [ ] `ARK-ACC-001` - [Arkheionx][Medium] ARK-ACC-001 - Privileged setters without role-boundary tests
+  - Suggested owner: `TBD`
+  - Expected output: For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.
+  - Acceptance checklist:
+    - [ ] Tests or docs updated.
+    - [ ] Arkheionx re-run completed.
+    - [ ] Remaining assumptions documented.
+- [ ] `ARK-ORC-004` - [Arkheionx][Medium] ARK-ORC-004 - Oracle setter/admin path without role-boundary tests
+  - Suggested owner: `TBD`
+  - Expected output: Assert unprivileged callers cannot change oracle or fallback oracle configuration.
+  - Acceptance checklist:
+    - [ ] Tests or docs updated.
+    - [ ] Arkheionx re-run completed.
+    - [ ] Remaining assumptions documented.
+- [ ] `ARK-ORC-005` - [Arkheionx][Medium] ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
+  - Suggested owner: `TBD`
+  - Expected output: Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+  - Acceptance checklist:
+    - [ ] Tests or docs updated.
+    - [ ] Arkheionx re-run completed.
+    - [ ] Remaining assumptions documented.
 - [ ] `ARK-RWD-002` - [Arkheionx][Medium] ARK-RWD-002 - Accumulator/index logic without precision/rounding tests
   - Suggested owner: `TBD`
   - Expected output: Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards.
@@ -55,30 +83,16 @@ Prepare this repository for a stronger formal audit, contest, or bug bounty read
 
 ### Phase 2 - High-priority readiness gaps
 
-- [ ] `ARK-TST-002` - [Arkheionx][High] ARK-TST-002 - No invariant tests detected for DeFi protocol shape
-  - Suggested owner: `TBD`
-  - Expected output: Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
-  - Acceptance checklist:
-    - [ ] Tests or docs updated.
-    - [ ] Arkheionx re-run completed.
-    - [ ] Remaining assumptions documented.
-- [ ] `ARK-ORC-001` - [Arkheionx][Medium] ARK-ORC-001 - Oracle-dependent logic without stale-price tests
-  - Suggested owner: `TBD`
-  - Expected output: Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
-  - Acceptance checklist:
-    - [ ] Tests or docs updated.
-    - [ ] Arkheionx re-run completed.
-    - [ ] Remaining assumptions documented.
-- [ ] `ARK-ORC-002` - [Arkheionx][Medium] ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
+- [ ] `ARK-ORC-002` - [Arkheionx][High] ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
   - Suggested owner: `TBD`
   - Expected output: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - Acceptance checklist:
     - [ ] Tests or docs updated.
     - [ ] Arkheionx re-run completed.
     - [ ] Remaining assumptions documented.
-- [ ] `ARK-ORC-005` - [Arkheionx][Medium] ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
+- [ ] `ARK-TST-002` - [Arkheionx][High] ARK-TST-002 - No invariant tests detected for DeFi protocol shape
   - Suggested owner: `TBD`
-  - Expected output: Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+  - Expected output: Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
   - Acceptance checklist:
     - [ ] Tests or docs updated.
     - [ ] Arkheionx re-run completed.

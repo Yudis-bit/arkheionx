@@ -216,7 +216,7 @@ def build_graph() -> dict[str, object]:
                 add_edge(edges, pattern_id, poc_id, "historical_example", "The PoC is a historical example for this pattern family.")
 
     graph = {
-        "schema_version": "0.9.0",
+        "schema_version": "1.0.0",
         "generated_at": "deterministic-local",
         "description": "Local Arkheionx security memory graph connecting historical exploit patterns, PoCs, rule packs, readiness findings, and suggested defensive tests.",
         "node_count": len(nodes),

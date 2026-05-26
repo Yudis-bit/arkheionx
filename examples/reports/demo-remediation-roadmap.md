@@ -4,27 +4,21 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 
 | Task ID | Finding ID | Phase | Priority | Confidence | Effort | Expected Output |
 |---|---|---|---|---|---|---|
-| ARK-TASK-001 | `ARK-TST-002` | Phase 2 - High-priority readiness gaps | High readiness gap | medium | Large | Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions. |
-| ARK-TASK-002 | `ARK-ORC-001` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Large | Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy. |
-| ARK-TASK-003 | `ARK-ORC-002` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Large | Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior. |
-| ARK-TASK-004 | `ARK-ORC-005` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Large | Add documentation plus local tests showing fallback and out-of-bounds price behavior. |
-| ARK-TASK-005 | `ARK-REENT-001` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Unknown | Review state update order and add local malicious-receiver tests where callbacks are possible. |
-| ARK-TASK-006 | `ARK-RWD-001` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Unknown | Add reward conservation and no-overclaim tests across multiple users and timing boundaries. |
-| ARK-TASK-007 | `ARK-RWD-002` | Phase 1 - Launch blockers | Medium readiness gap | high | Medium | Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards. |
-| ARK-TASK-008 | `ARK-RWD-003` | Phase 1 - Launch blockers | Medium readiness gap | high | Medium | Assert claim twice without new rewards returns zero or reverts according to documented policy. |
-| ARK-TASK-009 | `ARK-ACC-003` | Phase 1 - Launch blockers | Low readiness gap | high | Medium | Add a role matrix to docs and unit tests for critical roles. |
-| ARK-TASK-010 | `ARK-REENT-004` | Phase 2 - High-priority readiness gaps | Low readiness gap | medium | Medium | Pair ordering documentation with a local receiver test that exercises the documented boundary. |
-| ARK-TASK-011 | `ARK-VLT-009` | Phase 4 - Before formal audit / contest | Low readiness gap | low | Small | Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants. |
+| ARK-TASK-001 | `ARK-ORC-001` | Phase 1 - Launch blockers | High readiness gap | high | Large | Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy. |
+| ARK-TASK-002 | `ARK-ORC-002` | Phase 2 - High-priority readiness gaps | High readiness gap | medium | Large | Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior. |
+| ARK-TASK-003 | `ARK-TST-002` | Phase 2 - High-priority readiness gaps | High readiness gap | medium | Large | Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions. |
+| ARK-TASK-004 | `ARK-ACC-001` | Phase 1 - Launch blockers | Medium readiness gap | high | Medium | For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds. |
+| ARK-TASK-005 | `ARK-ORC-004` | Phase 1 - Launch blockers | Medium readiness gap | high | Large | Assert unprivileged callers cannot change oracle or fallback oracle configuration. |
+| ARK-TASK-006 | `ARK-ORC-005` | Phase 1 - Launch blockers | Medium readiness gap | high | Large | Add documentation plus local tests showing fallback and out-of-bounds price behavior. |
+| ARK-TASK-007 | `ARK-REENT-001` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Unknown | Review state update order and add local malicious-receiver tests where callbacks are possible. |
+| ARK-TASK-008 | `ARK-RWD-001` | Phase 2 - High-priority readiness gaps | Medium readiness gap | medium | Unknown | Add reward conservation and no-overclaim tests across multiple users and timing boundaries. |
+| ARK-TASK-009 | `ARK-RWD-002` | Phase 1 - Launch blockers | Medium readiness gap | high | Medium | Fuzz stake sizes and reward amounts and assert reward indexes are monotonic and bounded by funded rewards. |
+| ARK-TASK-010 | `ARK-RWD-003` | Phase 1 - Launch blockers | Medium readiness gap | high | Medium | Assert claim twice without new rewards returns zero or reverts according to documented policy. |
+| ARK-TASK-011 | `ARK-ACC-003` | Phase 1 - Launch blockers | Low readiness gap | high | Medium | Add a role matrix to docs and unit tests for critical roles. |
+| ARK-TASK-012 | `ARK-REENT-004` | Phase 2 - High-priority readiness gaps | Low readiness gap | medium | Medium | Pair ordering documentation with a local receiver test that exercises the documented boundary. |
+| ARK-TASK-013 | `ARK-VLT-009` | Phase 4 - Before formal audit / contest | Low readiness gap | low | Small | Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants. |
 
 ## Acceptance Criteria
-
-### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
-
-- Evidence summary: src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.
-- [ ] Tests or documentation updated.
-- [ ] Assumptions documented.
-- [ ] Arkheionx re-run completed.
-- [ ] Baseline diff reviewed if available.
 
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
@@ -35,6 +29,30 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 - [ ] Baseline diff reviewed if available.
 
 ### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
+
+- Evidence summary: src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.
+- [ ] Tests or documentation updated.
+- [ ] Assumptions documented.
+- [ ] Arkheionx re-run completed.
+- [ ] Baseline diff reviewed if available.
+
+### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
+
+- Evidence summary: src/OracleRewardFixture.sol in `rewardPerToken`: Solidity function contains oracle or price-feed call evidence.
+- [ ] Tests or documentation updated.
+- [ ] Assumptions documented.
+- [ ] Arkheionx re-run completed.
+- [ ] Baseline diff reviewed if available.
+
+### ARK-ACC-001 - Privileged setters without role-boundary tests
+
+- Evidence summary: src/OracleRewardFixture.sol in `setOracle`: Solidity function contains access-control or lifecycle modifier evidence.
+- [ ] Tests or documentation updated.
+- [ ] Assumptions documented.
+- [ ] Arkheionx re-run completed.
+- [ ] Baseline diff reviewed if available.
+
+### ARK-ORC-004 - Oracle setter/admin path without role-boundary tests
 
 - Evidence summary: src/OracleRewardFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.
 - [ ] Tests or documentation updated.
@@ -98,14 +116,6 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 - [ ] Arkheionx re-run completed.
 - [ ] Baseline diff reviewed if available.
 
-### ARK-VLT-009 - Vault accounting lacks visible roundtrip or conservation coverage
-
-- Evidence summary: : No semantic-lite vault test coverage terms were detected.
-- [ ] Tests or documentation updated.
-- [ ] Assumptions documented.
-- [ ] Arkheionx re-run completed.
-- [ ] Baseline diff reviewed if available.
-
 ## Related Artifacts
 
 | Artifact            | Path                                           |
@@ -119,4 +129,5 @@ This is not a formal audit. It does not guarantee security. It does not confirm 
 | Executive Summary   | `examples/reports/demo-executive-summary.md`   |
 | Remediation Roadmap | `examples/reports/demo-remediation-roadmap.md` |
 | Launch Report       | `examples/reports/demo-launch-report.md`       |
+| Sprint Plan         | `examples/reports/demo-sprint-plan.md`         |
 | Contest Readiness   | `examples/reports/demo-contest-readiness.md`   |

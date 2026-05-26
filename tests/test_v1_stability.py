@@ -1,0 +1,62 @@
+import subprocess
+import unittest
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0"
+
+
+class V1StabilityTests(unittest.TestCase):
+    def read(self, path: str) -> str:
+        return (REPO_ROOT / path).read_text(encoding="utf-8")
+
+    def test_public_docs_name_v1_stable_surface(self) -> None:
+        readme = self.read("README.md")
+        self.assertIn("Latest stable release: **v1.0.0", readme)
+        self.assertIn("Stable v1.0.0 Surface", readme)
+        self.assertIn(STABLE_ACTION, readme)
+        self.assertIn("docs/CLI_REFERENCE.md", readme)
+        self.assertIn("docs/SCHEMA_REFERENCE.md", readme)
+        self.assertIn("docs/OUTPUT_ARTIFACTS.md", readme)
+
+        action_docs = self.read("docs/GITHUB_ACTION_USAGE.md")
+        self.assertIn("Stable v1.0.0 Inputs", action_docs)
+        self.assertIn(STABLE_ACTION, action_docs)
+
+    def test_v1_reference_files_exist(self) -> None:
+        for path in [
+            "docs/CLI_REFERENCE.md",
+            "docs/SCHEMA_REFERENCE.md",
+            "docs/OUTPUT_ARTIFACTS.md",
+            "docs/V1_0_RELEASE_NOTES_DRAFT.md",
+            "Makefile",
+            "scripts/check_docs_links.py",
+            "scripts/check_version_consistency.py",
+            "scripts/check_safety_wording.py",
+        ]:
+            self.assertTrue((REPO_ROOT / path).exists(), path)
+
+    def test_stability_check_scripts_pass(self) -> None:
+        for command in [
+            ["python3", "scripts/check_version_consistency.py", "--check"],
+            ["python3", "scripts/check_safety_wording.py"],
+            ["python3", "scripts/check_docs_links.py", "--check"],
+        ]:
+            result = subprocess.run(
+                command,
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_changelog_and_roadmap_mark_v1_candidate(self) -> None:
+        self.assertIn("## v1.0.0 - Unreleased", self.read("CHANGELOG.md"))
+        roadmap = self.read("docs/ROADMAP.md")
+        self.assertIn("v1.0.0: Stable public release", roadmap)
+        self.assertIn("v1.1.0: Feedback Loop and External Calibration", roadmap)
+
+
+if __name__ == "__main__":
+    unittest.main()

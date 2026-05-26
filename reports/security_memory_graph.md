@@ -8,7 +8,7 @@ This is local/static security memory. It is not a formal audit, not a
 vulnerability confirmation, and not proof that a scanned repository has
 the same issue as any historical PoC.
 
-- Schema version: `0.9.0`
+- Schema version: `1.0.0`
 - Nodes: `267`
 - Edges: `445`
 

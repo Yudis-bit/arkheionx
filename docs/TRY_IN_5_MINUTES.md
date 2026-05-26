@@ -15,6 +15,14 @@ contracts, submit transactions, or create GitHub issues.
 
 ## Run The Demo Scan
 
+Shortcut:
+
+```sh
+make demo
+```
+
+Equivalent explicit command:
+
 ```sh
 python3 scripts/pre_audit_scan.py \
   --root examples/oracle-staking-fixture \

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/schemas/rule-calibration-matrix.schema.json",
+  "title": "Arkheionx Rule Calibration Matrix",
+  "type": "object",
+  "required": ["schema_version", "description", "families"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "description": { "type": "string" },
+    "families": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["rule_pack", "high_confidence_requires", "low_confidence_conditions"],
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
