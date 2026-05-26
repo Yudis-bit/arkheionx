@@ -14,7 +14,7 @@ Conventions for files, names, and prose.
 
 - EVM PoCs: `EVM/test/<YYYY-MM>/` (date-only) for current entries; future
   entries should use `EVM/test/<YYYY-MM-ProtocolName>/` once renames are
-  performed (see [internal/REBUILD_LOG.md](internal/REBUILD_LOG.md)).
+  performed as part of the public release process.
 - SVM PoCs: `SVM/tests/<YYYY-MM-ProtocolName>/`.
 - MoveVM PoCs: `MoveVM/sources/<YYYY-MM-ProtocolName>/`.
 
