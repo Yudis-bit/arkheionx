@@ -250,7 +250,7 @@ written reason in the release PR.
 - [ ] README names v1.0.0 as the latest stable release.
 - [ ] README documents what Arkheionx is, who it is for, what it produces, and
       how to try it in five minutes.
-- [ ] Stable GitHub Action examples use `@v1.0.0`.
+- [ ] Stable GitHub Action examples use the latest v1.0.x stable tag.
 - [ ] `docs/CLI_REFERENCE.md` exists and matches `scripts/pre_audit_scan.py --help`.
 - [ ] `docs/GITHUB_ACTION_USAGE.md` documents stable v1.0.0 inputs.
 - [ ] `docs/SCHEMA_REFERENCE.md` exists.
@@ -273,6 +273,31 @@ written reason in the release PR.
 - [ ] No exploit automation added.
 - [ ] No fake adoption, customer, or external-validation claims added.
 - [ ] Release notes drafted but no tag/release/push performed.
+
+## v1.1.0 Feedback Loop And External Calibration Checks
+
+- [ ] Feedback issue templates exist.
+- [ ] `metadata/feedback_schema.json` parses.
+- [ ] `metadata/feedback_examples.json` parses and examples are synthetic or
+      explicitly sourced.
+- [ ] `metadata/rule_calibration_backlog.json` parses.
+- [ ] `python3 scripts/generate_feedback_dashboard.py --check` passes.
+- [ ] `reports/feedback_dashboard.md` exists.
+- [ ] `reports/rule_calibration_backlog.md` exists.
+- [ ] `docs/FEEDBACK_LOOP.md` exists.
+- [ ] `docs/PUBLIC_FEEDBACK_GUIDE.md` exists.
+- [ ] `docs/FEEDBACK_TRIAGE_WORKFLOW.md` exists.
+- [ ] `docs/VALIDATION_LEVELS.md` exists.
+- [ ] Feedback templates warn against secrets/private keys.
+- [ ] Feedback templates warn against public disclosure of unpatched
+      vulnerabilities.
+- [ ] External validation docs distinguish toy/internal examples from public
+      validation.
+- [ ] No fake adoption or customer claims added.
+- [ ] Docs link check passes.
+- [ ] Version consistency check passes.
+- [ ] Safety wording check passes.
+- [ ] Unit tests pass.
 
 ## Safety Scan
 

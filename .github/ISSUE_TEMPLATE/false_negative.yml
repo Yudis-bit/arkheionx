@@ -1,0 +1,68 @@
+name: False negative report
+description: Report a readiness gap Arkheionx missed.
+title: "[False negative]: "
+labels: ["false-negative", "calibration", "arkheionx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for missed readiness signals, not public vulnerability disclosure.
+
+        Safety first:
+        - Do not disclose unpatched vulnerabilities publicly.
+        - Do not include private keys, secrets, mnemonics, or RPC credentials.
+        - Do not include private repository contents unless you are authorized.
+        - Do not include exploit steps for live targets.
+        - For bounty findings, follow the program's disclosure policy.
+  - type: input
+    id: arkheionx_version
+    attributes:
+      label: Arkheionx version
+      placeholder: "v1.0.1 or commit SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: missed_signal
+    attributes:
+      label: What did Arkheionx miss?
+      description: Describe the missed readiness signal in sanitized terms.
+    validations:
+      required: true
+  - type: input
+    id: rule_family
+    attributes:
+      label: Affected rule family if known
+      placeholder: "oracle, vault, access-control, reentrancy, reward, testing"
+  - type: dropdown
+    id: gap_type
+    attributes:
+      label: What kind of issue is this?
+      options:
+        - Readiness gap
+        - Documentation gap
+        - Real vulnerability under responsible disclosure
+        - Report wording problem
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: expected_readiness_signal
+    attributes:
+      label: Expected readiness signal
+      placeholder: "Arkheionx should have warned about missing stale-price tests..."
+    validations:
+      required: true
+  - type: textarea
+    id: sanitized_context
+    attributes:
+      label: Sanitized context
+      description: Provide high-level context only. Do not paste private source or exploit instructions.
+  - type: checkboxes
+    id: disclosure_confirmation
+    attributes:
+      label: Disclosure confirmation
+      options:
+        - label: I have not disclosed unpatched vulnerability details publicly.
+          required: true
+        - label: I removed secrets and unauthorized target details.
+          required: true

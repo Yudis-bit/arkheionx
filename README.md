@@ -159,9 +159,10 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.0.0 - Stable Public Release**.
+Latest stable release: **v1.0.1 - Docs Link Validation Hotfix**.
 
-v1.0.0 stabilizes:
+v1.0.1 keeps the v1.0 stable surface and adds a docs-link validation hotfix on
+top of:
 
 - documented CLI and GitHub Action surfaces;
 - JSON schemas for stable outputs;
@@ -184,11 +185,13 @@ v1.0.0 stabilizes:
 | v0.9.0 | Security Memory Graph + search upgrade | Released |
 | v0.9.1 | Negative evidence and score calibration | Released |
 | v0.9.2 | Generated artifact ignore and self-ingestion guard | Released |
-| v1.0.0 | Stable public release + schema freeze | Prepared, not tagged |
+| v1.0.0 | Stable public release + schema freeze | Released |
+| v1.0.1 | Docs link validation hotfix | Released |
+| v1.1.0 | Feedback Loop + External Calibration | Prepared, not tagged |
 
-## Stable v1.0.0 Surface
+## Stable v1.0.x Surface
 
-Arkheionx v1.0.0 treats these surfaces as stable unless a future changelog
+Arkheionx v1.0.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -197,8 +200,21 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.0.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.0.1`. Use `@main` only for development
 or testing unreleased changes.
+
+## Feedback and Calibration
+
+v1.1.0 prepares a structured feedback loop for false positives, false
+negatives, report quality, GitHub Action feedback, and rule calibration.
+
+Start here:
+
+- [`docs/FEEDBACK_LOOP.md`](docs/FEEDBACK_LOOP.md)
+- [`docs/PUBLIC_FEEDBACK_GUIDE.md`](docs/PUBLIC_FEEDBACK_GUIDE.md)
+- [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](docs/FEEDBACK_TRIAGE_WORKFLOW.md)
+- [`reports/feedback_dashboard.md`](reports/feedback_dashboard.md)
+- [`reports/rule_calibration_backlog.md`](reports/rule_calibration_backlog.md)
 
 ## The Five Pillars
 
@@ -273,7 +289,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.0.0` for stable usage:
+Use `@v1.0.1` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -288,7 +304,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1
         with:
           root: "."
           protocol-type: "auto"
@@ -322,7 +338,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -351,7 +367,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -402,7 +418,7 @@ python3 scripts/pre_audit_scan.py \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
-See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.0.0 CLI
+See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.0.x CLI
 surface.
 
 Vault builders can force the v0.2.0 Vault Rule Pack:
@@ -633,6 +649,12 @@ Core standards:
 |---|---|
 | Try the demo quickly | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
 | Evaluate public demo workflow | [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md) |
+| Share public feedback safely | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](docs/PUBLIC_FEEDBACK_GUIDE.md) |
+| Understand feedback loop | [`docs/FEEDBACK_LOOP.md`](docs/FEEDBACK_LOOP.md) |
+| Triage feedback | [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](docs/FEEDBACK_TRIAGE_WORKFLOW.md) |
+| Understand validation levels | [`docs/VALIDATION_LEVELS.md`](docs/VALIDATION_LEVELS.md) |
+| View feedback dashboard | [`reports/feedback_dashboard.md`](reports/feedback_dashboard.md) |
+| View calibration backlog | [`reports/rule_calibration_backlog.md`](reports/rule_calibration_backlog.md) |
 | Use stable CLI flags | [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) |
 | Review stable schemas | [`docs/SCHEMA_REFERENCE.md`](docs/SCHEMA_REFERENCE.md) |
 | Name output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md) |
@@ -757,8 +779,10 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   demo artifacts.
 - **v0.9.0-v0.9.2: security memory and calibration.** Security memory graph,
   local search, negative evidence calibration, and self-ingestion guard.
-- **v1.0.0: stable GitHub-native pre-audit kit.** Documented interfaces,
+- **v1.0.x: stable GitHub-native pre-audit kit.** Documented interfaces,
   schema freeze, calibrated rules, release artifacts, contribution workflow.
+- **v1.1.0: feedback loop and external calibration.** Structured templates,
+  calibration backlog, feedback dashboard, and validation language.
 
 Archive milestones remain honest:
 

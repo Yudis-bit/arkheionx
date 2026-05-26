@@ -569,6 +569,78 @@
       "related_patterns": ["self-ingestion guard", "generated artifact ignore"],
       "related_checks": ["ARKHEIONX_PRE_AUDIT_REPORT.md", "arkheionx-report.json", "arkheionx.sarif.json"],
       "search_tags": ["output-artifacts", "generated-artifacts", "reports"]
+    },
+    {
+      "term": "feedback loop",
+      "aliases": ["external calibration", "feedback workflow", "calibration workflow"],
+      "category": "feedback",
+      "related_patterns": ["rule tuning from safe sanitized feedback"],
+      "related_checks": ["false positive report", "false negative report", "report quality feedback"],
+      "search_tags": ["feedback-loop", "external-calibration", "v1.1.0"]
+    },
+    {
+      "term": "false positive report",
+      "aliases": ["noisy finding", "false positive calibration", "finding too noisy"],
+      "category": "feedback",
+      "related_patterns": ["confidence downgrade", "keyword-only downgrade", "evidence source review"],
+      "related_checks": ["rule calibration backlog", "feedback dashboard"],
+      "search_tags": ["false-positive", "calibration", "report-feedback"]
+    },
+    {
+      "term": "false negative report",
+      "aliases": ["missed finding", "missed readiness signal", "missing readiness gap"],
+      "category": "feedback",
+      "related_patterns": ["rule coverage gap", "test coverage gap"],
+      "related_checks": ["rule calibration request", "feedback triage"],
+      "search_tags": ["false-negative", "calibration", "readiness-signal"]
+    },
+    {
+      "term": "rule calibration backlog",
+      "aliases": ["calibration backlog", "rule tuning backlog", "feedback backlog"],
+      "category": "feedback",
+      "related_patterns": ["maintainer triage", "confidence scoring updates"],
+      "related_checks": ["metadata/rule_calibration_backlog.json", "reports/rule_calibration_backlog.md"],
+      "search_tags": ["rule-calibration", "backlog", "feedback-dashboard"]
+    },
+    {
+      "term": "feedback dashboard",
+      "aliases": ["feedback summary", "calibration dashboard", "external feedback dashboard"],
+      "category": "feedback",
+      "related_patterns": ["synthetic feedback separated from public external feedback"],
+      "related_checks": ["reports/feedback_dashboard.md", "generate_feedback_dashboard.py"],
+      "search_tags": ["feedback-dashboard", "external-validation", "calibration"]
+    },
+    {
+      "term": "public feedback guide",
+      "aliases": ["feedback guide", "safe feedback", "public feedback"],
+      "category": "feedback",
+      "related_patterns": ["safe disclosure", "sanitized report sharing"],
+      "related_checks": ["docs/PUBLIC_FEEDBACK_GUIDE.md", "docs/FEEDBACK_LOOP.md"],
+      "search_tags": ["public-feedback", "safe-disclosure", "feedback-guide"]
+    },
+    {
+      "term": "validation levels",
+      "aliases": ["external validation levels", "validation maturity", "allowed claims"],
+      "category": "external validation",
+      "related_patterns": ["toy demo vs public evaluation distinction"],
+      "related_checks": ["docs/VALIDATION_LEVELS.md", "docs/EXTERNAL_VALIDATION.md"],
+      "search_tags": ["validation-levels", "external-evaluation", "honest-claims"]
+    },
+    {
+      "term": "GitHub Action feedback",
+      "aliases": ["action feedback", "workflow feedback", "CI feedback"],
+      "category": "feedback",
+      "related_patterns": ["artifact generation workflow", "stable action inputs"],
+      "related_checks": ["docs/GITHUB_ACTION_USAGE.md", ".github/ISSUE_TEMPLATE/github_action_feedback.yml"],
+      "search_tags": ["github-action-feedback", "ci", "workflow"]
+    },
+    {
+      "term": "report quality feedback",
+      "aliases": ["report wording", "report clarity", "next-step feedback"],
+      "category": "feedback",
+      "related_patterns": ["builder readability", "researcher evidence quality"],
+      "related_checks": ["Launch Report", "Pre-Audit Report", "Executive Summary"],
+      "search_tags": ["report-quality", "readability", "actionability"]
     }
   ]
 }

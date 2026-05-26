@@ -1,0 +1,95 @@
+name: False positive report
+description: Report a readiness finding that appears too noisy or incorrectly triggered.
+title: "[False positive]: "
+labels: ["false-positive", "calibration", "arkheionx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping calibrate Arkheionx.
+
+        Safety first:
+        - Do not disclose unpatched vulnerabilities publicly.
+        - Do not include private keys, secrets, mnemonics, or RPC credentials.
+        - Do not include private repository contents unless you are authorized.
+        - Do not include exploit steps for live targets.
+        - For bounty findings, follow the program's disclosure policy.
+  - type: input
+    id: arkheionx_version
+    attributes:
+      label: Arkheionx version
+      placeholder: "v1.0.1 or commit SHA"
+    validations:
+      required: true
+  - type: input
+    id: finding_id
+    attributes:
+      label: Finding ID
+      placeholder: "ARK-ORC-001"
+    validations:
+      required: true
+  - type: input
+    id: rule_pack
+    attributes:
+      label: Rule pack
+      placeholder: "oracle, vault, access-control, reentrancy, reward, testing"
+  - type: dropdown
+    id: report_output_type
+    attributes:
+      label: Report output type
+      options:
+        - Markdown report
+        - JSON report
+        - SARIF
+        - PR comment
+        - issue plan
+        - launch report
+        - other
+  - type: textarea
+    id: why_false_positive
+    attributes:
+      label: Why does this appear to be a false positive?
+      description: Keep details sanitized. Focus on why the readiness signal is not useful for this repo.
+    validations:
+      required: true
+  - type: dropdown
+    id: generated_artifacts_ignored
+    attributes:
+      label: Were generated artifacts ignored?
+      options:
+        - "Yes"
+        - "No"
+        - "Not sure"
+  - type: checkboxes
+    id: evidence_source
+    attributes:
+      label: Where did the evidence appear to come from?
+      options:
+        - label: Source code
+        - label: Tests
+        - label: Documentation
+        - label: Comments
+        - label: Generated artifact
+        - label: Not sure
+  - type: textarea
+    id: sanitized_snippet
+    attributes:
+      label: Minimal sanitized snippet if safe
+      description: Remove secrets, private code, addresses, and sensitive details.
+      render: text
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      placeholder: "The finding should be downgraded to low confidence because..."
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety_confirmation
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not include secrets, private keys, or unauthorized target details.
+          required: true
+        - label: I did not publicly disclose unpatched vulnerability details.
+          required: true

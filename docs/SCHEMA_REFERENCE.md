@@ -26,12 +26,13 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
 ```
 
-Baselines, diff outputs, and issue plans also include `schema_version` in
-v1.0.0.
+`schema_version` remains `1.0.0` while the scanner `version` can advance in
+minor releases. Baselines, diff outputs, and issue plans also include
+`schema_version`.
 
 ## Compatibility Policy
 

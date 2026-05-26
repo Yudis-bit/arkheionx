@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.1.0",
+  "description": "Arkheionx feedback data model for public calibration, report quality, and external evaluation workflows.",
+  "feedback_types": [
+    {
+      "type": "false_positive",
+      "purpose": "A readiness finding appears too noisy or incorrectly triggered.",
+      "required_fields": ["feedback_id", "arkheionx_version", "finding_ids", "rule_packs", "feedback_summary", "status", "safety_review_required"]
+    },
+    {
+      "type": "false_negative",
+      "purpose": "Arkheionx missed a readiness signal that should be considered.",
+      "required_fields": ["feedback_id", "arkheionx_version", "feedback_summary", "status", "safety_review_required"]
+    },
+    {
+      "type": "report_quality",
+      "purpose": "Feedback on clarity, length, wording, audience fit, or next steps.",
+      "required_fields": ["feedback_id", "arkheionx_version", "feedback_summary", "status"]
+    },
+    {
+      "type": "rule_calibration",
+      "purpose": "A priority, confidence, evidence, or downgrade-condition calibration request.",
+      "required_fields": ["feedback_id", "rule_packs", "feedback_summary", "calibration_action", "status"]
+    },
+    {
+      "type": "external_evaluation",
+      "purpose": "Sanitized results from a toy, public, or authorized repository evaluation.",
+      "required_fields": ["feedback_id", "source_type", "repo_type", "arkheionx_version", "feedback_summary", "public_permission", "status"]
+    },
+    {
+      "type": "github_action_feedback",
+      "purpose": "Feedback about Action setup, inputs, generated artifacts, or CI behavior.",
+      "required_fields": ["feedback_id", "arkheionx_version", "feedback_summary", "status"]
+    }
+  ],
+  "common_fields": {
+    "feedback_id": "Stable local ID, for example FB-SYN-001.",
+    "source_type": "synthetic_internal, public_issue, private_authorized, public_demo, or maintainer_observation.",
+    "public_source": "URL or local note. Empty when no public source exists.",
+    "repo_type": "toy, public_open_source, private_authorized, contest_prep, audit_prep, or unknown.",
+    "arkheionx_version": "Version or commit used by the reporter.",
+    "finding_ids": "List of Arkheionx finding IDs.",
+    "rule_packs": "List of rule packs or finding families.",
+    "feedback_summary": "Short sanitized summary.",
+    "calibration_action": "Proposed or accepted calibration action.",
+    "status": "received, needs-reproduction, accepted-calibration, rejected-not-actionable, safety-review-required, fixed, documented, or deferred.",
+    "public_permission": "none, anonymized, public_source_allowed, or not_applicable.",
+    "safety_review_required": "Boolean indicating whether disclosure/safety triage is needed."
+  },
+  "safety_rules": [
+    "Do not store secrets, private keys, mnemonics, or RPC credentials.",
+    "Do not store unpatched vulnerability details from private or unauthorized targets.",
+    "Do not store exploit steps for live targets.",
+    "Do not claim external validation, customers, or adoption without committed public evidence."
+  ]
+}

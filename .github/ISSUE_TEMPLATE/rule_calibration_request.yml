@@ -1,0 +1,66 @@
+name: Rule calibration request
+description: Suggest a priority, confidence, or evidence calibration change.
+title: "[Rule calibration]: "
+labels: ["rule-calibration", "arkheionx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Calibration requests help tune readiness signals. Do not post private
+        code, secrets, unauthorized target details, or exploit steps for live targets.
+  - type: input
+    id: rule_id
+    attributes:
+      label: Rule ID or family
+      placeholder: "ARK-ORC-001 or oracle"
+    validations:
+      required: true
+  - type: dropdown
+    id: current_priority
+    attributes:
+      label: Current priority/confidence
+      options:
+        - Critical/high
+        - High
+        - Medium
+        - Low
+        - Informational
+        - Not sure
+  - type: dropdown
+    id: expected_priority
+    attributes:
+      label: Expected priority/confidence
+      options:
+        - Critical/high
+        - High
+        - Medium
+        - Low
+        - Informational
+        - Not sure
+  - type: textarea
+    id: evidence_quality
+    attributes:
+      label: Evidence quality
+      placeholder: "Semantic-lite source evidence exists, but matching tests reduce the risk..."
+  - type: textarea
+    id: false_positive_risk
+    attributes:
+      label: False-positive risk
+      description: Explain when this rule becomes noisy.
+  - type: textarea
+    id: suggested_test_terms
+    attributes:
+      label: Suggested test terms or evidence signals
+      placeholder: "stale, heartbeat, updatedAt, decimals..."
+  - type: textarea
+    id: downgrade_condition
+    attributes:
+      label: Suggested downgrade condition
+      placeholder: "Downgrade when source evidence exists but matching invariant tests are detected."
+  - type: checkboxes
+    id: safety_confirmation
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not include secrets, private code, or live-target exploit steps.
+          required: true

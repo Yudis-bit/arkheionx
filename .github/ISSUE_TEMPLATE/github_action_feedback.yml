@@ -1,0 +1,61 @@
+name: GitHub Action feedback
+description: Report GitHub Action usage, artifacts, or workflow problems.
+title: "[GitHub Action feedback]: "
+labels: ["github-action", "feedback", "arkheionx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share only safe workflow details. Do not paste secrets, private tokens,
+        private repository contents, or unpatched vulnerability details.
+  - type: input
+    id: action_version
+    attributes:
+      label: Action version
+      placeholder: "v1.0.1, @main, or commit SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: workflow_snippet
+    attributes:
+      label: Workflow snippet if safe
+      description: Remove secrets, private repo details, and sensitive paths.
+      render: yaml
+  - type: textarea
+    id: inputs_used
+    attributes:
+      label: Inputs used
+      placeholder: "protocol-type, sarif-output, issue-plan-output..."
+  - type: checkboxes
+    id: artifacts_generated
+    attributes:
+      label: Output artifacts generated
+      options:
+        - label: Markdown report
+        - label: JSON report
+        - label: SARIF
+        - label: Baseline
+        - label: Diff
+        - label: Issue checklist
+        - label: Issue plan
+        - label: Delivery artifacts
+  - type: textarea
+    id: failure_mode
+    attributes:
+      label: Failure mode
+      placeholder: "The action completed but did not upload expected artifacts..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety_confirmation
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I removed tokens, secrets, and private repository details.
+          required: true

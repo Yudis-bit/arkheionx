@@ -7,6 +7,7 @@ on:
       - "scripts/post_pr_comment.py"
       - "scripts/create_github_issues.py"
       - "scripts/generate_knowledge_graph.py"
+      - "scripts/generate_feedback_dashboard.py"
       - "scripts/search_knowledge.py"
       - "scripts/check_docs_links.py"
       - "scripts/check_version_consistency.py"
@@ -29,9 +30,14 @@ on:
       - "metadata/security_memory_graph.json"
       - "metadata/finding_knowledge_map.json"
       - "metadata/rule_calibration_matrix.json"
+      - "metadata/feedback_schema.json"
+      - "metadata/feedback_examples.json"
+      - "metadata/rule_calibration_backlog.json"
       - "reports/search_index.md"
       - "reports/security_memory_graph.md"
       - "reports/security_memory_graph_summary.md"
+      - "reports/feedback_dashboard.md"
+      - "reports/rule_calibration_backlog.md"
       - "templates/**"
       - "docs/**"
       - "README.md"
@@ -59,6 +65,7 @@ jobs:
           python3 -m py_compile scripts/post_pr_comment.py
           python3 -m py_compile scripts/create_github_issues.py
           python3 -m py_compile scripts/generate_knowledge_graph.py
+          python3 -m py_compile scripts/generate_feedback_dashboard.py
           python3 -m py_compile scripts/search_knowledge.py
           python3 -m py_compile scripts/check_docs_links.py
           python3 -m py_compile scripts/check_version_consistency.py
@@ -66,6 +73,9 @@ jobs:
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
+
+      - name: Verify feedback dashboard is current
+        run: python3 scripts/generate_feedback_dashboard.py --check
 
       - name: Verify security memory graph is current
         run: |

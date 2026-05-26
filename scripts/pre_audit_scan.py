@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 SCHEMA_VERSION = "1.0.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000

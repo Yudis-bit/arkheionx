@@ -27,12 +27,14 @@ validate:
 		scripts/post_pr_comment.py \
 		scripts/create_github_issues.py \
 		scripts/generate_knowledge_graph.py \
+		scripts/generate_feedback_dashboard.py \
 		scripts/search_knowledge.py \
 		scripts/check_docs_links.py \
 		scripts/check_version_consistency.py \
 		scripts/check_safety_wording.py
 	python3 -m unittest discover -s tests -p "test_*.py"
 	python3 scripts/generate_knowledge_graph.py --check
+	python3 scripts/generate_feedback_dashboard.py --check
 	python3 scripts/search_knowledge.py "oracle stale price"
 	python3 scripts/generate_search_index.py --check
 	python3 scripts/check_docs_links.py --check

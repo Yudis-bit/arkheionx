@@ -3,7 +3,52 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.0.0 - Unreleased
+## v1.1.0 - Unreleased
+
+### Added
+
+- Feedback issue templates.
+- Feedback data schema.
+- Rule calibration backlog.
+- Feedback dashboard.
+- Public feedback guide.
+- Feedback triage workflow.
+- Validation level guide.
+- Feedback dashboard generator.
+
+### Improved
+
+- External validation language.
+- README feedback section.
+- Rule calibration workflow.
+
+### Safety
+
+- Feedback templates warn against public disclosure of unpatched
+  vulnerabilities.
+- Feedback templates warn against secrets, private keys, and unauthorized
+  target details.
+- No live-chain/RPC behavior added.
+
+### Known Limitations
+
+- Feedback dashboard starts with synthetic/internal entries.
+- External validation requires public permission before being claimed.
+- Rule calibration still requires maintainer review.
+
+## v1.0.1
+
+### Fixed
+
+- Documentation link validation hotfix.
+- Release consistency checks for stable public docs.
+
+### Safety
+
+- No scanner behavior changes.
+- No live-chain/RPC behavior added.
+
+## v1.0.0
 
 ### Added
 

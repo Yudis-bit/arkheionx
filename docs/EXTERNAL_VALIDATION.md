@@ -35,9 +35,32 @@ security outcomes unless those claims are backed by committed public evidence.
 
 ## Feedback Paths
 
-- `External Validation Feedback` issue template for general product feedback.
-- `False Positive Calibration` issue template for noisy findings.
-- `Rule Request` issue template for new defensive checks.
+- `External evaluation feedback` issue template for sanitized evaluation
+  results.
+- `False positive report` issue template for noisy findings.
+- `False negative report` issue template for missed readiness signals.
+- `Report quality feedback` issue template for confusing output.
+- `Rule calibration request` issue template for confidence/priority tuning.
+- `GitHub Action feedback` issue template for CI and artifact workflow issues.
+
+## Validation Levels
+
+Arkheionx uses explicit validation levels so public language stays honest:
+
+| Level | Meaning |
+|---|---|
+| Level 0 | Internal toy/demo only. |
+| Level 1 | Public user tried the demo. |
+| Level 2 | Public user ran on a toy/public repo. |
+| Level 3 | Authorized private repo feedback, anonymized. |
+| Level 4 | Public case study with permission. |
+| Level 5 | Multiple public independent evaluations. |
+
+Current status: v1.0.1 has internal demo and self-simulation coverage. v1.1.0
+adds workflow for external calibration. Do not claim broad adoption, customers,
+or production validation without committed public evidence and permission.
+
+Read [`VALIDATION_LEVELS.md`](VALIDATION_LEVELS.md).
 
 ## How Feedback Improves Arkheionx
 

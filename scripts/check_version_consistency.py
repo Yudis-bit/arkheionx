@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check v1.0.0 release-candidate version wording."""
+"""Check v1.1.0 release-candidate version wording."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.0"
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.0.1"
 
 
 def read(path: str) -> str:
@@ -24,21 +24,23 @@ def check() -> list[str]:
     action_docs = read("docs/GITHUB_ACTION_USAGE.md")
     scanner = read("scripts/pre_audit_scan.py")
 
-    if 'VERSION = "1.0.0"' not in scanner:
-        failures.append("scripts/pre_audit_scan.py does not set VERSION to 1.0.0")
-    if "Latest stable release: **v1.0.0" not in readme:
-        failures.append("README.md does not name v1.0.0 as latest stable release")
-    if "## v1.0.0 - Unreleased" not in changelog:
-        failures.append("CHANGELOG.md is missing v1.0.0 - Unreleased")
-    if "v1.0.0" not in roadmap or "Stable public release" not in roadmap:
-        failures.append("docs/ROADMAP.md does not mention v1.0.0 stable public release")
+    if 'VERSION = "1.1.0"' not in scanner:
+        failures.append("scripts/pre_audit_scan.py does not set VERSION to 1.1.0")
+    if "Latest stable release: **v1.0.1" not in readme:
+        failures.append("README.md does not name v1.0.1 as latest stable release")
+    if "## v1.1.0 - Unreleased" not in changelog:
+        failures.append("CHANGELOG.md is missing v1.1.0 - Unreleased")
+    if "v1.1.0" not in roadmap or "Feedback Loop and External Calibration" not in roadmap:
+        failures.append("docs/ROADMAP.md does not mark v1.1.0 as current feedback milestone")
     if STABLE_ACTION not in readme:
-        failures.append("README.md is missing stable @v1.0.0 action example")
+        failures.append("README.md is missing stable @v1.0.1 action example")
     if STABLE_ACTION not in action_docs:
-        failures.append("docs/GITHUB_ACTION_USAGE.md is missing stable @v1.0.0 action example")
+        failures.append("docs/GITHUB_ACTION_USAGE.md is missing stable @v1.0.1 action example")
     stale = re.findall(r"Latest stable release: \*\*v0\.[^*]+", readme)
     if stale:
         failures.append("README.md still has stale v0.x latest stable wording")
+    if "## v1.0.0 - Unreleased" in changelog:
+        failures.append("CHANGELOG.md still treats v1.0.0 as unreleased")
     return failures
 
 

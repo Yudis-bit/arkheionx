@@ -19,6 +19,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
 | Output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](../docs/OUTPUT_ARTIFACTS.md) | output naming, generated artifacts, reports directory |
 | v1.0 release notes draft | [`docs/V1_0_RELEASE_NOTES_DRAFT.md`](../docs/V1_0_RELEASE_NOTES_DRAFT.md) | v1.0.0, release notes, stable public release |
+| Feedback loop | [`docs/FEEDBACK_LOOP.md`](../docs/FEEDBACK_LOOP.md) | feedback loop, false positive report, external calibration |
+| Public feedback guide | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](../docs/PUBLIC_FEEDBACK_GUIDE.md) | public feedback, safe disclosure, report quality |
+| Feedback triage workflow | [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](../docs/FEEDBACK_TRIAGE_WORKFLOW.md) | feedback triage, calibration status, severity |
+| Validation levels | [`docs/VALIDATION_LEVELS.md`](../docs/VALIDATION_LEVELS.md) | validation levels, external evaluation, allowed claims |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -61,11 +65,16 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Oracle staking demo case study | [`docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md`](../docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md) | oracle staking demo, case study, public demo |
 | Oracle staking before/after case study | [`docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md`](../docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md) | before after case study, fixed fixture, remediation demo |
 | Rule calibration summary | [`reports/rule_calibration_summary.md`](../reports/rule_calibration_summary.md) | rule calibration, common false positives, downgrade logic |
+| Feedback dashboard | [`reports/feedback_dashboard.md`](../reports/feedback_dashboard.md) | feedback dashboard, synthetic feedback, calibration |
+| Rule calibration backlog report | [`reports/rule_calibration_backlog.md`](../reports/rule_calibration_backlog.md) | rule calibration backlog, feedback status, calibration work |
 | Security memory graph report | [`reports/security_memory_graph.md`](../reports/security_memory_graph.md) | security memory graph, finding to pattern map, historical PoC nodes |
 | Security memory graph summary | [`reports/security_memory_graph_summary.md`](../reports/security_memory_graph_summary.md) | security memory graph, mapped findings, mapped patterns |
 | Security memory graph JSON | [`metadata/security_memory_graph.json`](../metadata/security_memory_graph.json) | security memory graph, nodes, edges |
 | Finding knowledge map JSON | [`metadata/finding_knowledge_map.json`](../metadata/finding_knowledge_map.json) | finding knowledge map, related patterns, suggested tests |
 | Rule calibration matrix JSON | [`metadata/rule_calibration_matrix.json`](../metadata/rule_calibration_matrix.json) | rule calibration matrix, confidence requirements, downgrade conditions |
+| Feedback schema JSON | [`metadata/feedback_schema.json`](../metadata/feedback_schema.json) | feedback schema, feedback loop, calibration |
+| Feedback examples JSON | [`metadata/feedback_examples.json`](../metadata/feedback_examples.json) | synthetic feedback, feedback examples, no adoption claims |
+| Rule calibration backlog JSON | [`metadata/rule_calibration_backlog.json`](../metadata/rule_calibration_backlog.json) | rule calibration backlog, feedback dashboard, calibration |
 | Case study template | [`templates/case_study_template.md`](../templates/case_study_template.md) | case study template, before after, readiness case study |
 | v0.8 launch posts | [`docs/launch/V0_8_LAUNCH_POSTS.md`](../docs/launch/V0_8_LAUNCH_POSTS.md) | launch post, outreach kit, public demo |
 | Mini-vault fixture | [`examples/mini-vault/README.md`](../examples/mini-vault/README.md) | vault, fixture, scanner demo |
@@ -100,6 +109,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | GitHub issue creator | [`scripts/create_github_issues.py`](../scripts/create_github_issues.py) | GitHub API, issue plan, dry-run |
 | Knowledge graph generator | [`scripts/generate_knowledge_graph.py`](../scripts/generate_knowledge_graph.py) | security memory graph, knowledge graph, check mode |
 | Knowledge search helper | [`scripts/search_knowledge.py`](../scripts/search_knowledge.py) | search knowledge, oracle stale price, local search |
+| Feedback dashboard generator | [`scripts/generate_feedback_dashboard.py`](../scripts/generate_feedback_dashboard.py) | feedback dashboard, rule calibration backlog, check mode |
 | Docs link checker | [`scripts/check_docs_links.py`](../scripts/check_docs_links.py) | docs link check, release validation, v1.0.0 |
 | Version consistency checker | [`scripts/check_version_consistency.py`](../scripts/check_version_consistency.py) | version consistency, release validation, v1.0.0 |
 | Safety wording checker | [`scripts/check_safety_wording.py`](../scripts/check_safety_wording.py) | safety wording, release validation, defensive |
@@ -189,6 +199,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `CLI reference` | stable CLI flags, pre_audit_scan.py help, scanner interface | documentation | --root, --json-output, --sarif-output, --issue-plan-output | cli-reference, stable-flags, pre-audit-scanner |
 | `JSON schema` | schema reference, pre-audit report schema, issue plan schema, baseline schema | schema | schemas/pre-audit-report.schema.json, schemas/issue-plan.schema.json | json-schema, schema-freeze, stable-output |
 | `output artifact naming` | recommended output names, generated artifacts, reports directory | documentation | ARKHEIONX_PRE_AUDIT_REPORT.md, arkheionx-report.json, arkheionx.sarif.json | output-artifacts, generated-artifacts, reports |
+| `feedback loop` | external calibration, feedback workflow, calibration workflow | feedback | false positive report, false negative report, report quality feedback | feedback-loop, external-calibration, v1.1.0 |
+| `false positive report` | noisy finding, false positive calibration, finding too noisy | feedback | rule calibration backlog, feedback dashboard | false-positive, calibration, report-feedback |
+| `false negative report` | missed finding, missed readiness signal, missing readiness gap | feedback | rule calibration request, feedback triage | false-negative, calibration, readiness-signal |
+| `rule calibration backlog` | calibration backlog, rule tuning backlog, feedback backlog | feedback | metadata/rule_calibration_backlog.json, reports/rule_calibration_backlog.md | rule-calibration, backlog, feedback-dashboard |
+| `feedback dashboard` | feedback summary, calibration dashboard, external feedback dashboard | feedback | reports/feedback_dashboard.md, generate_feedback_dashboard.py | feedback-dashboard, external-validation, calibration |
+| `public feedback guide` | feedback guide, safe feedback, public feedback | feedback | docs/PUBLIC_FEEDBACK_GUIDE.md, docs/FEEDBACK_LOOP.md | public-feedback, safe-disclosure, feedback-guide |
+| `validation levels` | external validation levels, validation maturity, allowed claims | external validation | docs/VALIDATION_LEVELS.md, docs/EXTERNAL_VALIDATION.md | validation-levels, external-evaluation, honest-claims |
+| `GitHub Action feedback` | action feedback, workflow feedback, CI feedback | feedback | docs/GITHUB_ACTION_USAGE.md, .github/ISSUE_TEMPLATE/github_action_feedback.yml | github-action-feedback, ci, workflow |
+| `report quality feedback` | report wording, report clarity, next-step feedback | feedback | Launch Report, Pre-Audit Report, Executive Summary | report-quality, readability, actionability |
 
 ## Historical Memory Index
 
@@ -345,4 +364,14 @@ audit blocker
 missing invariant
 Foundry invariant testing
 root-cause analysis
+feedback loop
+false positive report
+false negative report
+rule calibration backlog
+feedback dashboard
+external validation
+public feedback guide
+validation levels
+GitHub Action feedback
+report quality feedback
 ```

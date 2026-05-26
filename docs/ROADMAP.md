@@ -43,12 +43,15 @@ committed artifacts support it.
       scores.
 - [x] **v0.9.2: Generated artifact ignore and self-ingestion guard released.**
       Previous Arkheionx outputs are ignored as source evidence by default.
-- [ ] **v1.0.0: Stable public release, schema freeze, and production-ready documentation.**
+- [x] **v1.0.0: Stable public release, schema freeze, and production-ready documentation released.**
       Stable CLI/action interface, schema freeze, docs freeze, calibrated rule
       packs, release artifacts, and contribution workflow.
-- [ ] **v1.1.0: Feedback Loop and External Calibration.**
-      Public feedback triage, false-positive calibration workflow, and
-      real-world evaluation notes without unsupported adoption claims.
+- [x] **v1.0.1: Docs link validation hotfix released.**
+      Documentation link validation and release consistency checks.
+- [ ] **v1.1.0: Feedback Loop and External Calibration current milestone.**
+      Public feedback triage, false-positive and false-negative workflows,
+      feedback dashboard, validation levels, and rule calibration backlog
+      without unsupported adoption claims.
 - [ ] **v1.2.0: Paid Offer Refinement.**
       Clearer Launch Report, Pre-Audit Sprint, and Contest Readiness service
       packaging tied to generated artifacts.
