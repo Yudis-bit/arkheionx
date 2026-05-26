@@ -58,6 +58,12 @@ scanned repository has the same vulnerability.
 | `missing invariant` | Planning property tests before audit. |
 | `initializer protection` | Reviewing upgradeability or initialization paths. |
 
+Search can help interpret negative evidence too. For example, if a scan reports
+`missing invariant tests` as negative evidence, `python3 scripts/search_knowledge.py
+"missing invariant"` points to related findings, suggested defensive tests, and
+readiness docs. Search results remain educational context, not vulnerability
+confirmation.
+
 ## Limitations
 
 Search is token-based and local. It is meant for fast navigation and

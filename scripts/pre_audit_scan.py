@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
@@ -592,6 +592,7 @@ class ReadinessGap:
     affected_functions: list[str] = field(default_factory=list)
     affected_contracts: list[str] = field(default_factory=list)
     false_positive_notes: str = ""
+    negative_evidence: list[dict[str, object]] = field(default_factory=list)
 
 
 FINDING_RULES: list[tuple[str, str, str]] = [
@@ -1030,6 +1031,152 @@ def count_term(text: str, term: str) -> int:
     return text.lower().count(term.lower())
 
 
+NEGATIVE_CONTEXT_TERMS = [
+    "intentionally missing",
+    "required but missing",
+    "currently missing",
+    "coverage missing",
+    "not covered",
+    "not implemented",
+    "should include",
+    "should add",
+    "without",
+    "missing",
+    "lacks",
+    "absent",
+    "needs",
+    "todo",
+    "fixme",
+    "no",
+]
+
+COVERAGE_CONTEXT_TERMS = [
+    "invariant tests",
+    "invariant test",
+    "invariant",
+    "fuzz",
+    "stale oracle tests",
+    "stale oracle",
+    "oracle freshness",
+    "updatedAt",
+    "heartbeat",
+    "access-control negative tests",
+    "access-control",
+    "unauthorized",
+    "onlyOwner test",
+    "role-boundary",
+    "reward conservation tests",
+    "reward conservation",
+    "double-claim",
+    "reentrancy/callback tests",
+    "reentrancy",
+    "callback",
+    "solvency",
+    "liquidation boundary",
+    "slippage",
+    "constant product",
+    "share accounting",
+    "totalAssets",
+]
+
+
+def term_pattern(term: str) -> re.Pattern[str]:
+    escaped = re.escape(term).replace(r"\ ", r"[\s_-]+")
+    if re.search(r"^[A-Za-z_][A-Za-z0-9_]*$", term):
+        return re.compile(rf"(?<![A-Za-z0-9]){escaped}(?![A-Za-z0-9])", flags=re.IGNORECASE)
+    return re.compile(escaped, flags=re.IGNORECASE)
+
+
+def negative_marker_pattern(term: str) -> re.Pattern[str]:
+    escaped = re.escape(term).replace(r"\ ", r"[\s_-]+")
+    if re.search(r"^[A-Za-z]+$", term):
+        return re.compile(rf"(?<![A-Za-z0-9]){escaped}(?![A-Za-z0-9])", flags=re.IGNORECASE)
+    return re.compile(escaped, flags=re.IGNORECASE)
+
+
+NEGATIVE_CONTEXT_PATTERNS = [negative_marker_pattern(term) for term in NEGATIVE_CONTEXT_TERMS]
+
+
+def has_negative_marker(text: str) -> bool:
+    return any(pattern.search(text) for pattern in NEGATIVE_CONTEXT_PATTERNS)
+
+
+def iter_term_matches(text: str, term: str) -> Iterable[re.Match[str]]:
+    if not text or not term:
+        return []
+    return term_pattern(term).finditer(text)
+
+
+def is_negative_context(text: str, term: str, window: int = 160) -> bool:
+    """Return true when a coverage term appears near missing/negative wording."""
+    for match in iter_term_matches(text, term):
+        start = max(0, match.start() - window)
+        end = min(len(text), match.end() + window)
+        if has_negative_marker(text[start:end]):
+            return True
+    return False
+
+
+def has_positive_term(text: str, term: str, window: int = 160) -> bool:
+    """Return true when at least one occurrence is not in negative context."""
+    for match in iter_term_matches(text, term):
+        start = max(0, match.start() - window)
+        end = min(len(text), match.end() + window)
+        if not has_negative_marker(text[start:end]):
+            return True
+    return False
+
+
+def positive_count_term(text: str, term: str, window: int = 160) -> int:
+    count = 0
+    for match in iter_term_matches(text, term):
+        start = max(0, match.start() - window)
+        end = min(len(text), match.end() + window)
+        if not has_negative_marker(text[start:end]):
+            count += 1
+    return count
+
+
+def line_snippet_for_offset(text: str, offset: int) -> str:
+    line_start = text.rfind("\n", 0, offset) + 1
+    line_end = text.find("\n", offset)
+    if line_end == -1:
+        line_end = len(text)
+    return text[line_start:line_end].strip()
+
+
+def collect_negative_evidence(contents: dict[Path, str], root: Path, window: int = 160) -> list[dict[str, object]]:
+    evidence: list[dict[str, object]] = []
+    seen: set[tuple[str, int, str]] = set()
+    for path, text in contents.items():
+        if not text:
+            continue
+        for term in COVERAGE_CONTEXT_TERMS:
+            for match in iter_term_matches(text, term):
+                start = max(0, match.start() - window)
+                end = min(len(text), match.end() + window)
+                context = text[start:end]
+                if not has_negative_marker(context):
+                    continue
+                line = line_for_offset(text, match.start())
+                key = (rel(path, root), line, term.lower())
+                if key in seen:
+                    continue
+                seen.add(key)
+                snippet = line_snippet_for_offset(text, match.start()) or context.strip()
+                evidence.append(
+                    {
+                        "type": "negative-test-coverage",
+                        "file": rel(path, root),
+                        "line": line,
+                        "term": term,
+                        "snippet": snippet[:220],
+                        "reason": "Coverage term appears in negative context.",
+                    }
+                )
+    return evidence
+
+
 def detect_protocol_type(
     contents: dict[Path, str],
     classified: ClassifiedFiles,
@@ -1122,6 +1269,7 @@ def detect_test_readiness(
     contents: dict[Path, str],
     classified: ClassifiedFiles,
     root: Path,
+    negative_evidence: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
     usable_tests = [
         path
@@ -1130,17 +1278,18 @@ def detect_test_readiness(
     ]
     code_paths = classified.solidity_sources + usable_tests + classified.configs + classified.workflows
     all_text = combined_text(contents, code_paths or contents.keys())
+    tests_only_text = collect_text_for_paths(contents, usable_tests)
     test_paths = usable_tests
     lower_paths = [rel(p, root).lower() for p in contents]
     has_test_dir = any("/test/" in f"/{p}" or p.startswith("test/") for p in lower_paths)
     foundry = any(p.name == "foundry.toml" for p in classified.configs) or "forge-std" in all_text
     hardhat = any(p.name.startswith("hardhat.config") for p in classified.configs)
-    assert_count = len(re.findall(r"\bassert[A-Za-z_]*\s*\(", all_text))
-    invariant_count = count_term(all_text, "invariant") + len(
+    assert_count = len(re.findall(r"\bassert[A-Za-z_]*\s*\(", tests_only_text))
+    invariant_count = positive_count_term(tests_only_text, "invariant") + len(
         [p for p in test_paths if "invariant" in rel(p, root).lower()]
     )
-    fuzz_count = count_term(all_text, "fuzz") + len(re.findall(r"\btestFuzz", all_text))
-    handler_count = count_term(all_text, "handler") + count_term(all_text, "StdInvariant")
+    fuzz_count = positive_count_term(tests_only_text, "fuzz") + len(re.findall(r"\btestFuzz", tests_only_text))
+    handler_count = positive_count_term(tests_only_text, "handler") + positive_count_term(tests_only_text, "StdInvariant")
     edge_case_terms = [
         "zero",
         "rounding",
@@ -1152,7 +1301,7 @@ def detect_test_readiness(
         "max",
         "min",
     ]
-    edge_case_count = sum(count_term(all_text, term) for term in edge_case_terms)
+    edge_case_count = sum(positive_count_term(tests_only_text, term) for term in edge_case_terms)
     slither = any(p.name == "slither.config.json" for p in classified.configs) or count_term(all_text, "slither") > 0
     echidna = any(p.name in {"echidna.yaml", "echidna.yml"} for p in classified.configs) or count_term(all_text, "echidna") > 0
     ci = bool(classified.workflows)
@@ -1173,6 +1322,9 @@ def detect_test_readiness(
         "slither": slither,
         "ci_workflow": ci,
         "edge_case_tests": edge_case_count >= 3,
+        "negative_evidence": negative_evidence or [],
+        "negative_evidence_count": len(negative_evidence or []),
+        "negative_evidence_terms": sorted({str(item.get("term", "")) for item in negative_evidence or [] if item.get("term")}),
     }
 
 
@@ -1189,7 +1341,7 @@ def detect_vault_test_coverage(
     coverage: dict[str, bool] = {}
     matched_terms: dict[str, list[str]] = {}
     for key, terms in VAULT_TEST_COVERAGE_TERMS.items():
-        matched = sorted({term for term in terms if count_term(test_text, term) > 0})
+        matched = sorted({term for term in terms if has_positive_term(test_text, term)})
         coverage[key] = bool(matched)
         matched_terms[key] = matched
 
@@ -1400,7 +1552,6 @@ def parse_test_file(text: str, path: Path, root: Path) -> dict[str, object]:
     test_functions = re.findall(r"\bfunction\s+(test[A-Za-z0-9_]*)\s*\(", text)
     invariant_functions = [name for name in re.findall(r"\bfunction\s+([A-Za-z0-9_]*invariant[A-Za-z0-9_]*)\s*\(", text, flags=re.IGNORECASE)]
     fuzz_functions = [name for name in test_functions if "fuzz" in name.lower()]
-    lower = text.lower()
     coverage_terms = {
         "oracle": ["stale", "updatedat", "heartbeat", "decimals", "bounds", "twap", "spot", "oracle", "price"],
         "access_control": ["unauthorized", "onlyowner", "reverts", "prank", "owner", "role", "admin", "grantrole", "revokerole"],
@@ -1409,7 +1560,7 @@ def parse_test_file(text: str, path: Path, root: Path) -> dict[str, object]:
         "vault": ["deposit", "withdraw", "redeem", "donation", "rounding", "totalassets", "preview", "invariant"],
     }
     coverage = {
-        key: sorted({term for term in terms if term in lower})
+        key: sorted({term for term in terms if has_positive_term(text, term)})
         for key, terms in coverage_terms.items()
     }
     return {
@@ -2025,6 +2176,30 @@ def add_gap(
     )
 
 
+def apply_negative_evidence_score_penalty(
+    score: dict[str, dict[str, object]],
+    test_readiness: dict[str, object],
+    categories: Iterable[str],
+) -> None:
+    negative_count = int(test_readiness.get("negative_evidence_count", 0) or 0)
+    if negative_count <= 0:
+        return
+    total_penalty = min(10, max(2, negative_count))
+    category_list = [category for category in categories if category in score]
+    if not category_list:
+        return
+    per_category = max(1, total_penalty // len(category_list))
+    for category in category_list:
+        current = int(score[category].get("score", 0))
+        penalty = min(current, per_category)
+        if penalty <= 0:
+            continue
+        score[category]["score"] = current - penalty
+        score[category]["notes"].append(
+            f"Negative coverage statements detected; removed {penalty} readiness point(s) from this category."
+        )
+
+
 def compute_vault_readiness_score(
     root: Path,
     classified: ClassifiedFiles,
@@ -2072,9 +2247,9 @@ def compute_vault_readiness_score(
     upgrade_terms = detected_terms(signals, "upgradeability")
     fee_terms = [term for term in detected_terms(signals, "vault_accounting_risk", "accounting_complexity") if "fee" in term.lower()]
     share_conversion_signal = has_any(signals, "vault_erc4626", ["convertToShares", "convertToAssets", "previewDeposit", "previewWithdraw"]) or has_any(signals, "vault_accounting", ["convertToShares", "convertToAssets", "shares", "assets"])
-    role_covered = any(term in lower_text for term in ["unauthorized", "onlyowner", "accesscontrol", "role", "admin"])
-    oracle_controls = any(term in lower_text for term in ["stale", "heartbeat", "twap", "bounds", "sanity", "slippage"])
-    upgrade_covered = not upgrade_terms or any(term in lower_text for term in ["initializer", "reinitializer", "upgrade", "storage gap", "__gap"])
+    role_covered = text_has_any(lower_text, ["unauthorized", "onlyowner", "accesscontrol", "role", "admin"])
+    oracle_controls = text_has_any(lower_text, ["stale", "heartbeat", "twap", "bounds", "sanity", "slippage"])
+    upgrade_covered = not upgrade_terms or text_has_any(lower_text, ["initializer", "reinitializer", "upgrade", "storage gap", "__gap"])
 
     if has_sources:
         award("repository_structure", 4, "Solidity vault-like sources detected.")
@@ -2144,7 +2319,7 @@ def compute_vault_readiness_score(
         award("admin_operational_readiness", 2, "Vault admin/operational surface is visible.")
     if role_covered:
         award("admin_operational_readiness", 3, "Role or unauthorized-call coverage signal detected.")
-    if coverage["emergency_pause"] or any(term in lower_text for term in ["pause", "emergency"]):
+    if coverage["emergency_pause"] or text_has_any(lower_text, ["pause", "emergency"]):
         award("admin_operational_readiness", 2, "Pause or emergency control signal detected.")
     if upgrade_covered:
         award("admin_operational_readiness", 2, "Upgradeability is absent or initializer/upgrade terms are visible.")
@@ -2156,9 +2331,9 @@ def compute_vault_readiness_score(
     has_readme = any(p.name.lower() == "readme.md" for p in classified.docs)
     if has_readme:
         award("documentation_readiness", 2, "README detected.")
-    if any(term in lower_text for term in ["assumption", "invariant", "limitations", "rounding", "oracle"]):
+    if text_has_any(lower_text, ["assumption", "invariant", "limitations", "rounding", "oracle"]):
         award("documentation_readiness", 2, "Vault assumptions or limitations are documented.")
-    if any(term in lower_text for term in ["owner", "admin", "role", "treasury", "deployment"]):
+    if text_has_any(lower_text, ["owner", "admin", "role", "treasury", "deployment"]):
         award("documentation_readiness", 1, "Role, treasury, owner, or deployment terms are documented.")
 
     if not has_tests:
@@ -2348,6 +2523,17 @@ def compute_vault_readiness_score(
             suggested_test="Assert unauthorized callers cannot initialize or upgrade and that accounting invariants hold after a local upgrade simulation.",
         )
 
+    apply_negative_evidence_score_penalty(
+        score,
+        test_readiness,
+        [
+            "vault_accounting_coverage",
+            "invariant_fuzz_readiness",
+            "oracle_pricing_readiness",
+            "admin_operational_readiness",
+            "strategy_withdrawal_lifecycle_readiness",
+        ],
+    )
     total = sum(int(category["score"]) for category in score.values())
     total = max(0, min(100, total))
     next_steps = recommended_next_steps(gaps, "vault")
@@ -2405,7 +2591,7 @@ def compute_readiness_score(
     if test_readiness["foundry_tests"] or test_readiness["hardhat_tests"]:
         award("test_presence", 4, "Foundry or Hardhat test environment detected.")
     protocol_terms = signal_terms(signals, "vault_accounting", "oracle", "amm", "lending", "staking_rewards")
-    if has_tests and len(protocol_terms) >= 3:
+    if has_tests and len(protocol_terms) >= 3 and int(test_readiness.get("negative_evidence_count", 0) or 0) == 0:
         award("test_presence", 5, "Protocol-specific terms appear in the testable codebase.")
 
     if test_readiness["invariant_tests"]:
@@ -2417,18 +2603,19 @@ def compute_readiness_score(
     if test_readiness["edge_case_tests"]:
         award("invariant_fuzz_readiness", 3, "Edge-case testing terms detected.")
 
-    oracle_documented = has_meaningful_oracle_signal(signals) and any(term in all_text.lower() for term in ["stale", "heartbeat", "twap", "bounds", "sanity"])
+    lower_all_text = all_text.lower()
+    oracle_documented = has_meaningful_oracle_signal(signals) and text_has_any(lower_all_text, ["stale", "heartbeat", "twap", "bounds", "sanity"])
     accounting_documented = has_any(signals, "vault_accounting") and any(
-        term in all_text.lower() for term in ["roundtrip", "conservation", "totalassets", "shares", "rounding"]
+        has_positive_term(lower_all_text, term) for term in ["roundtrip", "conservation", "totalassets", "shares", "rounding"]
     )
     role_covered = has_any(signals, "access_control") and any(
-        term in all_text.lower() for term in ["unauthorized", "onlyowner", "accesscontrol", "role", "admin"]
+        has_positive_term(lower_all_text, term) for term in ["unauthorized", "onlyowner", "accesscontrol", "role", "admin"]
     )
     value_flow_covered = has_any(signals, "reentrancy_value_flow") and (
-        has_any(signals, "reentrancy_value_flow", ["nonReentrant", "ReentrancyGuard"]) or "reentr" in all_text.lower()
+        has_any(signals, "reentrancy_value_flow", ["nonReentrant", "ReentrancyGuard"]) or has_positive_term(lower_all_text, "reentrancy")
     )
     protocol_checklist = protocol_type != "generic" and (
-        test_readiness["edge_case_tests"] or test_readiness["invariant_tests"] or "checklist" in all_text.lower()
+        test_readiness["edge_case_tests"] or test_readiness["invariant_tests"] or has_positive_term(lower_all_text, "checklist")
     )
     if oracle_documented:
         award("defi_risk_coverage", 5, "Oracle assumptions have at least some documented or tested controls.")
@@ -2443,8 +2630,8 @@ def compute_readiness_score(
 
     has_readme = any(p.name.lower() == "readme.md" for p in classified.docs)
     has_security = any(p.name.lower() == "security.md" or "docs/security" in rel(p, root).lower() for p in classified.docs)
-    assumptions_documented = any(term in all_text.lower() for term in ["assumption", "invariant", "limitations", "oracle", "roles"])
-    roles_documented = any(term in all_text.lower() for term in ["deployment", "owner", "admin", "role", "treasury"])
+    assumptions_documented = text_has_any(lower_all_text, ["assumption", "invariant", "limitations", "oracle", "roles"])
+    roles_documented = text_has_any(lower_all_text, ["deployment", "owner", "admin", "role", "treasury"])
     if has_readme:
         award("documentation_readiness", 3, "README detected.")
     if has_security:
@@ -2456,13 +2643,13 @@ def compute_readiness_score(
 
     if has_any(signals, "access_control"):
         award("operational_admin_readiness", 3, "Access-control surface is visible.")
-    if any(term in all_text.lower() for term in ["pause", "emergency", "incident", "runbook"]):
+    if text_has_any(lower_all_text, ["pause", "emergency", "incident", "runbook"]):
         award("operational_admin_readiness", 3, "Emergency control or incident terms detected.")
-    if not has_any(signals, "upgradeability") or any(term in all_text.lower() for term in ["initializer", "upgrade", "storage gap", "__gap"]):
+    if not has_any(signals, "upgradeability") or text_has_any(lower_all_text, ["initializer", "upgrade", "storage gap", "__gap"]):
         award("operational_admin_readiness", 3, "Upgradeability is absent or has visible documentation/test terms.")
     if any(term in all_text for term in ["setFee", "setOracle", "setStrategy", "setTreasury", "onlyOwner"]):
         award("operational_admin_readiness", 3, "Privileged setters or owner boundaries are visible for review.")
-    if any(term in all_text.lower() for term in ["monitor", "incident", "limitations", "pause", "emergency"]):
+    if text_has_any(lower_all_text, ["monitor", "incident", "limitations", "pause", "emergency"]):
         award("operational_admin_readiness", 3, "Monitoring, incident, limitation, or emergency notes detected.")
 
     if not has_tests:
@@ -2510,7 +2697,7 @@ def compute_readiness_score(
             "Review state update order and add local malicious-receiver tests where callbacks are possible.",
             ["reentrancy-review", "value-flow"],
         )
-    if has_any(signals, "upgradeability") and "initializer" not in all_text:
+    if has_any(signals, "upgradeability") and not has_positive_term(lower_all_text, "initializer"):
         add_gap(
             gaps,
             "Medium readiness gap",
@@ -2547,6 +2734,11 @@ def compute_readiness_score(
             ["amm-invariant", "liquidity"],
         )
 
+    apply_negative_evidence_score_penalty(
+        score,
+        test_readiness,
+        ["invariant_fuzz_readiness", "defi_risk_coverage", "documentation_readiness"],
+    )
     total = sum(int(category["score"]) for category in score.values())
     total = max(0, min(100, total))
     next_steps = recommended_next_steps(gaps, protocol_type)
@@ -2638,7 +2830,7 @@ def source_and_doc_text(contents: dict[Path, str], classified: ClassifiedFiles) 
 
 
 def text_has_any(text: str, terms: Iterable[str]) -> bool:
-    return any(term.lower() in text for term in terms)
+    return any(has_positive_term(text, term) for term in terms)
 
 
 def existing_finding_ids(gaps: list[ReadinessGap]) -> set[str]:
@@ -2844,7 +3036,7 @@ def add_rule_pack_gaps(
 
     reent_terms = detected_terms(signals, "reentrancy_rule_pack", "reentrancy_value_flow")
     has_reent_surface = bool(set(reent_terms) & {"withdraw", "redeem", "claim", "refund", "safeTransfer", "transferFrom", ".call(", "call{", "callback", "flashLoan", "executeOperation"})
-    has_guard = bool(set(reent_terms) & {"nonReentrant", "ReentrancyGuard"}) or "nonreentrant" in corpus_text
+    has_guard = text_has_any(corpus_text, ["nonReentrant", "ReentrancyGuard"])
     has_ordering_docs = text_has_any(corpus_text, ["checks-effects-interactions", "state update before", "reentrancy", "external call ordering"])
     has_claim_refund = bool(set(reent_terms) & {"claim", "refund", "payout"})
 
@@ -3239,6 +3431,42 @@ def keyword_evidence_for_gap(gap: ReadinessGap) -> list[dict[str, object]]:
     return evidence
 
 
+NEGATIVE_EVIDENCE_GAP_TERMS = {
+    "oracle": ["stale oracle", "oracle freshness", "updatedAt", "heartbeat", "stale oracle tests"],
+    "access": ["access-control", "unauthorized", "onlyOwner test", "role-boundary"],
+    "upgrade": ["access-control", "onlyOwner test", "role-boundary"],
+    "reentrancy": ["reentrancy", "callback", "reentrancy/callback tests"],
+    "reward": ["reward conservation", "reward conservation tests", "double-claim"],
+    "vault": ["invariant", "invariant tests", "share accounting", "totalAssets", "solvency"],
+    "testing": ["invariant", "invariant tests", "fuzz"],
+    "amm": ["constant product", "slippage"],
+    "lending": ["liquidation boundary", "solvency"],
+}
+
+
+def negative_evidence_for_gap(
+    gap: ReadinessGap,
+    negative_evidence: list[dict[str, object]],
+    limit: int = 5,
+) -> list[dict[str, object]]:
+    category = gap.category.lower()
+    title = gap.title.lower()
+    keys = [
+        key
+        for key in NEGATIVE_EVIDENCE_GAP_TERMS
+        if key in category or key in title or (key == "testing" and ("test" in category or "test" in title))
+    ]
+    if not keys:
+        keys = ["testing"]
+    wanted = {term.lower() for key in keys for term in NEGATIVE_EVIDENCE_GAP_TERMS.get(key, [])}
+    matched: list[dict[str, object]] = []
+    for item in negative_evidence:
+        term = str(item.get("term", "")).lower()
+        if term in wanted or any(part in term or term in part for part in wanted):
+            matched.append(item)
+    return matched[:limit]
+
+
 def finding_has_semantic_support(gap: ReadinessGap, semantic: dict[str, object]) -> bool:
     signals = semantic.get("signals", {}) if isinstance(semantic.get("signals"), dict) else {}
     category = gap.category.lower()
@@ -3263,7 +3491,14 @@ def confidence_reason_for(
     has_test_coverage: bool,
     slither_evidence: list[dict[str, object]],
     keyword_only: bool,
+    negative_items: list[dict[str, object]] | None = None,
 ) -> str:
+    if negative_items and has_semantic and not has_test_coverage:
+        return "Semantic-lite Solidity evidence was detected, and explicit missing-test coverage statements were found."
+    if negative_items and not has_test_coverage:
+        return "Explicit missing-test coverage statements were detected; Arkheionx did not count them as positive coverage."
+    if negative_items and has_test_coverage:
+        return "Related test coverage terms were found, but conflicting missing-coverage statements require manual review."
     if has_semantic and not has_test_coverage:
         return "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found."
     if has_semantic and has_test_coverage:
@@ -3281,6 +3516,7 @@ def attach_evidence_and_calibrate(
     slither: dict[str, object],
     analysis_config: dict[str, object],
     protocol_type: str,
+    negative_evidence: list[dict[str, object]] | None = None,
 ) -> list[ReadinessGap]:
     max_evidence = int(analysis_config.get("max_evidence_per_finding", 5))
     downgrade_keyword_only = bool(analysis_config.get("downgrade_keyword_only", True))
@@ -3302,9 +3538,14 @@ def attach_evidence_and_calibrate(
             )
         slither_items = slither_evidence_for_gap(gap, slither)
         keyword_items = keyword_evidence_for_gap(gap)
+        negative_items = negative_evidence_for_gap(gap, negative_evidence or [], max_evidence)
         evidence = (semantic_evidence + test_evidence + slither_items + keyword_items)[:max_evidence]
         gap.evidence = evidence
+        gap.negative_evidence = negative_items
         gap.detection_sources = sorted({str(item.get("type", "")) for item in evidence if item.get("type")})
+        if negative_items and "negative-test-coverage" not in gap.detection_sources:
+            gap.detection_sources.append("negative-test-coverage")
+            gap.detection_sources = sorted(gap.detection_sources)
         gap.affected_functions = sorted({str(item.get("function", "")) for item in evidence if item.get("function")})
         gap.affected_contracts = sorted({str(item.get("contract", "")) for item in evidence if item.get("contract")})
         if evidence:
@@ -3331,7 +3572,9 @@ def attach_evidence_and_calibrate(
             gap.false_positive_notes = (
                 "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks."
             )
-        gap.confidence_reason = confidence_reason_for(has_semantic, has_test_coverage, slither_items, keyword_only)
+        gap.confidence_reason = confidence_reason_for(has_semantic, has_test_coverage, slither_items, keyword_only, negative_items)
+        if negative_items and not gap.false_positive_notes:
+            gap.false_positive_notes = "Explicit missing coverage was detected in local files. Review whether the missing coverage has since been added before suppressing this finding."
         gap.fingerprint = compute_finding_fingerprint(gap, protocol_type)
     return gaps
 
@@ -3356,6 +3599,7 @@ def analysis_quality(
         "test_coverage_mapping": "enabled",
         "invariant_tests": bool(test_readiness.get("invariant_tests")),
         "fuzz_tests": bool(test_readiness.get("fuzz_tests")),
+        "negative_evidence_count": int(test_readiness.get("negative_evidence_count", 0) or 0),
         "warnings": list(semantic.get("warnings", [])) + list(slither.get("warnings", [])),
     }
 
@@ -3393,8 +3637,10 @@ def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
         "confidence": gap.confidence,
         "confidence_reason": gap.confidence_reason,
         "evidence": gap.evidence,
+        "negative_evidence": gap.negative_evidence,
         "evidence_summary": gap.evidence_summary,
         "evidence_count": len(gap.evidence),
+        "negative_evidence_count": len(gap.negative_evidence),
         "detection_sources": gap.detection_sources,
         "detected_signals": gap.detected,
         "affected_files": gap.affected_files,
@@ -3707,6 +3953,7 @@ def finding_to_sarif_result(gap: ReadinessGap, root: Path) -> dict[str, object]:
             "confidence": gap.confidence,
             "confidence_reason": gap.confidence_reason,
             "evidence_count": len(gap.evidence),
+            "negative_evidence_count": len(gap.negative_evidence),
             "detection_sources": gap.detection_sources,
             "affected_functions": gap.affected_functions,
             "false_positive_notes": gap.false_positive_notes,
@@ -3931,6 +4178,7 @@ def generate_report(
                 ["Slither", str(analysis_quality_data.get("slither", "disabled"))],
                 ["Slither detectors", str(analysis_quality_data.get("slither_detector_count", 0))],
                 ["Test coverage mapping", str(analysis_quality_data.get("test_coverage_mapping", "enabled"))],
+                ["Negative evidence", str(analysis_quality_data.get("negative_evidence_count", 0))],
             ]
         )
     )
@@ -3958,6 +4206,22 @@ def generate_report(
         lines.append("")
         for warning in config_warnings:
             lines.append(f"- {warning}")
+        lines.append("")
+    negative_evidence_items = [
+        item
+        for item in test_readiness.get("negative_evidence", [])
+        if isinstance(item, dict)
+    ]
+    if negative_evidence_items:
+        lines.append("## Negative Evidence")
+        lines.append("")
+        lines.append("Arkheionx found coverage terms in missing/negative context. These statements are not counted as positive test coverage.")
+        lines.append("")
+        for item in negative_evidence_items[:20]:
+            location = f"`{item.get('file', '')}:{item.get('line', 1)}`"
+            lines.append(
+                f"- {location} `{item.get('term', '')}` - {item.get('reason', '')} Snippet: `{item.get('snippet', '')}`"
+            )
         lines.append("")
     lines.append("## Detected Protocol Shape")
     lines.append("")
@@ -4042,7 +4306,7 @@ def generate_report(
     lines.append("### Testing And Documentation")
     lines.append("")
     for key, value in test_readiness.items():
-        if key != "test_files":
+        if key not in {"test_files", "negative_evidence"}:
             lines.append(f"- {key.replace('_', ' ').title()}: `{value}`")
     if test_readiness.get("test_files"):
         lines.append(f"- Test files: `{', '.join(test_readiness['test_files'][:10])}`")
@@ -4109,6 +4373,13 @@ def generate_report(
                     if function:
                         label += f" in `{function}`"
                     lines.append(f"- {label}: {reason}" + (f" Snippet: `{snippet}`" if snippet else ""))
+                lines.append("")
+            if gap.negative_evidence:
+                lines.append("Negative evidence:")
+                for item in gap.negative_evidence[:5]:
+                    lines.append(
+                        f"- `{item.get('file', '')}:{item.get('line', 1)}` `{item.get('term', '')}`: {item.get('reason', '')} Snippet: `{item.get('snippet', '')}`"
+                    )
                 lines.append("")
             if gap.false_positive_notes:
                 lines.append("False-positive notes:")
@@ -4279,6 +4550,7 @@ def json_report(
     semantic: dict[str, object],
     slither: dict[str, object],
     analysis_quality_data: dict[str, object],
+    negative_evidence: list[dict[str, object]],
     historical_patterns: list[HistoricalPattern],
     gaps: list[ReadinessGap],
     suppressed_gaps: list[ReadinessGap],
@@ -4314,6 +4586,7 @@ def json_report(
         },
         "signals": signals,
         "analysis_quality": analysis_quality_data,
+        "negative_evidence": negative_evidence,
         "semantic_lite": semantic,
         "slither": slither,
         "vault_rule_pack": vault_test_coverage,
@@ -4496,6 +4769,8 @@ def issue_labels_for_gap(gap: ReadinessGap) -> list[str]:
     labels.update(tag.replace("_", "-") for tag in gap.tags[:6])
     if gap.confidence == "low":
         labels.add("low-confidence")
+    if gap.negative_evidence:
+        labels.add("negative-evidence")
     return sorted(label for label in labels if label)
 
 
@@ -4534,6 +4809,13 @@ def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> 
         lines.append("- No structured evidence was attached. Manual review recommended.")
     if gap.false_positive_notes:
         lines.extend(["", "False-positive notes:", "", gap.false_positive_notes])
+    if gap.negative_evidence:
+        lines.extend(["", "## Negative Evidence", ""])
+        lines.append("These missing-coverage statements were not counted as positive test coverage:")
+        for item in gap.negative_evidence[:5]:
+            lines.append(
+                f"- `{item.get('file', '')}:{item.get('line', 1)}` `{item.get('term', '')}`: {item.get('snippet', '')}"
+            )
     related_lines = compact_related_knowledge_lines(gap.id)
     if related_lines:
         lines.extend(["", "## Related Knowledge", ""])
@@ -4646,6 +4928,8 @@ def build_issue_plan(
                 "related_knowledge": related_knowledge_for_id(gap.id),
                 "evidence_summary": gap.evidence_summary,
                 "evidence": gap.evidence[:5],
+                "negative_evidence": gap.negative_evidence[:5],
+                "negative_evidence_count": len(gap.negative_evidence),
                 "detection_sources": gap.detection_sources,
                 "affected_functions": gap.affected_functions,
                 "fingerprint": gap.fingerprint,
@@ -5497,7 +5781,8 @@ def main(argv: list[str] | None = None) -> int:
         if not is_placeholder_skeleton(contents.get(path, ""))
     ]
     signals = detect_signals(contents, root, signal_paths or contents.keys())
-    test_readiness = detect_test_readiness(contents, classified, root)
+    negative_evidence = collect_negative_evidence(contents, root)
+    test_readiness = detect_test_readiness(contents, classified, root, negative_evidence)
     vault_test_coverage = detect_vault_test_coverage(contents, classified)
     semantic = extract_solidity_structure(contents, classified, root, bool(analysis_config.get("semantic_lite", True)))
     slither_json_path = resolve_output_path(args.slither_json)
@@ -5531,7 +5816,7 @@ def main(argv: list[str] | None = None) -> int:
     apply_finding_metadata(gaps, signals, protocol_type)
     add_rule_pack_gaps(gaps, contents, classified, signals)
     apply_finding_metadata(gaps, signals, protocol_type)
-    attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type)
+    attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type, negative_evidence)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
     rule_packs = build_rule_packs(signals, gaps, suppressed_gaps)
     invariants = suggest_invariants(protocol_type, signals)
@@ -5676,6 +5961,7 @@ def main(argv: list[str] | None = None) -> int:
                 semantic,
                 slither,
                 quality,
+                negative_evidence,
                 historical_patterns,
                 gaps,
                 suppressed_gaps,

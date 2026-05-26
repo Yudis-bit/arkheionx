@@ -53,6 +53,22 @@ Findings can also include test-coverage evidence:
 }
 ```
 
+They can also include negative evidence when coverage terms appear in missing
+or TODO context:
+
+```json
+{
+  "type": "negative-test-coverage",
+  "file": "test/FakeGlobalVault.t.sol",
+  "line": 6,
+  "term": "stale oracle tests",
+  "reason": "Coverage term appears in negative context."
+}
+```
+
+Negative evidence is not counted as coverage. It is retained as remediation
+context and can influence confidence reasons and score calibration.
+
 ## Confidence Effects
 
 - Semantic evidence plus missing matching tests can raise confidence.

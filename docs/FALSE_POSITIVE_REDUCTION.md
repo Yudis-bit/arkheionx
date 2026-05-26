@@ -37,6 +37,28 @@ Semantic-lite maps tests to rule-pack themes:
 Matching tests can reduce priority or confidence because Arkheionx has evidence
 that the team is already reviewing that assumption.
 
+## Negative Coverage Context
+
+Arkheionx v0.9.1 adds negative-context detection for coverage terms. Comments
+or docs such as "missing invariant tests," "no stale oracle tests," or
+"without access-control negative tests" are treated as negative evidence, not
+positive test coverage.
+
+Negative evidence can appear in JSON and Markdown reports as:
+
+```json
+{
+  "type": "negative-test-coverage",
+  "term": "invariant tests",
+  "reason": "Coverage term appears in negative context."
+}
+```
+
+This keeps explicit TODO or missing-coverage notes visible while preventing
+them from increasing the readiness score. If a team documents missing tests,
+Arkheionx uses that as remediation context until matching positive tests are
+added.
+
 ## Config Tuning
 
 ```json

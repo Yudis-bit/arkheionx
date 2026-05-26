@@ -3,7 +3,24 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.9.0 - Unreleased
+## v0.9.1 - Unreleased
+
+### Fixed
+
+- Negative-context comments such as "missing invariant tests" are no longer
+  counted as positive coverage evidence.
+- Explicitly missing coverage can now appear as negative evidence in reports
+  and JSON.
+- Score calibration now avoids awarding readiness points for missing-test
+  statements.
+
+### Safety
+
+- No live-chain/RPC behavior added.
+- No exploit automation added.
+- Findings remain readiness signals, not vulnerability confirmations.
+
+## v0.9.0
 
 ### Added
 

@@ -94,6 +94,12 @@ v0.7.0 delivery artifacts use the score to choose launch-readiness status,
 contest-readiness status, recommended next step, sprint priorities, and
 remediation phases. These labels are planning aids, not safety claims.
 
+v0.9.1 fixes negative-context calibration. A comment like "missing invariant
+tests" or "no stale oracle tests" is no longer counted as positive coverage.
+Those statements can reduce or cap relevant score categories and appear as
+`negative_evidence` in JSON so teams can see why readiness credit was not
+awarded.
+
 ## How To Improve The Score
 
 Practical improvements:
