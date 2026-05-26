@@ -32,6 +32,12 @@ The config is intentionally simple and dependency-free.
   "report": {
     "max_top_gaps": 5
   },
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [],
+    "extra_ignore_globs": []
+  },
   "analysis": {
     "semantic_lite": true,
     "slither": false,
@@ -54,6 +60,10 @@ See [`../examples/arkheionx.config.example.json`](../examples/arkheionx.config.e
 | `ignore_paths` | Paths excluded from scanner collection. |
 | `additional_search_tags` | Extra tags added to reports. |
 | `report.max_top_gaps` | Number of top gaps shown in summaries and comments. |
+| `scan.ignore_generated_artifacts` | Ignore Arkheionx generated reports/artifacts as source evidence. Defaults to `true`. |
+| `scan.include_generated_artifacts` | Advanced/debug override to include generated artifacts. Defaults to `false`. |
+| `scan.extra_ignore_paths` | Additional path-prefix ignores. |
+| `scan.extra_ignore_globs` | Additional glob ignores. |
 | `analysis.semantic_lite` | Enable semantic-lite Solidity structure extraction. Defaults to `true`. |
 | `analysis.slither` | Enable optional local Slither integration. Defaults to `false`. |
 | `analysis.min_confidence_for_issue_plan` | Minimum finding confidence included in generated issue plans. Defaults to `medium`. |
@@ -113,6 +123,20 @@ fixtures that should not influence readiness output:
 ```
 
 The scanner already ignores common build/cache directories.
+
+## Generated Artifact Ignore
+
+Arkheionx ignores its own generated reports and artifacts by default. This
+prevents files such as `reports/*-pre-audit-report.md`,
+`reports/*-issue-plan.json`, `arkheionx.sarif.json`, and
+`ARKHEIONX_PR_COMMENT.md` from affecting future scans.
+
+Reports include `scan_sources` so users can see how many generated artifacts
+were ignored. Only set `scan.include_generated_artifacts` to `true` for
+debugging scanner behavior; it can make previous reports influence the current
+score.
+
+See [`GENERATED_ARTIFACT_IGNORE.md`](GENERATED_ARTIFACT_IGNORE.md).
 
 ## Invalid Config Behavior
 

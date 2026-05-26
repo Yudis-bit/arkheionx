@@ -69,6 +69,10 @@ or TODO context:
 Negative evidence is not counted as coverage. It is retained as remediation
 context and can influence confidence reasons and score calibration.
 
+Generated Arkheionx artifacts are filtered before semantic-lite extraction.
+Old reports, issue plans, SARIF, baselines, and delivery artifacts should not
+create semantic evidence, test coverage evidence, or negative evidence.
+
 ## Confidence Effects
 
 - Semantic evidence plus missing matching tests can raise confidence.

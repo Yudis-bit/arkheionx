@@ -157,6 +157,22 @@ jobs:
             --issue-checklist-output examples/reports/semantic-lite-fixture-issue-checklist.md \
             --issue-plan-output examples/reports/semantic-lite-fixture-issue-plan.json
 
+      - name: Run scanner against negative evidence fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/negative-evidence-fixture \
+            --protocol-type auto \
+            --output examples/reports/negative-evidence-fixture-pre-audit-report.md \
+            --json-output examples/reports/negative-evidence-fixture-pre-audit-report.json
+
+      - name: Run scanner against generated-artifact self-ingestion fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/generated-artifact-self-ingestion-fixture \
+            --protocol-type auto \
+            --output examples/reports/generated-artifact-self-ingestion-pre-audit-report.md \
+            --json-output examples/reports/generated-artifact-self-ingestion-pre-audit-report.json
+
       - name: Verify Slither unavailable path is graceful
         run: |
           python3 scripts/pre_audit_scan.py \
@@ -291,6 +307,10 @@ jobs:
           test -f examples/reports/semantic-lite-fixture.baseline.json
           test -f examples/reports/semantic-lite-fixture-issue-checklist.md
           test -f examples/reports/semantic-lite-fixture-issue-plan.json
+          test -f examples/reports/negative-evidence-fixture-pre-audit-report.md
+          test -f examples/reports/negative-evidence-fixture-pre-audit-report.json
+          test -f examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
+          test -f examples/reports/generated-artifact-self-ingestion-pre-audit-report.json
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -333,6 +353,8 @@ jobs:
               "examples/reports/demo-report.json",
               "examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json",
               "examples/reports/semantic-lite-fixture-pre-audit-report.json",
+              "examples/reports/negative-evidence-fixture-pre-audit-report.json",
+              "examples/reports/generated-artifact-self-ingestion-pre-audit-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
           ]:
@@ -352,6 +374,7 @@ jobs:
               assert "delivery_outputs" in data
               assert "delivery_summary" in data
               assert "knowledge" in data
+              assert "scan_sources" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
               assert all(item["fingerprint"] for item in data["findings"])
               assert all("confidence_reason" in item for item in data["findings"])
@@ -386,6 +409,12 @@ jobs:
               assert payload
           config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
           assert config["suppressed_findings"]
+          generated = json.load(open("examples/reports/generated-artifact-self-ingestion-pre-audit-report.json", encoding="utf-8"))
+          assert generated["scan_sources"]["generated_artifacts_ignored"] > 0
+          assert not [
+              item for item in generated.get("negative_evidence", [])
+              if str(item.get("file", "")).startswith("reports/")
+          ]
           for path in [
               "examples/reports/mini-vault.sarif.json",
               "examples/reports/vault-risk-fixture.sarif.json",
@@ -445,6 +474,8 @@ jobs:
           test -f reports/security_memory_graph_summary.md
           grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
           grep -q "Related Knowledge" examples/reports/demo-issue-plan.json
+          grep -q "Scan Source Summary" examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
+          grep -q "Generated Arkheionx artifacts ignored" examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
 
       - name: Verify disclaimer is present
         run: |

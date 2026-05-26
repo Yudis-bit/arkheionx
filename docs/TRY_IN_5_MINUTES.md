@@ -44,6 +44,10 @@ python3 scripts/create_github_issues.py \
 
 Dry-run mode makes no GitHub API calls.
 
+Arkheionx ignores its own generated reports and artifacts by default. Re-running
+the demo will not treat previous `examples/reports/demo-*` outputs as source
+evidence.
+
 ## Search The Security Memory Graph
 
 ```sh

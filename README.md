@@ -75,6 +75,10 @@ python3 scripts/create_github_issues.py \
 Dry-run makes no GitHub API calls. The demo uses toy fixtures only and has no
 live-chain behavior.
 
+Arkheionx ignores its own generated reports and artifacts by default when
+scanning a repository. This prevents previous scan outputs from affecting
+future readiness scores.
+
 Read [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and
 [`docs/PUBLIC_DEMO_WORKFLOW.md`](docs/PUBLIC_DEMO_WORKFLOW.md).
 
@@ -590,6 +594,7 @@ Core standards:
 | Track baseline diff | [`docs/BASELINE_DIFF_MODE.md`](docs/BASELINE_DIFF_MODE.md) |
 | Understand semantic-lite evidence | [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md) |
 | Use optional Slither enrichment | [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md) |
+| Understand generated artifact ignores | [`docs/GENERATED_ARTIFACT_IGNORE.md`](docs/GENERATED_ARTIFACT_IGNORE.md) |
 | Reduce false positives | [`docs/FALSE_POSITIVE_REDUCTION.md`](docs/FALSE_POSITIVE_REDUCTION.md) |
 | Review rule calibration | [`docs/RULE_CALIBRATION.md`](docs/RULE_CALIBRATION.md) |
 | Use the security memory graph | [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md) |

@@ -24,6 +24,12 @@
   "report": {
     "max_top_gaps": 5
   },
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [],
+    "extra_ignore_globs": []
+  },
   "analysis": {
     "semantic_lite": true,
     "slither": false,

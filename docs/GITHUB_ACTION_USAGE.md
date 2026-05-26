@@ -332,6 +332,10 @@ with:
 These files are readiness deliverables. They are not formal audit reports and
 do not guarantee security.
 
+Arkheionx ignores its own generated reports and artifacts by default during
+future scans. This prevents old reports, issue plans, SARIF, baselines, and
+delivery outputs from influencing readiness scores or evidence.
+
 ## Local CLI Equivalent
 
 ```sh

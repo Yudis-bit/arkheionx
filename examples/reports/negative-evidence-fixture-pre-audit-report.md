@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/negative-evidence-fixture`
-- Generated at: `2026-05-26T13:58:55+00:00`
+- Generated at: `2026-05-26T15:11:21+00:00`
 - Protocol type: `oracle`
 - Protocol confidence: `high`
 - Files scanned: `4`
-- Scanner version: `0.9.1`
+- Scanner version: `0.9.2`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -16,6 +16,13 @@
 | Docs             | 1     |
 | Configs          | 1     |
 | Workflows        | 0     |
+
+## Scan Source Summary
+
+- Files considered: `4`
+- Files scanned: `4`
+- Files ignored: `0`
+- Generated Arkheionx artifacts ignored: `0`
 
 ## Disclaimer
 

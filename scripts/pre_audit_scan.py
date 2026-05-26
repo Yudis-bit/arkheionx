@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import fnmatch
 import hashlib
 import json
 import os
@@ -23,7 +24,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "0.9.1"
+VERSION = "0.9.2"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
@@ -57,7 +58,13 @@ CONFIG_FILENAMES = {
 }
 IGNORED_DIRS = {
     ".git",
+    ".forge",
+    ".slither",
+    ".venv",
+    "__pycache__",
+    "lib",
     "node_modules",
+    "venv",
     "out",
     "cache",
     "broadcast",
@@ -66,6 +73,62 @@ IGNORED_DIRS = {
     "dist",
     "build",
 }
+
+DEFAULT_GENERATED_ARTIFACT_IGNORE_PATTERNS = [
+    "reports/ARKHEIONX_*.md",
+    "reports/ARKHEIONX_*.json",
+    "reports/arkheionx-*.json",
+    "reports/*.sarif.json",
+    "reports/*.baseline.json",
+    "reports/*-baseline.json",
+    "reports/*-diff*.md",
+    "reports/*-diff*.json",
+    "reports/*-issue-plan.json",
+    "reports/*-issue-checklist.md",
+    "reports/*-issue-dry-run.md",
+    "reports/*-pre-audit-report.md",
+    "reports/*-pre-audit-report.json",
+    "reports/*-launch-report.md",
+    "reports/*-contest-readiness.md",
+    "reports/*-executive-summary.md",
+    "reports/*-remediation-roadmap.md",
+    "reports/*-sprint-plan.md",
+    "reports/*action-summary.md",
+    "reports/*pr-comment.md",
+    "ARKHEIONX_PRE_AUDIT_REPORT.md",
+    "ARKHEIONX_ACTION_SUMMARY.md",
+    "ARKHEIONX_PR_COMMENT.md",
+    "ARKHEIONX_ISSUE_CHECKLIST.md",
+    "ARKHEIONX_ISSUE_PLAN.json",
+    "ARKHEIONX_ISSUE_DRY_RUN.md",
+    "ARKHEIONX_LAUNCH_REPORT.md",
+    "ARKHEIONX_CONTEST_READINESS.md",
+    "ARKHEIONX_EXECUTIVE_SUMMARY.md",
+    "ARKHEIONX_REMEDIATION_ROADMAP.md",
+    "ARKHEIONX_SPRINT_PLAN.md",
+    "arkheionx-report.json",
+    "arkheionx.sarif.json",
+    "arkheionx.baseline.json",
+    "arkheionx-diff.json",
+    "ARKHEIONX_DIFF.md",
+]
+
+ARKHEIONX_GENERATED_CONTENT_MARKERS = [
+    "# Arkheionx Pre-Audit Readiness Report",
+    "# Arkheionx Launch Readiness Report",
+    "# Arkheionx Contest Readiness Report",
+    "# Arkheionx Pre-Audit Sprint Plan",
+    "# Arkheionx Executive Summary",
+    "# Arkheionx Remediation Roadmap",
+    "# Arkheionx Generated Issue Checklist",
+    "# Arkheionx Baseline Diff Report",
+    "<!-- arkheionx-pre-audit-comment -->",
+    "<!-- arkheionx-issue:",
+    "arkheionx_generated",
+    "\"scanner\": \"arkheionx\"",
+    "\"generated_by\": \"arkheionx\"",
+    "\"tool\": \"Arkheionx Pre-Audit Scanner\"",
+]
 
 
 VAULT_ERC4626_TERMS = [
@@ -820,6 +883,23 @@ def config_ignore_paths(config: dict[str, object]) -> list[str]:
     return [str(item) for item in raw if isinstance(item, str)]
 
 
+def config_scan(config: dict[str, object]) -> dict[str, object]:
+    raw = config.get("scan", {})
+    scan = raw if isinstance(raw, dict) else {}
+    extra_ignore_paths = scan.get("extra_ignore_paths", [])
+    extra_ignore_globs = scan.get("extra_ignore_globs", [])
+    return {
+        "ignore_generated_artifacts": bool(scan.get("ignore_generated_artifacts", True)),
+        "include_generated_artifacts": bool(scan.get("include_generated_artifacts", False)),
+        "extra_ignore_paths": [str(item) for item in extra_ignore_paths if isinstance(item, str)]
+        if isinstance(extra_ignore_paths, list)
+        else [],
+        "extra_ignore_globs": [str(item) for item in extra_ignore_globs if isinstance(item, str)]
+        if isinstance(extra_ignore_globs, list)
+        else [],
+    }
+
+
 def config_suppressions(config: dict[str, object]) -> dict[str, dict[str, str]]:
     raw = config.get("suppress_findings", [])
     suppressions: dict[str, dict[str, str]] = {}
@@ -944,10 +1024,98 @@ def is_relevant_file(path: Path) -> bool:
     return False
 
 
+def scan_relative_path(path: Path, root: Path) -> str:
+    try:
+        return rel(path, root)
+    except ValueError:
+        return path.as_posix()
+
+
+def path_matches_glob(path: str, pattern: str) -> bool:
+    return fnmatch.fnmatchcase(path.lower(), normalize_ignore_path(pattern).lower())
+
+
+def is_generated_artifact_path(path: Path, root: Path | None = None) -> bool:
+    relative = scan_relative_path(path, root) if root else normalize_ignore_path(path.as_posix())
+    return any(path_matches_glob(relative, pattern) for pattern in DEFAULT_GENERATED_ARTIFACT_IGNORE_PATTERNS)
+
+
+def is_potential_generated_artifact_candidate(path: Path, root: Path) -> bool:
+    relative = scan_relative_path(path, root)
+    if is_generated_artifact_path(path, root):
+        return True
+    if relative.startswith("reports/") and (path.suffix.lower() in {".md", ".json"} or path.name.lower().endswith(".sarif.json")):
+        return True
+    if path.name.lower().startswith("arkheionx"):
+        return True
+    return False
+
+
+def is_arkheionx_generated_artifact(path: Path, root: Path | None = None, text: str | None = None) -> bool:
+    if root and is_generated_artifact_path(path, root):
+        return True
+    if text is None:
+        return False
+    lower_text = text.lower()
+    return any(marker.lower() in lower_text for marker in ARKHEIONX_GENERATED_CONTENT_MARKERS)
+
+
+def should_ignore_scan_file(path: Path, root: Path, config: dict[str, object] | None = None) -> bool:
+    return ignore_reason_for_scan_file(path, root, config) is not None
+
+
+def ignore_reason_for_scan_file(path: Path, root: Path, config: dict[str, object] | None = None) -> str | None:
+    config = config or {}
+    scan = config_scan(config)
+    ignore_paths = config_ignore_paths(config) + list(scan.get("extra_ignore_paths", []))
+    if ignore_paths and should_ignore_config_path(path, root, ignore_paths):
+        return "configured-ignore-path"
+    relative = scan_relative_path(path, root)
+    for pattern in scan.get("extra_ignore_globs", []):
+        if path_matches_glob(relative, str(pattern)):
+            return "configured-ignore-glob"
+    include_generated = bool(scan.get("include_generated_artifacts", False))
+    ignore_generated = bool(scan.get("ignore_generated_artifacts", True))
+    potential_generated = is_potential_generated_artifact_candidate(path, root)
+    text = read_text_safe(path) if potential_generated else None
+    generated_artifact = is_arkheionx_generated_artifact(path, root, text)
+    if ignore_generated and not include_generated and generated_artifact:
+        return "generated-artifact"
+    if potential_generated and not generated_artifact and not is_relevant_file(path):
+        return "non-source-artifact"
+    return None
+
+
+def filter_scan_files(files: list[Path], root: Path, config: dict[str, object]) -> tuple[list[Path], dict[str, object]]:
+    scanned: list[Path] = []
+    ignored_paths: list[str] = []
+    generated_paths: list[str] = []
+    ignored_by_reason: dict[str, int] = {}
+    for path in files:
+        reason = ignore_reason_for_scan_file(path, root, config)
+        if reason is None:
+            scanned.append(path)
+            continue
+        relative = scan_relative_path(path, root)
+        ignored_paths.append(relative)
+        ignored_by_reason[reason] = ignored_by_reason.get(reason, 0) + 1
+        if reason == "generated-artifact":
+            generated_paths.append(relative)
+    return sorted(set(scanned)), {
+        "files_considered": len(files),
+        "files_scanned": len(set(scanned)),
+        "files_ignored": len(ignored_paths),
+        "generated_artifacts_ignored": len(generated_paths),
+        "ignored_generated_artifact_paths": sorted(generated_paths),
+        "ignored_paths": sorted(ignored_paths),
+        "ignored_by_reason": dict(sorted(ignored_by_reason.items())),
+        "include_generated_artifacts": bool(config_scan(config).get("include_generated_artifacts", False)),
+    }
+
+
 def collect_files(root: Path) -> list[Path]:
     root = root.resolve()
     included: list[Path] = []
-    lib_candidates: list[Path] = []
 
     for current, dirs, files in os.walk(root):
         current_path = Path(current)
@@ -958,19 +1126,10 @@ def collect_files(root: Path) -> list[Path]:
         ]
         for file_name in files:
             path = current_path / file_name
-            if is_relevant_file(path):
+            if is_relevant_file(path) or is_potential_generated_artifact_candidate(path, root):
                 included.append(path)
 
-    lib_dir = root / "lib"
-    if lib_dir.exists() and not any(p.suffix == ".sol" for p in included):
-        for current, dirs, files in os.walk(lib_dir):
-            dirs[:] = [d for d in dirs if d not in IGNORED_DIRS]
-            for file_name in files:
-                path = Path(current) / file_name
-                if is_relevant_file(path):
-                    lib_candidates.append(path)
-
-    return sorted(set(included + lib_candidates))
+    return sorted(set(included))
 
 
 def classify_files(files: Iterable[Path]) -> ClassifiedFiles:
@@ -4108,6 +4267,7 @@ def generate_report(
     historical_patterns: list[HistoricalPattern],
     rule_packs: dict[str, dict[str, object]],
     analysis_quality_data: dict[str, object],
+    scan_sources: dict[str, object],
     score: int,
     score_breakdown: dict[str, dict[str, object]],
     gaps: list[ReadinessGap],
@@ -4160,6 +4320,15 @@ def generate_report(
     lines.append(f"- Scanner version: `{VERSION}`")
     lines.append("")
     lines.append(markdown_table(file_summary))
+    lines.append("")
+    lines.append("## Scan Source Summary")
+    lines.append("")
+    lines.append(f"- Files considered: `{scan_sources.get('files_considered', 0)}`")
+    lines.append(f"- Files scanned: `{scan_sources.get('files_scanned', 0)}`")
+    lines.append(f"- Files ignored: `{scan_sources.get('files_ignored', 0)}`")
+    lines.append(f"- Generated Arkheionx artifacts ignored: `{scan_sources.get('generated_artifacts_ignored', 0)}`")
+    if int(scan_sources.get("generated_artifacts_ignored", 0) or 0) > 0:
+        lines.append("- Generated artifacts were ignored to prevent previous Arkheionx outputs from influencing this scan.")
     lines.append("")
     lines.append("## Disclaimer")
     lines.append("")
@@ -4550,6 +4719,7 @@ def json_report(
     semantic: dict[str, object],
     slither: dict[str, object],
     analysis_quality_data: dict[str, object],
+    scan_sources: dict[str, object],
     negative_evidence: list[dict[str, object]],
     historical_patterns: list[HistoricalPattern],
     gaps: list[ReadinessGap],
@@ -4586,6 +4756,7 @@ def json_report(
         },
         "signals": signals,
         "analysis_quality": analysis_quality_data,
+        "scan_sources": scan_sources,
         "negative_evidence": negative_evidence,
         "semantic_lite": semantic,
         "slither": slither,
@@ -5756,8 +5927,12 @@ def main(argv: list[str] | None = None) -> int:
 
     config_path = Path(args.config).expanduser() if args.config else None
     config, config_warnings = load_local_config(config_path, root)
-    ignore_paths = config_ignore_paths(config)
     analysis_config = config_analysis(config)
+    scan_config = config_scan(config)
+    if scan_config.get("include_generated_artifacts"):
+        config_warnings.append(
+            "Generated Arkheionx artifacts are included by config. This is advanced/debug behavior and may affect readiness scoring."
+        )
     if args.semantic_lite is False:
         analysis_config["semantic_lite"] = False
     if args.slither:
@@ -5765,9 +5940,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.min_confidence_for_issue_plan:
         analysis_config["min_confidence_for_issue_plan"] = args.min_confidence_for_issue_plan
 
-    files = collect_files(root)
-    if ignore_paths:
-        files = [path for path in files if not should_ignore_config_path(path, root, ignore_paths)]
+    files_considered = collect_files(root)
+    files, scan_sources = filter_scan_files(files_considered, root, config)
     classified = classify_files(files)
     contents = corpus(files)
     requested_protocol = args.protocol_type
@@ -5894,6 +6068,7 @@ def main(argv: list[str] | None = None) -> int:
         historical_patterns=historical_patterns,
         rule_packs=rule_packs,
         analysis_quality_data=quality,
+        scan_sources=scan_sources,
         score=score,
         score_breakdown=score_breakdown,
         gaps=gaps,
@@ -5961,6 +6136,7 @@ def main(argv: list[str] | None = None) -> int:
                 semantic,
                 slither,
                 quality,
+                scan_sources,
                 negative_evidence,
                 historical_patterns,
                 gaps,

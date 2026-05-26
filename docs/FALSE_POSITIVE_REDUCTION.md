@@ -59,6 +59,11 @@ them from increasing the readiness score. If a team documents missing tests,
 Arkheionx uses that as remediation context until matching positive tests are
 added.
 
+v0.9.2 also ignores generated Arkheionx artifacts by default. Previous reports
+often contain finding titles such as "without role-boundary tests"; those
+generated phrases are not source evidence and should not create negative
+evidence in later scans.
+
 ## Config Tuning
 
 ```json

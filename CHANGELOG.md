@@ -3,7 +3,24 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v0.9.1 - Unreleased
+## v0.9.2 - Unreleased
+
+### Fixed
+
+- Generated Arkheionx reports, SARIF files, baselines, issue plans, dry-run
+  outputs, launch reports, contest readiness reports, and remediation roadmaps
+  are ignored as source evidence by default.
+- Repeated scans no longer ingest previous Arkheionx outputs.
+- Negative evidence no longer comes from generated report text.
+- Scan source accounting now reports ignored generated artifacts.
+
+### Safety
+
+- No live-chain/RPC behavior added.
+- No exploit automation added.
+- Generated outputs remain local/static artifacts.
+
+## v0.9.1
 
 ### Fixed
 

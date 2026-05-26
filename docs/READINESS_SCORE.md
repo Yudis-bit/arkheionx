@@ -100,6 +100,11 @@ Those statements can reduce or cap relevant score categories and appear as
 `negative_evidence` in JSON so teams can see why readiness credit was not
 awarded.
 
+v0.9.2 adds a generated-artifact ignore guard. Previous Arkheionx reports,
+SARIF, baselines, issue plans, and delivery artifacts are ignored as source
+evidence by default. Re-running the scanner with outputs inside `reports/`
+should not increase score or findings because of old generated text.
+
 ## How To Improve The Score
 
 Practical improvements:

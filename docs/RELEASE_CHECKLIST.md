@@ -235,6 +235,16 @@ written reason in the release PR.
 - [ ] Docs explain that historical similarity is not vulnerability
       confirmation.
 
+## v0.9.2 Self-Ingestion Checks
+
+- [ ] Generated Arkheionx artifacts inside `reports/` are ignored by default.
+- [ ] JSON reports include `scan_sources.generated_artifacts_ignored`.
+- [ ] Markdown reports include `Scan Source Summary`.
+- [ ] Negative evidence does not come from generated report text.
+- [ ] Repeated scans with previous outputs keep score and finding IDs stable
+      unless source files changed.
+- [ ] `tests/test_generated_artifact_ignore.py` passes.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.
