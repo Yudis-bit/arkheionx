@@ -34,7 +34,27 @@ validate:
 		scripts/search_knowledge.py \
 		scripts/check_docs_links.py \
 		scripts/check_version_consistency.py \
-		scripts/check_safety_wording.py
+		scripts/check_safety_wording.py \
+		arkheionx/__init__.py \
+		arkheionx/version.py \
+		arkheionx/core/models.py \
+		arkheionx/core/paths.py \
+		arkheionx/core/files.py \
+		arkheionx/core/constants.py \
+		arkheionx/core/safety.py \
+		arkheionx/config/loader.py \
+		arkheionx/config/suppressions.py \
+		arkheionx/rules/registry.py \
+		arkheionx/rules/ids.py \
+		arkheionx/reports/artifacts.py \
+		arkheionx/knowledge/search.py \
+		arkheionx/generators/test_plan.py \
+		arkheionx/generators/feedback_dashboard.py \
+		arkheionx/generators/paid_offer_index.py \
+		arkheionx/generators/ecosystem_report.py \
+		arkheionx/cli/main.py
+	python3 -m arkheionx.cli.main version
+	python3 -m arkheionx.cli.main doctor
 	python3 -m unittest discover -s tests -p "test_*.py"
 	python3 scripts/generate_knowledge_graph.py --check
 	python3 scripts/generate_feedback_dashboard.py --check

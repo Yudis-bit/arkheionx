@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check v1.5.0 invariant/test-plan release-prep version wording."""
+"""Check v1.6.0 internal-engine release-prep version wording."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,13 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, SCANNER_VERSION, STABLE_RELEASE  # noqa: E402
+
+
+STABLE_ACTION = f"Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@{STABLE_RELEASE}"
 
 
 def read(path: str) -> str:
@@ -24,23 +30,23 @@ def check() -> list[str]:
     action_docs = read("docs/GITHUB_ACTION_USAGE.md")
     scanner = read("scripts/pre_audit_scan.py")
 
-    if 'VERSION = "1.5.0"' not in scanner:
-        failures.append("scripts/pre_audit_scan.py does not set VERSION to 1.5.0")
-    if "Latest stable release: **v1.4.0" not in readme:
-        failures.append("README.md does not name v1.4.0 as latest stable release")
-    if "## v1.5.0 - Unreleased" not in changelog:
-        failures.append("CHANGELOG.md is missing v1.5.0 - Unreleased")
-    if "## v1.4.0" not in changelog or "## v1.4.0 - Unreleased" in changelog:
-        failures.append("CHANGELOG.md does not treat v1.4.0 as released")
-    if "v1.5.0" not in roadmap or "Invariant/Test Plan Generator Upgrade current milestone" not in roadmap:
-        failures.append("docs/ROADMAP.md does not mark v1.5.0 as current invariant/test-plan milestone")
-    if "v1.6.0" not in roadmap or "Internal Engine Split" not in roadmap:
-        failures.append("docs/ROADMAP.md does not keep v1.6.0 as next milestone")
+    if "VERSION = SCANNER_VERSION" not in scanner and f'VERSION = "{SCANNER_VERSION}"' not in scanner:
+        failures.append(f"scripts/pre_audit_scan.py does not use scanner version {SCANNER_VERSION}")
+    if f"Latest stable release: **{STABLE_RELEASE}" not in readme:
+        failures.append(f"README.md does not name {STABLE_RELEASE} as latest stable release")
+    if f"## {CURRENT_MILESTONE} - Unreleased" not in changelog:
+        failures.append(f"CHANGELOG.md is missing {CURRENT_MILESTONE} - Unreleased")
+    if "## v1.5.0" not in changelog or "## v1.5.0 - Unreleased" in changelog:
+        failures.append("CHANGELOG.md does not treat v1.5.0 as released")
+    if CURRENT_MILESTONE not in roadmap or "Internal Engine Split current milestone" not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not mark {CURRENT_MILESTONE} as current internal-engine milestone")
+    if NEXT_MILESTONE not in roadmap or "Config + Rule Pack Stabilization" not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not keep {NEXT_MILESTONE} as next milestone")
     if STABLE_ACTION not in readme:
-        failures.append("README.md is missing stable @v1.4.0 action example")
+        failures.append(f"README.md is missing stable {STABLE_RELEASE} action example")
     if STABLE_ACTION not in action_docs:
-        failures.append("docs/GITHUB_ACTION_USAGE.md is missing stable @v1.4.0 action example")
-    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*|v1\.2\.0[^*]*|v1\.3\.0[^*]*)", readme)
+        failures.append(f"docs/GITHUB_ACTION_USAGE.md is missing stable {STABLE_RELEASE} action example")
+    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*|v1\.2\.0[^*]*|v1\.3\.0[^*]*|v1\.4\.0[^*]*)", readme)
     if stale:
         failures.append("README.md still has stale latest stable wording")
     if "## v1.0.0 - Unreleased" in changelog:

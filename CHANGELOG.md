@@ -3,7 +3,40 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.5.0 - Unreleased
+## v1.6.0 - Unreleased
+
+### Added
+
+- Internal `arkheionx/` package scaffold.
+- Shared version module.
+- Core helper modules.
+- Rule registry module.
+- Generator module extraction.
+- Preview internal CLI commands.
+- Internal engine split docs.
+- Package architecture docs.
+- CLI roadmap docs.
+
+### Improved
+
+- Generator scripts now begin using reusable package modules.
+- Version and rule-pack metadata are easier to maintain.
+- v2.0 CLI/package path is documented.
+
+### Safety
+
+- No scanner capability expansion.
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- Existing script entrypoints preserved.
+
+### Known Limitations
+
+- This is not the final v2 CLI.
+- `scripts/pre_audit_scan.py` remains the primary scanner entrypoint.
+- Only low-risk helpers were extracted.
+
+## v1.5.0
 
 ### Added
 

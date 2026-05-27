@@ -1,0 +1,96 @@
+"""Shared safety wording for Arkheionx checks and generated artifacts."""
+from __future__ import annotations
+
+BANNED_PHRASES = [
+    "guaranteed secure",
+    "audit replacement",
+    "cheap audit",
+    "fully verified database",
+    "bounty guaranteed",
+    "live exploit",
+    "profit calculator",
+    "attack live protocol",
+    "autonomous exploit runner",
+    "weaponize",
+    "drain helper",
+    "guaranteed bounty",
+    "guaranteed findings",
+    "auto exploit",
+    "paid customer",
+    "fake adoption",
+    "customer claim",
+    "trusted by",
+    "adopted by",
+    "proven in production",
+    "official audit",
+    "certification",
+    "security guarantee",
+    "bounty guarantee",
+    "exploit discovery guarantee",
+    "official ecosystem partner",
+    "ecosystem certified",
+    "audit certified",
+    "trusted by ecosystems",
+    "customer-proven",
+    "adopted by ecosystems",
+    "guaranteed security",
+    "official audit partner",
+    "amm exploit generator",
+    "lending exploit generator",
+    "liquidation bot",
+    "attack simulator",
+    "drain simulation",
+    "guaranteed liquidation profit",
+    "arbitrage exploit",
+    "live amm attack",
+    "live lending attack",
+    "exploit skeleton",
+    "exploit test generator",
+    "attack invariant",
+    "drain invariant",
+    "profit invariant",
+    "guaranteed invariant coverage",
+    "proof of safety",
+    "formal verification guarantee",
+    "automated exploit test",
+    "liquidation attack test",
+]
+
+CLEAR_PROHIBITION_CONTEXT = [
+    "do not",
+    "does not",
+    "without",
+    "not ",
+    "no ",
+    "must not",
+    "never",
+    "prohibited",
+    "disallowed",
+    "unsafe phrase",
+    "banned",
+    "avoid",
+    "not included",
+    "not allowed",
+    "claim boundaries",
+    "exclusions",
+    "does not buy",
+    "does not provide",
+    "what this is not",
+    "what paid work does not include",
+    "what this work does not include",
+    "disallowed language",
+    "words to avoid",
+    "not_included",
+    "not recommended",
+]
+
+LOCAL_ONLY_DISCLAIMER = (
+    "Arkheionx uses authorized local/static repository analysis only. It does "
+    "not perform RPC calls, live-chain calls, transaction execution, deployed "
+    "contract scanning, or exploit automation."
+)
+
+READINESS_DISCLAIMER = (
+    "Arkheionx output is a defensive readiness planning artifact, not a formal "
+    "audit, formal verification, proof of safety, or security guarantee."
+)

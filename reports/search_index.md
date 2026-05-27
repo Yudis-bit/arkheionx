@@ -22,6 +22,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Invariant test plan generator | [`docs/INVARIANT_TEST_PLAN_GENERATOR.md`](../docs/INVARIANT_TEST_PLAN_GENERATOR.md) | invariant generator, test plan generator, suggested tests |
 | Foundry invariant skeletons | [`docs/FOUNDRY_INVARIANT_SKELETONS.md`](../docs/FOUNDRY_INVARIANT_SKELETONS.md) | Foundry invariant skeleton, invariant candidates, local scaffold |
 | Invariant safety boundaries | [`docs/INVARIANT_SAFETY_BOUNDARIES.md`](../docs/INVARIANT_SAFETY_BOUNDARIES.md) | invariant safety, local-only skeletons, human review |
+| Internal engine split | [`docs/INTERNAL_ENGINE_SPLIT.md`](../docs/INTERNAL_ENGINE_SPLIT.md) | internal engine split, package scaffold, script compatibility |
+| Package architecture | [`docs/PACKAGE_ARCHITECTURE.md`](../docs/PACKAGE_ARCHITECTURE.md) | package architecture, arkheionx package, core engine |
+| CLI roadmap | [`docs/CLI_ROADMAP.md`](../docs/CLI_ROADMAP.md) | CLI roadmap, installable CLI, v2 package path |
 | v1.0 release notes draft | [`docs/V1_0_RELEASE_NOTES_DRAFT.md`](../docs/V1_0_RELEASE_NOTES_DRAFT.md) | v1.0.0, release notes, stable public release |
 | Feedback loop | [`docs/FEEDBACK_LOOP.md`](../docs/FEEDBACK_LOOP.md) | feedback loop, false positive report, external calibration |
 | Public feedback guide | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](../docs/PUBLIC_FEEDBACK_GUIDE.md) | public feedback, safe disclosure, report quality |
@@ -44,6 +47,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Ecosystem pilot metadata | [`metadata/ecosystem_pilot_example.json`](../metadata/ecosystem_pilot_example.json) | synthetic ecosystem pilot, ecosystem data model, repo aliases |
 | Ecosystem report generator | [`scripts/generate_ecosystem_report.py`](../scripts/generate_ecosystem_report.py) | ecosystem report generator, check mode, local static |
 | Test plan generator | [`scripts/generate_test_plan.py`](../scripts/generate_test_plan.py) | test plan generator, invariant generator, check mode |
+| Arkheionx package | [`arkheionx/__init__.py`](../arkheionx/__init__.py) | arkheionx package, internal engine split, package imports |
+| Version module | [`arkheionx/version.py`](../arkheionx/version.py) | version module, stable release, current milestone |
+| Rule registry module | [`arkheionx/rules/registry.py`](../arkheionx/rules/registry.py) | rule registry, rule packs, core engine |
+| Generator modules | [`arkheionx/generators/test_plan.py`](../arkheionx/generators/test_plan.py) | generator modules, test plan module, package extraction |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -175,6 +182,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `Arkheionx` | Arkheionx Security Memory, Arkheionx Readiness, pre-audit readiness OS, GitHub-native security memory | product | GitHub Action, Markdown report, SARIF output, baseline diff | arkheionx, security-memory, pre-audit-readiness, indie-defi |
 | `GitHub repo surface` | repository about, repository topics, public surface polish, GitHub About description | public surface | docs/GITHUB_REPO_SURFACE.md, README.md, scripts/github_surface_setup.sh | github-repo-surface, repository-about, public-surface-polish |
 | `security memory OS` | DeFi Security Memory OS, Arkheionx positioning, pre-audit readiness OS | product positioning | README.md, docs/GITHUB_REPO_SURFACE.md, docs/SECURITY_MEMORY_GRAPH.md | security-memory-os, arkheionx-positioning, pre-audit-readiness |
+| `internal engine split` | v1.6.0 internal modularization, script to package migration, core engine split | architecture | docs/INTERNAL_ENGINE_SPLIT.md, docs/PACKAGE_ARCHITECTURE.md, arkheionx/version.py | internal-engine-split, package-architecture, v1.6.0 |
+| `package architecture` | arkheionx package, core engine, package scaffold, modular engine | architecture | arkheionx/core/models.py, arkheionx/core/files.py, arkheionx/rules/registry.py | arkheionx-package, core-engine, package-scaffold |
+| `CLI roadmap` | installable CLI, v2 package path, preview internal CLI, python module CLI | architecture | docs/CLI_ROADMAP.md, arkheionx/cli/main.py, docs/CLI_REFERENCE.md | cli-roadmap, installable-cli, v2-package-path |
+| `rule registry` | rule-pack registry, RULE_PACKS, rule family metadata, canonical rule packs | architecture | arkheionx/rules/registry.py, docs/RULE_PACKS.md, reports/search_index.md | rule-registry, rule-packs, core-engine |
+| `generator modules` | test plan module, feedback module, ecosystem report module, paid offer module | architecture | arkheionx/generators/test_plan.py, arkheionx/generators/ecosystem_report.py, arkheionx/generators/feedback_dashboard.py | generator-modules, package-extraction, internal-engine-split |
 | `GitHub Action` | pre-audit action, Arkheionx action, GitHub-native scanner, Actions summary | GitHub-native workflow | Markdown report, JSON report, PR comment, issue checklist, SARIF | github-action, ci, pre-audit-readiness |
 | `security memory` | DeFi security memory, historical exploit memory, root-cause knowledge base, security knowledge base | research archive | registry, search index, research dashboard, PoC maturity index | security-memory, root-cause-analysis, exploit-research |
 | `readiness gap` | audit blocker, risk signal, review recommended, missing invariant | pre-audit readiness | finding ID, finding fingerprint, issue checklist, baseline diff | readiness-gap, audit-readiness, defensive-review |
@@ -290,6 +302,22 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `lending invariant skeleton` | lending test plan, lending Foundry skeleton, collateral debt skeleton | lending | examples/reports/ArkheionxLendingInvariants.t.sol, docs/LENDING_RULE_PACK.md | lending-invariant-skeleton, collateral-debt, liquidation-boundary |
 | `oracle test plan` | stale oracle test plan, oracle freshness tests, oracle invariant candidates | oracle | ARK-ORC-001, metadata/finding_test_plan_map.json | oracle-test-plan, stale-price, heartbeat |
 | `reward index invariant` | reward accumulator invariant, reward index monotonicity, staking index test | reward | ARK-RWD-002, docs/REWARD_ACCOUNTING_RULE_PACK.md | reward-index, accumulator, staking |
+
+## Rule Pack Registry
+
+Generated from `arkheionx.rules.registry.RULE_PACKS`.
+
+| Key | Rule pack | Prefix | Docs |
+|---|---|---|---|
+| `access-control` | Access Control Rule Pack | `ARK-ACC` | [`docs/ACCESS_CONTROL_RULE_PACK.md`](../docs/ACCESS_CONTROL_RULE_PACK.md) |
+| `amm` | AMM Rule Pack | `ARK-AMM` | [`docs/AMM_RULE_PACK.md`](../docs/AMM_RULE_PACK.md) |
+| `docs` | Documentation Readiness | `ARK-DOC` | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) |
+| `lending` | Lending Rule Pack | `ARK-LEND` | [`docs/LENDING_RULE_PACK.md`](../docs/LENDING_RULE_PACK.md) |
+| `oracle` | Oracle Rule Pack | `ARK-ORC` | [`docs/ORACLE_RULE_PACK.md`](../docs/ORACLE_RULE_PACK.md) |
+| `reentrancy-value-flow` | Reentrancy Value Flow Rule Pack | `ARK-REENT` | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](../docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) |
+| `rewards` | Reward Accounting Rule Pack | `ARK-RWD` | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](../docs/REWARD_ACCOUNTING_RULE_PACK.md) |
+| `testing` | Testing Readiness | `ARK-TST` | [`docs/READINESS_SCORE.md`](../docs/READINESS_SCORE.md) |
+| `vault` | Vault Rule Pack | `ARK-VLT` | [`docs/VAULT_RULE_PACK.md`](../docs/VAULT_RULE_PACK.md) |
 
 ## Historical Memory Index
 
@@ -495,4 +523,13 @@ vault invariant
 liquidation boundary test
 collateral debt invariant
 reward index invariant
+internal engine split
+package architecture
+CLI roadmap
+arkheionx package
+core engine
+rule registry
+generator modules
+installable CLI
+v2 package path
 ```

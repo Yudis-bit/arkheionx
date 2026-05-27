@@ -606,5 +606,5 @@
     "Pair ordering documentation with a local receiver test that exercises the documented boundary."
   ],
   "tool": "Arkheionx Test Plan Generator",
-  "version": "1.5.0"
+  "version": "1.6.0"
 }

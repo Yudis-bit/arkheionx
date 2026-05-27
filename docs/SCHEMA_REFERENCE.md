@@ -27,7 +27,7 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.5.0"
+  "version": "1.6.0"
 }
 ```
 
@@ -43,6 +43,9 @@ v1.5.0 adds optional `suggested_tests`, `invariant_candidates`, and
 `test_plan` fields to finding objects, plus a separate generated test-plan JSON
 artifact. These are additive planning fields and remain defensive readiness
 metadata.
+
+v1.6.0 is an internal engine split. It does not change the public schema
+version or add required fields.
 
 ## Compatibility Policy
 

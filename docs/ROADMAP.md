@@ -66,12 +66,16 @@ committed artifacts support it.
 - [x] **v1.4.0: AMM + Lending Protocol Packs released.**
       Defensive readiness rule packs, fixtures, reports, and knowledge mappings
       for AMM and lending protocol shapes.
-- [ ] **v1.5.0: Invariant/Test Plan Generator Upgrade current milestone.**
-      Better protocol-specific invariant and test-plan scaffolding for
-      readiness findings.
-- [ ] **v1.6.0: Internal Engine Split.**
-      Internal scanner module separation to make future rule-pack and report
-      work easier to maintain without changing the stable CLI surface.
+- [x] **v1.5.0: Invariant/Test Plan Generator Upgrade released.**
+      Finding-to-test-plan mapping, defensive test-plan generator, and safe
+      Foundry starter skeletons for readiness findings.
+- [ ] **v1.6.0: Internal Engine Split current milestone.**
+      Internal package scaffold, shared helper modules, rule registry metadata,
+      generator extraction, and preview CLI health commands without changing
+      the stable script surface.
+- [ ] **v1.7.0: Config + Rule Pack Stabilization.**
+      Continue modularizing configuration, suppressions, and rule-pack
+      metadata after the internal package boundary is stable.
 - [ ] **v2.0.0: Installable CLI/package target.**
       Package distribution only after schemas, docs, and GitHub-native flows
       remain stable.

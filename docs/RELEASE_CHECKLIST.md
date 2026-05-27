@@ -402,6 +402,28 @@ written reason in the release PR.
 - [ ] Safety wording check passes in strict mode.
 - [ ] Unit tests pass.
 
+## v1.6.0 Internal Engine Split Checks
+
+- [ ] `arkheionx/` package scaffold exists.
+- [ ] `arkheionx/version.py` exposes `1.6.0-dev`, `v1.5.0`, `v1.6.0`, and
+      `v1.7.0` milestone metadata.
+- [ ] Core helper modules exist under `arkheionx/core/`.
+- [ ] Rule registry exists under `arkheionx/rules/`.
+- [ ] Generator extraction starts under `arkheionx/generators/`.
+- [ ] `python3 -m arkheionx.cli.main version` exits 0.
+- [ ] `python3 -m arkheionx.cli.main doctor` exits 0.
+- [ ] Existing script entrypoints still run.
+- [ ] `scripts/generate_test_plan.py --check` passes.
+- [ ] Ecosystem, paid-offer, and feedback generator checks pass.
+- [ ] Search index includes internal engine, package architecture, and CLI
+      roadmap surfaces.
+- [ ] No scanner capability expansion, RPC/live-chain behavior, exploit
+      automation, or formal-audit claims added.
+- [ ] Docs link check passes.
+- [ ] Version consistency check passes.
+- [ ] Safety wording check passes in strict mode.
+- [ ] Unit tests pass.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

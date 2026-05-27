@@ -657,5 +657,5 @@
     "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy."
   ],
   "tool": "Arkheionx Test Plan Generator",
-  "version": "1.5.0"
+  "version": "1.6.0"
 }

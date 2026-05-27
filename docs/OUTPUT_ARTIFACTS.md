@@ -81,3 +81,9 @@ v1.5.0 adds defensive test-plan artifacts generated from report JSON:
 
 These skeletons are starter scaffolds with TODO placeholders. They are not
 formal verification and require project-specific review.
+
+## Internal Engine Split
+
+v1.6.0 does not add new public output artifact shapes. It adds the internal
+`arkheionx/` package scaffold and begins moving generator internals behind the
+same script entrypoints and output paths.

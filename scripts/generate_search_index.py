@@ -9,6 +9,11 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from arkheionx.rules.registry import RULE_PACKS  # noqa: E402
+
 REGISTRY_PATH = REPO_ROOT / "metadata" / "registry.json"
 SEARCH_TERMS_PATH = REPO_ROOT / "metadata" / "search_terms.json"
 OUTPUT_PATH = REPO_ROOT / "reports" / "search_index.md"
@@ -24,6 +29,9 @@ STATIC_INDEX = [
     ("Invariant test plan generator", "docs/INVARIANT_TEST_PLAN_GENERATOR.md", ["invariant generator", "test plan generator", "suggested tests"]),
     ("Foundry invariant skeletons", "docs/FOUNDRY_INVARIANT_SKELETONS.md", ["Foundry invariant skeleton", "invariant candidates", "local scaffold"]),
     ("Invariant safety boundaries", "docs/INVARIANT_SAFETY_BOUNDARIES.md", ["invariant safety", "local-only skeletons", "human review"]),
+    ("Internal engine split", "docs/INTERNAL_ENGINE_SPLIT.md", ["internal engine split", "package scaffold", "script compatibility"]),
+    ("Package architecture", "docs/PACKAGE_ARCHITECTURE.md", ["package architecture", "arkheionx package", "core engine"]),
+    ("CLI roadmap", "docs/CLI_ROADMAP.md", ["CLI roadmap", "installable CLI", "v2 package path"]),
     ("v1.0 release notes draft", "docs/V1_0_RELEASE_NOTES_DRAFT.md", ["v1.0.0", "release notes", "stable public release"]),
     ("Feedback loop", "docs/FEEDBACK_LOOP.md", ["feedback loop", "false positive report", "external calibration"]),
     ("Public feedback guide", "docs/PUBLIC_FEEDBACK_GUIDE.md", ["public feedback", "safe disclosure", "report quality"]),
@@ -46,6 +54,10 @@ STATIC_INDEX = [
     ("Ecosystem pilot metadata", "metadata/ecosystem_pilot_example.json", ["synthetic ecosystem pilot", "ecosystem data model", "repo aliases"]),
     ("Ecosystem report generator", "scripts/generate_ecosystem_report.py", ["ecosystem report generator", "check mode", "local static"]),
     ("Test plan generator", "scripts/generate_test_plan.py", ["test plan generator", "invariant generator", "check mode"]),
+    ("Arkheionx package", "arkheionx/__init__.py", ["arkheionx package", "internal engine split", "package imports"]),
+    ("Version module", "arkheionx/version.py", ["version module", "stable release", "current milestone"]),
+    ("Rule registry module", "arkheionx/rules/registry.py", ["rule registry", "rule packs", "core engine"]),
+    ("Generator modules", "arkheionx/generators/test_plan.py", ["generator modules", "test plan module", "package extraction"]),
     ("Services", "SERVICES.md", ["Launch Report", "Pre-Audit Sprint", "Contest Readiness Pack", "Ecosystem Pack"]),
     ("Pre-Audit Readiness OS", "docs/PRE_AUDIT_READINESS_OS.md", ["scanner", "readiness gap", "historical pattern similarity"]),
     ("GitHub Action usage", "docs/GITHUB_ACTION_USAGE.md", ["github-action", "SARIF", "baseline diff", "PR comment"]),
@@ -219,6 +231,25 @@ def render_search_terms_section() -> list[str]:
     return lines
 
 
+def render_rule_pack_registry_section() -> list[str]:
+    lines = ["## Rule Pack Registry", ""]
+    lines.append("Generated from `arkheionx.rules.registry.RULE_PACKS`.")
+    lines.append("")
+    lines.append("| Key | Rule pack | Prefix | Docs |")
+    lines.append("|---|---|---|---|")
+    for key, item in sorted(RULE_PACKS.items()):
+        lines.append(
+            "| `{key}` | {name} | `{prefix}` | [`{docs}`](../{docs}) |".format(
+                key=key,
+                name=item["display_name"],
+                prefix=item["prefix"],
+                docs=item["docs"],
+            )
+        )
+    lines.append("")
+    return lines
+
+
 def render_static_section() -> list[str]:
     lines = ["## Product Surface Index", ""]
     lines.append("| Surface | Path | Search tags |")
@@ -245,6 +276,7 @@ def render() -> str:
     ]
     lines.extend(render_static_section())
     lines.extend(render_search_terms_section())
+    lines.extend(render_rule_pack_registry_section())
     lines.extend(render_registry_section())
     lines.extend(
         [
@@ -427,6 +459,15 @@ def render() -> str:
             "liquidation boundary test",
             "collateral debt invariant",
             "reward index invariant",
+            "internal engine split",
+            "package architecture",
+            "CLI roadmap",
+            "arkheionx package",
+            "core engine",
+            "rule registry",
+            "generator modules",
+            "installable CLI",
+            "v2 package path",
             "```",
             "",
         ]

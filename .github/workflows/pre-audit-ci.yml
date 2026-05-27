@@ -15,6 +15,7 @@ on:
       - "scripts/check_docs_links.py"
       - "scripts/check_version_consistency.py"
       - "scripts/check_safety_wording.py"
+      - "arkheionx/**"
       - "tests/**"
       - "schemas/**"
       - "Makefile"
@@ -86,6 +87,30 @@ jobs:
           python3 -m py_compile scripts/check_docs_links.py
           python3 -m py_compile scripts/check_version_consistency.py
           python3 -m py_compile scripts/check_safety_wording.py
+          python3 -m py_compile \
+            arkheionx/__init__.py \
+            arkheionx/version.py \
+            arkheionx/core/models.py \
+            arkheionx/core/paths.py \
+            arkheionx/core/files.py \
+            arkheionx/core/constants.py \
+            arkheionx/core/safety.py \
+            arkheionx/config/loader.py \
+            arkheionx/config/suppressions.py \
+            arkheionx/rules/registry.py \
+            arkheionx/rules/ids.py \
+            arkheionx/reports/artifacts.py \
+            arkheionx/knowledge/search.py \
+            arkheionx/generators/test_plan.py \
+            arkheionx/generators/feedback_dashboard.py \
+            arkheionx/generators/paid_offer_index.py \
+            arkheionx/generators/ecosystem_report.py \
+            arkheionx/cli/main.py
+
+      - name: Verify preview package CLI
+        run: |
+          python3 -m arkheionx.cli.main version
+          python3 -m arkheionx.cli.main doctor
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
@@ -481,7 +506,7 @@ jobs:
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.5.0"
+              assert data["version"] == "1.6.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -529,7 +554,7 @@ jobs:
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.5.0"
+              assert plan["version"] == "1.6.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -546,7 +571,7 @@ jobs:
           ]:
               test_plan = json.load(open(path, encoding="utf-8"))
               assert test_plan["tool"] == "Arkheionx Test Plan Generator"
-              assert test_plan["version"] == "1.5.0"
+              assert test_plan["version"] == "1.6.0"
               assert test_plan["suggested_tests"]
               assert test_plan["invariant_candidates"]
               assert test_plan["manual_review_required"] is True

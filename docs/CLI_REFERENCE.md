@@ -100,3 +100,16 @@ python3 scripts/generate_test_plan.py \
 
 Generated skeletons are local starter scaffolds with TODO placeholders. They
 are not formal verification and require human review.
+
+## Preview Internal Package CLI
+
+v1.6.0 adds a package preview for internal engine health checks. Existing
+scripts remain the supported scanner and generator entrypoints.
+
+```sh
+python3 -m arkheionx.cli.main version
+python3 -m arkheionx.cli.main doctor
+```
+
+The preview CLI has no scan command yet. It does not add RPC, live-chain,
+transaction, remote-cloning, deployed-contract, or exploit-automation behavior.

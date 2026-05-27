@@ -5,6 +5,20 @@ Arkheionx Vault archive plus pre-audit readiness, security memory, reporting,
 and feedback calibration tooling. All scripts are pure-stdlib Python 3.11+ and
 run from the repository root unless noted.
 
+## Internal Package Preview
+
+v1.6.0 begins the internal engine split. Shared helpers now live under
+`arkheionx/`, but the scripts in this directory remain the supported entrypoints
+for scans, generated reports, indexes, dashboards, and validation checks.
+
+```sh
+python3 -m arkheionx.cli.main version
+python3 -m arkheionx.cli.main doctor
+```
+
+The preview package CLI is for health checks only. It does not replace
+`scripts/pre_audit_scan.py`.
+
 ## `pre_audit_scan.py`
 
 Runs the GitHub-native pre-audit readiness scanner. It inspects local

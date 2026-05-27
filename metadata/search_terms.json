@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -25,6 +25,46 @@
       "related_patterns": ["security memory plus pre-audit readiness workflow"],
       "related_checks": ["README.md", "docs/GITHUB_REPO_SURFACE.md", "docs/SECURITY_MEMORY_GRAPH.md"],
       "search_tags": ["security-memory-os", "arkheionx-positioning", "pre-audit-readiness"]
+    },
+    {
+      "term": "internal engine split",
+      "aliases": ["v1.6.0 internal modularization", "script to package migration", "core engine split"],
+      "category": "architecture",
+      "related_patterns": ["incremental package extraction without scanner behavior expansion"],
+      "related_checks": ["docs/INTERNAL_ENGINE_SPLIT.md", "docs/PACKAGE_ARCHITECTURE.md", "arkheionx/version.py"],
+      "search_tags": ["internal-engine-split", "package-architecture", "v1.6.0"]
+    },
+    {
+      "term": "package architecture",
+      "aliases": ["arkheionx package", "core engine", "package scaffold", "modular engine"],
+      "category": "architecture",
+      "related_patterns": ["future installable CLI/package preparation"],
+      "related_checks": ["arkheionx/core/models.py", "arkheionx/core/files.py", "arkheionx/rules/registry.py"],
+      "search_tags": ["arkheionx-package", "core-engine", "package-scaffold"]
+    },
+    {
+      "term": "CLI roadmap",
+      "aliases": ["installable CLI", "v2 package path", "preview internal CLI", "python module CLI"],
+      "category": "architecture",
+      "related_patterns": ["future v2 installable package path"],
+      "related_checks": ["docs/CLI_ROADMAP.md", "arkheionx/cli/main.py", "docs/CLI_REFERENCE.md"],
+      "search_tags": ["cli-roadmap", "installable-cli", "v2-package-path"]
+    },
+    {
+      "term": "rule registry",
+      "aliases": ["rule-pack registry", "RULE_PACKS", "rule family metadata", "canonical rule packs"],
+      "category": "architecture",
+      "related_patterns": ["shared rule-pack metadata for docs and future engine use"],
+      "related_checks": ["arkheionx/rules/registry.py", "docs/RULE_PACKS.md", "reports/search_index.md"],
+      "search_tags": ["rule-registry", "rule-packs", "core-engine"]
+    },
+    {
+      "term": "generator modules",
+      "aliases": ["test plan module", "feedback module", "ecosystem report module", "paid offer module"],
+      "category": "architecture",
+      "related_patterns": ["generator scripts backed by reusable package modules"],
+      "related_checks": ["arkheionx/generators/test_plan.py", "arkheionx/generators/ecosystem_report.py", "arkheionx/generators/feedback_dashboard.py"],
+      "search_tags": ["generator-modules", "package-extraction", "internal-engine-split"]
     },
     {
       "term": "GitHub Action",
