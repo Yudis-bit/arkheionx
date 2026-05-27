@@ -42,6 +42,15 @@ BANNED_PHRASES = [
     "adopted by ecosystems",
     "guaranteed security",
     "official audit partner",
+    "amm exploit generator",
+    "lending exploit generator",
+    "liquidation bot",
+    "attack simulator",
+    "drain simulation",
+    "guaranteed liquidation profit",
+    "arbitrage exploit",
+    "live amm attack",
+    "live lending attack",
 ]
 CLEAR_PROHIBITION_CONTEXT = [
     "do not",

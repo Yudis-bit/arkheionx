@@ -7,7 +7,7 @@ no live-chain access.
 Stable examples use:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
 ```
 
 Use `@main` only for development/testing of unreleased changes.
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
         with:
           root: "."
           protocol-type: "auto"
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
         with:
           root: "."
           protocol-type: "auto"
@@ -84,12 +84,12 @@ jobs:
 
 SARIF results are readiness gaps, not confirmed vulnerabilities.
 
-## Stable v1.2.x Inputs
+## Stable v1.3.x Inputs
 
 | Input | Default | Stable | Purpose |
 |---|---|---|---|
 | `root` | `.` | Yes | Repository root to scan. |
-| `protocol-type` | `auto` | Yes | Protocol hint. |
+| `protocol-type` | `auto` | Yes | Protocol hint: `auto`, `vault`, `amm`, `lending`, `staking`, `oracle`, or `generic`. |
 | `output` | `ARKHEIONX_PRE_AUDIT_REPORT.md` | Yes | Markdown report path. |
 | `json-output` | empty | Yes | JSON report path. |
 | `sarif-output` | empty | Yes | SARIF output path. |
@@ -150,7 +150,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
     with:
       protocol-type: "auto"
       json-output: "reports/arkheionx-report.json"
@@ -187,7 +187,7 @@ and local; Arkheionx does not install Slither automatically.
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
     with:
       protocol-type: "auto"
       slither: "true"

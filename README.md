@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.2.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.3.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,16 +126,15 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.2.0 - Paid Offer Refinement**.
+Latest stable release: **v1.3.0 - Ecosystem Pack**.
 
-v1.2.0 keeps the stable readiness surface and adds clear paid-readiness
-packaging:
+v1.3.0 keeps the stable readiness surface and adds ecosystem-level readiness
+workflow materials:
 
-- Readiness Snapshot, Pre-Audit Sprint, Contest Readiness Pack, GitHub Action
-  Setup, and Ecosystem Readiness Pilot;
-- pricing guidance and client intake;
-- scope-of-work templates;
-- paid-work boundaries that preserve "not an audit" positioning.
+- multi-repository readiness workflow docs;
+- anonymized ecosystem gap summary examples;
+- ecosystem intake and pilot scope templates;
+- synthetic local/static ecosystem reports with no customer or partner claims.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -156,11 +155,12 @@ packaging:
 | v1.1.0 | Feedback Loop + External Calibration | Released |
 | v1.1.1 | Public surface polish | Released |
 | v1.2.0 | Paid offer refinement | Released |
-| v1.3.0 | Ecosystem Pack | Prepared, not tagged |
+| v1.3.0 | Ecosystem Pack | Released |
+| v1.4.0 | AMM + Lending Protocol Packs | Prepared, not tagged |
 
-## Stable v1.2.x Surface
+## Stable v1.3.x Surface
 
-Arkheionx v1.2.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.3.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -169,8 +169,20 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.2.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.3.0`. Use `@main` only for development
 or testing unreleased changes.
+
+## Protocol Packs
+
+Arkheionx currently includes readiness checks for:
+
+- Vaults
+- Oracles
+- Access Control / Upgradeability
+- Reentrancy / Value Flow
+- Rewards / Staking
+- AMMs
+- Lending
 
 ## Feedback and Calibration
 
@@ -290,7 +302,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.2.0` for stable usage:
+Use `@v1.3.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -305,7 +317,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
         with:
           root: "."
           protocol-type: "auto"
@@ -339,7 +351,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -368,7 +380,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -422,7 +434,7 @@ python3 scripts/pre_audit_scan.py \
 See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.2.x CLI
 surface.
 
-Vault builders can force the v0.2.0 Vault Rule Pack:
+Vault builders can force the v0.3.0 Vault Rule Pack:
 
 ```sh
 python3 scripts/pre_audit_scan.py \
@@ -482,9 +494,9 @@ Recommended next steps:
 The report is a readiness artifact. It does not prove safety or confirm
 exploitability.
 
-## v0.2.0 Vault Rule Pack
+## v0.3.0 Vault Rule Pack
 
-Arkheionx v0.2.0 adds a vault-focused rule pack for indie builders working on
+Arkheionx v0.3.0 adds a vault-focused rule pack for indie builders working on
 ERC4626-like vaults, strategy vaults, yield vaults, staking vaults, and
 share/accounting systems.
 
@@ -671,6 +683,8 @@ Core standards:
 ### Analysis
 
 - [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md)
+- [`docs/AMM_RULE_PACK.md`](docs/AMM_RULE_PACK.md)
+- [`docs/LENDING_RULE_PACK.md`](docs/LENDING_RULE_PACK.md)
 - [`docs/SEMANTIC_LITE_ANALYSIS.md`](docs/SEMANTIC_LITE_ANALYSIS.md)
 - [`docs/SLITHER_INTEGRATION.md`](docs/SLITHER_INTEGRATION.md)
 - [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md)
@@ -810,6 +824,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   ladder, client intake, scope templates, and paid-work boundaries.
 - **v1.3.0: ecosystem pack.** Multi-repo readiness workflow, anonymized common
   gap reports, repo-by-repo summary tables, and ecosystem pilot templates.
+- **v1.4.0: AMM + Lending Protocol Packs.** Defensive AMM and lending readiness
+  findings, fixtures, reports, and knowledge mappings prepared locally.
 
 Archive milestones remain honest:
 

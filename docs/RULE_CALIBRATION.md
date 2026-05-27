@@ -57,6 +57,8 @@ Machine-readable calibration lives in
 | Access / Upgradeability | Public/external setters, role functions, initializer/upgrade functions without negative tests. | Owner variables in examples or docs only. |
 | Reentrancy / Value Flow | External calls or token transfers in withdraw/claim/refund-like flows without ordering/guard evidence. | Generic `transfer` terms in tests or docs. |
 | Reward / Staking | `stake`, `claim`, `rewardPerToken`, accumulator/index logic without conservation tests. | Reward terms in marketing docs or comments. |
+| AMM | `swap`, reserves, `getReserves`, LP shares, and `getAmountOut` without invariant, slippage, or LP boundary tests. | External AMM adapters, docs-only pool references, or test mocks. |
+| Lending | `borrow`, `repay`, collateral, debt, health factor, liquidation, or interest indexes without solvency/boundary tests. | Interface-only lending terms, docs-only collateral references, or imported adapters. |
 | Test Readiness | Protocol-like source signals without invariant/fuzz/property test evidence. | Tiny fixtures that intentionally omit tests. |
 | Documentation | Missing role/oracle/scope assumptions in docs. | Private docs outside the scanned repository. |
 
@@ -94,6 +96,8 @@ Run:
 ```sh
 python3 scripts/generate_knowledge_graph.py --check
 python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "AMM invariant"
+python3 scripts/search_knowledge.py "liquidation boundary"
 ```
 
 Historical pattern similarity is used for explanation and test inspiration. It

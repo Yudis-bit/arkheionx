@@ -62,7 +62,12 @@ The scanner reports readiness gaps when it sees patterns such as:
 - upgradeability without initializer review signals;
 - admin setters without role documentation or tests;
 - reward accounting without conservation or index tests;
-- AMM math without invariant tests.
+- AMM math without invariant tests;
+- AMM LP share accounting without mint/burn boundary tests;
+- AMM slippage, spot-price, or non-standard token assumptions without coverage;
+- lending collateral/debt solvency without invariant tests;
+- lending liquidation boundaries without just-above/just-below tests;
+- lending interest/index, reserve/cash, or oracle-dependent health-factor gaps.
 
 The gaps are review prompts. They are not confirmed vulnerabilities.
 
@@ -105,6 +110,11 @@ SARIF, baselines, issue plans, and delivery artifacts are ignored as source
 evidence by default. Re-running the scanner with outputs inside `reports/`
 should not increase score or findings because of old generated text.
 
+v1.4.0 adds AMM and lending readiness findings. These rule packs can influence
+generic DeFi risk coverage, invariant/fuzz readiness, SARIF output, issue
+plans, and Related Knowledge. They remain static heuristics and require manual
+review.
+
 ## How To Improve The Score
 
 Practical improvements:
@@ -144,6 +154,22 @@ Reward score improvements:
 - index monotonicity tests;
 - stake/unstake roundtrip tests;
 - small-balance precision tests.
+
+AMM score improvements:
+
+- swap invariant conservation tests;
+- LP share proportionality tests;
+- reserve-price/TWAP boundary tests;
+- `minOut` and stale quote tests;
+- actual received amount tests or non-standard token support documentation.
+
+Lending score improvements:
+
+- collateral/debt solvency invariants;
+- liquidation boundary tests;
+- interest and borrow-index monotonicity tests;
+- oracle stale-price and price-shock tests;
+- reserve/cash accounting consistency tests.
 
 ## Limitations
 

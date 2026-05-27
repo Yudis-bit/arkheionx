@@ -353,6 +353,30 @@ written reason in the release PR.
 - [ ] Safety wording check passes in strict mode.
 - [ ] Unit tests pass.
 
+## v1.4.0 AMM + Lending Protocol Pack Checks
+
+- [ ] `docs/AMM_RULE_PACK.md` exists.
+- [ ] `docs/LENDING_RULE_PACK.md` exists.
+- [ ] `examples/amm-fixture/README.md` exists.
+- [ ] `examples/lending-fixture/README.md` exists.
+- [ ] `examples/amm-lending-hybrid-fixture/README.md` exists.
+- [ ] AMM fixture scan emits `ARK-AMM-*` findings.
+- [ ] Lending fixture scan emits `ARK-LEND-*` findings.
+- [ ] Hybrid fixture scan emits both AMM and Lending rule-pack signals.
+- [ ] AMM/Lending JSON reports parse.
+- [ ] AMM/Lending SARIF outputs parse and include stable rule IDs.
+- [ ] AMM/Lending issue plans include Related Knowledge.
+- [ ] `metadata/finding_knowledge_map.json` maps `ARK-AMM-*` and `ARK-LEND-*`.
+- [ ] `metadata/security_memory_graph.json` regenerated and check mode passes.
+- [ ] Search index includes AMM/Lending docs, fixtures, and terms.
+- [ ] No live-chain, RPC, remote cloning, liquidation automation, or exploit
+      payload behavior added.
+- [ ] No vulnerability-confirmation or bounty-claim language added.
+- [ ] Docs link check passes.
+- [ ] Version consistency check passes.
+- [ ] Safety wording check passes in strict mode.
+- [ ] Unit tests pass.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

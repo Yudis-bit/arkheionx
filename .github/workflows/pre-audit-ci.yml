@@ -26,6 +26,9 @@ on:
       - "examples/oracle-staking-fixture/**"
       - "examples/oracle-staking-fixture-fixed/**"
       - "examples/semantic-lite-fixture/**"
+      - "examples/amm-fixture/**"
+      - "examples/lending-fixture/**"
+      - "examples/amm-lending-hybrid-fixture/**"
       - "examples/arkheionx.config.example.json"
       - "examples/reports/**"
       - "metadata/search_terms.json"
@@ -213,6 +216,36 @@ jobs:
             --output examples/reports/generated-artifact-self-ingestion-pre-audit-report.md \
             --json-output examples/reports/generated-artifact-self-ingestion-pre-audit-report.json
 
+      - name: Run scanner directly against AMM fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-fixture \
+            --protocol-type amm \
+            --output examples/reports/amm-fixture-pre-audit-report.md \
+            --json-output examples/reports/amm-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/amm-fixture.sarif.json \
+            --issue-plan-output examples/reports/amm-fixture-issue-plan.json
+
+      - name: Run scanner directly against lending fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/lending-fixture \
+            --protocol-type lending \
+            --output examples/reports/lending-fixture-pre-audit-report.md \
+            --json-output examples/reports/lending-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/lending-fixture.sarif.json \
+            --issue-plan-output examples/reports/lending-fixture-issue-plan.json
+
+      - name: Run scanner directly against AMM lending hybrid fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --protocol-type auto \
+            --output examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md \
+            --json-output examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/amm-lending-hybrid-fixture.sarif.json \
+            --issue-plan-output examples/reports/amm-lending-hybrid-fixture-issue-plan.json
+
       - name: Verify Slither unavailable path is graceful
         run: |
           python3 scripts/pre_audit_scan.py \
@@ -351,6 +384,18 @@ jobs:
           test -f examples/reports/negative-evidence-fixture-pre-audit-report.json
           test -f examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
           test -f examples/reports/generated-artifact-self-ingestion-pre-audit-report.json
+          test -f examples/reports/amm-fixture-pre-audit-report.md
+          test -f examples/reports/amm-fixture-pre-audit-report.json
+          test -f examples/reports/amm-fixture.sarif.json
+          test -f examples/reports/amm-fixture-issue-plan.json
+          test -f examples/reports/lending-fixture-pre-audit-report.md
+          test -f examples/reports/lending-fixture-pre-audit-report.json
+          test -f examples/reports/lending-fixture.sarif.json
+          test -f examples/reports/lending-fixture-issue-plan.json
+          test -f examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
+          test -f examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json
+          test -f examples/reports/amm-lending-hybrid-fixture.sarif.json
+          test -f examples/reports/amm-lending-hybrid-fixture-issue-plan.json
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -395,12 +440,15 @@ jobs:
               "examples/reports/semantic-lite-fixture-pre-audit-report.json",
               "examples/reports/negative-evidence-fixture-pre-audit-report.json",
               "examples/reports/generated-artifact-self-ingestion-pre-audit-report.json",
+              "examples/reports/amm-fixture-pre-audit-report.json",
+              "examples/reports/lending-fixture-pre-audit-report.json",
+              "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.3.0"
+              assert data["version"] == "1.4.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -427,16 +475,27 @@ jobs:
           oracle_ids = {item["id"] for item in oracle["findings"]}
           assert "ARK-ORC-001" in oracle_ids
           assert "ARK-RWD-001" in oracle_ids
+          amm = json.load(open("examples/reports/amm-fixture-pre-audit-report.json", encoding="utf-8"))
+          assert any(item["id"].startswith("ARK-AMM-") for item in amm["findings"])
+          lending = json.load(open("examples/reports/lending-fixture-pre-audit-report.json", encoding="utf-8"))
+          assert any(item["id"].startswith("ARK-LEND-") for item in lending["findings"])
+          hybrid = json.load(open("examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json", encoding="utf-8"))
+          hybrid_ids = {item["id"] for item in hybrid["findings"]}
+          assert any(item.startswith("ARK-AMM-") for item in hybrid_ids)
+          assert any(item.startswith("ARK-LEND-") for item in hybrid_ids)
           for path in [
               "examples/reports/mini-vault-issue-plan.json",
               "examples/reports/vault-risk-fixture-issue-plan.json",
               "examples/reports/oracle-staking-fixture-issue-plan.json",
               "examples/reports/demo-issue-plan.json",
               "examples/reports/semantic-lite-fixture-issue-plan.json",
+              "examples/reports/amm-fixture-issue-plan.json",
+              "examples/reports/lending-fixture-issue-plan.json",
+              "examples/reports/amm-lending-hybrid-fixture-issue-plan.json",
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.3.0"
+              assert plan["version"] == "1.4.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -467,6 +526,9 @@ jobs:
               "examples/reports/vault-risk-fixture-diff.sarif.json",
               "examples/reports/oracle-staking-fixture.sarif.json",
               "examples/reports/semantic-lite-fixture.sarif.json",
+              "examples/reports/amm-fixture.sarif.json",
+              "examples/reports/lending-fixture.sarif.json",
+              "examples/reports/amm-lending-hybrid-fixture.sarif.json",
               "arkheionx.sarif.json",
           ]:
               sarif = json.load(open(path, encoding="utf-8"))
@@ -526,8 +588,17 @@ jobs:
           test -f docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md
           test -f templates/ecosystem_intake.md
           test -f templates/ecosystem_readiness_pilot_scope.md
+          test -f docs/AMM_RULE_PACK.md
+          test -f docs/LENDING_RULE_PACK.md
+          test -f examples/amm-fixture/README.md
+          test -f examples/lending-fixture/README.md
+          test -f examples/amm-lending-hybrid-fixture/README.md
           grep -q "Repo-By-Repo Readiness Table" reports/ecosystem_readiness_summary.md
           grep -q "Common Gap Families" reports/ecosystem_common_gaps.md
+          grep -q "ARK-AMM" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "ARK-LEND" examples/reports/lending-fixture-pre-audit-report.md
+          grep -q "ARK-AMM" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
+          grep -q "ARK-LEND" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
           grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
           grep -q "Related Knowledge" examples/reports/demo-issue-plan.json
           grep -q "Scan Source Summary" examples/reports/generated-artifact-self-ingestion-pre-audit-report.md

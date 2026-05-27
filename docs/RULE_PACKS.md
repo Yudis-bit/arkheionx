@@ -15,12 +15,15 @@ formal audit. They are designed to help authorized maintainers prepare for one.
 | Access Control / Upgradeability | privileged setters, emergency paths, initializers, proxies | `ARK-ACC-*`, `ARK-UPG-*` |
 | Reentrancy / Value Flow | withdraw, redeem, claim, callbacks, external calls | `ARK-REENT-*` |
 | Staking / Reward Accounting | reward indexes, emissions, claims, cooldowns, overclaim risks | `ARK-RWD-*` |
+| AMM Rule Pack | swaps, reserves, LP shares, slippage, pool pricing | `ARK-AMM-*` |
+| Lending Rule Pack | collateral/debt, borrow/repay, liquidations, interest indexes | `ARK-LEND-*` |
 
 ## How Rule Packs Work
 
 Arkheionx reads local repository files and detects signals such as
-`latestRoundData`, `convertToShares`, `onlyOwner`, `claimReward`, or
-`nonReentrant`. In v0.6.0, semantic-lite extraction adds function-level
+`latestRoundData`, `convertToShares`, `onlyOwner`, `claimReward`,
+`getReserves`, `borrow`, `liquidate`, or `nonReentrant`. In v0.6.0,
+semantic-lite extraction adds function-level
 evidence and test coverage mapping so weak keyword-only findings can be
 downgraded instead of treated like stronger Solidity evidence.
 
@@ -58,8 +61,25 @@ Search examples:
 python3 scripts/search_knowledge.py "oracle stale price"
 python3 scripts/search_knowledge.py "vault accounting invariant"
 python3 scripts/search_knowledge.py "reentrancy value flow"
+python3 scripts/search_knowledge.py "AMM invariant"
+python3 scripts/search_knowledge.py "liquidation boundary"
 python3 scripts/search_knowledge.py "missing invariant"
 ```
 
 The results show related finding IDs, historical pattern categories, suggested
 defensive tests, and docs. They are readiness context only.
+
+## AMM And Lending Packs
+
+v1.4.0 prepares first-class AMM and lending readiness packs:
+
+- [`docs/AMM_RULE_PACK.md`](AMM_RULE_PACK.md) covers invariant assumptions,
+  LP share accounting, reserve-price dependence, non-standard token assumptions,
+  and slippage/min-output controls.
+- [`docs/LENDING_RULE_PACK.md`](LENDING_RULE_PACK.md) covers collateral/debt
+  solvency, liquidation boundaries, interest/index accounting, oracle-dependent
+  borrow/liquidation paths, reserve/cash accounting, and liquidation role
+  boundaries.
+
+These packs are heuristic and static. They help identify audit-preparation
+gaps and suggested defensive tests; they do not confirm vulnerabilities.

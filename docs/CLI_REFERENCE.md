@@ -15,6 +15,11 @@ or live-chain access.
 | `--output PATH` | `ARKHEIONX_PRE_AUDIT_REPORT.md` | Markdown pre-audit readiness report. |
 | `--json-output PATH` | empty | Machine-readable JSON report. |
 
+`auto` can detect hybrid repositories through rule-pack signals. For example,
+an AMM price dependency inside a lending-shaped market can emit both `ARK-AMM-*`
+and `ARK-LEND-*` readiness findings even when the primary protocol label is a
+single best-fit type.
+
 ## Reports
 
 | Flag | Purpose |

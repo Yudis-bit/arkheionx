@@ -73,6 +73,16 @@ Generated Arkheionx artifacts are filtered before semantic-lite extraction.
 Old reports, issue plans, SARIF, baselines, and delivery artifacts should not
 create semantic evidence, test coverage evidence, or negative evidence.
 
+v1.4.0 extends semantic-lite coverage mapping for AMM and lending shapes:
+
+- AMM: reserve, liquidity, invariant, LP share, slippage, TWAP, actual received
+  amount, and non-standard token assumptions.
+- Lending: collateral/debt, health factor, liquidation, interest/borrow index,
+  reserve/cash accounting, and oracle-dependent borrowing/liquidation terms.
+
+These mappings are heuristic. They improve affected function reporting and
+confidence calibration, but manual review remains required.
+
 ## Confidence Effects
 
 - Semantic evidence plus missing matching tests can raise confidence.

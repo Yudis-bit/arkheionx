@@ -1,6 +1,6 @@
 {
   "description": "Local Arkheionx security memory graph connecting historical exploit patterns, PoCs, rule packs, readiness findings, and suggested defensive tests.",
-  "edge_count": 445,
+  "edge_count": 664,
   "edges": [
     {
       "from": "ARK-ACC-001",
@@ -156,6 +156,12 @@
       "from": "ARK-AMM-001",
       "reason": "Related documentation explains the finding family or workflow.",
       "relation": "documented_in",
+      "to": "doc-docs/AMM_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-001",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
       "to": "doc-docs/EXPLOIT_TAXONOMY.md"
     },
     {
@@ -204,13 +210,19 @@
       "from": "ARK-AMM-001",
       "reason": "This test is defensive remediation guidance for the readiness finding.",
       "relation": "has_suggested_test",
+      "to": "test-fee-rounding-bound"
+    },
+    {
+      "from": "ARK-AMM-001",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
       "to": "test-liquidity-proportionality"
     },
     {
       "from": "ARK-AMM-001",
       "reason": "This test is defensive remediation guidance for the readiness finding.",
       "relation": "has_suggested_test",
-      "to": "test-slippage-boundary-test"
+      "to": "test-reserve-accounting-test"
     },
     {
       "from": "ARK-AMM-001",
@@ -280,6 +292,540 @@
     },
     {
       "from": "ARK-AMM-001",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-amm"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/AMM_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/VAULT_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-lp-value-conservation"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-mint-burn-proportionality"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-first-liquidity-state-is-safe"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-lp-mint-burn-is-always-proportional"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-low-liquidity-rounding-assumption"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-lp-share-boundary-undertested"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-dust-rounding-test"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-first-liquidity-provider-test"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-proportional-minting-test"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-proportional-withdrawal-test"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2021-10-indexed-finance"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2025-12-yeth"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-amm-invariant-steering"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-share-inflation-donation"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-AMM-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-amm"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/AMM_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/ORACLE_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-accounting-value-is-not-single-pool-dependent"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-price-input-remains-bounded"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-reserve-price-is-manipulation-resistant"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-spot-quote-is-stable-enough"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-missing-twap-or-bounds"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-same-transaction-price-trust"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-price-movement-bounds"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-reserve-manipulation-sanity-test"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-twap-vs-spot-behavior"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-10-harvest"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2021-01-saddle"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2025-12-yeth"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-pool-price-accounting"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-spot-price-manipulation"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-AMM-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-amm"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/AMM_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-reserve-increase-equals-accounted-input"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-swap-accounting-uses-actual-balance-delta"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-amount-in-equals-received"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-tokens-behave-like-standard-erc20"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-actual-received-amount-assumption"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-unsupported-token-behavior-undocumented"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-balance-before-after-accounting"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-fee-on-transfer-token-simulation"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-unsupported-token-documentation"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-06-balancer-deflationary"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-pool-price-accounting"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-precision-rounding-loss"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-AMM-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-amm"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/AMM_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/ORACLE_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-quote-freshness-assumption-is-explicit"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-swap-output-respects-user-bound"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-quote-remains-valid-through-execution"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-users-can-bound-price-movement-elsewhere"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-missing-user-output-bound"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-stale-quote-assumption"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-deadline-or-stale-quote-test"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-min-out-enforcement"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-slippage-boundary-test"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-10-harvest"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2021-01-saddle"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-assumption-not-encoded-in-tests"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-spot-price-manipulation"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-AMM-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-AMM-005",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-sarif"
@@ -423,139 +969,817 @@
       "to": "artifact-sarif"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Finding ID belongs to this Arkheionx rule pack.",
       "relation": "belongs_to_rule_pack",
       "to": "rule-pack-lending"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/LENDING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-001",
       "reason": "Related documentation explains the finding family or workflow.",
       "relation": "documented_in",
       "to": "doc-docs/READINESS_SCORE.md"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Related documentation explains the finding family or workflow.",
       "relation": "documented_in",
       "to": "doc-docs/RULE_PACKS.md"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The suggested review should encode or document this invariant.",
       "relation": "has_broken_invariant",
       "to": "broken-invariant-collateral-debt-solvency"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The suggested review should encode or document this invariant.",
       "relation": "has_broken_invariant",
-      "to": "broken-invariant-liquidation-does-not-create-bad-debt"
+      "to": "broken-invariant-debt-cannot-exceed-documented-ltv"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The finding asks maintainers to validate this assumption defensively.",
       "relation": "has_failed_assumption",
-      "to": "failed-assumption-collateral-value-is-current"
+      "to": "failed-assumption-collateral-value-covers-debt"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The finding asks maintainers to validate this assumption defensively.",
       "relation": "has_failed_assumption",
-      "to": "failed-assumption-debt-index-is-monotonic"
+      "to": "failed-assumption-unsafe-withdrawals-are-blocked"
     },
     {
-      "from": "ARK-LEND-900",
-      "reason": "The finding asks maintainers to validate this assumption defensively.",
-      "relation": "has_failed_assumption",
-      "to": "failed-assumption-liquidation-boundaries-are-complete"
-    },
-    {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The readiness finding is calibrated against this root-cause class.",
       "relation": "has_root_cause",
       "to": "root-cause-collateral-value-assumption"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The readiness finding is calibrated against this root-cause class.",
       "relation": "has_root_cause",
-      "to": "root-cause-liquidation-boundary-undertested"
+      "to": "root-cause-missing-solvency-invariant"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-borrow-limit-boundary-test"
+    },
+    {
+      "from": "ARK-LEND-001",
       "reason": "This test is defensive remediation guidance for the readiness finding.",
       "relation": "has_suggested_test",
       "to": "test-collateral-debt-invariant"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "This test is defensive remediation guidance for the readiness finding.",
       "relation": "has_suggested_test",
-      "to": "test-liquidation-boundary-fuzz"
+      "to": "test-unsafe-withdrawal-rejection"
     },
     {
-      "from": "ARK-LEND-900",
-      "reason": "This test is defensive remediation guidance for the readiness finding.",
-      "relation": "has_suggested_test",
-      "to": "test-oracle-price-shock-test"
-    },
-    {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
       "relation": "historical_example",
       "to": "poc-2020-11-cheese-bank"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
       "relation": "historical_example",
       "to": "poc-2025-11-moonwell"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
       "relation": "maps_to_pattern",
       "to": "pattern-collateral-debt-invariant"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
       "relation": "maps_to_pattern",
       "to": "pattern-oracle-stale-price"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-contest-readiness"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-issue-plan"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-launch-report"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-pre-audit-report"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-remediation-roadmap"
     },
     {
-      "from": "ARK-LEND-900",
+      "from": "ARK-LEND-001",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-lending"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/LENDING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/ORACLE_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-liquidation-does-not-over-seize"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-solvent-position-not-liquidatable"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-liquidation-bonus-is-bounded"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-threshold-comparison-is-correct"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-liquidation-bonus-assumption"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-liquidation-boundary-undertested"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-bonus-bound-test"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-just-above-threshold-test"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-just-below-threshold-test"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-partial-liquidation-math"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-11-cheese-bank"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2025-11-moonwell"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-collateral-debt-invariant"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-oracle-stale-price"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-LEND-002",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-lending"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/LENDING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/REWARD_ACCOUNTING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-accrual-does-not-create-unbounded-drift"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-debt-index-monotonicity"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-borrow-index-is-monotonic-and-bounded"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-small-balance-rounding-is-negligible"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-interest-index-rounding-drift"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-time-step-accrual-assumption"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-borrow-repay-around-accrual"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-interest-index-monotonicity"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-repeated-accrual-drift-bound"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-small-balance-rounding-test"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-08-opyn"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-09-bzx-ifusdc"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-accounting-index-drift"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-precision-rounding-loss"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-LEND-003",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-lending"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/LENDING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/ORACLE_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-borrow-and-liquidation-use-bounded-price"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-health-factor-uses-valid-price"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-collateral-price-is-current"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-oracle-answer-is-normalized"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-implicit-collateral-price-trust"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-missing-oracle-freshness-validation"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-borrow-blocked-on-invalid-price"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-decimals-normalization-test"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-price-shock-boundary-test"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-stale-oracle-rejection"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-10-harvest"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2025-11-moonwell"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-collateral-debt-invariant"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-oracle-stale-price"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-LEND-004",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-lending"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/LENDING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/RULE_PACKS.md"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-borrow-cannot-exceed-available-liquidity"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-cash-plus-borrows-reserves-reconcile"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-cash-matches-available-liquidity"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-repay-updates-debt-and-cash-consistently"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-available-liquidity-assumption"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-cash-reserve-accounting-drift"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-available-liquidity-bound"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-repay-cash-debt-consistency"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-reserve-withdrawal-constraints"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-utilization-bound-test"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2020-11-cheese-bank"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-accounting-index-drift"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-collateral-debt-invariant"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-LEND-005",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-sarif"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Finding ID belongs to this Arkheionx rule pack.",
+      "relation": "belongs_to_rule_pack",
+      "to": "rule-pack-lending"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/ACCESS_CONTROL_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Related documentation explains the finding family or workflow.",
+      "relation": "documented_in",
+      "to": "doc-docs/LENDING_RULE_PACK.md"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-paused-market-behavior-is-explicit"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The suggested review should encode or document this invariant.",
+      "relation": "has_broken_invariant",
+      "to": "broken-invariant-unauthorized-caller-cannot-change-liquidation-rules"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-liquidator-permissions-are-obvious"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The finding asks maintainers to validate this assumption defensively.",
+      "relation": "has_failed_assumption",
+      "to": "failed-assumption-pause-and-guardian-controls-are-clear"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-emergency-control-assumption"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The readiness finding is calibrated against this root-cause class.",
+      "relation": "has_root_cause",
+      "to": "root-cause-liquidation-role-boundary-undocumented"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-guardian-permission-test"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-liquidator-role-boundary-test"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "This test is defensive remediation guidance for the readiness finding.",
+      "relation": "has_suggested_test",
+      "to": "test-paused-market-liquidation-test"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2017-07-parity-multisig"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Historical PoC metadata provides defensive context for this readiness pattern.",
+      "relation": "historical_example",
+      "to": "poc-2022-02-dexible"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-collateral-debt-invariant"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "The finding maps to this historical readiness pattern for defensive explanation.",
+      "relation": "maps_to_pattern",
+      "to": "pattern-privileged-operation-boundary"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-contest-readiness"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-issue-plan"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-launch-report"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-pre-audit-report"
+    },
+    {
+      "from": "ARK-LEND-006",
+      "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
+      "relation": "supports_delivery_artifact",
+      "to": "artifact-remediation-roadmap"
+    },
+    {
+      "from": "ARK-LEND-006",
       "reason": "Readiness findings can be surfaced in delivery artifacts when generated.",
       "relation": "supports_delivery_artifact",
       "to": "artifact-sarif"
@@ -1884,6 +3108,12 @@
       "from": "pattern-accounting-index-drift",
       "reason": "The PoC is a historical example for this pattern family.",
       "relation": "historical_example",
+      "to": "poc-2020-11-cheese-bank"
+    },
+    {
+      "from": "pattern-accounting-index-drift",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
       "to": "poc-2020-12-warp-finance"
     },
     {
@@ -1926,6 +3156,18 @@
       "from": "pattern-assumption-not-encoded-in-tests",
       "reason": "The PoC is a historical example for this pattern family.",
       "relation": "historical_example",
+      "to": "poc-2020-10-harvest"
+    },
+    {
+      "from": "pattern-assumption-not-encoded-in-tests",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2021-01-saddle"
+    },
+    {
+      "from": "pattern-assumption-not-encoded-in-tests",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
       "to": "poc-2021-10-indexed-finance"
     },
     {
@@ -1950,7 +3192,25 @@
       "from": "pattern-collateral-debt-invariant",
       "reason": "The PoC is a historical example for this pattern family.",
       "relation": "historical_example",
+      "to": "poc-2017-07-parity-multisig"
+    },
+    {
+      "from": "pattern-collateral-debt-invariant",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2020-10-harvest"
+    },
+    {
+      "from": "pattern-collateral-debt-invariant",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
       "to": "poc-2020-11-cheese-bank"
+    },
+    {
+      "from": "pattern-collateral-debt-invariant",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2022-02-dexible"
     },
     {
       "from": "pattern-collateral-debt-invariant",
@@ -2019,10 +3279,52 @@
       "to": "poc-2025-11-moonwell"
     },
     {
+      "from": "pattern-pool-price-accounting",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2020-06-balancer-deflationary"
+    },
+    {
+      "from": "pattern-pool-price-accounting",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2020-10-harvest"
+    },
+    {
+      "from": "pattern-pool-price-accounting",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2021-01-saddle"
+    },
+    {
+      "from": "pattern-pool-price-accounting",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2025-12-yeth"
+    },
+    {
       "from": "pattern-precision-rounding-loss",
       "reason": "The PoC is a historical example for this pattern family.",
       "relation": "historical_example",
       "to": "poc-2018-04-bec-token"
+    },
+    {
+      "from": "pattern-precision-rounding-loss",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2020-06-balancer-deflationary"
+    },
+    {
+      "from": "pattern-precision-rounding-loss",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2020-08-opyn"
+    },
+    {
+      "from": "pattern-precision-rounding-loss",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2020-09-bzx-ifusdc"
     },
     {
       "from": "pattern-precision-rounding-loss",
@@ -2101,6 +3403,18 @@
       "reason": "The PoC is a historical example for this pattern family.",
       "relation": "historical_example",
       "to": "poc-2021-02-yearn-v1-dai"
+    },
+    {
+      "from": "pattern-share-inflation-donation",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2021-10-indexed-finance"
+    },
+    {
+      "from": "pattern-share-inflation-donation",
+      "reason": "The PoC is a historical example for this pattern family.",
+      "relation": "historical_example",
+      "to": "poc-2025-12-yeth"
     },
     {
       "from": "pattern-spot-price-manipulation",
@@ -2674,7 +3988,7 @@
     }
   ],
   "generated_at": "deterministic-local",
-  "node_count": 267,
+  "node_count": 356,
   "nodes": [
     {
       "category": "access-control",
@@ -2694,10 +4008,63 @@
       "rule_pack": "amm",
       "tags": [
         "AMM invariant",
-        "slippage boundary",
-        "constant product"
+        "constant product",
+        "reserve accounting",
+        "liquidity invariant"
       ],
-      "title": "AMM math needs invariant coverage",
+      "title": "AMM invariant assumptions not covered by tests",
+      "type": "finding"
+    },
+    {
+      "category": "amm-lp-accounting",
+      "id": "ARK-AMM-002",
+      "rule_pack": "amm",
+      "tags": [
+        "LP share accounting",
+        "liquidity mint burn",
+        "first liquidity provider",
+        "dust handling"
+      ],
+      "title": "LP share accounting without mint/burn boundary tests",
+      "type": "finding"
+    },
+    {
+      "category": "amm-pricing",
+      "id": "ARK-AMM-003",
+      "rule_pack": "amm",
+      "tags": [
+        "reserve price",
+        "spot price manipulation",
+        "TWAP",
+        "getAmountOut"
+      ],
+      "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
+      "type": "finding"
+    },
+    {
+      "category": "amm-token-assumptions",
+      "id": "ARK-AMM-004",
+      "rule_pack": "amm",
+      "tags": [
+        "fee-on-transfer",
+        "actual received amount",
+        "non-standard token",
+        "rebasing token"
+      ],
+      "title": "Fee-on-transfer or non-standard token assumptions not documented",
+      "type": "finding"
+    },
+    {
+      "category": "amm-slippage",
+      "id": "ARK-AMM-005",
+      "rule_pack": "amm",
+      "tags": [
+        "slippage boundary",
+        "minOut",
+        "deadline",
+        "stale quote"
+      ],
+      "title": "Slippage/min-output constraints missing or unclear",
       "type": "finding"
     },
     {
@@ -2713,15 +4080,81 @@
       "type": "finding"
     },
     {
+      "category": "lending-solvency",
+      "id": "ARK-LEND-001",
+      "rule_pack": "lending",
+      "tags": [
+        "collateral debt invariant",
+        "health factor",
+        "lending solvency",
+        "borrow limit"
+      ],
+      "title": "Collateral/debt solvency invariant not covered by tests",
+      "type": "finding"
+    },
+    {
       "category": "lending-liquidation",
-      "id": "ARK-LEND-900",
+      "id": "ARK-LEND-002",
       "rule_pack": "lending",
       "tags": [
         "liquidation boundary",
-        "collateral debt invariant",
-        "lending readiness"
+        "close factor",
+        "liquidation bonus",
+        "health factor"
       ],
-      "title": "Lending or liquidation readiness mapping",
+      "title": "Liquidation boundary tests missing",
+      "type": "finding"
+    },
+    {
+      "category": "lending-interest-index",
+      "id": "ARK-LEND-003",
+      "rule_pack": "lending",
+      "tags": [
+        "interest index",
+        "borrow index",
+        "accrueInterest",
+        "rounding drift"
+      ],
+      "title": "Interest/index accounting not covered by rounding and time-step tests",
+      "type": "finding"
+    },
+    {
+      "category": "lending-oracle",
+      "id": "ARK-LEND-004",
+      "rule_pack": "lending",
+      "tags": [
+        "lending oracle",
+        "stale price",
+        "price shock",
+        "collateral value"
+      ],
+      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+      "type": "finding"
+    },
+    {
+      "category": "lending-liquidity",
+      "id": "ARK-LEND-005",
+      "rule_pack": "lending",
+      "tags": [
+        "reserve accounting",
+        "available liquidity",
+        "totalBorrows",
+        "utilization"
+      ],
+      "title": "Reserve/cash accounting assumptions not covered",
+      "type": "finding"
+    },
+    {
+      "category": "lending-access-control",
+      "id": "ARK-LEND-006",
+      "rule_pack": "lending",
+      "tags": [
+        "liquidation role",
+        "keeper boundary",
+        "paused market",
+        "guardian"
+      ],
+      "title": "Liquidation/access-control interaction not documented",
       "type": "finding"
     },
     {
@@ -3027,6 +4460,14 @@
       "type": "broken_invariant"
     },
     {
+      "id": "broken-invariant-accrual-does-not-create-unbounded-drift",
+      "tags": [
+        "accrual-does-not-create-unbounded-drift"
+      ],
+      "title": "Accrual Does Not Create Unbounded Drift",
+      "type": "broken_invariant"
+    },
+    {
       "id": "broken-invariant-admin-actions-are-bounded-and-documented",
       "tags": [
         "admin-actions-are-bounded-and-documented"
@@ -3048,6 +4489,30 @@
         "authorization-or-lifecycle-invariant"
       ],
       "title": "Authorization Or Lifecycle Invariant",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-borrow-and-liquidation-use-bounded-price",
+      "tags": [
+        "borrow-and-liquidation-use-bounded-price"
+      ],
+      "title": "Borrow And Liquidation Use Bounded Price",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-borrow-cannot-exceed-available-liquidity",
+      "tags": [
+        "borrow-cannot-exceed-available-liquidity"
+      ],
+      "title": "Borrow Cannot Exceed Available Liquidity",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-cash-plus-borrows-reserves-reconcile",
+      "tags": [
+        "cash-plus-borrows-reserves-reconcile"
+      ],
+      "title": "Cash Plus Borrows Reserves Reconcile",
       "type": "broken_invariant"
     },
     {
@@ -3083,6 +4548,22 @@
       "type": "broken_invariant"
     },
     {
+      "id": "broken-invariant-debt-cannot-exceed-documented-ltv",
+      "tags": [
+        "debt-cannot-exceed-documented-ltv"
+      ],
+      "title": "Debt Cannot Exceed Documented Ltv",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-debt-index-monotonicity",
+      "tags": [
+        "debt-index-monotonicity"
+      ],
+      "title": "Debt Index Monotonicity",
+      "type": "broken_invariant"
+    },
+    {
       "id": "broken-invariant-deposit-withdraw-roundtrip-does-not-create-value",
       "tags": [
         "deposit-withdraw-roundtrip-does-not-create-value"
@@ -3099,6 +4580,14 @@
       "type": "broken_invariant"
     },
     {
+      "id": "broken-invariant-health-factor-uses-valid-price",
+      "tags": [
+        "health-factor-uses-valid-price"
+      ],
+      "title": "Health Factor Uses Valid Price",
+      "type": "broken_invariant"
+    },
+    {
       "id": "broken-invariant-initialization-is-single-use",
       "tags": [
         "initialization-is-single-use"
@@ -3107,11 +4596,11 @@
       "type": "broken_invariant"
     },
     {
-      "id": "broken-invariant-liquidation-does-not-create-bad-debt",
+      "id": "broken-invariant-liquidation-does-not-over-seize",
       "tags": [
-        "liquidation-does-not-create-bad-debt"
+        "liquidation-does-not-over-seize"
       ],
-      "title": "Liquidation Does Not Create Bad Debt",
+      "title": "Liquidation Does Not Over Seize",
       "type": "broken_invariant"
     },
     {
@@ -3128,6 +4617,14 @@
         "message-nonce-is-single-use"
       ],
       "title": "Message Nonce Is Single Use",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-mint-burn-proportionality",
+      "tags": [
+        "mint-burn-proportionality"
+      ],
+      "title": "Mint Burn Proportionality",
       "type": "broken_invariant"
     },
     {
@@ -3155,6 +4652,22 @@
       "type": "broken_invariant"
     },
     {
+      "id": "broken-invariant-paused-market-behavior-is-explicit",
+      "tags": [
+        "paused-market-behavior-is-explicit"
+      ],
+      "title": "Paused Market Behavior Is Explicit",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-price-input-remains-bounded",
+      "tags": [
+        "price-input-remains-bounded"
+      ],
+      "title": "Price Input Remains Bounded",
+      "type": "broken_invariant"
+    },
+    {
       "id": "broken-invariant-price-input-remains-manipulation-resistant",
       "tags": [
         "price-input-remains-manipulation-resistant"
@@ -3168,6 +4681,22 @@
         "protocol-specific-conservation-invariant"
       ],
       "title": "Protocol Specific Conservation Invariant",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-quote-freshness-assumption-is-explicit",
+      "tags": [
+        "quote-freshness-assumption-is-explicit"
+      ],
+      "title": "Quote Freshness Assumption Is Explicit",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-reserve-increase-equals-accounted-input",
+      "tags": [
+        "reserve-increase-equals-accounted-input"
+      ],
+      "title": "Reserve Increase Equals Accounted Input",
       "type": "broken_invariant"
     },
     {
@@ -3211,11 +4740,35 @@
       "type": "broken_invariant"
     },
     {
+      "id": "broken-invariant-solvent-position-not-liquidatable",
+      "tags": [
+        "solvent-position-not-liquidatable"
+      ],
+      "title": "Solvent Position Not Liquidatable",
+      "type": "broken_invariant"
+    },
+    {
       "id": "broken-invariant-state-updated-before-external-value-flow",
       "tags": [
         "state-updated-before-external-value-flow"
       ],
       "title": "State Updated Before External Value Flow",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-swap-accounting-uses-actual-balance-delta",
+      "tags": [
+        "swap-accounting-uses-actual-balance-delta"
+      ],
+      "title": "Swap Accounting Uses Actual Balance Delta",
+      "type": "broken_invariant"
+    },
+    {
+      "id": "broken-invariant-swap-output-respects-user-bound",
+      "tags": [
+        "swap-output-respects-user-bound"
+      ],
+      "title": "Swap Output Respects User Bound",
       "type": "broken_invariant"
     },
     {
@@ -3235,6 +4788,14 @@
       "type": "broken_invariant"
     },
     {
+      "id": "broken-invariant-unauthorized-caller-cannot-change-liquidation-rules",
+      "tags": [
+        "unauthorized-caller-cannot-change-liquidation-rules"
+      ],
+      "title": "Unauthorized Caller Cannot Change Liquidation Rules",
+      "type": "broken_invariant"
+    },
+    {
       "id": "broken-invariant-unauthorized-user-cannot-change-critical-config",
       "tags": [
         "unauthorized-user-cannot-change-critical-config"
@@ -3249,6 +4810,15 @@
         "documentation"
       ],
       "title": "docs/ACCESS_CONTROL_RULE_PACK.md",
+      "type": "doc"
+    },
+    {
+      "id": "doc-docs/AMM_RULE_PACK.md",
+      "path": "docs/AMM_RULE_PACK.md",
+      "tags": [
+        "documentation"
+      ],
+      "title": "docs/AMM_RULE_PACK.md",
       "type": "doc"
     },
     {
@@ -3276,6 +4846,15 @@
         "documentation"
       ],
       "title": "docs/EXPLOIT_TAXONOMY.md",
+      "type": "doc"
+    },
+    {
+      "id": "doc-docs/LENDING_RULE_PACK.md",
+      "path": "docs/LENDING_RULE_PACK.md",
+      "tags": [
+        "documentation"
+      ],
+      "title": "docs/LENDING_RULE_PACK.md",
       "type": "doc"
     },
     {
@@ -3359,6 +4938,30 @@
       "type": "failed_assumption"
     },
     {
+      "id": "failed-assumption-amount-in-equals-received",
+      "tags": [
+        "amount-in-equals-received"
+      ],
+      "title": "Amount In Equals Received",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-borrow-index-is-monotonic-and-bounded",
+      "tags": [
+        "borrow-index-is-monotonic-and-bounded"
+      ],
+      "title": "Borrow Index Is Monotonic And Bounded",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-cash-matches-available-liquidity",
+      "tags": [
+        "cash-matches-available-liquidity"
+      ],
+      "title": "Cash Matches Available Liquidity",
+      "type": "failed_assumption"
+    },
+    {
       "id": "failed-assumption-claim-or-withdraw-path-cannot-repeat",
       "tags": [
         "claim-or-withdraw-path-cannot-repeat"
@@ -3367,11 +4970,19 @@
       "type": "failed_assumption"
     },
     {
-      "id": "failed-assumption-collateral-value-is-current",
+      "id": "failed-assumption-collateral-price-is-current",
       "tags": [
-        "collateral-value-is-current"
+        "collateral-price-is-current"
       ],
-      "title": "Collateral Value Is Current",
+      "title": "Collateral Price Is Current",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-collateral-value-covers-debt",
+      "tags": [
+        "collateral-value-covers-debt"
+      ],
+      "title": "Collateral Value Covers Debt",
       "type": "failed_assumption"
     },
     {
@@ -3380,14 +4991,6 @@
         "conversion-rounding-is-always-user-neutral"
       ],
       "title": "Conversion Rounding Is Always User Neutral",
-      "type": "failed_assumption"
-    },
-    {
-      "id": "failed-assumption-debt-index-is-monotonic",
-      "tags": [
-        "debt-index-is-monotonic"
-      ],
-      "title": "Debt Index Is Monotonic",
       "type": "failed_assumption"
     },
     {
@@ -3423,6 +5026,14 @@
       "type": "failed_assumption"
     },
     {
+      "id": "failed-assumption-first-liquidity-state-is-safe",
+      "tags": [
+        "first-liquidity-state-is-safe"
+      ],
+      "title": "First Liquidity State Is Safe",
+      "type": "failed_assumption"
+    },
+    {
       "id": "failed-assumption-happy-path-tests-cover-adversarial-sequences",
       "tags": [
         "happy-path-tests-cover-adversarial-sequences"
@@ -3447,11 +5058,19 @@
       "type": "failed_assumption"
     },
     {
-      "id": "failed-assumption-liquidation-boundaries-are-complete",
+      "id": "failed-assumption-liquidation-bonus-is-bounded",
       "tags": [
-        "liquidation-boundaries-are-complete"
+        "liquidation-bonus-is-bounded"
       ],
-      "title": "Liquidation Boundaries Are Complete",
+      "title": "Liquidation Bonus Is Bounded",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-liquidator-permissions-are-obvious",
+      "tags": [
+        "liquidator-permissions-are-obvious"
+      ],
+      "title": "Liquidator Permissions Are Obvious",
       "type": "failed_assumption"
     },
     {
@@ -3468,6 +5087,14 @@
         "low-supply-vault-state-is-representative"
       ],
       "title": "Low Supply Vault State Is Representative",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-lp-mint-burn-is-always-proportional",
+      "tags": [
+        "lp-mint-burn-is-always-proportional"
+      ],
+      "title": "Lp Mint Burn Is Always Proportional",
       "type": "failed_assumption"
     },
     {
@@ -3503,6 +5130,14 @@
       "type": "failed_assumption"
     },
     {
+      "id": "failed-assumption-pause-and-guardian-controls-are-clear",
+      "tags": [
+        "pause-and-guardian-controls-are-clear"
+      ],
+      "title": "Pause And Guardian Controls Are Clear",
+      "type": "failed_assumption"
+    },
+    {
       "id": "failed-assumption-pool-invariant-remains-stable-through-edge-sequences",
       "tags": [
         "pool-invariant-remains-stable-through-edge-sequences"
@@ -3524,6 +5159,30 @@
         "pool-reserves-reflect-fair-price"
       ],
       "title": "Pool Reserves Reflect Fair Price",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-quote-remains-valid-through-execution",
+      "tags": [
+        "quote-remains-valid-through-execution"
+      ],
+      "title": "Quote Remains Valid Through Execution",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-repay-updates-debt-and-cash-consistently",
+      "tags": [
+        "repay-updates-debt-and-cash-consistently"
+      ],
+      "title": "Repay Updates Debt And Cash Consistently",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-reserve-price-is-manipulation-resistant",
+      "tags": [
+        "reserve-price-is-manipulation-resistant"
+      ],
+      "title": "Reserve Price Is Manipulation Resistant",
       "type": "failed_assumption"
     },
     {
@@ -3559,11 +5218,35 @@
       "type": "failed_assumption"
     },
     {
+      "id": "failed-assumption-small-balance-rounding-is-negligible",
+      "tags": [
+        "small-balance-rounding-is-negligible"
+      ],
+      "title": "Small Balance Rounding Is Negligible",
+      "type": "failed_assumption"
+    },
+    {
       "id": "failed-assumption-spot-price-cannot-be-moved-economically",
       "tags": [
         "spot-price-cannot-be-moved-economically"
       ],
       "title": "Spot Price Cannot Be Moved Economically",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-spot-quote-is-stable-enough",
+      "tags": [
+        "spot-quote-is-stable-enough"
+      ],
+      "title": "Spot Quote Is Stable Enough",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-threshold-comparison-is-correct",
+      "tags": [
+        "threshold-comparison-is-correct"
+      ],
+      "title": "Threshold Comparison Is Correct",
       "type": "failed_assumption"
     },
     {
@@ -3575,6 +5258,14 @@
       "type": "failed_assumption"
     },
     {
+      "id": "failed-assumption-tokens-behave-like-standard-erc20",
+      "tags": [
+        "tokens-behave-like-standard-erc20"
+      ],
+      "title": "Tokens Behave Like Standard Erc20",
+      "type": "failed_assumption"
+    },
+    {
       "id": "failed-assumption-unit-tests-cover-compositional-state",
       "tags": [
         "unit-tests-cover-compositional-state"
@@ -3583,11 +5274,27 @@
       "type": "failed_assumption"
     },
     {
+      "id": "failed-assumption-unsafe-withdrawals-are-blocked",
+      "tags": [
+        "unsafe-withdrawals-are-blocked"
+      ],
+      "title": "Unsafe Withdrawals Are Blocked",
+      "type": "failed_assumption"
+    },
+    {
       "id": "failed-assumption-upgrade-path-is-authorized",
       "tags": [
         "upgrade-path-is-authorized"
       ],
       "title": "Upgrade Path Is Authorized",
+      "type": "failed_assumption"
+    },
+    {
+      "id": "failed-assumption-users-can-bound-price-movement-elsewhere",
+      "tags": [
+        "users-can-bound-price-movement-elsewhere"
+      ],
+      "title": "Users Can Bound Price Movement Elsewhere",
       "type": "failed_assumption"
     },
     {
@@ -3653,13 +5360,13 @@
       "id": "pattern-collateral-debt-invariant",
       "tags": [
         "boundary",
-        "collateral",
-        "debt",
-        "invariant",
-        "lending",
+        "guardian",
+        "keeper",
         "liquidation",
+        "market",
         "pattern-collateral-debt-invariant",
-        "readiness"
+        "paused",
+        "role"
       ],
       "title": "Collateral and debt invariant failure",
       "type": "historical_pattern"
@@ -3763,16 +5470,14 @@
     {
       "id": "pattern-privileged-operation-boundary",
       "tags": [
-        "access",
-        "admin",
-        "control",
-        "failure",
-        "negative",
-        "onlyowner",
+        "boundary",
+        "guardian",
+        "keeper",
+        "liquidation",
+        "market",
         "pattern-privileged-operation-boundary",
-        "risk",
-        "setter",
-        "test"
+        "paused",
+        "role"
       ],
       "title": "Privileged operation boundary failure",
       "type": "historical_pattern"
@@ -4469,11 +6174,35 @@
       "type": "root_cause"
     },
     {
+      "id": "root-cause-actual-received-amount-assumption",
+      "tags": [
+        "actual-received-amount-assumption"
+      ],
+      "title": "Actual Received Amount Assumption",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-available-liquidity-assumption",
+      "tags": [
+        "available-liquidity-assumption"
+      ],
+      "title": "Available Liquidity Assumption",
+      "type": "root_cause"
+    },
+    {
       "id": "root-cause-callback-assumption-failure",
       "tags": [
         "callback-assumption-failure"
       ],
       "title": "Callback Assumption Failure",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-cash-reserve-accounting-drift",
+      "tags": [
+        "cash-reserve-accounting-drift"
+      ],
+      "title": "Cash Reserve Accounting Drift",
       "type": "root_cause"
     },
     {
@@ -4501,6 +6230,14 @@
       "type": "root_cause"
     },
     {
+      "id": "root-cause-emergency-control-assumption",
+      "tags": [
+        "emergency-control-assumption"
+      ],
+      "title": "Emergency Control Assumption",
+      "type": "root_cause"
+    },
+    {
       "id": "root-cause-external-control-before-state-finalization",
       "tags": [
         "external-control-before-state-finalization"
@@ -4514,6 +6251,14 @@
         "implicit-admin-trust"
       ],
       "title": "Implicit Admin Trust",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-implicit-collateral-price-trust",
+      "tags": [
+        "implicit-collateral-price-trust"
+      ],
+      "title": "Implicit Collateral Price Trust",
       "type": "root_cause"
     },
     {
@@ -4541,11 +6286,51 @@
       "type": "root_cause"
     },
     {
+      "id": "root-cause-interest-index-rounding-drift",
+      "tags": [
+        "interest-index-rounding-drift"
+      ],
+      "title": "Interest Index Rounding Drift",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-liquidation-bonus-assumption",
+      "tags": [
+        "liquidation-bonus-assumption"
+      ],
+      "title": "Liquidation Bonus Assumption",
+      "type": "root_cause"
+    },
+    {
       "id": "root-cause-liquidation-boundary-undertested",
       "tags": [
         "liquidation-boundary-undertested"
       ],
       "title": "Liquidation Boundary Undertested",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-liquidation-role-boundary-undocumented",
+      "tags": [
+        "liquidation-role-boundary-undocumented"
+      ],
+      "title": "Liquidation Role Boundary Undocumented",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-low-liquidity-rounding-assumption",
+      "tags": [
+        "low-liquidity-rounding-assumption"
+      ],
+      "title": "Low Liquidity Rounding Assumption",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-lp-share-boundary-undertested",
+      "tags": [
+        "lp-share-boundary-undertested"
+      ],
+      "title": "Lp Share Boundary Undertested",
       "type": "root_cause"
     },
     {
@@ -4597,11 +6382,27 @@
       "type": "root_cause"
     },
     {
+      "id": "root-cause-missing-solvency-invariant",
+      "tags": [
+        "missing-solvency-invariant"
+      ],
+      "title": "Missing Solvency Invariant",
+      "type": "root_cause"
+    },
+    {
       "id": "root-cause-missing-twap-or-bounds",
       "tags": [
         "missing-twap-or-bounds"
       ],
       "title": "Missing Twap Or Bounds",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-missing-user-output-bound",
+      "tags": [
+        "missing-user-output-bound"
+      ],
+      "title": "Missing User Output Bound",
       "type": "root_cause"
     },
     {
@@ -4661,6 +6462,14 @@
       "type": "root_cause"
     },
     {
+      "id": "root-cause-stale-quote-assumption",
+      "tags": [
+        "stale-quote-assumption"
+      ],
+      "title": "Stale Quote Assumption",
+      "type": "root_cause"
+    },
+    {
       "id": "root-cause-stale-reward-index",
       "tags": [
         "stale-reward-index"
@@ -4685,6 +6494,14 @@
       "type": "root_cause"
     },
     {
+      "id": "root-cause-time-step-accrual-assumption",
+      "tags": [
+        "time-step-accrual-assumption"
+      ],
+      "title": "Time Step Accrual Assumption",
+      "type": "root_cause"
+    },
+    {
       "id": "root-cause-unbounded-claim-accounting",
       "tags": [
         "unbounded-claim-accounting"
@@ -4706,6 +6523,14 @@
         "unclear-role-boundary"
       ],
       "title": "Unclear Role Boundary",
+      "type": "root_cause"
+    },
+    {
+      "id": "root-cause-unsupported-token-behavior-undocumented",
+      "tags": [
+        "unsupported-token-behavior-undocumented"
+      ],
+      "title": "Unsupported Token Behavior Undocumented",
       "type": "root_cause"
     },
     {
@@ -4865,6 +6690,54 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-available-liquidity-bound",
+      "tags": [
+        "available-liquidity-bound"
+      ],
+      "title": "Available Liquidity Bound",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-balance-before-after-accounting",
+      "tags": [
+        "balance-before-after-accounting"
+      ],
+      "title": "Balance Before After Accounting",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-bonus-bound-test",
+      "tags": [
+        "bonus-bound-test"
+      ],
+      "title": "Bonus Bound Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-borrow-blocked-on-invalid-price",
+      "tags": [
+        "borrow-blocked-on-invalid-price"
+      ],
+      "title": "Borrow Blocked On Invalid Price",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-borrow-limit-boundary-test",
+      "tags": [
+        "borrow-limit-boundary-test"
+      ],
+      "title": "Borrow Limit Boundary Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-borrow-repay-around-accrual",
+      "tags": [
+        "borrow-repay-around-accrual"
+      ],
+      "title": "Borrow Repay Around Accrual",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-claim-twice-reverts-or-noops",
       "tags": [
         "claim-twice-reverts-or-noops"
@@ -4889,11 +6762,27 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-deadline-or-stale-quote-test",
+      "tags": [
+        "deadline-or-stale-quote-test"
+      ],
+      "title": "Deadline Or Stale Quote Test",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-decimal-normalization-test",
       "tags": [
         "decimal-normalization-test"
       ],
       "title": "Decimal Normalization Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-decimals-normalization-test",
+      "tags": [
+        "decimals-normalization-test"
+      ],
+      "title": "Decimals Normalization Test",
       "type": "suggested_test"
     },
     {
@@ -4929,6 +6818,14 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-dust-rounding-test",
+      "tags": [
+        "dust-rounding-test"
+      ],
+      "title": "Dust Rounding Test",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-endpoint-configuration-documentation",
       "tags": [
         "endpoint-configuration-documentation"
@@ -4937,11 +6834,43 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-fee-on-transfer-token-simulation",
+      "tags": [
+        "fee-on-transfer-token-simulation"
+      ],
+      "title": "Fee On Transfer Token Simulation",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-fee-rounding-bound",
+      "tags": [
+        "fee-rounding-bound"
+      ],
+      "title": "Fee Rounding Bound",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-first-liquidity-provider-test",
+      "tags": [
+        "first-liquidity-provider-test"
+      ],
+      "title": "First Liquidity Provider Test",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-foundry-invariant-skeleton",
       "tags": [
         "foundry-invariant-skeleton"
       ],
       "title": "Foundry Invariant Skeleton",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-guardian-permission-test",
+      "tags": [
+        "guardian-permission-test"
+      ],
+      "title": "Guardian Permission Test",
       "type": "suggested_test"
     },
     {
@@ -4961,6 +6890,30 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-interest-index-monotonicity",
+      "tags": [
+        "interest-index-monotonicity"
+      ],
+      "title": "Interest Index Monotonicity",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-just-above-threshold-test",
+      "tags": [
+        "just-above-threshold-test"
+      ],
+      "title": "Just Above Threshold Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-just-below-threshold-test",
+      "tags": [
+        "just-below-threshold-test"
+      ],
+      "title": "Just Below Threshold Test",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-known-limitations-section",
       "tags": [
         "known-limitations-section"
@@ -4969,11 +6922,11 @@
       "type": "suggested_test"
     },
     {
-      "id": "test-liquidation-boundary-fuzz",
+      "id": "test-liquidator-role-boundary-test",
       "tags": [
-        "liquidation-boundary-fuzz"
+        "liquidator-role-boundary-test"
       ],
-      "title": "Liquidation Boundary Fuzz",
+      "title": "Liquidator Role Boundary Test",
       "type": "suggested_test"
     },
     {
@@ -4993,11 +6946,27 @@
       "type": "suggested_test"
     },
     {
-      "id": "test-oracle-price-shock-test",
+      "id": "test-min-out-enforcement",
       "tags": [
-        "oracle-price-shock-test"
+        "min-out-enforcement"
       ],
-      "title": "Oracle Price Shock Test",
+      "title": "Min Out Enforcement",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-partial-liquidation-math",
+      "tags": [
+        "partial-liquidation-math"
+      ],
+      "title": "Partial Liquidation Math",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-paused-market-liquidation-test",
+      "tags": [
+        "paused-market-liquidation-test"
+      ],
+      "title": "Paused Market Liquidation Test",
       "type": "suggested_test"
     },
     {
@@ -5009,11 +6978,59 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-price-movement-bounds",
+      "tags": [
+        "price-movement-bounds"
+      ],
+      "title": "Price Movement Bounds",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-price-shock-boundary-test",
+      "tags": [
+        "price-shock-boundary-test"
+      ],
+      "title": "Price Shock Boundary Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-proportional-minting-test",
+      "tags": [
+        "proportional-minting-test"
+      ],
+      "title": "Proportional Minting Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-proportional-withdrawal-test",
+      "tags": [
+        "proportional-withdrawal-test"
+      ],
+      "title": "Proportional Withdrawal Test",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-reentrant-receiver-mock",
       "tags": [
         "reentrant-receiver-mock"
       ],
       "title": "Reentrant Receiver Mock",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-repay-cash-debt-consistency",
+      "tags": [
+        "repay-cash-debt-consistency"
+      ],
+      "title": "Repay Cash Debt Consistency",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-repeated-accrual-drift-bound",
+      "tags": [
+        "repeated-accrual-drift-bound"
+      ],
+      "title": "Repeated Accrual Drift Bound",
       "type": "suggested_test"
     },
     {
@@ -5025,11 +7042,27 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-reserve-accounting-test",
+      "tags": [
+        "reserve-accounting-test"
+      ],
+      "title": "Reserve Accounting Test",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-reserve-manipulation-sanity-test",
       "tags": [
         "reserve-manipulation-sanity-test"
       ],
       "title": "Reserve Manipulation Sanity Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-reserve-withdrawal-constraints",
+      "tags": [
+        "reserve-withdrawal-constraints"
+      ],
+      "title": "Reserve Withdrawal Constraints",
       "type": "suggested_test"
     },
     {
@@ -5086,6 +7119,22 @@
         "slippage-boundary-test"
       ],
       "title": "Slippage Boundary Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-small-balance-rounding-test",
+      "tags": [
+        "small-balance-rounding-test"
+      ],
+      "title": "Small Balance Rounding Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-stale-oracle-rejection",
+      "tags": [
+        "stale-oracle-rejection"
+      ],
+      "title": "Stale Oracle Rejection",
       "type": "suggested_test"
     },
     {
@@ -5161,11 +7210,35 @@
       "type": "suggested_test"
     },
     {
+      "id": "test-unsafe-withdrawal-rejection",
+      "tags": [
+        "unsafe-withdrawal-rejection"
+      ],
+      "title": "Unsafe Withdrawal Rejection",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-unsupported-token-documentation",
+      "tags": [
+        "unsupported-token-documentation"
+      ],
+      "title": "Unsupported Token Documentation",
+      "type": "suggested_test"
+    },
+    {
       "id": "test-upgrade-authorization-test",
       "tags": [
         "upgrade-authorization-test"
       ],
       "title": "Upgrade Authorization Test",
+      "type": "suggested_test"
+    },
+    {
+      "id": "test-utilization-bound-test",
+      "tags": [
+        "utilization-bound-test"
+      ],
+      "title": "Utilization Bound Test",
       "type": "suggested_test"
     }
   ],

@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 SCHEMA_VERSION = "1.0.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
@@ -377,6 +377,76 @@ REWARD_RULE_TERMS = [
     "notifyRewardAmount",
 ]
 
+AMM_RULE_TERMS = [
+    "swap",
+    "addLiquidity",
+    "removeLiquidity",
+    "mint",
+    "burn",
+    "liquidity",
+    "reserve",
+    "reserve0",
+    "reserve1",
+    "getReserves",
+    "kLast",
+    "constant product",
+    "x * y",
+    "stableswap",
+    "invariant",
+    "LP",
+    "poolToken",
+    "totalSupply",
+    "balanceOf",
+    "getAmountOut",
+    "quote",
+    "spot price",
+    "reserve ratio",
+    "TWAP",
+    "minOut",
+    "deadline",
+    "slippage",
+    "amountIn",
+    "amountOut",
+    "balanceBefore",
+    "balanceAfter",
+    "fee-on-transfer",
+    "rebasing",
+]
+
+LENDING_RULE_TERMS = [
+    "borrow",
+    "repay",
+    "collateral",
+    "debt",
+    "healthFactor",
+    "health factor",
+    "LTV",
+    "loan-to-value",
+    "loanToValue",
+    "liquidationThreshold",
+    "collateralFactor",
+    "liquidate",
+    "liquidation",
+    "liquidationBonus",
+    "closeFactor",
+    "seize",
+    "interestIndex",
+    "borrowIndex",
+    "exchangeRate",
+    "utilization",
+    "accrueInterest",
+    "ratePerSecond",
+    "principal",
+    "scaledBalance",
+    "totalBorrows",
+    "totalReserves",
+    "cash",
+    "available liquidity",
+    "keeper",
+    "liquidator",
+    "guardian",
+]
+
 VAULT_TEST_COVERAGE_TERMS: dict[str, list[str]] = {
     "deposit": ["deposit", "previewDeposit"],
     "withdraw": ["withdraw", "previewWithdraw", "redeem", "previewRedeem"],
@@ -496,30 +566,17 @@ SIGNAL_TERMS: dict[str, list[str]] = {
         "wormhole",
     ],
     "amm": [
-        "swap",
+        *AMM_RULE_TERMS,
         "pool",
         "pair",
-        "reserve",
-        "getReserves",
-        "kLast",
-        "invariant",
-        "liquidity",
-        "addLiquidity",
-        "removeLiquidity",
         "sqrtPriceX96",
     ],
+    "amm_rule_pack": AMM_RULE_TERMS,
     "lending": [
-        "borrow",
-        "repay",
-        "collateral",
-        "liquidation",
-        "liquidate",
-        "healthFactor",
-        "debt",
-        "utilization",
+        *LENDING_RULE_TERMS,
         "interestRate",
-        "loanToValue",
     ],
+    "lending_rule_pack": LENDING_RULE_TERMS,
     "staking_rewards": [
         *REWARD_RULE_TERMS,
     ],
@@ -554,12 +611,19 @@ PROTOCOL_WEIGHTS: dict[str, dict[str, int]] = {
         "pool": 3,
         "pair": 3,
         "reserve": 3,
+        "reserve0": 5,
+        "reserve1": 5,
         "getReserves": 5,
         "kLast": 4,
-        "invariant": 2,
+        "constant product": 5,
+        "stableswap": 5,
+        "invariant": 3,
         "liquidity": 3,
         "addLiquidity": 4,
         "removeLiquidity": 4,
+        "minOut": 4,
+        "slippage": 4,
+        "quote": 3,
         "sqrtPriceX96": 5,
     },
     "lending": {
@@ -572,6 +636,13 @@ PROTOCOL_WEIGHTS: dict[str, dict[str, int]] = {
         "debt": 3,
         "utilization": 3,
         "interestRate": 3,
+        "interestIndex": 4,
+        "borrowIndex": 4,
+        "accrueInterest": 4,
+        "totalBorrows": 4,
+        "totalReserves": 4,
+        "liquidationThreshold": 4,
+        "collateralFactor": 4,
         "loanToValue": 4,
     },
     "staking": {
@@ -679,6 +750,17 @@ FINDING_RULES: list[tuple[str, str, str]] = [
     ("Upgradeability surface needs initializer review", "ARK-UPG-002", "upgradeability-initialization"),
     ("Reward accounting needs conservation coverage", "ARK-RWD-001", "reward-accounting"),
     ("AMM math needs invariant coverage", "ARK-AMM-001", "amm-invariant"),
+    ("AMM invariant assumptions not covered by tests", "ARK-AMM-001", "amm-invariant"),
+    ("LP share accounting without mint/burn boundary tests", "ARK-AMM-002", "amm-lp-accounting"),
+    ("Spot-price or reserve-price dependency without manipulation-resistance tests", "ARK-AMM-003", "amm-pricing"),
+    ("Fee-on-transfer or non-standard token assumptions not documented", "ARK-AMM-004", "amm-token-assumptions"),
+    ("Slippage/min-output constraints missing or unclear", "ARK-AMM-005", "amm-slippage"),
+    ("Collateral/debt solvency invariant not covered by tests", "ARK-LEND-001", "lending-solvency"),
+    ("Liquidation boundary tests missing", "ARK-LEND-002", "lending-liquidation"),
+    ("Interest/index accounting not covered by rounding and time-step tests", "ARK-LEND-003", "lending-interest-index"),
+    ("Oracle-dependent borrowing/liquidation without stale-price tests", "ARK-LEND-004", "lending-oracle"),
+    ("Reserve/cash accounting assumptions not covered", "ARK-LEND-005", "lending-liquidity"),
+    ("Liquidation/access-control interaction not documented", "ARK-LEND-006", "lending-access-control"),
     ("Vault accounting lacks visible roundtrip or conservation coverage", "ARK-VLT-009", "vault-accounting"),
     ("Oracle-dependent logic without stale-price tests", "ARK-ORC-001", "oracle-pricing"),
     ("Oracle decimals or normalization not covered by tests", "ARK-ORC-002", "oracle-pricing"),
@@ -1235,6 +1317,11 @@ COVERAGE_CONTEXT_TERMS = [
     "liquidation boundary",
     "slippage",
     "constant product",
+    "LP share accounting",
+    "fee-on-transfer",
+    "collateral debt",
+    "interest index",
+    "borrow index",
     "share accounting",
     "totalAssets",
 ]
@@ -1718,6 +1805,8 @@ def parse_test_file(text: str, path: Path, root: Path) -> dict[str, object]:
         "reentrancy": ["reentrant", "attacker", "callback", "malicious", "receiver", "double claim", "doubleclaim"],
         "reward": ["multi-user", "multiuser", "conservation", "claim twice", "claimtwice", "accumulator", "rewardpertoken", "epoch"],
         "vault": ["deposit", "withdraw", "redeem", "donation", "rounding", "totalassets", "preview", "invariant"],
+        "amm": ["constant product", "invariant", "reserve", "liquidity", "mint", "burn", "slippage", "minout", "deadline", "twap", "balancebefore", "balanceafter", "fee-on-transfer"],
+        "lending": ["collateral", "debt", "solvency", "healthfactor", "liquidation", "just above", "just below", "interest", "borrowindex", "accrue", "oracle", "stale", "cash", "reserves"],
     }
     coverage = {
         key: sorted({term for term in terms if has_positive_term(text, term)})
@@ -1780,7 +1869,11 @@ def semantic_signal_summary(contracts: list[dict[str, object]], test_files: list
     ]
     reward_state = any(term in variable.lower() for variable in state_variables for term in ["reward", "accumulator", "index", "emission", "staked"])
     vault_functions = {"deposit", "withdraw", "redeem", "mint", "totalassets", "converttoshares", "converttoassets", "previewdeposit", "previewwithdraw"}
-    tests_by_pack = {"oracle": set(), "access_control": set(), "reentrancy": set(), "reward": set(), "vault": set()}
+    amm_functions = {"swap", "addliquidity", "removeliquidity", "getamountout", "quote", "mint", "burn"}
+    lending_functions = {"borrow", "repay", "liquidate", "healthfactor", "accrueinterest", "depositcollateral", "withdrawcollateral"}
+    amm_state = any(term in variable.lower() for variable in state_variables for term in ["reserve", "klast", "liquidity", "pooltoken"])
+    lending_state = any(term in variable.lower() for variable in state_variables for term in ["collateral", "debt", "borrow", "reserve", "cash", "liquidation", "interestindex", "borrowindex"])
+    tests_by_pack = {"oracle": set(), "access_control": set(), "reentrancy": set(), "reward": set(), "vault": set(), "amm": set(), "lending": set()}
     for test_file in test_files:
         coverage_terms = test_file.get("coverage_terms", {})
         if isinstance(coverage_terms, dict):
@@ -1796,6 +1889,8 @@ def semantic_signal_summary(contracts: list[dict[str, object]], test_files: list
         "has_external_value_flow": bool(value_flow),
         "has_reward_accounting": reward_state or bool(function_names & {"stake", "unstake", "claim", "claimreward", "earned", "rewardpertoken", "notifyrewardamount"}),
         "has_vault_functions": bool(function_names & vault_functions),
+        "has_amm_functions": amm_state or bool(function_names & amm_functions),
+        "has_lending_functions": lending_state or bool(function_names & lending_functions),
         "has_upgradeability": bool(inherited & {"UUPSUpgradeable", "TransparentUpgradeableProxy"}) or any("upgrade" in str(function.get("name", "")).lower() or "initializer" in [str(mod).lower() for mod in function.get("modifiers", [])] for function in functions),
         "has_invariant_tests": any(test_file.get("invariant_functions") for test_file in test_files),
         "has_fuzz_tests": any(test_file.get("fuzz_functions") for test_file in test_files),
@@ -2875,7 +2970,7 @@ def compute_readiness_score(
             "Add tests that unauthorized users cannot call privileged setters or emergency controls.",
             ["access-control-review", "admin-risk"],
         )
-    if has_any(signals, "staking_rewards") and not test_readiness["invariant_tests"]:
+    if has_any(signals, "staking_rewards", ["stake", "unstake", "reward", "rewards", "claim", "rewardPerToken", "accumulator", "emission", "earned", "pendingReward"]) and not test_readiness["invariant_tests"]:
         add_gap(
             gaps,
             "Medium readiness gap",
@@ -2884,16 +2979,6 @@ def compute_readiness_score(
             "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
             ["reward-accounting", "precision"],
         )
-    if has_any(signals, "amm") and not test_readiness["invariant_tests"]:
-        add_gap(
-            gaps,
-            "Medium readiness gap",
-            "AMM math needs invariant coverage",
-            "AMM reserve/liquidity/swap terms were detected without invariant testing.",
-            "Add AMM invariant, liquidity proportionality, and fee-growth tests.",
-            ["amm-invariant", "liquidity"],
-        )
-
     apply_negative_evidence_score_penalty(
         score,
         test_readiness,
@@ -2989,6 +3074,10 @@ def source_and_doc_text(contents: dict[Path, str], classified: ClassifiedFiles) 
     return collect_text_for_paths(contents, paths or contents.keys()).lower()
 
 
+def source_text(contents: dict[Path, str], classified: ClassifiedFiles) -> str:
+    return collect_text_for_paths(contents, classified.solidity_sources).lower()
+
+
 def text_has_any(text: str, terms: Iterable[str]) -> bool:
     return any(has_positive_term(text, term) for term in terms)
 
@@ -3006,6 +3095,7 @@ def add_rule_pack_gaps(
     """Add v0.5 starter rule-pack findings without replacing existing scoring."""
     tests = test_text(contents, classified)
     corpus_text = source_and_doc_text(contents, classified)
+    solidity_text = source_text(contents, classified)
     existing_ids = existing_finding_ids(gaps)
 
     def maybe_add(finding_id: str, *args: object, **kwargs: object) -> None:
@@ -3354,6 +3444,219 @@ def add_rule_pack_gaps(
             suggested_test="Assert emission updates are role-gated and do not corrupt already accrued rewards.",
         )
 
+    amm_terms = detected_terms(signals, "amm_rule_pack", "amm")
+    has_amm_source = bool(amm_terms) and text_has_any(
+        solidity_text,
+        ["swap", "addliquidity", "removeliquidity", "reserve0", "reserve1", "getreserves", "klast", "liquidity", "getamountout"],
+    )
+    has_amm_invariant_tests = text_has_any(
+        tests,
+        ["constant product", "invariant", "reserve accounting", "swap invariant", "liquidity invariant", "x * y"],
+    )
+    has_lp_share_surface = has_amm_source and text_has_any(solidity_text, ["totalsupply", "balanceof", "mint", "burn", "shares", "pooltoken", "lp"])
+    has_lp_share_tests = text_has_any(tests, ["first liquidity", "proportional", "withdrawal", "rounding", "dust", "lp share"])
+    has_reserve_price_surface = has_amm_source and text_has_any(solidity_text, ["getamountout", "quote", "spot price", "reserve ratio", "reserve0", "reserve1", "getreserves"])
+    has_manipulation_tests = text_has_any(tests, ["twap", "manipulation", "price movement", "bounds", "reserve manipulation", "delay", "spot"])
+    has_token_assumption_surface = has_amm_source and text_has_any(solidity_text, ["transferfrom", "amountin", "safetransferfrom", "balancebefore", "balanceafter"])
+    has_received_amount_tests_or_docs = text_has_any(corpus_text, ["balancebefore", "balanceafter", "actual received", "fee-on-transfer", "rebasing", "non-standard token", "unsupported token"])
+    has_slippage_surface = has_amm_source and text_has_any(solidity_text, ["swap", "amountout", "getamountout"]) and not text_has_any(solidity_text, ["minout", "amountoutmin", "deadline", "slippage"])
+    has_slippage_tests = text_has_any(tests, ["minout", "amountoutmin", "deadline", "slippage", "stale quote"])
+
+    if has_amm_source and not has_amm_invariant_tests:
+        maybe_add(
+            "ARK-AMM-001",
+            "High readiness gap",
+            "AMM invariant assumptions not covered by tests",
+            "AMM reserve, swap, or liquidity signals were detected without visible invariant or reserve-accounting tests.",
+            "Add local tests or invariants showing swaps and liquidity operations preserve documented AMM accounting within fee and rounding bounds.",
+            ["amm-invariant", "amm-rule-pack", "pre-audit-readiness"],
+            priority="High",
+            category="amm-invariant",
+            detected=amm_terms,
+            why_it_matters="AMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations.",
+            historical_pattern_similarity="Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
+            defensive_checks=["swap invariant conservation", "reserve accounting", "add/remove liquidity consistency", "fee and rounding bounds"],
+            suggested_test="Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        )
+    if has_lp_share_surface and not has_lp_share_tests:
+        maybe_add(
+            "ARK-AMM-002",
+            "High readiness gap",
+            "LP share accounting without mint/burn boundary tests",
+            "LP supply, mint, burn, or share-accounting signals were detected without visible first-provider, proportional mint/burn, or rounding boundary tests.",
+            "Add tests for first liquidity provider behavior, proportional LP minting/burning, withdrawal rounding, and dust handling.",
+            ["amm-lp-accounting", "amm-rule-pack", "share-accounting"],
+            priority="High",
+            category="amm-lp-accounting",
+            detected=amm_terms,
+            why_it_matters="LP share accounting controls who owns pool value; boundary mistakes can distort deposits, withdrawals, or low-liquidity behavior.",
+            historical_pattern_similarity="Maps to share inflation and liquidity accounting readiness classes.",
+            defensive_checks=["first liquidity provider behavior", "proportional minting", "proportional withdrawal", "dust handling"],
+            suggested_test="Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+        )
+    if has_reserve_price_surface and not has_manipulation_tests:
+        maybe_add(
+            "ARK-AMM-003",
+            "High readiness gap",
+            "Spot-price or reserve-price dependency without manipulation-resistance tests",
+            "Reserve-ratio, quote, getAmountOut, or spot-price signals were detected without visible TWAP, delay, bounds, or manipulation-resistance tests.",
+            "Add local reserve-movement tests and document whether spot, TWAP, or external oracle assumptions are intended.",
+            ["amm-pricing", "spot-price", "oracle-risk", "amm-rule-pack"],
+            priority="High",
+            category="amm-pricing",
+            detected=amm_terms,
+            why_it_matters="Same-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented.",
+            historical_pattern_similarity="Maps to spot-price and pool-price accounting readiness classes.",
+            defensive_checks=["TWAP or delay assumption", "reserve manipulation sanity test", "price movement bounds"],
+            suggested_test="Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        )
+    if has_token_assumption_surface and not has_received_amount_tests_or_docs:
+        maybe_add(
+            "ARK-AMM-004",
+            "Medium readiness gap",
+            "Fee-on-transfer or non-standard token assumptions not documented",
+            "Token transfer and amountIn accounting signals were detected without clear received-amount tests or non-standard token assumptions.",
+            "Document supported token assumptions or add balanceBefore/balanceAfter accounting tests for fee-on-transfer and non-standard token behavior.",
+            ["amm-token-assumptions", "fee-on-transfer", "amm-rule-pack"],
+            priority="Medium",
+            category="amm-token-assumptions",
+            detected=amm_terms,
+            why_it_matters="AMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled.",
+            historical_pattern_similarity="Maps to fee-on-transfer and token accounting assumption readiness classes.",
+            defensive_checks=["actual received amount accounting", "fee-on-transfer simulation", "unsupported token documentation"],
+            suggested_test="Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        )
+    if has_slippage_surface and not has_slippage_tests:
+        maybe_add(
+            "ARK-AMM-005",
+            "Medium readiness gap",
+            "Slippage/min-output constraints missing or unclear",
+            "Swap path signals were detected without clear minOut, deadline, slippage, or stale-quote constraints.",
+            "Add user-provided min-output and stale-quote tests, or document why swaps are not user-facing and how price movement is bounded.",
+            ["amm-slippage", "min-output", "amm-rule-pack"],
+            priority="Medium",
+            category="amm-slippage",
+            detected=amm_terms,
+            why_it_matters="Slippage and stale quote controls help users and integrations bound expected outcomes around swaps.",
+            historical_pattern_similarity="Maps to price boundary and quote freshness readiness classes.",
+            defensive_checks=["minOut enforcement", "deadline behavior", "stale quote handling"],
+            suggested_test="Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        )
+
+    lending_terms = detected_terms(signals, "lending_rule_pack", "lending")
+    has_lending_source = bool(lending_terms) and text_has_any(
+        solidity_text,
+        ["borrow", "repay", "collateral", "debt", "healthfactor", "liquidate", "liquidation", "totalborrows"],
+    )
+    has_solvency_tests = text_has_any(tests, ["solvency", "collateral debt", "healthfactor", "ltv", "collateralization", "unsafe withdrawal"])
+    has_liquidation_surface = has_lending_source and text_has_any(solidity_text, ["liquidate", "liquidation", "liquidationthreshold", "liquidationbonus", "closefactor", "seize"])
+    has_liquidation_tests = text_has_any(tests, ["just above", "just below", "threshold", "liquidation bonus", "closefactor", "partial liquidation", "over-seizure"])
+    has_interest_surface = has_lending_source and text_has_any(solidity_text, ["interestindex", "borrowindex", "exchangerate", "utilization", "accrueinterest", "ratepersecond", "scaledbalance", "principal"])
+    has_interest_tests = text_has_any(tests, ["monotonic", "rounding", "small balance", "time-step", "accrual", "borrowindex", "interest"])
+    has_lending_oracle_surface = has_lending_source and has_meaningful_oracle_signal(signals) and text_has_any(solidity_text, ["healthfactor", "collateralvalue", "borrow", "liquidate", "liquidation"])
+    has_lending_oracle_tests = text_has_any(tests, ["stale", "updatedat", "heartbeat", "decimals", "price shock", "invalid price", "oracle"])
+    has_cash_surface = has_lending_source and text_has_any(solidity_text, ["cash", "reserves", "totalborrows", "totalreserves", "available liquidity", "utilization"])
+    has_cash_tests = text_has_any(tests, ["available liquidity", "cash", "reserve", "repay updates", "utilization", "cannot exceed liquidity"])
+    has_liquidation_roles = has_liquidation_surface and text_has_any(solidity_text, ["liquidator", "keeper", "owner", "guardian", "pause", "whitelist", "onlyowner", "onlyrole"])
+    has_liquidation_role_docs = text_has_any(corpus_text, ["liquidator role", "keeper", "paused market", "guardian", "whitelist", "liquidation role", "emergency control"])
+
+    if has_lending_source and not has_solvency_tests:
+        maybe_add(
+            "ARK-LEND-001",
+            "High readiness gap",
+            "Collateral/debt solvency invariant not covered by tests",
+            "Collateral, debt, borrow, repay, or health-factor signals were detected without visible solvency invariant tests.",
+            "Add collateral/debt invariants and boundary tests for borrow, repay, deposit, withdrawal, and liquidation readiness.",
+            ["lending-solvency", "lending-rule-pack", "pre-audit-readiness"],
+            priority="High",
+            category="lending-solvency",
+            detected=lending_terms,
+            why_it_matters="Lending systems depend on collateral and debt accounting staying aligned across every user action.",
+            historical_pattern_similarity="Maps to collateral/debt invariant and oracle-dependent lending readiness classes. This is defensive review context, not vulnerability confirmation.",
+            defensive_checks=["collateral debt invariant", "unsafe withdrawal rejection", "borrow limit boundary", "repay/deposit accounting"],
+            suggested_test="Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+        )
+    if has_liquidation_surface and not has_liquidation_tests:
+        maybe_add(
+            "ARK-LEND-002",
+            "High readiness gap",
+            "Liquidation boundary tests missing",
+            "Liquidation, threshold, bonus, close factor, or seize signals were detected without visible just-above/just-below boundary tests.",
+            "Add tests for liquidation thresholds, partial liquidation, bonus bounds, and over-seizure prevention.",
+            ["lending-liquidation", "liquidation-boundary", "lending-rule-pack"],
+            priority="High",
+            category="lending-liquidation",
+            detected=lending_terms,
+            why_it_matters="Liquidation boundary errors can reject valid liquidations, liquidate solvent positions, or distort seized collateral accounting.",
+            historical_pattern_similarity="Maps to liquidation boundary and collateral accounting readiness classes.",
+            defensive_checks=["just-above threshold", "just-below threshold", "bonus bounds", "partial liquidation math"],
+            suggested_test="Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+        )
+    if has_interest_surface and not has_interest_tests:
+        maybe_add(
+            "ARK-LEND-003",
+            "Medium readiness gap",
+            "Interest/index accounting not covered by rounding and time-step tests",
+            "Interest index, borrow index, exchange rate, utilization, or accrual signals were detected without visible rounding and time-step tests.",
+            "Add tests for accrual monotonicity, small-balance rounding, borrow/repay around accrual, and repeated accrual drift.",
+            ["lending-interest-index", "precision", "lending-rule-pack"],
+            priority="Medium",
+            category="lending-interest-index",
+            detected=lending_terms,
+            why_it_matters="Interest/index accounting can drift when rates, time steps, small balances, and repeated accrual interact.",
+            historical_pattern_similarity="Maps to accounting index drift and precision readiness classes.",
+            defensive_checks=["index monotonicity", "small-balance rounding", "borrow/repay around accrual", "drift bound"],
+            suggested_test="Advance local time across multiple accrual steps and assert borrow indexes and balances remain monotonic and bounded by documented rounding.",
+        )
+    if has_lending_oracle_surface and not has_lending_oracle_tests:
+        maybe_add(
+            "ARK-LEND-004",
+            "High readiness gap",
+            "Oracle-dependent borrowing/liquidation without stale-price tests",
+            "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
+            "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
+            ["lending-oracle", "oracle-risk", "lending-rule-pack"],
+            priority="High",
+            category="lending-oracle",
+            detected=sorted(set(lending_terms + oracle_terms)),
+            why_it_matters="Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices.",
+            historical_pattern_similarity="Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
+            defensive_checks=["stale oracle rejection", "decimals normalization", "price shock boundary", "borrow blocked on invalid price"],
+            suggested_test="Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        )
+    if has_cash_surface and not has_cash_tests:
+        maybe_add(
+            "ARK-LEND-005",
+            "Medium readiness gap",
+            "Reserve/cash accounting assumptions not covered",
+            "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
+            "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
+            ["lending-liquidity", "reserve-accounting", "lending-rule-pack"],
+            priority="Medium",
+            category="lending-liquidity",
+            detected=lending_terms,
+            why_it_matters="Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.",
+            historical_pattern_similarity="Maps to cash/debt mismatch and liquidity accounting readiness classes.",
+            defensive_checks=["available liquidity bound", "repay updates cash/debt", "reserve withdrawal constraints", "utilization bounds"],
+            suggested_test="Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        )
+    if has_liquidation_roles and not (has_role_tests or has_liquidation_role_docs):
+        maybe_add(
+            "ARK-LEND-006",
+            "Low readiness gap",
+            "Liquidation/access-control interaction not documented",
+            "Liquidation role, keeper, guardian, pause, whitelist, or owner signals were detected without clear role-boundary tests or documentation.",
+            "Document liquidation role boundaries and add tests for unauthorized liquidator restrictions, pause behavior, and emergency controls where applicable.",
+            ["lending-access-control", "liquidation-boundary", "access-control-review", "lending-rule-pack"],
+            priority="Low",
+            category="lending-access-control",
+            detected=lending_terms,
+            why_it_matters="Liquidation and pause controls can change who may act during stressed market states.",
+            historical_pattern_similarity="Maps to privileged operation and liquidation boundary readiness classes.",
+            defensive_checks=["liquidator authorization", "paused-market behavior", "guardian bounds", "role documentation"],
+            suggested_test="Assert paused-market and liquidation role behavior matches documented policy for authorized and unauthorized callers.",
+        )
+
 
 RULE_PACK_DEFINITIONS = {
     "vault": {
@@ -3390,6 +3693,20 @@ RULE_PACK_DEFINITIONS = {
         "finding_prefixes": ["ARK-RWD"],
         "docs": "docs/REWARD_ACCOUNTING_RULE_PACK.md",
         "suggested_tests": ["reward conservation", "no overclaim", "index monotonicity", "stake/unstake/claim lifecycle"],
+    },
+    "amm": {
+        "label": "AMM Rule Pack",
+        "signal_categories": ["amm_rule_pack", "amm"],
+        "finding_prefixes": ["ARK-AMM"],
+        "docs": "docs/AMM_RULE_PACK.md",
+        "suggested_tests": ["swap invariant conservation", "LP share proportionality", "TWAP or reserve bounds", "minOut enforcement"],
+    },
+    "lending": {
+        "label": "Lending Rule Pack",
+        "signal_categories": ["lending_rule_pack", "lending"],
+        "finding_prefixes": ["ARK-LEND"],
+        "docs": "docs/LENDING_RULE_PACK.md",
+        "suggested_tests": ["collateral/debt invariant", "liquidation boundary tests", "interest index monotonicity", "oracle shock tests"],
     },
 }
 
@@ -3479,6 +3796,20 @@ def semantic_functions_for_gap(gap: ReadinessGap, semantic: dict[str, object]) -
             if name_has(function, ["stake", "unstake", "claim", "reward", "earned", "notify"])
             or any("reward" in str(item).lower() or "accumulator" in str(item).lower() for item in function.get("reads_state", []) + function.get("writes_state", []))
         ]
+    if "amm" in category or "amm" in title or "liquidity" in title:
+        return [
+            function
+            for function in functions
+            if name_has(function, ["swap", "addliquidity", "removeliquidity", "getamountout", "quote", "mint", "burn"])
+            or any("reserve" in str(item).lower() or "liquidity" in str(item).lower() or "klast" in str(item).lower() for item in function.get("reads_state", []) + function.get("writes_state", []))
+        ]
+    if "lending" in category or "liquidation" in category or "collateral" in title or "borrow" in title:
+        return [
+            function
+            for function in functions
+            if name_has(function, ["borrow", "repay", "liquidate", "healthfactor", "accrueinterest", "withdrawcollateral", "depositcollateral"])
+            or any("collateral" in str(item).lower() or "debt" in str(item).lower() or "borrow" in str(item).lower() for item in function.get("reads_state", []) + function.get("writes_state", []))
+        ]
     if "vault" in category or "vault" in title or "erc4626" in gap.tags:
         return [
             function
@@ -3525,6 +3856,8 @@ def test_coverage_for_gap(gap: ReadinessGap, semantic: dict[str, object]) -> tup
         ("reentrancy", ["reentrancy", "value flow", "external call", "claim/refund"]),
         ("reward", ["reward", "staking", "accumulator", "claim flow"]),
         ("vault", ["vault", "erc4626", "share", "totalassets"]),
+        ("amm", ["amm", "liquidity", "reserve", "slippage", "lp share"]),
+        ("lending", ["lending", "liquidation", "collateral", "debt", "borrow"]),
     ]
     for key, terms in mapping:
         if any(term in category or term in title for term in terms):
@@ -3551,6 +3884,10 @@ def slither_evidence_for_gap(gap: ReadinessGap, slither: dict[str, object]) -> l
         keywords = ["oracle", "price", "timestamp"]
     elif "reward" in category:
         keywords = ["divide", "precision", "erc20"]
+    elif "amm" in category:
+        keywords = ["divide", "precision", "erc20", "price", "constant", "unused"]
+    elif "lending" in category or "liquidation" in category:
+        keywords = ["divide", "precision", "price", "timestamp", "erc20"]
     evidence = []
     for detector in detectors:
         if not isinstance(detector, dict):
@@ -3599,8 +3936,8 @@ NEGATIVE_EVIDENCE_GAP_TERMS = {
     "reward": ["reward conservation", "reward conservation tests", "double-claim"],
     "vault": ["invariant", "invariant tests", "share accounting", "totalAssets", "solvency"],
     "testing": ["invariant", "invariant tests", "fuzz"],
-    "amm": ["constant product", "slippage"],
-    "lending": ["liquidation boundary", "solvency"],
+    "amm": ["constant product", "amm invariant", "slippage", "lp share accounting", "fee-on-transfer"],
+    "lending": ["liquidation boundary", "collateral debt", "solvency", "interest index", "borrow index"],
 }
 
 
@@ -3643,6 +3980,10 @@ def finding_has_semantic_support(gap: ReadinessGap, semantic: dict[str, object])
         return bool(signals.get("has_reward_accounting"))
     if "vault" in category or "vault" in title:
         return bool(signals.get("has_vault_functions"))
+    if "amm" in category or "amm" in title or "liquidity" in title:
+        return bool(signals.get("has_amm_functions"))
+    if "lending" in category or "liquidation" in category or "collateral" in title or "borrow" in title:
+        return bool(signals.get("has_lending_functions"))
     return False
 
 

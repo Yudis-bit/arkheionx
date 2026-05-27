@@ -69,6 +69,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Access Control Rule Pack | [`docs/ACCESS_CONTROL_RULE_PACK.md`](../docs/ACCESS_CONTROL_RULE_PACK.md) | access control, upgradeability, initializer |
 | Reentrancy Value Flow Rule Pack | [`docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`](../docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md) | reentrancy, external calls, claim flow |
 | Reward Accounting Rule Pack | [`docs/REWARD_ACCOUNTING_RULE_PACK.md`](../docs/REWARD_ACCOUNTING_RULE_PACK.md) | staking, reward accounting, accumulator |
+| AMM Rule Pack | [`docs/AMM_RULE_PACK.md`](../docs/AMM_RULE_PACK.md) | AMM rule pack, AMM invariant, LP share accounting, slippage boundary |
+| Lending Rule Pack | [`docs/LENDING_RULE_PACK.md`](../docs/LENDING_RULE_PACK.md) | lending rule pack, collateral debt invariant, liquidation boundary, interest index |
 | Indie builder offer | [`docs/business/INDIE_BUILDER_OFFER.md`](../docs/business/INDIE_BUILDER_OFFER.md) | indie-defi, launch preparation, paid path |
 | Search guide | [`docs/SEARCH_GUIDE.md`](../docs/SEARCH_GUIDE.md) | search tags, root-cause analysis, broken invariant |
 | Security Memory Graph | [`docs/SECURITY_MEMORY_GRAPH.md`](../docs/SECURITY_MEMORY_GRAPH.md) | security memory graph, finding knowledge map, historical pattern similarity |
@@ -100,6 +102,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Oracle staking fixture | [`examples/oracle-staking-fixture/README.md`](../examples/oracle-staking-fixture/README.md) | oracle, staking, reward rule pack |
 | Oracle staking fixed fixture | [`examples/oracle-staking-fixture-fixed/README.md`](../examples/oracle-staking-fixture-fixed/README.md) | oracle, staking, before after, fixed fixture |
 | Semantic-lite fixture | [`examples/semantic-lite-fixture/README.md`](../examples/semantic-lite-fixture/README.md) | semantic-lite, false-positive reduction, evidence |
+| AMM fixture | [`examples/amm-fixture/README.md`](../examples/amm-fixture/README.md) | AMM fixture, swap readiness, liquidity pool |
+| Lending fixture | [`examples/lending-fixture/README.md`](../examples/lending-fixture/README.md) | lending fixture, borrow repay, liquidation boundary |
+| AMM Lending hybrid fixture | [`examples/amm-lending-hybrid-fixture/README.md`](../examples/amm-lending-hybrid-fixture/README.md) | hybrid fixture, AMM price dependency, lending health factor |
 | Sample Markdown report | [`examples/reports/mini-vault-pre-audit-report.md`](../examples/reports/mini-vault-pre-audit-report.md) | readiness report, vault, example |
 | Vault-risk Markdown report | [`examples/reports/vault-risk-fixture-pre-audit-report.md`](../examples/reports/vault-risk-fixture-pre-audit-report.md) | vault readiness, ERC4626, readiness gaps |
 | Sample JSON report | [`examples/reports/mini-vault-pre-audit-report.json`](../examples/reports/mini-vault-pre-audit-report.json) | json-output, automation, example |
@@ -113,6 +118,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Oracle staking sprint plan | [`examples/reports/oracle-staking-fixture-sprint-plan.md`](../examples/reports/oracle-staking-fixture-sprint-plan.md) | Pre-Audit Sprint, sprint checklist, remediation plan |
 | Oracle staking contest readiness | [`examples/reports/oracle-staking-fixture-contest-readiness.md`](../examples/reports/oracle-staking-fixture-contest-readiness.md) | Contest Readiness, scope checklist, researcher onboarding |
 | Oracle staking remediation roadmap | [`examples/reports/oracle-staking-fixture-remediation-roadmap.md`](../examples/reports/oracle-staking-fixture-remediation-roadmap.md) | remediation roadmap, launch blockers, audit handoff |
+| AMM fixture report | [`examples/reports/amm-fixture-pre-audit-report.md`](../examples/reports/amm-fixture-pre-audit-report.md) | AMM report, ARK-AMM, readiness findings |
+| AMM fixture SARIF | [`examples/reports/amm-fixture.sarif.json`](../examples/reports/amm-fixture.sarif.json) | AMM SARIF, ARK-AMM, Code Scanning |
+| Lending fixture report | [`examples/reports/lending-fixture-pre-audit-report.md`](../examples/reports/lending-fixture-pre-audit-report.md) | lending report, ARK-LEND, readiness findings |
+| Lending fixture SARIF | [`examples/reports/lending-fixture.sarif.json`](../examples/reports/lending-fixture.sarif.json) | lending SARIF, ARK-LEND, Code Scanning |
+| AMM Lending hybrid report | [`examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`](../examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md) | hybrid report, ARK-AMM, ARK-LEND |
 | Demo pre-audit report | [`examples/reports/demo-pre-audit-report.md`](../examples/reports/demo-pre-audit-report.md) | public demo reports, demo protocol, readiness report |
 | Demo launch report | [`examples/reports/demo-launch-report.md`](../examples/reports/demo-launch-report.md) | Launch Report, public demo, client-ready report |
 | Demo contest readiness | [`examples/reports/demo-contest-readiness.md`](../examples/reports/demo-contest-readiness.md) | Contest Readiness, scope checklist, public demo |
@@ -247,6 +257,16 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `cohort readiness` | audit-prep cohort, builder cohort readiness, accelerator readiness | ecosystem readiness | docs/ecosystem/COHORT_READINESS_GUIDE.md, docs/ecosystem/ECOSYSTEM_OPERATOR_FAQ.md | cohort-readiness, ecosystem-operator, readiness-pilot |
 | `repo-by-repo readiness` | repo readiness table, repository readiness table, repository aliases | ecosystem readiness | reports/ecosystem_readiness_summary.md, metadata/ecosystem_pack_schema.json | repo-by-repo-readiness, ecosystem-summary, anonymized |
 | `ecosystem readiness summary` | ecosystem summary, ecosystem pilot report, readiness distribution | ecosystem readiness | reports/ecosystem_readiness_summary.md, scripts/generate_ecosystem_report.py | ecosystem-readiness-summary, synthetic-report, markdown |
+| `AMM rule pack` | AMM readiness, liquidity pool readiness, swap readiness | rule pack | docs/AMM_RULE_PACK.md, examples/amm-fixture/README.md | amm-rule-pack, amm-readiness, liquidity-pool |
+| `AMM invariant` | constant product, stableswap invariant, reserve invariant | AMM | ARK-AMM-001, docs/AMM_RULE_PACK.md | amm-invariant, constant-product, reserve-accounting |
+| `LP share accounting` | liquidity shares, pool token accounting, mint burn boundary | AMM | ARK-AMM-002, docs/AMM_RULE_PACK.md | lp-share-accounting, mint-burn, dust-handling |
+| `slippage boundary` | minOut, amountOutMin, deadline, stale quote | AMM | ARK-AMM-005, docs/AMM_RULE_PACK.md | slippage, min-output, quote-boundary |
+| `reserve accounting` | reserve0 reserve1, getReserves, pool reserve accounting | AMM | ARK-AMM-001, ARK-AMM-003, docs/AMM_RULE_PACK.md | reserve-accounting, spot-price, amm |
+| `lending rule pack` | lending readiness, borrow repay readiness, lending market readiness | rule pack | docs/LENDING_RULE_PACK.md, examples/lending-fixture/README.md | lending-rule-pack, lending-readiness, borrow-repay |
+| `collateral debt invariant` | solvency invariant, health factor invariant, lending solvency | lending | ARK-LEND-001, docs/LENDING_RULE_PACK.md | collateral-debt, solvency, health-factor |
+| `liquidation boundary` | liquidation threshold, close factor, liquidation bonus | lending | ARK-LEND-002, docs/LENDING_RULE_PACK.md | liquidation-boundary, threshold, lending |
+| `interest index` | borrow index, accrueInterest, interest accounting | lending | ARK-LEND-003, docs/LENDING_RULE_PACK.md | interest-index, borrow-index, rounding-drift |
+| `lending health factor` | healthFactor, collateral value, oracle-dependent liquidation | lending | ARK-LEND-004, docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md | health-factor, lending-oracle, price-shock |
 
 ## Historical Memory Index
 

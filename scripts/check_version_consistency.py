@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check v1.3.0 ecosystem-pack release-prep version wording."""
+"""Check v1.4.0 AMM/Lending rule-pack release-prep version wording."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0"
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0"
 
 
 def read(path: str) -> str:
@@ -24,23 +24,23 @@ def check() -> list[str]:
     action_docs = read("docs/GITHUB_ACTION_USAGE.md")
     scanner = read("scripts/pre_audit_scan.py")
 
-    if 'VERSION = "1.3.0"' not in scanner:
-        failures.append("scripts/pre_audit_scan.py does not set VERSION to 1.3.0")
-    if "Latest stable release: **v1.2.0" not in readme:
-        failures.append("README.md does not name v1.2.0 as latest stable release")
-    if "## v1.3.0 - Unreleased" not in changelog:
-        failures.append("CHANGELOG.md is missing v1.3.0 - Unreleased")
-    if "## v1.2.0" not in changelog or "## v1.2.0 - Unreleased" in changelog:
-        failures.append("CHANGELOG.md does not treat v1.2.0 as released")
-    if "v1.3.0" not in roadmap or "Ecosystem Pack current milestone" not in roadmap:
-        failures.append("docs/ROADMAP.md does not mark v1.3.0 as current ecosystem milestone")
-    if "v1.4.0" not in roadmap or "AMM + Lending Protocol Packs" not in roadmap:
-        failures.append("docs/ROADMAP.md does not keep v1.4.0 as next milestone")
+    if 'VERSION = "1.4.0"' not in scanner:
+        failures.append("scripts/pre_audit_scan.py does not set VERSION to 1.4.0")
+    if "Latest stable release: **v1.3.0" not in readme:
+        failures.append("README.md does not name v1.3.0 as latest stable release")
+    if "## v1.4.0 - Unreleased" not in changelog:
+        failures.append("CHANGELOG.md is missing v1.4.0 - Unreleased")
+    if "## v1.3.0" not in changelog or "## v1.3.0 - Unreleased" in changelog:
+        failures.append("CHANGELOG.md does not treat v1.3.0 as released")
+    if "v1.4.0" not in roadmap or "AMM + Lending Protocol Packs current milestone" not in roadmap:
+        failures.append("docs/ROADMAP.md does not mark v1.4.0 as current AMM/Lending milestone")
+    if "v1.5.0" not in roadmap or "Invariant/Test Plan Generator Upgrade" not in roadmap:
+        failures.append("docs/ROADMAP.md does not keep v1.5.0 as next milestone")
     if STABLE_ACTION not in readme:
-        failures.append("README.md is missing stable @v1.2.0 action example")
+        failures.append("README.md is missing stable @v1.3.0 action example")
     if STABLE_ACTION not in action_docs:
-        failures.append("docs/GITHUB_ACTION_USAGE.md is missing stable @v1.2.0 action example")
-    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*)", readme)
+        failures.append("docs/GITHUB_ACTION_USAGE.md is missing stable @v1.3.0 action example")
+    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*|v1\.2\.0[^*]*)", readme)
     if stale:
         failures.append("README.md still has stale latest stable wording")
     if "## v1.0.0 - Unreleased" in changelog:

@@ -9,33 +9,42 @@ vulnerability confirmation, and not proof that a scanned repository has
 the same issue as any historical PoC.
 
 - Schema version: `1.0.0`
-- Nodes: `267`
-- Edges: `445`
+- Nodes: `356`
+- Edges: `664`
 
 ## Node Counts
 
 | Type | Count |
 |---|---:|
-| `broken_invariant` | 47 |
+| `broken_invariant` | 63 |
 | `delivery_artifact` | 6 |
-| `doc` | 14 |
+| `doc` | 16 |
 | `exploit_primitive` | 18 |
-| `failed_assumption` | 30 |
-| `finding` | 13 |
+| `failed_assumption` | 46 |
+| `finding` | 22 |
 | `historical_pattern` | 21 |
 | `poc` | 18 |
-| `root_cause` | 49 |
+| `root_cause` | 64 |
 | `rule_pack` | 11 |
-| `suggested_test` | 40 |
+| `suggested_test` | 71 |
 
 ## Finding To Pattern Map
 
 | Finding | Rule Pack | Historical Patterns | Suggested Tests |
 |---|---|---|---|
 | `ARK-ACC-001` Privileged setters without role-boundary tests | `access_control` | Privileged operation boundary failure, Initializer or privileged setup boundary failure | Admin Change Event And Bounds Test, Role Boundary Negative Tests, Unauthorized Setter Reverts |
-| `ARK-AMM-001` AMM math needs invariant coverage | `amm` | AMM invariant steering or liquidity manipulation, Spot or reserve price manipulation risk class | Liquidity Proportionality, Slippage Boundary Test, Swap Invariant Conservation |
+| `ARK-AMM-001` AMM invariant assumptions not covered by tests | `amm` | AMM invariant steering or liquidity manipulation, Spot or reserve price manipulation risk class | Fee Rounding Bound, Liquidity Proportionality, Reserve Accounting Test, Swap Invariant Conservation |
+| `ARK-AMM-002` LP share accounting without mint/burn boundary tests | `amm` | AMM invariant steering or liquidity manipulation, Vault share inflation or donation sensitivity | Dust Rounding Test, First Liquidity Provider Test, Proportional Minting Test, Proportional Withdrawal Test |
+| `ARK-AMM-003` Spot-price or reserve-price dependency without manipulation-resistance tests | `amm` | Pool price or external balance used as accounting truth, Spot or reserve price manipulation risk class | Price Movement Bounds, Reserve Manipulation Sanity Test, Twap Vs Spot Behavior |
+| `ARK-AMM-004` Fee-on-transfer or non-standard token assumptions not documented | `amm` | Pool price or external balance used as accounting truth, Precision, rounding, or normalization failure | Balance Before After Accounting, Fee On Transfer Token Simulation, Unsupported Token Documentation |
+| `ARK-AMM-005` Slippage/min-output constraints missing or unclear | `amm` | Failed assumption not represented in tests, Spot or reserve price manipulation risk class | Deadline Or Stale Quote Test, Min Out Enforcement, Slippage Boundary Test |
 | `ARK-DOC-001` Documentation assumptions are incomplete | `documentation` | External review scope ambiguity, Undocumented trust or operational assumption | Assumption Table Review, Known Limitations Section, Scope Checklist |
-| `ARK-LEND-900` Lending or liquidation readiness mapping | `lending` | Collateral and debt invariant failure, Oracle stale price or freshness assumption failure | Collateral Debt Invariant, Liquidation Boundary Fuzz, Oracle Price Shock Test |
+| `ARK-LEND-001` Collateral/debt solvency invariant not covered by tests | `lending` | Collateral and debt invariant failure, Oracle stale price or freshness assumption failure | Borrow Limit Boundary Test, Collateral Debt Invariant, Unsafe Withdrawal Rejection |
+| `ARK-LEND-002` Liquidation boundary tests missing | `lending` | Collateral and debt invariant failure, Oracle stale price or freshness assumption failure | Bonus Bound Test, Just Above Threshold Test, Just Below Threshold Test, Partial Liquidation Math |
+| `ARK-LEND-003` Interest/index accounting not covered by rounding and time-step tests | `lending` | Accounting index or accumulator drift, Precision, rounding, or normalization failure | Borrow Repay Around Accrual, Interest Index Monotonicity, Repeated Accrual Drift Bound, Small Balance Rounding Test |
+| `ARK-LEND-004` Oracle-dependent borrowing/liquidation without stale-price tests | `lending` | Collateral and debt invariant failure, Oracle stale price or freshness assumption failure | Borrow Blocked On Invalid Price, Decimals Normalization Test, Price Shock Boundary Test, Stale Oracle Rejection |
+| `ARK-LEND-005` Reserve/cash accounting assumptions not covered | `lending` | Accounting index or accumulator drift, Collateral and debt invariant failure | Available Liquidity Bound, Repay Cash Debt Consistency, Reserve Withdrawal Constraints, Utilization Bound Test |
+| `ARK-LEND-006` Liquidation/access-control interaction not documented | `lending` | Collateral and debt invariant failure, Privileged operation boundary failure | Guardian Permission Test, Liquidator Role Boundary Test, Paused Market Liquidation Test |
 | `ARK-ORC-001` Oracle-dependent logic without stale-price tests | `oracle` | Oracle stale price or freshness assumption failure, Pool price or external balance used as accounting truth, Spot or reserve price manipulation risk class | Decimal Normalization Test, Heartbeat Bound Test, Price Bounds Test, Stale Round Rejection |
 | `ARK-ORC-003` Spot or reserve-based pricing without manipulation-resistance tests | `oracle` | AMM invariant steering or liquidity manipulation, Spot or reserve price manipulation risk class | Price Bounds Test, Reserve Manipulation Sanity Test, Twap Vs Spot Behavior |
 | `ARK-REENT-001` Value flow with external calls needs reentrancy review | `reentrancy_value_flow` | Callback-capable token or receiver assumption failure, External call before state update | Double Claim Prevention, Reentrant Receiver Mock, State Update Before External Call Test |

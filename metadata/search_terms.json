@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -801,6 +801,86 @@
       "related_patterns": ["readiness distribution", "operator actions"],
       "related_checks": ["reports/ecosystem_readiness_summary.md", "scripts/generate_ecosystem_report.py"],
       "search_tags": ["ecosystem-readiness-summary", "synthetic-report", "markdown"]
+    },
+    {
+      "term": "AMM rule pack",
+      "aliases": ["AMM readiness", "liquidity pool readiness", "swap readiness"],
+      "category": "rule pack",
+      "related_patterns": ["AMM invariant assumptions", "LP share accounting"],
+      "related_checks": ["docs/AMM_RULE_PACK.md", "examples/amm-fixture/README.md"],
+      "search_tags": ["amm-rule-pack", "amm-readiness", "liquidity-pool"]
+    },
+    {
+      "term": "AMM invariant",
+      "aliases": ["constant product", "stableswap invariant", "reserve invariant"],
+      "category": "AMM",
+      "related_patterns": ["swap invariant conservation", "reserve accounting"],
+      "related_checks": ["ARK-AMM-001", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["amm-invariant", "constant-product", "reserve-accounting"]
+    },
+    {
+      "term": "LP share accounting",
+      "aliases": ["liquidity shares", "pool token accounting", "mint burn boundary"],
+      "category": "AMM",
+      "related_patterns": ["first liquidity provider", "proportional withdrawal"],
+      "related_checks": ["ARK-AMM-002", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["lp-share-accounting", "mint-burn", "dust-handling"]
+    },
+    {
+      "term": "slippage boundary",
+      "aliases": ["minOut", "amountOutMin", "deadline", "stale quote"],
+      "category": "AMM",
+      "related_patterns": ["user output bound", "quote freshness"],
+      "related_checks": ["ARK-AMM-005", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["slippage", "min-output", "quote-boundary"]
+    },
+    {
+      "term": "reserve accounting",
+      "aliases": ["reserve0 reserve1", "getReserves", "pool reserve accounting"],
+      "category": "AMM",
+      "related_patterns": ["reserve price", "pool accounting"],
+      "related_checks": ["ARK-AMM-001", "ARK-AMM-003", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["reserve-accounting", "spot-price", "amm"]
+    },
+    {
+      "term": "lending rule pack",
+      "aliases": ["lending readiness", "borrow repay readiness", "lending market readiness"],
+      "category": "rule pack",
+      "related_patterns": ["collateral debt invariant", "liquidation boundary"],
+      "related_checks": ["docs/LENDING_RULE_PACK.md", "examples/lending-fixture/README.md"],
+      "search_tags": ["lending-rule-pack", "lending-readiness", "borrow-repay"]
+    },
+    {
+      "term": "collateral debt invariant",
+      "aliases": ["solvency invariant", "health factor invariant", "lending solvency"],
+      "category": "lending",
+      "related_patterns": ["collateral/debt solvency", "unsafe withdrawal boundary"],
+      "related_checks": ["ARK-LEND-001", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["collateral-debt", "solvency", "health-factor"]
+    },
+    {
+      "term": "liquidation boundary",
+      "aliases": ["liquidation threshold", "close factor", "liquidation bonus"],
+      "category": "lending",
+      "related_patterns": ["just above threshold", "just below threshold"],
+      "related_checks": ["ARK-LEND-002", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["liquidation-boundary", "threshold", "lending"]
+    },
+    {
+      "term": "interest index",
+      "aliases": ["borrow index", "accrueInterest", "interest accounting"],
+      "category": "lending",
+      "related_patterns": ["index monotonicity", "rounding drift"],
+      "related_checks": ["ARK-LEND-003", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["interest-index", "borrow-index", "rounding-drift"]
+    },
+    {
+      "term": "lending health factor",
+      "aliases": ["healthFactor", "collateral value", "oracle-dependent liquidation"],
+      "category": "lending",
+      "related_patterns": ["oracle-dependent borrowing", "price shock boundary"],
+      "related_checks": ["ARK-LEND-004", "docs/LENDING_RULE_PACK.md", "docs/ORACLE_RULE_PACK.md"],
+      "search_tags": ["health-factor", "lending-oracle", "price-shock"]
     }
   ]
 }

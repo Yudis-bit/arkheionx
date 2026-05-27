@@ -329,6 +329,8 @@ rg -n "before after case study|rule calibration|external validation feedback" .
 rg -n "security memory graph|finding knowledge map|historical pattern similarity" .
 rg -n "oracle stale price|vault donation attack|share accounting invariant" .
 rg -n "reward overclaim|accumulator precision|reentrancy value flow" .
+rg -n "AMM invariant|LP share accounting|slippage boundary|reserve accounting" .
+rg -n "lending rule pack|collateral debt invariant|liquidation boundary|interest index" .
 rg -n "root-cause analysis|failed assumption|broken invariant" .
 ```
 

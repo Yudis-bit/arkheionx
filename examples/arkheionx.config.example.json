@@ -1,5 +1,5 @@
 {
-  "version": "0.6.0",
+  "version": "1.4.0",
   "protocol_type": "auto",
   "ignore_paths": [
     "lib/",
@@ -15,11 +15,23 @@
       "id": "ARK-DOC-001",
       "reason": "Documentation is tracked in a private planning repository during prototype phase.",
       "expires": "2026-12-31"
+    },
+    {
+      "id": "ARK-AMM-003",
+      "reason": "Example only: AMM spot-price assumptions are documented in a separate private design note.",
+      "expires": "2026-12-31"
+    },
+    {
+      "id": "ARK-LEND-002",
+      "reason": "Example only: liquidation boundary tests are tracked in a separate remediation issue.",
+      "expires": "2026-12-31"
     }
   ],
   "additional_search_tags": [
     "indie-defi",
-    "vault-security"
+    "vault-security",
+    "amm-readiness",
+    "lending-readiness"
   ],
   "report": {
     "max_top_gaps": 5

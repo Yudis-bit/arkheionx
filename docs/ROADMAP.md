@@ -60,12 +60,15 @@ committed artifacts support it.
       Clearer Launch Report, Pre-Audit Sprint, and Contest Readiness service
       packaging tied to generated artifacts, client intake, pricing guidance,
       and paid-work boundaries.
-- [ ] **v1.3.0: Ecosystem Pack current milestone.**
+- [x] **v1.3.0: Ecosystem Pack released.**
       Multi-repository readiness workflows and standardized Markdown reporting
       for authorized ecosystem support.
-- [ ] **v1.4.0: AMM + Lending Protocol Packs.**
-      Defensive readiness rule packs for AMM and lending protocols after the
-      ecosystem workflow stabilizes.
+- [ ] **v1.4.0: AMM + Lending Protocol Packs current milestone.**
+      Defensive readiness rule packs, fixtures, reports, and knowledge mappings
+      for AMM and lending protocol shapes.
+- [ ] **v1.5.0: Invariant/Test Plan Generator Upgrade.**
+      Better protocol-specific invariant and test-plan scaffolding for
+      readiness findings.
 - [ ] **v2.0.0: Installable CLI/package target.**
       Package distribution only after schemas, docs, and GitHub-native flows
       remain stable.

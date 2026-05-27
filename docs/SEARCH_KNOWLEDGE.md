@@ -10,6 +10,8 @@ It is local-only. It does not call RPC, GitHub, or external search services.
 ```sh
 python3 scripts/search_knowledge.py "oracle stale price"
 python3 scripts/search_knowledge.py "vault accounting invariant"
+python3 scripts/search_knowledge.py "AMM invariant"
+python3 scripts/search_knowledge.py "collateral debt invariant"
 python3 scripts/search_knowledge.py "reentrancy value flow"
 python3 scripts/search_knowledge.py "missing invariant"
 ```
@@ -55,6 +57,10 @@ scanned repository has the same vulnerability.
 | `vault accounting invariant` | Checking share/accounting readiness. |
 | `reentrancy value flow` | Reviewing withdraw, claim, refund, or transfer paths. |
 | `reward overclaim` | Reviewing staking or reward accounting. |
+| `AMM invariant` | Reviewing swaps, reserves, and liquidity pool accounting. |
+| `LP share accounting` | Reviewing liquidity mint/burn and low-liquidity behavior. |
+| `liquidation boundary` | Reviewing lending liquidation thresholds and close factors. |
+| `interest index` | Reviewing borrow index and accrual readiness. |
 | `missing invariant` | Planning property tests before audit. |
 | `initializer protection` | Reviewing upgradeability or initialization paths. |
 

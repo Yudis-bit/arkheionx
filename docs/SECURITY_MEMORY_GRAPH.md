@@ -66,6 +66,8 @@ Search locally:
 ```sh
 python3 scripts/search_knowledge.py "oracle stale price"
 python3 scripts/search_knowledge.py "vault accounting invariant"
+python3 scripts/search_knowledge.py "AMM invariant"
+python3 scripts/search_knowledge.py "liquidation boundary"
 python3 scripts/search_knowledge.py "missing invariant" --json
 ```
 

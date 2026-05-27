@@ -32,6 +32,8 @@ When adding or changing a mapping:
 python3 scripts/generate_knowledge_graph.py
 python3 scripts/generate_knowledge_graph.py --check
 python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "AMM invariant"
+python3 scripts/search_knowledge.py "liquidation boundary"
 ```
 
 ## Mapping Fields

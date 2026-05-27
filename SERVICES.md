@@ -5,7 +5,8 @@ builders and defensive research support for the public exploit-memory archive.
 
 This is not a formal audit service. Arkheionx helps builders prepare for one.
 
-Paid offer details for v1.2.0 are documented in
+Paid offer details introduced in v1.2.0 and expanded for ecosystem pilots in
+v1.3.0 are documented in
 [`docs/business/PAID_OFFER.md`](docs/business/PAID_OFFER.md),
 [`docs/business/PRICING_LADDER.md`](docs/business/PRICING_LADDER.md), and
 [`reports/paid_offer_index.md`](reports/paid_offer_index.md).
@@ -74,7 +75,7 @@ Value:
 Use it from any authorized repository:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
   with:
     root: "."
     protocol-type: "auto"

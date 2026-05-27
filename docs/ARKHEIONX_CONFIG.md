@@ -12,7 +12,7 @@ The config is intentionally simple and dependency-free.
 
 ```json
 {
-  "version": "0.3.0",
+  "version": "1.4.0",
   "protocol_type": "auto",
   "suppress_findings": [
     {
@@ -27,7 +27,9 @@ The config is intentionally simple and dependency-free.
   ],
   "additional_search_tags": [
     "my-protocol",
-    "vault"
+    "vault",
+    "amm",
+    "lending"
   ],
   "report": {
     "max_top_gaps": 5
@@ -89,6 +91,29 @@ Suppressed findings are not silently hidden. They appear under:
 
 Suppression is not proof of safety. It should be reviewed before launch,
 fundraising, audit intake, or handling user funds.
+
+Protocol type can be set to `auto`, `vault`, `amm`, `lending`, `staking`,
+`oracle`, or `generic`. Use `auto` unless a repository has a known dominant
+shape. Hybrid repositories can still emit multiple rule-pack findings through
+source signals.
+
+AMM and lending suppressions use the same format:
+
+```json
+{
+  "id": "ARK-AMM-003",
+  "reason": "Spot-price assumptions are documented in the scoped audit package.",
+  "expires": "2026-12-31"
+}
+```
+
+```json
+{
+  "id": "ARK-LEND-002",
+  "reason": "Liquidation boundary tests are tracked in an active remediation issue.",
+  "expires": "2026-12-31"
+}
+```
 
 ## Baseline And Diff Interaction
 

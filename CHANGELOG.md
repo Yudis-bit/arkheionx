@@ -3,7 +3,39 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.3.0 - Unreleased
+## v1.4.0 - Unreleased
+
+### Added
+
+- AMM Rule Pack.
+- Lending Rule Pack.
+- AMM fixture.
+- Lending fixture.
+- AMM/Lending hybrid fixture.
+- Example reports for AMM and Lending fixtures.
+- AMM/Lending knowledge mappings.
+- AMM/Lending search metadata.
+
+### Improved
+
+- Protocol-type auto detection for AMM and Lending shapes.
+- Report, JSON, SARIF, and issue-plan coverage for AMM/Lending readiness
+  findings.
+- Rule-pack docs and search index.
+
+### Safety
+
+- No live-chain/RPC behavior added.
+- No exploit automation added.
+- AMM/Lending findings are readiness signals, not vulnerability confirmations.
+
+### Known Limitations
+
+- Static/heuristic readiness signals only.
+- AMM/Lending rules require manual review.
+- No formal verification or protocol-specific audit claim.
+
+## v1.3.0
 
 ### Added
 

@@ -32,7 +32,11 @@ Semantic-lite maps tests to rule-pack themes:
 - access control: unauthorized caller, owner, role, admin, revert tests;
 - reentrancy/value flow: reentrant receiver, callback, double claim;
 - reward accounting: multi-user reward conservation, accumulator, precision;
-- vault: deposit, withdraw, redeem, donation, rounding, totalAssets, preview.
+- vault: deposit, withdraw, redeem, donation, rounding, totalAssets, preview;
+- AMM: constant product, reserve accounting, liquidity, LP share, slippage,
+  TWAP, balance-delta, and non-standard token terms;
+- lending: collateral/debt, solvency, health factor, liquidation boundary,
+  interest index, borrow index, reserve/cash, and oracle shock terms.
 
 Matching tests can reduce priority or confidence because Arkheionx has evidence
 that the team is already reviewing that assumption.
@@ -63,6 +67,10 @@ v0.9.2 also ignores generated Arkheionx artifacts by default. Previous reports
 often contain finding titles such as "without role-boundary tests"; those
 generated phrases are not source evidence and should not create negative
 evidence in later scans.
+
+AMM and lending rule packs follow the same calibration model. Keyword-only
+mentions of AMMs, liquidations, or collateral in docs/interfaces should be
+downgraded unless source-level function evidence supports a readiness finding.
 
 ## Config Tuning
 

@@ -48,3 +48,16 @@ and keep scanner outputs separate from protocol source files when possible.
 
 Generated artifacts are local/static outputs. They are not formal audit reports
 and do not confirm vulnerabilities.
+
+## Protocol-Pack Examples
+
+v1.4.0 adds AMM and lending fixture outputs that use the same artifact shapes:
+
+- `examples/reports/amm-fixture-pre-audit-report.md`
+- `examples/reports/amm-fixture-pre-audit-report.json`
+- `examples/reports/amm-fixture.sarif.json`
+- `examples/reports/amm-fixture-issue-plan.json`
+- `examples/reports/lending-fixture-pre-audit-report.md`
+- `examples/reports/lending-fixture-pre-audit-report.json`
+- `examples/reports/lending-fixture.sarif.json`
+- `examples/reports/lending-fixture-issue-plan.json`

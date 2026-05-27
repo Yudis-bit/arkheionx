@@ -26,13 +26,17 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.3.0"
+  "version": "1.4.0"
 }
 ```
 
 `schema_version` remains `1.0.0` while the scanner `version` can advance in
 minor releases. Baselines, diff outputs, and issue plans also include
 `schema_version`.
+
+v1.4.0 adds optional AMM and lending findings under the existing `findings`,
+`rule_packs`, SARIF, and issue-plan shapes. The schema remains `1.0.0`
+because these are additive rule-pack entries, not a top-level schema break.
 
 ## Compatibility Policy
 
