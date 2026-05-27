@@ -16,9 +16,9 @@ The repository itself is the product:
 - sponsors as funding surface;
 - releases as distribution.
 
-v1.2.0 refines the paid offer surface so buyers can understand scope,
-deliverables, pricing guidance, intake needs, and boundaries before requesting
-work. This is not a claim of customers, adoption, or external validation.
+v1.3.0 extends the paid offer surface with ecosystem-level readiness workflows
+for multiple authorized repositories. This is not a claim of customers,
+adoption, partnerships, or external validation.
 
 Paid Arkheionx work is a readiness engagement, not a formal audit.
 
@@ -36,7 +36,7 @@ Paid Arkheionx work is a readiness engagement, not a formal audit.
 | Vault Launch Report | USD 299-499 one time | Vault Rule Pack report, manual gap review, prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 one time | Vault-focused readiness review, strategy/oracle/withdrawal checklist, invariant plan. |
 | Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and a portfolio-level Markdown dashboard. |
-| Ecosystem Pack | USD 5,000-20,000/month | Bulk reports, portfolio dashboard, security clinic, training, community support. |
+| Ecosystem Readiness Pilot | Pilot: USD 5,000-15,000; expanded: USD 15,000-40,000+ | Multi-repo readiness summaries, anonymized common gaps, rule-family heatmap, and calibration notes for authorized cohorts. |
 | Research Sponsorship | Flexible | Fund exploit-memory research, assertion hardening, verification work, education, and rule packs. |
 
 ## Positioning
@@ -239,35 +239,36 @@ Value:
 This does not include secret management, payment integration, CRM integration,
 or email automation.
 
-## Ecosystem Pack
+## Ecosystem Readiness Pilot
 
-Price: USD 5,000-20,000 per month.
+Price: pilot USD 5,000-15,000; expanded USD 15,000-40,000+.
 
 Target buyers:
 
-- L2 ecosystems;
+- chain ecosystems;
 - accelerators;
-- hackathons;
 - grant programs;
-- builder communities.
+- venture studios;
+- audit-prep cohorts;
+- ecosystem security teams.
 
 Value:
 
-- bulk readiness reports;
-- multiple Launch Readiness Reports when scoped;
-- standardized generated issue plans for participating builders;
-- ecosystem-level remediation summary artifacts as Markdown;
-- monthly security clinic;
-- portfolio-level Markdown dashboard;
-- private GitHub Discussion support;
-- training session;
-- no website required.
+- repo-by-repo readiness table using aliases;
+- anonymized common-gap summary;
+- readiness distribution by score band;
+- rule-family heatmap;
+- top recurring blockers;
+- remediation themes and suggested next steps;
+- GitHub Action setup recommendations;
+- feedback and rule calibration notes;
+- 60-90 minute ecosystem walkthrough.
 
-This is the highest-leverage path because one ecosystem can introduce
-Arkheionx to many indie builders at once.
+This is the highest-leverage path only when every repository is authorized and
+the operator accepts strict anonymization and disclosure boundaries.
 
-In v1.2.0, this remains an Ecosystem Readiness Pilot until v1.3.0 refines the
-broader Ecosystem Pack.
+The v1.3.0 Ecosystem Pack keeps this as a local/static Markdown workflow. It
+does not add remote cloning, external APIs, a web app, or a database.
 
 ## Research Sponsorship
 

@@ -25,7 +25,7 @@ class PaidOfferTests(unittest.TestCase):
 
     def test_paid_offer_catalog_and_index(self) -> None:
         catalog = json.loads(self.read("metadata/paid_offer_catalog.json"))
-        self.assertEqual(catalog["schema_version"], "1.2.0")
+        self.assertEqual(catalog["schema_version"], "1.3.0")
         offer_ids = {offer["offer_id"] for offer in catalog["offers"]}
         self.assertIn("readiness-snapshot", offer_ids)
         self.assertIn("pre-audit-sprint", offer_ids)

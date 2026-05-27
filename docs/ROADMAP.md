@@ -56,13 +56,19 @@ committed artifacts support it.
       README front-page clarity, repository About guidance, topic
       recommendations, and onboarding path cleanup before the next major
       service-packaging milestone.
-- [ ] **v1.2.0: Paid Offer Refinement current milestone.**
+- [x] **v1.2.0: Paid Offer Refinement released.**
       Clearer Launch Report, Pre-Audit Sprint, and Contest Readiness service
       packaging tied to generated artifacts, client intake, pricing guidance,
       and paid-work boundaries.
-- [ ] **v1.3.0: Ecosystem Pack.**
+- [ ] **v1.3.0: Ecosystem Pack current milestone.**
       Multi-repository readiness workflows and standardized Markdown reporting
       for authorized ecosystem support.
+- [ ] **v1.4.0: AMM + Lending Protocol Packs.**
+      Defensive readiness rule packs for AMM and lending protocols after the
+      ecosystem workflow stabilizes.
+- [ ] **v2.0.0: Installable CLI/package target.**
+      Package distribution only after schemas, docs, and GitHub-native flows
+      remain stable.
 
 ## Archive Roadmap
 

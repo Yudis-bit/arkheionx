@@ -3,7 +3,39 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.2.0 - Unreleased
+## v1.3.0 - Unreleased
+
+### Added
+
+- Ecosystem Pack documentation.
+- Multi-repo readiness workflow.
+- Ecosystem intake template.
+- Ecosystem pilot scope template.
+- Synthetic ecosystem pilot data model.
+- Ecosystem report generator.
+- Synthetic ecosystem readiness reports.
+
+### Improved
+
+- Paid offer docs now include Ecosystem Readiness Pilot.
+- README now links to ecosystem readiness workflow.
+- Search index includes ecosystem readiness terms.
+
+### Safety
+
+- Ecosystem summaries are anonymized by default.
+- No unauthorized repo scanning added.
+- No live-chain/RPC behavior added.
+- No customer/adoption/partnership claims added.
+
+### Known Limitations
+
+- Ecosystem reports are generated from local/synthetic or user-provided
+  authorized JSON reports.
+- No automatic cloning or remote scanning.
+- Multi-repo workflow still requires human scoping and authorization checks.
+
+## v1.2.0
 
 ### Added
 

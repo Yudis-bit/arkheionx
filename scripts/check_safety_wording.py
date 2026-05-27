@@ -34,6 +34,14 @@ BANNED_PHRASES = [
     "security guarantee",
     "bounty guarantee",
     "exploit discovery guarantee",
+    "official ecosystem partner",
+    "ecosystem certified",
+    "audit certified",
+    "trusted by ecosystems",
+    "customer-proven",
+    "adopted by ecosystems",
+    "guaranteed security",
+    "official audit partner",
 ]
 CLEAR_PROHIBITION_CONTEXT = [
     "do not",

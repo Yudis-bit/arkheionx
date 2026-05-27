@@ -36,7 +36,7 @@ Paid work is human-guided readiness support around the open-source outputs:
 | Arkheionx Pre-Audit Sprint | 3-5 day guided readiness workflow | Pilot: USD 2,500-5,000; standard: USD 5,000-12,000 |
 | Contest Readiness Pack | Preparing scope and researcher onboarding | USD 1,500-6,000 |
 | GitHub Action Setup | Adding Arkheionx to CI safely | USD 500-2,500 |
-| Ecosystem Readiness Pilot | 3-5 authorized builder repos | USD 5,000-15,000 pilot |
+| Ecosystem Readiness Pilot | Multi-repo readiness support for authorized cohorts | Pilot: USD 5,000-15,000; expanded: USD 15,000-40,000+ |
 
 Pricing is guidance only. Final scope depends on repository size, urgency,
 protocol complexity, documentation quality, and the amount of manual review
@@ -64,6 +64,46 @@ requested.
 - Deployed-contract scanning.
 - Emergency incident response.
 - Legal, compliance, or security certification.
+
+## Ecosystem Readiness Pilot
+
+Audience:
+
+- chain ecosystems;
+- grant programs;
+- accelerators;
+- venture studios;
+- security support programs;
+- audit-prep cohorts.
+
+Suggested scope:
+
+- pilot: 3-5 authorized repositories;
+- expanded: 5-10 authorized repositories.
+
+Deliverables:
+
+- Ecosystem Readiness Summary;
+- Repo-by-Repo Readiness Table;
+- Common Gap Report;
+- Rule-Family Heatmap;
+- Anonymized Recommendations;
+- GitHub Action Setup Recommendations;
+- Feedback and Calibration Notes;
+- 60-90 minute ecosystem walkthrough.
+
+Not included:
+
+- formal audit;
+- vulnerability certification;
+- exploit development;
+- live-chain testing;
+- emergency incident response;
+- public claims without permission;
+- reviewing unauthorized repositories.
+
+Start with [`../ecosystem/ECOSYSTEM_PACK.md`](../ecosystem/ECOSYSTEM_PACK.md)
+and [`../../templates/ecosystem_intake.md`](../../templates/ecosystem_intake.md).
 
 ## Start Here
 

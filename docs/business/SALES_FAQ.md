@@ -43,6 +43,12 @@ A pilot has a narrow scope, a short timeline, and concrete deliverables. For
 example: one Readiness Snapshot, one Pre-Audit Sprint, or a small Ecosystem
 Readiness Pilot across 3-5 authorized repositories.
 
+## What does an Ecosystem Readiness Pilot include?
+
+It combines multiple authorized Arkheionx repo reports into repo-by-repo
+readiness tables, anonymized common-gap summaries, rule-family heatmaps, and
+recommended next steps. It does not certify participating repositories.
+
 ## Can Arkheionx mention the buyer publicly?
 
 Only with explicit public permission. No adoption, customer, or partnership

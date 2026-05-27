@@ -93,7 +93,7 @@ class SchemaOutputTests(unittest.TestCase):
             diff_data = load_json(diff_json)
 
             self.assertEqual(report_data["schema_version"], "1.0.0")
-            self.assertEqual(report_data["version"], "1.2.0")
+            self.assertEqual(report_data["version"], "1.3.0")
             self.assertEqual(plan_data["schema_version"], "1.0.0")
             self.assertEqual(baseline_data["schema_version"], "1.0.0")
             self.assertEqual(diff_data["schema_version"], "1.0.0")

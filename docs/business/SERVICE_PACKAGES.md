@@ -95,14 +95,36 @@ by the repository owner.
 
 Purpose:
 
-- pilot standardized readiness reporting across 3-5 authorized repositories;
-- identify common gaps without naming teams publicly unless permission exists.
+- support ecosystem-level readiness across multiple authorized repositories;
+- identify common readiness gaps without naming teams publicly unless
+  permission exists;
+- give operators a repo-by-repo table, anonymized common-gap summary, and
+  rule-family heatmap.
 
 Deliverables:
 
-- readiness scan across 3-5 authorized repos;
-- anonymized ecosystem-level gap summary;
-- common rule calibration notes;
-- onboarding guide.
+- Ecosystem Readiness Summary;
+- Repo-by-Repo Readiness Table;
+- Common Gap Report;
+- Rule-Family Heatmap;
+- Anonymized Recommendations;
+- GitHub Action Setup Recommendations;
+- Feedback and Calibration Notes;
+- 60-90 minute ecosystem walkthrough.
 
-This is pilot-only before the v1.3.0 Ecosystem Pack milestone.
+Suggested scope:
+
+- pilot: 3-5 authorized repositories;
+- expanded: 5-10 authorized repositories.
+
+Not included:
+
+- formal audit;
+- vulnerability certification;
+- exploit development;
+- live-chain testing;
+- emergency incident response;
+- public claims without permission;
+- reviewing unauthorized repositories.
+
+Read [`../ecosystem/ECOSYSTEM_PACK.md`](../ecosystem/ECOSYSTEM_PACK.md).

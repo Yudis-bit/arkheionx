@@ -19,7 +19,7 @@ guarantees, or formal audit sign-off.
 | Arkheionx Pre-Audit Sprint | USD 2,500 | Pilot: $2,500-$5,000; standard: $5,000-$12,000 | 3-5 business days, with optional follow-up calibration when scoped. |
 | Contest Readiness Pack | USD 1,500 | $1,500-$6,000 | 2-4 business days depending on repository and documentation size. |
 | GitHub Action Setup | USD 500 | $500-$2,500 | 1-2 business days after repository workflow access is ready. |
-| Ecosystem Readiness Pilot | USD 5,000 | $5,000-$15,000 pilot | Scoped pilot across 3-5 repositories. |
+| Ecosystem Readiness Pilot | USD 5,000 | Pilot: $5,000-$15,000; expanded: $15,000-$40,000+ | Scoped pilot across 3-5 repositories; expanded engagement across 5-10 authorized repositories. |
 
 ## Arkheionx Readiness Snapshot
 
@@ -234,20 +234,23 @@ Implementation support for adding the Arkheionx GitHub Action, artifacts, SARIF,
 ## Ecosystem Readiness Pilot
 
 - Offer ID: `ecosystem-readiness-pilot`
-- Audience: Grant programs, accelerators, hackathons, and ecosystems supporting multiple authorized DeFi builders.
+- Audience: Chain ecosystems, grant programs, accelerators, venture studios, and audit-prep cohorts supporting multiple authorized DeFi builders.
 - Starting price: USD 5,000
-- Typical range: $5,000-$15,000 pilot
-- Duration: Scoped pilot across 3-5 repositories.
+- Typical range: Pilot: $5,000-$15,000; expanded: $15,000-$40,000+
+- Duration: Scoped pilot across 3-5 repositories; expanded engagement across 5-10 authorized repositories.
 
-Pilot-only multi-repository readiness review across a small set of authorized repositories to surface common readiness gaps and calibration notes.
+Multi-repository readiness pilot that uses local Arkheionx reports to produce repo-by-repo summaries, anonymized common gaps, rule-family heatmaps, and ecosystem-level remediation themes.
 
 ### Deliverables
 
-- Readiness scan across 3-5 authorized repositories
-- Anonymized ecosystem-level gap summary
-- Common rule calibration notes
-- Builder onboarding guide
-- Markdown-only portfolio summary
+- Ecosystem Readiness Summary
+- Repo-by-Repo Readiness Table
+- Common Gap Report
+- Rule-Family Heatmap
+- Anonymized Recommendations
+- GitHub Action Setup Recommendations
+- Feedback and Calibration Notes
+- 60-90 minute ecosystem walkthrough
 
 ### Required Inputs
 
@@ -255,19 +258,24 @@ Pilot-only multi-repository readiness review across a small set of authorized re
 - Scope list and repository contacts
 - Preferred anonymity and reporting rules
 - Program timeline
+- Local Arkheionx JSON reports or repository access method agreed privately
 
 ### Not Included
 
-- Production ecosystem dashboard
-- Formal audits for participating teams
-- Customer or adoption claims without permission
-- Unlimited repository coverage
+- Formal audit
+- Vulnerability certification
+- Exploit development
+- Live-chain testing
+- Emergency incident response
+- Public claims without permission
+- Reviewing unauthorized repositories
 
 ### Safety Boundaries
 
-- Pilot only before v1.3.0 Ecosystem Pack refinement
+- Authorized repositories only
 - No public naming without explicit permission
 - No private code or vulnerability disclosure in public artifacts
+- Anonymized summaries must not reveal sensitive project details
 - No live-chain behavior
 
 ### Recommended For
@@ -275,12 +283,14 @@ Pilot-only multi-repository readiness review across a small set of authorized re
 - Ecosystems exploring standardized readiness support
 - Grant programs that want repeatable Markdown artifacts
 - Accelerators with several authorized DeFi repos
+- Audit-prep cohorts that need shared readiness themes
 
 ### Not Recommended For
 
 - Programs needing formal certification
 - Large portfolios without scoped authorization
 - Public marketing claims without consent
+- Remote scanning of repositories without authorization
 
 ## Inquiry Path
 

@@ -22,7 +22,7 @@ customers, adoption, or security guarantees.
 | Pre-Audit Sprint | Teams preparing for audit, contest, or bounty launch | Report bundle, SARIF, Issue Plan, Remediation Roadmap, test plan, walkthrough | USD 2,500-12,000 |
 | Contest Readiness Pack | Teams preparing authorized external review | Scope checklist, researcher onboarding notes, documentation gap review | USD 1,500-6,000 |
 | GitHub Action Setup | Teams that want Arkheionx in CI | Action integration, SARIF/report artifacts, config, threshold guidance | USD 500-2,500 |
-| Ecosystem Readiness Pilot | Grant programs or ecosystems with 3-5 authorized repos | Multi-repo readiness summary, anonymized gaps, calibration notes | USD 5,000-15,000 pilot |
+| Ecosystem Readiness Pilot | Ecosystems, grant programs, accelerators, or audit-prep cohorts with multiple authorized repos | Repo-by-repo readiness table, anonymized common gaps, rule-family heatmap, calibration notes | Pilot USD 5,000-15,000; expanded USD 15,000-40,000+ |
 | PoC assertion hardening sprint | A team with an existing exploit replay that ends in logs or weak checks | Foundry assertion patch, invariant map, metadata notes, reviewer summary | USD 750-2,500 per PoC |
 | Historical reproduction report | Protocols, researchers, or education teams studying a resolved incident | Fork reproduction review, root-cause narrative, assertion checklist, verification plan | USD 2,500-7,500 per incident |
 | Auditor training workshop | Teams learning exploit anatomy and invariant-driven review | Live workshop, slides, selected PoC walkthroughs, exercises | USD 1,000-3,000 per session |
@@ -40,6 +40,7 @@ requires a fresh reproduction or only review of an existing PoC.
 - Generated report, issue-plan, and delivery artifact review.
 - Remediation roadmap and test/invariant planning.
 - GitHub Action setup support.
+- Ecosystem-level anonymized common-gap summaries for authorized repositories.
 - Fork-based reproduction planning.
 - Assertion-family mapping against `docs/ASSERTION_STANDARD.md`.
 - Root-cause and invariant writeups.
@@ -55,6 +56,7 @@ requires a fresh reproduction or only review of an existing PoC.
 - Emergency incident response for an active exploit.
 - Full smart-contract audit signoff.
 - Security guarantees, bounty guarantees, or contest placement promises.
+- Public ecosystem claims without permission.
 - Legal, compliance, or security certification.
 
 If the work involves an unpatched live target, use coordinated disclosure with
@@ -72,6 +74,8 @@ Before asking for commercial work, prepare:
 - Desired output: assertion patch, report, workshop, or sponsorship.
 - Deadline and preferred communication channel.
 - Confirmation that the target is historical, patched, or authorized.
+- For ecosystem pilots, repository aliases, authorization confirmation for each
+  repository, and anonymization preferences.
 
 ## Inquiry Template
 

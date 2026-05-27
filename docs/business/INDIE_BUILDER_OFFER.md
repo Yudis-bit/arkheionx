@@ -79,13 +79,13 @@ Start with [`PAID_OFFER.md`](PAID_OFFER.md), then use
 [`../../templates/client_intake.md`](../../templates/client_intake.md) for
 scoping.
 
-Core v1.2.0 offers:
+Core v1.2.0 and v1.3.0 offers:
 
 - Readiness Snapshot;
 - Pre-Audit Sprint;
 - Contest Readiness Pack;
 - GitHub Action Setup;
-- Ecosystem Readiness Pilot.
+- Ecosystem Readiness Pilot for authorized multi-repo cohorts.
 
 ## Vault Builder Path
 
@@ -257,26 +257,30 @@ Output:
 - issue plan review;
 - final Markdown report.
 
-### Ecosystem Pack
+### Ecosystem Readiness Pilot
 
-Price range: USD 5,000-20,000 per month.
+Price range: pilot USD 5,000-15,000; expanded USD 15,000-40,000+.
 
 Best for:
 
-- L2 ecosystems;
+- chain ecosystems;
 - accelerators;
-- hackathons;
 - grant programs;
-- builder communities.
+- venture studios;
+- audit-prep cohorts;
+- ecosystem security teams.
 
 Output:
 
-- bulk readiness reports;
-- monthly security clinic;
-- portfolio-level Markdown dashboard;
-- private GitHub Discussion support if configured;
-- training session;
-- no website required.
+- repo-by-repo readiness table using aliases;
+- anonymized common-gap summary;
+- rule-family heatmap;
+- GitHub Action setup recommendations;
+- feedback and calibration notes;
+- ecosystem walkthrough.
+
+This does not certify participating repositories or create public claims
+without permission.
 
 ## What To Expect
 

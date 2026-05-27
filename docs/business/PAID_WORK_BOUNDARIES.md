@@ -14,6 +14,8 @@ Paid Arkheionx work is a readiness engagement, not a formal audit.
 - Remediation roadmap planning.
 - Rule calibration feedback.
 - GitHub Action setup for authorized repositories.
+- Ecosystem readiness summaries for multiple authorized repositories.
+- Anonymized common-gap reports.
 - Local/static analysis.
 
 ## Not Allowed
@@ -26,6 +28,8 @@ Paid Arkheionx work is a readiness engagement, not a formal audit.
 - Drain simulation.
 - Private key, mnemonic, API token, or secret handling.
 - Unauthorized repository scanning.
+- Public naming of participating repos without permission.
+- Public ecosystem or partner claims without committed evidence and consent.
 - Attack automation or evasion tooling.
 - Bounty farming automation.
 - Payment processing, CRM, or email automation in this repository.

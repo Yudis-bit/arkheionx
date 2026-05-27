@@ -74,7 +74,7 @@ Value:
 Use it from any authorized repository:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v0.7.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
   with:
     root: "."
     protocol-type: "auto"
@@ -239,25 +239,31 @@ funds are at risk.
 
 ## Ecosystem Pack
 
-Price range: USD 5,000-15,000 pilot for v1.2.0.
+Price range: pilot USD 5,000-15,000; expanded USD 15,000-40,000+.
 
 Best for:
 
-- L2 ecosystems;
+- chain ecosystems;
 - accelerators;
-- hackathons;
 - grant programs;
-- builder communities.
+- venture studios;
+- audit-prep cohorts;
+- ecosystem security teams.
 
 What you receive:
 
-- readiness scan across 3-5 authorized repositories;
+- readiness summary across 3-5 authorized repositories for a pilot, or 5-10
+  authorized repositories for an expanded engagement;
+- repo-by-repo readiness table;
 - anonymized ecosystem-level gap summary;
-- common rule calibration notes;
-- onboarding guide;
-- Markdown-only portfolio summary.
+- common gap report;
+- rule-family heatmap;
+- GitHub Action setup recommendations;
+- feedback and calibration notes;
+- 60-90 minute ecosystem walkthrough.
 
-This remains a pilot before v1.3.0 Ecosystem Pack refinement.
+This is not a public endorsement, certification, or adoption claim. Public
+summaries use aliases unless explicit naming permission exists.
 
 ## Ecosystem Vault Readiness Pack
 

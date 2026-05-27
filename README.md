@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.1.1` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.2.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,15 +126,16 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.1.1 - Public Surface Polish**.
+Latest stable release: **v1.2.0 - Paid Offer Refinement**.
 
-v1.1.1 keeps the stable readiness surface and clarifies the public repository
-positioning:
+v1.2.0 keeps the stable readiness surface and adds clear paid-readiness
+packaging:
 
-- clearer README front page;
-- recommended GitHub About description, topics, and resource URL;
-- stable Action examples pinned to v1.1.1;
-- concise documentation map and onboarding path.
+- Readiness Snapshot, Pre-Audit Sprint, Contest Readiness Pack, GitHub Action
+  Setup, and Ecosystem Readiness Pilot;
+- pricing guidance and client intake;
+- scope-of-work templates;
+- paid-work boundaries that preserve "not an audit" positioning.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -154,11 +155,12 @@ positioning:
 | v1.0.1 | Docs link validation hotfix | Released |
 | v1.1.0 | Feedback Loop + External Calibration | Released |
 | v1.1.1 | Public surface polish | Released |
-| v1.2.0 | Paid offer refinement | Prepared, not tagged |
+| v1.2.0 | Paid offer refinement | Released |
+| v1.3.0 | Ecosystem Pack | Prepared, not tagged |
 
-## Stable v1.1.x Surface
+## Stable v1.2.x Surface
 
-Arkheionx v1.1.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.2.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -167,7 +169,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.1.1`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.2.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Feedback and Calibration
@@ -199,6 +201,21 @@ Available services:
 
 Paid support is not a formal audit and does not guarantee security, bounty
 outcomes, or findings.
+
+## Ecosystem Readiness
+
+Arkheionx can support ecosystem-level readiness workflows by combining multiple
+authorized repo reports into anonymized common-gap summaries.
+
+Start here:
+
+- [`docs/ecosystem/ECOSYSTEM_PACK.md`](docs/ecosystem/ECOSYSTEM_PACK.md)
+- [`docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md`](docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md)
+- [`reports/ecosystem_readiness_summary.md`](reports/ecosystem_readiness_summary.md)
+
+The workflow does not clone remote repositories, scan unauthorized repos, or
+publish private details. Public summaries use aliases unless explicit
+permission exists.
 
 ## The Five Pillars
 
@@ -273,7 +290,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.1.1` for stable usage:
+Use `@v1.2.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -288,7 +305,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
         with:
           root: "."
           protocol-type: "auto"
@@ -322,7 +339,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -351,7 +368,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.2.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -402,7 +419,7 @@ python3 scripts/pre_audit_scan.py \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
-See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.1.x CLI
+See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.2.x CLI
 surface.
 
 Vault builders can force the v0.2.0 Vault Rule Pack:
@@ -677,6 +694,14 @@ Core standards:
 - [`docs/business/PAID_WORK_BOUNDARIES.md`](docs/business/PAID_WORK_BOUNDARIES.md)
 - [`reports/paid_offer_index.md`](reports/paid_offer_index.md)
 
+### Ecosystem Readiness
+
+- [`docs/ecosystem/ECOSYSTEM_PACK.md`](docs/ecosystem/ECOSYSTEM_PACK.md)
+- [`docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md`](docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md)
+- [`docs/ecosystem/ANONYMIZED_REPORTING.md`](docs/ecosystem/ANONYMIZED_REPORTING.md)
+- [`docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md`](docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md)
+- [`reports/ecosystem_readiness_summary.md`](reports/ecosystem_readiness_summary.md)
+
 ### Safety
 
 - [`docs/ETHICS.md`](docs/ETHICS.md)
@@ -698,11 +723,11 @@ Core standards:
 | Indie Builder Sponsor | USD 29/month | Support public tooling, early previews, priority Q&A. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates and priority issue support. |
 | Launch Report | USD 299-499 | Manual review of generated report, evidence, issue plan, and prioritized fix checklist. |
-| Pre-Audit Sprint | USD 1,000-2,000 | Manual readiness review, missing invariant plan, evidence-based GitHub issue plan/checklist. |
-| Contest Readiness Pack | USD 500-1,500 | Scope checklist, researcher onboarding checklist, and pre-contest remediation priorities. |
+| Pre-Audit Sprint | Pilot USD 2,500-5,000; standard USD 5,000-12,000 | Manual readiness review, missing invariant plan, evidence-based GitHub issue plan/checklist. |
+| Contest Readiness Pack | USD 1,500-6,000 | Scope checklist, researcher onboarding checklist, and pre-contest remediation priorities. |
 | Vault Launch Report | USD 299-499 | Vault Rule Pack review and prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 | Vault-focused invariant, strategy, oracle, and withdrawal lifecycle plan. |
-| Ecosystem Pack | USD 5,000-20,000/month | Bulk readiness reports and builder security clinic. |
+| Ecosystem Readiness Pilot | Pilot USD 5,000-15,000; expanded USD 15,000-40,000+ | Multi-repo readiness summaries, anonymized common gaps, and rule-family heatmap for authorized cohorts. |
 | Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and portfolio-level Markdown dashboard. |
 | Research Sponsorship | Flexible | Fund public exploit-memory and readiness-rule work. |
 
@@ -783,6 +808,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   About guidance, topics, and onboarding path cleanup.
 - **v1.2.0: paid offer refinement.** Productized readiness services, pricing
   ladder, client intake, scope templates, and paid-work boundaries.
+- **v1.3.0: ecosystem pack.** Multi-repo readiness workflow, anonymized common
+  gap reports, repo-by-repo summary tables, and ecosystem pilot templates.
 
 Archive milestones remain honest:
 

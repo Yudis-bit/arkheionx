@@ -8,6 +8,7 @@ For productized readiness services, prefer one of the scope templates:
 - [`../../templates/readiness_snapshot_scope.md`](../../templates/readiness_snapshot_scope.md)
 - [`../../templates/pre_audit_sprint_scope.md`](../../templates/pre_audit_sprint_scope.md)
 - [`../../templates/contest_readiness_scope.md`](../../templates/contest_readiness_scope.md)
+- [`../../templates/ecosystem_readiness_pilot_scope.md`](../../templates/ecosystem_readiness_pilot_scope.md)
 
 Paid Arkheionx work is a readiness engagement, not a formal audit.
 
@@ -37,6 +38,8 @@ This engagement does not cover:
 - <deliverable 1>
 - <deliverable 2>
 - <deliverable 3>
+- For ecosystem pilots: repo-by-repo readiness table, anonymized common-gap
+  summary, rule-family heatmap, and calibration notes
 
 ## 3. Inputs Needed
 
@@ -45,6 +48,8 @@ This engagement does not cover:
 - Target chain and fork block, if known
 - Confirmation of historical, patched, or authorized status
 - Preferred review format
+- For ecosystem pilots: repository aliases, authorization confirmation for each
+  repository, and anonymization preference
 
 ## 4. Process
 
@@ -72,6 +77,9 @@ All work is defensive and limited to historical, patched, or authorized targets.
 Any indication that the target is unpatched or under embargo pauses the work
 until the correct disclosure path is confirmed.
 
+For ecosystem pilots, no public naming, customer, adoption, or partnership
+claim may be made without explicit permission.
+
 ## 8. Acceptance
 
 Client:
@@ -87,7 +95,7 @@ Date:
 | Pre-Audit Sprint | USD 2,500-12,000 |
 | Contest Readiness Pack | USD 1,500-6,000 |
 | GitHub Action Setup | USD 500-2,500 |
-| Ecosystem Readiness Pilot | USD 5,000-15,000 pilot |
+| Ecosystem Readiness Pilot | Pilot USD 5,000-15,000; expanded USD 15,000-40,000+ |
 | One PoC assertion review memo | USD 300-750 |
 | Assertion hardening sprint | USD 750-2,500 |
 | Historical reproduction report | USD 2,500-7,500 |

@@ -12,7 +12,7 @@ Paid Arkheionx work is a readiness engagement, not a formal audit.
 | Readiness Snapshot | Pilot: USD 500-1,000; standard: USD 1,000-2,500 | Quick blocker scan and issue plan for an authorized repo. |
 | Contest Readiness Pack | USD 1,500-6,000 | Scope clarity, researcher onboarding, and pre-contest blocker list. |
 | Pre-Audit Sprint | Pilot: USD 2,500-5,000; standard: USD 5,000-12,000 | Guided 3-5 day readiness workflow before audit, contest, or bounty launch. |
-| Ecosystem Readiness Pilot | USD 5,000-15,000 pilot | Small multi-repo readiness pilot for 3-5 authorized builder repos. |
+| Ecosystem Readiness Pilot | Pilot: USD 5,000-15,000; expanded: USD 15,000-40,000+ | Multi-repo readiness pilot for 3-10 authorized builder repos, depending on scope. |
 
 ## Pricing Variables
 
@@ -23,6 +23,7 @@ Paid Arkheionx work is a readiness engagement, not a formal audit.
 - Whether follow-up calibration is included.
 - Whether deliverables must be anonymized.
 - Number of walkthrough calls.
+- Number of repositories and anonymization requirements for ecosystem pilots.
 
 ## Pilot Rules
 
@@ -47,3 +48,4 @@ Pricing does not buy:
 - exploit development;
 - live-chain behavior;
 - endorsement by audit firms, contest platforms, or bounty platforms.
+- public ecosystem claims without explicit permission.

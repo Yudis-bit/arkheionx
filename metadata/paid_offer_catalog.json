@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "description": "Arkheionx paid readiness offer catalog. Paid work is readiness support, not a formal audit.",
   "offers": [
     {
@@ -187,45 +187,55 @@
     {
       "offer_id": "ecosystem-readiness-pilot",
       "name": "Ecosystem Readiness Pilot",
-      "audience": "Grant programs, accelerators, hackathons, and ecosystems supporting multiple authorized DeFi builders.",
-      "description": "Pilot-only multi-repository readiness review across a small set of authorized repositories to surface common readiness gaps and calibration notes.",
+      "audience": "Chain ecosystems, grant programs, accelerators, venture studios, and audit-prep cohorts supporting multiple authorized DeFi builders.",
+      "description": "Multi-repository readiness pilot that uses local Arkheionx reports to produce repo-by-repo summaries, anonymized common gaps, rule-family heatmaps, and ecosystem-level remediation themes.",
       "starting_price_usd": 5000,
-      "typical_price_range_usd": "$5,000-$15,000 pilot",
-      "duration": "Scoped pilot across 3-5 repositories.",
+      "typical_price_range_usd": "Pilot: $5,000-$15,000; expanded: $15,000-$40,000+",
+      "duration": "Scoped pilot across 3-5 repositories; expanded engagement across 5-10 authorized repositories.",
       "deliverables": [
-        "Readiness scan across 3-5 authorized repositories",
-        "Anonymized ecosystem-level gap summary",
-        "Common rule calibration notes",
-        "Builder onboarding guide",
-        "Markdown-only portfolio summary"
+        "Ecosystem Readiness Summary",
+        "Repo-by-Repo Readiness Table",
+        "Common Gap Report",
+        "Rule-Family Heatmap",
+        "Anonymized Recommendations",
+        "GitHub Action Setup Recommendations",
+        "Feedback and Calibration Notes",
+        "60-90 minute ecosystem walkthrough"
       ],
       "not_included": [
-        "Production ecosystem dashboard",
-        "Formal audits for participating teams",
-        "Customer or adoption claims without permission",
-        "Unlimited repository coverage"
+        "Formal audit",
+        "Vulnerability certification",
+        "Exploit development",
+        "Live-chain testing",
+        "Emergency incident response",
+        "Public claims without permission",
+        "Reviewing unauthorized repositories"
       ],
       "required_inputs": [
         "Written authorization for every repository",
         "Scope list and repository contacts",
         "Preferred anonymity and reporting rules",
-        "Program timeline"
+        "Program timeline",
+        "Local Arkheionx JSON reports or repository access method agreed privately"
       ],
       "safety_boundaries": [
-        "Pilot only before v1.3.0 Ecosystem Pack refinement",
+        "Authorized repositories only",
         "No public naming without explicit permission",
         "No private code or vulnerability disclosure in public artifacts",
+        "Anonymized summaries must not reveal sensitive project details",
         "No live-chain behavior"
       ],
       "recommended_for": [
         "Ecosystems exploring standardized readiness support",
         "Grant programs that want repeatable Markdown artifacts",
-        "Accelerators with several authorized DeFi repos"
+        "Accelerators with several authorized DeFi repos",
+        "Audit-prep cohorts that need shared readiness themes"
       ],
       "not_recommended_for": [
         "Programs needing formal certification",
         "Large portfolios without scoped authorization",
-        "Public marketing claims without consent"
+        "Public marketing claims without consent",
+        "Remote scanning of repositories without authorization"
       ]
     }
   ]

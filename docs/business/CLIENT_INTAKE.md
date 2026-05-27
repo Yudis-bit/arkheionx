@@ -16,6 +16,8 @@ Paid Arkheionx work is a readiness engagement, not a formal audit.
 - Build and test commands.
 - Known limitations.
 - Desired deliverables.
+- For ecosystem pilots: repo aliases, authorization per repository, and
+  anonymization preference.
 
 ## Authorization
 
@@ -42,3 +44,6 @@ Primary concern:
 Preferred deliverables:
 Authorization confirmed:
 ```
+
+For ecosystem pilots, use
+[`../../templates/ecosystem_intake.md`](../../templates/ecosystem_intake.md).

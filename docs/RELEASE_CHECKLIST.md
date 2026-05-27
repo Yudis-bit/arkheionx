@@ -327,6 +327,32 @@ written reason in the release PR.
 - [ ] Safety wording check passes in strict mode.
 - [ ] Unit tests pass.
 
+## v1.3.0 Ecosystem Pack Checks
+
+- [ ] `docs/ecosystem/ECOSYSTEM_PACK.md` exists.
+- [ ] `docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md` exists.
+- [ ] `docs/ecosystem/ANONYMIZED_REPORTING.md` exists.
+- [ ] `docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md` exists.
+- [ ] `metadata/ecosystem_pack_schema.json` parses.
+- [ ] `metadata/ecosystem_pilot_example.json` parses and is clearly synthetic.
+- [ ] `templates/ecosystem_intake.md` exists.
+- [ ] `templates/ecosystem_readiness_pilot_scope.md` exists.
+- [ ] `templates/ecosystem_manifest.example.json` exists.
+- [ ] `python3 scripts/generate_ecosystem_report.py --check` passes.
+- [ ] `reports/ecosystem_readiness_summary.md` exists.
+- [ ] `reports/ecosystem_common_gaps.md` exists.
+- [ ] Paid offer docs mention Ecosystem Readiness Pilot.
+- [ ] README links ecosystem readiness workflow.
+- [ ] Search index includes ecosystem readiness docs and reports.
+- [ ] No remote cloning, external APIs, unauthorized repo workflow, live-chain,
+      RPC, or offensive behavior added.
+- [ ] No customer, adoption, partnership, endorsement, or certification claims
+      added.
+- [ ] Docs link check passes.
+- [ ] Version consistency check passes.
+- [ ] Safety wording check passes in strict mode.
+- [ ] Unit tests pass.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

@@ -22,9 +22,10 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("Not an audit. A way to prepare for one.", readme)
         self.assertIn("## Start Here", readme)
         self.assertIn("## Safety Boundaries", readme)
-        self.assertIn("Latest stable release: **v1.1.1", readme)
+        self.assertIn("Latest stable release: **v1.2.0", readme)
         self.assertIn("v1.1.1 | Public surface polish | Released", readme)
-        self.assertIn("v1.2.0 | Paid offer refinement | Prepared, not tagged", readme)
+        self.assertIn("v1.2.0 | Paid offer refinement | Released", readme)
+        self.assertIn("v1.3.0 | Ecosystem Pack | Prepared, not tagged", readme)
 
     def test_github_repo_surface_doc_exists(self) -> None:
         surface = self.read("docs/GITHUB_REPO_SURFACE.md")

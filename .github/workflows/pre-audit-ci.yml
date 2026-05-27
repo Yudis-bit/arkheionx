@@ -9,6 +9,7 @@ on:
       - "scripts/generate_knowledge_graph.py"
       - "scripts/generate_feedback_dashboard.py"
       - "scripts/generate_paid_offer_index.py"
+      - "scripts/generate_ecosystem_report.py"
       - "scripts/search_knowledge.py"
       - "scripts/check_docs_links.py"
       - "scripts/check_version_consistency.py"
@@ -35,12 +36,16 @@ on:
       - "metadata/feedback_examples.json"
       - "metadata/rule_calibration_backlog.json"
       - "metadata/paid_offer_catalog.json"
+      - "metadata/ecosystem_pack_schema.json"
+      - "metadata/ecosystem_pilot_example.json"
       - "reports/search_index.md"
       - "reports/security_memory_graph.md"
       - "reports/security_memory_graph_summary.md"
       - "reports/feedback_dashboard.md"
       - "reports/rule_calibration_backlog.md"
       - "reports/paid_offer_index.md"
+      - "reports/ecosystem_readiness_summary.md"
+      - "reports/ecosystem_common_gaps.md"
       - "templates/**"
       - "docs/**"
       - "README.md"
@@ -70,6 +75,7 @@ jobs:
           python3 -m py_compile scripts/generate_knowledge_graph.py
           python3 -m py_compile scripts/generate_feedback_dashboard.py
           python3 -m py_compile scripts/generate_paid_offer_index.py
+          python3 -m py_compile scripts/generate_ecosystem_report.py
           python3 -m py_compile scripts/search_knowledge.py
           python3 -m py_compile scripts/check_docs_links.py
           python3 -m py_compile scripts/check_version_consistency.py
@@ -83,6 +89,9 @@ jobs:
 
       - name: Verify paid offer index is current
         run: python3 scripts/generate_paid_offer_index.py --check
+
+      - name: Verify ecosystem reports are current
+        run: python3 scripts/generate_ecosystem_report.py --check
 
       - name: Verify security memory graph is current
         run: |
@@ -391,7 +400,7 @@ jobs:
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.0.0"
+              assert data["version"] == "1.3.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -427,7 +436,7 @@ jobs:
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.0.0"
+              assert plan["version"] == "1.3.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -439,6 +448,8 @@ jobs:
               "metadata/security_memory_graph.json",
               "metadata/finding_knowledge_map.json",
               "metadata/rule_calibration_matrix.json",
+              "metadata/ecosystem_pack_schema.json",
+              "metadata/ecosystem_pilot_example.json",
           ]:
               payload = json.load(open(path, encoding="utf-8"))
               assert payload
@@ -509,6 +520,14 @@ jobs:
           test -f metadata/rule_calibration_matrix.json
           test -f reports/security_memory_graph.md
           test -f reports/security_memory_graph_summary.md
+          test -f reports/ecosystem_readiness_summary.md
+          test -f reports/ecosystem_common_gaps.md
+          test -f docs/ecosystem/ECOSYSTEM_PACK.md
+          test -f docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md
+          test -f templates/ecosystem_intake.md
+          test -f templates/ecosystem_readiness_pilot_scope.md
+          grep -q "Repo-By-Repo Readiness Table" reports/ecosystem_readiness_summary.md
+          grep -q "Common Gap Families" reports/ecosystem_common_gaps.md
           grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
           grep -q "Related Knowledge" examples/reports/demo-issue-plan.json
           grep -q "Scan Source Summary" examples/reports/generated-artifact-self-ingestion-pre-audit-report.md

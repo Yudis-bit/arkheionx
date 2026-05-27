@@ -31,6 +31,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Sample scope of work | [`docs/business/SAMPLE_SCOPE_OF_WORK.md`](../docs/business/SAMPLE_SCOPE_OF_WORK.md) | scope of work, proposal template, not a formal audit |
 | Sales FAQ | [`docs/business/SALES_FAQ.md`](../docs/business/SALES_FAQ.md) | sales FAQ, paid readiness support, no guarantees |
 | Paid work boundaries | [`docs/business/PAID_WORK_BOUNDARIES.md`](../docs/business/PAID_WORK_BOUNDARIES.md) | paid work boundaries, safety boundaries, commercial |
+| Ecosystem Pack | [`docs/ecosystem/ECOSYSTEM_PACK.md`](../docs/ecosystem/ECOSYSTEM_PACK.md) | ecosystem pack, ecosystem readiness, multi-repo readiness |
+| Multi-repo readiness workflow | [`docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md`](../docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md) | multi-repo readiness, authorized repositories, local reports |
+| Ecosystem intake | [`docs/ecosystem/ECOSYSTEM_INTAKE.md`](../docs/ecosystem/ECOSYSTEM_INTAKE.md) | ecosystem intake, authorization, anonymization |
+| Anonymized reporting | [`docs/ecosystem/ANONYMIZED_REPORTING.md`](../docs/ecosystem/ANONYMIZED_REPORTING.md) | anonymized reporting, common gap report, repo aliases |
+| Ecosystem readiness pilot | [`docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md`](../docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md) | readiness pilot, ecosystem operator, cohort readiness |
+| Ecosystem readiness summary | [`reports/ecosystem_readiness_summary.md`](../reports/ecosystem_readiness_summary.md) | ecosystem readiness summary, repo-by-repo readiness, rule-family heatmap |
+| Ecosystem common gaps | [`reports/ecosystem_common_gaps.md`](../reports/ecosystem_common_gaps.md) | common gap report, recurring findings, anonymized recommendations |
+| Ecosystem pilot metadata | [`metadata/ecosystem_pilot_example.json`](../metadata/ecosystem_pilot_example.json) | synthetic ecosystem pilot, ecosystem data model, repo aliases |
+| Ecosystem report generator | [`scripts/generate_ecosystem_report.py`](../scripts/generate_ecosystem_report.py) | ecosystem report generator, check mode, local static |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -229,6 +238,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `client intake` | client intake template, repo intake, readiness intake | business | docs/business/CLIENT_INTAKE.md, templates/client_intake.md | client-intake, scope-of-work, paid-offer |
 | `scope of work` | SOW, scope template, proposal template | business | docs/business/SAMPLE_SCOPE_OF_WORK.md, docs/business/PROPOSAL_TEMPLATE.md | scope-of-work, proposal-template, paid-offer |
 | `pricing ladder` | pricing guidance, pilot pricing, service pricing | business | docs/business/PRICING_LADDER.md, metadata/paid_offer_catalog.json | pricing-ladder, paid-offer, commercial |
+| `ecosystem pack` | Arkheionx Ecosystem Pack, ecosystem readiness pack, multi-repo readiness pack | ecosystem readiness | docs/ecosystem/ECOSYSTEM_PACK.md, reports/ecosystem_readiness_summary.md | ecosystem-pack, multi-repo-readiness, readiness-support |
+| `ecosystem readiness` | ecosystem-level readiness, portfolio readiness, cohort readiness | ecosystem readiness | docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md, templates/ecosystem_readiness_pilot_scope.md | ecosystem-readiness, cohort-readiness, audit-prep |
+| `multi-repo readiness` | multiple repo readiness, repo cohort scan, authorized multi-repo workflow | ecosystem readiness | docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md, templates/ecosystem_manifest.example.json | multi-repo-readiness, authorized-repositories, local-static |
+| `ecosystem intake` | ecosystem client intake, multi-repo intake, cohort intake | ecosystem readiness | docs/ecosystem/ECOSYSTEM_INTAKE.md, templates/ecosystem_intake.md | ecosystem-intake, authorization, scope |
+| `anonymized reporting` | anonymized gap summary, repo aliases, redacted ecosystem report | ecosystem readiness | docs/ecosystem/ANONYMIZED_REPORTING.md, reports/ecosystem_common_gaps.md | anonymized-reporting, common-gap-report, safe-disclosure |
+| `common gap report` | common readiness gaps, recurring findings, rule-family heatmap | ecosystem readiness | reports/ecosystem_common_gaps.md, metadata/ecosystem_pilot_example.json | common-gap-report, recurring-findings, rule-family-heatmap |
+| `cohort readiness` | audit-prep cohort, builder cohort readiness, accelerator readiness | ecosystem readiness | docs/ecosystem/COHORT_READINESS_GUIDE.md, docs/ecosystem/ECOSYSTEM_OPERATOR_FAQ.md | cohort-readiness, ecosystem-operator, readiness-pilot |
+| `repo-by-repo readiness` | repo readiness table, repository readiness table, repository aliases | ecosystem readiness | reports/ecosystem_readiness_summary.md, metadata/ecosystem_pack_schema.json | repo-by-repo-readiness, ecosystem-summary, anonymized |
+| `ecosystem readiness summary` | ecosystem summary, ecosystem pilot report, readiness distribution | ecosystem readiness | reports/ecosystem_readiness_summary.md, scripts/generate_ecosystem_report.py | ecosystem-readiness-summary, synthetic-report, markdown |
 
 ## Historical Memory Index
 
@@ -411,4 +429,15 @@ scope of work
 pricing ladder
 commercial positioning
 proposal template
+ecosystem pack
+ecosystem readiness
+multi-repo readiness
+ecosystem intake
+anonymized reporting
+common gap report
+readiness pilot
+cohort readiness
+ecosystem operator
+repo-by-repo readiness
+ecosystem readiness summary
 ```
