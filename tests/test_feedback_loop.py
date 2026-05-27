@@ -14,6 +14,7 @@ class FeedbackLoopTests(unittest.TestCase):
     def test_feedback_issue_templates_exist(self) -> None:
         for path in [
             ".github/ISSUE_TEMPLATE/false_positive.yml",
+            ".github/ISSUE_TEMPLATE/false_positive_report.yml",
             ".github/ISSUE_TEMPLATE/false_negative.yml",
             ".github/ISSUE_TEMPLATE/report_quality_feedback.yml",
             ".github/ISSUE_TEMPLATE/rule_calibration_request.yml",

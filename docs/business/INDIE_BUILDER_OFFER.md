@@ -75,6 +75,18 @@ Before scanning your own repository, run the public demo:
 Paid work is optional and scoped. It is defensive readiness work, not a formal
 audit.
 
+Start with [`PAID_OFFER.md`](PAID_OFFER.md), then use
+[`../../templates/client_intake.md`](../../templates/client_intake.md) for
+scoping.
+
+Core v1.2.0 offers:
+
+- Readiness Snapshot;
+- Pre-Audit Sprint;
+- Contest Readiness Pack;
+- GitHub Action Setup;
+- Ecosystem Readiness Pilot.
+
 ## Vault Builder Path
 
 For ERC4626-like vaults, strategy vaults, yield vaults, or share/accounting
@@ -108,9 +120,9 @@ python3 scripts/pre_audit_scan.py \
 
 Vault builders should read [`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md).
 
-### Launch Readiness Report
+### Readiness Snapshot
 
-Price range: USD 299-499 one time.
+Price range: pilot USD 500-1,000; standard USD 1,000-2,500.
 
 Best for:
 
@@ -121,14 +133,13 @@ Best for:
 Output:
 
 - automated scan;
-- generated Launch Report;
+- generated Pre-Audit Readiness Report;
 - one-page executive summary;
-- remediation roadmap;
+- generated issue plan;
 - manual review of generated report;
-- baseline/diff interpretation if prior scan output is available;
-- generated issue checklist reviewed and turned into a prioritized fix list;
-- generated issue plan reviewed for safe remediation tasks;
 - semantic-lite evidence and confidence reasons reviewed for prioritization;
+- top 5-10 readiness gaps;
+- 30-minute walkthrough;
 - Markdown report;
 - clear limitations and formal audit recommendation.
 
@@ -155,7 +166,7 @@ Output:
 
 ### Pre-Audit Sprint
 
-Price range: USD 1,000-2,000 one time.
+Price range: pilot USD 2,500-5,000; standard USD 5,000-12,000.
 
 Best for:
 
@@ -182,7 +193,7 @@ You can preview the sprint structure in `examples/reports/demo-sprint-plan.md`.
 
 ### Contest Readiness Pack
 
-Price range: USD 500-1,500 one time.
+Price range: USD 1,500-6,000 one time.
 
 Best for:
 
@@ -206,6 +217,25 @@ You can preview the contest-readiness structure in
 
 This is defensive preparation for authorized maintainers. It does not promise
 contest outcomes or replace a formal audit.
+
+### GitHub Action Setup
+
+Price range: USD 500-2,500 one time.
+
+Best for:
+
+- teams that want Arkheionx in CI;
+- repositories that need SARIF/report artifacts;
+- builders who want baseline/diff tracking.
+
+Output:
+
+- GitHub Action integration;
+- SARIF output setup;
+- report artifact setup;
+- config/suppression setup;
+- recommended thresholds;
+- short handoff guide.
 
 ### Vault Pre-Audit Sprint
 

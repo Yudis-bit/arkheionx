@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.1.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.1.1` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,17 +126,15 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.1.0 - Feedback Loop and External Calibration**.
+Latest stable release: **v1.1.1 - Public Surface Polish**.
 
-v1.1.0 adds structured feedback and calibration workflows on top of the stable
-readiness surface:
+v1.1.1 keeps the stable readiness surface and clarifies the public repository
+positioning:
 
-- documented CLI and GitHub Action surfaces;
-- JSON schemas for stable outputs;
-- output artifact naming conventions;
-- generated artifact ignore and negative-evidence safeguards;
-- security memory graph/search workflows;
-- production-ready public documentation and release checklist.
+- clearer README front page;
+- recommended GitHub About description, topics, and resource URL;
+- stable Action examples pinned to v1.1.1;
+- concise documentation map and onboarding path.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -155,7 +153,8 @@ readiness surface:
 | v1.0.0 | Stable public release + schema freeze | Released |
 | v1.0.1 | Docs link validation hotfix | Released |
 | v1.1.0 | Feedback Loop + External Calibration | Released |
-| v1.1.1 | Public surface polish | Prepared, not tagged |
+| v1.1.1 | Public surface polish | Released |
+| v1.2.0 | Paid offer refinement | Prepared, not tagged |
 
 ## Stable v1.1.x Surface
 
@@ -168,7 +167,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.1.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.1.1`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Feedback and Calibration
@@ -183,6 +182,23 @@ Start here:
 - [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](docs/FEEDBACK_TRIAGE_WORKFLOW.md)
 - [`reports/feedback_dashboard.md`](reports/feedback_dashboard.md)
 - [`reports/rule_calibration_backlog.md`](reports/rule_calibration_backlog.md)
+
+## Paid Readiness Support
+
+Arkheionx is open-source. For teams that want help applying it to an
+authorized DeFi repository, paid readiness services are documented in
+[`docs/business/PAID_OFFER.md`](docs/business/PAID_OFFER.md).
+
+Available services:
+
+- Readiness Snapshot;
+- Pre-Audit Sprint;
+- Contest Readiness Pack;
+- GitHub Action Setup;
+- Ecosystem Readiness Pilot.
+
+Paid support is not a formal audit and does not guarantee security, bounty
+outcomes, or findings.
 
 ## The Five Pillars
 
@@ -257,7 +273,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.1.0` for stable usage:
+Use `@v1.1.1` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -272,7 +288,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1
         with:
           root: "."
           protocol-type: "auto"
@@ -306,7 +322,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -335,7 +351,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -652,6 +668,15 @@ Core standards:
 - [`docs/VALIDATION_LEVELS.md`](docs/VALIDATION_LEVELS.md)
 - [`reports/feedback_dashboard.md`](reports/feedback_dashboard.md)
 
+### Paid Readiness Support
+
+- [`docs/business/PAID_OFFER.md`](docs/business/PAID_OFFER.md)
+- [`docs/business/PRICING_LADDER.md`](docs/business/PRICING_LADDER.md)
+- [`docs/business/SERVICE_PACKAGES.md`](docs/business/SERVICE_PACKAGES.md)
+- [`docs/business/CLIENT_INTAKE.md`](docs/business/CLIENT_INTAKE.md)
+- [`docs/business/PAID_WORK_BOUNDARIES.md`](docs/business/PAID_WORK_BOUNDARIES.md)
+- [`reports/paid_offer_index.md`](reports/paid_offer_index.md)
+
 ### Safety
 
 - [`docs/ETHICS.md`](docs/ETHICS.md)
@@ -756,6 +781,8 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   calibration backlog, feedback dashboard, and validation language.
 - **v1.1.1: public surface polish.** README front-page clarity, repository
   About guidance, topics, and onboarding path cleanup.
+- **v1.2.0: paid offer refinement.** Productized readiness services, pricing
+  ladder, client intake, scope templates, and paid-work boundaries.
 
 Archive milestones remain honest:
 

@@ -26,16 +26,41 @@ BANNED_PHRASES = [
     "paid customer",
     "fake adoption",
     "customer claim",
+    "trusted by",
+    "adopted by",
+    "proven in production",
+    "official audit",
+    "certification",
+    "security guarantee",
+    "bounty guarantee",
+    "exploit discovery guarantee",
 ]
 CLEAR_PROHIBITION_CONTEXT = [
     "do not",
+    "does not",
+    "without",
     "not ",
     "no ",
     "must not",
     "never",
     "prohibited",
+    "disallowed",
     "unsafe phrase",
     "banned",
+    "avoid",
+    "not included",
+    "not allowed",
+    "claim boundaries",
+    "exclusions",
+    "does not buy",
+    "does not provide",
+    "what this is not",
+    "what paid work does not include",
+    "what this work does not include",
+    "disallowed language",
+    "words to avoid",
+    "not_included",
+    "not recommended",
 ]
 
 
@@ -65,8 +90,8 @@ def files_to_scan() -> list[Path]:
     ]
 
 
-def phrase_allowed(line: str) -> bool:
-    lower = line.lower()
+def phrase_allowed(context: str) -> bool:
+    lower = context.lower()
     return any(marker in lower for marker in CLEAR_PROHIBITION_CONTEXT)
 
 
@@ -79,8 +104,9 @@ def scan() -> list[str]:
             continue
         for number, line in enumerate(lines, 1):
             lower = line.lower()
+            context = "\n".join(lines[max(0, number - 12) : number])
             for phrase in BANNED_PHRASES:
-                if phrase in lower and not phrase_allowed(line):
+                if phrase in lower and not phrase_allowed(context):
                     warnings.append(f"{path.relative_to(ROOT)}:{number}: {phrase}")
     return warnings
 

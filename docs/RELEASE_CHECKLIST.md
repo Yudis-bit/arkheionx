@@ -299,6 +299,34 @@ written reason in the release PR.
 - [ ] Safety wording check passes.
 - [ ] Unit tests pass.
 
+## v1.2.0 Paid Offer Refinement Checks
+
+- [ ] `docs/business/PAID_OFFER.md` exists.
+- [ ] `docs/business/PRICING_LADDER.md` exists.
+- [ ] `docs/business/SERVICE_PACKAGES.md` exists.
+- [ ] `docs/business/CLIENT_INTAKE.md` exists.
+- [ ] `docs/business/SAMPLE_SCOPE_OF_WORK.md` exists.
+- [ ] `docs/business/SALES_FAQ.md` exists.
+- [ ] `docs/business/PAID_WORK_BOUNDARIES.md` exists.
+- [ ] `metadata/paid_offer_catalog.json` parses.
+- [ ] `python3 scripts/generate_paid_offer_index.py --check` passes.
+- [ ] `reports/paid_offer_index.md` exists.
+- [ ] `templates/client_intake.md` exists.
+- [ ] Readiness Snapshot, Pre-Audit Sprint, and Contest Readiness scope
+      templates exist.
+- [ ] Paid docs clearly say paid work is not a formal audit.
+- [ ] Paid docs clearly say there are no security or bounty guarantees.
+- [ ] README links to paid readiness support.
+- [ ] Search index includes paid-offer docs and catalog.
+- [ ] No customer, adoption, auditor-trust, platform-affiliation, or official
+      certification claims added.
+- [ ] No payment processing, CRM, email automation, live-chain, RPC, or
+      offensive behavior added.
+- [ ] Docs link check passes.
+- [ ] Version consistency check passes.
+- [ ] Safety wording check passes in strict mode.
+- [ ] Unit tests pass.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

@@ -26,7 +26,7 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.1.1"
+  "version": "1.2.0"
 }
 ```
 

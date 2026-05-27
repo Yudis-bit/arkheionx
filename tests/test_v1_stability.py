@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.0"
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.1.1"
 
 
 class V1StabilityTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_public_docs_name_v1_stable_surface(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("Latest stable release: **v1.1.0", readme)
+        self.assertIn("Latest stable release: **v1.1.1", readme)
         self.assertIn("Stable v1.1.x Surface", readme)
         self.assertIn(STABLE_ACTION, readme)
         self.assertIn("docs/CLI_REFERENCE.md", readme)
@@ -53,13 +53,14 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_changelog_and_roadmap_mark_v1_candidate(self) -> None:
         changelog = self.read("CHANGELOG.md")
-        self.assertIn("## v1.1.1 - Unreleased", changelog)
+        self.assertIn("## v1.2.0 - Unreleased", changelog)
+        self.assertIn("## v1.1.1", changelog)
         self.assertIn("## v1.1.0", changelog)
         self.assertIn("## v1.0.1", changelog)
         roadmap = self.read("docs/ROADMAP.md")
         self.assertIn("v1.0.0: Stable public release", roadmap)
-        self.assertIn("v1.1.1: Public Surface Polish current patch milestone", roadmap)
-        self.assertIn("v1.2.0: Paid Offer Refinement", roadmap)
+        self.assertIn("v1.2.0: Paid Offer Refinement current milestone", roadmap)
+        self.assertIn("v1.3.0: Ecosystem Pack", roadmap)
 
 
 if __name__ == "__main__":

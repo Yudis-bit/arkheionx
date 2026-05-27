@@ -3,7 +3,40 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.1.1 - Unreleased
+## v1.2.0 - Unreleased
+
+### Added
+
+- Paid offer documentation.
+- Pricing ladder.
+- Service package guide.
+- Client intake template.
+- Sample scope-of-work templates.
+- Paid offer catalog.
+- Paid offer index generator.
+- Sales FAQ.
+- Paid work boundaries.
+
+### Improved
+
+- Commercial positioning.
+- Monetization docs.
+- Proposal templates.
+- README paid support section.
+
+### Safety
+
+- Paid offers are clearly positioned as readiness support, not formal audits.
+- No security guarantees, bounty guarantees, or customer/adoption claims added.
+- No live-chain/RPC/offensive behavior added.
+
+### Known Limitations
+
+- Pricing is guidance only.
+- Paid work requires human scoping.
+- External validation and customer claims require explicit public permission.
+
+## v1.1.1
 
 ### Improved
 

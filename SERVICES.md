@@ -5,6 +5,11 @@ builders and defensive research support for the public exploit-memory archive.
 
 This is not a formal audit service. Arkheionx helps builders prepare for one.
 
+Paid offer details for v1.2.0 are documented in
+[`docs/business/PAID_OFFER.md`](docs/business/PAID_OFFER.md),
+[`docs/business/PRICING_LADDER.md`](docs/business/PRICING_LADDER.md), and
+[`reports/paid_offer_index.md`](reports/paid_offer_index.md).
+
 Core message:
 
 > Find exploit-pattern risks, missing invariants, and audit blockers before
@@ -78,28 +83,26 @@ Use it from any authorized repository:
     create-issue-checklist: "true"
 ```
 
-## Launch Readiness Report
+## Readiness Snapshot
 
-Price range: USD 299-499 one time.
+Price range: pilot USD 500-1,000; standard USD 1,000-2,500.
 
 Best for:
 
 - builders preparing for first audit intake;
 - teams close to testnet or public launch;
-- grant-funded teams that need a serious readiness artifact.
+- grant-funded teams that need a concise readiness artifact.
 
 What you receive:
 
 - automated Arkheionx scan;
-- generated Launch Readiness Report;
+- generated Pre-Audit Readiness Report;
 - one-page executive summary;
-- prioritized remediation roadmap;
+- generated issue plan;
 - manual review of the generated report;
-- baseline/diff interpretation when previous scan artifacts are available;
-- review of the generated issue checklist;
-- review of the generated issue plan;
 - review of semantic-lite evidence and confidence reasons;
-- prioritized fix checklist;
+- top 5-10 readiness gaps;
+- 30-minute walkthrough;
 - Markdown report suitable for internal planning;
 - clear limitations and formal audit recommendation.
 
@@ -131,7 +134,7 @@ This is vault launch preparation, not a formal audit.
 
 ## Pre-Audit Sprint
 
-Price range: USD 1,000-2,000 one time.
+Price range: pilot USD 2,500-5,000; standard USD 5,000-12,000.
 
 Best for:
 
@@ -163,7 +166,7 @@ This is defensive readiness work. It does not certify protocol safety.
 
 ## Contest Readiness Pack
 
-Price range: USD 500-1,500 one time.
+Price range: USD 1,500-6,000 one time.
 
 Best for:
 
@@ -187,6 +190,28 @@ onboarding checklist structure.
 
 This is defensive contest preparation for authorized maintainers. It is not a
 bug bounty guarantee, exploit strategy document, or formal audit.
+
+## GitHub Action Setup
+
+Price range: USD 500-2,500 one time.
+
+Best for:
+
+- teams that want Arkheionx in CI;
+- repositories that need SARIF and report artifacts;
+- builders who want baseline/diff tracking and config guidance.
+
+What you receive:
+
+- GitHub Action integration;
+- SARIF output setup;
+- report artifact setup;
+- config/suppression setup;
+- recommended readiness thresholds;
+- short handoff guide.
+
+This does not include secret management, payment integration, CRM integration,
+email automation, or remote issue creation unless explicitly scoped.
 
 ## Vault Pre-Audit Sprint
 
@@ -214,7 +239,7 @@ funds are at risk.
 
 ## Ecosystem Pack
 
-Price range: USD 5,000-20,000 per month.
+Price range: USD 5,000-15,000 pilot for v1.2.0.
 
 Best for:
 
@@ -226,15 +251,13 @@ Best for:
 
 What you receive:
 
-- bulk readiness reports for participating repositories;
-- multiple Launch Readiness Reports when scoped;
-- standardized readiness scoring across participating builders;
-- standardized issue plans for participating builders;
-- monthly security clinic;
-- portfolio-level Markdown dashboard and remediation summary artifacts;
-- private GitHub Discussion support if configured;
-- training session for builders;
-- no website or SaaS dashboard required.
+- readiness scan across 3-5 authorized repositories;
+- anonymized ecosystem-level gap summary;
+- common rule calibration notes;
+- onboarding guide;
+- Markdown-only portfolio summary.
+
+This remains a pilot before v1.3.0 Ecosystem Pack refinement.
 
 ## Ecosystem Vault Readiness Pack
 

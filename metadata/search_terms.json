@@ -1,5 +1,5 @@
 {
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -657,6 +657,78 @@
       "related_patterns": ["builder readability", "researcher evidence quality"],
       "related_checks": ["Launch Report", "Pre-Audit Report", "Executive Summary"],
       "search_tags": ["report-quality", "readability", "actionability"]
+    },
+    {
+      "term": "paid offer",
+      "aliases": ["paid readiness support", "commercial positioning", "service package"],
+      "category": "business",
+      "related_patterns": ["readiness engagement", "not a formal audit"],
+      "related_checks": ["docs/business/PAID_OFFER.md", "reports/paid_offer_index.md"],
+      "search_tags": ["paid-offer", "readiness-support", "commercial"]
+    },
+    {
+      "term": "readiness snapshot",
+      "aliases": ["Arkheionx Readiness Snapshot", "quick readiness scan", "blocker scan"],
+      "category": "business",
+      "related_patterns": ["top readiness gaps", "issue plan review"],
+      "related_checks": ["docs/business/SERVICE_PACKAGES.md", "templates/readiness_snapshot_scope.md"],
+      "search_tags": ["readiness-snapshot", "pre-audit", "paid-offer"]
+    },
+    {
+      "term": "pre-audit sprint",
+      "aliases": ["Arkheionx Pre-Audit Sprint", "sprint plan", "guided readiness workflow"],
+      "category": "business",
+      "related_patterns": ["remediation roadmap", "issue plan triage"],
+      "related_checks": ["docs/business/SERVICE_PACKAGES.md", "templates/pre_audit_sprint_scope.md"],
+      "search_tags": ["pre-audit-sprint", "remediation-roadmap", "paid-offer"]
+    },
+    {
+      "term": "contest readiness pack",
+      "aliases": ["Contest Readiness Pack", "scope checklist", "researcher onboarding"],
+      "category": "business",
+      "related_patterns": ["contest preparation", "authorized external review"],
+      "related_checks": ["docs/business/SERVICE_PACKAGES.md", "templates/contest_readiness_scope.md"],
+      "search_tags": ["contest-readiness-pack", "scope-checklist", "paid-offer"]
+    },
+    {
+      "term": "GitHub Action setup",
+      "aliases": ["CI setup", "SARIF setup", "report artifact setup"],
+      "category": "business",
+      "related_patterns": ["GitHub-native readiness workflow"],
+      "related_checks": ["docs/GITHUB_ACTION_USAGE.md", "docs/business/SERVICE_PACKAGES.md"],
+      "search_tags": ["github-action-setup", "ci", "paid-offer"]
+    },
+    {
+      "term": "paid work boundaries",
+      "aliases": ["commercial boundaries", "service exclusions", "safety boundaries"],
+      "category": "business",
+      "related_patterns": ["readiness support boundaries", "no live-chain behavior"],
+      "related_checks": ["docs/business/PAID_WORK_BOUNDARIES.md", "docs/business/SALES_FAQ.md"],
+      "search_tags": ["paid-work-boundaries", "safety", "commercial"]
+    },
+    {
+      "term": "client intake",
+      "aliases": ["client intake template", "repo intake", "readiness intake"],
+      "category": "business",
+      "related_patterns": ["authorized repository intake"],
+      "related_checks": ["docs/business/CLIENT_INTAKE.md", "templates/client_intake.md"],
+      "search_tags": ["client-intake", "scope-of-work", "paid-offer"]
+    },
+    {
+      "term": "scope of work",
+      "aliases": ["SOW", "scope template", "proposal template"],
+      "category": "business",
+      "related_patterns": ["paid engagement scoping"],
+      "related_checks": ["docs/business/SAMPLE_SCOPE_OF_WORK.md", "docs/business/PROPOSAL_TEMPLATE.md"],
+      "search_tags": ["scope-of-work", "proposal-template", "paid-offer"]
+    },
+    {
+      "term": "pricing ladder",
+      "aliases": ["pricing guidance", "pilot pricing", "service pricing"],
+      "category": "business",
+      "related_patterns": ["offer tiers", "pilot rules"],
+      "related_checks": ["docs/business/PRICING_LADDER.md", "metadata/paid_offer_catalog.json"],
+      "search_tags": ["pricing-ladder", "paid-offer", "commercial"]
     }
   ]
 }

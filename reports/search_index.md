@@ -24,6 +24,13 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Public feedback guide | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](../docs/PUBLIC_FEEDBACK_GUIDE.md) | public feedback, safe disclosure, report quality |
 | Feedback triage workflow | [`docs/FEEDBACK_TRIAGE_WORKFLOW.md`](../docs/FEEDBACK_TRIAGE_WORKFLOW.md) | feedback triage, calibration status, severity |
 | Validation levels | [`docs/VALIDATION_LEVELS.md`](../docs/VALIDATION_LEVELS.md) | validation levels, external evaluation, allowed claims |
+| Paid offer | [`docs/business/PAID_OFFER.md`](../docs/business/PAID_OFFER.md) | paid offer, readiness support, commercial positioning |
+| Pricing ladder | [`docs/business/PRICING_LADDER.md`](../docs/business/PRICING_LADDER.md) | pricing ladder, pilot pricing, service packages |
+| Service packages | [`docs/business/SERVICE_PACKAGES.md`](../docs/business/SERVICE_PACKAGES.md) | service packages, Readiness Snapshot, Pre-Audit Sprint |
+| Client intake | [`docs/business/CLIENT_INTAKE.md`](../docs/business/CLIENT_INTAKE.md) | client intake, authorized repository, scope of work |
+| Sample scope of work | [`docs/business/SAMPLE_SCOPE_OF_WORK.md`](../docs/business/SAMPLE_SCOPE_OF_WORK.md) | scope of work, proposal template, not a formal audit |
+| Sales FAQ | [`docs/business/SALES_FAQ.md`](../docs/business/SALES_FAQ.md) | sales FAQ, paid readiness support, no guarantees |
+| Paid work boundaries | [`docs/business/PAID_WORK_BOUNDARIES.md`](../docs/business/PAID_WORK_BOUNDARIES.md) | paid work boundaries, safety boundaries, commercial |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -68,6 +75,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Rule calibration summary | [`reports/rule_calibration_summary.md`](../reports/rule_calibration_summary.md) | rule calibration, common false positives, downgrade logic |
 | Feedback dashboard | [`reports/feedback_dashboard.md`](../reports/feedback_dashboard.md) | feedback dashboard, synthetic feedback, calibration |
 | Rule calibration backlog report | [`reports/rule_calibration_backlog.md`](../reports/rule_calibration_backlog.md) | rule calibration backlog, feedback status, calibration work |
+| Paid offer index | [`reports/paid_offer_index.md`](../reports/paid_offer_index.md) | paid offer index, pricing ladder, service packages |
 | Security memory graph report | [`reports/security_memory_graph.md`](../reports/security_memory_graph.md) | security memory graph, finding to pattern map, historical PoC nodes |
 | Security memory graph summary | [`reports/security_memory_graph_summary.md`](../reports/security_memory_graph_summary.md) | security memory graph, mapped findings, mapped patterns |
 | Security memory graph JSON | [`metadata/security_memory_graph.json`](../metadata/security_memory_graph.json) | security memory graph, nodes, edges |
@@ -111,6 +119,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Knowledge graph generator | [`scripts/generate_knowledge_graph.py`](../scripts/generate_knowledge_graph.py) | security memory graph, knowledge graph, check mode |
 | Knowledge search helper | [`scripts/search_knowledge.py`](../scripts/search_knowledge.py) | search knowledge, oracle stale price, local search |
 | Feedback dashboard generator | [`scripts/generate_feedback_dashboard.py`](../scripts/generate_feedback_dashboard.py) | feedback dashboard, rule calibration backlog, check mode |
+| Paid offer index generator | [`scripts/generate_paid_offer_index.py`](../scripts/generate_paid_offer_index.py) | paid offer index, paid offer catalog, check mode |
 | Docs link checker | [`scripts/check_docs_links.py`](../scripts/check_docs_links.py) | docs link check, release validation, v1.0.0 |
 | Version consistency checker | [`scripts/check_version_consistency.py`](../scripts/check_version_consistency.py) | version consistency, release validation, v1.0.0 |
 | Safety wording checker | [`scripts/check_safety_wording.py`](../scripts/check_safety_wording.py) | safety wording, release validation, defensive |
@@ -211,6 +220,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `validation levels` | external validation levels, validation maturity, allowed claims | external validation | docs/VALIDATION_LEVELS.md, docs/EXTERNAL_VALIDATION.md | validation-levels, external-evaluation, honest-claims |
 | `GitHub Action feedback` | action feedback, workflow feedback, CI feedback | feedback | docs/GITHUB_ACTION_USAGE.md, .github/ISSUE_TEMPLATE/github_action_feedback.yml | github-action-feedback, ci, workflow |
 | `report quality feedback` | report wording, report clarity, next-step feedback | feedback | Launch Report, Pre-Audit Report, Executive Summary | report-quality, readability, actionability |
+| `paid offer` | paid readiness support, commercial positioning, service package | business | docs/business/PAID_OFFER.md, reports/paid_offer_index.md | paid-offer, readiness-support, commercial |
+| `readiness snapshot` | Arkheionx Readiness Snapshot, quick readiness scan, blocker scan | business | docs/business/SERVICE_PACKAGES.md, templates/readiness_snapshot_scope.md | readiness-snapshot, pre-audit, paid-offer |
+| `pre-audit sprint` | Arkheionx Pre-Audit Sprint, sprint plan, guided readiness workflow | business | docs/business/SERVICE_PACKAGES.md, templates/pre_audit_sprint_scope.md | pre-audit-sprint, remediation-roadmap, paid-offer |
+| `contest readiness pack` | Contest Readiness Pack, scope checklist, researcher onboarding | business | docs/business/SERVICE_PACKAGES.md, templates/contest_readiness_scope.md | contest-readiness-pack, scope-checklist, paid-offer |
+| `GitHub Action setup` | CI setup, SARIF setup, report artifact setup | business | docs/GITHUB_ACTION_USAGE.md, docs/business/SERVICE_PACKAGES.md | github-action-setup, ci, paid-offer |
+| `paid work boundaries` | commercial boundaries, service exclusions, safety boundaries | business | docs/business/PAID_WORK_BOUNDARIES.md, docs/business/SALES_FAQ.md | paid-work-boundaries, safety, commercial |
+| `client intake` | client intake template, repo intake, readiness intake | business | docs/business/CLIENT_INTAKE.md, templates/client_intake.md | client-intake, scope-of-work, paid-offer |
+| `scope of work` | SOW, scope template, proposal template | business | docs/business/SAMPLE_SCOPE_OF_WORK.md, docs/business/PROPOSAL_TEMPLATE.md | scope-of-work, proposal-template, paid-offer |
+| `pricing ladder` | pricing guidance, pilot pricing, service pricing | business | docs/business/PRICING_LADDER.md, metadata/paid_offer_catalog.json | pricing-ladder, paid-offer, commercial |
 
 ## Historical Memory Index
 
@@ -382,4 +400,15 @@ repository about
 public surface polish
 security memory OS
 Arkheionx positioning
+paid offer
+readiness snapshot
+pre-audit sprint
+contest readiness pack
+GitHub Action setup
+paid work boundaries
+client intake
+scope of work
+pricing ladder
+commercial positioning
+proposal template
 ```

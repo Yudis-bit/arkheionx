@@ -52,13 +52,14 @@ committed artifacts support it.
       Public feedback triage, false-positive and false-negative workflows,
       feedback dashboard, validation levels, and rule calibration backlog
       without unsupported adoption claims.
-- [ ] **v1.1.1: Public Surface Polish current patch milestone.**
+- [x] **v1.1.1: Public Surface Polish released.**
       README front-page clarity, repository About guidance, topic
       recommendations, and onboarding path cleanup before the next major
       service-packaging milestone.
-- [ ] **v1.2.0: Paid Offer Refinement.**
+- [ ] **v1.2.0: Paid Offer Refinement current milestone.**
       Clearer Launch Report, Pre-Audit Sprint, and Contest Readiness service
-      packaging tied to generated artifacts.
+      packaging tied to generated artifacts, client intake, pricing guidance,
+      and paid-work boundaries.
 - [ ] **v1.3.0: Ecosystem Pack.**
       Multi-repository readiness workflows and standardized Markdown reporting
       for authorized ecosystem support.

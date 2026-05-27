@@ -3,6 +3,14 @@
 Use this template for scoped commercial work. It keeps offers concrete and
 prevents the engagement from drifting into live-target or audit-signoff work.
 
+For productized readiness services, prefer one of the scope templates:
+
+- [`../../templates/readiness_snapshot_scope.md`](../../templates/readiness_snapshot_scope.md)
+- [`../../templates/pre_audit_sprint_scope.md`](../../templates/pre_audit_sprint_scope.md)
+- [`../../templates/contest_readiness_scope.md`](../../templates/contest_readiness_scope.md)
+
+Paid Arkheionx work is a readiness engagement, not a formal audit.
+
 ```text
 Proposal: <engagement name>
 
@@ -13,7 +21,7 @@ Date:
 ## 1. Scope
 
 This engagement covers:
-- <historical incident / PoC / workshop topic>
+- <authorized repository / readiness package / historical incident / workshop topic>
 - <chain / VM>
 - <public references>
 
@@ -22,7 +30,7 @@ This engagement does not cover:
 - scanner or drain tooling
 - private-key, RPC-key, or credential handling
 - full smart-contract audit signoff
-- assured bounty or contest outcome
+- security, bounty, or contest outcome promises
 
 ## 2. Deliverables
 
@@ -75,6 +83,11 @@ Date:
 
 | Engagement | Suggested quote |
 |---|---:|
+| Readiness Snapshot | USD 500-2,500 |
+| Pre-Audit Sprint | USD 2,500-12,000 |
+| Contest Readiness Pack | USD 1,500-6,000 |
+| GitHub Action Setup | USD 500-2,500 |
+| Ecosystem Readiness Pilot | USD 5,000-15,000 pilot |
 | One PoC assertion review memo | USD 300-750 |
 | Assertion hardening sprint | USD 750-2,500 |
 | Historical reproduction report | USD 2,500-7,500 |

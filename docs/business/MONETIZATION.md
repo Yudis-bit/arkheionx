@@ -16,9 +16,11 @@ The repository itself is the product:
 - sponsors as funding surface;
 - releases as distribution.
 
-v0.8 adds public demo and case-study artifacts so buyers can preview sample
-outputs before requesting scoped work. This is not a claim of customers,
-adoption, or external validation.
+v1.2.0 refines the paid offer surface so buyers can understand scope,
+deliverables, pricing guidance, intake needs, and boundaries before requesting
+work. This is not a claim of customers, adoption, or external validation.
+
+Paid Arkheionx work is a readiness engagement, not a formal audit.
 
 ## Revenue Ladder
 
@@ -27,9 +29,10 @@ adoption, or external validation.
 | Free GitHub Action | Free | Basic scan, readiness score, Markdown/JSON output, optional SARIF, baseline diff artifacts, Actions summary, optional PR Readiness Comment, generated issue checklist, generated issue plan. |
 | Indie Builder Sponsor | USD 29/month | Recognition if desired, early rule previews, priority Q&A in GitHub Discussions, monthly readiness tips. |
 | Protocol Pro Sponsor | USD 99/month | Deeper templates, priority issue support, advanced invariant templates, monthly mini-review slot if capacity allows. |
-| Launch Readiness Report | USD 299-499 one time | Generated Launch Report, executive summary, remediation roadmap, manual report/evidence review, prioritized fix checklist. |
-| Pre-Audit Sprint | USD 1,000-2,000 one time | Generated sprint plan, manual readiness review, issue-plan triage, remediation roadmap, final readiness summary. |
-| Contest Readiness Pack | USD 500-1,500 one time | Contest Readiness Report, scope checklist, researcher onboarding checklist, and pre-contest remediation priorities. |
+| Readiness Snapshot | Pilot: USD 500-1,000; standard: USD 1,000-2,500 | Quick blocker scan, Pre-Audit Report, executive summary, issue plan, and 30-minute walkthrough. |
+| Pre-Audit Sprint | Pilot: USD 2,500-5,000; standard: USD 5,000-12,000 | 3-5 day guided readiness workflow, report bundle, issue-plan triage, remediation roadmap, and walkthrough. |
+| Contest Readiness Pack | USD 1,500-6,000 one time | Contest Readiness Report, scope checklist, researcher onboarding checklist, documentation gap review, and pre-contest priorities. |
+| GitHub Action Setup | USD 500-2,500 one time | Action integration, SARIF/report artifact setup, config/suppression setup, and handoff guide. |
 | Vault Launch Report | USD 299-499 one time | Vault Rule Pack report, manual gap review, prioritized vault fix checklist. |
 | Vault Pre-Audit Sprint | USD 1,000-2,000 one time | Vault-focused readiness review, strategy/oracle/withdrawal checklist, invariant plan. |
 | Ecosystem Vault Readiness Pack | Custom | Bulk vault readiness reports and a portfolio-level Markdown dashboard. |
@@ -100,22 +103,20 @@ Value:
 This tier should be capacity-limited. Do not promise response times the
 maintainer cannot sustain.
 
-## Launch Readiness Report
+## Readiness Snapshot
 
-Price: USD 299-499 one time.
+Price: pilot USD 500-1,000; standard USD 1,000-2,500.
 
 Value:
 
 - automated scan;
-- generated Launch Report;
+- generated Pre-Audit Readiness Report;
 - one-page executive summary;
-- remediation roadmap;
+- generated issue plan;
 - manual review of generated report;
 - manual review of semantic-lite evidence and confidence reasons;
-- interpretation of baseline/diff output when available;
-- manual review of generated issue checklist;
-- manual review of generated issue plan;
-- prioritized fix checklist;
+- top 5-10 readiness gaps;
+- 30-minute walkthrough;
 - Markdown report;
 - explicit limitations;
 - formal audit preparation notes.
@@ -181,7 +182,7 @@ services and do not certify protocol safety.
 
 ## Pre-Audit Sprint
 
-Price: USD 1,000-2,000 one time.
+Price: pilot USD 2,500-5,000; standard USD 5,000-12,000.
 
 Value:
 
@@ -206,7 +207,7 @@ before/after toy case study.
 
 ## Contest Readiness Pack
 
-Price: USD 500-1,500 one time.
+Price: USD 1,500-6,000 one time.
 
 Value:
 
@@ -221,6 +222,22 @@ This is defensive preparation for authorized maintainers. It does not automate
 contest research, promise bounty outcomes, or replace platform rules.
 
 Preview path: inspect `demo-contest-readiness.md` and the public demo workflow.
+
+## GitHub Action Setup
+
+Price: USD 500-2,500 one time.
+
+Value:
+
+- GitHub Action integration;
+- SARIF output setup;
+- report artifact setup;
+- config/suppression setup;
+- recommended readiness thresholds;
+- short handoff guide.
+
+This does not include secret management, payment integration, CRM integration,
+or email automation.
 
 ## Ecosystem Pack
 
@@ -248,6 +265,9 @@ Value:
 
 This is the highest-leverage path because one ecosystem can introduce
 Arkheionx to many indie builders at once.
+
+In v1.2.0, this remains an Ecosystem Readiness Pilot until v1.3.0 refines the
+broader Ecosystem Pack.
 
 ## Research Sponsorship
 
