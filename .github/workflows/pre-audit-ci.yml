@@ -622,7 +622,7 @@ jobs:
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "2.0.0"
+              assert data["version"] == "2.0.1"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -677,7 +677,7 @@ jobs:
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "2.0.0"
+              assert plan["version"] == "2.0.1"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -696,7 +696,7 @@ jobs:
           ]:
               test_plan = json.load(open(path, encoding="utf-8"))
               assert test_plan["tool"] == "Arkheionx Test Plan Generator"
-              assert test_plan["version"] == "2.0.0"
+              assert test_plan["version"] == "2.0.1"
               assert test_plan["suggested_tests"]
               assert test_plan["invariant_candidates"]
               assert test_plan["manual_review_required"] is True

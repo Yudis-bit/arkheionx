@@ -1,8 +1,8 @@
 # Try Arkheionx In 5 Minutes
 
 This guide runs Arkheionx against the built-in oracle/staking demo fixture and
-generates the same GitHub-native artifacts a builder would inspect before a
-formal audit.
+generates the same local/static artifacts a builder or researcher would inspect
+to map value movement, spot missing tests, and prepare advanced review outputs.
 
 The demo is local and static. It does not call RPC, inspect deployed
 contracts, submit transactions, or create GitHub issues.

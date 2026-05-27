@@ -1,7 +1,8 @@
 # Arkheionx CLI Reference
 
-Arkheionx v2.0.0 supports the installable console command, the module CLI, and
-the stable script surface:
+Arkheionx v2.0.1 supports the installable console command, the module CLI, and
+the stable script surface as the current functional foundation for local
+value-flow review:
 
 ```sh
 arkheionx scan .
@@ -10,7 +11,29 @@ python3 scripts/pre_audit_scan.py --root .
 ```
 
 The scanner is local/static. It does not require RPC, private keys, mnemonics,
-or live-chain access.
+or live-chain access. Current commands help produce review reports, missing
+test prompts, issue plans, SARIF, and security-memory lookups. The future
+`arkheionx flow` command family is planned, not available in v2.0.1.
+
+## Current Commands
+
+- `arkheionx scan`
+- `arkheionx test-plan`
+- `arkheionx search`
+- `arkheionx validate-config`
+- `arkheionx doctor`
+- `arkheionx version`
+
+## Planned Future Commands
+
+These commands are roadmap items and are not available in v2.0.1:
+
+- `arkheionx flow`
+- `arkheionx flow --test-gaps`
+- `arkheionx flow explain`
+- `arkheionx flow test-template`
+- `arkheionx flow review-map`
+- `arkheionx flow verify`
 
 ## Core
 
@@ -135,8 +158,8 @@ are not formal verification and require human review.
 
 ## Pre-v2 Module CLI Candidate
 
-v1.9.0 adds a module CLI candidate. Existing scripts remain supported and
-first-class until v2.0.0.
+v1.9.0 added a module CLI candidate. Existing scripts remain supported and
+first-class in v2.0.1.
 
 ```sh
 python3 -m arkheionx.cli.main version
@@ -154,7 +177,7 @@ exploit-automation behavior.
 
 ## Installable Console CLI
 
-v2.0.0 adds:
+v2.0.0 added:
 
 ```sh
 python3 -m pip install -e .
@@ -167,4 +190,4 @@ arkheionx search "oracle stale price"
 ```
 
 The console entrypoint is source-tree compatible and not published to PyPI in
-v2.0.0.
+v2.0.1.

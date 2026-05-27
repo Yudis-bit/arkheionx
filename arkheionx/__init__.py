@@ -1,4 +1,4 @@
-"""Arkheionx local/static pre-audit readiness package."""
+"""Arkheionx local/static DeFi value-flow workbench package."""
 from __future__ import annotations
 
 from .version import CURRENT_MILESTONE, NEXT_MILESTONE, PACKAGE_VERSION, STABLE_RELEASE, __version__

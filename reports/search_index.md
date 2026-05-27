@@ -1,22 +1,27 @@
 # Arkheionx Search Index
 
-GitHub-searchable index for Arkheionx Memory, Readiness, Tests, Search, and Market.
+GitHub-searchable index for Arkheionx value flows, memory, tests, search, and advanced workflows.
 
-Use this page with GitHub search or local `rg` to find exploit primitives,
-broken invariants, failed assumptions, readiness gaps, services, templates,
-examples, and reports.
+Use this page with GitHub search or local `rg` to find value flows,
+missing tests, exploit primitives, broken invariants, failed assumptions,
+readiness gaps, services, templates, examples, and reports.
 
 Current truth: 18 structured PoCs, 0 deterministic-confirmed L4+ entries,
+11 assertion-hardened entries, 7 strong static assertions, 4 medium
+static assertions, 7 weak static assertions, 18 not-run/no-RPC entries,
 EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 
 ## Product Surface Index
 
 | Surface | Path | Search tags |
 |---|---|---|
-| README landing page | [`README.md`](../README.md) | arkheionx, pre-audit-readiness, security-memory |
-| GitHub repository surface | [`docs/GITHUB_REPO_SURFACE.md`](../docs/GITHUB_REPO_SURFACE.md) | GitHub repo surface, repository about, public surface polish |
-| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v1.0.0, stable public release, release notes |
-| CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, v1.0.0 |
+| README landing page | [`README.md`](../README.md) | arkheionx, value-flow workbench, map the money flow |
+| Value Flow Workbench | [`docs/VALUE_FLOW_WORKBENCH.md`](../docs/VALUE_FLOW_WORKBENCH.md) | value flow, money flow, missing security tests |
+| Value Flow Roadmap | [`docs/VALUE_FLOW_ROADMAP.md`](../docs/VALUE_FLOW_ROADMAP.md) | Value Flow Map MVP, flow map, DeFi Value Flow Workbench |
+| Developer and researcher workflow | [`docs/DEVELOPER_RESEARCHER_WORKFLOW.md`](../docs/DEVELOPER_RESEARCHER_WORKFLOW.md) | developer researcher workflow, review map, what you forgot to test |
+| GitHub repository surface | [`docs/GITHUB_REPO_SURFACE.md`](../docs/GITHUB_REPO_SURFACE.md) | GitHub repo surface, value-flow workbench, repository about |
+| Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v2.0.1, value-flow workbench, release notes |
+| CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, planned flow commands |
 | Pre-v2 CLI candidate | [`docs/CLI_CANDIDATE.md`](../docs/CLI_CANDIDATE.md) | CLI candidate, module CLI, pre-v2 CLI |
 | CLI commands | [`docs/CLI_COMMANDS.md`](../docs/CLI_COMMANDS.md) | arkheionx scan, validate-config, test-plan |
 | CLI migration to v2 | [`docs/CLI_MIGRATION_TO_V2.md`](../docs/CLI_MIGRATION_TO_V2.md) | CLI migration to v2, command surface, installable CLI |
@@ -206,7 +211,20 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 
 | Term | Aliases | Category | Related checks | Tags |
 |---|---|---|---|---|
-| `Arkheionx` | Arkheionx Security Memory, Arkheionx Readiness, pre-audit readiness OS, GitHub-native security memory | product | GitHub Action, Markdown report, SARIF output, baseline diff | arkheionx, security-memory, pre-audit-readiness, indie-defi |
+| `Arkheionx` | Arkheionx value-flow workbench, Arkheionx Security Memory, Arkheionx Readiness, pre-audit readiness OS, GitHub-native security memory | product | GitHub Action, Markdown report, SARIF output, baseline diff | arkheionx, value-flow-workbench, security-memory, pre-audit-readiness, indie-defi |
+| `value flow` | money flow, asset flow, DeFi value flow, value-flow workbench | product positioning | docs/VALUE_FLOW_WORKBENCH.md, docs/VALUE_FLOW_ROADMAP.md, arkheionx scan | value-flow, money-flow, asset-flow, missing-security-tests |
+| `money flow` | map the money flow, where value moves, value movement | product positioning | docs/VALUE_FLOW_WORKBENCH.md, docs/DEVELOPER_RESEARCHER_WORKFLOW.md | money-flow, value-flow, flow-map |
+| `asset flow` | token flow, balance flow, asset movement | DeFi review | docs/VALUE_FLOW_WORKBENCH.md, arkheionx scan | asset-flow, value-flow, defi-security |
+| `DeFi value flow` | DeFi money flow, DeFi asset flow, protocol value flow | DeFi review | docs/VALUE_FLOW_WORKBENCH.md, docs/VALUE_FLOW_ROADMAP.md | defi-value-flow, value-flow, review-map |
+| `value-flow workbench` | value flow workbench, DeFi value-flow workbench, local-first value-flow workbench | product positioning | README.md, docs/VALUE_FLOW_WORKBENCH.md, docs/GITHUB_REPO_SURFACE.md | value-flow-workbench, local-first, arkheionx |
+| `missing security tests` | missing value-flow tests, what you forgot to test, missing tests | testing | docs/DEVELOPER_RESEARCHER_WORKFLOW.md, scripts/generate_test_plan.py, arkheionx test-plan | missing-security-tests, test-coverage, value-flow |
+| `flow map` | value flow map, money flow map, protocol flow map | roadmap | docs/VALUE_FLOW_ROADMAP.md, docs/ROADMAP.md | flow-map, value-flow-map, roadmap |
+| `value flow roadmap` | Value Flow Map MVP, DeFi Value Flow Workbench, v2.1.0 roadmap | roadmap | docs/VALUE_FLOW_ROADMAP.md, docs/ROADMAP.md | value-flow-roadmap, v2.1.0, v3.0.0 |
+| `developer researcher workflow` | developer workflow, researcher workflow, builders and researchers | workflow | docs/DEVELOPER_RESEARCHER_WORKFLOW.md, docs/VALUE_FLOW_WORKBENCH.md | developer-workflow, researcher-workflow, value-flow |
+| `review map` | researcher review map, flow review-map, review areas | roadmap | docs/VALUE_FLOW_ROADMAP.md, docs/DEVELOPER_RESEARCHER_WORKFLOW.md | review-map, security-research, value-flow |
+| `map the money flow` | Map the money flow. Find the missing tests., money flow slogan | product positioning | README.md, docs/VALUE_FLOW_WORKBENCH.md | map-the-money-flow, value-flow-workbench |
+| `Foundry tells you if tests pass` | Foundry tells you if your tests pass, where value moves, what you forgot to test | product positioning | README.md, docs/VALUE_FLOW_WORKBENCH.md | foundry, missing-security-tests, value-flow |
+| `what you forgot to test` | forgot to test, missing tests, missing security tests | testing | README.md, docs/DEVELOPER_RESEARCHER_WORKFLOW.md, arkheionx test-plan | forgot-to-test, missing-tests, test-coverage |
 | `GitHub repo surface` | repository about, repository topics, public surface polish, GitHub About description | public surface | docs/GITHUB_REPO_SURFACE.md, README.md, scripts/github_surface_setup.sh | github-repo-surface, repository-about, public-surface-polish |
 | `security memory OS` | DeFi Security Memory OS, Arkheionx positioning, pre-audit readiness OS | product positioning | README.md, docs/GITHUB_REPO_SURFACE.md, docs/SECURITY_MEMORY_GRAPH.md | security-memory-os, arkheionx-positioning, pre-audit-readiness |
 | `internal engine split` | v1.6.0 internal modularization, script to package migration, core engine split | architecture | docs/INTERNAL_ENGINE_SPLIT.md, docs/PACKAGE_ARCHITECTURE.md, arkheionx/version.py | internal-engine-split, package-architecture, v1.6.0 |
@@ -394,6 +412,21 @@ Generated from `metadata/registry.json`.
 ## High-Value Searches
 
 ```text
+value flow
+money flow
+asset flow
+DeFi value flow
+value-flow workbench
+missing security tests
+flow map
+value flow roadmap
+developer researcher workflow
+review map
+map the money flow
+Foundry tells you if tests pass
+what you forgot to test
+Value Flow Map MVP
+where value moves
 vault accounting
 ERC4626
 totalAssets

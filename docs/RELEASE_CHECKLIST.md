@@ -516,6 +516,27 @@ written reason in the release PR.
 - [ ] Package docs do not claim PyPI availability and do not ask for secrets or
       RPC keys.
 
+## v2.0.1 Packaging + Product Repositioning Hotfix Checks
+
+- [ ] README uses value-flow workbench positioning.
+- [ ] `Map the money flow. Find the missing tests.` appears in public docs.
+- [ ] Audit-prep is framed as an advanced workflow.
+- [ ] `docs/VALUE_FLOW_WORKBENCH.md` exists.
+- [ ] `docs/VALUE_FLOW_ROADMAP.md` exists.
+- [ ] `docs/DEVELOPER_RESEARCHER_WORKFLOW.md` exists.
+- [ ] GitHub About recommendation uses the value-flow workbench description.
+- [ ] No future `flow` commands are documented as available commands.
+- [ ] No feature claims are made for an unimplemented flow engine.
+- [ ] Installable CLI still works.
+- [ ] Module CLI still works.
+- [ ] Old scripts still work.
+- [ ] No package publishing workflow added.
+- [ ] No `dist/`, `build/`, `.eggs/`, or `*.egg-info/` artifacts are
+      committed.
+- [ ] Version consistency check names v2.0.0 as latest stable, v2.0.1 as
+      current milestone, and v2.1.0 as next milestone.
+- [ ] Safety wording check passes in strict mode.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

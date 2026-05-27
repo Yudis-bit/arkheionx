@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arkheionx"
-version = "2.0.0.dev0"
-description = "GitHub-native DeFi pre-audit readiness and security memory CLI."
+version = "2.0.1.dev0"
+description = "Local-first DeFi value-flow workbench CLI."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,8 +14,10 @@ authors = [
 keywords = [
   "defi-security",
   "smart-contract-security",
-  "pre-audit",
+  "value-flow",
+  "security-testing",
   "audit-readiness",
+  "test-coverage",
   "sarif",
   "foundry",
   "solidity"
@@ -41,4 +43,3 @@ arkheionx = "arkheionx.cli.main:main"
 
 [tool.setuptools.packages.find]
 include = ["arkheionx*"]
-

@@ -523,5 +523,5 @@
     "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
   ],
   "tool": "Arkheionx Test Plan Generator",
-  "version": "2.0.0"
+  "version": "2.0.1"
 }

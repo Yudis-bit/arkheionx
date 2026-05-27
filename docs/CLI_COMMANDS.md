@@ -1,7 +1,15 @@
 # CLI Commands
 
-Arkheionx v2.0.0 exposes the installed `arkheionx` console command and keeps
-the module CLI available.
+Arkheionx v2.0.1 exposes the installed `arkheionx` console command and keeps
+the module CLI available. These commands are the current functional foundation
+for local/static value-flow review, missing-test planning, reports, SARIF,
+issue plans, config validation, and security-memory search.
+
+Future value-flow commands such as `arkheionx flow`,
+`arkheionx flow --test-gaps`, `arkheionx flow explain`,
+`arkheionx flow test-template`, `arkheionx flow review-map`, and
+`arkheionx flow verify` are planned roadmap items. They are not available
+commands in v2.0.1.
 
 ## version
 

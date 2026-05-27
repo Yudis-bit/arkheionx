@@ -3,7 +3,38 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.0.0 - Unreleased
+## v2.0.1 - Unreleased
+
+### Changed
+
+- Repositioned Arkheionx from a pre-audit-first tool to a local-first DeFi
+  value-flow workbench.
+- Reframed audit-prep outputs as advanced workflows rather than the main entry
+  point.
+- Updated public messaging around builders, researchers, value flows, and
+  missing tests.
+
+### Added
+
+- Value Flow Workbench documentation.
+- Value Flow Roadmap documentation.
+- Developer and researcher workflow documentation.
+- GitHub About recommendation for the new positioning.
+
+### Safety
+
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- No package publishing added.
+- Existing script, module CLI, and console CLI entrypoints remain supported.
+
+### Known Limitations
+
+- v2.0.1 is a repositioning hotfix.
+- The future `arkheionx flow` command is not implemented yet.
+- Existing scan/report workflows remain the current functional interface.
+
+## v2.0.0
 
 ### Added
 

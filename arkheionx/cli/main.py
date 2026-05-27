@@ -1,8 +1,8 @@
 """Arkheionx local/static CLI command surface.
 
-v2.0.0 exposes this parser through the installed `arkheionx` console command
-and the `python3 -m arkheionx.cli.main` module path. Existing scripts remain
-supported and first-class.
+v2.0.1 keeps this parser available through the installed `arkheionx` console
+command and the `python3 -m arkheionx.cli.main` module path. Existing scripts
+remain supported and first-class.
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ PROTOCOL_TYPES = [
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
-        description="Arkheionx local/static pre-audit readiness CLI.",
+        description="Arkheionx local/static DeFi value-flow workbench CLI.",
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -39,7 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
     doctor = subparsers.add_parser("doctor", help="Check local package imports, rule packs, and safety posture.")
     doctor.set_defaults(func=commands.doctor_command)
 
-    scan = subparsers.add_parser("scan", help="Run a local Arkheionx readiness scan.")
+    scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
     scan.add_argument("--protocol-type", default="auto", choices=PROTOCOL_TYPES, help="Protocol type hint.")
     scan.add_argument("--config", default="", help="Optional Arkheionx JSON config path.")

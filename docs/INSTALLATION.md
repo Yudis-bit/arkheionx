@@ -1,7 +1,8 @@
 # Installation
 
-Arkheionx v2.0.0 prepares local editable installation for development and
-authorized repository review.
+Arkheionx v2.0.1 uses local editable installation for development and
+authorized repository review. The CLI remains local-first and static while the
+public direction shifts toward a DeFi value-flow workbench.
 
 ```sh
 python3 -m pip install -e .
@@ -9,7 +10,7 @@ arkheionx doctor
 arkheionx scan .
 ```
 
-This repository does not publish a PyPI package in v2.0.0. Install from the
+This repository does not publish a PyPI package in v2.0.1. Install from the
 source checkout you are working in.
 
 If your system Python blocks editable installs because it is externally
@@ -41,6 +42,14 @@ Existing scripts still work:
 python3 scripts/pre_audit_scan.py --root . --protocol-type auto
 python3 scripts/generate_test_plan.py --check
 ```
+
+## Planned Flow Workflow
+
+Future value-flow commands such as `arkheionx flow`,
+`arkheionx flow --test-gaps`, `arkheionx flow explain`,
+`arkheionx flow test-template`, `arkheionx flow review-map`, and
+`arkheionx flow verify` are planned roadmap items. They are not installed or
+documented as available commands in v2.0.1.
 
 ## Safety
 

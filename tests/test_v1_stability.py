@@ -4,24 +4,24 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0"
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0"
 
 
 class V1StabilityTests(unittest.TestCase):
     def read(self, path: str) -> str:
         return (REPO_ROOT / path).read_text(encoding="utf-8")
 
-    def test_public_docs_name_v1_stable_surface(self) -> None:
+    def test_public_docs_name_stable_surface(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("Latest stable release: **v1.9.0", readme)
-        self.assertIn("Stable v1.9.x Surface", readme)
+        self.assertIn("Latest stable release: **v2.0.0", readme)
+        self.assertIn("Stable v2.0.0 Surface", readme)
         self.assertIn(STABLE_ACTION, readme)
         self.assertIn("docs/CLI_REFERENCE.md", readme)
         self.assertIn("docs/SCHEMA_REFERENCE.md", readme)
         self.assertIn("docs/OUTPUT_ARTIFACTS.md", readme)
 
         action_docs = self.read("docs/GITHUB_ACTION_USAGE.md")
-        self.assertIn("Stable v1.9.x Inputs", action_docs)
+        self.assertIn("Stable v2.0.0 Inputs", action_docs)
         self.assertIn(STABLE_ACTION, action_docs)
 
     def test_v1_reference_files_exist(self) -> None:
@@ -53,7 +53,9 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_changelog_and_roadmap_mark_v1_candidate(self) -> None:
         changelog = self.read("CHANGELOG.md")
-        self.assertIn("## v2.0.0 - Unreleased", changelog)
+        self.assertIn("## v2.0.1 - Unreleased", changelog)
+        self.assertIn("## v2.0.0", changelog)
+        self.assertNotIn("## v2.0.0 - Unreleased", changelog)
         self.assertIn("## v1.9.0", changelog)
         self.assertNotIn("## v1.9.0 - Unreleased", changelog)
         self.assertIn("## v1.8.0", changelog)
@@ -77,8 +79,9 @@ class V1StabilityTests(unittest.TestCase):
         self.assertIn("v1.7.0: Config + Rule Pack Stabilization released", roadmap)
         self.assertIn("v1.8.0: Report UX + Noise Reduction released", roadmap)
         self.assertIn("v1.9.0: Pre-v2 CLI Candidate released", roadmap)
-        self.assertIn("v2.0.0: Installable Arkheionx CLI / Package current milestone", roadmap)
-        self.assertIn("v2.0.1: Packaging/Release Hotfix next milestone", roadmap)
+        self.assertIn("v2.0.0: Installable Arkheionx CLI / Package released", roadmap)
+        self.assertIn("v2.0.1: Packaging + Product Repositioning Hotfix current milestone", roadmap)
+        self.assertIn("v2.1.0: Value Flow Map MVP next milestone", roadmap)
 
 
 if __name__ == "__main__":
