@@ -1,7 +1,7 @@
 # Arkheionx Package Architecture
 
-The `arkheionx/` package is a preview internal engine boundary. It is stdlib
-only and intentionally small in v1.6.0.
+The `arkheionx/` package is the local/static CLI package for v2.0.0. It remains
+stdlib-only at runtime and keeps existing scripts supported.
 
 ```text
 arkheionx/
@@ -21,7 +21,7 @@ arkheionx/
 |---|---|
 | `arkheionx.version` | Version, stable release, current milestone, and next milestone metadata. |
 | `arkheionx.core.models` | Lightweight dataclasses for future engine migration. |
-| `arkheionx.core.paths` | Repo-root and display-path helpers. |
+| `arkheionx.core.paths` | Project-root, package-root, runtime data, input, output, and display-path helpers. |
 | `arkheionx.core.files` | JSON/text IO helpers and simple file classification helpers. |
 | `arkheionx.core.constants` | Generated-artifact ignore patterns and markers. |
 | `arkheionx.core.safety` | Shared safety wording and banned phrase lists. |
@@ -32,7 +32,7 @@ arkheionx/
 | `arkheionx.reports.ux` | Fix First, grouping, and suppression summary helpers. |
 | `arkheionx.reports.summary` | Backward-compatible report UX summary metadata. |
 | `arkheionx.generators.*` | Extracted generator logic behind existing scripts. |
-| `arkheionx.cli.main` | Pre-v2 module CLI candidate. |
+| `arkheionx.cli.main` | Console/module CLI command surface. |
 | `arkheionx.cli.commands` | Thin wrappers around existing script/module entrypoints. |
 | `arkheionx.cli.exit_codes` | Candidate exit-code conventions. |
 
@@ -61,10 +61,19 @@ python3 -m arkheionx.cli.main search "oracle stale price"
 The candidate delegates to existing scripts/modules so compatibility remains
 easy to test before package publishing.
 
+v2.0.0 adds `pyproject.toml` and the `arkheionx` console entrypoint:
+
+```sh
+python3 -m pip install -e .
+arkheionx scan .
+```
+
+Package-data resolution remains source-tree compatible for editable installs.
+See [`PACKAGE_DATA.md`](PACKAGE_DATA.md).
+
 ## Not Yet Included
 
-- No package publishing.
-- No `pyproject.toml`.
-- No final v2 installable command.
+- No PyPI publishing.
+- No package upload workflow.
 - No database, web app, remote clone workflow, RPC workflow, or external API
   dependency.

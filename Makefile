@@ -60,6 +60,12 @@ validate:
 		arkheionx/cli/main.py \
 		arkheionx/cli/commands.py \
 		arkheionx/cli/exit_codes.py
+	PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install -e . --no-build-isolation
+	arkheionx --help
+	arkheionx version
+	arkheionx doctor
+	arkheionx validate-config --config examples/arkheionx.config.example.json
+	arkheionx search "oracle stale price"
 	python3 -m arkheionx.cli.main version
 	python3 -m arkheionx.cli.main doctor
 	python3 -m arkheionx.cli.main validate-config --config examples/arkheionx.config.example.json

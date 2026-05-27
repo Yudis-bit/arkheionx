@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arkheionx"
+version = "2.0.0.dev0"
+description = "GitHub-native DeFi pre-audit readiness and security memory CLI."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "Yudistira Putra" }
+]
+keywords = [
+  "defi-security",
+  "smart-contract-security",
+  "pre-audit",
+  "audit-readiness",
+  "sarif",
+  "foundry",
+  "solidity"
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Security",
+  "Topic :: Software Development :: Quality Assurance"
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs"
+Documentation = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
+
+[project.scripts]
+arkheionx = "arkheionx.cli.main:main"
+
+[tool.setuptools.packages.find]
+include = ["arkheionx*"]
+

@@ -76,6 +76,17 @@ python3 -m arkheionx.cli.main scan examples/amm-fixture \
 
 The module CLI wraps the existing scripts and does not change artifact schemas.
 
+v2.0.0 can write the same artifacts through the installed console command:
+
+```sh
+arkheionx scan examples/amm-fixture \
+  --protocol-type amm \
+  --output examples/reports/package-cli-amm-report.md \
+  --json-output examples/reports/package-cli-amm-report.json \
+  --sarif-output examples/reports/package-cli-amm.sarif.json \
+  --issue-plan-output examples/reports/package-cli-amm-issue-plan.json
+```
+
 ## Protocol-Pack Examples
 
 v1.4.0 adds AMM and lending fixture outputs that use the same artifact shapes:

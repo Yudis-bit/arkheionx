@@ -1,7 +1,7 @@
 # CLI Migration To v2
 
-Arkheionx v1.9.0 is a pre-v2 CLI candidate. It defines the command shape that
-will become the installable v2 CLI, but it does not publish a package.
+Arkheionx v2.0.0 adds local editable installation and the `arkheionx` console
+command. It does not publish a package to PyPI.
 
 ## What Stays Supported
 
@@ -19,7 +19,7 @@ These script entrypoints remain supported:
 
 ## Candidate Module Commands
 
-The module CLI mirrors the most common workflows:
+The module CLI remains available:
 
 ```sh
 python3 -m arkheionx.cli.main scan .
@@ -30,13 +30,20 @@ python3 -m arkheionx.cli.main search "oracle stale price"
 
 ## v2 Expectations
 
-v2.0.0 is expected to make the CLI installable while preserving the local/static
-safety model. The v1.9.0 candidate exists so users can test command names,
-options, exit codes, and docs before package publishing.
+Use the console command after editable install:
+
+```sh
+python3 -m pip install -e .
+arkheionx scan .
+arkheionx validate-config --config .arkheionx.json
+arkheionx test-plan --report reports/arkheionx-report.json
+arkheionx search "oracle stale price"
+```
+
+The script and module command paths remain supported during v2.0.0.
 
 ## Boundaries
 
 The CLI migration does not add RPC, live-chain scanning, remote cloning,
 transaction execution, secrets handling, or exploit automation. It is still a
 pre-audit readiness workflow for authorized local repositories.
-

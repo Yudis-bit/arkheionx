@@ -28,7 +28,7 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.8.0"
+  "version": "2.0.0"
 }
 ```
 
@@ -58,6 +58,9 @@ v1.8.0 adds optional report UX summary fields: `fix_first`, `report_ux`,
 v1.9.0 adds a pre-v2 module CLI candidate. The CLI writes the same report,
 SARIF, issue-plan, and test-plan artifact shapes as the existing scripts; it
 does not introduce a new output schema.
+
+v2.0.0 adds the installable `arkheionx` console command. The console command
+writes the same artifact shapes as the module CLI and existing scripts.
 
 ## Compatibility Policy
 

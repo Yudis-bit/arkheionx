@@ -40,7 +40,7 @@ class IssuePlanTests(unittest.TestCase):
             )
 
             plan = json.loads(plan_path.read_text(encoding="utf-8"))
-            self.assertEqual(plan["version"], "1.9.0")
+            self.assertEqual(plan["version"], "2.0.0")
             self.assertEqual(plan["schema_version"], "1.0.0")
             self.assertTrue(plan["issues"])
             first = plan["issues"][0]

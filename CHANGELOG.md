@@ -3,7 +3,40 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.9.0 - Unreleased
+## v2.0.0 - Unreleased
+
+### Added
+
+- Installable local Arkheionx package metadata.
+- `arkheionx` console entrypoint.
+- Editable install workflow.
+- Package-data/path-resolution helpers.
+- Installation docs.
+- Packaging docs.
+- Console entrypoint tests.
+- Package-data tests.
+
+### Improved
+
+- CLI command surface can now be used through `arkheionx ...`.
+- CI validates editable install and console command behavior.
+- v2 migration path from scripts/module CLI to console CLI is documented.
+
+### Safety
+
+- Package remains local/static only.
+- No PyPI publishing workflow added.
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- Existing scripts remain supported.
+
+### Known Limitations
+
+- v2.0.0 prepares local package installation but does not publish to PyPI.
+- Package-data strategy remains source-tree compatible.
+- Some scanner internals still rely on legacy script modules.
+
+## v1.9.0
 
 ### Added
 

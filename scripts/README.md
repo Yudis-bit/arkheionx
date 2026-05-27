@@ -7,11 +7,16 @@ run from the repository root unless noted.
 
 ## Pre-v2 Module CLI Candidate
 
-v1.9.0 defines a local module CLI candidate. Shared helpers live under
+v1.9.0 defines a local module CLI candidate. v2.0.0 adds the installable
+`arkheionx` console command. Shared helpers live under
 `arkheionx/`, but the scripts in this directory remain supported entrypoints
 for scans, generated reports, indexes, dashboards, and validation checks.
 
 ```sh
+python3 -m pip install -e .
+arkheionx version
+arkheionx doctor
+arkheionx scan .
 python3 -m arkheionx.cli.main version
 python3 -m arkheionx.cli.main doctor
 python3 -m arkheionx.cli.main scan .
@@ -20,8 +25,8 @@ python3 -m arkheionx.cli.main test-plan --report reports/arkheionx-report.json
 python3 -m arkheionx.cli.main search "oracle stale price"
 ```
 
-The module CLI wraps existing scripts/modules. It is not the final v2
-installable package and does not replace `scripts/pre_audit_scan.py`.
+The console and module CLIs wrap existing scripts/modules. They do not replace
+`scripts/pre_audit_scan.py`.
 
 ## `validate_config.py`
 

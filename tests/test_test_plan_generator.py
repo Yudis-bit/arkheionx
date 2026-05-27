@@ -58,7 +58,7 @@ class TestPlanGeneratorTests(unittest.TestCase):
         ]:
             data = load_json(path)
             self.assertEqual(data["tool"], "Arkheionx Test Plan Generator")
-            self.assertEqual(data["version"], "1.9.0")
+            self.assertEqual(data["version"], "2.0.0")
             self.assertIn("source_report", data)
             self.assertTrue(data["suggested_tests"])
             self.assertTrue(data["invariant_candidates"])

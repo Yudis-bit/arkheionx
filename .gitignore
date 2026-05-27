@@ -5,6 +5,11 @@ cache/
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
+.eggs/
+*.egg-info/
+build/
+dist/
 .env
 POST_DRAFT.txt
 assets/

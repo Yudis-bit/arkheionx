@@ -1,7 +1,13 @@
 # Arkheionx CLI Reference
 
-Arkheionx v1.0.0 treats the flags below as the stable public CLI surface for
-`scripts/pre_audit_scan.py`.
+Arkheionx v2.0.0 supports the installable console command, the module CLI, and
+the stable script surface:
+
+```sh
+arkheionx scan .
+python3 -m arkheionx.cli.main scan .
+python3 scripts/pre_audit_scan.py --root .
+```
 
 The scanner is local/static. It does not require RPC, private keys, mnemonics,
 or live-chain access.
@@ -145,3 +151,20 @@ Read [`CLI_COMMANDS.md`](CLI_COMMANDS.md) and
 [`CLI_MIGRATION_TO_V2.md`](CLI_MIGRATION_TO_V2.md). The module CLI does not add
 RPC, live-chain, transaction, remote-cloning, deployed-contract, or
 exploit-automation behavior.
+
+## Installable Console CLI
+
+v2.0.0 adds:
+
+```sh
+python3 -m pip install -e .
+arkheionx version
+arkheionx doctor
+arkheionx scan examples/amm-fixture --protocol-type amm
+arkheionx validate-config --config examples/arkheionx.config.example.json
+arkheionx test-plan --report examples/reports/amm-fixture-pre-audit-report.json
+arkheionx search "oracle stale price"
+```
+
+The console entrypoint is source-tree compatible and not published to PyPI in
+v2.0.0.

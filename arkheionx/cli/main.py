@@ -1,7 +1,8 @@
-"""Arkheionx pre-v2 local module CLI candidate.
+"""Arkheionx local/static CLI command surface.
 
-This is a candidate command surface for v2.0 packaging. Existing scripts remain
-supported and first-class in v1.9.0.
+v2.0.0 exposes this parser through the installed `arkheionx` console command
+and the `python3 -m arkheionx.cli.main` module path. Existing scripts remain
+supported and first-class.
 """
 from __future__ import annotations
 
@@ -28,7 +29,7 @@ PROTOCOL_TYPES = [
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
-        description="Arkheionx local/static pre-audit readiness CLI candidate.",
+        description="Arkheionx local/static pre-audit readiness CLI.",
     )
     subparsers = parser.add_subparsers(dest="command")
 

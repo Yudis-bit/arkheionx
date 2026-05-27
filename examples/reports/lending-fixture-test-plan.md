@@ -12,7 +12,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 ## Source Summary
 
 - Source report root: `examples/lending-fixture`
-- Source report version: `1.9.0`
+- Source report version: `2.0.0`
 - Protocol type: `lending`
 - Readiness score: `59`
 - Score band: `Early readiness`

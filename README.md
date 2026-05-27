@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.8.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.9.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -30,6 +30,7 @@ feedback calibration. Maintained by **Yudistira Putra**, creator of Arkheionx -
 | Goal | Link |
 |---|---|
 | Try it in 5 minutes | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
+| Install locally | [`docs/INSTALLATION.md`](docs/INSTALLATION.md) |
 | Run the CLI | [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) |
 | Use GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
 | Understand outputs | [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md) |
@@ -62,6 +63,20 @@ python3 scripts/pre_audit_scan.py \
 
 Local scans require Python 3. They do not require RPC, private keys,
 mnemonics, or a GitHub token.
+
+## Installable CLI
+
+For local development:
+
+```sh
+python3 -m pip install -e .
+arkheionx doctor
+arkheionx scan .
+```
+
+The installed console command is local/static only and does not require RPC
+keys, private keys, mnemonics, or hosted services. The package is prepared for
+local editable installs; this repository does not claim PyPI availability.
 
 ## What It Produces
 
@@ -126,16 +141,17 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.8.0 - Report UX + Noise Reduction**.
+Latest stable release: **v1.9.0 - Pre-v2 CLI Candidate**.
 
-v1.9.0 is prepared locally as a Pre-v2 CLI Candidate. It defines a local
-module command surface while preserving every existing script entrypoint:
+v2.0.0 is prepared locally as the Installable Arkheionx CLI / Package
+milestone. It adds editable local installation and the `arkheionx` console
+command while preserving every existing script entrypoint:
 
-- `scan`;
-- `validate-config`;
-- `test-plan`;
-- `search`;
-- `version` / `doctor`.
+- `arkheionx scan`;
+- `arkheionx validate-config`;
+- `arkheionx test-plan`;
+- `arkheionx search`;
+- `arkheionx version` / `arkheionx doctor`.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -162,11 +178,12 @@ module command surface while preserving every existing script entrypoint:
 | v1.6.0 | Internal Engine Split | Released |
 | v1.7.0 | Config + Rule Pack Stabilization | Released |
 | v1.8.0 | Report UX + Noise Reduction | Released |
-| v1.9.0 | Pre-v2 CLI Candidate | Prepared, not tagged |
+| v1.9.0 | Pre-v2 CLI Candidate | Released |
+| v2.0.0 | Installable Arkheionx CLI / Package | Prepared, not tagged |
 
-## Stable v1.8.x Surface
+## Stable v1.9.x Surface
 
-Arkheionx v1.8.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.9.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -175,7 +192,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.8.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.9.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Configuration
@@ -226,7 +243,7 @@ Read:
 
 ## Pre-v2 CLI Candidate
 
-v1.9.0 introduces a local module CLI candidate:
+v1.9.0 introduced a local module CLI candidate:
 
 ```sh
 python3 -m arkheionx.cli.main scan .
@@ -235,8 +252,7 @@ python3 -m arkheionx.cli.main test-plan --report reports/arkheionx-report.json
 python3 -m arkheionx.cli.main search "oracle stale price"
 ```
 
-Existing scripts remain supported and first-class until the v2 installable
-package release.
+Existing scripts remain supported and first-class in v2.0.0.
 
 Read:
 
@@ -247,8 +263,8 @@ Read:
 ## Engine and CLI Roadmap
 
 Arkheionx v1.6.0 began the internal engine split toward a future installable
-CLI/package. Existing scripts remain supported; the v1.9 module CLI is a
-candidate command surface, not the final package release.
+CLI/package. v2.0.0 adds local editable installation and the `arkheionx`
+console command while preserving the module CLI and old scripts.
 
 ```sh
 python3 -m arkheionx.cli.main version
@@ -407,7 +423,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.8.0` for stable usage:
+Use `@v1.9.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -422,7 +438,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0
         with:
           root: "."
           protocol-type: "auto"
@@ -456,7 +472,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -485,7 +501,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -772,7 +788,9 @@ Core standards:
 ### Start
 
 - [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
+- [`docs/INSTALLATION.md`](docs/INSTALLATION.md)
 - [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
+- [`docs/CLI_INSTALLABLE.md`](docs/CLI_INSTALLABLE.md)
 - [`docs/CLI_CANDIDATE.md`](docs/CLI_CANDIDATE.md)
 - [`docs/CLI_COMMANDS.md`](docs/CLI_COMMANDS.md)
 - [`docs/CLI_MIGRATION_TO_V2.md`](docs/CLI_MIGRATION_TO_V2.md)
@@ -799,6 +817,8 @@ Core standards:
 
 - [`docs/INTERNAL_ENGINE_SPLIT.md`](docs/INTERNAL_ENGINE_SPLIT.md)
 - [`docs/PACKAGE_ARCHITECTURE.md`](docs/PACKAGE_ARCHITECTURE.md)
+- [`docs/PACKAGING.md`](docs/PACKAGING.md)
+- [`docs/PACKAGE_DATA.md`](docs/PACKAGE_DATA.md)
 - [`docs/RULE_PACKS.md`](docs/RULE_PACKS.md)
 - [`docs/AMM_RULE_PACK.md`](docs/AMM_RULE_PACK.md)
 - [`docs/LENDING_RULE_PACK.md`](docs/LENDING_RULE_PACK.md)

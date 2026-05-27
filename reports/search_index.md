@@ -20,6 +20,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Pre-v2 CLI candidate | [`docs/CLI_CANDIDATE.md`](../docs/CLI_CANDIDATE.md) | CLI candidate, module CLI, pre-v2 CLI |
 | CLI commands | [`docs/CLI_COMMANDS.md`](../docs/CLI_COMMANDS.md) | arkheionx scan, validate-config, test-plan |
 | CLI migration to v2 | [`docs/CLI_MIGRATION_TO_V2.md`](../docs/CLI_MIGRATION_TO_V2.md) | CLI migration to v2, command surface, installable CLI |
+| Installation | [`docs/INSTALLATION.md`](../docs/INSTALLATION.md) | installable CLI, editable install, arkheionx command |
+| CLI installable guide | [`docs/CLI_INSTALLABLE.md`](../docs/CLI_INSTALLABLE.md) | console entrypoint, local package install, v2 CLI |
+| Packaging | [`docs/PACKAGING.md`](../docs/PACKAGING.md) | pyproject, package metadata, console script |
+| Package data | [`docs/PACKAGE_DATA.md`](../docs/PACKAGE_DATA.md) | package data, path resolution, runtime data |
+| Project package metadata | [`pyproject.toml`](../pyproject.toml) | pyproject, arkheionx command, console entrypoint |
 | Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
 | Output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](../docs/OUTPUT_ARTIFACTS.md) | output naming, generated artifacts, reports directory |
 | Report UX | [`docs/REPORT_UX.md`](../docs/REPORT_UX.md) | report UX, findings by rule family, confidence summary |
@@ -76,6 +81,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Full profile report | [`examples/reports/full-profile-report.md`](../examples/reports/full-profile-report.md) | full report, output profile, detailed evidence |
 | CLI AMM report | [`examples/reports/cli-amm-report.md`](../examples/reports/cli-amm-report.md) | CLI candidate, arkheionx scan, AMM report |
 | CLI test plan | [`examples/reports/cli-test-plan.md`](../examples/reports/cli-test-plan.md) | arkheionx test-plan, module CLI, Foundry skeleton |
+| Package CLI AMM report | [`examples/reports/package-cli-amm-report.md`](../examples/reports/package-cli-amm-report.md) | installable CLI, arkheionx command, AMM report |
+| Package CLI test plan | [`examples/reports/package-cli-test-plan.md`](../examples/reports/package-cli-test-plan.md) | arkheionx test-plan, console entrypoint, Foundry skeleton |
 | SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
 | Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
 | Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
@@ -205,6 +212,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `internal engine split` | v1.6.0 internal modularization, script to package migration, core engine split | architecture | docs/INTERNAL_ENGINE_SPLIT.md, docs/PACKAGE_ARCHITECTURE.md, arkheionx/version.py | internal-engine-split, package-architecture, v1.6.0 |
 | `package architecture` | arkheionx package, core engine, package scaffold, modular engine | architecture | arkheionx/core/models.py, arkheionx/core/files.py, arkheionx/rules/registry.py | arkheionx-package, core-engine, package-scaffold |
 | `CLI roadmap` | installable CLI, v2 package path, preview internal CLI, python module CLI | architecture | docs/CLI_ROADMAP.md, arkheionx/cli/main.py, docs/CLI_REFERENCE.md | cli-roadmap, installable-cli, v2-package-path |
+| `installable CLI` | arkheionx command, console entrypoint, editable install, local package install | packaging | pyproject.toml, docs/INSTALLATION.md, docs/CLI_INSTALLABLE.md | installable-cli, arkheionx-command, editable-install |
+| `pyproject` | package metadata, project scripts, setuptools package metadata | packaging | pyproject.toml, tests/test_package_installable.py | pyproject, package-metadata, console-entrypoint |
+| `package data` | runtime data path, metadata path resolution, schema path resolution, template path resolution | packaging | docs/PACKAGE_DATA.md, arkheionx/core/paths.py, tests/test_package_data.py | package-data, path-resolution, runtime-data |
+| `v2 CLI` | Arkheionx v2 CLI, installable Arkheionx CLI, console CLI | packaging | docs/CLI_INSTALLABLE.md, docs/CLI_MIGRATION_TO_V2.md, arkheionx/cli/main.py | v2-cli, console-cli, script-compatibility |
 | `rule registry` | rule-pack registry, RULE_PACKS, rule family metadata, canonical rule packs | architecture | arkheionx/rules/registry.py, docs/RULE_PACKS.md, reports/search_index.md | rule-registry, rule-packs, core-engine |
 | `config reference` | Arkheionx config, .arkheionx.json, config validation, config schema | configuration | docs/CONFIG_REFERENCE.md, schemas/arkheionx_config.schema.json, scripts/validate_config.py | config-reference, config-validation, arkheionx-config |
 | `rule pack configuration` | rule_packs, enabled rule packs, min confidence, output profile | configuration | docs/RULE_PACK_CONFIGURATION.md, arkheionx/rules/registry.py, examples/configs/amm-lending.config.json | rule-pack-configuration, min-confidence, output-profile |

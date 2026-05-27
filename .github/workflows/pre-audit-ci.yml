@@ -19,6 +19,7 @@ on:
       - "arkheionx/**"
       - "tests/**"
       - "schemas/**"
+      - "pyproject.toml"
       - "Makefile"
       - ".github/actions/pre-audit/action.yml"
       - ".github/workflows/arkheionx-demo.yml"
@@ -115,6 +116,17 @@ jobs:
             arkheionx/cli/main.py \
             arkheionx/cli/commands.py \
             arkheionx/cli/exit_codes.py
+
+      - name: Install local package
+        run: PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install -e . --no-build-isolation
+
+      - name: Verify installable console CLI
+        run: |
+          arkheionx --help
+          arkheionx version
+          arkheionx doctor
+          arkheionx validate-config --config examples/arkheionx.config.example.json
+          arkheionx search "oracle stale price"
 
       - name: Verify pre-v2 module CLI
         run: |
@@ -338,6 +350,21 @@ jobs:
             --foundry-output examples/reports/ArkheionxCLIInvariants.t.sol
           python3 -m arkheionx.cli.main test-plan --check
 
+      - name: Run installable CLI scan and test-plan
+        run: |
+          arkheionx scan examples/amm-fixture \
+            --protocol-type amm \
+            --output examples/reports/package-cli-amm-report.md \
+            --json-output examples/reports/package-cli-amm-report.json \
+            --sarif-output examples/reports/package-cli-amm.sarif.json \
+            --issue-plan-output examples/reports/package-cli-amm-issue-plan.json
+          arkheionx test-plan \
+            --report examples/reports/package-cli-amm-report.json \
+            --output examples/reports/package-cli-test-plan.md \
+            --json-output examples/reports/package-cli-test-plan.json \
+            --foundry-output examples/reports/ArkheionxPackageCLIInvariants.t.sol
+          arkheionx test-plan --check
+
       - name: Generate AMM and lending test plans
         run: |
           python3 scripts/generate_test_plan.py \
@@ -531,6 +558,13 @@ jobs:
           test -f examples/reports/cli-test-plan.md
           test -f examples/reports/cli-test-plan.json
           test -f examples/reports/ArkheionxCLIInvariants.t.sol
+          test -f examples/reports/package-cli-amm-report.md
+          test -f examples/reports/package-cli-amm-report.json
+          test -f examples/reports/package-cli-amm.sarif.json
+          test -f examples/reports/package-cli-amm-issue-plan.json
+          test -f examples/reports/package-cli-test-plan.md
+          test -f examples/reports/package-cli-test-plan.json
+          test -f examples/reports/ArkheionxPackageCLIInvariants.t.sol
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -582,12 +616,13 @@ jobs:
               "examples/reports/ci-profile-report.json",
               "examples/reports/full-profile-report.json",
               "examples/reports/cli-amm-report.json",
+              "examples/reports/package-cli-amm-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.9.0"
+              assert data["version"] == "2.0.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -638,10 +673,11 @@ jobs:
               "examples/reports/lending-fixture-issue-plan.json",
               "examples/reports/amm-lending-hybrid-fixture-issue-plan.json",
               "examples/reports/cli-amm-issue-plan.json",
+              "examples/reports/package-cli-amm-issue-plan.json",
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.9.0"
+              assert plan["version"] == "2.0.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -656,10 +692,11 @@ jobs:
               "examples/reports/lending-fixture-test-plan.json",
               "examples/reports/amm-lending-hybrid-fixture-test-plan.json",
               "examples/reports/cli-test-plan.json",
+              "examples/reports/package-cli-test-plan.json",
           ]:
               test_plan = json.load(open(path, encoding="utf-8"))
               assert test_plan["tool"] == "Arkheionx Test Plan Generator"
-              assert test_plan["version"] == "1.9.0"
+              assert test_plan["version"] == "2.0.0"
               assert test_plan["suggested_tests"]
               assert test_plan["invariant_candidates"]
               assert test_plan["manual_review_required"] is True
@@ -705,6 +742,7 @@ jobs:
               "examples/reports/ci-profile.sarif.json",
               "examples/reports/full-profile.sarif.json",
               "examples/reports/cli-amm.sarif.json",
+              "examples/reports/package-cli-amm.sarif.json",
               "arkheionx.sarif.json",
           ]:
               sarif = json.load(open(path, encoding="utf-8"))
@@ -788,6 +826,7 @@ jobs:
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxLendingInvariants.t.sol
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxHybridInvariants.t.sol
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxCLIInvariants.t.sol
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxPackageCLIInvariants.t.sol
           ! grep -RniE "private key|mnemonic|rpc url|mainnet fork|drain|profit|exploit payload|live target" examples/reports/*Invariants.t.sol templates/invariant_skeletons
           grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
           grep -q "Related Knowledge" examples/reports/demo-issue-plan.json

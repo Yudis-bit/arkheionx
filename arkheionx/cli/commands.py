@@ -1,4 +1,4 @@
-"""Command implementations for the Arkheionx pre-v2 CLI candidate."""
+"""Command implementations for the Arkheionx local/static CLI."""
 from __future__ import annotations
 
 import importlib

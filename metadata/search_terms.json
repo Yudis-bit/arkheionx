@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0",
+  "version": "2.0.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -49,6 +49,38 @@
       "related_patterns": ["future v2 installable package path"],
       "related_checks": ["docs/CLI_ROADMAP.md", "arkheionx/cli/main.py", "docs/CLI_REFERENCE.md"],
       "search_tags": ["cli-roadmap", "installable-cli", "v2-package-path"]
+    },
+    {
+      "term": "installable CLI",
+      "aliases": ["arkheionx command", "console entrypoint", "editable install", "local package install"],
+      "category": "packaging",
+      "related_patterns": ["local/static package installation", "v2 CLI workflow"],
+      "related_checks": ["pyproject.toml", "docs/INSTALLATION.md", "docs/CLI_INSTALLABLE.md"],
+      "search_tags": ["installable-cli", "arkheionx-command", "editable-install"]
+    },
+    {
+      "term": "pyproject",
+      "aliases": ["package metadata", "project scripts", "setuptools package metadata"],
+      "category": "packaging",
+      "related_patterns": ["local editable install", "console script declaration"],
+      "related_checks": ["pyproject.toml", "tests/test_package_installable.py"],
+      "search_tags": ["pyproject", "package-metadata", "console-entrypoint"]
+    },
+    {
+      "term": "package data",
+      "aliases": ["runtime data path", "metadata path resolution", "schema path resolution", "template path resolution"],
+      "category": "packaging",
+      "related_patterns": ["source-tree compatible package data", "editable install path helpers"],
+      "related_checks": ["docs/PACKAGE_DATA.md", "arkheionx/core/paths.py", "tests/test_package_data.py"],
+      "search_tags": ["package-data", "path-resolution", "runtime-data"]
+    },
+    {
+      "term": "v2 CLI",
+      "aliases": ["Arkheionx v2 CLI", "installable Arkheionx CLI", "console CLI"],
+      "category": "packaging",
+      "related_patterns": ["module CLI to console CLI migration", "script compatibility"],
+      "related_checks": ["docs/CLI_INSTALLABLE.md", "docs/CLI_MIGRATION_TO_V2.md", "arkheionx/cli/main.py"],
+      "search_tags": ["v2-cli", "console-cli", "script-compatibility"]
     },
     {
       "term": "rule registry",

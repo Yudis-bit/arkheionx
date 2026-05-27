@@ -1,10 +1,12 @@
 # CLI Commands
 
-Arkheionx v1.9.0 exposes a pre-v2 local module CLI candidate.
+Arkheionx v2.0.0 exposes the installed `arkheionx` console command and keeps
+the module CLI available.
 
 ## version
 
 ```sh
+arkheionx version
 python3 -m arkheionx.cli.main version
 ```
 
@@ -14,6 +16,7 @@ next milestone.
 ## doctor
 
 ```sh
+arkheionx doctor
 python3 -m arkheionx.cli.main doctor
 ```
 
@@ -23,6 +26,13 @@ static safety posture.
 ## scan
 
 ```sh
+arkheionx scan examples/amm-fixture \
+  --protocol-type amm \
+  --output examples/reports/package-cli-amm-report.md \
+  --json-output examples/reports/package-cli-amm-report.json \
+  --sarif-output examples/reports/package-cli-amm.sarif.json \
+  --issue-plan-output examples/reports/package-cli-amm-issue-plan.json
+
 python3 -m arkheionx.cli.main scan examples/amm-fixture \
   --protocol-type amm \
   --output examples/reports/cli-amm-report.md \
@@ -31,7 +41,7 @@ python3 -m arkheionx.cli.main scan examples/amm-fixture \
   --issue-plan-output examples/reports/cli-amm-issue-plan.json
 ```
 
-The `scan` command wraps `scripts/pre_audit_scan.py`. Supported candidate
+The `scan` command wraps `scripts/pre_audit_scan.py`. Supported
 options include:
 
 - `--protocol-type`
@@ -56,6 +66,9 @@ CLI flags override config where applicable.
 ## validate-config
 
 ```sh
+arkheionx validate-config \
+  --config examples/arkheionx.config.example.json
+
 python3 -m arkheionx.cli.main validate-config \
   --config examples/arkheionx.config.example.json
 ```
@@ -65,6 +78,12 @@ Wraps `scripts/validate_config.py`.
 ## test-plan
 
 ```sh
+arkheionx test-plan \
+  --report examples/reports/package-cli-amm-report.json \
+  --output examples/reports/package-cli-test-plan.md \
+  --json-output examples/reports/package-cli-test-plan.json \
+  --foundry-output examples/reports/ArkheionxPackageCLIInvariants.t.sol
+
 python3 -m arkheionx.cli.main test-plan \
   --report examples/reports/cli-amm-report.json \
   --output examples/reports/cli-test-plan.md \
@@ -77,6 +96,8 @@ Wraps `scripts/generate_test_plan.py`.
 ## search
 
 ```sh
+arkheionx search "oracle stale price"
+arkheionx search "oracle stale price" --json
 python3 -m arkheionx.cli.main search "oracle stale price"
 python3 -m arkheionx.cli.main search "oracle stale price" --json
 ```
@@ -90,4 +111,3 @@ and does not call external services.
 - `1`: runtime/check failed.
 - `2`: invalid arguments/config.
 - `3`: safety/config rejection.
-

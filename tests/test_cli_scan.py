@@ -45,7 +45,7 @@ class CliScanTests(unittest.TestCase):
                 self.assertTrue(path.exists(), str(path))
             self.assertIn("Fix First", report.read_text(encoding="utf-8"))
             data = json.loads(json_report.read_text(encoding="utf-8"))
-            self.assertEqual(data["version"], "1.9.0")
+            self.assertEqual(data["version"], "2.0.0")
             self.assertTrue(data["fix_first"])
             self.assertTrue(any(item["id"].startswith("ARK-AMM-") for item in data["findings"]))
             sarif_payload = json.loads(sarif.read_text(encoding="utf-8"))

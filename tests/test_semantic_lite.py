@@ -47,7 +47,7 @@ class SemanticLiteAnalysisTests(unittest.TestCase):
             ["--min-confidence-for-issue-plan", "medium"],
         )
 
-        self.assertEqual(report["version"], "1.9.0")
+        self.assertEqual(report["version"], "2.0.0")
         self.assertEqual(report["schema_version"], "1.0.0")
         self.assertEqual(report["analysis_quality"]["semantic_lite"], "enabled")
         self.assertGreaterEqual(report["analysis_quality"]["semantic_contracts"], 2)

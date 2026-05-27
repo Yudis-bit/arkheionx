@@ -80,14 +80,16 @@ committed artifacts support it.
       Improve report clarity, Fix First prioritization, output profiles,
       suppression visibility, and developer-facing summaries after config
       behavior is stable.
-- [ ] **v1.9.0: Pre-v2 CLI Candidate current milestone.**
+- [x] **v1.9.0: Pre-v2 CLI Candidate released.**
       Prepare the installable CLI surface while preserving stable scripts,
       schemas, GitHub Action usage, and local/static safety boundaries.
-- [ ] **v2.0.0: Installable Arkheionx CLI / Package.**
+- [ ] **v2.0.0: Installable Arkheionx CLI / Package current milestone.**
       Package distribution only after schemas, docs, and GitHub-native flows
       remain stable.
-- [ ] **v2.0.1: Packaging/Release Hotfix.**
+- [ ] **v2.0.1: Packaging/Release Hotfix next milestone.**
       Follow-up patch target for packaging metadata or release hygiene issues.
+- [ ] **v2.1.0: CLI Command Polish.**
+      Refine installed command UX after the first local package milestone.
 
 ## Archive Roadmap
 
