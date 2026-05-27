@@ -19,6 +19,7 @@ extension.
 | Finding knowledge map | [`schemas/finding-knowledge-map.schema.json`](../schemas/finding-knowledge-map.schema.json) |
 | Rule calibration matrix | [`schemas/rule-calibration-matrix.schema.json`](../schemas/rule-calibration-matrix.schema.json) |
 | Test plan JSON | [`schemas/test_plan.schema.json`](../schemas/test_plan.schema.json) |
+| Arkheionx config | [`schemas/arkheionx_config.schema.json`](../schemas/arkheionx_config.schema.json) |
 
 ## Versioning
 
@@ -27,7 +28,7 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.6.0"
+  "version": "1.7.0"
 }
 ```
 
@@ -46,6 +47,9 @@ metadata.
 
 v1.6.0 is an internal engine split. It does not change the public schema
 version or add required fields.
+
+v1.7.0 adds a stable local config schema. Config validation is implemented with
+stdlib checks so users do not need a JSON Schema runtime.
 
 ## Compatibility Policy
 

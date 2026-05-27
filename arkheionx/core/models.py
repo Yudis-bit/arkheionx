@@ -57,6 +57,8 @@ class RulePackInfo:
     prefix: str
     docs: str
     description: str = ""
+    default_enabled: bool = True
+    related_protocol_types: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

@@ -25,6 +25,7 @@ class InternalEngineSplitTests(unittest.TestCase):
             ["python3", "scripts/generate_ecosystem_report.py", "--check"],
             ["python3", "scripts/generate_paid_offer_index.py", "--check"],
             ["python3", "scripts/generate_feedback_dashboard.py", "--check"],
+            ["python3", "scripts/validate_config.py", "--config", "examples/arkheionx.config.example.json"],
             ["python3", "scripts/check_docs_links.py", "--check"],
             ["python3", "scripts/check_version_consistency.py", "--check"],
             ["python3", "scripts/check_safety_wording.py", "--strict"],

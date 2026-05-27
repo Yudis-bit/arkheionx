@@ -19,6 +19,16 @@ python3 -m arkheionx.cli.main doctor
 The preview package CLI is for health checks only. It does not replace
 `scripts/pre_audit_scan.py`.
 
+## `validate_config.py`
+
+Validates safe local Arkheionx config files and rejects dangerous keys such as
+RPC URLs, private keys, live targets, remote clone targets, or attack modes.
+
+```sh
+python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
+python3 scripts/validate_config.py --config examples/configs/minimal.config.json --json
+```
+
 ## `pre_audit_scan.py`
 
 Runs the GitHub-native pre-audit readiness scanner. It inspects local

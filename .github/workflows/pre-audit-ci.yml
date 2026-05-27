@@ -11,6 +11,7 @@ on:
       - "scripts/generate_paid_offer_index.py"
       - "scripts/generate_ecosystem_report.py"
       - "scripts/generate_test_plan.py"
+      - "scripts/validate_config.py"
       - "scripts/search_knowledge.py"
       - "scripts/check_docs_links.py"
       - "scripts/check_version_consistency.py"
@@ -32,6 +33,7 @@ on:
       - "examples/lending-fixture/**"
       - "examples/amm-lending-hybrid-fixture/**"
       - "examples/arkheionx.config.example.json"
+      - "examples/configs/**"
       - "examples/reports/**"
       - "metadata/search_terms.json"
       - "metadata/security_memory_graph.json"
@@ -83,6 +85,7 @@ jobs:
           python3 -m py_compile scripts/generate_paid_offer_index.py
           python3 -m py_compile scripts/generate_ecosystem_report.py
           python3 -m py_compile scripts/generate_test_plan.py
+          python3 -m py_compile scripts/validate_config.py
           python3 -m py_compile scripts/search_knowledge.py
           python3 -m py_compile scripts/check_docs_links.py
           python3 -m py_compile scripts/check_version_consistency.py
@@ -96,6 +99,7 @@ jobs:
             arkheionx/core/constants.py \
             arkheionx/core/safety.py \
             arkheionx/config/loader.py \
+            arkheionx/config/schema.py \
             arkheionx/config/suppressions.py \
             arkheionx/rules/registry.py \
             arkheionx/rules/ids.py \
@@ -111,6 +115,16 @@ jobs:
         run: |
           python3 -m arkheionx.cli.main version
           python3 -m arkheionx.cli.main doctor
+
+      - name: Validate Arkheionx config examples
+        run: |
+          python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
+          python3 scripts/validate_config.py --config examples/configs/minimal.config.json
+          python3 scripts/validate_config.py --config examples/configs/ci.config.json
+          python3 scripts/validate_config.py --config examples/configs/amm-lending.config.json
+          python3 scripts/validate_config.py --config examples/configs/strict-audit-prep.config.json
+          python3 scripts/validate_config.py --config examples/configs/suppressions.config.json
+          python3 scripts/validate_config.py --config examples/configs/minimal.config.json --json
 
       - name: Verify search index is current
         run: python3 scripts/generate_search_index.py --check
@@ -276,6 +290,15 @@ jobs:
             --json-output examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json \
             --sarif-output examples/reports/amm-lending-hybrid-fixture.sarif.json \
             --issue-plan-output examples/reports/amm-lending-hybrid-fixture-issue-plan.json
+
+      - name: Run scanner against AMM lending hybrid fixture with config
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --config examples/configs/amm-lending.config.json \
+            --output examples/reports/configured-amm-lending-report.md \
+            --json-output examples/reports/configured-amm-lending-report.json \
+            --sarif-output examples/reports/configured-amm-lending.sarif.json
 
       - name: Generate AMM and lending test plans
         run: |
@@ -454,6 +477,9 @@ jobs:
           test -f examples/reports/amm-lending-hybrid-fixture-test-plan.md
           test -f examples/reports/amm-lending-hybrid-fixture-test-plan.json
           test -f examples/reports/ArkheionxHybridInvariants.t.sol
+          test -f examples/reports/configured-amm-lending-report.md
+          test -f examples/reports/configured-amm-lending-report.json
+          test -f examples/reports/configured-amm-lending.sarif.json
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -501,12 +527,13 @@ jobs:
               "examples/reports/amm-fixture-pre-audit-report.json",
               "examples/reports/lending-fixture-pre-audit-report.json",
               "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json",
+              "examples/reports/configured-amm-lending-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.6.0"
+              assert data["version"] == "1.7.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -523,6 +550,7 @@ jobs:
               assert "delivery_summary" in data
               assert "knowledge" in data
               assert "scan_sources" in data
+              assert "config_summary" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
               assert all(item["fingerprint"] for item in data["findings"])
               assert all("confidence_reason" in item for item in data["findings"])
@@ -554,7 +582,7 @@ jobs:
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.6.0"
+              assert plan["version"] == "1.7.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -571,7 +599,7 @@ jobs:
           ]:
               test_plan = json.load(open(path, encoding="utf-8"))
               assert test_plan["tool"] == "Arkheionx Test Plan Generator"
-              assert test_plan["version"] == "1.6.0"
+              assert test_plan["version"] == "1.7.0"
               assert test_plan["suggested_tests"]
               assert test_plan["invariant_candidates"]
               assert test_plan["manual_review_required"] is True
@@ -583,6 +611,13 @@ jobs:
               "metadata/ecosystem_pack_schema.json",
               "metadata/ecosystem_pilot_example.json",
               "schemas/test_plan.schema.json",
+              "schemas/arkheionx_config.schema.json",
+              "examples/arkheionx.config.example.json",
+              "examples/configs/minimal.config.json",
+              "examples/configs/ci.config.json",
+              "examples/configs/amm-lending.config.json",
+              "examples/configs/strict-audit-prep.config.json",
+              "examples/configs/suppressions.config.json",
           ]:
               payload = json.load(open(path, encoding="utf-8"))
               assert payload

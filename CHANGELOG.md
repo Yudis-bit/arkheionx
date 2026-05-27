@@ -3,7 +3,40 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.6.0 - Unreleased
+## v1.7.0 - Unreleased
+
+### Added
+
+- Stable Arkheionx config schema.
+- Config validator script.
+- Safe config defaults.
+- Rule-pack registry helpers.
+- Config examples.
+- Suppression reference docs.
+- Rule-pack configuration docs.
+- Config safety docs.
+
+### Improved
+
+- Scanner config handling.
+- Rule pack enable/disable behavior.
+- Version/config validation tests.
+- CI checks for config examples.
+
+### Safety
+
+- Dangerous config keys are rejected.
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- Config is local/static only.
+
+### Known Limitations
+
+- Config stabilization is not the final v2 CLI interface.
+- Some scanner internals still use legacy script-level logic.
+- Config schema is stdlib-validated, not external JSON-schema-runtime enforced.
+
+## v1.6.0
 
 ### Added
 

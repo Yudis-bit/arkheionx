@@ -6,6 +6,7 @@ ID_PREFIXES = {
     "vault": "ARK-VLT",
     "oracle": "ARK-ORC",
     "access-control": "ARK-ACC",
+    "upgradeability": "ARK-UPG",
     "reentrancy-value-flow": "ARK-REENT",
     "rewards": "ARK-RWD",
     "testing": "ARK-TST",

@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.7.0",
+  "protocol_type": "hybrid",
+  "rule_packs": [
+    "oracle",
+    "access-control",
+    "reentrancy-value-flow",
+    "testing",
+    "docs",
+    "amm",
+    "lending"
+  ],
+  "min_confidence": "low",
+  "output_profile": "standard",
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [],
+    "extra_ignore_globs": [],
+    "include_tests": true,
+    "include_docs": true
+  },
+  "test_plan": {
+    "include_foundry_skeletons": true,
+    "group_by_rule_family": true,
+    "include_low_confidence": false,
+    "output_profile": "standard"
+  }
+}

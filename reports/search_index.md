@@ -58,6 +58,13 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Generated issue checklist | [`docs/GENERATED_ISSUE_CHECKLIST.md`](../docs/GENERATED_ISSUE_CHECKLIST.md) | issue checklist, remediation, finding IDs |
 | GitHub issue workflow | [`docs/GITHUB_ISSUE_WORKFLOW.md`](../docs/GITHUB_ISSUE_WORKFLOW.md) | issue plan, dry-run, duplicate prevention |
 | Arkheionx config | [`docs/ARKHEIONX_CONFIG.md`](../docs/ARKHEIONX_CONFIG.md) | config, suppression, ignore paths |
+| Config reference | [`docs/CONFIG_REFERENCE.md`](../docs/CONFIG_REFERENCE.md) | config reference, config validation, output profile |
+| Rule pack configuration | [`docs/RULE_PACK_CONFIGURATION.md`](../docs/RULE_PACK_CONFIGURATION.md) | rule pack configuration, rule_packs, min confidence |
+| Suppressions | [`docs/SUPPRESSIONS.md`](../docs/SUPPRESSIONS.md) | suppressions, suppression reason, review_after |
+| Config safety | [`docs/CONFIG_SAFETY.md`](../docs/CONFIG_SAFETY.md) | config safety, dangerous keys, generated artifact ignore |
+| Config validator | [`scripts/validate_config.py`](../scripts/validate_config.py) | validate_config.py, config validation, strict audit prep config |
+| Arkheionx config schema | [`schemas/arkheionx_config.schema.json`](../schemas/arkheionx_config.schema.json) | arkheionx config schema, schema_version 1.7.0, CI config |
+| Config examples | [`examples/configs/minimal.config.json`](../examples/configs/minimal.config.json) | minimal config, CI config, amm lending config |
 | SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
 | Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
 | Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
@@ -186,6 +193,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `package architecture` | arkheionx package, core engine, package scaffold, modular engine | architecture | arkheionx/core/models.py, arkheionx/core/files.py, arkheionx/rules/registry.py | arkheionx-package, core-engine, package-scaffold |
 | `CLI roadmap` | installable CLI, v2 package path, preview internal CLI, python module CLI | architecture | docs/CLI_ROADMAP.md, arkheionx/cli/main.py, docs/CLI_REFERENCE.md | cli-roadmap, installable-cli, v2-package-path |
 | `rule registry` | rule-pack registry, RULE_PACKS, rule family metadata, canonical rule packs | architecture | arkheionx/rules/registry.py, docs/RULE_PACKS.md, reports/search_index.md | rule-registry, rule-packs, core-engine |
+| `config reference` | Arkheionx config, .arkheionx.json, config validation, config schema | configuration | docs/CONFIG_REFERENCE.md, schemas/arkheionx_config.schema.json, scripts/validate_config.py | config-reference, config-validation, arkheionx-config |
+| `rule pack configuration` | rule_packs, enabled rule packs, min confidence, output profile | configuration | docs/RULE_PACK_CONFIGURATION.md, arkheionx/rules/registry.py, examples/configs/amm-lending.config.json | rule-pack-configuration, min-confidence, output-profile |
+| `suppressions` | suppression config, suppress finding, suppression reason, review_after | configuration | docs/SUPPRESSIONS.md, examples/configs/suppressions.config.json | suppressions, suppression-review, readiness-triage |
+| `config safety` | dangerous config keys, safe config defaults, generated artifact ignore, strict audit prep config, CI config | configuration | docs/CONFIG_SAFETY.md, examples/configs/strict-audit-prep.config.json, examples/configs/ci.config.json | config-safety, generated-artifact-ignore, ci-config |
 | `generator modules` | test plan module, feedback module, ecosystem report module, paid offer module | architecture | arkheionx/generators/test_plan.py, arkheionx/generators/ecosystem_report.py, arkheionx/generators/feedback_dashboard.py | generator-modules, package-extraction, internal-engine-split |
 | `GitHub Action` | pre-audit action, Arkheionx action, GitHub-native scanner, Actions summary | GitHub-native workflow | Markdown report, JSON report, PR comment, issue checklist, SARIF | github-action, ci, pre-audit-readiness |
 | `security memory` | DeFi security memory, historical exploit memory, root-cause knowledge base, security knowledge base | research archive | registry, search index, research dashboard, PoC maturity index | security-memory, root-cause-analysis, exploit-research |
@@ -529,6 +540,16 @@ CLI roadmap
 arkheionx package
 core engine
 rule registry
+config reference
+config validation
+rule pack configuration
+suppressions
+min confidence
+output profile
+generated artifact ignore
+strict audit prep config
+CI config
+config safety
 generator modules
 installable CLI
 v2 package path

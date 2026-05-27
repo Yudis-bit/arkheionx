@@ -6,7 +6,7 @@ inputs:
     required: false
     default: "."
   protocol-type:
-    description: "Protocol type: auto, vault, amm, lending, staking, oracle, generic."
+    description: "Protocol type: auto, generic, vault, oracle, access-control, rewards, staking, amm, lending, hybrid."
     required: false
     default: "auto"
   output:

@@ -43,6 +43,9 @@ from arkheionx.core.constants import (  # noqa: E402
 from arkheionx.core.constants import (  # noqa: E402
     ISSUE_MARKER_PREFIX as SHARED_ISSUE_MARKER_PREFIX,
 )
+from arkheionx.config.loader import load_and_validate_config  # noqa: E402
+from arkheionx.config.schema import PROTOCOL_TYPES as STABLE_PROTOCOL_TYPES  # noqa: E402
+from arkheionx.rules.registry import finding_id_to_rule_pack  # noqa: E402
 from arkheionx.version import SCANNER_VERSION, SCHEMA_VERSION as PACKAGE_SCHEMA_VERSION  # noqa: E402
 
 
@@ -955,24 +958,12 @@ def should_ignore_config_path(path: Path, root: Path, ignore_paths: Iterable[str
     return False
 
 
-def load_local_config(path: Path | None, root: Path) -> tuple[dict[str, object], list[str]]:
-    if path is None:
-        return {}, []
-    if path.is_absolute():
-        config_path = path
-    else:
-        cwd_candidate = Path.cwd() / path
-        root_candidate = root / path
-        config_path = cwd_candidate if cwd_candidate.exists() else root_candidate
-    if not config_path.exists():
-        return {}, []
-    try:
-        data = json.loads(config_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        return {}, [f"Could not parse Arkheionx config `{display_path(config_path)}`: {exc}"]
-    if not isinstance(data, dict):
-        return {}, [f"Arkheionx config `{display_path(config_path)}` must be a JSON object."]
-    return data, []
+def load_local_config(path: Path | None, root: Path) -> tuple[dict[str, object], list[str], list[str], str]:
+    result = load_and_validate_config(path, root)
+    config = dict(result.normalized_config)
+    if result.source:
+        config["__config_source"] = result.source
+    return config, result.warnings, result.errors, result.source
 
 
 def config_ignore_paths(config: dict[str, object]) -> list[str]:
@@ -987,6 +978,7 @@ def config_scan(config: dict[str, object]) -> dict[str, object]:
     scan = raw if isinstance(raw, dict) else {}
     extra_ignore_paths = scan.get("extra_ignore_paths", [])
     extra_ignore_globs = scan.get("extra_ignore_globs", [])
+    max_file_size_kb = scan.get("max_file_size_kb")
     return {
         "ignore_generated_artifacts": bool(scan.get("ignore_generated_artifacts", True)),
         "include_generated_artifacts": bool(scan.get("include_generated_artifacts", False)),
@@ -996,11 +988,14 @@ def config_scan(config: dict[str, object]) -> dict[str, object]:
         "extra_ignore_globs": [str(item) for item in extra_ignore_globs if isinstance(item, str)]
         if isinstance(extra_ignore_globs, list)
         else [],
+        "max_file_size_kb": max_file_size_kb if isinstance(max_file_size_kb, int) and max_file_size_kb > 0 else None,
+        "include_tests": bool(scan.get("include_tests", True)),
+        "include_docs": bool(scan.get("include_docs", True)),
     }
 
 
 def config_suppressions(config: dict[str, object]) -> dict[str, dict[str, str]]:
-    raw = config.get("suppress_findings", [])
+    raw = config.get("suppressions", config.get("suppress_findings", []))
     suppressions: dict[str, dict[str, str]] = {}
     if not isinstance(raw, list):
         return suppressions
@@ -1011,6 +1006,9 @@ def config_suppressions(config: dict[str, object]) -> dict[str, dict[str, str]]:
         suppressions[finding_id] = {
             "reason": str(item.get("reason", "No reason provided.")),
             "expires": str(item.get("expires", "")),
+            "owner": str(item.get("owner", "")),
+            "review_after": str(item.get("review_after", "")),
+            "path": str(item.get("path", "")),
         }
     return suppressions
 
@@ -1023,7 +1021,7 @@ def config_additional_tags(config: dict[str, object]) -> list[str]:
 
 
 def config_max_top_gaps(config: dict[str, object]) -> int:
-    report = config.get("report", {})
+    report = config.get("reports", config.get("report", {}))
     if not isinstance(report, dict):
         return 5
     try:
@@ -1036,7 +1034,9 @@ def config_max_top_gaps(config: dict[str, object]) -> int:
 def config_analysis(config: dict[str, object]) -> dict[str, object]:
     raw = config.get("analysis", {})
     analysis = raw if isinstance(raw, dict) else {}
-    min_confidence = str(analysis.get("min_confidence_for_issue_plan", "medium")).lower()
+    min_confidence = str(
+        analysis.get("min_confidence_for_issue_plan", config.get("min_confidence", "low"))
+    ).lower()
     if min_confidence not in {"low", "medium", "high"}:
         min_confidence = "low"
     try:
@@ -1049,6 +1049,49 @@ def config_analysis(config: dict[str, object]) -> dict[str, object]:
         "min_confidence_for_issue_plan": min_confidence,
         "downgrade_keyword_only": bool(analysis.get("downgrade_keyword_only", True)),
         "max_evidence_per_finding": max(1, min(20, max_evidence)),
+    }
+
+
+def config_enabled_rule_packs(config: dict[str, object]) -> set[str]:
+    raw = config.get("rule_packs", [])
+    if not isinstance(raw, list) or not raw:
+        return {
+            "vault",
+            "oracle",
+            "access-control",
+            "reentrancy-value-flow",
+            "rewards",
+            "testing",
+            "docs",
+            "amm",
+            "lending",
+        }
+    return {str(item) for item in raw if isinstance(item, str)}
+
+
+def filter_gaps_by_rule_packs(gaps: list[ReadinessGap], enabled_rule_packs: set[str]) -> list[ReadinessGap]:
+    filtered: list[ReadinessGap] = []
+    for gap in gaps:
+        family = finding_id_to_rule_pack(gap.id)
+        if family == "generic" or family in enabled_rule_packs:
+            filtered.append(gap)
+    return filtered
+
+
+def config_summary(
+    config: dict[str, object],
+    source: str,
+    protocol_type: str,
+    enabled_rule_packs: set[str],
+    analysis_config: dict[str, object],
+) -> dict[str, object]:
+    return {
+        "config_source": source,
+        "protocol_type_effective": protocol_type,
+        "enabled_rule_packs": sorted(enabled_rule_packs),
+        "min_confidence": str(config.get("min_confidence", analysis_config.get("min_confidence_for_issue_plan", "low"))),
+        "suppressions_count": len(config_suppressions(config)),
+        "output_profile": str(config.get("output_profile", "standard")),
     }
 
 
@@ -1169,6 +1212,18 @@ def ignore_reason_for_scan_file(path: Path, root: Path, config: dict[str, object
     ignore_paths = config_ignore_paths(config) + list(scan.get("extra_ignore_paths", []))
     if ignore_paths and should_ignore_config_path(path, root, ignore_paths):
         return "configured-ignore-path"
+    max_file_size_kb = scan.get("max_file_size_kb")
+    if isinstance(max_file_size_kb, int):
+        try:
+            if path.stat().st_size > max_file_size_kb * 1024:
+                return "configured-max-file-size"
+        except OSError:
+            return "unreadable"
+    lower_parts = {part.lower() for part in path.parts}
+    if not bool(scan.get("include_tests", True)) and path.suffix == ".sol" and (path.name.endswith(".t.sol") or "test" in lower_parts):
+        return "configured-tests-disabled"
+    if not bool(scan.get("include_docs", True)) and path.suffix.lower() == ".md":
+        return "configured-docs-disabled"
     relative = scan_relative_path(path, root)
     for pattern in scan.get("extra_ignore_globs", []):
         if path_matches_glob(relative, str(pattern)):
@@ -4131,10 +4186,25 @@ def apply_suppressions(
     config: dict[str, object],
 ) -> tuple[list[ReadinessGap], list[ReadinessGap]]:
     suppressions = config_suppressions(config)
+
+    def matching_suppression(gap: ReadinessGap) -> dict[str, str] | None:
+        for configured_id, suppression in suppressions.items():
+            prefix = configured_id.rstrip("*")
+            id_matches = gap.id == configured_id or (prefix and gap.id.startswith(prefix))
+            if not id_matches:
+                continue
+            path_filter = suppression.get("path", "").strip()
+            if path_filter:
+                affected = gap.affected_files or []
+                if not any(path_matches_glob(path, path_filter) or path.startswith(path_filter.rstrip("/") + "/") for path in affected):
+                    continue
+            return suppression
+        return None
+
     active: list[ReadinessGap] = []
     suppressed: list[ReadinessGap] = []
     for gap in gaps:
-        suppression = suppressions.get(gap.id)
+        suppression = matching_suppression(gap)
         if suppression and gap.suppressible:
             gap.suppression = suppression
             suppressed.append(gap)
@@ -4660,6 +4730,7 @@ def generate_report(
     next_steps: list[str],
     skeleton_path: Path | None,
     generated_outputs: dict[str, str],
+    config_summary_data: dict[str, object],
     config_warnings: list[str],
     additional_search_tags: list[str],
     max_top_gaps: int,
@@ -4704,6 +4775,15 @@ def generate_report(
     lines.append(f"- Scanner version: `{VERSION}`")
     lines.append("")
     lines.append(markdown_table(file_summary))
+    lines.append("")
+    lines.append("## Config Summary")
+    lines.append("")
+    lines.append(f"- Config source: `{config_summary_data.get('config_source', '') or 'defaults'}`")
+    lines.append(f"- Effective protocol type: `{config_summary_data.get('protocol_type_effective', protocol_type)}`")
+    lines.append(f"- Enabled rule packs: `{', '.join(str(item) for item in config_summary_data.get('enabled_rule_packs', []))}`")
+    lines.append(f"- Minimum confidence: `{config_summary_data.get('min_confidence', 'low')}`")
+    lines.append(f"- Suppressions configured: `{config_summary_data.get('suppressions_count', 0)}`")
+    lines.append(f"- Output profile: `{config_summary_data.get('output_profile', 'standard')}`")
     lines.append("")
     lines.append("## Scan Source Summary")
     lines.append("")
@@ -5121,6 +5201,7 @@ def json_report(
     generated_outputs: dict[str, str],
     delivery_outputs: dict[str, str],
     delivery_summary_data: dict[str, object],
+    config_summary_data: dict[str, object],
     config_warnings: list[str],
     diff_data: dict[str, object] | None,
 ) -> dict[str, object]:
@@ -5171,6 +5252,7 @@ def json_report(
         "generated_outputs": generated_outputs,
         "delivery_outputs": delivery_outputs,
         "delivery_summary": delivery_summary_data,
+        "config_summary": config_summary_data,
         "diff": diff_data or empty_diff_data(),
         "next_steps": next_steps,
         "config_warnings": config_warnings,
@@ -6311,7 +6393,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--protocol-type",
         default="auto",
-        choices=["auto", "vault", "amm", "lending", "staking", "oracle", "generic"],
+        choices=list(STABLE_PROTOCOL_TYPES),
         help="Protocol type hint.",
     )
     parser.add_argument("--output", default="ARKHEIONX_PRE_AUDIT_REPORT.md", help="Markdown report output path.")
@@ -6360,9 +6442,14 @@ def main(argv: list[str] | None = None) -> int:
         print("notice: --create-issues is reserved for future local issue suggestions; no remote issues are created.")
 
     config_path = Path(args.config).expanduser() if args.config else None
-    config, config_warnings = load_local_config(config_path, root)
+    config, config_warnings, config_errors, config_source = load_local_config(config_path, root)
+    if config_errors:
+        for error in config_errors:
+            print(f"error: {error}", file=sys.stderr)
+        return 1
     analysis_config = config_analysis(config)
     scan_config = config_scan(config)
+    enabled_rule_packs = config_enabled_rule_packs(config)
     if scan_config.get("include_generated_artifacts"):
         config_warnings.append(
             "Generated Arkheionx artifacts are included by config. This is advanced/debug behavior and may affect readiness scoring."
@@ -6380,7 +6467,7 @@ def main(argv: list[str] | None = None) -> int:
     contents = corpus(files)
     requested_protocol = args.protocol_type
     configured_protocol = config.get("protocol_type")
-    if requested_protocol == "auto" and isinstance(configured_protocol, str) and configured_protocol in (set(PROTOCOL_WEIGHTS) | {"generic", "auto"}):
+    if requested_protocol == "auto" and isinstance(configured_protocol, str) and configured_protocol in set(STABLE_PROTOCOL_TYPES):
         requested_protocol = configured_protocol
     protocol_type, protocol_confidence, protocol_scores = detect_protocol_type(contents, classified, requested_protocol)
     signal_paths = [
@@ -6425,6 +6512,7 @@ def main(argv: list[str] | None = None) -> int:
     add_rule_pack_gaps(gaps, contents, classified, signals)
     apply_finding_metadata(gaps, signals, protocol_type)
     attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type, negative_evidence)
+    gaps = filter_gaps_by_rule_packs(gaps, enabled_rule_packs)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
     rule_packs = build_rule_packs(signals, gaps, suppressed_gaps)
     invariants = suggest_invariants(protocol_type, signals)
@@ -6475,6 +6563,7 @@ def main(argv: list[str] | None = None) -> int:
         "remediation_roadmap": delivery_outputs["remediation_roadmap"],
     }
     delivery_summary_data = delivery_summary(score, protocol_type, gaps)
+    config_summary_data = config_summary(config, config_source, protocol_type, enabled_rule_packs, analysis_config)
     additional_search_tags = config_additional_tags(config)
     max_top_gaps = config_max_top_gaps(config)
     diff_data: dict[str, object] | None = None
@@ -6511,6 +6600,7 @@ def main(argv: list[str] | None = None) -> int:
         next_steps=next_steps,
         skeleton_path=skeleton_path,
         generated_outputs=generated_outputs,
+        config_summary_data=config_summary_data,
         config_warnings=config_warnings,
         additional_search_tags=additional_search_tags,
         max_top_gaps=max_top_gaps,
@@ -6580,6 +6670,7 @@ def main(argv: list[str] | None = None) -> int:
                 generated_outputs,
                 delivery_outputs,
                 delivery_summary_data,
+                config_summary_data,
                 config_warnings,
                 diff_data,
             ),

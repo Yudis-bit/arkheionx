@@ -56,7 +56,7 @@ def scan() -> list[str]:
             continue
         for number, line in enumerate(lines, 1):
             lower = line.lower()
-            context = "\n".join(lines[max(0, number - 12) : number])
+            context = "\n".join(lines[max(0, number - 30) : min(len(lines), number + 3)])
             for phrase in BANNED_PHRASES:
                 if phrase in lower and not phrase_allowed(context):
                     warnings.append(f"{path.relative_to(ROOT)}:{number}: {phrase}")

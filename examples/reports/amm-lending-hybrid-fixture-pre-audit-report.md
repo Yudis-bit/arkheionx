@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/amm-lending-hybrid-fixture`
-- Generated at: `2026-05-27T04:09:42+00:00`
+- Generated at: `2026-05-27T06:10:23+00:00`
 - Protocol type: `amm`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `1.5.0`
+- Scanner version: `1.7.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -16,6 +16,15 @@
 | Docs             | 1     |
 | Configs          | 1     |
 | Workflows        | 0     |
+
+## Config Summary
+
+- Config source: `defaults`
+- Effective protocol type: `amm`
+- Enabled rule packs: `access-control, amm, docs, lending, oracle, reentrancy-value-flow, rewards, testing, vault`
+- Minimum confidence: `low`
+- Suppressions configured: `0`
+- Output profile: `standard`
 
 ## Scan Source Summary
 

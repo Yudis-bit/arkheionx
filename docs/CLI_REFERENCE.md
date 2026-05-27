@@ -11,7 +11,7 @@ or live-chain access.
 | Flag | Default | Purpose |
 |---|---|---|
 | `--root PATH` | `.` | Repository root to scan. |
-| `--protocol-type TYPE` | `auto` | Protocol hint: `auto`, `vault`, `amm`, `lending`, `staking`, `oracle`, or `generic`. |
+| `--protocol-type TYPE` | `auto` | Protocol hint: `auto`, `generic`, `vault`, `oracle`, `access-control`, `rewards`, `staking`, `amm`, `lending`, or `hybrid`. |
 | `--output PATH` | `ARKHEIONX_PRE_AUDIT_REPORT.md` | Markdown pre-audit readiness report. |
 | `--json-output PATH` | empty | Machine-readable JSON report. |
 
@@ -77,6 +77,20 @@ Patch releases may add optional fields or flags, but v1.0.0 flags should remain
 backward compatible unless a future changelog explicitly marks a breaking
 change. Findings remain readiness signals, not formal audit findings or
 vulnerability confirmations.
+
+## Config Validator
+
+v1.7.0 adds a stable config validator:
+
+```sh
+python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
+python3 scripts/validate_config.py --config examples/configs/minimal.config.json --json
+```
+
+The validator normalizes legacy config fields, validates protocol types,
+rule-pack keys, confidence levels, suppressions, and rejects dangerous keys
+such as RPC URLs, private keys, live targets, remote clone targets, or attack
+modes.
 
 ## Test Plan Generator
 

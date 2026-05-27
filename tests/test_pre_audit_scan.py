@@ -184,18 +184,32 @@ class PreAuditScannerTests(unittest.TestCase):
             self.assertIn("ARK-VLT-001", suppressed_ids)
             self.assertIn("Suppressed Readiness Gaps", md_path.read_text(encoding="utf-8"))
 
-    def test_invalid_config_does_not_crash(self) -> None:
+    def test_invalid_config_fails_clearly(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             config_path = tmp_path / ".arkheionx.json"
             config_path.write_text("{invalid", encoding="utf-8")
-            markdown, report = self.run_scanner(
-                "examples/vault-risk-fixture",
-                "vault",
-                ["--config", str(config_path)],
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(SCANNER),
+                    "--root",
+                    str(REPO_ROOT / "examples/vault-risk-fixture"),
+                    "--protocol-type",
+                    "vault",
+                    "--config",
+                    str(config_path),
+                    "--output",
+                    str(tmp_path / "report.md"),
+                    "--json-output",
+                    str(tmp_path / "report.json"),
+                ],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
             )
-            self.assertIn("Configuration Warnings", markdown)
-            self.assertTrue(report["config_warnings"])
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Could not parse config", result.stderr)
 
     def test_config_ignore_paths_are_respected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

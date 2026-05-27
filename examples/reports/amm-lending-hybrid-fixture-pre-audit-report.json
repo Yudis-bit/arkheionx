@@ -12,6 +12,24 @@
     "test_coverage_mapping": "enabled",
     "warnings": []
   },
+  "config_summary": {
+    "config_source": "",
+    "enabled_rule_packs": [
+      "access-control",
+      "amm",
+      "docs",
+      "lending",
+      "oracle",
+      "reentrancy-value-flow",
+      "rewards",
+      "testing",
+      "vault"
+    ],
+    "min_confidence": "low",
+    "output_profile": "standard",
+    "protocol_type_effective": "amm",
+    "suppressions_count": 0
+  },
   "config_warnings": [],
   "delivery_outputs": {
     "contest_readiness": "",
@@ -2026,7 +2044,7 @@
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-27T04:09:42+00:00",
+  "generated_at": "2026-05-27T06:10:23+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -6867,5 +6885,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "1.5.0"
+  "version": "1.7.0"
 }

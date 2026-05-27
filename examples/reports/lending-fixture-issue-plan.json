@@ -1,130 +1,7 @@
 {
   "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
-  "excluded_low_confidence_findings": [
-    {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyLendingMarket.sol",
-        "test/ToyLendingMarket.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "testing-readiness",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
-      "detected_signals": [],
-      "detection_sources": [
-        "keyword"
-      ],
-      "evidence": [
-        {
-          "file": "src/ToyLendingMarket.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyLendingMarket.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 2,
-      "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "365ac6a8f4023a1d577381a3",
-      "historical_pattern_similarity": "",
-      "id": "ARK-TST-002",
-      "invariant_candidates": [
-        "Core accounting relationships hold after any allowed user action.",
-        "Privileged actions cannot silently bypass documented accounting assumptions."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "protocol-specific-conservation-invariant",
-          "authorization-or-lifecycle-invariant"
-        ],
-        "failed_assumptions": [
-          "unit-tests-cover-compositional-state",
-          "happy-path-tests-cover-adversarial-sequences"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/READINESS_SCORE.md",
-          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
-        ],
-        "related_patterns": [
-          "pattern-missing-invariant-coverage",
-          "pattern-assumption-not-encoded-in-tests"
-        ],
-        "related_pocs": [
-          "poc-2020-08-opyn",
-          "poc-2020-09-bzx-ifusdc",
-          "poc-2021-10-indexed-finance"
-        ],
-        "root_causes": [
-          "critical-assumption-only-documented-or-implicit",
-          "state-machine-not-fuzzed"
-        ],
-        "rule_pack": "testing",
-        "search_terms": [
-          "missing invariant",
-          "audit blocker",
-          "stateful fuzz",
-          "invariant testing"
-        ],
-        "suggested_tests": [
-          "foundry-invariant-skeleton",
-          "stateful-fuzz-sequence",
-          "roundtrip-or-conservation-invariant"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-      "recommended_defensive_checks": [],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-        "Add a stateful invariant suite for the core protocol lifecycle.",
-        "Add handler actions for normal user flows and documented edge cases.",
-        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
-      ],
-      "suppressible": true,
-      "tags": [
-        "invariant-testing",
-        "lending"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_coreAccountingRelationshipsHold",
-          "invariant_privilegedActionsRespectDocumentedAssumptions"
-        ],
-        "manual_review_notes": [
-          "Review whether the protocol uses another property-testing framework outside Foundry."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Target contracts",
-          "Allowed action handler",
-          "Local mocks for assets and oracle inputs"
-        ],
-        "rule_family": "testing",
-        "safety_notes": [
-          "Generated invariants are starting points and need human tailoring."
-        ]
-      },
-      "title": "No invariant tests detected for DeFi protocol shape",
-      "why_it_matters": ""
-    }
-  ],
-  "generated_at": "2026-05-27T04:09:42+00:00",
+  "excluded_low_confidence_findings": [],
+  "generated_at": "2026-05-27T06:10:23+00:00",
   "issue_grouping": "one-per-finding",
   "issues": [
     {
@@ -1267,9 +1144,106 @@
         "Add documentation for price shock and fallback assumptions."
       ],
       "title": "[Arkheionx][Medium] ARK-ORC-005 - Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-TST-002 -->\n\n# Arkheionx readiness gap: ARK-TST-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-TST-002`\n- Priority: `Low readiness gap`\n- Category: `testing-readiness`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Fingerprint: `365ac6a8f4023a1d577381a3`\n\n## Evidence\n\n- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding.\n- `test/ToyLendingMarket.t.sol:1`: Keyword signal matched this readiness finding.\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant\n- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance\n- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol\n\n## Why It Matters\n\nProtocol-like value flows were detected, but no invariant/property testing signal was found.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\n## Suggested Tests\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.\n\n## Invariant Candidates\n\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/lending-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/lending-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/lending-fixture.sarif.json`\n- Issue Plan: `examples/reports/lending-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "src/ToyLendingMarket.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyLendingMarket.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
+      "finding_id": "ARK-TST-002",
+      "fingerprint": "365ac6a8f4023a1d577381a3",
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "labels": [
+        "arkheionx",
+        "invariant-testing",
+        "lending",
+        "low-confidence",
+        "low-readiness-gap",
+        "pre-audit-readiness",
+        "testing-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-TST-002 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [],
+      "related_knowledge": {
+        "broken_invariants": [
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
+        ],
+        "failed_assumptions": [
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+        ],
+        "related_patterns": [
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
+        ],
+        "related_pocs": [
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
+        ],
+        "root_causes": [
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
+        ],
+        "rule_pack": "testing",
+        "search_terms": [
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
+        ],
+        "suggested_tests": [
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
+        ]
+      },
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
+      ],
+      "title": "[Arkheionx][Low] ARK-TST-002 - No invariant tests detected for DeFi protocol shape"
     }
   ],
-  "min_confidence": "medium",
+  "min_confidence": "low",
   "mode": "dry-run",
   "protocol_type": "lending",
   "repo_root": "examples/lending-fixture",
@@ -1288,5 +1262,5 @@
     "title": "[Arkheionx] Pre-audit readiness remediation plan"
   },
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "1.5.0"
+  "version": "1.7.0"
 }

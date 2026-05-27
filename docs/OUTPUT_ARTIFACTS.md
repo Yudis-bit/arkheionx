@@ -44,6 +44,10 @@ dry-run outputs, delivery artifacts, test plans, and invariant skeletons by
 default on future scans. This prevents previous outputs from influencing score,
 evidence, findings, negative evidence, protocol detection, or issue plans.
 
+v1.7.0 scanner reports include a compact config summary in Markdown and JSON:
+config source, effective protocol type, enabled rule packs, minimum confidence,
+suppression count, and output profile.
+
 ## Custom Paths
 
 Custom output paths are supported. Use names that make generated status obvious

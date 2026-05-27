@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -57,6 +57,38 @@
       "related_patterns": ["shared rule-pack metadata for docs and future engine use"],
       "related_checks": ["arkheionx/rules/registry.py", "docs/RULE_PACKS.md", "reports/search_index.md"],
       "search_tags": ["rule-registry", "rule-packs", "core-engine"]
+    },
+    {
+      "term": "config reference",
+      "aliases": ["Arkheionx config", ".arkheionx.json", "config validation", "config schema"],
+      "category": "configuration",
+      "related_patterns": ["safe local configuration", "stable config schema", "stdlib validation"],
+      "related_checks": ["docs/CONFIG_REFERENCE.md", "schemas/arkheionx_config.schema.json", "scripts/validate_config.py"],
+      "search_tags": ["config-reference", "config-validation", "arkheionx-config"]
+    },
+    {
+      "term": "rule pack configuration",
+      "aliases": ["rule_packs", "enabled rule packs", "min confidence", "output profile"],
+      "category": "configuration",
+      "related_patterns": ["focused rule-pack readiness review", "finding family control"],
+      "related_checks": ["docs/RULE_PACK_CONFIGURATION.md", "arkheionx/rules/registry.py", "examples/configs/amm-lending.config.json"],
+      "search_tags": ["rule-pack-configuration", "min-confidence", "output-profile"]
+    },
+    {
+      "term": "suppressions",
+      "aliases": ["suppression config", "suppress finding", "suppression reason", "review_after"],
+      "category": "configuration",
+      "related_patterns": ["documented readiness finding suppression", "visible suppression review"],
+      "related_checks": ["docs/SUPPRESSIONS.md", "examples/configs/suppressions.config.json"],
+      "search_tags": ["suppressions", "suppression-review", "readiness-triage"]
+    },
+    {
+      "term": "config safety",
+      "aliases": ["dangerous config keys", "safe config defaults", "generated artifact ignore", "strict audit prep config", "CI config"],
+      "category": "configuration",
+      "related_patterns": ["local static config boundary", "dangerous key rejection"],
+      "related_checks": ["docs/CONFIG_SAFETY.md", "examples/configs/strict-audit-prep.config.json", "examples/configs/ci.config.json"],
+      "search_tags": ["config-safety", "generated-artifact-ignore", "ci-config"]
     },
     {
       "term": "generator modules",

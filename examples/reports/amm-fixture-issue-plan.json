@@ -1,619 +1,7 @@
 {
   "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
-  "excluded_low_confidence_findings": [
-    {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyAMMPool.sol",
-        "test/ToyAMMPool.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "oracle-pricing",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.",
-      "detected_signals": [
-        "getReserves",
-        "pool",
-        "reserve0",
-        "reserve1"
-      ],
-      "detection_sources": [
-        "keyword",
-        "test-coverage"
-      ],
-      "evidence": [
-        {
-          "file": "",
-          "function": "",
-          "line": 1,
-          "reason": "No semantic-lite oracle test coverage terms were detected.",
-          "snippet": "",
-          "type": "test-coverage"
-        },
-        {
-          "file": "src/ToyAMMPool.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "getReserves, pool, reserve0, reserve1",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyAMMPool.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "getReserves, pool, reserve0, reserve1",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 3,
-      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "204867f6f7d3206783b6abd7",
-      "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
-      "id": "ARK-ORC-001",
-      "invariant_candidates": [
-        "Accounting decisions only use oracle data that satisfies documented freshness policy."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "accounting-value-uses-valid-price",
-          "collateral-value-is-bounded",
-          "share-price-uses-trusted-input"
-        ],
-        "failed_assumptions": [
-          "oracle-price-is-current",
-          "oracle-answer-is-normalized",
-          "pool-price-is-manipulation-resistant"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/ORACLE_RULE_PACK.md",
-          "docs/RULE_PACKS.md",
-          "docs/SEARCH_GUIDE.md"
-        ],
-        "related_patterns": [
-          "pattern-oracle-stale-price",
-          "pattern-spot-price-manipulation",
-          "pattern-pool-price-accounting"
-        ],
-        "related_pocs": [
-          "poc-2025-11-moonwell",
-          "poc-2020-10-harvest",
-          "poc-2021-02-yearn-v1-dai"
-        ],
-        "root_causes": [
-          "missing-oracle-freshness-validation",
-          "implicit-price-trust",
-          "missing-price-bounds"
-        ],
-        "rule_pack": "oracle",
-        "search_terms": [
-          "oracle stale price",
-          "Chainlink updatedAt",
-          "heartbeat validation",
-          "price bounds",
-          "TWAP vs spot"
-        ],
-        "suggested_tests": [
-          "stale-round-rejection",
-          "heartbeat-bound-test",
-          "decimal-normalization-test",
-          "price-bounds-test"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.",
-      "recommended_defensive_checks": [
-        "stale round rejection",
-        "heartbeat checks",
-        "updatedAt validation",
-        "answeredInRound handling"
-      ],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
-        "Reject stale oracle rounds or document fallback behavior.",
-        "Test updatedAt or heartbeat boundaries.",
-        "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
-      ],
-      "suppressible": true,
-      "tags": [
-        "oracle-risk",
-        "oracle-rule-pack",
-        "pre-audit-readiness"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_oracleFreshnessPolicyIsRespected"
-        ],
-        "manual_review_notes": [
-          "Check whether freshness validation is implemented in an imported adapter."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Oracle adapter or mock feed",
-          "Consumer contract"
-        ],
-        "rule_family": "oracle",
-        "safety_notes": [
-          "Use local mock oracle responses only."
-        ]
-      },
-      "title": "Oracle-dependent logic without stale-price tests",
-      "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
-    },
-    {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyAMMPool.sol",
-        "test/ToyAMMPool.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "oracle-pricing",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
-      "detected_signals": [],
-      "detection_sources": [
-        "keyword",
-        "test-coverage"
-      ],
-      "evidence": [
-        {
-          "file": "",
-          "function": "",
-          "line": 1,
-          "reason": "No semantic-lite oracle test coverage terms were detected.",
-          "snippet": "",
-          "type": "test-coverage"
-        },
-        {
-          "file": "src/ToyAMMPool.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyAMMPool.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 3,
-      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "3e0db8a302dcfc0b19bcdf3e",
-      "historical_pattern_similarity": "",
-      "id": "ARK-ORC-002",
-      "invariant_candidates": [
-        "Normalized oracle values remain within documented unit and decimal assumptions."
-      ],
-      "knowledge": {
-        "finding_map_version": "0.9.0",
-        "related_docs": [],
-        "related_patterns": [],
-        "related_pocs": [],
-        "search_terms": [],
-        "suggested_tests": []
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-      "recommended_defensive_checks": [],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-        "Test decimals normalization across expected feed decimals.",
-        "Test zero, negative, or invalid oracle answers if applicable.",
-        "Assert normalized price units match accounting units."
-      ],
-      "suppressible": true,
-      "tags": [
-        "oracle-risk",
-        "price-assumptions"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_oracleNormalizationMatchesAccountingUnits"
-        ],
-        "manual_review_notes": [
-          "Review whether feed decimals are fixed at deployment."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Oracle adapter",
-          "Accounting consumer"
-        ],
-        "rule_family": "oracle",
-        "safety_notes": [
-          "Use synthetic feed answers and local mocks."
-        ]
-      },
-      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
-      "why_it_matters": ""
-    },
-    {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyAMMPool.sol",
-        "test/ToyAMMPool.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "oracle-pricing",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Spot, reserve, pool, or sqrtPriceX96 pricing signals were detected without visible manipulation-resistance tests.",
-      "detected_signals": [
-        "getReserves",
-        "pool",
-        "reserve0",
-        "reserve1"
-      ],
-      "detection_sources": [
-        "keyword",
-        "test-coverage"
-      ],
-      "evidence": [
-        {
-          "file": "",
-          "function": "",
-          "line": 1,
-          "reason": "No semantic-lite oracle test coverage terms were detected.",
-          "snippet": "",
-          "type": "test-coverage"
-        },
-        {
-          "file": "src/ToyAMMPool.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "getReserves, pool, reserve0, reserve1",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyAMMPool.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "getReserves, pool, reserve0, reserve1",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 3,
-      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "c7c2a014effc261606b9ab6b",
-      "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
-      "id": "ARK-ORC-003",
-      "invariant_candidates": [
-        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "price-input-remains-manipulation-resistant",
-          "accounting-value-is-not-single-pool-dependent"
-        ],
-        "failed_assumptions": [
-          "pool-reserves-reflect-fair-price",
-          "spot-price-cannot-be-moved-economically"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/ORACLE_RULE_PACK.md",
-          "docs/RULE_PACKS.md"
-        ],
-        "related_patterns": [
-          "pattern-spot-price-manipulation",
-          "pattern-amm-invariant-steering"
-        ],
-        "related_pocs": [
-          "poc-2020-10-harvest",
-          "poc-2021-01-saddle",
-          "poc-2025-12-yeth"
-        ],
-        "root_causes": [
-          "same-transaction-price-trust",
-          "missing-twap-or-bounds"
-        ],
-        "rule_pack": "oracle",
-        "search_terms": [
-          "spot price manipulation",
-          "getReserves",
-          "TWAP",
-          "pool price"
-        ],
-        "suggested_tests": [
-          "twap-vs-spot-behavior",
-          "reserve-manipulation-sanity-test",
-          "price-bounds-test"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Add local pool/reserve tests for TWAP, bounds, and spot-price movement assumptions.",
-      "recommended_defensive_checks": [
-        "TWAP vs spot behavior",
-        "reserve movement bounds",
-        "price sanity checks",
-        "local pool mocks"
-      ],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
-        "Test spot-price movement bounds.",
-        "Test TWAP or delay assumptions when used.",
-        "Document reserve-price dependency and expected safeguards."
-      ],
-      "suppressible": true,
-      "tags": [
-        "oracle-risk",
-        "spot-price",
-        "reserve-pricing",
-        "oracle-rule-pack"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_reservePriceDependencyIsBounded"
-        ],
-        "manual_review_notes": [
-          "Review whether price source is advisory or authoritative."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "AMM or price source mock",
-          "Price consumer"
-        ],
-        "rule_family": "oracle",
-        "safety_notes": [
-          "Use local reserve changes and avoid production market assumptions."
-        ]
-      },
-      "title": "Spot or reserve-based pricing without manipulation-resistance tests",
-      "why_it_matters": "Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design."
-    },
-    {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyAMMPool.sol",
-        "test/ToyAMMPool.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "oracle-pricing",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
-      "detected_signals": [
-        "getReserves",
-        "pool",
-        "reserve0",
-        "reserve1"
-      ],
-      "detection_sources": [
-        "keyword",
-        "test-coverage"
-      ],
-      "evidence": [
-        {
-          "file": "",
-          "function": "",
-          "line": 1,
-          "reason": "No semantic-lite oracle test coverage terms were detected.",
-          "snippet": "",
-          "type": "test-coverage"
-        },
-        {
-          "file": "src/ToyAMMPool.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "getReserves, pool, reserve0, reserve1",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyAMMPool.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "getReserves, pool, reserve0, reserve1",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 3,
-      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "18c27a0df2b8711caa82c079",
-      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
-      "id": "ARK-ORC-005",
-      "invariant_candidates": [
-        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
-      ],
-      "knowledge": {
-        "finding_map_version": "0.9.0",
-        "related_docs": [],
-        "related_patterns": [],
-        "related_pocs": [],
-        "search_terms": [],
-        "suggested_tests": []
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
-      "recommended_defensive_checks": [
-        "price bounds",
-        "fallback policy",
-        "stale-price policy",
-        "sequencer downtime notes"
-      ],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
-        "Test documented price bounds.",
-        "Test invalid answer fallback behavior.",
-        "Add documentation for price shock and fallback assumptions."
-      ],
-      "suppressible": true,
-      "tags": [
-        "oracle-risk",
-        "documentation-readiness",
-        "oracle-rule-pack"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_invalidPricesDoNotDriveCriticalAccounting"
-        ],
-        "manual_review_notes": [
-          "Review whether fallback behavior is intentionally unavailable."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Oracle adapter",
-          "Consumer path"
-        ],
-        "rule_family": "oracle",
-        "safety_notes": [
-          "Use local invalid-value mocks."
-        ]
-      },
-      "title": "Missing price bounds or fallback assumptions documentation",
-      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
-    },
-    {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyAMMPool.sol",
-        "test/ToyAMMPool.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "testing-readiness",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
-      "detected_signals": [],
-      "detection_sources": [
-        "keyword"
-      ],
-      "evidence": [
-        {
-          "file": "src/ToyAMMPool.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyAMMPool.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 2,
-      "evidence_summary": "src/ToyAMMPool.sol: Keyword signal matched this readiness finding.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "513273fd79a5b51907be9ccf",
-      "historical_pattern_similarity": "",
-      "id": "ARK-TST-002",
-      "invariant_candidates": [
-        "Core accounting relationships hold after any allowed user action.",
-        "Privileged actions cannot silently bypass documented accounting assumptions."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "protocol-specific-conservation-invariant",
-          "authorization-or-lifecycle-invariant"
-        ],
-        "failed_assumptions": [
-          "unit-tests-cover-compositional-state",
-          "happy-path-tests-cover-adversarial-sequences"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/READINESS_SCORE.md",
-          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
-        ],
-        "related_patterns": [
-          "pattern-missing-invariant-coverage",
-          "pattern-assumption-not-encoded-in-tests"
-        ],
-        "related_pocs": [
-          "poc-2020-08-opyn",
-          "poc-2020-09-bzx-ifusdc",
-          "poc-2021-10-indexed-finance"
-        ],
-        "root_causes": [
-          "critical-assumption-only-documented-or-implicit",
-          "state-machine-not-fuzzed"
-        ],
-        "rule_pack": "testing",
-        "search_terms": [
-          "missing invariant",
-          "audit blocker",
-          "stateful fuzz",
-          "invariant testing"
-        ],
-        "suggested_tests": [
-          "foundry-invariant-skeleton",
-          "stateful-fuzz-sequence",
-          "roundtrip-or-conservation-invariant"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-      "recommended_defensive_checks": [],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-        "Add a stateful invariant suite for the core protocol lifecycle.",
-        "Add handler actions for normal user flows and documented edge cases.",
-        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
-      ],
-      "suppressible": true,
-      "tags": [
-        "invariant-testing",
-        "amm"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_coreAccountingRelationshipsHold",
-          "invariant_privilegedActionsRespectDocumentedAssumptions"
-        ],
-        "manual_review_notes": [
-          "Review whether the protocol uses another property-testing framework outside Foundry."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Target contracts",
-          "Allowed action handler",
-          "Local mocks for assets and oracle inputs"
-        ],
-        "rule_family": "testing",
-        "safety_notes": [
-          "Generated invariants are starting points and need human tailoring."
-        ]
-      },
-      "title": "No invariant tests detected for DeFi protocol shape",
-      "why_it_matters": ""
-    }
-  ],
-  "generated_at": "2026-05-27T04:09:42+00:00",
+  "excluded_low_confidence_findings": [],
+  "generated_at": "2026-05-27T06:10:22+00:00",
   "issue_grouping": "one-per-finding",
   "issues": [
     {
@@ -1416,6 +804,387 @@
       "title": "[Arkheionx][Medium] ARK-REENT-001 - External-call value flow needs reentrancy review"
     },
     {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-001 -->\n\n# Arkheionx readiness gap: ARK-ORC-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-001`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Fingerprint: `204867f6f7d3206783b6abd7`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting\n- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test\n- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai\n- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md\n\n## Why It Matters\n\nOracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions.\n\n## Historical Pattern Similarity\n\nMaps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.\n\n## Recommended Defensive Checks\n\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling\n\n## Suggested Tests\n\n- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.\n- Reject stale oracle rounds or document fallback behavior.\n- Test updatedAt or heartbeat boundaries.\n- Test borrow, liquidation, vault, or reward flows when oracle data is stale.\n\n## Invariant Candidates\n\n- Accounting decisions only use oracle data that satisfies documented freshness policy.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-001",
+      "fingerprint": "204867f6f7d3206783b6abd7",
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
+      "labels": [
+        "arkheionx",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-001 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "stale round rejection",
+        "heartbeat checks",
+        "updatedAt validation",
+        "answeredInRound handling"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "accounting-value-uses-valid-price",
+          "collateral-value-is-bounded",
+          "share-price-uses-trusted-input"
+        ],
+        "failed_assumptions": [
+          "oracle-price-is-current",
+          "oracle-answer-is-normalized",
+          "pool-price-is-manipulation-resistant"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ORACLE_RULE_PACK.md",
+          "docs/RULE_PACKS.md",
+          "docs/SEARCH_GUIDE.md"
+        ],
+        "related_patterns": [
+          "pattern-oracle-stale-price",
+          "pattern-spot-price-manipulation",
+          "pattern-pool-price-accounting"
+        ],
+        "related_pocs": [
+          "poc-2025-11-moonwell",
+          "poc-2020-10-harvest",
+          "poc-2021-02-yearn-v1-dai"
+        ],
+        "root_causes": [
+          "missing-oracle-freshness-validation",
+          "implicit-price-trust",
+          "missing-price-bounds"
+        ],
+        "rule_pack": "oracle",
+        "search_terms": [
+          "oracle stale price",
+          "Chainlink updatedAt",
+          "heartbeat validation",
+          "price bounds",
+          "TWAP vs spot"
+        ],
+        "suggested_tests": [
+          "stale-round-rejection",
+          "heartbeat-bound-test",
+          "decimal-normalization-test",
+          "price-bounds-test"
+        ]
+      },
+      "suggested_tests": [
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-001 - Oracle-dependent logic without stale-price tests"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-002 -->\n\n# Arkheionx readiness gap: ARK-ORC-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-002`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Fingerprint: `3e0db8a302dcfc0b19bcdf3e`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding.\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Why It Matters\n\nOracle and price-feed signals were detected without enough freshness or sanity-check language.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\n## Suggested Tests\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n- Assert normalized price units match accounting units.\n\n## Invariant Candidates\n\n- Normalized oracle values remain within documented unit and decimal assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-002",
+      "fingerprint": "3e0db8a302dcfc0b19bcdf3e",
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
+      "labels": [
+        "arkheionx",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "pre-audit-readiness",
+        "price-assumptions"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-002 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [],
+      "related_knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "suggested_tests": [
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-003 -->\n\n# Arkheionx readiness gap: ARK-ORC-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-003`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Fingerprint: `c7c2a014effc261606b9ab6b`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-amm-invariant-steering\n- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-bounds-test\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth\n- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md\n\n## Why It Matters\n\nSame-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design.\n\n## Historical Pattern Similarity\n\nMaps to historical price-manipulation readiness classes.\n\n## Recommended Defensive Checks\n\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks\n\n## Suggested Tests\n\n- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.\n- Test spot-price movement bounds.\n- Test TWAP or delay assumptions when used.\n- Document reserve-price dependency and expected safeguards.\n\n## Invariant Candidates\n\n- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-003",
+      "fingerprint": "c7c2a014effc261606b9ab6b",
+      "invariant_candidates": [
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+      ],
+      "labels": [
+        "arkheionx",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness",
+        "reserve-pricing",
+        "spot-price"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-003 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "TWAP vs spot behavior",
+        "reserve movement bounds",
+        "price sanity checks",
+        "local pool mocks"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "price-input-remains-manipulation-resistant",
+          "accounting-value-is-not-single-pool-dependent"
+        ],
+        "failed_assumptions": [
+          "pool-reserves-reflect-fair-price",
+          "spot-price-cannot-be-moved-economically"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ORACLE_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-spot-price-manipulation",
+          "pattern-amm-invariant-steering"
+        ],
+        "related_pocs": [
+          "poc-2020-10-harvest",
+          "poc-2021-01-saddle",
+          "poc-2025-12-yeth"
+        ],
+        "root_causes": [
+          "same-transaction-price-trust",
+          "missing-twap-or-bounds"
+        ],
+        "rule_pack": "oracle",
+        "search_terms": [
+          "spot price manipulation",
+          "getReserves",
+          "TWAP",
+          "pool price"
+        ],
+        "suggested_tests": [
+          "twap-vs-spot-behavior",
+          "reserve-manipulation-sanity-test",
+          "price-bounds-test"
+        ]
+      },
+      "suggested_tests": [
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-005 -->\n\n# Arkheionx readiness gap: ARK-ORC-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-005`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Fingerprint: `18c27a0df2b8711caa82c079`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Why It Matters\n\nAuditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.\n\n## Historical Pattern Similarity\n\nMaps to failed assumption classes where oracle behavior was implied but not enforced or documented.\n\n## Recommended Defensive Checks\n\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes\n\n## Suggested Tests\n\n- Add documentation plus local tests showing fallback and out-of-bounds price behavior.\n- Test documented price bounds.\n- Test invalid answer fallback behavior.\n- Add documentation for price shock and fallback assumptions.\n\n## Invariant Candidates\n\n- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-005",
+      "fingerprint": "18c27a0df2b8711caa82c079",
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "labels": [
+        "arkheionx",
+        "documentation-readiness",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-005 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "price bounds",
+        "fallback policy",
+        "stale-price policy",
+        "sequencer downtime notes"
+      ],
+      "related_knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "suggested_tests": [
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-005 - Missing price bounds or fallback assumptions documentation"
+    },
+    {
       "affected_functions": [
         "addLiquidity",
         "removeLiquidity",
@@ -1515,9 +1284,106 @@
         "Assert failure paths preserve accounting state."
       ],
       "title": "[Arkheionx][Low] ARK-REENT-004 - External call path without documented ordering assumptions"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-TST-002 -->\n\n# Arkheionx readiness gap: ARK-TST-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-TST-002`\n- Priority: `Low readiness gap`\n- Category: `testing-readiness`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Fingerprint: `513273fd79a5b51907be9ccf`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding.\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant\n- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance\n- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol\n\n## Why It Matters\n\nProtocol-like value flows were detected, but no invariant/property testing signal was found.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\n## Suggested Tests\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.\n\n## Invariant Candidates\n\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol: Keyword signal matched this readiness finding.",
+      "finding_id": "ARK-TST-002",
+      "fingerprint": "513273fd79a5b51907be9ccf",
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "labels": [
+        "amm",
+        "arkheionx",
+        "invariant-testing",
+        "low-confidence",
+        "low-readiness-gap",
+        "pre-audit-readiness",
+        "testing-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-TST-002 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [],
+      "related_knowledge": {
+        "broken_invariants": [
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
+        ],
+        "failed_assumptions": [
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+        ],
+        "related_patterns": [
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
+        ],
+        "related_pocs": [
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
+        ],
+        "root_causes": [
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
+        ],
+        "rule_pack": "testing",
+        "search_terms": [
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
+        ],
+        "suggested_tests": [
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
+        ]
+      },
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
+      ],
+      "title": "[Arkheionx][Low] ARK-TST-002 - No invariant tests detected for DeFi protocol shape"
     }
   ],
-  "min_confidence": "medium",
+  "min_confidence": "low",
   "mode": "dry-run",
   "protocol_type": "amm",
   "repo_root": "examples/amm-fixture",
@@ -1536,5 +1402,5 @@
     "title": "[Arkheionx] Pre-audit readiness remediation plan"
   },
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "1.5.0"
+  "version": "1.7.0"
 }

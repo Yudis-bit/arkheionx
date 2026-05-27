@@ -31,6 +31,7 @@ validate:
 		scripts/generate_paid_offer_index.py \
 		scripts/generate_ecosystem_report.py \
 		scripts/generate_test_plan.py \
+		scripts/validate_config.py \
 		scripts/search_knowledge.py \
 		scripts/check_docs_links.py \
 		scripts/check_version_consistency.py \
@@ -43,6 +44,7 @@ validate:
 		arkheionx/core/constants.py \
 		arkheionx/core/safety.py \
 		arkheionx/config/loader.py \
+		arkheionx/config/schema.py \
 		arkheionx/config/suppressions.py \
 		arkheionx/rules/registry.py \
 		arkheionx/rules/ids.py \
@@ -55,6 +57,12 @@ validate:
 		arkheionx/cli/main.py
 	python3 -m arkheionx.cli.main version
 	python3 -m arkheionx.cli.main doctor
+	python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
+	python3 scripts/validate_config.py --config examples/configs/minimal.config.json
+	python3 scripts/validate_config.py --config examples/configs/ci.config.json
+	python3 scripts/validate_config.py --config examples/configs/amm-lending.config.json
+	python3 scripts/validate_config.py --config examples/configs/strict-audit-prep.config.json
+	python3 scripts/validate_config.py --config examples/configs/suppressions.config.json
 	python3 -m unittest discover -s tests -p "test_*.py"
 	python3 scripts/generate_knowledge_graph.py --check
 	python3 scripts/generate_feedback_dashboard.py --check

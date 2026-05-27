@@ -12,7 +12,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 ## Source Summary
 
 - Source report root: `examples/amm-lending-hybrid-fixture`
-- Source report version: `1.5.0`
+- Source report version: `1.7.0`
 - Protocol type: `amm`
 - Readiness score: `38`
 - Score band: `Not audit-ready`

@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.5.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.6.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,16 +126,17 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.5.0 - Invariant/Test Plan Generator Upgrade**.
+Latest stable release: **v1.6.0 - Internal Engine Split**.
 
-v1.6.0 is prepared locally as the Internal Engine Split. It begins moving
-Arkheionx from script-heavy tooling toward a future installable package while
-preserving existing script entrypoints and outputs:
+v1.7.0 is prepared locally as Config + Rule Pack Stabilization. It makes
+configuration safer, clearer, and easier to validate before the future v2
+installable CLI/package path:
 
-- internal `arkheionx/` package scaffold;
-- shared version, safety, file, path, and rule-pack metadata helpers;
-- generator module extraction behind existing scripts;
-- preview internal CLI commands for `version` and `doctor`.
+- stable `.arkheionx.json` schema;
+- config validator script;
+- rule-pack registry helpers;
+- safe config examples;
+- suppression and config safety references.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -159,11 +160,12 @@ preserving existing script entrypoints and outputs:
 | v1.3.0 | Ecosystem Pack | Released |
 | v1.4.0 | AMM + Lending Protocol Packs | Released |
 | v1.5.0 | Invariant/Test Plan Generator Upgrade | Released |
-| v1.6.0 | Internal Engine Split | Prepared, not tagged |
+| v1.6.0 | Internal Engine Split | Released |
+| v1.7.0 | Config + Rule Pack Stabilization | Prepared, not tagged |
 
-## Stable v1.5.x Surface
+## Stable v1.6.x Surface
 
-Arkheionx v1.5.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.6.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -172,8 +174,28 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.5.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.6.0`. Use `@main` only for development
 or testing unreleased changes.
+
+## Configuration
+
+Arkheionx supports safe local configuration through `.arkheionx.json`.
+
+```sh
+python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
+```
+
+Config can control protocol hints, enabled rule packs, minimum confidence,
+suppressions, generated-artifact behavior, output profile, and test-plan
+preferences. It cannot enable RPC, live-chain behavior, remote cloning, private
+keys, or attack modes.
+
+Read:
+
+- [`docs/CONFIG_REFERENCE.md`](docs/CONFIG_REFERENCE.md)
+- [`docs/RULE_PACK_CONFIGURATION.md`](docs/RULE_PACK_CONFIGURATION.md)
+- [`docs/SUPPRESSIONS.md`](docs/SUPPRESSIONS.md)
+- [`docs/CONFIG_SAFETY.md`](docs/CONFIG_SAFETY.md)
 
 ## Engine and CLI Roadmap
 
@@ -338,7 +360,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.5.0` for stable usage:
+Use `@v1.6.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -353,7 +375,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
         with:
           root: "."
           protocol-type: "auto"
@@ -387,7 +409,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.5.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -416,7 +438,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.5.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -733,6 +755,14 @@ Core standards:
 - [`docs/FINDING_KNOWLEDGE_MAP.md`](docs/FINDING_KNOWLEDGE_MAP.md)
 - [`docs/INVARIANT_SAFETY_BOUNDARIES.md`](docs/INVARIANT_SAFETY_BOUNDARIES.md)
 
+### Configuration
+
+- [`docs/ARKHEIONX_CONFIG.md`](docs/ARKHEIONX_CONFIG.md)
+- [`docs/CONFIG_REFERENCE.md`](docs/CONFIG_REFERENCE.md)
+- [`docs/RULE_PACK_CONFIGURATION.md`](docs/RULE_PACK_CONFIGURATION.md)
+- [`docs/SUPPRESSIONS.md`](docs/SUPPRESSIONS.md)
+- [`docs/CONFIG_SAFETY.md`](docs/CONFIG_SAFETY.md)
+
 ### Feedback
 
 - [`docs/FEEDBACK_LOOP.md`](docs/FEEDBACK_LOOP.md)
@@ -871,7 +901,10 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v1.5.0: Invariant/Test Plan Generator Upgrade.** Finding-to-test-plan map,
   defensive test-plan generator, and Foundry starter skeletons.
 - **v1.6.0: Internal Engine Split.** Package scaffold, shared metadata modules,
-  generator extraction, and preview internal CLI commands prepared locally.
+  generator extraction, and preview internal CLI commands.
+- **v1.7.0: Config + Rule Pack Stabilization.** Stable config schema,
+  validator, examples, suppression reference, and rule-pack controls prepared
+  locally.
 
 Archive milestones remain honest:
 

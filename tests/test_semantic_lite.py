@@ -42,9 +42,12 @@ class SemanticLiteAnalysisTests(unittest.TestCase):
             )
 
     def test_semantic_lite_extracts_structure_and_attaches_evidence(self) -> None:
-        report, sarif, issue_plan = self.run_scanner("examples/semantic-lite-fixture")
+        report, sarif, issue_plan = self.run_scanner(
+            "examples/semantic-lite-fixture",
+            ["--min-confidence-for-issue-plan", "medium"],
+        )
 
-        self.assertEqual(report["version"], "1.6.0")
+        self.assertEqual(report["version"], "1.7.0")
         self.assertEqual(report["schema_version"], "1.0.0")
         self.assertEqual(report["analysis_quality"]["semantic_lite"], "enabled")
         self.assertGreaterEqual(report["analysis_quality"]["semantic_contracts"], 2)

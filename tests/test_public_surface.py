@@ -22,13 +22,14 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("Not an audit. A way to prepare for one.", readme)
         self.assertIn("## Start Here", readme)
         self.assertIn("## Safety Boundaries", readme)
-        self.assertIn("Latest stable release: **v1.5.0", readme)
+        self.assertIn("Latest stable release: **v1.6.0", readme)
         self.assertIn("v1.1.1 | Public surface polish | Released", readme)
         self.assertIn("v1.2.0 | Paid offer refinement | Released", readme)
         self.assertIn("v1.3.0 | Ecosystem Pack | Released", readme)
         self.assertIn("v1.4.0 | AMM + Lending Protocol Packs | Released", readme)
         self.assertIn("v1.5.0 | Invariant/Test Plan Generator Upgrade | Released", readme)
-        self.assertIn("v1.6.0 | Internal Engine Split | Prepared, not tagged", readme)
+        self.assertIn("v1.6.0 | Internal Engine Split | Released", readme)
+        self.assertIn("v1.7.0 | Config + Rule Pack Stabilization | Prepared, not tagged", readme)
         self.assertIn("## Engine and CLI Roadmap", readme)
 
     def test_github_repo_surface_doc_exists(self) -> None:

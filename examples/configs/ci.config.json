@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.7.0",
+  "protocol_type": "auto",
+  "min_confidence": "medium",
+  "output_profile": "ci",
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [
+      "lib/",
+      "node_modules/"
+    ],
+    "extra_ignore_globs": [
+      "reports/*.json",
+      "reports/*.md"
+    ],
+    "include_tests": true,
+    "include_docs": true
+  },
+  "reports": {
+    "include_related_knowledge": true,
+    "include_evidence_snippets": true,
+    "include_suggested_tests": true,
+    "include_issue_plan": true,
+    "include_executive_summary": false,
+    "max_top_gaps": 5
+  }
+}

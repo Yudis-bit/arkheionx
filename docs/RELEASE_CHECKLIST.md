@@ -12,6 +12,18 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v1.7 Config Stabilization Checks
+
+- [ ] `schemas/arkheionx_config.schema.json` exists and parses.
+- [ ] `python3 scripts/validate_config.py --config examples/arkheionx.config.example.json`
+- [ ] Every `examples/configs/*.config.json` validates.
+- [ ] Dangerous config keys are rejected.
+- [ ] Rule-pack registry helpers map finding IDs to rule packs.
+- [ ] Scanner accepts `--config` and reports config summary in Markdown/JSON.
+- [ ] CLI `--protocol-type` overrides config protocol hints.
+- [ ] Suppressions require a written reason.
+- [ ] Config safety docs explain rejected keys and local/static boundaries.
+
 ## Scanner And Product Validation
 
 - [ ] `python3 -m py_compile scripts/pre_audit_scan.py scripts/generate_search_index.py`
@@ -406,7 +418,7 @@ written reason in the release PR.
 
 - [ ] `arkheionx/` package scaffold exists.
 - [ ] `arkheionx/version.py` exposes `1.6.0-dev`, `v1.5.0`, `v1.6.0`, and
-      `v1.7.0` milestone metadata.
+      `v1.7.0` milestone metadata for the v1.6 release branch.
 - [ ] Core helper modules exist under `arkheionx/core/`.
 - [ ] Rule registry exists under `arkheionx/rules/`.
 - [ ] Generator extraction starts under `arkheionx/generators/`.
@@ -423,6 +435,20 @@ written reason in the release PR.
 - [ ] Version consistency check passes.
 - [ ] Safety wording check passes in strict mode.
 - [ ] Unit tests pass.
+
+## v1.7.0 Config And Rule-Pack Checks
+
+- [ ] `arkheionx/version.py` exposes `1.7.0-dev`, `v1.6.0`, `v1.7.0`, and
+      `v1.8.0` milestone metadata.
+- [ ] `scripts/validate_config.py --config examples/arkheionx.config.example.json` exits 0.
+- [ ] All `examples/configs/*.config.json` files validate.
+- [ ] Dangerous config keys fail validation.
+- [ ] Scanner JSON and Markdown include config summary.
+- [ ] Rule-pack registry helpers map known IDs and reject unknown rule packs.
+- [ ] Config docs, suppression docs, rule-pack config docs, and config safety
+      docs exist.
+- [ ] No RPC/live-chain, remote clone, secret-handling, or exploit-mode config
+      behavior added.
 
 ## Safety Scan
 

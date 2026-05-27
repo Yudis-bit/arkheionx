@@ -92,3 +92,18 @@ tests, invariant candidates, and Foundry skeleton function names.
 
 Generated plans are defensive starter scaffolds. They are not formal
 verification and require project-specific review.
+
+## Configuration
+
+v1.7.0 makes rule-pack keys stable for `.arkheionx.json`:
+
+```json
+{
+  "schema_version": "1.7.0",
+  "rule_packs": ["oracle", "access-control", "testing", "docs", "amm", "lending"]
+}
+```
+
+See [`RULE_PACK_CONFIGURATION.md`](RULE_PACK_CONFIGURATION.md) and
+[`CONFIG_REFERENCE.md`](CONFIG_REFERENCE.md). Empty `rule_packs` means the
+default defensive set is enabled.
