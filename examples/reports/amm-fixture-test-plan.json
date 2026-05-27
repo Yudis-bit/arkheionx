@@ -413,7 +413,7 @@
       "Failure-mode stub"
     ]
   },
-  "generated_at": "2026-05-27T06:10:22+00:00",
+  "generated_at": "2026-05-27T09:24:38+00:00",
   "invariant_candidates": [
     "LP share supply tracks pool ownership within documented rounding.",
     "Reserve-based price consumers respect documented bounds and delay assumptions.",
@@ -554,7 +554,7 @@
   "source_report": "examples/amm-fixture",
   "source_report_score": 43,
   "source_report_score_band": "Early readiness",
-  "source_report_version": "1.7.0",
+  "source_report_version": "1.8.0",
   "suggested_tests": [
     "Test first liquidity provider behavior.",
     "Test proportional minting and proportional withdrawal.",
@@ -606,5 +606,5 @@
     "Pair ordering documentation with a local receiver test that exercises the documented boundary."
   ],
   "tool": "Arkheionx Test Plan Generator",
-  "version": "1.7.0"
+  "version": "1.8.0"
 }

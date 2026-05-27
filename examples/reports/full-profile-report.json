@@ -14,7 +14,7 @@
     "warnings": []
   },
   "config_summary": {
-    "config_source": "",
+    "config_source": "examples/configs/strict-audit-prep.config.json",
     "enabled_rule_packs": [
       "access-control",
       "amm",
@@ -28,8 +28,8 @@
     ],
     "ignore_generated_artifacts": true,
     "include_generated_artifacts": false,
-    "min_confidence": "low",
-    "output_profile": "standard",
+    "min_confidence": "high",
+    "output_profile": "full",
     "protocol_type_effective": "amm",
     "suppressions_count": 0
   },
@@ -2113,9 +2113,42 @@
       "suggested_test": "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
       "title": "Reserve/cash accounting assumptions not covered",
       "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-LEND-001",
+      "priority": "Medium readiness gap",
+      "rank": 6,
+      "recommended_next_action": "Add or review: Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+      "rule_family": "lending",
+      "suggested_test": "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+      "title": "Collateral/debt solvency invariant not covered by tests",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-LEND-002",
+      "priority": "Medium readiness gap",
+      "rank": 7,
+      "recommended_next_action": "Add or review: Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+      "rule_family": "lending",
+      "suggested_test": "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+      "title": "Liquidation boundary tests missing",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "low",
+      "id": "ARK-LEND-004",
+      "priority": "Low readiness gap",
+      "rank": 8,
+      "recommended_next_action": "Add or review: Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+      "rule_family": "lending",
+      "suggested_test": "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-05-27T09:24:38+00:00",
+  "generated_at": "2026-05-27T09:24:45+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -2124,12 +2157,12 @@
     "diff_report": "",
     "executive_summary": "",
     "issue_checklist": "",
-    "issue_plan": "examples/reports/amm-lending-hybrid-fixture-issue-plan.json",
-    "json_report": "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json",
+    "issue_plan": "",
+    "json_report": "examples/reports/full-profile-report.json",
     "launch_report": "",
-    "markdown_report": "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md",
+    "markdown_report": "examples/reports/full-profile-report.md",
     "remediation_roadmap": "",
-    "sarif_report": "examples/reports/amm-lending-hybrid-fixture.sarif.json",
+    "sarif_report": "examples/reports/full-profile.sarif.json",
     "slither_summary": "",
     "sprint_plan": "",
     "summary": ""
@@ -4269,12 +4302,45 @@
         "suggested_test": "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
         "title": "Reserve/cash accounting assumptions not covered",
         "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "medium",
+        "id": "ARK-LEND-001",
+        "priority": "Medium readiness gap",
+        "rank": 6,
+        "recommended_next_action": "Add or review: Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+        "rule_family": "lending",
+        "suggested_test": "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+        "title": "Collateral/debt solvency invariant not covered by tests",
+        "why_fix_first": "appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "medium",
+        "id": "ARK-LEND-002",
+        "priority": "Medium readiness gap",
+        "rank": 7,
+        "recommended_next_action": "Add or review: Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+        "rule_family": "lending",
+        "suggested_test": "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+        "title": "Liquidation boundary tests missing",
+        "why_fix_first": "appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "low",
+        "id": "ARK-LEND-004",
+        "priority": "Low readiness gap",
+        "rank": 8,
+        "recommended_next_action": "Add or review: Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "rule_family": "lending",
+        "suggested_test": "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+        "why_fix_first": "appears across multiple files; clear defensive tests are available."
       }
     ],
     "profile": {
-      "all_findings_limit": 12,
-      "evidence_limit": 3,
-      "fix_first_limit": 5,
+      "all_findings_limit": 0,
+      "evidence_limit": 10,
+      "fix_first_limit": 8,
       "include_all_finding_details": true,
       "include_analysis_quality": true,
       "include_generated_outputs": true,
@@ -4282,13 +4348,13 @@
       "include_rule_pack_details": true,
       "include_scan_sources": true,
       "include_signal_summary": true,
-      "key": "standard",
-      "label": "Standard",
-      "negative_evidence_limit": 5,
-      "related_knowledge_limit": 3,
-      "suggested_test_limit": 5,
-      "summary_limit": 5,
-      "top_gap_limit": 5
+      "key": "full",
+      "label": "Full",
+      "negative_evidence_limit": 10,
+      "related_knowledge_limit": 6,
+      "suggested_test_limit": 8,
+      "summary_limit": 8,
+      "top_gap_limit": 10
     },
     "suppressed_findings_count": 0,
     "suppression_summary": {

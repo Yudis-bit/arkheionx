@@ -19,6 +19,10 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, v1.0.0 |
 | Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
 | Output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](../docs/OUTPUT_ARTIFACTS.md) | output naming, generated artifacts, reports directory |
+| Report UX | [`docs/REPORT_UX.md`](../docs/REPORT_UX.md) | report UX, findings by rule family, confidence summary |
+| Output profiles | [`docs/OUTPUT_PROFILES.md`](../docs/OUTPUT_PROFILES.md) | output profile, concise report, CI report, full report |
+| Fix First | [`docs/FIX_FIRST.md`](../docs/FIX_FIRST.md) | fix first, remediation priority, top readiness blockers |
+| Noise reduction | [`docs/NOISE_REDUCTION.md`](../docs/NOISE_REDUCTION.md) | noise reduction, suppressed findings, keyword-only review |
 | Invariant test plan generator | [`docs/INVARIANT_TEST_PLAN_GENERATOR.md`](../docs/INVARIANT_TEST_PLAN_GENERATOR.md) | invariant generator, test plan generator, suggested tests |
 | Foundry invariant skeletons | [`docs/FOUNDRY_INVARIANT_SKELETONS.md`](../docs/FOUNDRY_INVARIANT_SKELETONS.md) | Foundry invariant skeleton, invariant candidates, local scaffold |
 | Invariant safety boundaries | [`docs/INVARIANT_SAFETY_BOUNDARIES.md`](../docs/INVARIANT_SAFETY_BOUNDARIES.md) | invariant safety, local-only skeletons, human review |
@@ -65,6 +69,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Config validator | [`scripts/validate_config.py`](../scripts/validate_config.py) | validate_config.py, config validation, strict audit prep config |
 | Arkheionx config schema | [`schemas/arkheionx_config.schema.json`](../schemas/arkheionx_config.schema.json) | arkheionx config schema, schema_version 1.7.0, CI config |
 | Config examples | [`examples/configs/minimal.config.json`](../examples/configs/minimal.config.json) | minimal config, CI config, amm lending config |
+| CI profile report | [`examples/reports/ci-profile-report.md`](../examples/reports/ci-profile-report.md) | CI report, output profile, Fix First |
+| Full profile report | [`examples/reports/full-profile-report.md`](../examples/reports/full-profile-report.md) | full report, output profile, detailed evidence |
 | SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
 | Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
 | Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
@@ -313,6 +319,12 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `lending invariant skeleton` | lending test plan, lending Foundry skeleton, collateral debt skeleton | lending | examples/reports/ArkheionxLendingInvariants.t.sol, docs/LENDING_RULE_PACK.md | lending-invariant-skeleton, collateral-debt, liquidation-boundary |
 | `oracle test plan` | stale oracle test plan, oracle freshness tests, oracle invariant candidates | oracle | ARK-ORC-001, metadata/finding_test_plan_map.json | oracle-test-plan, stale-price, heartbeat |
 | `reward index invariant` | reward accumulator invariant, reward index monotonicity, staking index test | reward | ARK-RWD-002, docs/REWARD_ACCOUNTING_RULE_PACK.md | reward-index, accumulator, staking |
+| `report UX` | report usability, readiness report UX, report quality | reporting | docs/REPORT_UX.md, examples/reports/amm-fixture-pre-audit-report.md | report-ux, readiness-report, noise-reduction |
+| `output profile` | concise report, standard report, full report, CI report | reporting | docs/OUTPUT_PROFILES.md, examples/configs/ci.config.json | output-profile, ci-report, full-report |
+| `fix first` | Fix First, remediation priority, top blockers, fix-first ranking | reporting | docs/FIX_FIRST.md, examples/reports/amm-fixture-pre-audit-report.md | fix-first, remediation-priority, audit-readiness |
+| `noise reduction` | report noise, low confidence grouping, keyword-only downgrade, suppressed findings | reporting | docs/NOISE_REDUCTION.md, docs/FALSE_POSITIVE_REDUCTION.md | noise-reduction, confidence-summary, suppressed-findings |
+| `findings by rule family` | rule family grouping, finding grouping, grouped findings | reporting | docs/REPORT_UX.md, reports/search_index.md | findings-by-rule-family, rule-pack-summary, report-ux |
+| `confidence summary` | findings by confidence, confidence grouping, low confidence findings | reporting | docs/REPORT_UX.md, docs/RULE_CALIBRATION.md | confidence-summary, findings-by-confidence, rule-calibration |
 
 ## Rule Pack Registry
 

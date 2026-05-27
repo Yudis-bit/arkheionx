@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.6.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.7.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,17 +126,16 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.6.0 - Internal Engine Split**.
+Latest stable release: **v1.7.0 - Config + Rule Pack Stabilization**.
 
-v1.7.0 is prepared locally as Config + Rule Pack Stabilization. It makes
-configuration safer, clearer, and easier to validate before the future v2
-installable CLI/package path:
+v1.8.0 is prepared locally as Report UX + Noise Reduction. It makes Markdown,
+JSON, SARIF, and issue-plan outputs easier to scan and convert into action:
 
-- stable `.arkheionx.json` schema;
-- config validator script;
-- rule-pack registry helpers;
-- safe config examples;
-- suppression and config safety references.
+- report output profiles;
+- Fix First ranking;
+- grouped findings by rule family and confidence;
+- clearer suppression and config summaries;
+- compact CI-friendly report output.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -161,11 +160,12 @@ installable CLI/package path:
 | v1.4.0 | AMM + Lending Protocol Packs | Released |
 | v1.5.0 | Invariant/Test Plan Generator Upgrade | Released |
 | v1.6.0 | Internal Engine Split | Released |
-| v1.7.0 | Config + Rule Pack Stabilization | Prepared, not tagged |
+| v1.7.0 | Config + Rule Pack Stabilization | Released |
+| v1.8.0 | Report UX + Noise Reduction | Prepared, not tagged |
 
-## Stable v1.6.x Surface
+## Stable v1.7.x Surface
 
-Arkheionx v1.6.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.7.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -174,7 +174,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.6.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.7.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Configuration
@@ -196,6 +196,32 @@ Read:
 - [`docs/RULE_PACK_CONFIGURATION.md`](docs/RULE_PACK_CONFIGURATION.md)
 - [`docs/SUPPRESSIONS.md`](docs/SUPPRESSIONS.md)
 - [`docs/CONFIG_SAFETY.md`](docs/CONFIG_SAFETY.md)
+
+## Report Profiles
+
+Arkheionx supports report profiles for different workflows:
+
+- `concise`
+- `standard`
+- `full`
+- `ci`
+
+Example:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --config examples/configs/ci.config.json \
+  --output reports/ARKHEIONX_PRE_AUDIT_REPORT.md \
+  --json-output reports/arkheionx-report.json
+```
+
+Read:
+
+- [`docs/OUTPUT_PROFILES.md`](docs/OUTPUT_PROFILES.md)
+- [`docs/FIX_FIRST.md`](docs/FIX_FIRST.md)
+- [`docs/REPORT_UX.md`](docs/REPORT_UX.md)
+- [`docs/NOISE_REDUCTION.md`](docs/NOISE_REDUCTION.md)
 
 ## Engine and CLI Roadmap
 
@@ -360,7 +386,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.6.0` for stable usage:
+Use `@v1.7.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -375,7 +401,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
         with:
           root: "."
           protocol-type: "auto"
@@ -409,7 +435,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -438,7 +464,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -738,6 +764,10 @@ Core standards:
 - [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
 - [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md)
 - [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md)
+- [`docs/REPORT_UX.md`](docs/REPORT_UX.md)
+- [`docs/OUTPUT_PROFILES.md`](docs/OUTPUT_PROFILES.md)
+- [`docs/FIX_FIRST.md`](docs/FIX_FIRST.md)
+- [`docs/NOISE_REDUCTION.md`](docs/NOISE_REDUCTION.md)
 - [`docs/INVARIANT_TEST_PLAN_GENERATOR.md`](docs/INVARIANT_TEST_PLAN_GENERATOR.md)
 - [`docs/FOUNDRY_INVARIANT_SKELETONS.md`](docs/FOUNDRY_INVARIANT_SKELETONS.md)
 

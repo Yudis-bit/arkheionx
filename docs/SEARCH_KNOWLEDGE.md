@@ -14,6 +14,8 @@ python3 scripts/search_knowledge.py "AMM invariant"
 python3 scripts/search_knowledge.py "collateral debt invariant"
 python3 scripts/search_knowledge.py "reentrancy value flow"
 python3 scripts/search_knowledge.py "missing invariant"
+python3 scripts/search_knowledge.py "fix first"
+python3 scripts/search_knowledge.py "output profile"
 ```
 
 JSON output:
@@ -64,6 +66,9 @@ scanned repository has the same vulnerability.
 | `missing invariant` | Planning property tests before audit. |
 | `invariant generator` | Finding the v1.5 test-plan generator. |
 | `Foundry invariant skeleton` | Finding local skeleton docs and examples. |
+| `fix first` | Finding v1.8 remediation-priority report guidance. |
+| `output profile` | Finding concise, standard, full, and CI report profile docs. |
+| `noise reduction` | Finding confidence grouping and suppression UX docs. |
 | `initializer protection` | Reviewing upgradeability or initialization paths. |
 
 Search can help interpret negative evidence too. For example, if a scan reports

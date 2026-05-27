@@ -36,6 +36,16 @@ v1.7.0 stabilizes these top-level fields:
 }
 ```
 
+v1.8.0 uses `output_profile` to tune Markdown report verbosity:
+
+- `concise` for short founder/dev summaries;
+- `standard` for normal local review;
+- `full` for deeper pre-audit evidence review;
+- `ci` for compact CI artifacts.
+
+Read [`OUTPUT_PROFILES.md`](OUTPUT_PROFILES.md) and
+[`REPORT_UX.md`](REPORT_UX.md) for report behavior.
+
 Empty `rule_packs` means Arkheionx uses the default defensive rule-pack set.
 
 ## CLI Override Behavior

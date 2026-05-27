@@ -44,9 +44,14 @@ dry-run outputs, delivery artifacts, test plans, and invariant skeletons by
 default on future scans. This prevents previous outputs from influencing score,
 evidence, findings, negative evidence, protocol detection, or issue plans.
 
-v1.7.0 scanner reports include a compact config summary in Markdown and JSON:
-config source, effective protocol type, enabled rule packs, minimum confidence,
-suppression count, and output profile.
+v1.8.0 scanner reports include Fix First, grouped finding summaries, compact
+suppression summaries, and config summaries in Markdown and JSON. Config
+summary fields include config source, effective protocol type, enabled rule
+packs, minimum confidence, suppression count, output profile, and generated
+artifact handling.
+
+See [`OUTPUT_PROFILES.md`](OUTPUT_PROFILES.md), [`FIX_FIRST.md`](FIX_FIRST.md),
+and [`REPORT_UX.md`](REPORT_UX.md).
 
 ## Custom Paths
 

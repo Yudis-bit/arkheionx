@@ -28,6 +28,9 @@ The helper searches `metadata/security_memory_graph.json`,
 | `reentrancy value flow` | Checking withdraw, claim, refund, or transfer paths. | `ARK-REENT-*`, `docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md` |
 | `missing invariant` | Checking test readiness. | `ARK-TST-*`, `docs/READINESS_SCORE.md` |
 | `contest readiness` | Preparing external review. | `docs/CONTEST_READINESS_MODE.md` |
+| `fix first` | Finding prioritized remediation guidance. | `docs/FIX_FIRST.md`, `examples/reports/amm-fixture-pre-audit-report.md` |
+| `output profile` | Choosing concise, standard, full, or CI reports. | `docs/OUTPUT_PROFILES.md` |
+| `noise reduction` | Understanding confidence grouping and suppression UX. | `docs/NOISE_REDUCTION.md` |
 
 ## Search By Exploit Primitive
 

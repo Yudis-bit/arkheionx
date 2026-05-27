@@ -3,12 +3,12 @@
 ## Scope
 
 - Repository root: `examples/amm-lending-hybrid-fixture`
-- Generated at: `2026-05-27T09:24:38+00:00`
+- Generated at: `2026-05-27T09:24:44+00:00`
 - Protocol type: `amm`
 - Protocol confidence: `medium`
 - Files scanned: `4`
 - Scanner version: `1.8.0`
-- Output profile: `standard` (Standard)
+- Output profile: `full` (Full)
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -20,12 +20,12 @@
 
 ## Config Summary
 
-- Config source: `defaults`
+- Config source: `examples/configs/strict-audit-prep.config.json`
 - Effective protocol type: `amm`
 - Enabled rule packs: `access-control, amm, docs, lending, oracle, reentrancy-value-flow, rewards, testing, vault`
-- Minimum confidence: `low`
+- Minimum confidence: `high`
 - Suppressions configured: `0`
-- Output profile: `standard`
+- Output profile: `full`
 - Ignore generated artifacts: `True`
 - Include generated artifacts: `False`
 
@@ -69,6 +69,11 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
   - **ARK-AMM-004 (Medium readiness gap):** Fee-on-transfer or non-standard token assumptions not documented - Document supported token assumptions or add balanceBefore/balanceAfter accounting tests for fee-on-transfer and non-standard token behavior.
   - **ARK-AMM-005 (Medium readiness gap):** Slippage/min-output constraints missing or unclear - Add user-provided min-output and stale-quote tests, or document why swaps are not user-facing and how price movement is bounded.
   - **ARK-LEND-001 (Medium readiness gap):** Collateral/debt solvency invariant not covered by tests - Add collateral/debt invariants and boundary tests for borrow, repay, deposit, withdrawal, and liquidation readiness.
+  - **ARK-LEND-002 (Medium readiness gap):** Liquidation boundary tests missing - Add tests for liquidation thresholds, partial liquidation, bonus bounds, and over-seizure prevention.
+  - **ARK-LEND-005 (Medium readiness gap):** Reserve/cash accounting assumptions not covered - Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.
+  - **ARK-LEND-004 (Low readiness gap):** Oracle-dependent borrowing/liquidation without stale-price tests - Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.
+  - **ARK-ORC-001 (Low readiness gap):** Oracle-dependent logic without stale-price tests - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
+  - **ARK-ORC-002 (Low readiness gap):** Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
@@ -77,13 +82,16 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 
 ## Fix First
 
-| Rank | Finding                                                                                    | Rule Family | Why Fix First                                                                                                                          | Next Action                                                                                                                                    |
-| ---- | ------------------------------------------------------------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | ARK-AMM-001 - AMM invariant assumptions not covered by tests                               | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.          |
-| 2    | ARK-AMM-003 - Spot-price or reserve-price dependency without manipulation-resistance tests | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions. |
-| 3    | ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented             | amm         | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.               |
-| 4    | ARK-AMM-005 - Slippage/min-output constraints missing or unclear                           | amm         | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.             |
-| 5    | ARK-LEND-005 - Reserve/cash accounting assumptions not covered                             | lending     | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.           |
+| Rank | Finding                                                                                    | Rule Family | Why Fix First                                                                                                                          | Next Action                                                                                                                                                     |
+| ---- | ------------------------------------------------------------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | ARK-AMM-001 - AMM invariant assumptions not covered by tests                               | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.                           |
+| 2    | ARK-AMM-003 - Spot-price or reserve-price dependency without manipulation-resistance tests | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.                  |
+| 3    | ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented             | amm         | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.                                |
+| 4    | ARK-AMM-005 - Slippage/min-output constraints missing or unclear                           | amm         | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.                              |
+| 5    | ARK-LEND-005 - Reserve/cash accounting assumptions not covered                             | lending     | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.                            |
+| 6    | ARK-LEND-001 - Collateral/debt solvency invariant not covered by tests                     | lending     | appears across multiple files; clear defensive tests are available.                                                                    | Add or review: Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested. |
+| 7    | ARK-LEND-002 - Liquidation boundary tests missing                                          | lending     | appears across multiple files; clear defensive tests are available.                                                                    | Add or review: Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.  |
+| 8    | ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests            | lending     | appears across multiple files; clear defensive tests are available.                                                                    | Add or review: Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.                                  |
 
 ## Finding Groups
 
@@ -137,6 +145,11 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 | ARK-AMM-004  | Medium readiness gap | amm-token-assumptions | Fee-on-transfer or non-standard token assumptions not documented             |
 | ARK-AMM-005  | Medium readiness gap | amm-slippage          | Slippage/min-output constraints missing or unclear                           |
 | ARK-LEND-001 | Medium readiness gap | lending-solvency      | Collateral/debt solvency invariant not covered by tests                      |
+| ARK-LEND-002 | Medium readiness gap | lending-liquidation   | Liquidation boundary tests missing                                           |
+| ARK-LEND-005 | Medium readiness gap | lending-liquidity     | Reserve/cash accounting assumptions not covered                              |
+| ARK-LEND-004 | Low readiness gap    | lending-oracle        | Oracle-dependent borrowing/liquidation without stale-price tests             |
+| ARK-ORC-001  | Low readiness gap    | oracle-pricing        | Oracle-dependent logic without stale-price tests                             |
+| ARK-ORC-002  | Low readiness gap    | oracle-pricing        | Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage       |
 
 ## Rule Pack Coverage
 
@@ -332,6 +345,7 @@ Related Knowledge:
 - Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
 - Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
 - Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
+- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol
 
 Suggested tests:
 
@@ -440,6 +454,7 @@ Related Knowledge:
 - Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
 - Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
 - Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
+- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md
 
 Suggested tests:
 
@@ -505,6 +520,7 @@ Related Knowledge:
 - Historical patterns: pattern-spot-price-manipulation, pattern-amm-invariant-steering
 - Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-bounds-test
 - Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth
+- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md
 
 Suggested tests:
 
@@ -591,6 +607,8 @@ Evidence:
 - `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
 - `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
 - `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`
 
 Detected signals:
 - `amountIn`
@@ -631,6 +649,7 @@ Related Knowledge:
 - Historical patterns: pattern-amm-invariant-steering, pattern-spot-price-manipulation
 - Suggested defensive tests: swap-invariant-conservation, reserve-accounting-test, liquidity-proportionality
 - Related PoCs: poc-2021-01-saddle, poc-2021-10-indexed-finance, poc-2025-12-yeth
+- Docs: docs/AMM_RULE_PACK.md, docs/RULE_PACKS.md, docs/EXPLOIT_TAXONOMY.md
 
 Suggested tests:
 
@@ -658,6 +677,8 @@ Evidence:
 - `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
 - `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
 - `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`
 
 Detected signals:
 - `amountIn`
@@ -697,6 +718,7 @@ Related Knowledge:
 - Historical patterns: pattern-spot-price-manipulation, pattern-pool-price-accounting
 - Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-movement-bounds
 - Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth
+- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md
 
 Suggested tests:
 
@@ -723,6 +745,8 @@ Evidence:
 - `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
 - `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
 - `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`
 
 Detected signals:
 - `amountIn`
@@ -762,6 +786,7 @@ Related Knowledge:
 - Historical patterns: pattern-pool-price-accounting, pattern-precision-rounding-loss
 - Suggested defensive tests: balance-before-after-accounting, fee-on-transfer-token-simulation, unsupported-token-documentation
 - Related PoCs: poc-2020-06-balancer-deflationary
+- Docs: docs/AMM_RULE_PACK.md, docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md
 
 Suggested tests:
 
@@ -788,6 +813,8 @@ Evidence:
 - `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
 - `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
 - `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`
 
 Detected signals:
 - `amountIn`
@@ -827,6 +854,7 @@ Related Knowledge:
 - Historical patterns: pattern-spot-price-manipulation, pattern-assumption-not-encoded-in-tests
 - Suggested defensive tests: min-out-enforcement, deadline-or-stale-quote-test, slippage-boundary-test
 - Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle
+- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md
 
 Suggested tests:
 
@@ -853,6 +881,8 @@ Evidence:
 - `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
 - `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`
 - `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
+- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, "HEALTH");`
+- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
 
 Detected signals:
 - `borrow`
@@ -893,6 +923,7 @@ Related Knowledge:
 - Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price
 - Suggested defensive tests: collateral-debt-invariant, borrow-limit-boundary-test, unsafe-withdrawal-rejection
 - Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank
+- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md, docs/READINESS_SCORE.md
 
 Suggested tests:
 
@@ -919,6 +950,8 @@ Evidence:
 - `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
 - `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`
 - `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
+- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, "HEALTH");`
+- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
 
 Detected signals:
 - `borrow`
@@ -959,6 +992,7 @@ Related Knowledge:
 - Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price
 - Suggested defensive tests: just-above-threshold-test, just-below-threshold-test, partial-liquidation-math
 - Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank
+- Docs: docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md
 
 Suggested tests:
 
@@ -1033,6 +1067,7 @@ Related Knowledge:
 - Historical patterns: pattern-oracle-stale-price, pattern-collateral-debt-invariant
 - Suggested defensive tests: stale-oracle-rejection, decimals-normalization-test, price-shock-boundary-test
 - Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest
+- Docs: docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md
 
 Suggested tests:
 
@@ -1047,7 +1082,74 @@ Invariant candidates:
 
 Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
 
-_Profile `standard` shows 12 detailed findings. Use `output_profile: full` for all findings._
+### ARK-LEND-005 - Reserve/cash accounting assumptions not covered
+
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
+- Category: `lending-liquidity`
+
+Evidence:
+- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
+- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`
+- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
+- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, "HEALTH");`
+- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
+
+Detected signals:
+- `borrow`
+- `cash`
+- `collateral`
+- `debt`
+- `healthFactor`
+- `liquidate`
+- `liquidationThreshold`
+- `repay`
+- `totalBorrows`
+
+Affected files:
+- `src/ToyHybridMarket.sol`
+- `test/ToyHybridMarket.t.sol`
+
+What was detected:
+
+Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.
+
+Why it matters:
+
+Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.
+
+Historical pattern similarity:
+
+Maps to cash/debt mismatch and liquidity accounting readiness classes.
+
+Recommended defensive checks:
+
+- available liquidity bound
+- repay updates cash/debt
+- reserve withdrawal constraints
+- utilization bounds
+
+Related Knowledge:
+
+- Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift
+- Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints
+- Related PoCs: poc-2020-11-cheese-bank
+- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md
+
+Suggested tests:
+
+- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
+- Test borrow cannot exceed available liquidity.
+- Test repay updates cash, debt, and reserves consistently.
+- Assert reserves cannot be withdrawn beyond documented constraints.
+
+Invariant candidates:
+
+- Cash, total borrows, total reserves, and utilization remain internally consistent.
+
+Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
 
 ## Suppressed Readiness Gaps
 
@@ -1087,15 +1189,12 @@ No readiness gaps were suppressed in this run.
 
 - No issue checklist file was requested in this run.
 - To generate one: `python3 scripts/pre_audit_scan.py --root . --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md`
-- Generated issue plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`
-- Issue plan JSON can be used with `scripts/create_github_issues.py` in dry-run, create, or update mode.
 
 ## GitHub Action Outputs
 
-- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`
-- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`
-- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`
-- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`
+- Markdown Report: `examples/reports/full-profile-report.md`
+- Json Report: `examples/reports/full-profile-report.json`
+- Sarif Report: `examples/reports/full-profile.sarif.json`
 
 ## Search Tags
 

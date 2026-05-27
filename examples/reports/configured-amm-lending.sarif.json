@@ -99,6 +99,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "testing",
             "suggested_tests": [
               "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
               "Add a stateful invariant suite for the core protocol lifecycle.",
@@ -162,6 +163,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
               "Test decimals normalization across expected feed decimals.",
@@ -264,6 +266,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
               "Reject stale oracle rounds or document fallback behavior.",
@@ -360,6 +363,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
               "Test spot-price movement bounds.",
@@ -425,6 +429,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
               "Test documented price bounds.",
@@ -529,6 +534,7 @@
             "not_formal_audit": true,
             "priority": "High readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
               "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
@@ -630,6 +636,7 @@
             "not_formal_audit": true,
             "priority": "High readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
               "Test reserve-price movement bounds.",
@@ -730,6 +737,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
               "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
@@ -830,6 +838,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
               "Test minOut enforcement.",
@@ -931,6 +940,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "lending",
             "suggested_tests": [
               "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
               "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
@@ -1032,6 +1042,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "lending",
             "suggested_tests": [
               "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
               "Test just-above-threshold positions cannot be liquidated.",
@@ -1128,6 +1139,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "lending",
             "suggested_tests": [
               "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
               "Test stale oracle rejection for borrow and liquidation paths.",
@@ -1228,6 +1240,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "lending",
             "suggested_tests": [
               "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
               "Test borrow cannot exceed available liquidity.",
@@ -1263,6 +1276,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "testing",
                 "tags": [
                   "invariant-testing",
                   "hybrid"
@@ -1287,6 +1301,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "price-assumptions"
@@ -1311,6 +1326,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "oracle-rule-pack",
@@ -1336,6 +1352,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "spot-price",
@@ -1362,6 +1379,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "documentation-readiness",
@@ -1387,6 +1405,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-invariant",
                   "amm-rule-pack",
@@ -1412,6 +1431,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-pricing",
                   "spot-price",
@@ -1438,6 +1458,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-token-assumptions",
                   "fee-on-transfer",
@@ -1463,6 +1484,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-slippage",
                   "min-output",
@@ -1488,6 +1510,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "lending",
                 "tags": [
                   "lending-solvency",
                   "lending-rule-pack",
@@ -1513,6 +1536,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "lending",
                 "tags": [
                   "lending-liquidation",
                   "liquidation-boundary",
@@ -1538,6 +1562,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "lending",
                 "tags": [
                   "lending-oracle",
                   "oracle-risk",
@@ -1563,6 +1588,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "lending",
                 "tags": [
                   "lending-liquidity",
                   "reserve-accounting",
@@ -1574,7 +1600,7 @@
               }
             }
           ],
-          "semanticVersion": "1.7.0"
+          "semanticVersion": "1.8.0"
         }
       }
     }

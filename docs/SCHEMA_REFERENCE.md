@@ -28,7 +28,7 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.7.0"
+  "version": "1.8.0"
 }
 ```
 
@@ -50,6 +50,10 @@ version or add required fields.
 
 v1.7.0 adds a stable local config schema. Config validation is implemented with
 stdlib checks so users do not need a JSON Schema runtime.
+
+v1.8.0 adds optional report UX summary fields: `fix_first`, `report_ux`,
+`findings_by_rule_family`, `findings_by_confidence`, `suppression_summary`,
+`active_findings_count`, and `suppressed_findings_count`.
 
 ## Compatibility Policy
 

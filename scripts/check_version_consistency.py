@@ -36,17 +36,17 @@ def check() -> list[str]:
         failures.append(f"README.md does not name {STABLE_RELEASE} as latest stable release")
     if f"## {CURRENT_MILESTONE} - Unreleased" not in changelog:
         failures.append(f"CHANGELOG.md is missing {CURRENT_MILESTONE} - Unreleased")
-    if "## v1.6.0" not in changelog or "## v1.6.0 - Unreleased" in changelog:
-        failures.append("CHANGELOG.md does not treat v1.6.0 as released")
-    if CURRENT_MILESTONE not in roadmap or "Config + Rule Pack Stabilization current milestone" not in roadmap:
-        failures.append(f"docs/ROADMAP.md does not mark {CURRENT_MILESTONE} as current config milestone")
-    if NEXT_MILESTONE not in roadmap or "Report UX + Noise Reduction" not in roadmap:
+    if "## v1.7.0" not in changelog or "## v1.7.0 - Unreleased" in changelog:
+        failures.append("CHANGELOG.md does not treat v1.7.0 as released")
+    if CURRENT_MILESTONE not in roadmap or "Report UX + Noise Reduction current milestone" not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not mark {CURRENT_MILESTONE} as current report UX milestone")
+    if NEXT_MILESTONE not in roadmap or "Pre-v2 CLI Candidate" not in roadmap:
         failures.append(f"docs/ROADMAP.md does not keep {NEXT_MILESTONE} as next milestone")
     if STABLE_ACTION not in readme:
         failures.append(f"README.md is missing stable {STABLE_RELEASE} action example")
     if STABLE_ACTION not in action_docs:
         failures.append(f"docs/GITHUB_ACTION_USAGE.md is missing stable {STABLE_RELEASE} action example")
-    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*|v1\.2\.0[^*]*|v1\.3\.0[^*]*|v1\.4\.0[^*]*|v1\.5\.0[^*]*)", readme)
+    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*|v1\.2\.0[^*]*|v1\.3\.0[^*]*|v1\.4\.0[^*]*|v1\.5\.0[^*]*|v1\.6\.0[^*]*)", readme)
     if stale:
         failures.append("README.md still has stale latest stable wording")
     if "## v1.0.0 - Unreleased" in changelog:

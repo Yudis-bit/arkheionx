@@ -14,7 +14,7 @@
     "warnings": []
   },
   "config_summary": {
-    "config_source": "",
+    "config_source": "examples/configs/ci.config.json",
     "enabled_rule_packs": [
       "access-control",
       "amm",
@@ -28,8 +28,8 @@
     ],
     "ignore_generated_artifacts": true,
     "include_generated_artifacts": false,
-    "min_confidence": "low",
-    "output_profile": "standard",
+    "min_confidence": "medium",
+    "output_profile": "ci",
     "protocol_type_effective": "amm",
     "suppressions_count": 0
   },
@@ -2115,7 +2115,7 @@
       "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-05-27T09:24:38+00:00",
+  "generated_at": "2026-05-27T09:24:44+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -2124,12 +2124,12 @@
     "diff_report": "",
     "executive_summary": "",
     "issue_checklist": "",
-    "issue_plan": "examples/reports/amm-lending-hybrid-fixture-issue-plan.json",
-    "json_report": "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json",
+    "issue_plan": "",
+    "json_report": "examples/reports/ci-profile-report.json",
     "launch_report": "",
-    "markdown_report": "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md",
+    "markdown_report": "examples/reports/ci-profile-report.md",
     "remediation_roadmap": "",
-    "sarif_report": "examples/reports/amm-lending-hybrid-fixture.sarif.json",
+    "sarif_report": "examples/reports/ci-profile.sarif.json",
     "slither_summary": "",
     "sprint_plan": "",
     "summary": ""
@@ -4272,22 +4272,22 @@
       }
     ],
     "profile": {
-      "all_findings_limit": 12,
-      "evidence_limit": 3,
+      "all_findings_limit": 0,
+      "evidence_limit": 1,
       "fix_first_limit": 5,
-      "include_all_finding_details": true,
-      "include_analysis_quality": true,
+      "include_all_finding_details": false,
+      "include_analysis_quality": false,
       "include_generated_outputs": true,
-      "include_historical_patterns": true,
-      "include_rule_pack_details": true,
+      "include_historical_patterns": false,
+      "include_rule_pack_details": false,
       "include_scan_sources": true,
-      "include_signal_summary": true,
-      "key": "standard",
-      "label": "Standard",
-      "negative_evidence_limit": 5,
-      "related_knowledge_limit": 3,
-      "suggested_test_limit": 5,
-      "summary_limit": 5,
+      "include_signal_summary": false,
+      "key": "ci",
+      "label": "CI",
+      "negative_evidence_limit": 3,
+      "related_knowledge_limit": 2,
+      "suggested_test_limit": 3,
+      "summary_limit": 3,
       "top_gap_limit": 5
     },
     "suppressed_findings_count": 0,

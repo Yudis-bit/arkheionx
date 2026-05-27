@@ -29,6 +29,16 @@ python3 scripts/validate_config.py --config examples/arkheionx.config.example.js
 python3 scripts/validate_config.py --config examples/configs/minimal.config.json --json
 ```
 
+v1.8.0 report UX uses the same config surface for output profiles:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root examples/amm-lending-hybrid-fixture \
+  --config examples/configs/ci.config.json \
+  --output examples/reports/ci-profile-report.md \
+  --json-output examples/reports/ci-profile-report.json
+```
+
 ## `pre_audit_scan.py`
 
 Runs the GitHub-native pre-audit readiness scanner. It inspects local

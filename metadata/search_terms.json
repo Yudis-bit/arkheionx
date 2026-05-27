@@ -1,5 +1,5 @@
 {
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -1017,6 +1017,54 @@
       "related_patterns": ["accumulator precision", "reward overclaim"],
       "related_checks": ["ARK-RWD-002", "docs/REWARD_ACCOUNTING_RULE_PACK.md"],
       "search_tags": ["reward-index", "accumulator", "staking"]
+    },
+    {
+      "term": "report UX",
+      "aliases": ["report usability", "readiness report UX", "report quality"],
+      "category": "reporting",
+      "related_patterns": ["clear readiness summary", "actionable report layout"],
+      "related_checks": ["docs/REPORT_UX.md", "examples/reports/amm-fixture-pre-audit-report.md"],
+      "search_tags": ["report-ux", "readiness-report", "noise-reduction"]
+    },
+    {
+      "term": "output profile",
+      "aliases": ["concise report", "standard report", "full report", "CI report"],
+      "category": "reporting",
+      "related_patterns": ["profile-driven report verbosity"],
+      "related_checks": ["docs/OUTPUT_PROFILES.md", "examples/configs/ci.config.json"],
+      "search_tags": ["output-profile", "ci-report", "full-report"]
+    },
+    {
+      "term": "fix first",
+      "aliases": ["Fix First", "remediation priority", "top blockers", "fix-first ranking"],
+      "category": "reporting",
+      "related_patterns": ["prioritized readiness remediation"],
+      "related_checks": ["docs/FIX_FIRST.md", "examples/reports/amm-fixture-pre-audit-report.md"],
+      "search_tags": ["fix-first", "remediation-priority", "audit-readiness"]
+    },
+    {
+      "term": "noise reduction",
+      "aliases": ["report noise", "low confidence grouping", "keyword-only downgrade", "suppressed findings"],
+      "category": "reporting",
+      "related_patterns": ["manual review recommended wording", "confidence grouping"],
+      "related_checks": ["docs/NOISE_REDUCTION.md", "docs/FALSE_POSITIVE_REDUCTION.md"],
+      "search_tags": ["noise-reduction", "confidence-summary", "suppressed-findings"]
+    },
+    {
+      "term": "findings by rule family",
+      "aliases": ["rule family grouping", "finding grouping", "grouped findings"],
+      "category": "reporting",
+      "related_patterns": ["rule-pack grouped readiness triage"],
+      "related_checks": ["docs/REPORT_UX.md", "reports/search_index.md"],
+      "search_tags": ["findings-by-rule-family", "rule-pack-summary", "report-ux"]
+    },
+    {
+      "term": "confidence summary",
+      "aliases": ["findings by confidence", "confidence grouping", "low confidence findings"],
+      "category": "reporting",
+      "related_patterns": ["review confidence triage"],
+      "related_checks": ["docs/REPORT_UX.md", "docs/RULE_CALIBRATION.md"],
+      "search_tags": ["confidence-summary", "findings-by-confidence", "rule-calibration"]
     }
   ]
 }

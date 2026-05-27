@@ -15,7 +15,7 @@ Runtime validation uses Python standard library checks through
 | `protocol_type` | `auto` | Protocol hint for scanner behavior. |
 | `rule_packs` | `[]` | Enabled rule packs. Empty means default enabled packs. |
 | `min_confidence` | `low` | Minimum confidence preference for issue planning. |
-| `output_profile` | `standard` | Report verbosity profile: `concise`, `standard`, `full`, or `ci`. |
+| `output_profile` | `standard` | Markdown report verbosity profile: `concise`, `standard`, `full`, or `ci`. |
 | `scan` | object | Source file handling and generated artifact controls. |
 | `reports` | object | Report content preferences. |
 | `test_plan` | object | Test-plan generator preferences. |
@@ -60,6 +60,9 @@ Use `auto` unless the repository has a known dominant protocol shape.
 | `include_issue_plan` | `true` | Include issue-plan-oriented metadata. |
 | `include_executive_summary` | `true` | Include executive summary sections where supported. |
 | `max_top_gaps` | `5` | Top gap count in summaries. |
+
+See [`OUTPUT_PROFILES.md`](OUTPUT_PROFILES.md) for profile behavior. Profiles
+change report presentation, not scanner safety boundaries or finding meaning.
 
 ## Test Plan Fields
 

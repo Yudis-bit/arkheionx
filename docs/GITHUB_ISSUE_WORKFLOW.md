@@ -5,8 +5,9 @@ plan. Optional issue creation is disabled by default and should be used only in
 repositories you own or are authorized to manage.
 
 Generated issues are remediation tasks. They are not formal audit findings and
-do not confirm vulnerabilities. v0.6 issue plans include confidence reasons,
-top evidence, detection sources, and affected functions when semantic-lite or
+do not confirm vulnerabilities. v1.8 issue plans include Fix First ordering,
+rule family, confidence reasons, top evidence, suggested tests, invariant
+candidates, detection sources, and affected functions when semantic-lite or
 optional Slither evidence is available.
 
 ## Recommended Flow
@@ -90,7 +91,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.6.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
     with:
       protocol-type: auto
       issue-plan-output: ARKHEIONX_ISSUE_PLAN.json

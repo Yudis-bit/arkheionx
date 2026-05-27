@@ -1,4 +1,5 @@
 {
+  "active_findings_count": 13,
   "analysis_quality": {
     "fuzz_tests": false,
     "invariant_tests": false,
@@ -23,6 +24,8 @@
       "reentrancy-value-flow",
       "testing"
     ],
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
     "min_confidence": "low",
     "output_profile": "standard",
     "protocol_type_effective": "hybrid",
@@ -2041,8 +2044,76 @@
       "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
     }
   ],
+  "findings_by_confidence": {
+    "high": 5,
+    "low": 6,
+    "medium": 2
+  },
+  "findings_by_rule_family": {
+    "amm": 4,
+    "lending": 4,
+    "oracle": 4,
+    "testing": 1
+  },
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-27T06:25:02+00:00",
+  "fix_first": [
+    {
+      "confidence": "high",
+      "id": "ARK-AMM-001",
+      "priority": "High readiness gap",
+      "rank": 1,
+      "recommended_next_action": "Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+      "rule_family": "amm",
+      "suggested_test": "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+      "title": "AMM invariant assumptions not covered by tests",
+      "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-AMM-003",
+      "priority": "High readiness gap",
+      "rank": 2,
+      "recommended_next_action": "Add or review: Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+      "rule_family": "amm",
+      "suggested_test": "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+      "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
+      "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-AMM-004",
+      "priority": "Medium readiness gap",
+      "rank": 3,
+      "recommended_next_action": "Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+      "rule_family": "amm",
+      "suggested_test": "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+      "title": "Fee-on-transfer or non-standard token assumptions not documented",
+      "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-AMM-005",
+      "priority": "Medium readiness gap",
+      "rank": 4,
+      "recommended_next_action": "Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+      "rule_family": "amm",
+      "suggested_test": "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+      "title": "Slippage/min-output constraints missing or unclear",
+      "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-LEND-005",
+      "priority": "Medium readiness gap",
+      "rank": 5,
+      "recommended_next_action": "Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+      "rule_family": "lending",
+      "suggested_test": "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+      "title": "Reserve/cash accounting assumptions not covered",
+      "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    }
+  ],
+  "generated_at": "2026-05-27T09:13:00+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -4128,6 +4199,104 @@
     }
   ],
   "repo_root": "examples/amm-lending-hybrid-fixture",
+  "report_ux": {
+    "active_findings_count": 13,
+    "findings_by_confidence": {
+      "high": 5,
+      "low": 6,
+      "medium": 2
+    },
+    "findings_by_rule_family": {
+      "amm": 4,
+      "lending": 4,
+      "oracle": 4,
+      "testing": 1
+    },
+    "fix_first": [
+      {
+        "confidence": "high",
+        "id": "ARK-AMM-001",
+        "priority": "High readiness gap",
+        "rank": 1,
+        "recommended_next_action": "Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "rule_family": "amm",
+        "suggested_test": "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "title": "AMM invariant assumptions not covered by tests",
+        "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-AMM-003",
+        "priority": "High readiness gap",
+        "rank": 2,
+        "recommended_next_action": "Add or review: Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "rule_family": "amm",
+        "suggested_test": "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
+        "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-AMM-004",
+        "priority": "Medium readiness gap",
+        "rank": 3,
+        "recommended_next_action": "Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "rule_family": "amm",
+        "suggested_test": "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "title": "Fee-on-transfer or non-standard token assumptions not documented",
+        "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-AMM-005",
+        "priority": "Medium readiness gap",
+        "rank": 4,
+        "recommended_next_action": "Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        "rule_family": "amm",
+        "suggested_test": "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        "title": "Slippage/min-output constraints missing or unclear",
+        "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-LEND-005",
+        "priority": "Medium readiness gap",
+        "rank": 5,
+        "recommended_next_action": "Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "rule_family": "lending",
+        "suggested_test": "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "title": "Reserve/cash accounting assumptions not covered",
+        "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      }
+    ],
+    "profile": {
+      "all_findings_limit": 12,
+      "evidence_limit": 3,
+      "fix_first_limit": 5,
+      "include_all_finding_details": true,
+      "include_analysis_quality": true,
+      "include_generated_outputs": true,
+      "include_historical_patterns": true,
+      "include_rule_pack_details": true,
+      "include_scan_sources": true,
+      "include_signal_summary": true,
+      "key": "standard",
+      "label": "Standard",
+      "negative_evidence_limit": 5,
+      "related_knowledge_limit": 3,
+      "suggested_test_limit": 5,
+      "summary_limit": 5,
+      "top_gap_limit": 5
+    },
+    "suppressed_findings_count": 0,
+    "suppression_summary": {
+      "requires_review": false,
+      "suppressed_finding_ids": [],
+      "suppressions_applied": 0,
+      "suppressions_loaded": 0
+    },
+    "suppression_warnings": []
+  },
   "rule_packs": {
     "access_control_upgradeability": {
       "detected": false,
@@ -6839,6 +7008,14 @@
     "total_readiness_gaps": 13
   },
   "suppressed_findings": [],
+  "suppressed_findings_count": 0,
+  "suppression_summary": {
+    "requires_review": false,
+    "suppressed_finding_ids": [],
+    "suppressions_applied": 0,
+    "suppressions_loaded": 0
+  },
+  "suppression_warnings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
   "vault_rule_pack": {
     "coverage": {
@@ -6883,5 +7060,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "1.7.0"
+  "version": "1.8.0"
 }

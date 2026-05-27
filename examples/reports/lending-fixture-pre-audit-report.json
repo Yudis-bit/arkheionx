@@ -1,4 +1,5 @@
 {
+  "active_findings_count": 10,
   "analysis_quality": {
     "fuzz_tests": false,
     "invariant_tests": false,
@@ -25,6 +26,8 @@
       "testing",
       "vault"
     ],
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
     "min_confidence": "low",
     "output_profile": "standard",
     "protocol_type_effective": "lending",
@@ -1713,8 +1716,76 @@
       "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
     }
   ],
+  "findings_by_confidence": {
+    "high": 5,
+    "low": 1,
+    "medium": 4
+  },
+  "findings_by_rule_family": {
+    "access-control": 1,
+    "lending": 5,
+    "oracle": 3,
+    "testing": 1
+  },
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-27T06:10:23+00:00",
+  "fix_first": [
+    {
+      "confidence": "high",
+      "id": "ARK-LEND-004",
+      "priority": "High readiness gap",
+      "rank": 1,
+      "recommended_next_action": "Add or review: Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+      "rule_family": "lending",
+      "suggested_test": "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+      "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-ORC-001",
+      "priority": "High readiness gap",
+      "rank": 2,
+      "recommended_next_action": "Add or review: Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+      "rule_family": "oracle",
+      "suggested_test": "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+      "title": "Oracle-dependent logic without stale-price tests",
+      "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-ORC-002",
+      "priority": "High readiness gap",
+      "rank": 3,
+      "recommended_next_action": "Add or review: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+      "rule_family": "oracle",
+      "suggested_test": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+      "why_fix_first": "higher-priority readiness blocker; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "rank": 4,
+      "recommended_next_action": "Add or review: For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.",
+      "rule_family": "access-control",
+      "suggested_test": "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.",
+      "title": "Privileged setters without role-boundary tests",
+      "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-LEND-005",
+      "priority": "Medium readiness gap",
+      "rank": 5,
+      "recommended_next_action": "Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+      "rule_family": "lending",
+      "suggested_test": "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+      "title": "Reserve/cash accounting assumptions not covered",
+      "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    }
+  ],
+  "generated_at": "2026-05-27T09:24:38+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -3475,6 +3546,104 @@
     }
   ],
   "repo_root": "examples/lending-fixture",
+  "report_ux": {
+    "active_findings_count": 10,
+    "findings_by_confidence": {
+      "high": 5,
+      "low": 1,
+      "medium": 4
+    },
+    "findings_by_rule_family": {
+      "access-control": 1,
+      "lending": 5,
+      "oracle": 3,
+      "testing": 1
+    },
+    "fix_first": [
+      {
+        "confidence": "high",
+        "id": "ARK-LEND-004",
+        "priority": "High readiness gap",
+        "rank": 1,
+        "recommended_next_action": "Add or review: Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "rule_family": "lending",
+        "suggested_test": "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+        "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-ORC-001",
+        "priority": "High readiness gap",
+        "rank": 2,
+        "recommended_next_action": "Add or review: Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "rule_family": "oracle",
+        "suggested_test": "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "title": "Oracle-dependent logic without stale-price tests",
+        "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "medium",
+        "id": "ARK-ORC-002",
+        "priority": "High readiness gap",
+        "rank": 3,
+        "recommended_next_action": "Add or review: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "rule_family": "oracle",
+        "suggested_test": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+        "why_fix_first": "higher-priority readiness blocker; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-ACC-001",
+        "priority": "Medium readiness gap",
+        "rank": 4,
+        "recommended_next_action": "Add or review: For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.",
+        "rule_family": "access-control",
+        "suggested_test": "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.",
+        "title": "Privileged setters without role-boundary tests",
+        "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      },
+      {
+        "confidence": "high",
+        "id": "ARK-LEND-005",
+        "priority": "Medium readiness gap",
+        "rank": 5,
+        "recommended_next_action": "Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "rule_family": "lending",
+        "suggested_test": "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "title": "Reserve/cash accounting assumptions not covered",
+        "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+      }
+    ],
+    "profile": {
+      "all_findings_limit": 12,
+      "evidence_limit": 3,
+      "fix_first_limit": 5,
+      "include_all_finding_details": true,
+      "include_analysis_quality": true,
+      "include_generated_outputs": true,
+      "include_historical_patterns": true,
+      "include_rule_pack_details": true,
+      "include_scan_sources": true,
+      "include_signal_summary": true,
+      "key": "standard",
+      "label": "Standard",
+      "negative_evidence_limit": 5,
+      "related_knowledge_limit": 3,
+      "suggested_test_limit": 5,
+      "summary_limit": 5,
+      "top_gap_limit": 5
+    },
+    "suppressed_findings_count": 0,
+    "suppression_summary": {
+      "requires_review": false,
+      "suppressed_finding_ids": [],
+      "suppressions_applied": 0,
+      "suppressions_loaded": 0
+    },
+    "suppression_warnings": []
+  },
   "rule_packs": {
     "access_control_upgradeability": {
       "detected": true,
@@ -5952,6 +6121,14 @@
     "total_readiness_gaps": 10
   },
   "suppressed_findings": [],
+  "suppressed_findings_count": 0,
+  "suppression_summary": {
+    "requires_review": false,
+    "suppressed_finding_ids": [],
+    "suppressions_applied": 0,
+    "suppressions_loaded": 0
+  },
+  "suppression_warnings": [],
   "tool": "Arkheionx Pre-Audit Scanner",
   "vault_rule_pack": {
     "coverage": {
@@ -5998,5 +6175,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "1.7.0"
+  "version": "1.8.0"
 }

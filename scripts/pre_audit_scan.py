@@ -45,6 +45,9 @@ from arkheionx.core.constants import (  # noqa: E402
 )
 from arkheionx.config.loader import load_and_validate_config  # noqa: E402
 from arkheionx.config.schema import PROTOCOL_TYPES as STABLE_PROTOCOL_TYPES  # noqa: E402
+from arkheionx.reports.profiles import profile_settings  # noqa: E402
+from arkheionx.reports.summary import report_ux_summary  # noqa: E402
+from arkheionx.reports.ux import fix_first_items, rank_fix_first  # noqa: E402
 from arkheionx.rules.registry import finding_id_to_rule_pack  # noqa: E402
 from arkheionx.version import SCANNER_VERSION, SCHEMA_VERSION as PACKAGE_SCHEMA_VERSION  # noqa: E402
 
@@ -1085,6 +1088,7 @@ def config_summary(
     enabled_rule_packs: set[str],
     analysis_config: dict[str, object],
 ) -> dict[str, object]:
+    scan = config_scan(config)
     return {
         "config_source": source,
         "protocol_type_effective": protocol_type,
@@ -1092,6 +1096,8 @@ def config_summary(
         "min_confidence": str(config.get("min_confidence", analysis_config.get("min_confidence_for_issue_plan", "low"))),
         "suppressions_count": len(config_suppressions(config)),
         "output_profile": str(config.get("output_profile", "standard")),
+        "ignore_generated_artifacts": bool(scan.get("ignore_generated_artifacts", True)),
+        "include_generated_artifacts": bool(scan.get("include_generated_artifacts", False)),
     }
 
 
@@ -1144,6 +1150,59 @@ def finding_counts(gaps: list[ReadinessGap], suppressed: list[ReadinessGap]) -> 
         else:
             counts["informational"] += 1
     return counts
+
+
+def enrich_gap_report_fields(gaps: list[ReadinessGap]) -> None:
+    """Attach mapped test-plan hints for generic report UX helpers."""
+
+    for gap in gaps:
+        setattr(gap, "suggested_tests", mapped_suggested_tests(gap))
+        setattr(gap, "invariant_candidates", mapped_invariant_candidates(gap))
+
+
+def suppression_warnings(config: dict[str, object], today: dt.date | None = None) -> list[str]:
+    today = today or dt.date.today()
+    warnings: list[str] = []
+    for finding_id, suppression in config_suppressions(config).items():
+        expires = suppression.get("expires", "").strip()
+        review_after = suppression.get("review_after", "").strip()
+        for label, raw in [("expires", expires), ("review_after", review_after)]:
+            if not raw:
+                continue
+            try:
+                date_value = dt.date.fromisoformat(raw)
+            except ValueError:
+                warnings.append(f"Suppression `{finding_id}` has invalid {label} date `{raw}`.")
+                continue
+            if date_value <= today:
+                warnings.append(f"Suppression `{finding_id}` {label} date `{raw}` should be reviewed.")
+    return warnings
+
+
+def build_report_ux_data(
+    gaps: list[ReadinessGap],
+    suppressed_gaps: list[ReadinessGap],
+    config: dict[str, object],
+) -> dict[str, object]:
+    enrich_gap_report_fields(gaps)
+    enrich_gap_report_fields(suppressed_gaps)
+    settings = profile_settings(str(config.get("output_profile", "standard")))
+    summary = report_ux_summary(
+        gaps,
+        suppressed_gaps,
+        len(config_suppressions(config)),
+        int(settings.get("fix_first_limit", 5)),
+    )
+    summary["profile"] = settings
+    summary["suppression_warnings"] = suppression_warnings(config)
+    return summary
+
+
+def grouped_count_rows(title: str, counts: dict[str, int]) -> list[list[str]]:
+    rows = [[title, "Active Findings"]]
+    for key, value in sorted(counts.items()):
+        rows.append([key, str(value)])
+    return rows
 
 
 def is_workflow(path: Path) -> bool:
@@ -4541,6 +4600,7 @@ def finding_to_sarif_rule(gap: ReadinessGap) -> dict[str, object]:
         },
         "properties": {
             "category": gap.category,
+            "rule_family": finding_id_to_rule_pack(gap.id),
             "tags": gap.tags,
             "readiness_gap": True,
             "not_formal_audit": True,
@@ -4570,6 +4630,7 @@ def finding_to_sarif_result(gap: ReadinessGap, root: Path) -> dict[str, object]:
             "affected_functions": gap.affected_functions,
             "false_positive_notes": gap.false_positive_notes,
             "category": gap.category,
+            "rule_family": finding_id_to_rule_pack(gap.id),
             "historical_pattern_similarity": gap.historical_pattern_similarity,
             "knowledge": related_knowledge_for_id(gap.id),
             "suggested_tests": mapped_suggested_tests(gap),
@@ -4731,6 +4792,7 @@ def generate_report(
     skeleton_path: Path | None,
     generated_outputs: dict[str, str],
     config_summary_data: dict[str, object],
+    report_ux_data: dict[str, object],
     config_warnings: list[str],
     additional_search_tags: list[str],
     max_top_gaps: int,
@@ -4738,6 +4800,17 @@ def generate_report(
 ) -> None:
     generated_at = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     output.parent.mkdir(parents=True, exist_ok=True)
+    profile = report_ux_data.get("profile", {})
+    if not isinstance(profile, dict):
+        profile = profile_settings(str(config_summary_data.get("output_profile", "standard")))
+    profile_key = str(profile.get("key", config_summary_data.get("output_profile", "standard")))
+    profile_label = str(profile.get("label", profile_key.title()))
+    evidence_limit = int(profile.get("evidence_limit", 3) or 3)
+    negative_evidence_limit = int(profile.get("negative_evidence_limit", 5) or 5)
+    suggested_test_limit = int(profile.get("suggested_test_limit", 5) or 5)
+    related_knowledge_limit = int(profile.get("related_knowledge_limit", 3) or 3)
+    all_findings_limit = int(profile.get("all_findings_limit", 12) or 0)
+    top_gap_limit = min(max_top_gaps, int(profile.get("top_gap_limit", max_top_gaps) or max_top_gaps))
 
     file_summary = [
         ["File class", "Count"],
@@ -4759,8 +4832,18 @@ def generate_report(
             ]
         )
 
-    top_gaps = top_findings(gaps, max_top_gaps)
+    top_gaps = top_findings(gaps, top_gap_limit)
     counts = finding_counts(gaps, suppressed_gaps)
+    fix_first = report_ux_data.get("fix_first", [])
+    if not isinstance(fix_first, list):
+        fix_first = []
+    summary_tables = {
+        "findings_by_rule_family": report_ux_data.get("findings_by_rule_family", {}),
+        "findings_by_confidence": report_ux_data.get("findings_by_confidence", {}),
+    }
+    suppression_summary = report_ux_data.get("suppression_summary", {})
+    if not isinstance(suppression_summary, dict):
+        suppression_summary = {}
 
     lines: list[str] = []
     lines.append("# Arkheionx Pre-Audit Readiness Report")
@@ -4773,6 +4856,7 @@ def generate_report(
     lines.append(f"- Protocol confidence: `{protocol_confidence}`")
     lines.append(f"- Files scanned: `{sum(len(v) for v in [classified.solidity_sources, classified.solidity_tests, classified.docs, classified.configs, classified.workflows, classified.unknown])}`")
     lines.append(f"- Scanner version: `{VERSION}`")
+    lines.append(f"- Output profile: `{profile_key}` ({profile_label})")
     lines.append("")
     lines.append(markdown_table(file_summary))
     lines.append("")
@@ -4784,55 +4868,111 @@ def generate_report(
     lines.append(f"- Minimum confidence: `{config_summary_data.get('min_confidence', 'low')}`")
     lines.append(f"- Suppressions configured: `{config_summary_data.get('suppressions_count', 0)}`")
     lines.append(f"- Output profile: `{config_summary_data.get('output_profile', 'standard')}`")
+    lines.append(f"- Ignore generated artifacts: `{config_summary_data.get('ignore_generated_artifacts', True)}`")
+    lines.append(f"- Include generated artifacts: `{config_summary_data.get('include_generated_artifacts', False)}`")
     lines.append("")
-    lines.append("## Scan Source Summary")
-    lines.append("")
-    lines.append(f"- Files considered: `{scan_sources.get('files_considered', 0)}`")
-    lines.append(f"- Files scanned: `{scan_sources.get('files_scanned', 0)}`")
-    lines.append(f"- Files ignored: `{scan_sources.get('files_ignored', 0)}`")
-    lines.append(f"- Generated Arkheionx artifacts ignored: `{scan_sources.get('generated_artifacts_ignored', 0)}`")
-    if int(scan_sources.get("generated_artifacts_ignored", 0) or 0) > 0:
-        lines.append("- Generated artifacts were ignored to prevent previous Arkheionx outputs from influencing this scan.")
-    lines.append("")
+    if bool(profile.get("include_scan_sources", True)):
+        lines.append("## Scan Source Summary")
+        lines.append("")
+        lines.append(f"- Files considered: `{scan_sources.get('files_considered', 0)}`")
+        lines.append(f"- Files scanned: `{scan_sources.get('files_scanned', 0)}`")
+        lines.append(f"- Files ignored: `{scan_sources.get('files_ignored', 0)}`")
+        lines.append(f"- Generated Arkheionx artifacts ignored: `{scan_sources.get('generated_artifacts_ignored', 0)}`")
+        if int(scan_sources.get("generated_artifacts_ignored", 0) or 0) > 0:
+            lines.append("- Generated artifacts were ignored to prevent previous Arkheionx outputs from influencing this scan.")
+        lines.append("")
     lines.append("## Disclaimer")
     lines.append("")
     lines.append(DISCLAIMER)
     lines.append("")
-    lines.append("## Analysis Quality")
-    lines.append("")
-    lines.append(
-        markdown_table(
-            [
-                ["Source", "Status"],
-                ["Keyword scan", str(analysis_quality_data.get("keyword_scan", "enabled"))],
-                ["Semantic-lite extraction", str(analysis_quality_data.get("semantic_lite", "enabled"))],
-                ["Semantic contracts", str(analysis_quality_data.get("semantic_contracts", 0))],
-                ["Semantic test files", str(analysis_quality_data.get("semantic_test_files", 0))],
-                ["Slither", str(analysis_quality_data.get("slither", "disabled"))],
-                ["Slither detectors", str(analysis_quality_data.get("slither_detector_count", 0))],
-                ["Test coverage mapping", str(analysis_quality_data.get("test_coverage_mapping", "enabled"))],
-                ["Negative evidence", str(analysis_quality_data.get("negative_evidence_count", 0))],
-            ]
-        )
-    )
-    if analysis_quality_data.get("warnings"):
+    if bool(profile.get("include_analysis_quality", True)):
+        lines.append("## Analysis Quality")
         lines.append("")
-        lines.append("Analysis warnings:")
-        for warning in analysis_quality_data.get("warnings", []):
-            lines.append(f"- {warning}")
-    lines.append("")
+        lines.append(
+            markdown_table(
+                [
+                    ["Source", "Status"],
+                    ["Keyword scan", str(analysis_quality_data.get("keyword_scan", "enabled"))],
+                    ["Semantic-lite extraction", str(analysis_quality_data.get("semantic_lite", "enabled"))],
+                    ["Semantic contracts", str(analysis_quality_data.get("semantic_contracts", 0))],
+                    ["Semantic test files", str(analysis_quality_data.get("semantic_test_files", 0))],
+                    ["Slither", str(analysis_quality_data.get("slither", "disabled"))],
+                    ["Slither detectors", str(analysis_quality_data.get("slither_detector_count", 0))],
+                    ["Test coverage mapping", str(analysis_quality_data.get("test_coverage_mapping", "enabled"))],
+                    ["Negative evidence", str(analysis_quality_data.get("negative_evidence_count", 0))],
+                ]
+            )
+        )
+        if analysis_quality_data.get("warnings"):
+            lines.append("")
+            lines.append("Analysis warnings:")
+            for warning in analysis_quality_data.get("warnings", []):
+                lines.append(f"- {warning}")
+        lines.append("")
     lines.append("## Executive Summary")
+    lines.append("")
+    lines.append(f"Arkheionx scanned `{display_path(root)}` as `{protocol_type}` readiness context. This is a local/static pre-audit readiness report, not a formal audit.")
     lines.append("")
     lines.append(f"- Readiness score: **{score}/100**")
     lines.append(f"- Score band: **{score_band(score)}**")
     lines.append(f"- Active readiness gaps: `{counts['total_readiness_gaps']}`")
     lines.append(f"- Suppressed readiness gaps: `{counts['suppressed']}`")
+    lines.append(f"- Active rule packs: `{', '.join(str(item) for item in config_summary_data.get('enabled_rule_packs', []))}`")
+    lines.append(f"- Generated artifacts ignored: `{scan_sources.get('generated_artifacts_ignored', 0)}`")
     lines.append("- Top readiness gaps:")
     for gap in top_gaps or [ReadinessGap("Informational", "No major automated readiness gaps detected", "Manual review is still required.", "Proceed to manual review and formal audit planning.", ["manual-review"], id="ARK-GEN-000", category="manual-review")]:
         lines.append(f"  - **{gap.id} ({gap.priority}):** {gap.title} - {gap.recommendation}")
     lines.append("- Top recommended actions:")
     for step in next_steps[:5]:
         lines.append(f"  - {step}")
+    lines.append("")
+    lines.append("## Fix First")
+    lines.append("")
+    if fix_first:
+        rows = [["Rank", "Finding", "Rule Family", "Why Fix First", "Next Action"]]
+        for item in fix_first:
+            if not isinstance(item, dict):
+                continue
+            rows.append(
+                [
+                    str(item.get("rank", "")),
+                    f"{item.get('id', '')} - {item.get('title', '')}",
+                    str(item.get("rule_family", "")),
+                    str(item.get("why_fix_first", "")),
+                    str(item.get("recommended_next_action", "")),
+                ]
+            )
+        lines.append(markdown_table(rows))
+    else:
+        lines.append("No automated Fix First items were ranked. Manual review is still required.")
+    lines.append("")
+    lines.append("## Finding Groups")
+    lines.append("")
+    by_family = summary_tables.get("findings_by_rule_family", {})
+    by_confidence = summary_tables.get("findings_by_confidence", {})
+    if isinstance(by_family, dict) and by_family:
+        lines.append("### Findings by Rule Family")
+        lines.append("")
+        lines.append(markdown_table(grouped_count_rows("Rule Family", {str(k): int(v) for k, v in by_family.items()})))
+        lines.append("")
+    if isinstance(by_confidence, dict) and by_confidence:
+        lines.append("### Findings by Confidence")
+        lines.append("")
+        lines.append(markdown_table(grouped_count_rows("Confidence", {str(k): int(v) for k, v in by_confidence.items()})))
+        lines.append("")
+    lines.append("## Suppression Summary")
+    lines.append("")
+    lines.append(f"- Suppressions loaded: `{suppression_summary.get('suppressions_loaded', config_summary_data.get('suppressions_count', 0))}`")
+    lines.append(f"- Suppressions applied: `{suppression_summary.get('suppressions_applied', len(suppressed_gaps))}`")
+    suppressed_ids = suppression_summary.get("suppressed_finding_ids", [])
+    if suppressed_ids:
+        lines.append(f"- Suppressed finding IDs: `{', '.join(str(item) for item in suppressed_ids)}`")
+    suppression_warnings_list = report_ux_data.get("suppression_warnings", [])
+    if isinstance(suppression_warnings_list, list) and suppression_warnings_list:
+        lines.append("- Suppression warnings:")
+        for warning in suppression_warnings_list:
+            lines.append(f"  - {warning}")
+    lines.append("- Suppressions should include a reason and be revisited before launch or external review.")
     lines.append("")
     if config_warnings:
         lines.append("## Configuration Warnings")
@@ -4850,19 +4990,20 @@ def generate_report(
         lines.append("")
         lines.append("Arkheionx found coverage terms in missing/negative context. These statements are not counted as positive test coverage.")
         lines.append("")
-        for item in negative_evidence_items[:20]:
+        for item in negative_evidence_items[:negative_evidence_limit]:
             location = f"`{item.get('file', '')}:{item.get('line', 1)}`"
             lines.append(
                 f"- {location} `{item.get('term', '')}` - {item.get('reason', '')} Snippet: `{item.get('snippet', '')}`"
             )
         lines.append("")
-    lines.append("## Detected Protocol Shape")
-    lines.append("")
-    lines.append(f"- Detected protocol type: `{protocol_type}`")
-    lines.append(f"- Confidence: `{protocol_confidence}`")
-    lines.append(f"- Protocol score signals: `{json.dumps(protocol_scores, sort_keys=True)}`")
-    lines.append(f"- Arkheionx memory metadata loaded: `{registry_metadata.get('entry_count', 0)}` entries")
-    lines.append("")
+    if profile_key not in {"ci"}:
+        lines.append("## Detected Protocol Shape")
+        lines.append("")
+        lines.append(f"- Detected protocol type: `{protocol_type}`")
+        lines.append(f"- Confidence: `{protocol_confidence}`")
+        lines.append(f"- Protocol score signals: `{json.dumps(protocol_scores, sort_keys=True)}`")
+        lines.append(f"- Arkheionx memory metadata loaded: `{registry_metadata.get('entry_count', 0)}` entries")
+        lines.append("")
     lines.append("## Readiness Score Breakdown")
     lines.append("")
     lines.append(markdown_table(score_rows))
@@ -4890,52 +5031,54 @@ def generate_report(
         )
     lines.append(markdown_table(rule_rows))
     lines.append("")
-    for pack in rule_packs.values():
-        if not pack.get("detected") and not pack.get("findings"):
-            continue
-        lines.append(f"### {pack.get('label', 'Rule Pack')}")
-        lines.append("")
-        lines.append(f"- Signals detected: `{pack.get('signal_count', 0)}`")
-        if pack.get("signals"):
-            lines.append(f"- Signal terms: `{', '.join(str(item) for item in pack.get('signals', [])[:20])}`")
-        lines.append(f"- Findings: `{pack.get('finding_count', 0)}`")
-        lines.append(f"- Docs: `{pack.get('docs', '')}`")
-        lines.append("- Suggested tests:")
-        for test in pack.get("suggested_tests", []):
-            lines.append(f"  - {test}")
-        lines.append("")
-    lines.append("## Risk Signal Summary")
-    lines.append("")
-    for category in [
-        "vault_erc4626",
-        "vault_accounting",
-        "vault_accounting_risk",
-        "vault_strategy",
-        "vault_pricing",
-        "vault_withdrawal_liquidity",
-        "vault_admin_ops",
-        "oracle",
-        "access_control",
-        "reentrancy_value_flow",
-        "upgradeability",
-        "accounting_complexity",
-        "staking_rewards",
-        "amm",
-        "lending",
-        "bridge_cross_chain",
-        "governance",
-    ]:
-        data = signals.get(category, {})
-        terms = data.get("terms", [])
-        if terms:
-            lines.append(f"### {category.replace('_', ' ').title()}")
+    if bool(profile.get("include_rule_pack_details", True)):
+        for pack in rule_packs.values():
+            if not pack.get("detected") and not pack.get("findings"):
+                continue
+            lines.append(f"### {pack.get('label', 'Rule Pack')}")
             lines.append("")
-            lines.append(f"- Detected signals: `{', '.join(terms)}`")
-            lines.append(f"- Files with signals: `{data.get('file_count', 0)}`")
-            example_files = data.get("files", [])[:5]
-            if example_files:
-                lines.append(f"- Example files: `{', '.join(example_files)}`")
+            lines.append(f"- Signals detected: `{pack.get('signal_count', 0)}`")
+            if pack.get("signals"):
+                lines.append(f"- Signal terms: `{', '.join(str(item) for item in pack.get('signals', [])[:20])}`")
+            lines.append(f"- Findings: `{pack.get('finding_count', 0)}`")
+            lines.append(f"- Docs: `{pack.get('docs', '')}`")
+            lines.append("- Suggested tests:")
+            for test in pack.get("suggested_tests", []):
+                lines.append(f"  - {test}")
             lines.append("")
+    if bool(profile.get("include_signal_summary", True)):
+        lines.append("## Risk Signal Summary")
+        lines.append("")
+        for category in [
+            "vault_erc4626",
+            "vault_accounting",
+            "vault_accounting_risk",
+            "vault_strategy",
+            "vault_pricing",
+            "vault_withdrawal_liquidity",
+            "vault_admin_ops",
+            "oracle",
+            "access_control",
+            "reentrancy_value_flow",
+            "upgradeability",
+            "accounting_complexity",
+            "staking_rewards",
+            "amm",
+            "lending",
+            "bridge_cross_chain",
+            "governance",
+        ]:
+            data = signals.get(category, {})
+            terms = data.get("terms", [])
+            if terms:
+                lines.append(f"### {category.replace('_', ' ').title()}")
+                lines.append("")
+                lines.append(f"- Detected signals: `{', '.join(terms)}`")
+                lines.append(f"- Files with signals: `{data.get('file_count', 0)}`")
+                example_files = data.get("files", [])[:5]
+                if example_files:
+                    lines.append(f"- Example files: `{', '.join(example_files)}`")
+                lines.append("")
     lines.append("### Testing And Documentation")
     lines.append("")
     for key, value in test_readiness.items():
@@ -4962,30 +5105,33 @@ def generate_report(
             )
         lines.append(markdown_table(rows))
         lines.append("")
-    lines.append("## Historical Exploit-Pattern Similarity")
-    lines.append("")
-    if historical_patterns:
-        for item in historical_patterns:
-            lines.append(f"### {item.name}")
-            lines.append("")
-            lines.append(f"- Confidence: `{item.confidence}`")
-            lines.append(f"- Detected signals: `{', '.join(item.detected_signals[:20])}`")
-            lines.append(f"- Why it matters: {item.why_it_matters}")
-            lines.append(f"- Failed assumption class: {item.failed_assumption_class}")
-            lines.append(f"- Broken invariant class: {item.broken_invariant_class}")
-            lines.append("- Recommended defensive checks:")
-            for check in item.defensive_checks:
-                lines.append(f"  - {check}")
-            lines.append(f"- Suggested test/invariant: {item.suggested_test}")
-            lines.append(f"- Search tags: `{', '.join(item.search_tags)}`")
-            lines.append("")
-    else:
-        lines.append("No strong historical pattern similarity was detected by the automated scanner. Manual review is still recommended.")
+    if bool(profile.get("include_historical_patterns", True)):
+        lines.append("## Historical Exploit-Pattern Similarity")
         lines.append("")
-    lines.append("## All Readiness Gaps")
-    lines.append("")
-    if gaps:
-        for gap in gaps:
+        if historical_patterns:
+            for item in historical_patterns:
+                lines.append(f"### {item.name}")
+                lines.append("")
+                lines.append(f"- Confidence: `{item.confidence}`")
+                lines.append(f"- Detected signals: `{', '.join(item.detected_signals[:20])}`")
+                lines.append(f"- Why it matters: {item.why_it_matters}")
+                lines.append(f"- Failed assumption class: {item.failed_assumption_class}")
+                lines.append(f"- Broken invariant class: {item.broken_invariant_class}")
+                lines.append("- Recommended defensive checks:")
+                for check in item.defensive_checks:
+                    lines.append(f"  - {check}")
+                lines.append(f"- Suggested test/invariant: {item.suggested_test}")
+                lines.append(f"- Search tags: `{', '.join(item.search_tags)}`")
+                lines.append("")
+        else:
+            lines.append("No strong historical pattern similarity was detected by the automated scanner. Manual review is still recommended.")
+            lines.append("")
+    if bool(profile.get("include_all_finding_details", True)):
+        lines.append("## All Readiness Gaps")
+        lines.append("")
+    if bool(profile.get("include_all_finding_details", True)) and gaps:
+        detailed_gaps = gaps if all_findings_limit <= 0 else gaps[:all_findings_limit]
+        for gap in detailed_gaps:
             lines.append(f"### {gap.id} - {gap.title}")
             lines.append("")
             lines.append(f"- Priority: `{gap.priority}`")
@@ -4996,7 +5142,7 @@ def generate_report(
             lines.append("")
             if gap.evidence:
                 lines.append("Evidence:")
-                for item in gap.evidence[:5]:
+                for item in gap.evidence[:evidence_limit]:
                     location = str(item.get("file", ""))
                     function = str(item.get("function", ""))
                     line = item.get("line", 1)
@@ -5009,7 +5155,7 @@ def generate_report(
                 lines.append("")
             if gap.negative_evidence:
                 lines.append("Negative evidence:")
-                for item in gap.negative_evidence[:5]:
+                for item in gap.negative_evidence[:negative_evidence_limit]:
                     lines.append(
                         f"- `{item.get('file', '')}:{item.get('line', 1)}` `{item.get('term', '')}`: {item.get('reason', '')} Snippet: `{item.get('snippet', '')}`"
                     )
@@ -5055,26 +5201,29 @@ def generate_report(
             if related_lines:
                 lines.append("Related Knowledge:")
                 lines.append("")
-                for item in related_lines[1:]:
+                for item in related_lines[1 : 1 + related_knowledge_limit]:
                     lines.append(item)
             lines.append("")
             lines.append("Suggested tests:")
             lines.append("")
-            for test in mapped_suggested_tests(gap)[:6]:
+            for test in mapped_suggested_tests(gap)[:suggested_test_limit]:
                 lines.append(f"- {test}")
             invariant_candidates = mapped_invariant_candidates(gap)
             if invariant_candidates:
                 lines.append("")
                 lines.append("Invariant candidates:")
                 lines.append("")
-                for candidate in invariant_candidates[:5]:
+                for candidate in invariant_candidates[:suggested_test_limit]:
                     lines.append(f"- {candidate}")
             lines.append("")
             lines.append(f"Search tags: `{', '.join(gap.tags)}`")
             lines.append("")
-    else:
+        if all_findings_limit > 0 and len(gaps) > all_findings_limit:
+            lines.append(f"_Profile `{profile_key}` shows {all_findings_limit} detailed findings. Use `output_profile: full` for all findings._")
+            lines.append("")
+    elif bool(profile.get("include_all_finding_details", True)):
         lines.append("- No major automated gaps detected. This does not prove safety and should be followed by manual review.")
-    lines.append("")
+        lines.append("")
     lines.append("## Suppressed Readiness Gaps")
     lines.append("")
     if suppressed_gaps:
@@ -5202,6 +5351,7 @@ def json_report(
     delivery_outputs: dict[str, str],
     delivery_summary_data: dict[str, object],
     config_summary_data: dict[str, object],
+    report_ux_data: dict[str, object],
     config_warnings: list[str],
     diff_data: dict[str, object] | None,
 ) -> dict[str, object]:
@@ -5253,6 +5403,14 @@ def json_report(
         "delivery_outputs": delivery_outputs,
         "delivery_summary": delivery_summary_data,
         "config_summary": config_summary_data,
+        "report_ux": report_ux_data,
+        "fix_first": report_ux_data.get("fix_first", []),
+        "findings_by_rule_family": report_ux_data.get("findings_by_rule_family", {}),
+        "findings_by_confidence": report_ux_data.get("findings_by_confidence", {}),
+        "active_findings_count": report_ux_data.get("active_findings_count", len(gaps)),
+        "suppressed_findings_count": report_ux_data.get("suppressed_findings_count", len(suppressed_gaps)),
+        "suppression_summary": report_ux_data.get("suppression_summary", {}),
+        "suppression_warnings": report_ux_data.get("suppression_warnings", []),
         "diff": diff_data or empty_diff_data(),
         "next_steps": next_steps,
         "config_warnings": config_warnings,
@@ -5421,7 +5579,7 @@ def issue_labels_for_gap(gap: ReadinessGap) -> list[str]:
     return sorted(label for label in labels if label)
 
 
-def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> str:
+def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str], fix_first_rank: int | None = None) -> str:
     lines = [
         issue_marker(gap.id),
         "",
@@ -5436,6 +5594,8 @@ def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> 
         f"- Category: `{gap.category}`",
         f"- Confidence: `{gap.confidence}`",
         f"- Confidence reason: {gap.confidence_reason or 'Local/static evidence was used.'}",
+        f"- Rule family: `{finding_id_to_rule_pack(gap.id)}`",
+        f"- Fix First rank: `{fix_first_rank if fix_first_rank is not None else 'not ranked'}`",
         f"- Fingerprint: `{gap.fingerprint}`",
         "",
         "## Evidence",
@@ -5525,6 +5685,7 @@ def summary_issue_body(
     score: int,
     protocol_type: str,
     generated_outputs: dict[str, str],
+    fix_first: list[dict[str, object]] | None = None,
 ) -> str:
     lines = [
         issue_marker("summary"),
@@ -5538,9 +5699,24 @@ def summary_issue_body(
         f"- Protocol type: `{protocol_type}`",
         f"- Active readiness gaps: `{len(gaps)}`",
         "",
-        "## Top Readiness Gaps",
+        "## Fix First",
         "",
     ]
+    if fix_first:
+        for item in fix_first[:10]:
+            lines.append(
+                f"- [ ] `{item.get('id', '')}` - {item.get('title', '')} "
+                f"({item.get('rule_family', '')}; {item.get('confidence', '')})"
+            )
+    else:
+        lines.append("- No automated Fix First items were ranked. Manual review is still required.")
+    lines.extend(
+        [
+            "",
+        "## Top Readiness Gaps",
+        "",
+        ]
+    )
     for gap in top_findings(gaps, 10):
         lines.append(f"- [ ] `{gap.id}` - {gap.title} ({gap.priority})")
     lines.extend(["", "## Generated Artifacts", ""])
@@ -5562,7 +5738,11 @@ def build_issue_plan(
 ) -> dict[str, object]:
     issues = []
     excluded = []
-    for gap in sorted(gaps, key=lambda item: (gap_priority_rank(item), item.id, item.title)):
+    enrich_gap_report_fields(gaps)
+    ranked_gaps = rank_fix_first(gaps, len(gaps))
+    fix_first_lookup = {gap.id: index for index, gap in enumerate(ranked_gaps, 1)}
+    fix_first = fix_first_items(gaps, min(10, len(gaps)))
+    for gap in ranked_gaps:
         if not confidence_meets(gap.confidence, min_confidence):
             excluded.append(finding_to_dict(gap))
             continue
@@ -5572,9 +5752,11 @@ def build_issue_plan(
                 "finding_id": gap.id,
                 "title": issue_title_for_gap(gap),
                 "labels": issue_labels_for_gap(gap),
-                "body": issue_body_for_gap(gap, generated_outputs),
+                "body": issue_body_for_gap(gap, generated_outputs, fix_first_lookup.get(gap.id)),
+                "fix_first_rank": fix_first_lookup.get(gap.id),
                 "priority": gap.priority,
                 "category": gap.category,
+                "rule_family": finding_id_to_rule_pack(gap.id),
                 "confidence": gap.confidence,
                 "confidence_reason": gap.confidence_reason,
                 "related_knowledge": related_knowledge_for_id(gap.id),
@@ -5603,13 +5785,14 @@ def build_issue_plan(
         "mode": "dry-run",
         "issue_grouping": grouping,
         "min_confidence": min_confidence,
+        "fix_first": fix_first,
         "issues": issues,
         "excluded_low_confidence_findings": excluded,
         "summary_issue": {
             "marker": issue_marker("summary"),
             "title": "[Arkheionx] Pre-audit readiness remediation plan",
             "labels": ["arkheionx", "pre-audit-readiness", "remediation-plan"],
-            "body": summary_issue_body(gaps, score, protocol_type, generated_outputs),
+            "body": summary_issue_body(gaps, score, protocol_type, generated_outputs, fix_first),
             "disclaimer": ISSUE_DISCLAIMER,
         },
         "disclaimer": ISSUE_DISCLAIMER,
@@ -6564,6 +6747,7 @@ def main(argv: list[str] | None = None) -> int:
     }
     delivery_summary_data = delivery_summary(score, protocol_type, gaps)
     config_summary_data = config_summary(config, config_source, protocol_type, enabled_rule_packs, analysis_config)
+    report_ux_data = build_report_ux_data(gaps, suppressed_gaps, config)
     additional_search_tags = config_additional_tags(config)
     max_top_gaps = config_max_top_gaps(config)
     diff_data: dict[str, object] | None = None
@@ -6601,6 +6785,7 @@ def main(argv: list[str] | None = None) -> int:
         skeleton_path=skeleton_path,
         generated_outputs=generated_outputs,
         config_summary_data=config_summary_data,
+        report_ux_data=report_ux_data,
         config_warnings=config_warnings,
         additional_search_tags=additional_search_tags,
         max_top_gaps=max_top_gaps,
@@ -6671,6 +6856,7 @@ def main(argv: list[str] | None = None) -> int:
                 delivery_outputs,
                 delivery_summary_data,
                 config_summary_data,
+                report_ux_data,
                 config_warnings,
                 diff_data,
             ),
@@ -6711,6 +6897,15 @@ def main(argv: list[str] | None = None) -> int:
     if skeleton_path:
         print(f"Arkheionx invariant skeleton generated: {skeleton_path}")
     print(f"Readiness score: {score}/100 ({score_band(score)})")
+    print(f"Active findings: {len(gaps)}; suppressed findings: {len(suppressed_gaps)}")
+    fix_first_ids = [
+        str(item.get("id", ""))
+        for item in report_ux_data.get("fix_first", [])
+        if isinstance(item, dict) and item.get("id")
+    ][:5]
+    if fix_first_ids:
+        print(f"Fix First: {', '.join(fix_first_ids)}")
+    print("Full readiness details are in the Markdown/JSON artifacts.")
 
     if args.fail_on_critical_readiness_gap and critical_gaps:
         print("critical readiness gaps detected; failing because --fail-on-critical-readiness-gap was set", file=sys.stderr)

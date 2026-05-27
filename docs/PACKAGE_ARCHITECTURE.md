@@ -28,6 +28,9 @@ arkheionx/
 | `arkheionx.config.schema` | Stable config defaults, normalization, validation, and dangerous-key rejection. |
 | `arkheionx.config.loader` | Config file loading and validation wrapper. |
 | `arkheionx.rules.registry` | Canonical rule-family metadata. |
+| `arkheionx.reports.profiles` | Report output profile settings. |
+| `arkheionx.reports.ux` | Fix First, grouping, and suppression summary helpers. |
+| `arkheionx.reports.summary` | Backward-compatible report UX summary metadata. |
 | `arkheionx.generators.*` | Extracted generator logic behind existing scripts. |
 | `arkheionx.cli.main` | Preview `version` and `doctor` commands. |
 
@@ -40,6 +43,9 @@ tests prove identical behavior.
 
 v1.7.0 stabilizes the package-side config and rule-pack registry surfaces while
 keeping `scripts/pre_audit_scan.py` as the supported scanner entrypoint.
+
+v1.8.0 adds report UX helpers for output profiles, Fix First ranking, finding
+grouping, and suppression summaries without replacing the stable scanner script.
 
 ## Not Yet Included
 

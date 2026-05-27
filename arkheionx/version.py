@@ -1,10 +1,10 @@
 """Shared Arkheionx version metadata."""
 from __future__ import annotations
 
-__version__ = "1.7.0-dev"
-STABLE_RELEASE = "v1.6.0"
-CURRENT_MILESTONE = "v1.7.0"
-NEXT_MILESTONE = "v1.8.0"
+__version__ = "1.8.0-dev"
+STABLE_RELEASE = "v1.7.0"
+CURRENT_MILESTONE = "v1.8.0"
+NEXT_MILESTONE = "v1.9.0"
 
 SCANNER_VERSION = CURRENT_MILESTONE.removeprefix("v")
 SCHEMA_VERSION = "1.0.0"

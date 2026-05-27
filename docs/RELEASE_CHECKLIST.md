@@ -24,6 +24,19 @@ written reason in the release PR.
 - [ ] Suppressions require a written reason.
 - [ ] Config safety docs explain rejected keys and local/static boundaries.
 
+## v1.8 Report UX Checks
+
+- [ ] Markdown reports include `Fix First`.
+- [ ] JSON reports include `fix_first`.
+- [ ] JSON reports include `findings_by_rule_family`.
+- [ ] JSON reports include `findings_by_confidence`.
+- [ ] Markdown reports include `Suppression Summary`.
+- [ ] Markdown reports include compact config and generated artifact settings.
+- [ ] CI profile scan produces a compact report.
+- [ ] Full profile scan preserves detailed evidence.
+- [ ] Issue plans include Fix First ordering and rule family.
+- [ ] SARIF includes defensive readiness help text and rule-family metadata.
+
 ## Scanner And Product Validation
 
 - [ ] `python3 -m py_compile scripts/pre_audit_scan.py scripts/generate_search_index.py`
@@ -449,6 +462,22 @@ written reason in the release PR.
       docs exist.
 - [ ] No RPC/live-chain, remote clone, secret-handling, or exploit-mode config
       behavior added.
+
+## v1.8.0 Report UX And Noise Reduction Checks
+
+- [ ] `arkheionx/version.py` exposes `1.8.0-dev`, `v1.7.0`, `v1.8.0`, and
+      `v1.9.0` milestone metadata.
+- [ ] `arkheionx/reports/ux.py`, `summary.py`, and `profiles.py` compile.
+- [ ] Markdown fixture reports include Fix First, Finding Groups, Config
+      Summary, and Suppression Summary.
+- [ ] JSON fixture reports include `fix_first`, `report_ux`,
+      `findings_by_rule_family`, and `findings_by_confidence`.
+- [ ] CI and full profile fixture reports are generated and parseable.
+- [ ] Issue plans include Fix First ordering, rule family, confidence reason,
+      suggested tests, and invariant candidates.
+- [ ] SARIF remains valid and includes rule-family readiness metadata.
+- [ ] No report wording claims confirmed vulnerabilities, exploitability,
+      formal audit status, or security guarantees.
 
 ## Safety Scan
 

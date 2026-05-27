@@ -99,6 +99,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "testing",
             "suggested_tests": [
               "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
               "Add a stateful invariant suite for the core protocol lifecycle.",
@@ -162,6 +163,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
               "Test decimals normalization across expected feed decimals.",
@@ -261,6 +263,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "reentrancy-value-flow",
             "suggested_tests": [
               "Review state update order and add local malicious-receiver tests where callbacks are possible.",
               "Add a benign callback-capable receiver stub.",
@@ -363,6 +366,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
               "Reject stale oracle rounds or document fallback behavior.",
@@ -459,6 +463,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
               "Test spot-price movement bounds.",
@@ -524,6 +529,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "oracle",
             "suggested_tests": [
               "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
               "Test documented price bounds.",
@@ -593,6 +599,7 @@
             "not_formal_audit": true,
             "priority": "Low readiness gap",
             "readiness_gap": true,
+            "rule_family": "reentrancy-value-flow",
             "suggested_tests": [
               "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
               "Document checks-effects-interactions or guard assumptions.",
@@ -697,6 +704,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
               "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
@@ -798,6 +806,7 @@
             "not_formal_audit": true,
             "priority": "High readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
               "Test first liquidity provider behavior.",
@@ -899,6 +908,7 @@
             "not_formal_audit": true,
             "priority": "High readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
               "Test reserve-price movement bounds.",
@@ -999,6 +1009,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
               "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
@@ -1099,6 +1110,7 @@
             "not_formal_audit": true,
             "priority": "Medium readiness gap",
             "readiness_gap": true,
+            "rule_family": "amm",
             "suggested_tests": [
               "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
               "Test minOut enforcement.",
@@ -1134,6 +1146,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "testing",
                 "tags": [
                   "invariant-testing",
                   "amm"
@@ -1158,6 +1171,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "price-assumptions"
@@ -1182,6 +1196,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "reentrancy-value-flow",
                 "tags": [
                   "reentrancy-review",
                   "value-flow"
@@ -1206,6 +1221,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "oracle-rule-pack",
@@ -1231,6 +1247,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "spot-price",
@@ -1257,6 +1274,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "oracle",
                 "tags": [
                   "oracle-risk",
                   "documentation-readiness",
@@ -1282,6 +1300,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "reentrancy-value-flow",
                 "tags": [
                   "reentrancy-review",
                   "documentation-readiness",
@@ -1307,6 +1326,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-invariant",
                   "amm-rule-pack",
@@ -1332,6 +1352,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-lp-accounting",
                   "amm-rule-pack",
@@ -1357,6 +1378,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-pricing",
                   "spot-price",
@@ -1383,6 +1405,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-token-assumptions",
                   "fee-on-transfer",
@@ -1408,6 +1431,7 @@
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
+                "rule_family": "amm",
                 "tags": [
                   "amm-slippage",
                   "min-output",
@@ -1419,7 +1443,7 @@
               }
             }
           ],
-          "semanticVersion": "1.7.0"
+          "semanticVersion": "1.8.0"
         }
       }
     }

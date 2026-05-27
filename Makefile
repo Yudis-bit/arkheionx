@@ -49,6 +49,9 @@ validate:
 		arkheionx/rules/registry.py \
 		arkheionx/rules/ids.py \
 		arkheionx/reports/artifacts.py \
+		arkheionx/reports/profiles.py \
+		arkheionx/reports/summary.py \
+		arkheionx/reports/ux.py \
 		arkheionx/knowledge/search.py \
 		arkheionx/generators/test_plan.py \
 		arkheionx/generators/feedback_dashboard.py \

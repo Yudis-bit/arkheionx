@@ -3,7 +3,41 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.7.0 - Unreleased
+## v1.8.0 - Unreleased
+
+### Added
+
+- Report profile documentation.
+- Fix First report section.
+- Report UX helpers.
+- Output profile docs.
+- Noise reduction docs.
+
+### Improved
+
+- Executive summary readability.
+- Finding grouping by rule family and confidence.
+- Suppression summary.
+- Config summary in reports.
+- Issue-plan readability.
+- Terminal scan summary.
+- CI-oriented report profile.
+
+### Safety
+
+- Findings remain readiness signals, not vulnerability confirmations.
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- No customer/adoption/security guarantee claims added.
+
+### Known Limitations
+
+- Report UX improvements do not change the underlying static/heuristic nature
+  of findings.
+- Manual review remains required.
+- Some legacy report sections remain for backward compatibility.
+
+## v1.7.0
 
 ### Added
 

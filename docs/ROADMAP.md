@@ -73,12 +73,16 @@ committed artifacts support it.
       Internal package scaffold, shared helper modules, rule registry metadata,
       generator extraction, and preview CLI health commands without changing
       the stable script surface.
-- [ ] **v1.7.0: Config + Rule Pack Stabilization current milestone.**
+- [x] **v1.7.0: Config + Rule Pack Stabilization released.**
       Stable config schema, safe validator, suppression references, config
       examples, and rule-pack registry helpers.
-- [ ] **v1.8.0: Report UX + Noise Reduction.**
-      Improve report clarity, noise controls, and developer-facing summaries
-      after config behavior is stable.
+- [ ] **v1.8.0: Report UX + Noise Reduction current milestone.**
+      Improve report clarity, Fix First prioritization, output profiles,
+      suppression visibility, and developer-facing summaries after config
+      behavior is stable.
+- [ ] **v1.9.0: Pre-v2 CLI Candidate.**
+      Prepare the installable CLI surface while preserving stable scripts,
+      schemas, GitHub Action usage, and local/static safety boundaries.
 - [ ] **v2.0.0: Installable CLI/package target.**
       Package distribution only after schemas, docs, and GitHub-native flows
       remain stable.

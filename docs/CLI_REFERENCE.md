@@ -35,6 +35,18 @@ single best-fit type.
 | `--executive-summary-output PATH` | Short executive summary Markdown. |
 | `--remediation-roadmap-output PATH` | Remediation roadmap Markdown. |
 
+Report verbosity is controlled through config `output_profile`: `concise`,
+`standard`, `full`, or `ci`.
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root . \
+  --config examples/configs/ci.config.json \
+  --output reports/ARKHEIONX_PRE_AUDIT_REPORT.md
+```
+
+See [`OUTPUT_PROFILES.md`](OUTPUT_PROFILES.md).
+
 ## Security Output
 
 | Flag | Purpose |

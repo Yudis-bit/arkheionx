@@ -28,9 +28,10 @@ python3 -m arkheionx.cli.main doctor
 ## Future Path
 
 - v1.7.0: stabilize config and rule-pack metadata inside package modules.
-- v1.8.0: report UX and noise reduction after config behavior is stable.
-- v1.9.0: continue extracting scanner/report internals behind stable
-  tests.
+- v1.8.0: add report UX helpers, output profiles, Fix First ranking, and
+  noise-reduction summaries.
+- v1.9.0: prepare the pre-v2 CLI candidate while keeping script compatibility
+  tests stable.
 - v2.0.0: consider an installable package and official CLI only after script
   compatibility, schemas, docs, and GitHub-native workflows remain stable.
 

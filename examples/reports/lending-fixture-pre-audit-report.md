@@ -3,11 +3,12 @@
 ## Scope
 
 - Repository root: `examples/lending-fixture`
-- Generated at: `2026-05-27T06:10:23+00:00`
+- Generated at: `2026-05-27T09:24:38+00:00`
 - Protocol type: `lending`
 - Protocol confidence: `manual`
 - Files scanned: `4`
-- Scanner version: `1.7.0`
+- Scanner version: `1.8.0`
+- Output profile: `standard` (Standard)
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -25,6 +26,8 @@
 - Minimum confidence: `low`
 - Suppressions configured: `0`
 - Output profile: `standard`
+- Ignore generated artifacts: `True`
+- Include generated artifacts: `False`
 
 ## Scan Source Summary
 
@@ -52,10 +55,14 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 ## Executive Summary
 
+Arkheionx scanned `examples/lending-fixture` as `lending` readiness context. This is a local/static pre-audit readiness report, not a formal audit.
+
 - Readiness score: **59/100**
 - Score band: **Early readiness**
 - Active readiness gaps: `10`
 - Suppressed readiness gaps: `0`
+- Active rule packs: `access-control, amm, docs, lending, oracle, reentrancy-value-flow, rewards, testing, vault`
+- Generated artifacts ignored: `0`
 - Top readiness gaps:
   - **ARK-LEND-004 (High readiness gap):** Oracle-dependent borrowing/liquidation without stale-price tests - Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.
   - **ARK-ORC-001 (High readiness gap):** Oracle-dependent logic without stale-price tests - Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior.
@@ -67,6 +74,41 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
   - Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.
   - Run a formal smart contract audit before mainnet launch or before handling real user funds.
+
+## Fix First
+
+| Rank | Finding                                                                              | Rule Family    | Why Fix First                                                                                                                          | Next Action                                                                                                                                       |
+| ---- | ------------------------------------------------------------------------------------ | -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests      | lending        | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.                    |
+| 2    | ARK-ORC-001 - Oracle-dependent logic without stale-price tests                       | oracle         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.    |
+| 3    | ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage | oracle         | higher-priority readiness blocker; appears across multiple files; clear defensive tests are available.                                 | Add or review: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.                                   |
+| 4    | ARK-ACC-001 - Privileged setters without role-boundary tests                         | access-control | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds. |
+| 5    | ARK-LEND-005 - Reserve/cash accounting assumptions not covered                       | lending        | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.              |
+
+## Finding Groups
+
+### Findings by Rule Family
+
+| Rule Family    | Active Findings |
+| -------------- | --------------- |
+| access-control | 1               |
+| lending        | 5               |
+| oracle         | 3               |
+| testing        | 1               |
+
+### Findings by Confidence
+
+| Confidence | Active Findings |
+| ---------- | --------------- |
+| high       | 5               |
+| low        | 1               |
+| medium     | 4               |
+
+## Suppression Summary
+
+- Suppressions loaded: `0`
+- Suppressions applied: `0`
+- Suppressions should include a reason and be revisited before launch or external review.
 
 ## Detected Protocol Shape
 
@@ -296,7 +338,6 @@ Related Knowledge:
 - Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
 - Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
 - Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
-- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol
 
 Suggested tests:
 
@@ -324,8 +365,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding.
 
 Detected signals:
 - scanner signal
@@ -364,8 +403,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, getPrice, latestRoundData, priceFeed`
 
 Detected signals:
 - `answer`
@@ -401,7 +438,6 @@ Related Knowledge:
 - Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
 - Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
 - Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
-- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md
 
 Suggested tests:
 
@@ -428,8 +464,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, getPrice, latestRoundData, priceFeed`
 
 Detected signals:
 - `answer`
@@ -486,8 +520,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:39` in `setGuardian`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`
 - `src/ToyLendingMarket.sol:43` in `pause`: Solidity function contains external value-flow call evidence. Snippet: `require(msg.sender == guardian, "GUARDIAN");`
 - `test/documentation coverage`: No semantic-lite access control test coverage terms were detected.
-- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `guardian, onlyOwner, owner, pause`
-- `test/ToyLendingMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `guardian, onlyOwner, owner, pause`
 
 Detected signals:
 - `guardian`
@@ -523,7 +555,6 @@ Related Knowledge:
 - Historical patterns: pattern-unprotected-initializer, pattern-privileged-operation-boundary
 - Suggested defensive tests: unauthorized-setter-reverts, role-boundary-negative-tests, admin-change-event-and-bounds-test
 - Related PoCs: poc-2017-07-parity-multisig, poc-2020-06-balancer-deflationary, poc-2022-02-dexible
-- Docs: docs/ACCESS_CONTROL_RULE_PACK.md, docs/RULE_PACKS.md
 
 Suggested tests:
 
@@ -550,8 +581,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:48` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:62` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-- `src/ToyLendingMarket.sol:69` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `uint256 projectedDebt = debt[msg.sender] + amount;`
-- `src/ToyLendingMarket.sol:79` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
 
 Detected signals:
 - `LTV`
@@ -602,7 +631,6 @@ Related Knowledge:
 - Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price
 - Suggested defensive tests: collateral-debt-invariant, borrow-limit-boundary-test, unsafe-withdrawal-rejection
 - Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank
-- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md, docs/READINESS_SCORE.md
 
 Suggested tests:
 
@@ -629,8 +657,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:48` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:62` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-- `src/ToyLendingMarket.sol:69` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `uint256 projectedDebt = debt[msg.sender] + amount;`
-- `src/ToyLendingMarket.sol:79` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
 
 Detected signals:
 - `LTV`
@@ -681,7 +707,6 @@ Related Knowledge:
 - Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price
 - Suggested defensive tests: just-above-threshold-test, just-below-threshold-test, partial-liquidation-math
 - Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank
-- Docs: docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md
 
 Suggested tests:
 
@@ -708,8 +733,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:48` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:62` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-- `src/ToyLendingMarket.sol:69` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `uint256 projectedDebt = debt[msg.sender] + amount;`
-- `src/ToyLendingMarket.sol:79` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
 
 Detected signals:
 - `LTV`
@@ -760,7 +783,6 @@ Related Knowledge:
 - Historical patterns: pattern-accounting-index-drift, pattern-precision-rounding-loss
 - Suggested defensive tests: interest-index-monotonicity, small-balance-rounding-test, borrow-repay-around-accrual
 - Related PoCs: poc-2020-09-bzx-ifusdc, poc-2020-08-opyn
-- Docs: docs/LENDING_RULE_PACK.md, docs/REWARD_ACCOUNTING_RULE_PACK.md
 
 Suggested tests:
 
@@ -787,8 +809,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral`
 
 Detected signals:
 - `LTV`
@@ -840,7 +860,6 @@ Related Knowledge:
 - Historical patterns: pattern-oracle-stale-price, pattern-collateral-debt-invariant
 - Suggested defensive tests: stale-oracle-rejection, decimals-normalization-test, price-shock-boundary-test
 - Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest
-- Docs: docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md
 
 Suggested tests:
 
@@ -867,8 +886,6 @@ Evidence:
 - `src/ToyLendingMarket.sol:48` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
 - `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
 - `src/ToyLendingMarket.sol:62` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-- `src/ToyLendingMarket.sol:69` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `uint256 projectedDebt = debt[msg.sender] + amount;`
-- `src/ToyLendingMarket.sol:79` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`
 
 Detected signals:
 - `LTV`
@@ -919,7 +936,6 @@ Related Knowledge:
 - Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift
 - Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints
 - Related PoCs: poc-2020-11-cheese-bank
-- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md
 
 Suggested tests:
 
@@ -933,7 +949,6 @@ Invariant candidates:
 - Cash, total borrows, total reserves, and utilization remain internally consistent.
 
 Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
-
 
 ## Suppressed Readiness Gaps
 

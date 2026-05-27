@@ -200,3 +200,10 @@ In v1.5.0, findings can include mapped `suggested_tests` and
 These fields do not add score by themselves. They help maintainers turn a
 score-impacting readiness gap into local remediation work such as Foundry
 invariant skeletons, boundary tests, and documentation tasks.
+
+## Report UX Context
+
+In v1.8.0, reports add Fix First and grouped finding summaries. These sections
+do not change the score. They make the score easier to act on by showing which
+readiness gaps are higher priority, which rule families are noisy, and which
+findings need manual confidence review.

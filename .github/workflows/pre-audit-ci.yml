@@ -104,6 +104,9 @@ jobs:
             arkheionx/rules/registry.py \
             arkheionx/rules/ids.py \
             arkheionx/reports/artifacts.py \
+            arkheionx/reports/profiles.py \
+            arkheionx/reports/summary.py \
+            arkheionx/reports/ux.py \
             arkheionx/knowledge/search.py \
             arkheionx/generators/test_plan.py \
             arkheionx/generators/feedback_dashboard.py \
@@ -300,6 +303,21 @@ jobs:
             --json-output examples/reports/configured-amm-lending-report.json \
             --sarif-output examples/reports/configured-amm-lending.sarif.json
 
+      - name: Run scanner with report output profiles
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --config examples/configs/ci.config.json \
+            --output examples/reports/ci-profile-report.md \
+            --json-output examples/reports/ci-profile-report.json \
+            --sarif-output examples/reports/ci-profile.sarif.json
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --config examples/configs/strict-audit-prep.config.json \
+            --output examples/reports/full-profile-report.md \
+            --json-output examples/reports/full-profile-report.json \
+            --sarif-output examples/reports/full-profile.sarif.json
+
       - name: Generate AMM and lending test plans
         run: |
           python3 scripts/generate_test_plan.py \
@@ -480,6 +498,12 @@ jobs:
           test -f examples/reports/configured-amm-lending-report.md
           test -f examples/reports/configured-amm-lending-report.json
           test -f examples/reports/configured-amm-lending.sarif.json
+          test -f examples/reports/ci-profile-report.md
+          test -f examples/reports/ci-profile-report.json
+          test -f examples/reports/ci-profile.sarif.json
+          test -f examples/reports/full-profile-report.md
+          test -f examples/reports/full-profile-report.json
+          test -f examples/reports/full-profile.sarif.json
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -528,12 +552,14 @@ jobs:
               "examples/reports/lending-fixture-pre-audit-report.json",
               "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json",
               "examples/reports/configured-amm-lending-report.json",
+              "examples/reports/ci-profile-report.json",
+              "examples/reports/full-profile-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.7.0"
+              assert data["version"] == "1.8.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -551,6 +577,10 @@ jobs:
               assert "knowledge" in data
               assert "scan_sources" in data
               assert "config_summary" in data
+              assert "fix_first" in data
+              assert "findings_by_rule_family" in data
+              assert "findings_by_confidence" in data
+              assert "suppression_summary" in data
               assert all(item["id"].startswith("ARK-") for item in data["findings"])
               assert all(item["fingerprint"] for item in data["findings"])
               assert all("confidence_reason" in item for item in data["findings"])
@@ -582,7 +612,7 @@ jobs:
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.7.0"
+              assert plan["version"] == "1.8.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -599,7 +629,7 @@ jobs:
           ]:
               test_plan = json.load(open(path, encoding="utf-8"))
               assert test_plan["tool"] == "Arkheionx Test Plan Generator"
-              assert test_plan["version"] == "1.7.0"
+              assert test_plan["version"] == "1.8.0"
               assert test_plan["suggested_tests"]
               assert test_plan["invariant_candidates"]
               assert test_plan["manual_review_required"] is True
@@ -623,6 +653,10 @@ jobs:
               assert payload
           config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
           assert config["suppressed_findings"]
+          ci_profile = json.load(open("examples/reports/ci-profile-report.json", encoding="utf-8"))
+          assert ci_profile["config_summary"]["output_profile"] == "ci"
+          full_profile = json.load(open("examples/reports/full-profile-report.json", encoding="utf-8"))
+          assert full_profile["config_summary"]["output_profile"] == "full"
           generated = json.load(open("examples/reports/generated-artifact-self-ingestion-pre-audit-report.json", encoding="utf-8"))
           assert generated["scan_sources"]["generated_artifacts_ignored"] > 0
           assert not [
@@ -638,6 +672,8 @@ jobs:
               "examples/reports/amm-fixture.sarif.json",
               "examples/reports/lending-fixture.sarif.json",
               "examples/reports/amm-lending-hybrid-fixture.sarif.json",
+              "examples/reports/ci-profile.sarif.json",
+              "examples/reports/full-profile.sarif.json",
               "arkheionx.sarif.json",
           ]:
               sarif = json.load(open(path, encoding="utf-8"))
@@ -645,6 +681,7 @@ jobs:
               assert sarif["runs"][0]["tool"]["driver"]["rules"]
               assert sarif["runs"][0]["results"]
               assert sarif["runs"][0]["results"][0]["properties"]["not_a_vulnerability_confirmation"] is True
+              assert "rule_family" in sarif["runs"][0]["results"][0]["properties"]
               assert sarif["runs"][0]["results"][0]["locations"]
           baseline = json.load(open("examples/reports/vault-risk-fixture.baseline.json", encoding="utf-8"))
           assert baseline["schema_version"] == "1.0.0"
@@ -708,6 +745,11 @@ jobs:
           grep -q "ARK-LEND" examples/reports/lending-fixture-pre-audit-report.md
           grep -q "ARK-AMM" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
           grep -q "ARK-LEND" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
+          grep -q "Fix First" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Findings by Rule Family" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Suppression Summary" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Output profile: \`ci\`" examples/reports/ci-profile-report.md
+          grep -q "Output profile: \`full\`" examples/reports/full-profile-report.md
           grep -q "Invariant candidates" examples/reports/amm-fixture-test-plan.md
           grep -q "Invariant candidates" examples/reports/lending-fixture-test-plan.md
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxAMMInvariants.t.sol

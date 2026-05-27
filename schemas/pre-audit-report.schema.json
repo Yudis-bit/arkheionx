@@ -46,6 +46,11 @@
     "generated_outputs": { "type": "object" },
     "delivery_outputs": { "type": "object" },
     "scan_sources": { "type": "object" },
+    "fix_first": { "type": "array" },
+    "report_ux": { "type": "object" },
+    "findings_by_rule_family": { "type": "object" },
+    "findings_by_confidence": { "type": "object" },
+    "suppression_summary": { "type": "object" },
     "negative_evidence": { "type": "array" },
     "disclaimer": { "type": "string" }
   },

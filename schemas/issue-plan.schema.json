@@ -12,6 +12,7 @@
     "repo_root": { "type": "string" },
     "protocol_type": { "type": "string" },
     "score": { "type": "integer" },
+    "fix_first": { "type": "array" },
     "issues": {
       "type": "array",
       "items": {
