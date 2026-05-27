@@ -62,6 +62,8 @@ scanned repository has the same vulnerability.
 | `liquidation boundary` | Reviewing lending liquidation thresholds and close factors. |
 | `interest index` | Reviewing borrow index and accrual readiness. |
 | `missing invariant` | Planning property tests before audit. |
+| `invariant generator` | Finding the v1.5 test-plan generator. |
+| `Foundry invariant skeleton` | Finding local skeleton docs and examples. |
 | `initializer protection` | Reviewing upgradeability or initialization paths. |
 
 Search can help interpret negative evidence too. For example, if a scan reports

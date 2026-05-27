@@ -117,3 +117,18 @@ python3 scripts/search_knowledge.py "slippage boundary"
 python3 scripts/search_knowledge.py "LP share accounting"
 python3 scripts/search_knowledge.py "reserve price"
 ```
+
+## Test Plan Generation
+
+AMM findings map to local defensive test ideas in
+`metadata/finding_test_plan_map.json`.
+
+```sh
+python3 scripts/generate_test_plan.py \
+  --report examples/reports/amm-fixture-pre-audit-report.json \
+  --output examples/reports/amm-fixture-test-plan.md \
+  --foundry-output examples/reports/ArkheionxAMMInvariants.t.sol
+```
+
+Generated AMM skeletons include TODOs for pool, token mocks, swap handlers,
+liquidity handlers, and project-specific invariant assertions.

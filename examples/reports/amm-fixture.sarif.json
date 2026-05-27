@@ -50,6 +50,10 @@
             "evidence_count": 2,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "Core accounting relationships hold after any allowed user action.",
+              "Privileged actions cannot silently bypass documented accounting assumptions."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "protocol-specific-conservation-invariant",
@@ -96,7 +100,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+              "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+              "Add a stateful invariant suite for the core protocol lifecycle.",
+              "Add handler actions for normal user flows and documented edge cases.",
+              "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
             ],
             "tags": [
               "invariant-testing",
@@ -139,6 +146,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "Normalized oracle values remain within documented unit and decimal assumptions."
+            ],
             "knowledge": {
               "finding_map_version": "0.9.0",
               "related_docs": [],
@@ -153,7 +163,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+              "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+              "Test decimals normalization across expected feed decimals.",
+              "Test zero, negative, or invalid oracle answers if applicable.",
+              "Assert normalized price units match accounting units."
             ],
             "tags": [
               "oracle-risk",
@@ -201,6 +214,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "External-call flows cannot observe or preserve inconsistent accounting state."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "single-claim-or-withdrawal",
@@ -246,7 +262,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Review state update order and add local malicious-receiver tests where callbacks are possible."
+              "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+              "Add a benign callback-capable receiver stub.",
+              "Assert state updates happen before external value transfer where required.",
+              "Test withdraw, claim, refund, or swap flows for accounting consistency."
             ],
             "tags": [
               "reentrancy-review",
@@ -289,6 +308,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+            "invariant_candidates": [
+              "Accounting decisions only use oracle data that satisfies documented freshness policy."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "accounting-value-uses-valid-price",
@@ -342,7 +364,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+              "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+              "Reject stale oracle rounds or document fallback behavior.",
+              "Test updatedAt or heartbeat boundaries.",
+              "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
             ],
             "tags": [
               "oracle-risk",
@@ -386,6 +411,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
+            "invariant_candidates": [
+              "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "price-input-remains-manipulation-resistant",
@@ -432,7 +460,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+              "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+              "Test spot-price movement bounds.",
+              "Test TWAP or delay assumptions when used.",
+              "Document reserve-price dependency and expected safeguards."
             ],
             "tags": [
               "oracle-risk",
@@ -477,6 +508,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+            "invariant_candidates": [
+              "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+            ],
             "knowledge": {
               "finding_map_version": "0.9.0",
               "related_docs": [],
@@ -491,7 +525,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+              "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+              "Test documented price bounds.",
+              "Test invalid answer fallback behavior.",
+              "Add documentation for price shock and fallback assumptions."
             ],
             "tags": [
               "oracle-risk",
@@ -540,6 +577,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+            "invariant_candidates": [
+              "External call ordering follows documented state-transition policy."
+            ],
             "knowledge": {
               "finding_map_version": "0.9.0",
               "related_docs": [],
@@ -554,7 +594,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+              "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+              "Document checks-effects-interactions or guard assumptions.",
+              "Test state before and after external calls.",
+              "Assert failure paths preserve accounting state."
             ],
             "tags": [
               "reentrancy-review",
@@ -603,6 +646,10 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
+            "invariant_candidates": [
+              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+              "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "constant-product-or-stableswap-invariant",
@@ -651,7 +698,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+              "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+              "Test repeated swaps across small and large reserve states.",
+              "Document expected invariant tolerance."
             ],
             "tags": [
               "amm-invariant",
@@ -700,6 +750,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to share inflation and liquidity accounting readiness classes.",
+            "invariant_candidates": [
+              "LP share supply tracks pool ownership within documented rounding."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "lp-value-conservation",
@@ -746,7 +799,10 @@
             "priority": "High readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional."
+              "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+              "Test first liquidity provider behavior.",
+              "Test proportional minting and proportional withdrawal.",
+              "Cover rounding and dust handling during mint/burn."
             ],
             "tags": [
               "amm-lp-accounting",
@@ -795,6 +851,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to spot-price and pool-price accounting readiness classes.",
+            "invariant_candidates": [
+              "Reserve-based price consumers respect documented bounds and delay assumptions."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "price-input-remains-bounded",
@@ -841,7 +900,10 @@
             "priority": "High readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+              "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+              "Test reserve-price movement bounds.",
+              "Test TWAP or delay assumptions if used.",
+              "Document whether other accounting paths rely on spot reserve price."
             ],
             "tags": [
               "amm-pricing",
@@ -891,6 +953,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to fee-on-transfer and token accounting assumption readiness classes.",
+            "invariant_candidates": [
+              "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "reserve-increase-equals-accounted-input",
@@ -935,7 +1000,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+              "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+              "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+              "Simulate fee-on-transfer behavior with a local mock if supported.",
+              "Document unsupported token types if not handled."
             ],
             "tags": [
               "amm-token-assumptions",
@@ -984,6 +1052,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to price boundary and quote freshness readiness classes.",
+            "invariant_candidates": [
+              "Swap execution respects user-provided output bounds and documented deadline policy."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "swap-output-respects-user-bound",
@@ -1029,7 +1100,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+              "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+              "Test minOut enforcement.",
+              "Test stale quote or deadline behavior if supported.",
+              "Assert user-provided slippage bounds are respected."
             ],
             "tags": [
               "amm-slippage",
@@ -1050,8 +1124,8 @@
                 "text": "Protocol-like value flows were detected, but no invariant/property testing signal was found."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-                "text": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+                "markdown": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.",
+                "text": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions."
               },
               "id": "ARK-TST-002",
               "name": "no-invariant-tests-detected-for-defi-protocol-shape",
@@ -1074,8 +1148,8 @@
                 "text": "Oracle and price-feed signals were detected without enough freshness or sanity-check language."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-                "text": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+                "markdown": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions.",
+                "text": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions."
               },
               "id": "ARK-ORC-002",
               "name": "oracle-usage-lacks-visible-staleness,-twap,-bounds,-or-sanity-coverage",
@@ -1098,8 +1172,8 @@
                 "text": "External call or token transfer terms were detected without guard or reentrancy-review signals."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.",
-                "text": "Defensive readiness checks:\n- Review state update order and add local malicious-receiver tests where callbacks are possible."
+                "markdown": "Defensive readiness checks:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n\nSuggested defensive tests:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n\nInvariant candidates:\n- External-call flows cannot observe or preserve inconsistent accounting state.",
+                "text": "Defensive readiness checks:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n\nSuggested defensive tests:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n\nInvariant candidates:\n- External-call flows cannot observe or preserve inconsistent accounting state."
               },
               "id": "ARK-REENT-001",
               "name": "external-call-value-flow-needs-reentrancy-review",
@@ -1122,8 +1196,8 @@
                 "text": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling",
-                "text": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling"
+                "markdown": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling\n\nSuggested defensive tests:\n- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.\n- Reject stale oracle rounds or document fallback behavior.\n- Test updatedAt or heartbeat boundaries.\n\nInvariant candidates:\n- Accounting decisions only use oracle data that satisfies documented freshness policy.",
+                "text": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling\n\nSuggested defensive tests:\n- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.\n- Reject stale oracle rounds or document fallback behavior.\n- Test updatedAt or heartbeat boundaries.\n\nInvariant candidates:\n- Accounting decisions only use oracle data that satisfies documented freshness policy."
               },
               "id": "ARK-ORC-001",
               "name": "oracle-dependent-logic-without-stale-price-tests",
@@ -1147,8 +1221,8 @@
                 "text": "Spot, reserve, pool, or sqrtPriceX96 pricing signals were detected without visible manipulation-resistance tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks",
-                "text": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks"
+                "markdown": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks\n\nSuggested defensive tests:\n- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.\n- Test spot-price movement bounds.\n- Test TWAP or delay assumptions when used.\n\nInvariant candidates:\n- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.",
+                "text": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks\n\nSuggested defensive tests:\n- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.\n- Test spot-price movement bounds.\n- Test TWAP or delay assumptions when used.\n\nInvariant candidates:\n- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
               },
               "id": "ARK-ORC-003",
               "name": "spot-or-reserve-based-pricing-without-manipulation-resistance-tests",
@@ -1173,8 +1247,8 @@
                 "text": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes",
-                "text": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes"
+                "markdown": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes\n\nSuggested defensive tests:\n- Add documentation plus local tests showing fallback and out-of-bounds price behavior.\n- Test documented price bounds.\n- Test invalid answer fallback behavior.\n\nInvariant candidates:\n- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.",
+                "text": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes\n\nSuggested defensive tests:\n- Add documentation plus local tests showing fallback and out-of-bounds price behavior.\n- Test documented price bounds.\n- Test invalid answer fallback behavior.\n\nInvariant candidates:\n- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
               },
               "id": "ARK-ORC-005",
               "name": "missing-price-bounds-or-fallback-assumptions-documentation",
@@ -1198,8 +1272,8 @@
                 "text": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior",
-                "text": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior"
+                "markdown": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\nSuggested defensive tests:\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n\nInvariant candidates:\n- External call ordering follows documented state-transition policy.",
+                "text": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\nSuggested defensive tests:\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n\nInvariant candidates:\n- External call ordering follows documented state-transition policy."
               },
               "id": "ARK-REENT-004",
               "name": "external-call-path-without-documented-ordering-assumptions",
@@ -1223,8 +1297,8 @@
                 "text": "AMM reserve, swap, or liquidity signals were detected without visible invariant or reserve-accounting tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds",
-                "text": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds"
+                "markdown": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
+                "text": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
               },
               "id": "ARK-AMM-001",
               "name": "amm-invariant-assumptions-not-covered-by-tests",
@@ -1248,8 +1322,8 @@
                 "text": "LP supply, mint, burn, or share-accounting signals were detected without visible first-provider, proportional mint/burn, or rounding boundary tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling",
-                "text": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling"
+                "markdown": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\nSuggested defensive tests:\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n\nInvariant candidates:\n- LP share supply tracks pool ownership within documented rounding.",
+                "text": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\nSuggested defensive tests:\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n\nInvariant candidates:\n- LP share supply tracks pool ownership within documented rounding."
               },
               "id": "ARK-AMM-002",
               "name": "lp-share-accounting-without-mint/burn-boundary-tests",
@@ -1273,8 +1347,8 @@
                 "text": "Reserve-ratio, quote, getAmountOut, or spot-price signals were detected without visible TWAP, delay, bounds, or manipulation-resistance tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds",
-                "text": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds"
+                "markdown": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions.",
+                "text": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions."
               },
               "id": "ARK-AMM-003",
               "name": "spot-price-or-reserve-price-dependency-without-manipulation-resistance-tests",
@@ -1299,8 +1373,8 @@
                 "text": "Token transfer and amountIn accounting signals were detected without clear received-amount tests or non-standard token assumptions."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation",
-                "text": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation"
+                "markdown": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
+                "text": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
               },
               "id": "ARK-AMM-004",
               "name": "fee-on-transfer-or-non-standard-token-assumptions-not-documented",
@@ -1324,8 +1398,8 @@
                 "text": "Swap path signals were detected without clear minOut, deadline, slippage, or stale-quote constraints."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling",
-                "text": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling"
+                "markdown": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy.",
+                "text": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy."
               },
               "id": "ARK-AMM-005",
               "name": "slippage/min-output-constraints-missing-or-unclear",
@@ -1345,7 +1419,7 @@
               }
             }
           ],
-          "semanticVersion": "1.4.0"
+          "semanticVersion": "1.5.0"
         }
       }
     }

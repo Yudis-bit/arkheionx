@@ -19,6 +19,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, v1.0.0 |
 | Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
 | Output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](../docs/OUTPUT_ARTIFACTS.md) | output naming, generated artifacts, reports directory |
+| Invariant test plan generator | [`docs/INVARIANT_TEST_PLAN_GENERATOR.md`](../docs/INVARIANT_TEST_PLAN_GENERATOR.md) | invariant generator, test plan generator, suggested tests |
+| Foundry invariant skeletons | [`docs/FOUNDRY_INVARIANT_SKELETONS.md`](../docs/FOUNDRY_INVARIANT_SKELETONS.md) | Foundry invariant skeleton, invariant candidates, local scaffold |
+| Invariant safety boundaries | [`docs/INVARIANT_SAFETY_BOUNDARIES.md`](../docs/INVARIANT_SAFETY_BOUNDARIES.md) | invariant safety, local-only skeletons, human review |
 | v1.0 release notes draft | [`docs/V1_0_RELEASE_NOTES_DRAFT.md`](../docs/V1_0_RELEASE_NOTES_DRAFT.md) | v1.0.0, release notes, stable public release |
 | Feedback loop | [`docs/FEEDBACK_LOOP.md`](../docs/FEEDBACK_LOOP.md) | feedback loop, false positive report, external calibration |
 | Public feedback guide | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](../docs/PUBLIC_FEEDBACK_GUIDE.md) | public feedback, safe disclosure, report quality |
@@ -40,6 +43,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Ecosystem common gaps | [`reports/ecosystem_common_gaps.md`](../reports/ecosystem_common_gaps.md) | common gap report, recurring findings, anonymized recommendations |
 | Ecosystem pilot metadata | [`metadata/ecosystem_pilot_example.json`](../metadata/ecosystem_pilot_example.json) | synthetic ecosystem pilot, ecosystem data model, repo aliases |
 | Ecosystem report generator | [`scripts/generate_ecosystem_report.py`](../scripts/generate_ecosystem_report.py) | ecosystem report generator, check mode, local static |
+| Test plan generator | [`scripts/generate_test_plan.py`](../scripts/generate_test_plan.py) | test plan generator, invariant generator, check mode |
 | Services | [`SERVICES.md`](../SERVICES.md) | Launch Report, Pre-Audit Sprint, Contest Readiness Pack, Ecosystem Pack |
 | Pre-Audit Readiness OS | [`docs/PRE_AUDIT_READINESS_OS.md`](../docs/PRE_AUDIT_READINESS_OS.md) | scanner, readiness gap, historical pattern similarity |
 | GitHub Action usage | [`docs/GITHUB_ACTION_USAGE.md`](../docs/GITHUB_ACTION_USAGE.md) | github-action, SARIF, baseline diff, PR comment |
@@ -92,6 +96,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Security memory graph JSON | [`metadata/security_memory_graph.json`](../metadata/security_memory_graph.json) | security memory graph, nodes, edges |
 | Finding knowledge map JSON | [`metadata/finding_knowledge_map.json`](../metadata/finding_knowledge_map.json) | finding knowledge map, related patterns, suggested tests |
 | Rule calibration matrix JSON | [`metadata/rule_calibration_matrix.json`](../metadata/rule_calibration_matrix.json) | rule calibration matrix, confidence requirements, downgrade conditions |
+| Finding test plan map JSON | [`metadata/finding_test_plan_map.json`](../metadata/finding_test_plan_map.json) | finding test plan map, suggested tests, invariant candidates |
 | Feedback schema JSON | [`metadata/feedback_schema.json`](../metadata/feedback_schema.json) | feedback schema, feedback loop, calibration |
 | Feedback examples JSON | [`metadata/feedback_examples.json`](../metadata/feedback_examples.json) | synthetic feedback, feedback examples, no adoption claims |
 | Rule calibration backlog JSON | [`metadata/rule_calibration_backlog.json`](../metadata/rule_calibration_backlog.json) | rule calibration backlog, feedback dashboard, calibration |
@@ -120,9 +125,15 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Oracle staking remediation roadmap | [`examples/reports/oracle-staking-fixture-remediation-roadmap.md`](../examples/reports/oracle-staking-fixture-remediation-roadmap.md) | remediation roadmap, launch blockers, audit handoff |
 | AMM fixture report | [`examples/reports/amm-fixture-pre-audit-report.md`](../examples/reports/amm-fixture-pre-audit-report.md) | AMM report, ARK-AMM, readiness findings |
 | AMM fixture SARIF | [`examples/reports/amm-fixture.sarif.json`](../examples/reports/amm-fixture.sarif.json) | AMM SARIF, ARK-AMM, Code Scanning |
+| AMM fixture test plan | [`examples/reports/amm-fixture-test-plan.md`](../examples/reports/amm-fixture-test-plan.md) | AMM test plan, invariant candidates, Foundry skeleton |
+| AMM Foundry invariant skeleton | [`examples/reports/ArkheionxAMMInvariants.t.sol`](../examples/reports/ArkheionxAMMInvariants.t.sol) | AMM invariant skeleton, Foundry, TODO assertions |
 | Lending fixture report | [`examples/reports/lending-fixture-pre-audit-report.md`](../examples/reports/lending-fixture-pre-audit-report.md) | lending report, ARK-LEND, readiness findings |
 | Lending fixture SARIF | [`examples/reports/lending-fixture.sarif.json`](../examples/reports/lending-fixture.sarif.json) | lending SARIF, ARK-LEND, Code Scanning |
+| Lending fixture test plan | [`examples/reports/lending-fixture-test-plan.md`](../examples/reports/lending-fixture-test-plan.md) | lending test plan, collateral debt invariant, Foundry skeleton |
+| Lending Foundry invariant skeleton | [`examples/reports/ArkheionxLendingInvariants.t.sol`](../examples/reports/ArkheionxLendingInvariants.t.sol) | lending invariant skeleton, Foundry, liquidation boundary |
 | AMM Lending hybrid report | [`examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`](../examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md) | hybrid report, ARK-AMM, ARK-LEND |
+| AMM Lending hybrid test plan | [`examples/reports/amm-lending-hybrid-fixture-test-plan.md`](../examples/reports/amm-lending-hybrid-fixture-test-plan.md) | hybrid test plan, AMM, lending |
+| Hybrid Foundry invariant skeleton | [`examples/reports/ArkheionxHybridInvariants.t.sol`](../examples/reports/ArkheionxHybridInvariants.t.sol) | hybrid invariant skeleton, AMM lending, Foundry |
 | Demo pre-audit report | [`examples/reports/demo-pre-audit-report.md`](../examples/reports/demo-pre-audit-report.md) | public demo reports, demo protocol, readiness report |
 | Demo launch report | [`examples/reports/demo-launch-report.md`](../examples/reports/demo-launch-report.md) | Launch Report, public demo, client-ready report |
 | Demo contest readiness | [`examples/reports/demo-contest-readiness.md`](../examples/reports/demo-contest-readiness.md) | Contest Readiness, scope checklist, public demo |
@@ -150,8 +161,12 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Security memory graph schema | [`schemas/security-memory-graph.schema.json`](../schemas/security-memory-graph.schema.json) | JSON schema, security memory graph, schema freeze |
 | Finding knowledge map schema | [`schemas/finding-knowledge-map.schema.json`](../schemas/finding-knowledge-map.schema.json) | JSON schema, finding knowledge map, schema freeze |
 | Rule calibration matrix schema | [`schemas/rule-calibration-matrix.schema.json`](../schemas/rule-calibration-matrix.schema.json) | JSON schema, rule calibration matrix, schema freeze |
+| Test plan schema | [`schemas/test_plan.schema.json`](../schemas/test_plan.schema.json) | JSON schema, test plan, invariant candidates |
 | Report template | [`templates/pre_audit_report.md`](../templates/pre_audit_report.md) | template, Markdown report, disclaimer |
 | Invariant skeleton template | [`templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol`](../templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol) | Foundry, invariant, skeleton |
+| AMM invariant skeleton template | [`templates/invariant_skeletons/amm_invariants.sol`](../templates/invariant_skeletons/amm_invariants.sol) | AMM, Foundry, invariant skeleton |
+| Lending invariant skeleton template | [`templates/invariant_skeletons/lending_invariants.sol`](../templates/invariant_skeletons/lending_invariants.sol) | lending, Foundry, invariant skeleton |
+| Hybrid invariant skeleton template | [`templates/invariant_skeletons/hybrid_invariants.sol`](../templates/invariant_skeletons/hybrid_invariants.sol) | hybrid, Foundry, invariant skeleton |
 
 ## Search Term Index
 
@@ -267,6 +282,14 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `liquidation boundary` | liquidation threshold, close factor, liquidation bonus | lending | ARK-LEND-002, docs/LENDING_RULE_PACK.md | liquidation-boundary, threshold, lending |
 | `interest index` | borrow index, accrueInterest, interest accounting | lending | ARK-LEND-003, docs/LENDING_RULE_PACK.md | interest-index, borrow-index, rounding-drift |
 | `lending health factor` | healthFactor, collateral value, oracle-dependent liquidation | lending | ARK-LEND-004, docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md | health-factor, lending-oracle, price-shock |
+| `invariant generator` | test plan generator, Arkheionx test plan generator, generate_test_plan.py | test planning | scripts/generate_test_plan.py, docs/INVARIANT_TEST_PLAN_GENERATOR.md | invariant-generator, test-plan-generator, foundry |
+| `Foundry invariant skeleton` | invariant skeleton, Foundry skeleton, Arkheionx invariant skeleton | test planning | docs/FOUNDRY_INVARIANT_SKELETONS.md, templates/invariant_skeletons/ | foundry-invariant-skeleton, local-testing, defensive-scaffold |
+| `suggested tests` | finding suggested tests, test recommendations, defensive test ideas | test planning | metadata/finding_test_plan_map.json, examples/reports/amm-fixture-test-plan.md | suggested-tests, readiness-remediation, test-plan |
+| `invariant candidates` | candidate invariants, property candidates, invariant ideas | test planning | metadata/finding_test_plan_map.json, schemas/test_plan.schema.json | invariant-candidates, property-testing, foundry |
+| `AMM invariant skeleton` | AMM test plan, AMM Foundry skeleton, pool invariant skeleton | AMM | examples/reports/ArkheionxAMMInvariants.t.sol, docs/AMM_RULE_PACK.md | amm-invariant-skeleton, constant-product, reserve-accounting |
+| `lending invariant skeleton` | lending test plan, lending Foundry skeleton, collateral debt skeleton | lending | examples/reports/ArkheionxLendingInvariants.t.sol, docs/LENDING_RULE_PACK.md | lending-invariant-skeleton, collateral-debt, liquidation-boundary |
+| `oracle test plan` | stale oracle test plan, oracle freshness tests, oracle invariant candidates | oracle | ARK-ORC-001, metadata/finding_test_plan_map.json | oracle-test-plan, stale-price, heartbeat |
+| `reward index invariant` | reward accumulator invariant, reward index monotonicity, staking index test | reward | ARK-RWD-002, docs/REWARD_ACCOUNTING_RULE_PACK.md | reward-index, accumulator, staking |
 
 ## Historical Memory Index
 
@@ -460,4 +483,16 @@ cohort readiness
 ecosystem operator
 repo-by-repo readiness
 ecosystem readiness summary
+invariant generator
+test plan generator
+Foundry invariant skeleton
+suggested tests
+invariant candidates
+AMM invariant skeleton
+lending invariant skeleton
+oracle test plan
+vault invariant
+liquidation boundary test
+collateral debt invariant
+reward index invariant
 ```

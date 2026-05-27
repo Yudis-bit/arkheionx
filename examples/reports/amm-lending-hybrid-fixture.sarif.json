@@ -50,6 +50,10 @@
             "evidence_count": 2,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "Core accounting relationships hold after any allowed user action.",
+              "Privileged actions cannot silently bypass documented accounting assumptions."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "protocol-specific-conservation-invariant",
@@ -96,7 +100,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+              "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+              "Add a stateful invariant suite for the core protocol lifecycle.",
+              "Add handler actions for normal user flows and documented edge cases.",
+              "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
             ],
             "tags": [
               "invariant-testing",
@@ -139,6 +146,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "Normalized oracle values remain within documented unit and decimal assumptions."
+            ],
             "knowledge": {
               "finding_map_version": "0.9.0",
               "related_docs": [],
@@ -153,7 +163,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+              "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+              "Test decimals normalization across expected feed decimals.",
+              "Test zero, negative, or invalid oracle answers if applicable.",
+              "Assert normalized price units match accounting units."
             ],
             "tags": [
               "oracle-risk",
@@ -196,6 +209,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+            "invariant_candidates": [
+              "Accounting decisions only use oracle data that satisfies documented freshness policy."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "accounting-value-uses-valid-price",
@@ -249,7 +265,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+              "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+              "Reject stale oracle rounds or document fallback behavior.",
+              "Test updatedAt or heartbeat boundaries.",
+              "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
             ],
             "tags": [
               "oracle-risk",
@@ -293,6 +312,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
+            "invariant_candidates": [
+              "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "price-input-remains-manipulation-resistant",
@@ -339,7 +361,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+              "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+              "Test spot-price movement bounds.",
+              "Test TWAP or delay assumptions when used.",
+              "Document reserve-price dependency and expected safeguards."
             ],
             "tags": [
               "oracle-risk",
@@ -384,6 +409,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+            "invariant_candidates": [
+              "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+            ],
             "knowledge": {
               "finding_map_version": "0.9.0",
               "related_docs": [],
@@ -398,7 +426,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+              "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+              "Test documented price bounds.",
+              "Test invalid answer fallback behavior.",
+              "Add documentation for price shock and fallback assumptions."
             ],
             "tags": [
               "oracle-risk",
@@ -447,6 +478,10 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
+            "invariant_candidates": [
+              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+              "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "constant-product-or-stableswap-invariant",
@@ -495,7 +530,10 @@
             "priority": "High readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+              "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+              "Test repeated swaps across small and large reserve states.",
+              "Document expected invariant tolerance."
             ],
             "tags": [
               "amm-invariant",
@@ -544,6 +582,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to spot-price and pool-price accounting readiness classes.",
+            "invariant_candidates": [
+              "Reserve-based price consumers respect documented bounds and delay assumptions."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "price-input-remains-bounded",
@@ -590,7 +631,10 @@
             "priority": "High readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+              "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+              "Test reserve-price movement bounds.",
+              "Test TWAP or delay assumptions if used.",
+              "Document whether other accounting paths rely on spot reserve price."
             ],
             "tags": [
               "amm-pricing",
@@ -640,6 +684,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to fee-on-transfer and token accounting assumption readiness classes.",
+            "invariant_candidates": [
+              "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "reserve-increase-equals-accounted-input",
@@ -684,7 +731,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+              "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+              "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+              "Simulate fee-on-transfer behavior with a local mock if supported.",
+              "Document unsupported token types if not handled."
             ],
             "tags": [
               "amm-token-assumptions",
@@ -733,6 +783,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to price boundary and quote freshness readiness classes.",
+            "invariant_candidates": [
+              "Swap execution respects user-provided output bounds and documented deadline policy."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "swap-output-respects-user-bound",
@@ -778,7 +831,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+              "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+              "Test minOut enforcement.",
+              "Test stale quote or deadline behavior if supported.",
+              "Assert user-provided slippage bounds are respected."
             ],
             "tags": [
               "amm-slippage",
@@ -827,6 +883,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to collateral/debt invariant and oracle-dependent lending readiness classes. This is defensive review context, not vulnerability confirmation.",
+            "invariant_candidates": [
+              "Collateral value and debt remain inside documented solvency constraints after allowed user actions."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "collateral-debt-solvency",
@@ -873,7 +932,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested."
+              "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+              "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
+              "Test debt cannot exceed documented collateral constraints.",
+              "Test unsafe withdrawals are rejected or explicitly documented."
             ],
             "tags": [
               "lending-solvency",
@@ -922,6 +984,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to liquidation boundary and collateral accounting readiness classes.",
+            "invariant_candidates": [
+              "Liquidation eligibility changes only at documented threshold boundaries."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "solvent-position-not-liquidatable",
@@ -968,7 +1033,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds."
+              "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+              "Test just-above-threshold positions cannot be liquidated.",
+              "Test just-below-threshold positions can be liquidated according to policy.",
+              "Assert liquidation bonus and close factor stay within documented bounds."
             ],
             "tags": [
               "lending-liquidation",
@@ -1012,6 +1080,9 @@
             "evidence_count": 3,
             "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
             "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
+            "invariant_candidates": [
+              "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "health-factor-uses-valid-price",
@@ -1058,7 +1129,10 @@
             "priority": "Low readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy."
+              "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+              "Test stale oracle rejection for borrow and liquidation paths.",
+              "Test decimals normalization for collateral valuation.",
+              "Test price shock boundaries around health-factor transitions."
             ],
             "tags": [
               "lending-oracle",
@@ -1107,6 +1181,9 @@
             "evidence_count": 5,
             "false_positive_notes": "",
             "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
+            "invariant_candidates": [
+              "Cash, total borrows, total reserves, and utilization remain internally consistent."
+            ],
             "knowledge": {
               "broken_invariants": [
                 "borrow-cannot-exceed-available-liquidity",
@@ -1152,7 +1229,10 @@
             "priority": "Medium readiness gap",
             "readiness_gap": true,
             "suggested_tests": [
-              "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently."
+              "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+              "Test borrow cannot exceed available liquidity.",
+              "Test repay updates cash, debt, and reserves consistently.",
+              "Assert reserves cannot be withdrawn beyond documented constraints."
             ],
             "tags": [
               "lending-liquidity",
@@ -1173,8 +1253,8 @@
                 "text": "Protocol-like value flows were detected, but no invariant/property testing signal was found."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-                "text": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+                "markdown": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.",
+                "text": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions."
               },
               "id": "ARK-TST-002",
               "name": "no-invariant-tests-detected-for-defi-protocol-shape",
@@ -1197,8 +1277,8 @@
                 "text": "Oracle and price-feed signals were detected without enough freshness or sanity-check language."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-                "text": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+                "markdown": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions.",
+                "text": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions."
               },
               "id": "ARK-ORC-002",
               "name": "oracle-usage-lacks-visible-staleness,-twap,-bounds,-or-sanity-coverage",
@@ -1221,8 +1301,8 @@
                 "text": "Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling",
-                "text": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling"
+                "markdown": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling\n\nSuggested defensive tests:\n- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.\n- Reject stale oracle rounds or document fallback behavior.\n- Test updatedAt or heartbeat boundaries.\n\nInvariant candidates:\n- Accounting decisions only use oracle data that satisfies documented freshness policy.",
+                "text": "Defensive readiness checks:\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling\n\nSuggested defensive tests:\n- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.\n- Reject stale oracle rounds or document fallback behavior.\n- Test updatedAt or heartbeat boundaries.\n\nInvariant candidates:\n- Accounting decisions only use oracle data that satisfies documented freshness policy."
               },
               "id": "ARK-ORC-001",
               "name": "oracle-dependent-logic-without-stale-price-tests",
@@ -1246,8 +1326,8 @@
                 "text": "Spot, reserve, pool, or sqrtPriceX96 pricing signals were detected without visible manipulation-resistance tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks",
-                "text": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks"
+                "markdown": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks\n\nSuggested defensive tests:\n- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.\n- Test spot-price movement bounds.\n- Test TWAP or delay assumptions when used.\n\nInvariant candidates:\n- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.",
+                "text": "Defensive readiness checks:\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks\n\nSuggested defensive tests:\n- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.\n- Test spot-price movement bounds.\n- Test TWAP or delay assumptions when used.\n\nInvariant candidates:\n- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
               },
               "id": "ARK-ORC-003",
               "name": "spot-or-reserve-based-pricing-without-manipulation-resistance-tests",
@@ -1272,8 +1352,8 @@
                 "text": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes",
-                "text": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes"
+                "markdown": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes\n\nSuggested defensive tests:\n- Add documentation plus local tests showing fallback and out-of-bounds price behavior.\n- Test documented price bounds.\n- Test invalid answer fallback behavior.\n\nInvariant candidates:\n- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.",
+                "text": "Defensive readiness checks:\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes\n\nSuggested defensive tests:\n- Add documentation plus local tests showing fallback and out-of-bounds price behavior.\n- Test documented price bounds.\n- Test invalid answer fallback behavior.\n\nInvariant candidates:\n- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
               },
               "id": "ARK-ORC-005",
               "name": "missing-price-bounds-or-fallback-assumptions-documentation",
@@ -1297,8 +1377,8 @@
                 "text": "AMM reserve, swap, or liquidity signals were detected without visible invariant or reserve-accounting tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds",
-                "text": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds"
+                "markdown": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
+                "text": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
               },
               "id": "ARK-AMM-001",
               "name": "amm-invariant-assumptions-not-covered-by-tests",
@@ -1322,8 +1402,8 @@
                 "text": "Reserve-ratio, quote, getAmountOut, or spot-price signals were detected without visible TWAP, delay, bounds, or manipulation-resistance tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds",
-                "text": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds"
+                "markdown": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions.",
+                "text": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions."
               },
               "id": "ARK-AMM-003",
               "name": "spot-price-or-reserve-price-dependency-without-manipulation-resistance-tests",
@@ -1348,8 +1428,8 @@
                 "text": "Token transfer and amountIn accounting signals were detected without clear received-amount tests or non-standard token assumptions."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation",
-                "text": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation"
+                "markdown": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
+                "text": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
               },
               "id": "ARK-AMM-004",
               "name": "fee-on-transfer-or-non-standard-token-assumptions-not-documented",
@@ -1373,8 +1453,8 @@
                 "text": "Swap path signals were detected without clear minOut, deadline, slippage, or stale-quote constraints."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling",
-                "text": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling"
+                "markdown": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy.",
+                "text": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy."
               },
               "id": "ARK-AMM-005",
               "name": "slippage/min-output-constraints-missing-or-unclear",
@@ -1398,8 +1478,8 @@
                 "text": "Collateral, debt, borrow, repay, or health-factor signals were detected without visible solvency invariant tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- collateral debt invariant\n- unsafe withdrawal rejection\n- borrow limit boundary\n- repay/deposit accounting",
-                "text": "Defensive readiness checks:\n- collateral debt invariant\n- unsafe withdrawal rejection\n- borrow limit boundary\n- repay/deposit accounting"
+                "markdown": "Defensive readiness checks:\n- collateral debt invariant\n- unsafe withdrawal rejection\n- borrow limit boundary\n- repay/deposit accounting\n\nSuggested defensive tests:\n- Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.\n- Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.\n- Test debt cannot exceed documented collateral constraints.\n\nInvariant candidates:\n- Collateral value and debt remain inside documented solvency constraints after allowed user actions.",
+                "text": "Defensive readiness checks:\n- collateral debt invariant\n- unsafe withdrawal rejection\n- borrow limit boundary\n- repay/deposit accounting\n\nSuggested defensive tests:\n- Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.\n- Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.\n- Test debt cannot exceed documented collateral constraints.\n\nInvariant candidates:\n- Collateral value and debt remain inside documented solvency constraints after allowed user actions."
               },
               "id": "ARK-LEND-001",
               "name": "collateral/debt-solvency-invariant-not-covered-by-tests",
@@ -1423,8 +1503,8 @@
                 "text": "Liquidation, threshold, bonus, close factor, or seize signals were detected without visible just-above/just-below boundary tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- just-above threshold\n- just-below threshold\n- bonus bounds\n- partial liquidation math",
-                "text": "Defensive readiness checks:\n- just-above threshold\n- just-below threshold\n- bonus bounds\n- partial liquidation math"
+                "markdown": "Defensive readiness checks:\n- just-above threshold\n- just-below threshold\n- bonus bounds\n- partial liquidation math\n\nSuggested defensive tests:\n- Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.\n- Test just-above-threshold positions cannot be liquidated.\n- Test just-below-threshold positions can be liquidated according to policy.\n\nInvariant candidates:\n- Liquidation eligibility changes only at documented threshold boundaries.",
+                "text": "Defensive readiness checks:\n- just-above threshold\n- just-below threshold\n- bonus bounds\n- partial liquidation math\n\nSuggested defensive tests:\n- Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.\n- Test just-above-threshold positions cannot be liquidated.\n- Test just-below-threshold positions can be liquidated according to policy.\n\nInvariant candidates:\n- Liquidation eligibility changes only at documented threshold boundaries."
               },
               "id": "ARK-LEND-002",
               "name": "liquidation-boundary-tests-missing",
@@ -1448,8 +1528,8 @@
                 "text": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- stale oracle rejection\n- decimals normalization\n- price shock boundary\n- borrow blocked on invalid price",
-                "text": "Defensive readiness checks:\n- stale oracle rejection\n- decimals normalization\n- price shock boundary\n- borrow blocked on invalid price"
+                "markdown": "Defensive readiness checks:\n- stale oracle rejection\n- decimals normalization\n- price shock boundary\n- borrow blocked on invalid price\n\nSuggested defensive tests:\n- Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.\n- Test stale oracle rejection for borrow and liquidation paths.\n- Test decimals normalization for collateral valuation.\n\nInvariant candidates:\n- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.",
+                "text": "Defensive readiness checks:\n- stale oracle rejection\n- decimals normalization\n- price shock boundary\n- borrow blocked on invalid price\n\nSuggested defensive tests:\n- Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.\n- Test stale oracle rejection for borrow and liquidation paths.\n- Test decimals normalization for collateral valuation.\n\nInvariant candidates:\n- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
               },
               "id": "ARK-LEND-004",
               "name": "oracle-dependent-borrowing/liquidation-without-stale-price-tests",
@@ -1473,8 +1553,8 @@
                 "text": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- available liquidity bound\n- repay updates cash/debt\n- reserve withdrawal constraints\n- utilization bounds",
-                "text": "Defensive readiness checks:\n- available liquidity bound\n- repay updates cash/debt\n- reserve withdrawal constraints\n- utilization bounds"
+                "markdown": "Defensive readiness checks:\n- available liquidity bound\n- repay updates cash/debt\n- reserve withdrawal constraints\n- utilization bounds\n\nSuggested defensive tests:\n- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.\n- Test borrow cannot exceed available liquidity.\n- Test repay updates cash, debt, and reserves consistently.\n\nInvariant candidates:\n- Cash, total borrows, total reserves, and utilization remain internally consistent.",
+                "text": "Defensive readiness checks:\n- available liquidity bound\n- repay updates cash/debt\n- reserve withdrawal constraints\n- utilization bounds\n\nSuggested defensive tests:\n- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.\n- Test borrow cannot exceed available liquidity.\n- Test repay updates cash, debt, and reserves consistently.\n\nInvariant candidates:\n- Cash, total borrows, total reserves, and utilization remain internally consistent."
               },
               "id": "ARK-LEND-005",
               "name": "reserve/cash-accounting-assumptions-not-covered",
@@ -1494,7 +1574,7 @@
               }
             }
           ],
-          "semanticVersion": "1.4.0"
+          "semanticVersion": "1.5.0"
         }
       }
     }

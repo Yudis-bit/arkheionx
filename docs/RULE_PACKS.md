@@ -83,3 +83,12 @@ v1.4.0 prepares first-class AMM and lending readiness packs:
 
 These packs are heuristic and static. They help identify audit-preparation
 gaps and suggested defensive tests; they do not confirm vulnerabilities.
+
+## Test Plan Mapping
+
+v1.5.0 adds `metadata/finding_test_plan_map.json` and
+`scripts/generate_test_plan.py`. Rule-pack findings can now map to suggested
+tests, invariant candidates, and Foundry skeleton function names.
+
+Generated plans are defensive starter scaffolds. They are not formal
+verification and require project-specific review.

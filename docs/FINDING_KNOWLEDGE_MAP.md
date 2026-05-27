@@ -18,6 +18,10 @@ Finding IDs are more useful when maintainers can answer:
 The map turns scanner output into searchable security memory without requiring
 a database or external service.
 
+v1.5.0 adds a companion map, `metadata/finding_test_plan_map.json`, for
+turning finding IDs into suggested tests, invariant candidates, and Foundry
+skeleton function names.
+
 ## Maintainer Update Rules
 
 When adding or changing a mapping:

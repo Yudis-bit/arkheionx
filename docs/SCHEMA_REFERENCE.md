@@ -18,6 +18,7 @@ extension.
 | Security memory graph | [`schemas/security-memory-graph.schema.json`](../schemas/security-memory-graph.schema.json) |
 | Finding knowledge map | [`schemas/finding-knowledge-map.schema.json`](../schemas/finding-knowledge-map.schema.json) |
 | Rule calibration matrix | [`schemas/rule-calibration-matrix.schema.json`](../schemas/rule-calibration-matrix.schema.json) |
+| Test plan JSON | [`schemas/test_plan.schema.json`](../schemas/test_plan.schema.json) |
 
 ## Versioning
 
@@ -26,7 +27,7 @@ The main scanner JSON includes:
 ```json
 {
   "schema_version": "1.0.0",
-  "version": "1.4.0"
+  "version": "1.5.0"
 }
 ```
 
@@ -37,6 +38,11 @@ minor releases. Baselines, diff outputs, and issue plans also include
 v1.4.0 adds optional AMM and lending findings under the existing `findings`,
 `rule_packs`, SARIF, and issue-plan shapes. The schema remains `1.0.0`
 because these are additive rule-pack entries, not a top-level schema break.
+
+v1.5.0 adds optional `suggested_tests`, `invariant_candidates`, and
+`test_plan` fields to finding objects, plus a separate generated test-plan JSON
+artifact. These are additive planning fields and remain defensive readiness
+metadata.
 
 ## Compatibility Policy
 

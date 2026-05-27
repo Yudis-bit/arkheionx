@@ -31,6 +31,7 @@ class SchemaOutputTests(unittest.TestCase):
             "security-memory-graph.schema.json",
             "finding-knowledge-map.schema.json",
             "rule-calibration-matrix.schema.json",
+            "test_plan.schema.json",
         ]:
             payload = load_json(SCHEMA_DIR / name)
             self.assertIn("title", payload)
@@ -93,7 +94,7 @@ class SchemaOutputTests(unittest.TestCase):
             diff_data = load_json(diff_json)
 
             self.assertEqual(report_data["schema_version"], "1.0.0")
-            self.assertEqual(report_data["version"], "1.4.0")
+            self.assertEqual(report_data["version"], "1.5.0")
             self.assertEqual(plan_data["schema_version"], "1.0.0")
             self.assertEqual(baseline_data["schema_version"], "1.0.0")
             self.assertEqual(diff_data["schema_version"], "1.0.0")

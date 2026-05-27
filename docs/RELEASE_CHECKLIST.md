@@ -377,6 +377,31 @@ written reason in the release PR.
 - [ ] Safety wording check passes in strict mode.
 - [ ] Unit tests pass.
 
+## v1.5.0 Invariant/Test Plan Generator Checks
+
+- [ ] `docs/INVARIANT_TEST_PLAN_GENERATOR.md` exists.
+- [ ] `docs/FOUNDRY_INVARIANT_SKELETONS.md` exists.
+- [ ] `docs/INVARIANT_SAFETY_BOUNDARIES.md` exists.
+- [ ] `metadata/finding_test_plan_map.json` parses.
+- [ ] `scripts/generate_test_plan.py --check` passes.
+- [ ] AMM fixture test plan Markdown and JSON exist.
+- [ ] Lending fixture test plan Markdown and JSON exist.
+- [ ] Hybrid fixture test plan Markdown and JSON exist.
+- [ ] Generated Foundry skeletons include TODO placeholders and safety notices.
+- [ ] Generated skeletons avoid production endpoints, credentials, real
+      deployment assumptions, and unsafe payload language.
+- [ ] Scanner JSON findings include `suggested_tests` and
+      `invariant_candidates` where mappings exist.
+- [ ] Issue plans include suggested test and invariant-candidate content.
+- [ ] `schemas/test_plan.schema.json` exists and parses.
+- [ ] Search index includes invariant/test-plan generator surfaces.
+- [ ] No live-chain, RPC, deployed-contract testing, attack automation, or
+      complete-coverage claims added.
+- [ ] Docs link check passes.
+- [ ] Version consistency check passes.
+- [ ] Safety wording check passes in strict mode.
+- [ ] Unit tests pass.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

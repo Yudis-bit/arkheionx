@@ -352,4 +352,13 @@ web3-security
 indie-defi
 security-tools
 github-action
+test-plan-generator
+foundry-invariant-skeleton
+```
+
+## Test Plan Searches
+
+```sh
+rg -n "invariant candidates|suggested tests|Foundry skeleton" docs examples/reports metadata
+rg -n "finding_test_plan_map|generate_test_plan" .
 ```

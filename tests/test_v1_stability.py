@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0"
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0"
 
 
 class V1StabilityTests(unittest.TestCase):
@@ -13,15 +13,15 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_public_docs_name_v1_stable_surface(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("Latest stable release: **v1.3.0", readme)
-        self.assertIn("Stable v1.3.x Surface", readme)
+        self.assertIn("Latest stable release: **v1.4.0", readme)
+        self.assertIn("Stable v1.4.x Surface", readme)
         self.assertIn(STABLE_ACTION, readme)
         self.assertIn("docs/CLI_REFERENCE.md", readme)
         self.assertIn("docs/SCHEMA_REFERENCE.md", readme)
         self.assertIn("docs/OUTPUT_ARTIFACTS.md", readme)
 
         action_docs = self.read("docs/GITHUB_ACTION_USAGE.md")
-        self.assertIn("Stable v1.3.x Inputs", action_docs)
+        self.assertIn("Stable v1.4.x Inputs", action_docs)
         self.assertIn(STABLE_ACTION, action_docs)
 
     def test_v1_reference_files_exist(self) -> None:
@@ -53,8 +53,8 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_changelog_and_roadmap_mark_v1_candidate(self) -> None:
         changelog = self.read("CHANGELOG.md")
-        self.assertIn("## v1.4.0 - Unreleased", changelog)
-        self.assertIn("## v1.3.0", changelog)
+        self.assertIn("## v1.5.0 - Unreleased", changelog)
+        self.assertIn("## v1.4.0", changelog)
         self.assertIn("## v1.2.0", changelog)
         self.assertIn("## v1.1.1", changelog)
         self.assertIn("## v1.1.0", changelog)
@@ -63,8 +63,9 @@ class V1StabilityTests(unittest.TestCase):
         self.assertIn("v1.0.0: Stable public release", roadmap)
         self.assertIn("v1.2.0: Paid Offer Refinement released", roadmap)
         self.assertIn("v1.3.0: Ecosystem Pack released", roadmap)
-        self.assertIn("v1.4.0: AMM + Lending Protocol Packs current milestone", roadmap)
-        self.assertIn("v1.5.0: Invariant/Test Plan Generator Upgrade", roadmap)
+        self.assertIn("v1.4.0: AMM + Lending Protocol Packs released", roadmap)
+        self.assertIn("v1.5.0: Invariant/Test Plan Generator Upgrade current milestone", roadmap)
+        self.assertIn("v1.6.0: Internal Engine Split", roadmap)
 
 
 if __name__ == "__main__":

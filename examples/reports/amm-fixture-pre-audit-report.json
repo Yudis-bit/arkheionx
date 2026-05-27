@@ -105,6 +105,10 @@
       "fingerprint": "513273fd79a5b51907be9ccf",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
       "knowledge": {
         "broken_invariants": [
           "protocol-specific-conservation-invariant",
@@ -152,13 +156,35 @@
       "recommended_defensive_checks": [],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
       ],
       "suppressible": true,
       "tags": [
         "invariant-testing",
         "amm"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_coreAccountingRelationshipsHold",
+          "invariant_privilegedActionsRespectDocumentedAssumptions"
+        ],
+        "manual_review_notes": [
+          "Review whether the protocol uses another property-testing framework outside Foundry."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Target contracts",
+          "Allowed action handler",
+          "Local mocks for assets and oracle inputs"
+        ],
+        "rule_family": "testing",
+        "safety_notes": [
+          "Generated invariants are starting points and need human tailoring."
+        ]
+      },
       "title": "No invariant tests detected for DeFi protocol shape",
       "why_it_matters": ""
     },
@@ -210,6 +236,9 @@
       "fingerprint": "3e0db8a302dcfc0b19bcdf3e",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -225,13 +254,33 @@
       "recommended_defensive_checks": [],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
       ],
       "suppressible": true,
       "tags": [
         "oracle-risk",
         "price-assumptions"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_oracleNormalizationMatchesAccountingUnits"
+        ],
+        "manual_review_notes": [
+          "Review whether feed decimals are fixed at deployment."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Accounting consumer"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use synthetic feed answers and local mocks."
+        ]
+      },
       "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
       "why_it_matters": ""
     },
@@ -309,6 +358,9 @@
       "fingerprint": "93c080a4c61fba5511c77110",
       "historical_pattern_similarity": "",
       "id": "ARK-REENT-001",
+      "invariant_candidates": [
+        "External-call flows cannot observe or preserve inconsistent accounting state."
+      ],
       "knowledge": {
         "broken_invariants": [
           "single-claim-or-withdrawal",
@@ -355,13 +407,33 @@
       "recommended_defensive_checks": [],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Review state update order and add local malicious-receiver tests where callbacks are possible."
+        "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+        "Add a benign callback-capable receiver stub.",
+        "Assert state updates happen before external value transfer where required.",
+        "Test withdraw, claim, refund, or swap flows for accounting consistency."
       ],
       "suppressible": true,
       "tags": [
         "reentrancy-review",
         "value-flow"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_externalCallFlowsPreserveAccountingState"
+        ],
+        "manual_review_notes": [
+          "Review inherited guards and pull-payment patterns."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "External-call flow",
+          "Local receiver stub"
+        ],
+        "rule_family": "reentrancy-value-flow",
+        "safety_notes": [
+          "Use a harmless local receiver stub with TODO assertions."
+        ]
+      },
       "title": "External-call value flow needs reentrancy review",
       "why_it_matters": ""
     },
@@ -418,6 +490,9 @@
       "fingerprint": "204867f6f7d3206783b6abd7",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
       "knowledge": {
         "broken_invariants": [
           "accounting-value-uses-valid-price",
@@ -477,7 +552,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
       ],
       "suppressible": true,
       "tags": [
@@ -485,6 +563,23 @@
         "oracle-rule-pack",
         "pre-audit-readiness"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_oracleFreshnessPolicyIsRespected"
+        ],
+        "manual_review_notes": [
+          "Check whether freshness validation is implemented in an imported adapter."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter or mock feed",
+          "Consumer contract"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local mock oracle responses only."
+        ]
+      },
       "title": "Oracle-dependent logic without stale-price tests",
       "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
     },
@@ -541,6 +636,9 @@
       "fingerprint": "c7c2a014effc261606b9ab6b",
       "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
       "id": "ARK-ORC-003",
+      "invariant_candidates": [
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+      ],
       "knowledge": {
         "broken_invariants": [
           "price-input-remains-manipulation-resistant",
@@ -593,7 +691,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards."
       ],
       "suppressible": true,
       "tags": [
@@ -602,6 +703,23 @@
         "reserve-pricing",
         "oracle-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_reservePriceDependencyIsBounded"
+        ],
+        "manual_review_notes": [
+          "Review whether price source is advisory or authoritative."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM or price source mock",
+          "Price consumer"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local reserve changes and avoid production market assumptions."
+        ]
+      },
       "title": "Spot or reserve-based pricing without manipulation-resistance tests",
       "why_it_matters": "Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design."
     },
@@ -658,6 +776,9 @@
       "fingerprint": "18c27a0df2b8711caa82c079",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -678,7 +799,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
       ],
       "suppressible": true,
       "tags": [
@@ -686,6 +810,23 @@
         "documentation-readiness",
         "oracle-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+        ],
+        "manual_review_notes": [
+          "Review whether fallback behavior is intentionally unavailable."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Consumer path"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local invalid-value mocks."
+        ]
+      },
       "title": "Missing price bounds or fallback assumptions documentation",
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
@@ -766,6 +907,9 @@
       "fingerprint": "5267b7cf94570dcb176a34ce",
       "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
       "id": "ARK-REENT-004",
+      "invariant_candidates": [
+        "External call ordering follows documented state-transition policy."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -785,7 +929,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+        "Document checks-effects-interactions or guard assumptions.",
+        "Test state before and after external calls.",
+        "Assert failure paths preserve accounting state."
       ],
       "suppressible": true,
       "tags": [
@@ -793,6 +940,23 @@
         "documentation-readiness",
         "reentrancy-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_externalCallOrderingMatchesPolicy"
+        ],
+        "manual_review_notes": [
+          "Review code paths manually before deciding severity."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "External call path",
+          "Failure-mode stub"
+        ],
+        "rule_family": "reentrancy-value-flow",
+        "safety_notes": [
+          "Use local failure-mode stubs only."
+        ]
+      },
       "title": "External call path without documented ordering assumptions",
       "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     },
@@ -887,6 +1051,10 @@
       "fingerprint": "cb6a1b50135e01f31517c594",
       "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
       "id": "ARK-AMM-001",
+      "invariant_candidates": [
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+      ],
       "knowledge": {
         "broken_invariants": [
           "constant-product-or-stableswap-invariant",
@@ -941,7 +1109,10 @@
       ],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+        "Test repeated swaps across small and large reserve states.",
+        "Document expected invariant tolerance."
       ],
       "suppressible": true,
       "tags": [
@@ -949,6 +1120,24 @@
         "amm-rule-pack",
         "pre-audit-readiness"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_ammAccountingPreservesDocumentedInvariant"
+        ],
+        "manual_review_notes": [
+          "Review exact AMM curve before choosing assertion tolerance."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM pool",
+          "Token0 and token1 mocks",
+          "Swap handler"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use toy/local reserves and no production market assumptions."
+        ]
+      },
       "title": "AMM invariant assumptions not covered by tests",
       "why_it_matters": "AMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations."
     },
@@ -1043,6 +1232,9 @@
       "fingerprint": "9a483231ae3cf546477eb4b1",
       "historical_pattern_similarity": "Maps to share inflation and liquidity accounting readiness classes.",
       "id": "ARK-AMM-002",
+      "invariant_candidates": [
+        "LP share supply tracks pool ownership within documented rounding."
+      ],
       "knowledge": {
         "broken_invariants": [
           "lp-value-conservation",
@@ -1095,7 +1287,10 @@
       ],
       "severity": "High readiness gap",
       "suggested_tests": [
-        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional."
+        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+        "Test first liquidity provider behavior.",
+        "Test proportional minting and proportional withdrawal.",
+        "Cover rounding and dust handling during mint/burn."
       ],
       "suppressible": true,
       "tags": [
@@ -1103,6 +1298,24 @@
         "amm-rule-pack",
         "share-accounting"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_lpSharesTrackPoolOwnership"
+        ],
+        "manual_review_notes": [
+          "Review minimum-liquidity and initial-share policy."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM pool",
+          "LP share accounting",
+          "Liquidity actors"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use local token mocks and project-specific rounding tolerance."
+        ]
+      },
       "title": "LP share accounting without mint/burn boundary tests",
       "why_it_matters": "LP share accounting controls who owns pool value; boundary mistakes can distort deposits, withdrawals, or low-liquidity behavior."
     },
@@ -1197,6 +1410,9 @@
       "fingerprint": "2eae6a7b67e516903d52f4ab",
       "historical_pattern_similarity": "Maps to spot-price and pool-price accounting readiness classes.",
       "id": "ARK-AMM-003",
+      "invariant_candidates": [
+        "Reserve-based price consumers respect documented bounds and delay assumptions."
+      ],
       "knowledge": {
         "broken_invariants": [
           "price-input-remains-bounded",
@@ -1248,7 +1464,10 @@
       ],
       "severity": "High readiness gap",
       "suggested_tests": [
-        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "Test reserve-price movement bounds.",
+        "Test TWAP or delay assumptions if used.",
+        "Document whether other accounting paths rely on spot reserve price."
       ],
       "suppressible": true,
       "tags": [
@@ -1257,6 +1476,23 @@
         "oracle-risk",
         "amm-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_reservePriceConsumersRespectBounds"
+        ],
+        "manual_review_notes": [
+          "Review whether price output is advisory or used for critical accounting."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM price function",
+          "Price consumer"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use local reserve changes only."
+        ]
+      },
       "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
       "why_it_matters": "Same-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented."
     },
@@ -1351,6 +1587,9 @@
       "fingerprint": "4534bbd962ed2f44c1905536",
       "historical_pattern_similarity": "Maps to fee-on-transfer and token accounting assumption readiness classes.",
       "id": "ARK-AMM-004",
+      "invariant_candidates": [
+        "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+      ],
       "knowledge": {
         "broken_invariants": [
           "reserve-increase-equals-accounted-input",
@@ -1400,7 +1639,10 @@
       ],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+        "Simulate fee-on-transfer behavior with a local mock if supported.",
+        "Document unsupported token types if not handled."
       ],
       "suppressible": true,
       "tags": [
@@ -1408,6 +1650,23 @@
         "fee-on-transfer",
         "amm-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_poolUsesActualReceivedAmounts"
+        ],
+        "manual_review_notes": [
+          "Review token support policy before adding mocks."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Transfer path",
+          "Token mock with configurable received amount"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use synthetic local token behavior only."
+        ]
+      },
       "title": "Fee-on-transfer or non-standard token assumptions not documented",
       "why_it_matters": "AMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled."
     },
@@ -1502,6 +1761,9 @@
       "fingerprint": "8047aeb2942bb0b0162b1684",
       "historical_pattern_similarity": "Maps to price boundary and quote freshness readiness classes.",
       "id": "ARK-AMM-005",
+      "invariant_candidates": [
+        "Swap execution respects user-provided output bounds and documented deadline policy."
+      ],
       "knowledge": {
         "broken_invariants": [
           "swap-output-respects-user-bound",
@@ -1552,7 +1814,10 @@
       ],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        "Test minOut enforcement.",
+        "Test stale quote or deadline behavior if supported.",
+        "Assert user-provided slippage bounds are respected."
       ],
       "suppressible": true,
       "tags": [
@@ -1560,12 +1825,29 @@
         "min-output",
         "amm-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_swapsRespectUserOutputBounds"
+        ],
+        "manual_review_notes": [
+          "Review whether slippage is enforced by a router outside this repository."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Swap function",
+          "Slippage or deadline inputs"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use local swap state and synthetic users."
+        ]
+      },
       "title": "Slippage/min-output constraints missing or unclear",
       "why_it_matters": "Slippage and stale quote controls help users and integrations bound expected outcomes around swaps."
     }
   ],
   "fingerprint_version": "0.6.0",
-  "generated_at": "2026-05-27T03:46:52+00:00",
+  "generated_at": "2026-05-27T04:09:42+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -1727,6 +2009,7 @@
   "knowledge": {
     "finding_knowledge_map": "metadata/finding_knowledge_map.json",
     "finding_map_version": "0.9.0",
+    "finding_test_plan_map": "metadata/finding_test_plan_map.json",
     "mapped_findings": [
       "ARK-ACC-001",
       "ARK-AMM-001",
@@ -1804,6 +2087,10 @@
       "fingerprint": "513273fd79a5b51907be9ccf",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
       "knowledge": {
         "broken_invariants": [
           "protocol-specific-conservation-invariant",
@@ -1851,13 +2138,35 @@
       "recommended_defensive_checks": [],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
       ],
       "suppressible": true,
       "tags": [
         "invariant-testing",
         "amm"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_coreAccountingRelationshipsHold",
+          "invariant_privilegedActionsRespectDocumentedAssumptions"
+        ],
+        "manual_review_notes": [
+          "Review whether the protocol uses another property-testing framework outside Foundry."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Target contracts",
+          "Allowed action handler",
+          "Local mocks for assets and oracle inputs"
+        ],
+        "rule_family": "testing",
+        "safety_notes": [
+          "Generated invariants are starting points and need human tailoring."
+        ]
+      },
       "title": "No invariant tests detected for DeFi protocol shape",
       "why_it_matters": ""
     },
@@ -1909,6 +2218,9 @@
       "fingerprint": "3e0db8a302dcfc0b19bcdf3e",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -1924,13 +2236,33 @@
       "recommended_defensive_checks": [],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
       ],
       "suppressible": true,
       "tags": [
         "oracle-risk",
         "price-assumptions"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_oracleNormalizationMatchesAccountingUnits"
+        ],
+        "manual_review_notes": [
+          "Review whether feed decimals are fixed at deployment."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Accounting consumer"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use synthetic feed answers and local mocks."
+        ]
+      },
       "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
       "why_it_matters": ""
     },
@@ -2008,6 +2340,9 @@
       "fingerprint": "93c080a4c61fba5511c77110",
       "historical_pattern_similarity": "",
       "id": "ARK-REENT-001",
+      "invariant_candidates": [
+        "External-call flows cannot observe or preserve inconsistent accounting state."
+      ],
       "knowledge": {
         "broken_invariants": [
           "single-claim-or-withdrawal",
@@ -2054,13 +2389,33 @@
       "recommended_defensive_checks": [],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Review state update order and add local malicious-receiver tests where callbacks are possible."
+        "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+        "Add a benign callback-capable receiver stub.",
+        "Assert state updates happen before external value transfer where required.",
+        "Test withdraw, claim, refund, or swap flows for accounting consistency."
       ],
       "suppressible": true,
       "tags": [
         "reentrancy-review",
         "value-flow"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_externalCallFlowsPreserveAccountingState"
+        ],
+        "manual_review_notes": [
+          "Review inherited guards and pull-payment patterns."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "External-call flow",
+          "Local receiver stub"
+        ],
+        "rule_family": "reentrancy-value-flow",
+        "safety_notes": [
+          "Use a harmless local receiver stub with TODO assertions."
+        ]
+      },
       "title": "External-call value flow needs reentrancy review",
       "why_it_matters": ""
     },
@@ -2117,6 +2472,9 @@
       "fingerprint": "204867f6f7d3206783b6abd7",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
       "knowledge": {
         "broken_invariants": [
           "accounting-value-uses-valid-price",
@@ -2176,7 +2534,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
       ],
       "suppressible": true,
       "tags": [
@@ -2184,6 +2545,23 @@
         "oracle-rule-pack",
         "pre-audit-readiness"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_oracleFreshnessPolicyIsRespected"
+        ],
+        "manual_review_notes": [
+          "Check whether freshness validation is implemented in an imported adapter."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter or mock feed",
+          "Consumer contract"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local mock oracle responses only."
+        ]
+      },
       "title": "Oracle-dependent logic without stale-price tests",
       "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
     },
@@ -2240,6 +2618,9 @@
       "fingerprint": "c7c2a014effc261606b9ab6b",
       "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
       "id": "ARK-ORC-003",
+      "invariant_candidates": [
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+      ],
       "knowledge": {
         "broken_invariants": [
           "price-input-remains-manipulation-resistant",
@@ -2292,7 +2673,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards."
       ],
       "suppressible": true,
       "tags": [
@@ -2301,6 +2685,23 @@
         "reserve-pricing",
         "oracle-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_reservePriceDependencyIsBounded"
+        ],
+        "manual_review_notes": [
+          "Review whether price source is advisory or authoritative."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM or price source mock",
+          "Price consumer"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local reserve changes and avoid production market assumptions."
+        ]
+      },
       "title": "Spot or reserve-based pricing without manipulation-resistance tests",
       "why_it_matters": "Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design."
     },
@@ -2357,6 +2758,9 @@
       "fingerprint": "18c27a0df2b8711caa82c079",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -2377,7 +2781,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
       ],
       "suppressible": true,
       "tags": [
@@ -2385,6 +2792,23 @@
         "documentation-readiness",
         "oracle-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+        ],
+        "manual_review_notes": [
+          "Review whether fallback behavior is intentionally unavailable."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Consumer path"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local invalid-value mocks."
+        ]
+      },
       "title": "Missing price bounds or fallback assumptions documentation",
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
@@ -2465,6 +2889,9 @@
       "fingerprint": "5267b7cf94570dcb176a34ce",
       "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
       "id": "ARK-REENT-004",
+      "invariant_candidates": [
+        "External call ordering follows documented state-transition policy."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -2484,7 +2911,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+        "Document checks-effects-interactions or guard assumptions.",
+        "Test state before and after external calls.",
+        "Assert failure paths preserve accounting state."
       ],
       "suppressible": true,
       "tags": [
@@ -2492,6 +2922,23 @@
         "documentation-readiness",
         "reentrancy-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_externalCallOrderingMatchesPolicy"
+        ],
+        "manual_review_notes": [
+          "Review code paths manually before deciding severity."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "External call path",
+          "Failure-mode stub"
+        ],
+        "rule_family": "reentrancy-value-flow",
+        "safety_notes": [
+          "Use local failure-mode stubs only."
+        ]
+      },
       "title": "External call path without documented ordering assumptions",
       "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
     },
@@ -2586,6 +3033,10 @@
       "fingerprint": "cb6a1b50135e01f31517c594",
       "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
       "id": "ARK-AMM-001",
+      "invariant_candidates": [
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+      ],
       "knowledge": {
         "broken_invariants": [
           "constant-product-or-stableswap-invariant",
@@ -2640,7 +3091,10 @@
       ],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+        "Test repeated swaps across small and large reserve states.",
+        "Document expected invariant tolerance."
       ],
       "suppressible": true,
       "tags": [
@@ -2648,6 +3102,24 @@
         "amm-rule-pack",
         "pre-audit-readiness"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_ammAccountingPreservesDocumentedInvariant"
+        ],
+        "manual_review_notes": [
+          "Review exact AMM curve before choosing assertion tolerance."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM pool",
+          "Token0 and token1 mocks",
+          "Swap handler"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use toy/local reserves and no production market assumptions."
+        ]
+      },
       "title": "AMM invariant assumptions not covered by tests",
       "why_it_matters": "AMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations."
     },
@@ -2742,6 +3214,9 @@
       "fingerprint": "9a483231ae3cf546477eb4b1",
       "historical_pattern_similarity": "Maps to share inflation and liquidity accounting readiness classes.",
       "id": "ARK-AMM-002",
+      "invariant_candidates": [
+        "LP share supply tracks pool ownership within documented rounding."
+      ],
       "knowledge": {
         "broken_invariants": [
           "lp-value-conservation",
@@ -2794,7 +3269,10 @@
       ],
       "severity": "High readiness gap",
       "suggested_tests": [
-        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional."
+        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+        "Test first liquidity provider behavior.",
+        "Test proportional minting and proportional withdrawal.",
+        "Cover rounding and dust handling during mint/burn."
       ],
       "suppressible": true,
       "tags": [
@@ -2802,6 +3280,24 @@
         "amm-rule-pack",
         "share-accounting"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_lpSharesTrackPoolOwnership"
+        ],
+        "manual_review_notes": [
+          "Review minimum-liquidity and initial-share policy."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM pool",
+          "LP share accounting",
+          "Liquidity actors"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use local token mocks and project-specific rounding tolerance."
+        ]
+      },
       "title": "LP share accounting without mint/burn boundary tests",
       "why_it_matters": "LP share accounting controls who owns pool value; boundary mistakes can distort deposits, withdrawals, or low-liquidity behavior."
     },
@@ -2896,6 +3392,9 @@
       "fingerprint": "2eae6a7b67e516903d52f4ab",
       "historical_pattern_similarity": "Maps to spot-price and pool-price accounting readiness classes.",
       "id": "ARK-AMM-003",
+      "invariant_candidates": [
+        "Reserve-based price consumers respect documented bounds and delay assumptions."
+      ],
       "knowledge": {
         "broken_invariants": [
           "price-input-remains-bounded",
@@ -2947,7 +3446,10 @@
       ],
       "severity": "High readiness gap",
       "suggested_tests": [
-        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "Test reserve-price movement bounds.",
+        "Test TWAP or delay assumptions if used.",
+        "Document whether other accounting paths rely on spot reserve price."
       ],
       "suppressible": true,
       "tags": [
@@ -2956,6 +3458,23 @@
         "oracle-risk",
         "amm-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_reservePriceConsumersRespectBounds"
+        ],
+        "manual_review_notes": [
+          "Review whether price output is advisory or used for critical accounting."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM price function",
+          "Price consumer"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use local reserve changes only."
+        ]
+      },
       "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
       "why_it_matters": "Same-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented."
     },
@@ -3050,6 +3569,9 @@
       "fingerprint": "4534bbd962ed2f44c1905536",
       "historical_pattern_similarity": "Maps to fee-on-transfer and token accounting assumption readiness classes.",
       "id": "ARK-AMM-004",
+      "invariant_candidates": [
+        "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+      ],
       "knowledge": {
         "broken_invariants": [
           "reserve-increase-equals-accounted-input",
@@ -3099,7 +3621,10 @@
       ],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+        "Simulate fee-on-transfer behavior with a local mock if supported.",
+        "Document unsupported token types if not handled."
       ],
       "suppressible": true,
       "tags": [
@@ -3107,6 +3632,23 @@
         "fee-on-transfer",
         "amm-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_poolUsesActualReceivedAmounts"
+        ],
+        "manual_review_notes": [
+          "Review token support policy before adding mocks."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Transfer path",
+          "Token mock with configurable received amount"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use synthetic local token behavior only."
+        ]
+      },
       "title": "Fee-on-transfer or non-standard token assumptions not documented",
       "why_it_matters": "AMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled."
     },
@@ -3201,6 +3743,9 @@
       "fingerprint": "8047aeb2942bb0b0162b1684",
       "historical_pattern_similarity": "Maps to price boundary and quote freshness readiness classes.",
       "id": "ARK-AMM-005",
+      "invariant_candidates": [
+        "Swap execution respects user-provided output bounds and documented deadline policy."
+      ],
       "knowledge": {
         "broken_invariants": [
           "swap-output-respects-user-bound",
@@ -3251,7 +3796,10 @@
       ],
       "severity": "Medium readiness gap",
       "suggested_tests": [
-        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        "Test minOut enforcement.",
+        "Test stale quote or deadline behavior if supported.",
+        "Assert user-provided slippage bounds are respected."
       ],
       "suppressible": true,
       "tags": [
@@ -3259,6 +3807,23 @@
         "min-output",
         "amm-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_swapsRespectUserOutputBounds"
+        ],
+        "manual_review_notes": [
+          "Review whether slippage is enforced by a router outside this repository."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Swap function",
+          "Slippage or deadline inputs"
+        ],
+        "rule_family": "amm",
+        "safety_notes": [
+          "Use local swap state and synthetic users."
+        ]
+      },
       "title": "Slippage/min-output constraints missing or unclear",
       "why_it_matters": "Slippage and stale quote controls help users and integrations bound expected outcomes around swaps."
     }
@@ -3381,6 +3946,10 @@
           "fingerprint": "cb6a1b50135e01f31517c594",
           "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
           "id": "ARK-AMM-001",
+          "invariant_candidates": [
+            "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+            "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+          ],
           "knowledge": {
             "broken_invariants": [
               "constant-product-or-stableswap-invariant",
@@ -3435,7 +4004,10 @@
           ],
           "severity": "Medium readiness gap",
           "suggested_tests": [
-            "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+            "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+            "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+            "Test repeated swaps across small and large reserve states.",
+            "Document expected invariant tolerance."
           ],
           "suppressible": true,
           "tags": [
@@ -3443,6 +4015,24 @@
             "amm-rule-pack",
             "pre-audit-readiness"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_ammAccountingPreservesDocumentedInvariant"
+            ],
+            "manual_review_notes": [
+              "Review exact AMM curve before choosing assertion tolerance."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "AMM pool",
+              "Token0 and token1 mocks",
+              "Swap handler"
+            ],
+            "rule_family": "amm",
+            "safety_notes": [
+              "Use toy/local reserves and no production market assumptions."
+            ]
+          },
           "title": "AMM invariant assumptions not covered by tests",
           "why_it_matters": "AMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations."
         },
@@ -3537,6 +4127,9 @@
           "fingerprint": "9a483231ae3cf546477eb4b1",
           "historical_pattern_similarity": "Maps to share inflation and liquidity accounting readiness classes.",
           "id": "ARK-AMM-002",
+          "invariant_candidates": [
+            "LP share supply tracks pool ownership within documented rounding."
+          ],
           "knowledge": {
             "broken_invariants": [
               "lp-value-conservation",
@@ -3589,7 +4182,10 @@
           ],
           "severity": "High readiness gap",
           "suggested_tests": [
-            "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional."
+            "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+            "Test first liquidity provider behavior.",
+            "Test proportional minting and proportional withdrawal.",
+            "Cover rounding and dust handling during mint/burn."
           ],
           "suppressible": true,
           "tags": [
@@ -3597,6 +4193,24 @@
             "amm-rule-pack",
             "share-accounting"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_lpSharesTrackPoolOwnership"
+            ],
+            "manual_review_notes": [
+              "Review minimum-liquidity and initial-share policy."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "AMM pool",
+              "LP share accounting",
+              "Liquidity actors"
+            ],
+            "rule_family": "amm",
+            "safety_notes": [
+              "Use local token mocks and project-specific rounding tolerance."
+            ]
+          },
           "title": "LP share accounting without mint/burn boundary tests",
           "why_it_matters": "LP share accounting controls who owns pool value; boundary mistakes can distort deposits, withdrawals, or low-liquidity behavior."
         },
@@ -3691,6 +4305,9 @@
           "fingerprint": "2eae6a7b67e516903d52f4ab",
           "historical_pattern_similarity": "Maps to spot-price and pool-price accounting readiness classes.",
           "id": "ARK-AMM-003",
+          "invariant_candidates": [
+            "Reserve-based price consumers respect documented bounds and delay assumptions."
+          ],
           "knowledge": {
             "broken_invariants": [
               "price-input-remains-bounded",
@@ -3742,7 +4359,10 @@
           ],
           "severity": "High readiness gap",
           "suggested_tests": [
-            "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+            "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+            "Test reserve-price movement bounds.",
+            "Test TWAP or delay assumptions if used.",
+            "Document whether other accounting paths rely on spot reserve price."
           ],
           "suppressible": true,
           "tags": [
@@ -3751,6 +4371,23 @@
             "oracle-risk",
             "amm-rule-pack"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_reservePriceConsumersRespectBounds"
+            ],
+            "manual_review_notes": [
+              "Review whether price output is advisory or used for critical accounting."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "AMM price function",
+              "Price consumer"
+            ],
+            "rule_family": "amm",
+            "safety_notes": [
+              "Use local reserve changes only."
+            ]
+          },
           "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
           "why_it_matters": "Same-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented."
         },
@@ -3845,6 +4482,9 @@
           "fingerprint": "4534bbd962ed2f44c1905536",
           "historical_pattern_similarity": "Maps to fee-on-transfer and token accounting assumption readiness classes.",
           "id": "ARK-AMM-004",
+          "invariant_candidates": [
+            "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+          ],
           "knowledge": {
             "broken_invariants": [
               "reserve-increase-equals-accounted-input",
@@ -3894,7 +4534,10 @@
           ],
           "severity": "Medium readiness gap",
           "suggested_tests": [
-            "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+            "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+            "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+            "Simulate fee-on-transfer behavior with a local mock if supported.",
+            "Document unsupported token types if not handled."
           ],
           "suppressible": true,
           "tags": [
@@ -3902,6 +4545,23 @@
             "fee-on-transfer",
             "amm-rule-pack"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_poolUsesActualReceivedAmounts"
+            ],
+            "manual_review_notes": [
+              "Review token support policy before adding mocks."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Transfer path",
+              "Token mock with configurable received amount"
+            ],
+            "rule_family": "amm",
+            "safety_notes": [
+              "Use synthetic local token behavior only."
+            ]
+          },
           "title": "Fee-on-transfer or non-standard token assumptions not documented",
           "why_it_matters": "AMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled."
         },
@@ -3996,6 +4656,9 @@
           "fingerprint": "8047aeb2942bb0b0162b1684",
           "historical_pattern_similarity": "Maps to price boundary and quote freshness readiness classes.",
           "id": "ARK-AMM-005",
+          "invariant_candidates": [
+            "Swap execution respects user-provided output bounds and documented deadline policy."
+          ],
           "knowledge": {
             "broken_invariants": [
               "swap-output-respects-user-bound",
@@ -4046,7 +4709,10 @@
           ],
           "severity": "Medium readiness gap",
           "suggested_tests": [
-            "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+            "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+            "Test minOut enforcement.",
+            "Test stale quote or deadline behavior if supported.",
+            "Assert user-provided slippage bounds are respected."
           ],
           "suppressible": true,
           "tags": [
@@ -4054,6 +4720,23 @@
             "min-output",
             "amm-rule-pack"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_swapsRespectUserOutputBounds"
+            ],
+            "manual_review_notes": [
+              "Review whether slippage is enforced by a router outside this repository."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Swap function",
+              "Slippage or deadline inputs"
+            ],
+            "rule_family": "amm",
+            "safety_notes": [
+              "Use local swap state and synthetic users."
+            ]
+          },
           "title": "Slippage/min-output constraints missing or unclear",
           "why_it_matters": "Slippage and stale quote controls help users and integrations bound expected outcomes around swaps."
         }
@@ -4156,6 +4839,9 @@
           "fingerprint": "3e0db8a302dcfc0b19bcdf3e",
           "historical_pattern_similarity": "",
           "id": "ARK-ORC-002",
+          "invariant_candidates": [
+            "Normalized oracle values remain within documented unit and decimal assumptions."
+          ],
           "knowledge": {
             "finding_map_version": "0.9.0",
             "related_docs": [],
@@ -4171,13 +4857,33 @@
           "recommended_defensive_checks": [],
           "severity": "Low readiness gap",
           "suggested_tests": [
-            "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+            "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+            "Test decimals normalization across expected feed decimals.",
+            "Test zero, negative, or invalid oracle answers if applicable.",
+            "Assert normalized price units match accounting units."
           ],
           "suppressible": true,
           "tags": [
             "oracle-risk",
             "price-assumptions"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_oracleNormalizationMatchesAccountingUnits"
+            ],
+            "manual_review_notes": [
+              "Review whether feed decimals are fixed at deployment."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Oracle adapter",
+              "Accounting consumer"
+            ],
+            "rule_family": "oracle",
+            "safety_notes": [
+              "Use synthetic feed answers and local mocks."
+            ]
+          },
           "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
           "why_it_matters": ""
         },
@@ -4234,6 +4940,9 @@
           "fingerprint": "204867f6f7d3206783b6abd7",
           "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
           "id": "ARK-ORC-001",
+          "invariant_candidates": [
+            "Accounting decisions only use oracle data that satisfies documented freshness policy."
+          ],
           "knowledge": {
             "broken_invariants": [
               "accounting-value-uses-valid-price",
@@ -4293,7 +5002,10 @@
           ],
           "severity": "Low readiness gap",
           "suggested_tests": [
-            "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+            "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+            "Reject stale oracle rounds or document fallback behavior.",
+            "Test updatedAt or heartbeat boundaries.",
+            "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
           ],
           "suppressible": true,
           "tags": [
@@ -4301,6 +5013,23 @@
             "oracle-rule-pack",
             "pre-audit-readiness"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_oracleFreshnessPolicyIsRespected"
+            ],
+            "manual_review_notes": [
+              "Check whether freshness validation is implemented in an imported adapter."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Oracle adapter or mock feed",
+              "Consumer contract"
+            ],
+            "rule_family": "oracle",
+            "safety_notes": [
+              "Use local mock oracle responses only."
+            ]
+          },
           "title": "Oracle-dependent logic without stale-price tests",
           "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
         },
@@ -4357,6 +5086,9 @@
           "fingerprint": "c7c2a014effc261606b9ab6b",
           "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
           "id": "ARK-ORC-003",
+          "invariant_candidates": [
+            "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+          ],
           "knowledge": {
             "broken_invariants": [
               "price-input-remains-manipulation-resistant",
@@ -4409,7 +5141,10 @@
           ],
           "severity": "Low readiness gap",
           "suggested_tests": [
-            "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+            "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+            "Test spot-price movement bounds.",
+            "Test TWAP or delay assumptions when used.",
+            "Document reserve-price dependency and expected safeguards."
           ],
           "suppressible": true,
           "tags": [
@@ -4418,6 +5153,23 @@
             "reserve-pricing",
             "oracle-rule-pack"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_reservePriceDependencyIsBounded"
+            ],
+            "manual_review_notes": [
+              "Review whether price source is advisory or authoritative."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "AMM or price source mock",
+              "Price consumer"
+            ],
+            "rule_family": "oracle",
+            "safety_notes": [
+              "Use local reserve changes and avoid production market assumptions."
+            ]
+          },
           "title": "Spot or reserve-based pricing without manipulation-resistance tests",
           "why_it_matters": "Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design."
         },
@@ -4474,6 +5226,9 @@
           "fingerprint": "18c27a0df2b8711caa82c079",
           "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
           "id": "ARK-ORC-005",
+          "invariant_candidates": [
+            "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+          ],
           "knowledge": {
             "finding_map_version": "0.9.0",
             "related_docs": [],
@@ -4494,7 +5249,10 @@
           ],
           "severity": "Low readiness gap",
           "suggested_tests": [
-            "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+            "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+            "Test documented price bounds.",
+            "Test invalid answer fallback behavior.",
+            "Add documentation for price shock and fallback assumptions."
           ],
           "suppressible": true,
           "tags": [
@@ -4502,6 +5260,23 @@
             "documentation-readiness",
             "oracle-rule-pack"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_invalidPricesDoNotDriveCriticalAccounting"
+            ],
+            "manual_review_notes": [
+              "Review whether fallback behavior is intentionally unavailable."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Oracle adapter",
+              "Consumer path"
+            ],
+            "rule_family": "oracle",
+            "safety_notes": [
+              "Use local invalid-value mocks."
+            ]
+          },
           "title": "Missing price bounds or fallback assumptions documentation",
           "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
         }
@@ -4604,6 +5379,9 @@
           "fingerprint": "93c080a4c61fba5511c77110",
           "historical_pattern_similarity": "",
           "id": "ARK-REENT-001",
+          "invariant_candidates": [
+            "External-call flows cannot observe or preserve inconsistent accounting state."
+          ],
           "knowledge": {
             "broken_invariants": [
               "single-claim-or-withdrawal",
@@ -4650,13 +5428,33 @@
           "recommended_defensive_checks": [],
           "severity": "Medium readiness gap",
           "suggested_tests": [
-            "Review state update order and add local malicious-receiver tests where callbacks are possible."
+            "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+            "Add a benign callback-capable receiver stub.",
+            "Assert state updates happen before external value transfer where required.",
+            "Test withdraw, claim, refund, or swap flows for accounting consistency."
           ],
           "suppressible": true,
           "tags": [
             "reentrancy-review",
             "value-flow"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_externalCallFlowsPreserveAccountingState"
+            ],
+            "manual_review_notes": [
+              "Review inherited guards and pull-payment patterns."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "External-call flow",
+              "Local receiver stub"
+            ],
+            "rule_family": "reentrancy-value-flow",
+            "safety_notes": [
+              "Use a harmless local receiver stub with TODO assertions."
+            ]
+          },
           "title": "External-call value flow needs reentrancy review",
           "why_it_matters": ""
         },
@@ -4737,6 +5535,9 @@
           "fingerprint": "5267b7cf94570dcb176a34ce",
           "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
           "id": "ARK-REENT-004",
+          "invariant_candidates": [
+            "External call ordering follows documented state-transition policy."
+          ],
           "knowledge": {
             "finding_map_version": "0.9.0",
             "related_docs": [],
@@ -4756,7 +5557,10 @@
           ],
           "severity": "Low readiness gap",
           "suggested_tests": [
-            "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+            "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+            "Document checks-effects-interactions or guard assumptions.",
+            "Test state before and after external calls.",
+            "Assert failure paths preserve accounting state."
           ],
           "suppressible": true,
           "tags": [
@@ -4764,6 +5568,23 @@
             "documentation-readiness",
             "reentrancy-rule-pack"
           ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_externalCallOrderingMatchesPolicy"
+            ],
+            "manual_review_notes": [
+              "Review code paths manually before deciding severity."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "External call path",
+              "Failure-mode stub"
+            ],
+            "rule_family": "reentrancy-value-flow",
+            "safety_notes": [
+              "Use local failure-mode stubs only."
+            ]
+          },
           "title": "External call path without documented ordering assumptions",
           "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
         }
@@ -5563,5 +6384,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "1.4.0"
+  "version": "1.5.0"
 }

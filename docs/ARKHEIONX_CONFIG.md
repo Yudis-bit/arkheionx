@@ -12,7 +12,7 @@ The config is intentionally simple and dependency-free.
 
 ```json
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "protocol_type": "auto",
   "suppress_findings": [
     {
@@ -46,6 +46,12 @@ The config is intentionally simple and dependency-free.
     "min_confidence_for_issue_plan": "medium",
     "downgrade_keyword_only": true,
     "max_evidence_per_finding": 5
+  },
+  "test_plan": {
+    "include_foundry_skeletons": true,
+    "group_by_rule_family": true,
+    "include_low_confidence": true,
+    "output_profile": "defensive-foundry"
   }
 }
 ```
@@ -71,6 +77,10 @@ See [`../examples/arkheionx.config.example.json`](../examples/arkheionx.config.e
 | `analysis.min_confidence_for_issue_plan` | Minimum finding confidence included in generated issue plans. Defaults to `medium`. |
 | `analysis.downgrade_keyword_only` | Downgrade weak keyword-only findings. Defaults to `true`. |
 | `analysis.max_evidence_per_finding` | Maximum evidence records shown per finding. Defaults to `5`. |
+| `test_plan.include_foundry_skeletons` | Optional planning preference for generated test plans. |
+| `test_plan.group_by_rule_family` | Optional planning preference to group suggestions by rule family. |
+| `test_plan.include_low_confidence` | Optional planning preference for low-confidence findings. |
+| `test_plan.output_profile` | Optional label for the generated test-plan style. |
 
 ## Suppression Rules
 

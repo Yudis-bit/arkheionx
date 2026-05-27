@@ -47,3 +47,9 @@ python3 scripts/search_knowledge.py "callback capable token"
 
 Historical similarity is used to guide defensive tests such as local receiver
 mocks and double-claim prevention checks.
+
+## Test Plan Mapping
+
+Value-flow findings map to local receiver stubs, state-transition checks,
+claim/refund lifecycle tests, and external-call ordering assertions in
+`metadata/finding_test_plan_map.json`.

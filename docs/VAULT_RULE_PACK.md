@@ -195,3 +195,9 @@ python3 scripts/search_knowledge.py "share accounting invariant"
 
 Search results connect this rule pack to suggested defensive tests and related
 historical pattern categories.
+
+## Test Plan Mapping
+
+Vault findings map to share accounting, totalAssets, conversion rounding,
+strategy lifecycle, fee, and withdrawal lifecycle properties in
+`metadata/finding_test_plan_map.json`.

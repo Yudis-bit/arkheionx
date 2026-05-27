@@ -7,7 +7,7 @@ no live-chain access.
 Stable examples use:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
 ```
 
 Use `@main` only for development/testing of unreleased changes.
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
         with:
           root: "."
           protocol-type: "auto"
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
         with:
           root: "."
           protocol-type: "auto"
@@ -84,7 +84,7 @@ jobs:
 
 SARIF results are readiness gaps, not confirmed vulnerabilities.
 
-## Stable v1.3.x Inputs
+## Stable v1.4.x Inputs
 
 | Input | Default | Stable | Purpose |
 |---|---|---|---|
@@ -150,7 +150,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
     with:
       protocol-type: "auto"
       json-output: "reports/arkheionx-report.json"
@@ -187,7 +187,7 @@ and local; Arkheionx does not install Slither automatically.
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
     with:
       protocol-type: "auto"
       slither: "true"
@@ -214,3 +214,19 @@ python3 scripts/pre_audit_scan.py \
 Arkheionx ignores its own generated reports and artifacts by default during
 future scans. This prevents old reports, issue plans, SARIF, baselines, and
 delivery outputs from influencing readiness scores or evidence.
+
+## Test Plan Artifacts
+
+The GitHub Action keeps scanner outputs focused on readiness reports. To create
+v1.5.0 test-plan artifacts in CI, run the companion CLI after generating JSON:
+
+```yaml
+- run: |
+    python3 scripts/generate_test_plan.py \
+      --report reports/arkheionx-report.json \
+      --output reports/ARKHEIONX_TEST_PLAN.md \
+      --json-output reports/ARKHEIONX_TEST_PLAN.json \
+      --foundry-output reports/ArkheionxReadinessInvariants.t.sol
+```
+
+Generated skeletons are local starter scaffolds and require human review.

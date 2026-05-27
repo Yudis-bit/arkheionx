@@ -191,3 +191,12 @@ tests, and related docs.
 
 Historical similarity explains why a readiness check exists. It does not mean a
 scanned repository has the same vulnerability as a historical PoC.
+
+## Test Plan Context
+
+In v1.5.0, findings can include mapped `suggested_tests` and
+`invariant_candidates` from `metadata/finding_test_plan_map.json`.
+
+These fields do not add score by themselves. They help maintainers turn a
+score-impacting readiness gap into local remediation work such as Foundry
+invariant skeletons, boundary tests, and documentation tasks.

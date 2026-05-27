@@ -137,3 +137,19 @@ python3 scripts/search_knowledge.py "liquidation boundary"
 python3 scripts/search_knowledge.py "interest index"
 python3 scripts/search_knowledge.py "lending oracle"
 ```
+
+## Test Plan Generation
+
+Lending findings map to local defensive test ideas in
+`metadata/finding_test_plan_map.json`.
+
+```sh
+python3 scripts/generate_test_plan.py \
+  --report examples/reports/lending-fixture-pre-audit-report.json \
+  --output examples/reports/lending-fixture-test-plan.md \
+  --foundry-output examples/reports/ArkheionxLendingInvariants.t.sol
+```
+
+Generated lending skeletons include TODOs for local lending markets, token
+mocks, price mocks, borrower actors, liquidation boundaries, and accounting
+properties.

@@ -49,3 +49,9 @@ python3 scripts/search_knowledge.py "accumulator precision"
 
 Use results to prioritize conservation, double-claim, and accumulator
 monotonicity tests.
+
+## Test Plan Mapping
+
+Reward and staking findings map to conservation, no-double-claim, accumulator
+precision, lifecycle boundary, and emission-admin tests in
+`metadata/finding_test_plan_map.json`.

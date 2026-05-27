@@ -24,12 +24,13 @@ from pathlib import Path
 from typing import Iterable
 
 
-VERSION = "1.4.0"
+VERSION = "1.5.0"
 SCHEMA_VERSION = "1.0.0"
 FINGERPRINT_VERSION = "0.6.0"
 MAX_READ_BYTES = 750_000
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_MAP_PATH = PACKAGE_ROOT / "metadata" / "finding_knowledge_map.json"
+TEST_PLAN_MAP_PATH = PACKAGE_ROOT / "metadata" / "finding_test_plan_map.json"
 DEFAULT_CONFIG = ".arkheionx.json"
 COMMENT_MARKER = "<!-- arkheionx-pre-audit-comment -->"
 ISSUE_MARKER_PREFIX = "<!-- arkheionx-issue:"
@@ -94,6 +95,9 @@ DEFAULT_GENERATED_ARTIFACT_IGNORE_PATTERNS = [
     "reports/*-executive-summary.md",
     "reports/*-remediation-roadmap.md",
     "reports/*-sprint-plan.md",
+    "reports/*-test-plan.md",
+    "reports/*-test-plan.json",
+    "reports/Arkheionx*Invariants.t.sol",
     "reports/*action-summary.md",
     "reports/*pr-comment.md",
     "ARKHEIONX_PRE_AUDIT_REPORT.md",
@@ -107,6 +111,9 @@ DEFAULT_GENERATED_ARTIFACT_IGNORE_PATTERNS = [
     "ARKHEIONX_EXECUTIVE_SUMMARY.md",
     "ARKHEIONX_REMEDIATION_ROADMAP.md",
     "ARKHEIONX_SPRINT_PLAN.md",
+    "ARKHEIONX_TEST_PLAN.md",
+    "ARKHEIONX_TEST_PLAN.json",
+    "Arkheionx*Invariants.t.sol",
     "arkheionx-report.json",
     "arkheionx.sarif.json",
     "arkheionx.baseline.json",
@@ -121,10 +128,12 @@ ARKHEIONX_GENERATED_CONTENT_MARKERS = [
     "# Arkheionx Pre-Audit Sprint Plan",
     "# Arkheionx Executive Summary",
     "# Arkheionx Remediation Roadmap",
+    "# Arkheionx Defensive Test Plan",
     "# Arkheionx Generated Issue Checklist",
     "# Arkheionx Baseline Diff Report",
     "<!-- arkheionx-pre-audit-comment -->",
     "<!-- arkheionx-issue:",
+    "Arkheionx-generated defensive invariant skeleton",
     "arkheionx_generated",
     "\"scanner\": \"arkheionx\"",
     "\"generated_by\": \"arkheionx\"",
@@ -820,6 +829,52 @@ def load_finding_knowledge_map() -> dict[str, dict[str, object]]:
     if not isinstance(findings, dict):
         return {}
     return {str(key): value for key, value in findings.items() if isinstance(value, dict)}
+
+
+def load_finding_test_plan_map() -> dict[str, dict[str, object]]:
+    try:
+        payload = json.loads(TEST_PLAN_MAP_PATH.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    entries = payload.get("findings", {})
+    if not isinstance(entries, dict):
+        return {}
+    return {str(key): value for key, value in entries.items() if isinstance(value, dict)}
+
+
+def test_plan_for_id(finding_id: str) -> dict[str, object]:
+    return load_finding_test_plan_map().get(finding_id, {})
+
+
+def mapped_suggested_tests(gap: ReadinessGap) -> list[str]:
+    plan = test_plan_for_id(gap.id)
+    tests = [str(item) for item in plan.get("suggested_tests", []) if str(item).strip()]
+    fallback = gap.suggested_test or gap.recommendation
+    if fallback:
+        tests.insert(0, fallback)
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for item in tests:
+        key = normalize_for_fingerprint(item)
+        if key and key not in seen:
+            seen.add(key)
+            deduped.append(item)
+    return deduped
+
+
+def mapped_invariant_candidates(gap: ReadinessGap) -> list[str]:
+    plan = test_plan_for_id(gap.id)
+    candidates = [str(item) for item in plan.get("invariant_candidates", []) if str(item).strip()]
+    if gap.suggested_test and "invariant" in gap.suggested_test.lower():
+        candidates.insert(0, gap.suggested_test)
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for item in candidates:
+        key = normalize_for_fingerprint(item)
+        if key and key not in seen:
+            seen.add(key)
+            deduped.append(item)
+    return deduped
 
 
 def related_knowledge_for_id(finding_id: str) -> dict[str, object]:
@@ -4128,6 +4183,7 @@ def apply_suppressions(
 
 
 def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
+    test_plan = test_plan_for_id(gap.id)
     data: dict[str, object] = {
         "id": gap.id,
         "fingerprint": gap.fingerprint,
@@ -4151,7 +4207,16 @@ def finding_to_dict(gap: ReadinessGap) -> dict[str, object]:
         "why_it_matters": gap.why_it_matters,
         "historical_pattern_similarity": gap.historical_pattern_similarity,
         "recommended_defensive_checks": gap.defensive_checks,
-        "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+        "suggested_tests": mapped_suggested_tests(gap),
+        "invariant_candidates": mapped_invariant_candidates(gap),
+        "test_plan": {
+            "mapped": bool(test_plan),
+            "rule_family": test_plan.get("rule_family", ""),
+            "foundry_skeleton_functions": test_plan.get("foundry_skeleton_functions", []),
+            "required_project_bindings": test_plan.get("required_project_bindings", []),
+            "manual_review_notes": test_plan.get("manual_review_notes", []),
+            "safety_notes": test_plan.get("safety_notes", []),
+        },
         "knowledge": related_knowledge_for_id(gap.id),
         "recommendation": gap.recommendation,
         "detail": gap.detail,
@@ -4421,7 +4486,19 @@ def sarif_location(gap: ReadinessGap, root: Path) -> dict[str, object]:
 
 
 def finding_to_sarif_rule(gap: ReadinessGap) -> dict[str, object]:
-    help_text = "\n".join(f"- {check}" for check in (gap.defensive_checks or [gap.recommendation]))
+    checks = list(gap.defensive_checks or [gap.recommendation])
+    tests = mapped_suggested_tests(gap)[:3]
+    candidates = mapped_invariant_candidates(gap)[:3]
+    help_lines = [f"- {check}" for check in checks]
+    if tests:
+        help_lines.append("")
+        help_lines.append("Suggested defensive tests:")
+        help_lines.extend(f"- {test}" for test in tests)
+    if candidates:
+        help_lines.append("")
+        help_lines.append("Invariant candidates:")
+        help_lines.extend(f"- {candidate}" for candidate in candidates)
+    help_text = "\n".join(help_lines)
     return {
         "id": gap.id,
         "name": normalize_for_fingerprint(gap.title).replace(" ", "-")[:80],
@@ -4464,7 +4541,8 @@ def finding_to_sarif_result(gap: ReadinessGap, root: Path) -> dict[str, object]:
             "category": gap.category,
             "historical_pattern_similarity": gap.historical_pattern_similarity,
             "knowledge": related_knowledge_for_id(gap.id),
-            "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+            "suggested_tests": mapped_suggested_tests(gap),
+            "invariant_candidates": mapped_invariant_candidates(gap),
             "tags": gap.tags,
             "arkheionx_kind": "pre-audit-readiness",
             "readiness_gap": True,
@@ -4938,10 +5016,18 @@ def generate_report(
                 lines.append("")
                 for item in related_lines[1:]:
                     lines.append(item)
-                lines.append("")
+            lines.append("")
             lines.append("Suggested tests:")
             lines.append("")
-            lines.append(f"- {gap.suggested_test or gap.recommendation}")
+            for test in mapped_suggested_tests(gap)[:6]:
+                lines.append(f"- {test}")
+            invariant_candidates = mapped_invariant_candidates(gap)
+            if invariant_candidates:
+                lines.append("")
+                lines.append("Invariant candidates:")
+                lines.append("")
+                for candidate in invariant_candidates[:5]:
+                    lines.append(f"- {candidate}")
             lines.append("")
             lines.append(f"Search tags: `{', '.join(gap.tags)}`")
             lines.append("")
@@ -5115,6 +5201,7 @@ def json_report(
             "security_memory_graph": "metadata/security_memory_graph.json",
             "finding_knowledge_map": "metadata/finding_knowledge_map.json",
             "rule_calibration_matrix": "metadata/rule_calibration_matrix.json",
+            "finding_test_plan_map": "metadata/finding_test_plan_map.json",
         },
         "findings": findings,
         "suppressed_findings": suppressed_findings,
@@ -5355,8 +5442,13 @@ def issue_body_for_gap(gap: ReadinessGap, generated_outputs: dict[str, str]) -> 
     for check in gap.defensive_checks or [gap.recommendation]:
         lines.append(f"- {check}")
     lines.extend(["", "## Suggested Tests", ""])
-    for test in ([gap.suggested_test] if gap.suggested_test else [gap.recommendation]):
+    for test in mapped_suggested_tests(gap)[:8]:
         lines.append(f"- {test}")
+    invariant_candidates = mapped_invariant_candidates(gap)
+    if invariant_candidates:
+        lines.extend(["", "## Invariant Candidates", ""])
+        for candidate in invariant_candidates[:6]:
+            lines.append(f"- {candidate}")
     lines.extend(
         [
             "",
@@ -5450,7 +5542,8 @@ def build_issue_plan(
                 "detection_sources": gap.detection_sources,
                 "affected_functions": gap.affected_functions,
                 "fingerprint": gap.fingerprint,
-                "suggested_tests": [gap.suggested_test] if gap.suggested_test else [gap.recommendation],
+                "suggested_tests": mapped_suggested_tests(gap),
+                "invariant_candidates": mapped_invariant_candidates(gap),
                 "recommended_defensive_checks": gap.defensive_checks,
                 "disclaimer": ISSUE_DISCLAIMER,
             }
@@ -6163,6 +6256,15 @@ pragma solidity ^0.8.20;
 // It contains no live addresses, no RPC calls, and no exploit payloads.
 
 contract ArkheionxReadinessInvariants {
+    struct WithdrawalLifecycleSnapshot {
+        uint256 activeShares;
+        uint256 pendingShares;
+        uint256 burnedShares;
+        uint256 vaultAssets;
+        uint256 claimableAssets;
+        uint256 claimedAssets;
+    }
+
     // TODO: import your protocol contracts.
     // TODO: deploy a local test instance.
     // TODO: wire mock assets and mock oracles.
@@ -6193,7 +6295,14 @@ contract ArkheionxReadinessInvariants {
     }
 
     function invariant_withdrawalLifecycleConservesShares() public {
-        // TODO: assert request, cooldown, claim, and cancel flows conserve shares/assets.
+        WithdrawalLifecycleSnapshot memory beforeFlow = _withdrawalLifecycleSnapshot();
+
+        _exerciseWithdrawalRequestCooldownClaimCancel();
+
+        WithdrawalLifecycleSnapshot memory afterFlow = _withdrawalLifecycleSnapshot();
+
+        assert(_sharesUnderWithdrawalLifecycle(beforeFlow) == _sharesUnderWithdrawalLifecycle(afterFlow));
+        assert(_assetsUnderWithdrawalLifecycle(beforeFlow) == _assetsUnderWithdrawalLifecycle(afterFlow));
     }
 
     function invariant_adminCannotBypassAccountingWithoutExplicitTrust() public {
@@ -6206,6 +6315,23 @@ contract ArkheionxReadinessInvariants {
 
     function invariant_oracleAssumptionsAreDocumented() public {
         // TODO: assert stale, bounded, or mocked oracle behavior follows documented assumptions.
+    }
+
+    function _withdrawalLifecycleSnapshot()
+        internal
+        view
+        virtual
+        returns (WithdrawalLifecycleSnapshot memory snapshot)
+    {}
+
+    function _exerciseWithdrawalRequestCooldownClaimCancel() internal virtual {}
+
+    function _sharesUnderWithdrawalLifecycle(WithdrawalLifecycleSnapshot memory snapshot) internal pure returns (uint256) {
+        return snapshot.activeShares + snapshot.pendingShares + snapshot.burnedShares;
+    }
+
+    function _assetsUnderWithdrawalLifecycle(WithdrawalLifecycleSnapshot memory snapshot) internal pure returns (uint256) {
+        return snapshot.vaultAssets + snapshot.claimableAssets + snapshot.claimedAssets;
     }
 }
 """

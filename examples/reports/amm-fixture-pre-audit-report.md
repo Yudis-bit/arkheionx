@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/amm-fixture`
-- Generated at: `2026-05-27T03:46:52+00:00`
+- Generated at: `2026-05-27T04:09:42+00:00`
 - Protocol type: `amm`
 - Protocol confidence: `manual`
 - Files scanned: `4`
-- Scanner version: `1.4.0`
+- Scanner version: `1.5.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -335,6 +335,14 @@ Related Knowledge:
 Suggested tests:
 
 - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+- Add a stateful invariant suite for the core protocol lifecycle.
+- Add handler actions for normal user flows and documented edge cases.
+- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
+
+Invariant candidates:
+
+- Core accounting relationships hold after any allowed user action.
+- Privileged actions cannot silently bypass documented accounting assumptions.
 
 Search tags: `invariant-testing, amm`
 
@@ -366,9 +374,17 @@ What was detected:
 
 Oracle and price-feed signals were detected without enough freshness or sanity-check language.
 
+
 Suggested tests:
 
 - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Test decimals normalization across expected feed decimals.
+- Test zero, negative, or invalid oracle answers if applicable.
+- Assert normalized price units match accounting units.
+
+Invariant candidates:
+
+- Normalized oracle values remain within documented unit and decimal assumptions.
 
 Search tags: `oracle-risk, price-assumptions`
 
@@ -408,6 +424,13 @@ Related Knowledge:
 Suggested tests:
 
 - Review state update order and add local malicious-receiver tests where callbacks are possible.
+- Add a benign callback-capable receiver stub.
+- Assert state updates happen before external value transfer where required.
+- Test withdraw, claim, refund, or swap flows for accounting consistency.
+
+Invariant candidates:
+
+- External-call flows cannot observe or preserve inconsistent accounting state.
 
 Search tags: `reentrancy-review, value-flow`
 
@@ -467,6 +490,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+- Reject stale oracle rounds or document fallback behavior.
+- Test updatedAt or heartbeat boundaries.
+- Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+
+Invariant candidates:
+
+- Accounting decisions only use oracle data that satisfies documented freshness policy.
 
 Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 
@@ -526,6 +556,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.
+- Test spot-price movement bounds.
+- Test TWAP or delay assumptions when used.
+- Document reserve-price dependency and expected safeguards.
+
+Invariant candidates:
+
+- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
 
 Search tags: `oracle-risk, spot-price, reserve-pricing, oracle-rule-pack`
 
@@ -575,9 +612,17 @@ Recommended defensive checks:
 - stale-price policy
 - sequencer downtime notes
 
+
 Suggested tests:
 
 - Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+- Test documented price bounds.
+- Test invalid answer fallback behavior.
+- Add documentation for price shock and fallback assumptions.
+
+Invariant candidates:
+
+- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
 
 Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
@@ -622,9 +667,17 @@ Recommended defensive checks:
 - callback assumptions
 - external call failure behavior
 
+
 Suggested tests:
 
 - Pair ordering documentation with a local receiver test that exercises the documented boundary.
+- Document checks-effects-interactions or guard assumptions.
+- Test state before and after external calls.
+- Assert failure paths preserve accounting state.
+
+Invariant candidates:
+
+- External call ordering follows documented state-transition policy.
 
 Search tags: `reentrancy-review, documentation-readiness, reentrancy-rule-pack`
 
@@ -692,6 +745,14 @@ Related Knowledge:
 Suggested tests:
 
 - Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
+- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.
+- Test repeated swaps across small and large reserve states.
+- Document expected invariant tolerance.
+
+Invariant candidates:
+
+- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
+- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.
 
 Search tags: `amm-invariant, amm-rule-pack, pre-audit-readiness`
 
@@ -759,6 +820,13 @@ Related Knowledge:
 Suggested tests:
 
 - Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.
+- Test first liquidity provider behavior.
+- Test proportional minting and proportional withdrawal.
+- Cover rounding and dust handling during mint/burn.
+
+Invariant candidates:
+
+- LP share supply tracks pool ownership within documented rounding.
 
 Search tags: `amm-lp-accounting, amm-rule-pack, share-accounting`
 
@@ -825,6 +893,13 @@ Related Knowledge:
 Suggested tests:
 
 - Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.
+- Test reserve-price movement bounds.
+- Test TWAP or delay assumptions if used.
+- Document whether other accounting paths rely on spot reserve price.
+
+Invariant candidates:
+
+- Reserve-based price consumers respect documented bounds and delay assumptions.
 
 Search tags: `amm-pricing, spot-price, oracle-risk, amm-rule-pack`
 
@@ -891,6 +966,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.
+- Test actual received amount accounting with balanceBefore/balanceAfter pattern.
+- Simulate fee-on-transfer behavior with a local mock if supported.
+- Document unsupported token types if not handled.
+
+Invariant candidates:
+
+- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.
 
 Search tags: `amm-token-assumptions, fee-on-transfer, amm-rule-pack`
 
@@ -957,6 +1039,13 @@ Related Knowledge:
 Suggested tests:
 
 - Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.
+- Test minOut enforcement.
+- Test stale quote or deadline behavior if supported.
+- Assert user-provided slippage bounds are respected.
+
+Invariant candidates:
+
+- Swap execution respects user-provided output bounds and documented deadline policy.
 
 Search tags: `amm-slippage, min-output, amm-rule-pack`
 

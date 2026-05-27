@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -881,6 +881,70 @@
       "related_patterns": ["oracle-dependent borrowing", "price shock boundary"],
       "related_checks": ["ARK-LEND-004", "docs/LENDING_RULE_PACK.md", "docs/ORACLE_RULE_PACK.md"],
       "search_tags": ["health-factor", "lending-oracle", "price-shock"]
+    },
+    {
+      "term": "invariant generator",
+      "aliases": ["test plan generator", "Arkheionx test plan generator", "generate_test_plan.py"],
+      "category": "test planning",
+      "related_patterns": ["finding to test plan", "defensive invariant scaffolding"],
+      "related_checks": ["scripts/generate_test_plan.py", "docs/INVARIANT_TEST_PLAN_GENERATOR.md"],
+      "search_tags": ["invariant-generator", "test-plan-generator", "foundry"]
+    },
+    {
+      "term": "Foundry invariant skeleton",
+      "aliases": ["invariant skeleton", "Foundry skeleton", "Arkheionx invariant skeleton"],
+      "category": "test planning",
+      "related_patterns": ["local invariant scaffold", "TODO assertions"],
+      "related_checks": ["docs/FOUNDRY_INVARIANT_SKELETONS.md", "templates/invariant_skeletons/"],
+      "search_tags": ["foundry-invariant-skeleton", "local-testing", "defensive-scaffold"]
+    },
+    {
+      "term": "suggested tests",
+      "aliases": ["finding suggested tests", "test recommendations", "defensive test ideas"],
+      "category": "test planning",
+      "related_patterns": ["readiness finding remediation", "rule-family test plan"],
+      "related_checks": ["metadata/finding_test_plan_map.json", "examples/reports/amm-fixture-test-plan.md"],
+      "search_tags": ["suggested-tests", "readiness-remediation", "test-plan"]
+    },
+    {
+      "term": "invariant candidates",
+      "aliases": ["candidate invariants", "property candidates", "invariant ideas"],
+      "category": "test planning",
+      "related_patterns": ["finding to invariant mapping", "Foundry property planning"],
+      "related_checks": ["metadata/finding_test_plan_map.json", "schemas/test_plan.schema.json"],
+      "search_tags": ["invariant-candidates", "property-testing", "foundry"]
+    },
+    {
+      "term": "AMM invariant skeleton",
+      "aliases": ["AMM test plan", "AMM Foundry skeleton", "pool invariant skeleton"],
+      "category": "AMM",
+      "related_patterns": ["constant product invariant", "reserve accounting"],
+      "related_checks": ["examples/reports/ArkheionxAMMInvariants.t.sol", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["amm-invariant-skeleton", "constant-product", "reserve-accounting"]
+    },
+    {
+      "term": "lending invariant skeleton",
+      "aliases": ["lending test plan", "lending Foundry skeleton", "collateral debt skeleton"],
+      "category": "lending",
+      "related_patterns": ["collateral debt invariant", "liquidation boundary"],
+      "related_checks": ["examples/reports/ArkheionxLendingInvariants.t.sol", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["lending-invariant-skeleton", "collateral-debt", "liquidation-boundary"]
+    },
+    {
+      "term": "oracle test plan",
+      "aliases": ["stale oracle test plan", "oracle freshness tests", "oracle invariant candidates"],
+      "category": "oracle",
+      "related_patterns": ["stale price rejection", "decimals normalization"],
+      "related_checks": ["ARK-ORC-001", "metadata/finding_test_plan_map.json"],
+      "search_tags": ["oracle-test-plan", "stale-price", "heartbeat"]
+    },
+    {
+      "term": "reward index invariant",
+      "aliases": ["reward accumulator invariant", "reward index monotonicity", "staking index test"],
+      "category": "reward",
+      "related_patterns": ["accumulator precision", "reward overclaim"],
+      "related_checks": ["ARK-RWD-002", "docs/REWARD_ACCOUNTING_RULE_PACK.md"],
+      "search_tags": ["reward-index", "accumulator", "staking"]
     }
   ]
 }

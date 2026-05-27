@@ -74,6 +74,9 @@ python3 scripts/search_knowledge.py "missing invariant" --json
 Use the results to understand which finding IDs, rule packs, suggested tests,
 docs, and historical categories are related to a readiness gap.
 
+For remediation planning, pair this graph with
+`metadata/finding_test_plan_map.json` and `scripts/generate_test_plan.py`.
+
 ## What It Does Not Prove
 
 - It does not confirm a vulnerability.

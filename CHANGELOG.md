@@ -3,7 +3,39 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.4.0 - Unreleased
+## v1.5.0 - Unreleased
+
+### Added
+
+- Finding-to-test-plan map.
+- Defensive test-plan generator.
+- Foundry invariant skeleton generator.
+- AMM, Lending, and hybrid test-plan examples.
+- Test-plan JSON schema.
+- Invariant generator safety documentation.
+
+### Improved
+
+- Scanner JSON findings now include mapped suggested tests and invariant
+  candidates where available.
+- Issue plans now include suggested test and invariant-candidate content.
+- SARIF help text includes compact defensive test-plan guidance.
+- Search index includes invariant/test-plan generator surfaces.
+
+### Safety
+
+- Generated skeletons are local-only starter scaffolds with TODO placeholders.
+- No live-chain/RPC behavior added.
+- No exploit automation added.
+- Generated invariants are not formal verification or proof of safety.
+
+### Known Limitations
+
+- Generated plans are heuristic and require human review.
+- Skeletons require project-specific wiring before use.
+- The generator does not claim complete property coverage.
+
+## v1.4.0
 
 ### Added
 

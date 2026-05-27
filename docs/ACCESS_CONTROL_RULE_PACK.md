@@ -52,3 +52,9 @@ python3 scripts/search_knowledge.py "upgrade authorization"
 
 Use these mappings to plan authorization tests and documentation, not to claim
 a confirmed access-control bug.
+
+## Test Plan Mapping
+
+Access-control and upgradeability findings map to unauthorized-caller,
+role-boundary, initializer-once, upgrade-authorization, and post-upgrade state
+checks in `metadata/finding_test_plan_map.json`.

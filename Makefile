@@ -30,6 +30,7 @@ validate:
 		scripts/generate_feedback_dashboard.py \
 		scripts/generate_paid_offer_index.py \
 		scripts/generate_ecosystem_report.py \
+		scripts/generate_test_plan.py \
 		scripts/search_knowledge.py \
 		scripts/check_docs_links.py \
 		scripts/check_version_consistency.py \
@@ -39,6 +40,7 @@ validate:
 	python3 scripts/generate_feedback_dashboard.py --check
 	python3 scripts/generate_paid_offer_index.py --check
 	python3 scripts/generate_ecosystem_report.py --check
+	python3 scripts/generate_test_plan.py --check
 	python3 scripts/search_knowledge.py "oracle stale price"
 	python3 scripts/generate_search_index.py --check
 	python3 scripts/check_docs_links.py --check

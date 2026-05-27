@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/amm-lending-hybrid-fixture`
-- Generated at: `2026-05-27T03:46:53+00:00`
+- Generated at: `2026-05-27T04:09:42+00:00`
 - Protocol type: `amm`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `1.4.0`
+- Scanner version: `1.5.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -286,6 +286,14 @@ Related Knowledge:
 Suggested tests:
 
 - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+- Add a stateful invariant suite for the core protocol lifecycle.
+- Add handler actions for normal user flows and documented edge cases.
+- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
+
+Invariant candidates:
+
+- Core accounting relationships hold after any allowed user action.
+- Privileged actions cannot silently bypass documented accounting assumptions.
 
 Search tags: `invariant-testing, amm`
 
@@ -317,9 +325,17 @@ What was detected:
 
 Oracle and price-feed signals were detected without enough freshness or sanity-check language.
 
+
 Suggested tests:
 
 - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Test decimals normalization across expected feed decimals.
+- Test zero, negative, or invalid oracle answers if applicable.
+- Assert normalized price units match accounting units.
+
+Invariant candidates:
+
+- Normalized oracle values remain within documented unit and decimal assumptions.
 
 Search tags: `oracle-risk, price-assumptions`
 
@@ -379,6 +395,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+- Reject stale oracle rounds or document fallback behavior.
+- Test updatedAt or heartbeat boundaries.
+- Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+
+Invariant candidates:
+
+- Accounting decisions only use oracle data that satisfies documented freshness policy.
 
 Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 
@@ -438,6 +461,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.
+- Test spot-price movement bounds.
+- Test TWAP or delay assumptions when used.
+- Document reserve-price dependency and expected safeguards.
+
+Invariant candidates:
+
+- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
 
 Search tags: `oracle-risk, spot-price, reserve-pricing, oracle-rule-pack`
 
@@ -487,9 +517,17 @@ Recommended defensive checks:
 - stale-price policy
 - sequencer downtime notes
 
+
 Suggested tests:
 
 - Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+- Test documented price bounds.
+- Test invalid answer fallback behavior.
+- Add documentation for price shock and fallback assumptions.
+
+Invariant candidates:
+
+- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
 
 Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
@@ -552,6 +590,14 @@ Related Knowledge:
 Suggested tests:
 
 - Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
+- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.
+- Test repeated swaps across small and large reserve states.
+- Document expected invariant tolerance.
+
+Invariant candidates:
+
+- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
+- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.
 
 Search tags: `amm-invariant, amm-rule-pack, pre-audit-readiness`
 
@@ -613,6 +659,13 @@ Related Knowledge:
 Suggested tests:
 
 - Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.
+- Test reserve-price movement bounds.
+- Test TWAP or delay assumptions if used.
+- Document whether other accounting paths rely on spot reserve price.
+
+Invariant candidates:
+
+- Reserve-based price consumers respect documented bounds and delay assumptions.
 
 Search tags: `amm-pricing, spot-price, oracle-risk, amm-rule-pack`
 
@@ -674,6 +727,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.
+- Test actual received amount accounting with balanceBefore/balanceAfter pattern.
+- Simulate fee-on-transfer behavior with a local mock if supported.
+- Document unsupported token types if not handled.
+
+Invariant candidates:
+
+- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.
 
 Search tags: `amm-token-assumptions, fee-on-transfer, amm-rule-pack`
 
@@ -735,6 +795,13 @@ Related Knowledge:
 Suggested tests:
 
 - Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.
+- Test minOut enforcement.
+- Test stale quote or deadline behavior if supported.
+- Assert user-provided slippage bounds are respected.
+
+Invariant candidates:
+
+- Swap execution respects user-provided output bounds and documented deadline policy.
 
 Search tags: `amm-slippage, min-output, amm-rule-pack`
 
@@ -797,6 +864,13 @@ Related Knowledge:
 Suggested tests:
 
 - Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.
+- Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.
+- Test debt cannot exceed documented collateral constraints.
+- Test unsafe withdrawals are rejected or explicitly documented.
+
+Invariant candidates:
+
+- Collateral value and debt remain inside documented solvency constraints after allowed user actions.
 
 Search tags: `lending-solvency, lending-rule-pack, pre-audit-readiness`
 
@@ -859,6 +933,13 @@ Related Knowledge:
 Suggested tests:
 
 - Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.
+- Test just-above-threshold positions cannot be liquidated.
+- Test just-below-threshold positions can be liquidated according to policy.
+- Assert liquidation bonus and close factor stay within documented bounds.
+
+Invariant candidates:
+
+- Liquidation eligibility changes only at documented threshold boundaries.
 
 Search tags: `lending-liquidation, liquidation-boundary, lending-rule-pack`
 
@@ -927,6 +1008,13 @@ Related Knowledge:
 Suggested tests:
 
 - Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
+- Test stale oracle rejection for borrow and liquidation paths.
+- Test decimals normalization for collateral valuation.
+- Test price shock boundaries around health-factor transitions.
+
+Invariant candidates:
+
+- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
 
 Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
 
@@ -989,6 +1077,13 @@ Related Knowledge:
 Suggested tests:
 
 - Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
+- Test borrow cannot exceed available liquidity.
+- Test repay updates cash, debt, and reserves consistently.
+- Assert reserves cannot be withdrawn beyond documented constraints.
+
+Invariant candidates:
+
+- Cash, total borrows, total reserves, and utilization remain internally consistent.
 
 Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
 

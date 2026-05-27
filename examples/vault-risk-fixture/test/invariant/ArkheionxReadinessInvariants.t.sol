@@ -6,6 +6,15 @@ pragma solidity ^0.8.20;
 // It contains no live addresses, no RPC calls, and no exploit payloads.
 
 contract ArkheionxReadinessInvariants {
+    struct WithdrawalLifecycleSnapshot {
+        uint256 activeShares;
+        uint256 pendingShares;
+        uint256 burnedShares;
+        uint256 vaultAssets;
+        uint256 claimableAssets;
+        uint256 claimedAssets;
+    }
+
     // TODO: import your protocol contracts.
     // TODO: deploy a local test instance.
     // TODO: wire mock assets and mock oracles.
@@ -36,7 +45,14 @@ contract ArkheionxReadinessInvariants {
     }
 
     function invariant_withdrawalLifecycleConservesShares() public {
-        // TODO: assert request, cooldown, claim, and cancel flows conserve shares/assets.
+        WithdrawalLifecycleSnapshot memory beforeFlow = _withdrawalLifecycleSnapshot();
+
+        _exerciseWithdrawalRequestCooldownClaimCancel();
+
+        WithdrawalLifecycleSnapshot memory afterFlow = _withdrawalLifecycleSnapshot();
+
+        assert(_sharesUnderWithdrawalLifecycle(beforeFlow) == _sharesUnderWithdrawalLifecycle(afterFlow));
+        assert(_assetsUnderWithdrawalLifecycle(beforeFlow) == _assetsUnderWithdrawalLifecycle(afterFlow));
     }
 
     function invariant_adminCannotBypassAccountingWithoutExplicitTrust() public {
@@ -49,5 +65,22 @@ contract ArkheionxReadinessInvariants {
 
     function invariant_oracleAssumptionsAreDocumented() public {
         // TODO: assert stale, bounded, or mocked oracle behavior follows documented assumptions.
+    }
+
+    function _withdrawalLifecycleSnapshot()
+        internal
+        view
+        virtual
+        returns (WithdrawalLifecycleSnapshot memory snapshot)
+    {}
+
+    function _exerciseWithdrawalRequestCooldownClaimCancel() internal virtual {}
+
+    function _sharesUnderWithdrawalLifecycle(WithdrawalLifecycleSnapshot memory snapshot) internal pure returns (uint256) {
+        return snapshot.activeShares + snapshot.pendingShares + snapshot.burnedShares;
+    }
+
+    function _assetsUnderWithdrawalLifecycle(WithdrawalLifecycleSnapshot memory snapshot) internal pure returns (uint256) {
+        return snapshot.vaultAssets + snapshot.claimableAssets + snapshot.claimedAssets;
     }
 }

@@ -19,6 +19,9 @@ for stable CI and local workflows.
 | Contest Readiness | `ARKHEIONX_CONTEST_READINESS.md` |
 | Executive Summary | `ARKHEIONX_EXECUTIVE_SUMMARY.md` |
 | Remediation Roadmap | `ARKHEIONX_REMEDIATION_ROADMAP.md` |
+| Test Plan | `ARKHEIONX_TEST_PLAN.md` |
+| Test Plan JSON | `ARKHEIONX_TEST_PLAN.json` |
+| Foundry Invariant Skeleton | `ArkheionxReadinessInvariants.t.sol` |
 | Action Summary | `ARKHEIONX_ACTION_SUMMARY.md` |
 | PR Comment Body | `ARKHEIONX_PR_COMMENT.md` |
 
@@ -37,9 +40,9 @@ python3 scripts/pre_audit_scan.py \
 ```
 
 Arkheionx ignores its own generated reports, SARIF, baselines, issue plans,
-dry-run outputs, and delivery artifacts by default on future scans. This
-prevents previous outputs from influencing score, evidence, findings, negative
-evidence, protocol detection, or issue plans.
+dry-run outputs, delivery artifacts, test plans, and invariant skeletons by
+default on future scans. This prevents previous outputs from influencing score,
+evidence, findings, negative evidence, protocol detection, or issue plans.
 
 ## Custom Paths
 
@@ -61,3 +64,20 @@ v1.4.0 adds AMM and lending fixture outputs that use the same artifact shapes:
 - `examples/reports/lending-fixture-pre-audit-report.json`
 - `examples/reports/lending-fixture.sarif.json`
 - `examples/reports/lending-fixture-issue-plan.json`
+
+## Test Plan Examples
+
+v1.5.0 adds defensive test-plan artifacts generated from report JSON:
+
+- `examples/reports/amm-fixture-test-plan.md`
+- `examples/reports/amm-fixture-test-plan.json`
+- `examples/reports/ArkheionxAMMInvariants.t.sol`
+- `examples/reports/lending-fixture-test-plan.md`
+- `examples/reports/lending-fixture-test-plan.json`
+- `examples/reports/ArkheionxLendingInvariants.t.sol`
+- `examples/reports/amm-lending-hybrid-fixture-test-plan.md`
+- `examples/reports/amm-lending-hybrid-fixture-test-plan.json`
+- `examples/reports/ArkheionxHybridInvariants.t.sol`
+
+These skeletons are starter scaffolds with TODO placeholders. They are not
+formal verification and require project-specific review.

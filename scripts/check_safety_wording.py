@@ -51,6 +51,16 @@ BANNED_PHRASES = [
     "arbitrage exploit",
     "live amm attack",
     "live lending attack",
+    "exploit skeleton",
+    "exploit test generator",
+    "attack invariant",
+    "drain invariant",
+    "profit invariant",
+    "guaranteed invariant coverage",
+    "proof of safety",
+    "formal verification guarantee",
+    "automated exploit test",
+    "liquidation attack test",
 ]
 CLEAR_PROHIBITION_CONTEXT = [
     "do not",

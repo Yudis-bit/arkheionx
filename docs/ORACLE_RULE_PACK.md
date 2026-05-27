@@ -53,3 +53,9 @@ python3 scripts/search_knowledge.py "spot price manipulation"
 
 Use these results as defensive test inspiration, not vulnerability
 confirmation.
+
+## Test Plan Mapping
+
+Oracle findings map to stale-price, normalization, invalid-answer, price-bound,
+and oracle-admin test ideas in `metadata/finding_test_plan_map.json`.
+Generated skeletons require local mock feeds and project-specific assertions.

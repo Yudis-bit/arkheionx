@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "protocol_type": "auto",
   "ignore_paths": [
     "lib/",
@@ -48,5 +48,11 @@
     "min_confidence_for_issue_plan": "medium",
     "downgrade_keyword_only": true,
     "max_evidence_per_finding": 5
+  },
+  "test_plan": {
+    "include_foundry_skeletons": true,
+    "group_by_rule_family": true,
+    "include_low_confidence": true,
+    "output_profile": "defensive-foundry"
   }
 }

@@ -72,6 +72,10 @@ AMM and lending rule packs follow the same calibration model. Keyword-only
 mentions of AMMs, liquidations, or collateral in docs/interfaces should be
 downgraded unless source-level function evidence supports a readiness finding.
 
+Generated test plans and invariant skeletons are ignored as generated
+artifacts on future scans, so they should not create positive or negative
+coverage evidence by accident.
+
 ## Config Tuning
 
 ```json

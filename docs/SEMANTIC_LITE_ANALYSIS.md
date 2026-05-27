@@ -83,6 +83,10 @@ v1.4.0 extends semantic-lite coverage mapping for AMM and lending shapes:
 These mappings are heuristic. They improve affected function reporting and
 confidence calibration, but manual review remains required.
 
+v1.5.0 uses finding IDs from semantic-lite-supported findings to attach
+suggested tests and invariant candidates through
+`metadata/finding_test_plan_map.json`.
+
 ## Confidence Effects
 
 - Semantic evidence plus missing matching tests can raise confidence.

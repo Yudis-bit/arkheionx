@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/lending-fixture`
-- Generated at: `2026-05-27T03:46:52+00:00`
+- Generated at: `2026-05-27T04:09:42+00:00`
 - Protocol type: `lending`
 - Protocol confidence: `manual`
 - Files scanned: `4`
-- Scanner version: `1.4.0`
+- Scanner version: `1.5.0`
 
 | File class       | Count |
 | ---------------- | ----- |
@@ -292,6 +292,14 @@ Related Knowledge:
 Suggested tests:
 
 - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+- Add a stateful invariant suite for the core protocol lifecycle.
+- Add handler actions for normal user flows and documented edge cases.
+- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
+
+Invariant candidates:
+
+- Core accounting relationships hold after any allowed user action.
+- Privileged actions cannot silently bypass documented accounting assumptions.
 
 Search tags: `invariant-testing, lending`
 
@@ -321,9 +329,17 @@ What was detected:
 
 Oracle and price-feed signals were detected without enough freshness or sanity-check language.
 
+
 Suggested tests:
 
 - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Test decimals normalization across expected feed decimals.
+- Test zero, negative, or invalid oracle answers if applicable.
+- Assert normalized price units match accounting units.
+
+Invariant candidates:
+
+- Normalized oracle values remain within documented unit and decimal assumptions.
 
 Search tags: `oracle-risk, price-assumptions`
 
@@ -381,6 +397,13 @@ Related Knowledge:
 Suggested tests:
 
 - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+- Reject stale oracle rounds or document fallback behavior.
+- Test updatedAt or heartbeat boundaries.
+- Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+
+Invariant candidates:
+
+- Accounting decisions only use oracle data that satisfies documented freshness policy.
 
 Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 
@@ -428,9 +451,17 @@ Recommended defensive checks:
 - stale-price policy
 - sequencer downtime notes
 
+
 Suggested tests:
 
 - Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+- Test documented price bounds.
+- Test invalid answer fallback behavior.
+- Add documentation for price shock and fallback assumptions.
+
+Invariant candidates:
+
+- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
 
 Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
@@ -488,6 +519,13 @@ Related Knowledge:
 Suggested tests:
 
 - For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.
+- Test unauthorized callers cannot change critical parameters.
+- Test authorized role can perform expected setter actions.
+- Document role ownership and transfer procedure.
+
+Invariant candidates:
+
+- Unauthorized users cannot mutate privileged configuration.
 
 Search tags: `access-control-review, admin-risk, access-control-rule-pack`
 
@@ -560,6 +598,13 @@ Related Knowledge:
 Suggested tests:
 
 - Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.
+- Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.
+- Test debt cannot exceed documented collateral constraints.
+- Test unsafe withdrawals are rejected or explicitly documented.
+
+Invariant candidates:
+
+- Collateral value and debt remain inside documented solvency constraints after allowed user actions.
 
 Search tags: `lending-solvency, lending-rule-pack, pre-audit-readiness`
 
@@ -632,6 +677,13 @@ Related Knowledge:
 Suggested tests:
 
 - Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.
+- Test just-above-threshold positions cannot be liquidated.
+- Test just-below-threshold positions can be liquidated according to policy.
+- Assert liquidation bonus and close factor stay within documented bounds.
+
+Invariant candidates:
+
+- Liquidation eligibility changes only at documented threshold boundaries.
 
 Search tags: `lending-liquidation, liquidation-boundary, lending-rule-pack`
 
@@ -704,6 +756,13 @@ Related Knowledge:
 Suggested tests:
 
 - Advance local time across multiple accrual steps and assert borrow indexes and balances remain monotonic and bounded by documented rounding.
+- Test interest or borrow index monotonicity.
+- Cover small balances and repeated accrual.
+- Test borrow and repay before and after accrual.
+
+Invariant candidates:
+
+- Interest and borrow indexes move according to documented rate policy and do not drift unexpectedly.
 
 Search tags: `lending-interest-index, precision, lending-rule-pack`
 
@@ -777,6 +836,13 @@ Related Knowledge:
 Suggested tests:
 
 - Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
+- Test stale oracle rejection for borrow and liquidation paths.
+- Test decimals normalization for collateral valuation.
+- Test price shock boundaries around health-factor transitions.
+
+Invariant candidates:
+
+- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
 
 Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
 
@@ -849,6 +915,13 @@ Related Knowledge:
 Suggested tests:
 
 - Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
+- Test borrow cannot exceed available liquidity.
+- Test repay updates cash, debt, and reserves consistently.
+- Assert reserves cannot be withdrawn beyond documented constraints.
+
+Invariant candidates:
+
+- Cash, total borrows, total reserves, and utilization remain internally consistent.
 
 Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
 

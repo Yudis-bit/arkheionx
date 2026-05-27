@@ -49,6 +49,10 @@ Markdown and JSON reports include `scan_sources` so users can see:
 - generated Arkheionx artifacts ignored;
 - ignored generated artifact paths.
 
+v1.5.0 extends the default ignore set to generated test plans and Foundry
+invariant skeleton outputs, so starter scaffolds do not become source evidence
+in later scans.
+
 ## Config
 
 Default behavior:

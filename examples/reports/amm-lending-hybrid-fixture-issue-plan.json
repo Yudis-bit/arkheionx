@@ -63,6 +63,9 @@
       "fingerprint": "e398df447166c047e25f65b7",
       "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
       "id": "ARK-LEND-004",
+      "invariant_candidates": [
+        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
+      ],
       "knowledge": {
         "broken_invariants": [
           "health-factor-uses-valid-price",
@@ -115,7 +118,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy."
+        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "Test stale oracle rejection for borrow and liquidation paths.",
+        "Test decimals normalization for collateral valuation.",
+        "Test price shock boundaries around health-factor transitions."
       ],
       "suppressible": true,
       "tags": [
@@ -123,6 +129,24 @@
         "oracle-risk",
         "lending-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_lendingOracleValidityPolicyIsRespected"
+        ],
+        "manual_review_notes": [
+          "Review fallback behavior and collateral-specific feed assumptions."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Lending market",
+          "Oracle mock",
+          "Health-factor logic"
+        ],
+        "rule_family": "lending",
+        "safety_notes": [
+          "Use local oracle values and synthetic price shocks."
+        ]
+      },
       "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
       "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
     },
@@ -179,6 +203,9 @@
       "fingerprint": "fc3f7c7e29551f02f8aa3360",
       "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
       "id": "ARK-ORC-001",
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
       "knowledge": {
         "broken_invariants": [
           "accounting-value-uses-valid-price",
@@ -238,7 +265,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
       ],
       "suppressible": true,
       "tags": [
@@ -246,6 +276,23 @@
         "oracle-rule-pack",
         "pre-audit-readiness"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_oracleFreshnessPolicyIsRespected"
+        ],
+        "manual_review_notes": [
+          "Check whether freshness validation is implemented in an imported adapter."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter or mock feed",
+          "Consumer contract"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local mock oracle responses only."
+        ]
+      },
       "title": "Oracle-dependent logic without stale-price tests",
       "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
     },
@@ -297,6 +344,9 @@
       "fingerprint": "c2b4554f5dc03ba75b904ebd",
       "historical_pattern_similarity": "",
       "id": "ARK-ORC-002",
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -312,13 +362,33 @@
       "recommended_defensive_checks": [],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
       ],
       "suppressible": true,
       "tags": [
         "oracle-risk",
         "price-assumptions"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_oracleNormalizationMatchesAccountingUnits"
+        ],
+        "manual_review_notes": [
+          "Review whether feed decimals are fixed at deployment."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Accounting consumer"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use synthetic feed answers and local mocks."
+        ]
+      },
       "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
       "why_it_matters": ""
     },
@@ -375,6 +445,9 @@
       "fingerprint": "e19b2aed2db4fc55b0a35d42",
       "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
       "id": "ARK-ORC-003",
+      "invariant_candidates": [
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+      ],
       "knowledge": {
         "broken_invariants": [
           "price-input-remains-manipulation-resistant",
@@ -427,7 +500,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards."
       ],
       "suppressible": true,
       "tags": [
@@ -436,6 +512,23 @@
         "reserve-pricing",
         "oracle-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_reservePriceDependencyIsBounded"
+        ],
+        "manual_review_notes": [
+          "Review whether price source is advisory or authoritative."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "AMM or price source mock",
+          "Price consumer"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local reserve changes and avoid production market assumptions."
+        ]
+      },
       "title": "Spot or reserve-based pricing without manipulation-resistance tests",
       "why_it_matters": "Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design."
     },
@@ -492,6 +585,9 @@
       "fingerprint": "c5d79b9ef53a19a38b897813",
       "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
       "id": "ARK-ORC-005",
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
       "knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -512,7 +608,10 @@
       ],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
       ],
       "suppressible": true,
       "tags": [
@@ -520,6 +619,23 @@
         "documentation-readiness",
         "oracle-rule-pack"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+        ],
+        "manual_review_notes": [
+          "Review whether fallback behavior is intentionally unavailable."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Consumer path"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local invalid-value mocks."
+        ]
+      },
       "title": "Missing price bounds or fallback assumptions documentation",
       "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
@@ -562,6 +678,10 @@
       "fingerprint": "95a86408e7d17e8f07537344",
       "historical_pattern_similarity": "",
       "id": "ARK-TST-002",
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
       "knowledge": {
         "broken_invariants": [
           "protocol-specific-conservation-invariant",
@@ -609,18 +729,40 @@
       "recommended_defensive_checks": [],
       "severity": "Low readiness gap",
       "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
       ],
       "suppressible": true,
       "tags": [
         "invariant-testing",
         "amm"
       ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_coreAccountingRelationshipsHold",
+          "invariant_privilegedActionsRespectDocumentedAssumptions"
+        ],
+        "manual_review_notes": [
+          "Review whether the protocol uses another property-testing framework outside Foundry."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Target contracts",
+          "Allowed action handler",
+          "Local mocks for assets and oracle inputs"
+        ],
+        "rule_family": "testing",
+        "safety_notes": [
+          "Generated invariants are starting points and need human tailoring."
+        ]
+      },
       "title": "No invariant tests detected for DeFi protocol shape",
       "why_it_matters": ""
     }
   ],
-  "generated_at": "2026-05-27T03:46:53+00:00",
+  "generated_at": "2026-05-27T04:09:42+00:00",
   "issue_grouping": "one-per-finding",
   "issues": [
     {
@@ -629,7 +771,7 @@
         "quote",
         "swap"
       ],
-      "body": "<!-- arkheionx-issue:ARK-AMM-001 -->\n\n# Arkheionx readiness gap: ARK-AMM-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-001`\n- Priority: `High readiness gap`\n- Category: `amm-invariant`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `8835e3f68835cbce02a64abb`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-amm-invariant-steering, pattern-spot-price-manipulation\n- Suggested defensive tests: swap-invariant-conservation, reserve-accounting-test, liquidity-proportionality\n- Related PoCs: poc-2021-01-saddle, poc-2021-10-indexed-finance, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/RULE_PACKS.md, docs/EXPLOIT_TAXONOMY.md\n\n## Why It Matters\n\nAMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations.\n\n## Historical Pattern Similarity\n\nMaps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.\n\n## Recommended Defensive Checks\n\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\n## Suggested Tests\n\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-AMM-001 -->\n\n# Arkheionx readiness gap: ARK-AMM-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-001`\n- Priority: `High readiness gap`\n- Category: `amm-invariant`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `8835e3f68835cbce02a64abb`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-amm-invariant-steering, pattern-spot-price-manipulation\n- Suggested defensive tests: swap-invariant-conservation, reserve-accounting-test, liquidity-proportionality\n- Related PoCs: poc-2021-01-saddle, poc-2021-10-indexed-finance, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/RULE_PACKS.md, docs/EXPLOIT_TAXONOMY.md\n\n## Why It Matters\n\nAMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations.\n\n## Historical Pattern Similarity\n\nMaps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.\n\n## Recommended Defensive Checks\n\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\n## Suggested Tests\n\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n- Document expected invariant tolerance.\n\n## Invariant Candidates\n\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "amm-invariant",
       "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
@@ -687,6 +829,10 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.",
       "finding_id": "ARK-AMM-001",
       "fingerprint": "8835e3f68835cbce02a64abb",
+      "invariant_candidates": [
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+      ],
       "labels": [
         "amm-invariant",
         "amm-rule-pack",
@@ -747,7 +893,10 @@
         ]
       },
       "suggested_tests": [
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+        "Test repeated swaps across small and large reserve states.",
+        "Document expected invariant tolerance."
       ],
       "title": "[Arkheionx][High] ARK-AMM-001 - AMM invariant assumptions not covered by tests"
     },
@@ -757,7 +906,7 @@
         "quote",
         "swap"
       ],
-      "body": "<!-- arkheionx-issue:ARK-AMM-003 -->\n\n# Arkheionx readiness gap: ARK-AMM-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-003`\n- Priority: `High readiness gap`\n- Category: `amm-pricing`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `2c13497a73ab11c332eb3387`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-pool-price-accounting\n- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-movement-bounds\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nSame-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented.\n\n## Historical Pattern Similarity\n\nMaps to spot-price and pool-price accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\n## Suggested Tests\n\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-AMM-003 -->\n\n# Arkheionx readiness gap: ARK-AMM-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-003`\n- Priority: `High readiness gap`\n- Category: `amm-pricing`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `2c13497a73ab11c332eb3387`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-pool-price-accounting\n- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-movement-bounds\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nSame-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented.\n\n## Historical Pattern Similarity\n\nMaps to spot-price and pool-price accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\n## Suggested Tests\n\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n- Document whether other accounting paths rely on spot reserve price.\n\n## Invariant Candidates\n\n- Reserve-based price consumers respect documented bounds and delay assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "amm-pricing",
       "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
@@ -815,6 +964,9 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.",
       "finding_id": "ARK-AMM-003",
       "fingerprint": "2c13497a73ab11c332eb3387",
+      "invariant_candidates": [
+        "Reserve-based price consumers respect documented bounds and delay assumptions."
+      ],
       "labels": [
         "amm-pricing",
         "amm-rule-pack",
@@ -874,7 +1026,10 @@
         ]
       },
       "suggested_tests": [
-        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "Test reserve-price movement bounds.",
+        "Test TWAP or delay assumptions if used.",
+        "Document whether other accounting paths rely on spot reserve price."
       ],
       "title": "[Arkheionx][High] ARK-AMM-003 - Spot-price or reserve-price dependency without manipulation-resistance tests"
     },
@@ -884,7 +1039,7 @@
         "quote",
         "swap"
       ],
-      "body": "<!-- arkheionx-issue:ARK-AMM-004 -->\n\n# Arkheionx readiness gap: ARK-AMM-004\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-004`\n- Priority: `Medium readiness gap`\n- Category: `amm-token-assumptions`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `313cfceb024bb8a5c426688e`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-pool-price-accounting, pattern-precision-rounding-loss\n- Suggested defensive tests: balance-before-after-accounting, fee-on-transfer-token-simulation, unsupported-token-documentation\n- Related PoCs: poc-2020-06-balancer-deflationary\n- Docs: docs/AMM_RULE_PACK.md, docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md\n\n## Why It Matters\n\nAMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled.\n\n## Historical Pattern Similarity\n\nMaps to fee-on-transfer and token accounting assumption readiness classes.\n\n## Recommended Defensive Checks\n\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\n## Suggested Tests\n\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-AMM-004 -->\n\n# Arkheionx readiness gap: ARK-AMM-004\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-004`\n- Priority: `Medium readiness gap`\n- Category: `amm-token-assumptions`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `313cfceb024bb8a5c426688e`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-pool-price-accounting, pattern-precision-rounding-loss\n- Suggested defensive tests: balance-before-after-accounting, fee-on-transfer-token-simulation, unsupported-token-documentation\n- Related PoCs: poc-2020-06-balancer-deflationary\n- Docs: docs/AMM_RULE_PACK.md, docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md\n\n## Why It Matters\n\nAMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled.\n\n## Historical Pattern Similarity\n\nMaps to fee-on-transfer and token accounting assumption readiness classes.\n\n## Recommended Defensive Checks\n\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\n## Suggested Tests\n\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n- Document unsupported token types if not handled.\n\n## Invariant Candidates\n\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "amm-token-assumptions",
       "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
@@ -942,6 +1097,9 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.",
       "finding_id": "ARK-AMM-004",
       "fingerprint": "313cfceb024bb8a5c426688e",
+      "invariant_candidates": [
+        "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+      ],
       "labels": [
         "amm-rule-pack",
         "amm-token-assumptions",
@@ -998,7 +1156,10 @@
         ]
       },
       "suggested_tests": [
-        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+        "Simulate fee-on-transfer behavior with a local mock if supported.",
+        "Document unsupported token types if not handled."
       ],
       "title": "[Arkheionx][Medium] ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented"
     },
@@ -1008,7 +1169,7 @@
         "quote",
         "swap"
       ],
-      "body": "<!-- arkheionx-issue:ARK-AMM-005 -->\n\n# Arkheionx readiness gap: ARK-AMM-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-005`\n- Priority: `Medium readiness gap`\n- Category: `amm-slippage`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `e56f2a3fada927e4cb9f4acb`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: min-out-enforcement, deadline-or-stale-quote-test, slippage-boundary-test\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle\n- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nSlippage and stale quote controls help users and integrations bound expected outcomes around swaps.\n\n## Historical Pattern Similarity\n\nMaps to price boundary and quote freshness readiness classes.\n\n## Recommended Defensive Checks\n\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\n## Suggested Tests\n\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-AMM-005 -->\n\n# Arkheionx readiness gap: ARK-AMM-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-005`\n- Priority: `Medium readiness gap`\n- Category: `amm-slippage`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `e56f2a3fada927e4cb9f4acb`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`\n- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`\n- `test/documentation coverage`: No semantic-lite amm test coverage terms were detected.\n- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1`\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: min-out-enforcement, deadline-or-stale-quote-test, slippage-boundary-test\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle\n- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nSlippage and stale quote controls help users and integrations bound expected outcomes around swaps.\n\n## Historical Pattern Similarity\n\nMaps to price boundary and quote freshness readiness classes.\n\n## Recommended Defensive Checks\n\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\n## Suggested Tests\n\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n- Assert user-provided slippage bounds are respected.\n\n## Invariant Candidates\n\n- Swap execution respects user-provided output bounds and documented deadline policy.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "amm-slippage",
       "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
@@ -1066,6 +1227,9 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.",
       "finding_id": "ARK-AMM-005",
       "fingerprint": "e56f2a3fada927e4cb9f4acb",
+      "invariant_candidates": [
+        "Swap execution respects user-provided output bounds and documented deadline policy."
+      ],
       "labels": [
         "amm-rule-pack",
         "amm-slippage",
@@ -1123,7 +1287,10 @@
         ]
       },
       "suggested_tests": [
-        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        "Test minOut enforcement.",
+        "Test stale quote or deadline behavior if supported.",
+        "Assert user-provided slippage bounds are respected."
       ],
       "title": "[Arkheionx][Medium] ARK-AMM-005 - Slippage/min-output constraints missing or unclear"
     },
@@ -1135,7 +1302,7 @@
         "healthFactor",
         "repay"
       ],
-      "body": "<!-- arkheionx-issue:ARK-LEND-001 -->\n\n# Arkheionx readiness gap: ARK-LEND-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-LEND-001`\n- Priority: `Medium readiness gap`\n- Category: `lending-solvency`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `a8bf08df97209e6400df49bd`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`\n- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`\n- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`\n- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, \"HEALTH\");`\n- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`\n\n## Related Knowledge\n\n- Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price\n- Suggested defensive tests: collateral-debt-invariant, borrow-limit-boundary-test, unsafe-withdrawal-rejection\n- Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank\n- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md, docs/READINESS_SCORE.md\n\n## Why It Matters\n\nLending systems depend on collateral and debt accounting staying aligned across every user action.\n\n## Historical Pattern Similarity\n\nMaps to collateral/debt invariant and oracle-dependent lending readiness classes. This is defensive review context, not vulnerability confirmation.\n\n## Recommended Defensive Checks\n\n- collateral debt invariant\n- unsafe withdrawal rejection\n- borrow limit boundary\n- repay/deposit accounting\n\n## Suggested Tests\n\n- Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-LEND-001 -->\n\n# Arkheionx readiness gap: ARK-LEND-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-LEND-001`\n- Priority: `Medium readiness gap`\n- Category: `lending-solvency`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `a8bf08df97209e6400df49bd`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`\n- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`\n- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`\n- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, \"HEALTH\");`\n- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`\n\n## Related Knowledge\n\n- Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price\n- Suggested defensive tests: collateral-debt-invariant, borrow-limit-boundary-test, unsafe-withdrawal-rejection\n- Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank\n- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md, docs/READINESS_SCORE.md\n\n## Why It Matters\n\nLending systems depend on collateral and debt accounting staying aligned across every user action.\n\n## Historical Pattern Similarity\n\nMaps to collateral/debt invariant and oracle-dependent lending readiness classes. This is defensive review context, not vulnerability confirmation.\n\n## Recommended Defensive Checks\n\n- collateral debt invariant\n- unsafe withdrawal rejection\n- borrow limit boundary\n- repay/deposit accounting\n\n## Suggested Tests\n\n- Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.\n- Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.\n- Test debt cannot exceed documented collateral constraints.\n- Test unsafe withdrawals are rejected or explicitly documented.\n\n## Invariant Candidates\n\n- Collateral value and debt remain inside documented solvency constraints after allowed user actions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "lending-solvency",
       "confidence": "medium",
       "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
@@ -1193,6 +1360,9 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
       "finding_id": "ARK-LEND-001",
       "fingerprint": "a8bf08df97209e6400df49bd",
+      "invariant_candidates": [
+        "Collateral value and debt remain inside documented solvency constraints after allowed user actions."
+      ],
       "labels": [
         "arkheionx",
         "lending-rule-pack",
@@ -1251,7 +1421,10 @@
         ]
       },
       "suggested_tests": [
-        "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested."
+        "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+        "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
+        "Test debt cannot exceed documented collateral constraints.",
+        "Test unsafe withdrawals are rejected or explicitly documented."
       ],
       "title": "[Arkheionx][Medium] ARK-LEND-001 - Collateral/debt solvency invariant not covered by tests"
     },
@@ -1263,7 +1436,7 @@
         "healthFactor",
         "repay"
       ],
-      "body": "<!-- arkheionx-issue:ARK-LEND-002 -->\n\n# Arkheionx readiness gap: ARK-LEND-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-LEND-002`\n- Priority: `Medium readiness gap`\n- Category: `lending-liquidation`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `41beca50a023651457f51cf2`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`\n- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`\n- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`\n- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, \"HEALTH\");`\n- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`\n\n## Related Knowledge\n\n- Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price\n- Suggested defensive tests: just-above-threshold-test, just-below-threshold-test, partial-liquidation-math\n- Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank\n- Docs: docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nLiquidation boundary errors can reject valid liquidations, liquidate solvent positions, or distort seized collateral accounting.\n\n## Historical Pattern Similarity\n\nMaps to liquidation boundary and collateral accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- just-above threshold\n- just-below threshold\n- bonus bounds\n- partial liquidation math\n\n## Suggested Tests\n\n- Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-LEND-002 -->\n\n# Arkheionx readiness gap: ARK-LEND-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-LEND-002`\n- Priority: `Medium readiness gap`\n- Category: `lending-liquidation`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `41beca50a023651457f51cf2`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`\n- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`\n- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`\n- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, \"HEALTH\");`\n- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`\n\n## Related Knowledge\n\n- Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price\n- Suggested defensive tests: just-above-threshold-test, just-below-threshold-test, partial-liquidation-math\n- Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank\n- Docs: docs/LENDING_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nLiquidation boundary errors can reject valid liquidations, liquidate solvent positions, or distort seized collateral accounting.\n\n## Historical Pattern Similarity\n\nMaps to liquidation boundary and collateral accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- just-above threshold\n- just-below threshold\n- bonus bounds\n- partial liquidation math\n\n## Suggested Tests\n\n- Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.\n- Test just-above-threshold positions cannot be liquidated.\n- Test just-below-threshold positions can be liquidated according to policy.\n- Assert liquidation bonus and close factor stay within documented bounds.\n\n## Invariant Candidates\n\n- Liquidation eligibility changes only at documented threshold boundaries.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "lending-liquidation",
       "confidence": "medium",
       "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
@@ -1321,6 +1494,9 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
       "finding_id": "ARK-LEND-002",
       "fingerprint": "41beca50a023651457f51cf2",
+      "invariant_candidates": [
+        "Liquidation eligibility changes only at documented threshold boundaries."
+      ],
       "labels": [
         "arkheionx",
         "lending-liquidation",
@@ -1380,7 +1556,10 @@
         ]
       },
       "suggested_tests": [
-        "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds."
+        "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+        "Test just-above-threshold positions cannot be liquidated.",
+        "Test just-below-threshold positions can be liquidated according to policy.",
+        "Assert liquidation bonus and close factor stay within documented bounds."
       ],
       "title": "[Arkheionx][Medium] ARK-LEND-002 - Liquidation boundary tests missing"
     },
@@ -1392,7 +1571,7 @@
         "healthFactor",
         "repay"
       ],
-      "body": "<!-- arkheionx-issue:ARK-LEND-005 -->\n\n# Arkheionx readiness gap: ARK-LEND-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-LEND-005`\n- Priority: `Medium readiness gap`\n- Category: `lending-liquidity`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `34a9fb670f137b0064695aee`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`\n- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`\n- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`\n- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, \"HEALTH\");`\n- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`\n\n## Related Knowledge\n\n- Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift\n- Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints\n- Related PoCs: poc-2020-11-cheese-bank\n- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md\n\n## Why It Matters\n\nReserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.\n\n## Historical Pattern Similarity\n\nMaps to cash/debt mismatch and liquidity accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- available liquidity bound\n- repay updates cash/debt\n- reserve withdrawal constraints\n- utilization bounds\n\n## Suggested Tests\n\n- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-LEND-005 -->\n\n# Arkheionx readiness gap: ARK-LEND-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-LEND-005`\n- Priority: `Medium readiness gap`\n- Category: `lending-liquidity`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `34a9fb670f137b0064695aee`\n\n## Evidence\n\n- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`\n- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`\n- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`\n- `src/ToyHybridMarket.sol:53` in `borrow`: Solidity function contains external value-flow call evidence. Snippet: `require(healthFactor(msg.sender) > 1e18, \"HEALTH\");`\n- `src/ToyHybridMarket.sol:61` in `repay`: Solidity function contains external value-flow call evidence. Snippet: `uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;`\n\n## Related Knowledge\n\n- Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift\n- Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints\n- Related PoCs: poc-2020-11-cheese-bank\n- Docs: docs/LENDING_RULE_PACK.md, docs/RULE_PACKS.md\n\n## Why It Matters\n\nReserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.\n\n## Historical Pattern Similarity\n\nMaps to cash/debt mismatch and liquidity accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- available liquidity bound\n- repay updates cash/debt\n- reserve withdrawal constraints\n- utilization bounds\n\n## Suggested Tests\n\n- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.\n- Test borrow cannot exceed available liquidity.\n- Test repay updates cash, debt, and reserves consistently.\n- Assert reserves cannot be withdrawn beyond documented constraints.\n\n## Invariant Candidates\n\n- Cash, total borrows, total reserves, and utilization remain internally consistent.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`\n- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "lending-liquidity",
       "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
@@ -1450,6 +1629,9 @@
       "evidence_summary": "src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
       "finding_id": "ARK-LEND-005",
       "fingerprint": "34a9fb670f137b0064695aee",
+      "invariant_candidates": [
+        "Cash, total borrows, total reserves, and utilization remain internally consistent."
+      ],
       "labels": [
         "arkheionx",
         "lending-liquidity",
@@ -1508,7 +1690,10 @@
         ]
       },
       "suggested_tests": [
-        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently."
+        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "Test borrow cannot exceed available liquidity.",
+        "Test repay updates cash, debt, and reserves consistently.",
+        "Assert reserves cannot be withdrawn beyond documented constraints."
       ],
       "title": "[Arkheionx][Medium] ARK-LEND-005 - Reserve/cash accounting assumptions not covered"
     }
@@ -1532,5 +1717,5 @@
     "title": "[Arkheionx] Pre-audit readiness remediation plan"
   },
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "1.4.0"
+  "version": "1.5.0"
 }

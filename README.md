@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.3.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.4.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,21 +126,21 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.3.0 - Ecosystem Pack**.
+Latest stable release: **v1.4.0 - AMM + Lending Protocol Packs**.
 
-v1.3.0 keeps the stable readiness surface and adds ecosystem-level readiness
-workflow materials:
+v1.5.0 is prepared locally as the Invariant/Test Plan Generator Upgrade. It
+turns readiness findings into defensive test plans and safe Foundry skeletons:
 
-- multi-repository readiness workflow docs;
-- anonymized ecosystem gap summary examples;
-- ecosystem intake and pilot scope templates;
-- synthetic local/static ecosystem reports with no customer or partner claims.
+- suggested tests mapped by finding ID;
+- invariant candidates grouped by rule family;
+- Foundry starter skeletons with TODO placeholders;
+- local-only examples for AMM, Lending, and hybrid fixtures.
 
 | Release | Focus | Status |
 |---|---|---|
 | v0.1.0 | Pre-Audit Readiness OS MVP | Released |
 | v0.2.0 | Vault Rule Pack | Released |
-| v0.3.0 | GitHub Action UX + PR Comment Mode | Released |
+| v0.4.0 | GitHub Action UX + PR Comment Mode | Released |
 | v0.4.0 | SARIF Output + Baseline Diff Mode | Released |
 | v0.4.1 | Public polish and release consistency | Released |
 | v0.5.0 | Generated issue workflow + rule-pack expansion | Released |
@@ -156,11 +156,12 @@ workflow materials:
 | v1.1.1 | Public surface polish | Released |
 | v1.2.0 | Paid offer refinement | Released |
 | v1.3.0 | Ecosystem Pack | Released |
-| v1.4.0 | AMM + Lending Protocol Packs | Prepared, not tagged |
+| v1.4.0 | AMM + Lending Protocol Packs | Released |
+| v1.5.0 | Invariant/Test Plan Generator Upgrade | Prepared, not tagged |
 
-## Stable v1.3.x Surface
+## Stable v1.4.x Surface
 
-Arkheionx v1.3.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.4.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -169,7 +170,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.3.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.4.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Protocol Packs
@@ -183,6 +184,22 @@ Arkheionx currently includes readiness checks for:
 - Rewards / Staking
 - AMMs
 - Lending
+
+## Test Plan Generation
+
+Arkheionx can turn readiness findings into suggested defensive test plans and
+Foundry invariant skeletons:
+
+```sh
+python3 scripts/generate_test_plan.py \
+  --report examples/reports/amm-fixture-pre-audit-report.json \
+  --output examples/reports/amm-fixture-test-plan.md \
+  --foundry-output examples/reports/ArkheionxAMMInvariants.t.sol
+```
+
+Generated skeletons are starting points, not formal verification or proof of
+safety. Review TODOs, bind local project contracts and mocks, and replace
+placeholder assertions with project-specific properties.
 
 ## Feedback and Calibration
 
@@ -302,7 +319,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.3.0` for stable usage:
+Use `@v1.4.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -317,7 +334,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
         with:
           root: "."
           protocol-type: "auto"
@@ -351,7 +368,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -380,7 +397,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.3.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.4.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -434,7 +451,7 @@ python3 scripts/pre_audit_scan.py \
 See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.2.x CLI
 surface.
 
-Vault builders can force the v0.3.0 Vault Rule Pack:
+Vault builders can force the v0.4.0 Vault Rule Pack:
 
 ```sh
 python3 scripts/pre_audit_scan.py \
@@ -494,9 +511,9 @@ Recommended next steps:
 The report is a readiness artifact. It does not prove safety or confirm
 exploitability.
 
-## v0.3.0 Vault Rule Pack
+## v0.4.0 Vault Rule Pack
 
-Arkheionx v0.3.0 adds a vault-focused rule pack for indie builders working on
+Arkheionx v0.4.0 adds a vault-focused rule pack for indie builders working on
 ERC4626-like vaults, strategy vaults, yield vaults, staking vaults, and
 share/accounting systems.
 
@@ -679,6 +696,8 @@ Core standards:
 - [`docs/GENERATED_ISSUE_CHECKLIST.md`](docs/GENERATED_ISSUE_CHECKLIST.md)
 - [`docs/GITHUB_ISSUE_WORKFLOW.md`](docs/GITHUB_ISSUE_WORKFLOW.md)
 - [`docs/DELIVERY_ARTIFACTS.md`](docs/DELIVERY_ARTIFACTS.md)
+- [`docs/INVARIANT_TEST_PLAN_GENERATOR.md`](docs/INVARIANT_TEST_PLAN_GENERATOR.md)
+- [`docs/FOUNDRY_INVARIANT_SKELETONS.md`](docs/FOUNDRY_INVARIANT_SKELETONS.md)
 
 ### Analysis
 
@@ -690,6 +709,7 @@ Core standards:
 - [`docs/SECURITY_MEMORY_GRAPH.md`](docs/SECURITY_MEMORY_GRAPH.md)
 - [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md)
 - [`docs/FINDING_KNOWLEDGE_MAP.md`](docs/FINDING_KNOWLEDGE_MAP.md)
+- [`docs/INVARIANT_SAFETY_BOUNDARIES.md`](docs/INVARIANT_SAFETY_BOUNDARIES.md)
 
 ### Feedback
 
@@ -795,7 +815,7 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v0.2.0: vault rule pack.** Stronger vault accounting and ERC4626-specific
   readiness rules, vault-risk fixture, vault-specific scoring, report coverage,
   and scanner tests.
-- **v0.3.0: GitHub Action UX.** Actions summary, optional PR comment mode,
+- **v0.4.0: GitHub Action UX.** Actions summary, optional PR comment mode,
   generated issue checklist, stable finding IDs, and local config suppression.
 - **v0.4.0: SARIF and baseline diff mode.** SARIF output, readiness
   baselines, new/resolved/unchanged gap tracking, and explicit CI thresholds.
@@ -825,7 +845,9 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v1.3.0: ecosystem pack.** Multi-repo readiness workflow, anonymized common
   gap reports, repo-by-repo summary tables, and ecosystem pilot templates.
 - **v1.4.0: AMM + Lending Protocol Packs.** Defensive AMM and lending readiness
-  findings, fixtures, reports, and knowledge mappings prepared locally.
+  findings, fixtures, reports, and knowledge mappings.
+- **v1.5.0: Invariant/Test Plan Generator Upgrade.** Finding-to-test-plan map,
+  defensive test-plan generator, and Foundry starter skeletons prepared locally.
 
 Archive milestones remain honest:
 

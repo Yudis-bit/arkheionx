@@ -94,6 +94,19 @@ Start with:
 4. `demo-launch-report.md` for a client-facing readiness artifact.
 5. `demo-contest-readiness.md` for scope and reviewer onboarding gaps.
 
+Optional v1.5 follow-up:
+
+```sh
+python3 scripts/generate_test_plan.py \
+  --report examples/reports/demo-report.json \
+  --output examples/reports/demo-test-plan.md \
+  --json-output examples/reports/demo-test-plan.json \
+  --foundry-output examples/reports/ArkheionxReadinessInvariants.t.sol
+```
+
+Generated skeletons are TODO-based starting points for local review, not
+formal verification.
+
 ## Common Errors
 
 - `python3: command not found`: install Python 3 or use the Python binary name

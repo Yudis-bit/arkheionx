@@ -77,3 +77,26 @@ Patch releases may add optional fields or flags, but v1.0.0 flags should remain
 backward compatible unless a future changelog explicitly marks a breaking
 change. Findings remain readiness signals, not formal audit findings or
 vulnerability confirmations.
+
+## Test Plan Generator
+
+v1.5.0 adds a companion CLI:
+
+```sh
+python3 scripts/generate_test_plan.py \
+  --report examples/reports/amm-fixture-pre-audit-report.json \
+  --output examples/reports/amm-fixture-test-plan.md \
+  --json-output examples/reports/amm-fixture-test-plan.json \
+  --foundry-output examples/reports/ArkheionxAMMInvariants.t.sol
+```
+
+| Flag | Purpose |
+|---|---|
+| `--report PATH` | Arkheionx JSON report input. |
+| `--output PATH` | Markdown defensive test plan output. |
+| `--json-output PATH` | Optional machine-readable test-plan JSON. |
+| `--foundry-output PATH` | Optional Foundry invariant skeleton output. |
+| `--check` | Verify committed fixture test plans are current. |
+
+Generated skeletons are local starter scaffolds with TODO placeholders. They
+are not formal verification and require human review.
