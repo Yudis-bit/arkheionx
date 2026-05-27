@@ -6616,7 +6616,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv or sys.argv[1:])
+    args = parse_args(sys.argv[1:] if argv is None else argv)
     root = Path(args.root).expanduser().resolve()
     if not root.exists() or not root.is_dir():
         print(f"error: --root does not exist or is not a directory: {root}", file=sys.stderr)

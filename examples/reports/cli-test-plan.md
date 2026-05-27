@@ -327,8 +327,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 
 ## Foundry Skeleton
 
-- Suggested output: `examples/reports/ArkheionxAMMInvariants.t.sol`
-- Contract name: `ArkheionxAMMInvariants`
+- Suggested output: `examples/reports/ArkheionxCLIInvariants.t.sol`
+- Contract name: `ArkheionxCLIInvariants`
 - Skeleton functions:
   - `invariant_lpSharesTrackPoolOwnership`
   - `invariant_reservePriceConsumersRespectBounds`

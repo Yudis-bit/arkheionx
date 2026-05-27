@@ -21,7 +21,7 @@ python3 scripts/generate_search_index.py --check
 - Rule-pack metadata lives in `arkheionx/rules/registry.py`.
 - Test-plan, ecosystem, paid-offer, and feedback generator logic now has
   package modules behind the existing scripts.
-- A preview internal CLI lives at `arkheionx/cli/main.py`.
+- A pre-v2 CLI candidate lives at `arkheionx/cli/main.py`.
 
 ## What Stays In Scripts
 
@@ -35,6 +35,10 @@ remain script-owned for now.
 The internal package supports the old scripts; it does not replace them yet.
 Documentation, GitHub Action examples, Makefile targets, and validation checks
 continue to call `scripts/*.py`.
+
+v1.9.0 adds `scan`, `validate-config`, `test-plan`, and `search` module
+commands as wrappers around the existing scripts/modules. The script surface
+remains supported until the v2 package release.
 
 ## Safety Boundary
 

@@ -1936,7 +1936,7 @@
       "why_fix_first": "appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-05-27T09:51:54+00:00",
+  "generated_at": "2026-05-27T10:29:45+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -1945,12 +1945,12 @@
     "diff_report": "",
     "executive_summary": "",
     "issue_checklist": "",
-    "issue_plan": "examples/reports/amm-fixture-issue-plan.json",
-    "json_report": "examples/reports/amm-fixture-pre-audit-report.json",
+    "issue_plan": "examples/reports/cli-amm-issue-plan.json",
+    "json_report": "examples/reports/cli-amm-report.json",
     "launch_report": "",
-    "markdown_report": "examples/reports/amm-fixture-pre-audit-report.md",
+    "markdown_report": "examples/reports/cli-amm-report.md",
     "remediation_roadmap": "",
-    "sarif_report": "examples/reports/amm-fixture.sarif.json",
+    "sarif_report": "examples/reports/cli-amm.sarif.json",
     "slither_summary": "",
     "sprint_plan": "",
     "summary": ""

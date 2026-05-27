@@ -113,7 +113,7 @@
       "why_fix_first": "appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-05-27T09:24:38+00:00",
+  "generated_at": "2026-05-27T09:51:54+00:00",
   "issue_grouping": "one-per-finding",
   "issues": [
     {
@@ -1394,5 +1394,5 @@
     "title": "[Arkheionx] Pre-audit readiness remediation plan"
   },
   "tool": "Arkheionx Pre-Audit Scanner",
-  "version": "1.8.0"
+  "version": "1.9.0"
 }

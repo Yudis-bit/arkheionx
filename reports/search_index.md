@@ -17,6 +17,9 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | GitHub repository surface | [`docs/GITHUB_REPO_SURFACE.md`](../docs/GITHUB_REPO_SURFACE.md) | GitHub repo surface, repository about, public surface polish |
 | Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v1.0.0, stable public release, release notes |
 | CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, v1.0.0 |
+| Pre-v2 CLI candidate | [`docs/CLI_CANDIDATE.md`](../docs/CLI_CANDIDATE.md) | CLI candidate, module CLI, pre-v2 CLI |
+| CLI commands | [`docs/CLI_COMMANDS.md`](../docs/CLI_COMMANDS.md) | arkheionx scan, validate-config, test-plan |
+| CLI migration to v2 | [`docs/CLI_MIGRATION_TO_V2.md`](../docs/CLI_MIGRATION_TO_V2.md) | CLI migration to v2, command surface, installable CLI |
 | Schema reference | [`docs/SCHEMA_REFERENCE.md`](../docs/SCHEMA_REFERENCE.md) | schema freeze, JSON Schema, stable outputs |
 | Output artifacts | [`docs/OUTPUT_ARTIFACTS.md`](../docs/OUTPUT_ARTIFACTS.md) | output naming, generated artifacts, reports directory |
 | Report UX | [`docs/REPORT_UX.md`](../docs/REPORT_UX.md) | report UX, findings by rule family, confidence summary |
@@ -71,6 +74,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Config examples | [`examples/configs/minimal.config.json`](../examples/configs/minimal.config.json) | minimal config, CI config, amm lending config |
 | CI profile report | [`examples/reports/ci-profile-report.md`](../examples/reports/ci-profile-report.md) | CI report, output profile, Fix First |
 | Full profile report | [`examples/reports/full-profile-report.md`](../examples/reports/full-profile-report.md) | full report, output profile, detailed evidence |
+| CLI AMM report | [`examples/reports/cli-amm-report.md`](../examples/reports/cli-amm-report.md) | CLI candidate, arkheionx scan, AMM report |
+| CLI test plan | [`examples/reports/cli-test-plan.md`](../examples/reports/cli-test-plan.md) | arkheionx test-plan, module CLI, Foundry skeleton |
 | SARIF output | [`docs/SARIF_OUTPUT.md`](../docs/SARIF_OUTPUT.md) | SARIF, GitHub Code Scanning, readiness gap |
 | Baseline diff mode | [`docs/BASELINE_DIFF_MODE.md`](../docs/BASELINE_DIFF_MODE.md) | baseline, diff mode, new resolved unchanged |
 | Semantic-lite analysis | [`docs/SEMANTIC_LITE_ANALYSIS.md`](../docs/SEMANTIC_LITE_ANALYSIS.md) | semantic-lite, Solidity structure extraction, evidence |
@@ -164,6 +169,8 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Vault-risk diff report | [`examples/reports/vault-risk-fixture-diff.md`](../examples/reports/vault-risk-fixture-diff.md) | baseline diff, new resolved unchanged, remediation tracking |
 | Arkheionx config example | [`examples/arkheionx.config.example.json`](../examples/arkheionx.config.example.json) | config, suppression, ignore paths |
 | Pre-audit scanner | [`scripts/pre_audit_scan.py`](../scripts/pre_audit_scan.py) | cli, scanner, standard-library |
+| Module CLI main | [`arkheionx/cli/main.py`](../arkheionx/cli/main.py) | module CLI, pre-v2 CLI, command surface |
+| Module CLI commands | [`arkheionx/cli/commands.py`](../arkheionx/cli/commands.py) | arkheionx scan, arkheionx search, script compatibility |
 | PR comment poster | [`scripts/post_pr_comment.py`](../scripts/post_pr_comment.py) | GitHub API, PR comment, marker update |
 | GitHub issue creator | [`scripts/create_github_issues.py`](../scripts/create_github_issues.py) | GitHub API, issue plan, dry-run |
 | Knowledge graph generator | [`scripts/generate_knowledge_graph.py`](../scripts/generate_knowledge_graph.py) | security memory graph, knowledge graph, check mode |
@@ -325,6 +332,12 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | `noise reduction` | report noise, low confidence grouping, keyword-only downgrade, suppressed findings | reporting | docs/NOISE_REDUCTION.md, docs/FALSE_POSITIVE_REDUCTION.md | noise-reduction, confidence-summary, suppressed-findings |
 | `findings by rule family` | rule family grouping, finding grouping, grouped findings | reporting | docs/REPORT_UX.md, reports/search_index.md | findings-by-rule-family, rule-pack-summary, report-ux |
 | `confidence summary` | findings by confidence, confidence grouping, low confidence findings | reporting | docs/REPORT_UX.md, docs/RULE_CALIBRATION.md | confidence-summary, findings-by-confidence, rule-calibration |
+| `CLI candidate` | pre-v2 CLI, module CLI, local module CLI | CLI | docs/CLI_CANDIDATE.md, arkheionx/cli/main.py | cli-candidate, pre-v2-cli, module-cli |
+| `arkheionx scan` | module scan command, CLI scan, pre-v2 scan command | CLI | docs/CLI_COMMANDS.md, examples/reports/cli-amm-report.md | arkheionx-scan, command-surface, readiness-scan |
+| `arkheionx validate-config` | CLI validate-config, module config validator, config command | CLI | docs/CLI_COMMANDS.md, scripts/validate_config.py | validate-config, config-validation, module-cli |
+| `arkheionx test-plan` | CLI test-plan, module test plan, Foundry skeleton command | CLI | docs/CLI_COMMANDS.md, examples/reports/cli-test-plan.md | test-plan-command, invariant-skeleton, module-cli |
+| `arkheionx search` | CLI search, module search command, security memory search command | CLI | docs/CLI_COMMANDS.md, scripts/search_knowledge.py | arkheionx-search, security-memory-search, module-cli |
+| `CLI migration to v2` | v2 CLI migration, package CLI path, command surface | CLI | docs/CLI_MIGRATION_TO_V2.md, docs/CLI_ROADMAP.md | cli-migration, v2-package, command-surface |
 
 ## Rule Pack Registry
 

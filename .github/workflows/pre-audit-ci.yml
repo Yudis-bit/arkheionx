@@ -112,12 +112,17 @@ jobs:
             arkheionx/generators/feedback_dashboard.py \
             arkheionx/generators/paid_offer_index.py \
             arkheionx/generators/ecosystem_report.py \
-            arkheionx/cli/main.py
+            arkheionx/cli/main.py \
+            arkheionx/cli/commands.py \
+            arkheionx/cli/exit_codes.py
 
-      - name: Verify preview package CLI
+      - name: Verify pre-v2 module CLI
         run: |
+          python3 -m arkheionx.cli.main --help
           python3 -m arkheionx.cli.main version
           python3 -m arkheionx.cli.main doctor
+          python3 -m arkheionx.cli.main validate-config --config examples/arkheionx.config.example.json
+          python3 -m arkheionx.cli.main search "oracle stale price"
 
       - name: Validate Arkheionx config examples
         run: |
@@ -318,6 +323,21 @@ jobs:
             --json-output examples/reports/full-profile-report.json \
             --sarif-output examples/reports/full-profile.sarif.json
 
+      - name: Run pre-v2 module CLI scan and test-plan
+        run: |
+          python3 -m arkheionx.cli.main scan examples/amm-fixture \
+            --protocol-type amm \
+            --output examples/reports/cli-amm-report.md \
+            --json-output examples/reports/cli-amm-report.json \
+            --sarif-output examples/reports/cli-amm.sarif.json \
+            --issue-plan-output examples/reports/cli-amm-issue-plan.json
+          python3 -m arkheionx.cli.main test-plan \
+            --report examples/reports/cli-amm-report.json \
+            --output examples/reports/cli-test-plan.md \
+            --json-output examples/reports/cli-test-plan.json \
+            --foundry-output examples/reports/ArkheionxCLIInvariants.t.sol
+          python3 -m arkheionx.cli.main test-plan --check
+
       - name: Generate AMM and lending test plans
         run: |
           python3 scripts/generate_test_plan.py \
@@ -504,6 +524,13 @@ jobs:
           test -f examples/reports/full-profile-report.md
           test -f examples/reports/full-profile-report.json
           test -f examples/reports/full-profile.sarif.json
+          test -f examples/reports/cli-amm-report.md
+          test -f examples/reports/cli-amm-report.json
+          test -f examples/reports/cli-amm.sarif.json
+          test -f examples/reports/cli-amm-issue-plan.json
+          test -f examples/reports/cli-test-plan.md
+          test -f examples/reports/cli-test-plan.json
+          test -f examples/reports/ArkheionxCLIInvariants.t.sol
           test -f examples/reports/vault-risk-fixture-config-report.md
           test -f examples/reports/vault-risk-fixture-config-report.json
           test -f examples/reports/vault-risk-fixture-config-summary.md
@@ -554,12 +581,13 @@ jobs:
               "examples/reports/configured-amm-lending-report.json",
               "examples/reports/ci-profile-report.json",
               "examples/reports/full-profile-report.json",
+              "examples/reports/cli-amm-report.json",
               "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
               "arkheionx-report.json",
           ]:
               data = json.load(open(path, encoding="utf-8"))
               assert data["tool"] == "Arkheionx Pre-Audit Scanner"
-              assert data["version"] == "1.8.0"
+              assert data["version"] == "1.9.0"
               assert data["schema_version"] == "1.0.0"
               assert isinstance(data["score"], int)
               assert "disclaimer" in data
@@ -609,10 +637,11 @@ jobs:
               "examples/reports/amm-fixture-issue-plan.json",
               "examples/reports/lending-fixture-issue-plan.json",
               "examples/reports/amm-lending-hybrid-fixture-issue-plan.json",
+              "examples/reports/cli-amm-issue-plan.json",
               "ARKHEIONX_ISSUE_PLAN.json",
           ]:
               plan = json.load(open(path, encoding="utf-8"))
-              assert plan["version"] == "1.8.0"
+              assert plan["version"] == "1.9.0"
               assert plan["schema_version"] == "1.0.0"
               assert plan["issues"]
               assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
@@ -626,10 +655,11 @@ jobs:
               "examples/reports/amm-fixture-test-plan.json",
               "examples/reports/lending-fixture-test-plan.json",
               "examples/reports/amm-lending-hybrid-fixture-test-plan.json",
+              "examples/reports/cli-test-plan.json",
           ]:
               test_plan = json.load(open(path, encoding="utf-8"))
               assert test_plan["tool"] == "Arkheionx Test Plan Generator"
-              assert test_plan["version"] == "1.8.0"
+              assert test_plan["version"] == "1.9.0"
               assert test_plan["suggested_tests"]
               assert test_plan["invariant_candidates"]
               assert test_plan["manual_review_required"] is True
@@ -674,6 +704,7 @@ jobs:
               "examples/reports/amm-lending-hybrid-fixture.sarif.json",
               "examples/reports/ci-profile.sarif.json",
               "examples/reports/full-profile.sarif.json",
+              "examples/reports/cli-amm.sarif.json",
               "arkheionx.sarif.json",
           ]:
               sarif = json.load(open(path, encoding="utf-8"))
@@ -746,6 +777,7 @@ jobs:
           grep -q "ARK-AMM" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
           grep -q "ARK-LEND" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
           grep -q "Fix First" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Fix First" examples/reports/cli-amm-report.md
           grep -q "Findings by Rule Family" examples/reports/amm-fixture-pre-audit-report.md
           grep -q "Suppression Summary" examples/reports/amm-fixture-pre-audit-report.md
           grep -q "Output profile: \`ci\`" examples/reports/ci-profile-report.md
@@ -755,6 +787,7 @@ jobs:
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxAMMInvariants.t.sol
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxLendingInvariants.t.sol
           grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxHybridInvariants.t.sol
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxCLIInvariants.t.sol
           ! grep -RniE "private key|mnemonic|rpc url|mainnet fork|drain|profit|exploit payload|live target" examples/reports/*Invariants.t.sol templates/invariant_skeletons
           grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
           grep -q "Related Knowledge" examples/reports/demo-issue-plan.json

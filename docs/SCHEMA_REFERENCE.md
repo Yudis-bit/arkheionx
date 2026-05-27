@@ -55,6 +55,10 @@ v1.8.0 adds optional report UX summary fields: `fix_first`, `report_ux`,
 `findings_by_rule_family`, `findings_by_confidence`, `suppression_summary`,
 `active_findings_count`, and `suppressed_findings_count`.
 
+v1.9.0 adds a pre-v2 module CLI candidate. The CLI writes the same report,
+SARIF, issue-plan, and test-plan artifact shapes as the existing scripts; it
+does not introduce a new output schema.
+
 ## Compatibility Policy
 
 Patch and minor releases may:

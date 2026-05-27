@@ -57,9 +57,13 @@ validate:
 		arkheionx/generators/feedback_dashboard.py \
 		arkheionx/generators/paid_offer_index.py \
 		arkheionx/generators/ecosystem_report.py \
-		arkheionx/cli/main.py
+		arkheionx/cli/main.py \
+		arkheionx/cli/commands.py \
+		arkheionx/cli/exit_codes.py
 	python3 -m arkheionx.cli.main version
 	python3 -m arkheionx.cli.main doctor
+	python3 -m arkheionx.cli.main validate-config --config examples/arkheionx.config.example.json
+	python3 -m arkheionx.cli.main search "oracle stale price"
 	python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
 	python3 scripts/validate_config.py --config examples/configs/minimal.config.json
 	python3 scripts/validate_config.py --config examples/configs/ci.config.json

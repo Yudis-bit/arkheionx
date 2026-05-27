@@ -3,11 +3,11 @@
 ## Scope
 
 - Repository root: `examples/amm-lending-hybrid-fixture`
-- Generated at: `2026-05-27T09:24:44+00:00`
+- Generated at: `2026-05-27T09:51:55+00:00`
 - Protocol type: `amm`
 - Protocol confidence: `medium`
 - Files scanned: `4`
-- Scanner version: `1.8.0`
+- Scanner version: `1.9.0`
 - Output profile: `ci` (CI)
 
 | File class       | Count |

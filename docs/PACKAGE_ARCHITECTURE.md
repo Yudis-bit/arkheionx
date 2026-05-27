@@ -32,7 +32,9 @@ arkheionx/
 | `arkheionx.reports.ux` | Fix First, grouping, and suppression summary helpers. |
 | `arkheionx.reports.summary` | Backward-compatible report UX summary metadata. |
 | `arkheionx.generators.*` | Extracted generator logic behind existing scripts. |
-| `arkheionx.cli.main` | Preview `version` and `doctor` commands. |
+| `arkheionx.cli.main` | Pre-v2 module CLI candidate. |
+| `arkheionx.cli.commands` | Thin wrappers around existing script/module entrypoints. |
+| `arkheionx.cli.exit_codes` | Candidate exit-code conventions. |
 
 ## Compatibility Strategy
 
@@ -47,10 +49,22 @@ keeping `scripts/pre_audit_scan.py` as the supported scanner entrypoint.
 v1.8.0 adds report UX helpers for output profiles, Fix First ranking, finding
 grouping, and suppression summaries without replacing the stable scanner script.
 
+v1.9.0 adds the pre-v2 module CLI candidate:
+
+```sh
+python3 -m arkheionx.cli.main scan .
+python3 -m arkheionx.cli.main validate-config --config .arkheionx.json
+python3 -m arkheionx.cli.main test-plan --report reports/arkheionx-report.json
+python3 -m arkheionx.cli.main search "oracle stale price"
+```
+
+The candidate delegates to existing scripts/modules so compatibility remains
+easy to test before package publishing.
+
 ## Not Yet Included
 
 - No package publishing.
 - No `pyproject.toml`.
-- No official scan command under `python3 -m arkheionx`.
+- No final v2 installable command.
 - No database, web app, remote clone workflow, RPC workflow, or external API
   dependency.

@@ -479,6 +479,25 @@ written reason in the release PR.
 - [ ] No report wording claims confirmed vulnerabilities, exploitability,
       formal audit status, or security guarantees.
 
+## v1.9.0 Pre-v2 CLI Candidate Checks
+
+- [ ] `arkheionx/version.py` exposes `1.9.0-dev`, `v1.8.0`, `v1.9.0`, and
+      `v2.0.0` milestone metadata.
+- [ ] `arkheionx/cli/main.py`, `commands.py`, and `exit_codes.py` compile.
+- [ ] `python3 -m arkheionx.cli.main version` exits 0.
+- [ ] `python3 -m arkheionx.cli.main doctor` exits 0.
+- [ ] `python3 -m arkheionx.cli.main scan ...` writes Markdown, JSON, SARIF,
+      and issue-plan outputs.
+- [ ] `python3 -m arkheionx.cli.main validate-config --config ...` validates
+      safe local configs and rejects dangerous config keys.
+- [ ] `python3 -m arkheionx.cli.main test-plan ...` writes Markdown, JSON, and
+      safe Foundry skeleton outputs.
+- [ ] `python3 -m arkheionx.cli.main search "oracle stale price"` works locally.
+- [ ] Existing script entrypoints still work.
+- [ ] CLI docs and migration-to-v2 docs exist.
+- [ ] No package publishing, pyproject, network behavior, RPC behavior, remote
+      cloning, or exploit automation added.
+
 ## Safety Scan
 
 - [ ] No live-target workflow added.

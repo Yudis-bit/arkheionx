@@ -7,7 +7,7 @@ GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
 Arkheionx helps DeFi builders and security reviewers surface readiness gaps
 before audits, contests, and bug bounty launches.
 
-`Stable: v1.7.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+`Stable: v1.8.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
@@ -126,16 +126,16 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.7.0 - Config + Rule Pack Stabilization**.
+Latest stable release: **v1.8.0 - Report UX + Noise Reduction**.
 
-v1.8.0 is prepared locally as Report UX + Noise Reduction. It makes Markdown,
-JSON, SARIF, and issue-plan outputs easier to scan and convert into action:
+v1.9.0 is prepared locally as a Pre-v2 CLI Candidate. It defines a local
+module command surface while preserving every existing script entrypoint:
 
-- report output profiles;
-- Fix First ranking;
-- grouped findings by rule family and confidence;
-- clearer suppression and config summaries;
-- compact CI-friendly report output.
+- `scan`;
+- `validate-config`;
+- `test-plan`;
+- `search`;
+- `version` / `doctor`.
 
 | Release | Focus | Status |
 |---|---|---|
@@ -161,11 +161,12 @@ JSON, SARIF, and issue-plan outputs easier to scan and convert into action:
 | v1.5.0 | Invariant/Test Plan Generator Upgrade | Released |
 | v1.6.0 | Internal Engine Split | Released |
 | v1.7.0 | Config + Rule Pack Stabilization | Released |
-| v1.8.0 | Report UX + Noise Reduction | Prepared, not tagged |
+| v1.8.0 | Report UX + Noise Reduction | Released |
+| v1.9.0 | Pre-v2 CLI Candidate | Prepared, not tagged |
 
-## Stable v1.7.x Surface
+## Stable v1.8.x Surface
 
-Arkheionx v1.7.x treats these surfaces as stable unless a future changelog
+Arkheionx v1.8.x treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -174,7 +175,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.7.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v1.8.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Configuration
@@ -223,11 +224,31 @@ Read:
 - [`docs/REPORT_UX.md`](docs/REPORT_UX.md)
 - [`docs/NOISE_REDUCTION.md`](docs/NOISE_REDUCTION.md)
 
+## Pre-v2 CLI Candidate
+
+v1.9.0 introduces a local module CLI candidate:
+
+```sh
+python3 -m arkheionx.cli.main scan .
+python3 -m arkheionx.cli.main validate-config --config .arkheionx.json
+python3 -m arkheionx.cli.main test-plan --report reports/arkheionx-report.json
+python3 -m arkheionx.cli.main search "oracle stale price"
+```
+
+Existing scripts remain supported and first-class until the v2 installable
+package release.
+
+Read:
+
+- [`docs/CLI_CANDIDATE.md`](docs/CLI_CANDIDATE.md)
+- [`docs/CLI_COMMANDS.md`](docs/CLI_COMMANDS.md)
+- [`docs/CLI_MIGRATION_TO_V2.md`](docs/CLI_MIGRATION_TO_V2.md)
+
 ## Engine and CLI Roadmap
 
-Arkheionx v1.6.0 begins the internal engine split toward a future installable
-CLI/package. Existing scripts remain supported; the preview package exposes
-shared metadata and health commands but does not replace the scanner CLI.
+Arkheionx v1.6.0 began the internal engine split toward a future installable
+CLI/package. Existing scripts remain supported; the v1.9 module CLI is a
+candidate command surface, not the final package release.
 
 ```sh
 python3 -m arkheionx.cli.main version
@@ -386,7 +407,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.7.0` for stable usage:
+Use `@v1.8.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -401,7 +422,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
         with:
           root: "."
           protocol-type: "auto"
@@ -435,7 +456,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -464,7 +485,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -752,6 +773,9 @@ Core standards:
 
 - [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
 - [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
+- [`docs/CLI_CANDIDATE.md`](docs/CLI_CANDIDATE.md)
+- [`docs/CLI_COMMANDS.md`](docs/CLI_COMMANDS.md)
+- [`docs/CLI_MIGRATION_TO_V2.md`](docs/CLI_MIGRATION_TO_V2.md)
 - [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
 - [`docs/PRE_AUDIT_READINESS_OS.md`](docs/PRE_AUDIT_READINESS_OS.md)
 - [`docs/CLI_ROADMAP.md`](docs/CLI_ROADMAP.md)
@@ -933,8 +957,11 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
 - **v1.6.0: Internal Engine Split.** Package scaffold, shared metadata modules,
   generator extraction, and preview internal CLI commands.
 - **v1.7.0: Config + Rule Pack Stabilization.** Stable config schema,
-  validator, examples, suppression reference, and rule-pack controls prepared
-  locally.
+  validator, examples, suppression reference, and rule-pack controls.
+- **v1.8.0: Report UX + Noise Reduction.** Output profiles, Fix First ranking,
+  grouped findings, suppression/config summaries, and CI-oriented reports.
+- **v1.9.0: Pre-v2 CLI Candidate.** Local module CLI commands for scan,
+  config validation, test-plan generation, and security memory search.
 
 Archive milestones remain honest:
 

@@ -1,5 +1,5 @@
 {
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
   "topics": [
     {
@@ -1065,6 +1065,54 @@
       "related_patterns": ["review confidence triage"],
       "related_checks": ["docs/REPORT_UX.md", "docs/RULE_CALIBRATION.md"],
       "search_tags": ["confidence-summary", "findings-by-confidence", "rule-calibration"]
+    },
+    {
+      "term": "CLI candidate",
+      "aliases": ["pre-v2 CLI", "module CLI", "local module CLI"],
+      "category": "CLI",
+      "related_patterns": ["candidate command surface", "script compatibility"],
+      "related_checks": ["docs/CLI_CANDIDATE.md", "arkheionx/cli/main.py"],
+      "search_tags": ["cli-candidate", "pre-v2-cli", "module-cli"]
+    },
+    {
+      "term": "arkheionx scan",
+      "aliases": ["module scan command", "CLI scan", "pre-v2 scan command"],
+      "category": "CLI",
+      "related_patterns": ["readiness scan wrapper", "script compatibility"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "examples/reports/cli-amm-report.md"],
+      "search_tags": ["arkheionx-scan", "command-surface", "readiness-scan"]
+    },
+    {
+      "term": "arkheionx validate-config",
+      "aliases": ["CLI validate-config", "module config validator", "config command"],
+      "category": "CLI",
+      "related_patterns": ["safe config validation", "dangerous key rejection"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "scripts/validate_config.py"],
+      "search_tags": ["validate-config", "config-validation", "module-cli"]
+    },
+    {
+      "term": "arkheionx test-plan",
+      "aliases": ["CLI test-plan", "module test plan", "Foundry skeleton command"],
+      "category": "CLI",
+      "related_patterns": ["finding to test plan", "invariant skeleton output"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "examples/reports/cli-test-plan.md"],
+      "search_tags": ["test-plan-command", "invariant-skeleton", "module-cli"]
+    },
+    {
+      "term": "arkheionx search",
+      "aliases": ["CLI search", "module search command", "security memory search command"],
+      "category": "CLI",
+      "related_patterns": ["local security memory lookup", "knowledge search"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "scripts/search_knowledge.py"],
+      "search_tags": ["arkheionx-search", "security-memory-search", "module-cli"]
+    },
+    {
+      "term": "CLI migration to v2",
+      "aliases": ["v2 CLI migration", "package CLI path", "command surface"],
+      "category": "CLI",
+      "related_patterns": ["pre-v2 command stabilization", "installable CLI planning"],
+      "related_checks": ["docs/CLI_MIGRATION_TO_V2.md", "docs/CLI_ROADMAP.md"],
+      "search_tags": ["cli-migration", "v2-package", "command-surface"]
     }
   ]
 }

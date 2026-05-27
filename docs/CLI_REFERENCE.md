@@ -127,15 +127,21 @@ python3 scripts/generate_test_plan.py \
 Generated skeletons are local starter scaffolds with TODO placeholders. They
 are not formal verification and require human review.
 
-## Preview Internal Package CLI
+## Pre-v2 Module CLI Candidate
 
-v1.6.0 adds a package preview for internal engine health checks. Existing
-scripts remain the supported scanner and generator entrypoints.
+v1.9.0 adds a module CLI candidate. Existing scripts remain supported and
+first-class until v2.0.0.
 
 ```sh
 python3 -m arkheionx.cli.main version
 python3 -m arkheionx.cli.main doctor
+python3 -m arkheionx.cli.main scan examples/amm-fixture --protocol-type amm
+python3 -m arkheionx.cli.main validate-config --config examples/arkheionx.config.example.json
+python3 -m arkheionx.cli.main test-plan --report examples/reports/amm-fixture-pre-audit-report.json
+python3 -m arkheionx.cli.main search "oracle stale price"
 ```
 
-The preview CLI has no scan command yet. It does not add RPC, live-chain,
-transaction, remote-cloning, deployed-contract, or exploit-automation behavior.
+Read [`CLI_COMMANDS.md`](CLI_COMMANDS.md) and
+[`CLI_MIGRATION_TO_V2.md`](CLI_MIGRATION_TO_V2.md). The module CLI does not add
+RPC, live-chain, transaction, remote-cloning, deployed-contract, or
+exploit-automation behavior.

@@ -1,2 +1,2 @@
-"""Preview CLI package for Arkheionx."""
+"""Pre-v2 CLI candidate package for Arkheionx."""
 from __future__ import annotations

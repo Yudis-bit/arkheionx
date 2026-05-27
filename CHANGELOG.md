@@ -3,7 +3,42 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v1.8.0 - Unreleased
+## v1.9.0 - Unreleased
+
+### Added
+
+- Pre-v2 local module CLI candidate.
+- `scan` CLI command.
+- `validate-config` CLI command.
+- `test-plan` CLI command.
+- `search` CLI command.
+- CLI command docs.
+- CLI migration-to-v2 docs.
+- CLI exit-code conventions.
+- CLI tests.
+
+### Improved
+
+- Version/doctor CLI output.
+- Scan terminal output consistency.
+- CLI and script compatibility coverage.
+- Documentation for future v2 package path.
+
+### Safety
+
+- CLI remains local/static only.
+- No package publishing.
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- Existing scripts remain supported.
+
+### Known Limitations
+
+- This is not the final v2 installable package.
+- No pyproject/package publishing is added yet.
+- CLI wraps existing scripts/modules and some legacy scanner internals remain.
+
+## v1.8.0
 
 ### Added
 

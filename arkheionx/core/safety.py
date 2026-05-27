@@ -64,6 +64,7 @@ BANNED_PHRASES = [
     "profit_mode",
     "clone_url",
     "remote_target",
+    "remote target scanning",
     "bypass_safety",
     "disable_safety",
 ]

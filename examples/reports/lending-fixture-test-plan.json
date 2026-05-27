@@ -354,7 +354,7 @@
       "Local mocks for assets and oracle inputs"
     ]
   },
-  "generated_at": "2026-05-27T09:24:38+00:00",
+  "generated_at": "2026-05-27T09:51:54+00:00",
   "invariant_candidates": [
     "Normalized oracle values remain within documented unit and decimal assumptions.",
     "Accounting decisions only use oracle data that satisfies documented freshness policy.",
@@ -479,7 +479,7 @@
   "source_report": "examples/lending-fixture",
   "source_report_score": 59,
   "source_report_score_band": "Early readiness",
-  "source_report_version": "1.8.0",
+  "source_report_version": "1.9.0",
   "suggested_tests": [
     "Test decimals normalization across expected feed decimals.",
     "Test zero, negative, or invalid oracle answers if applicable.",
@@ -523,5 +523,5 @@
     "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
   ],
   "tool": "Arkheionx Test Plan Generator",
-  "version": "1.8.0"
+  "version": "1.9.0"
 }

@@ -7,7 +7,7 @@ no live-chain access.
 Stable examples use:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
 ```
 
 Use `@main` only for development/testing of unreleased changes.
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
         with:
           root: "."
           protocol-type: "auto"
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
         with:
           root: "."
           protocol-type: "auto"
@@ -84,7 +84,7 @@ jobs:
 
 SARIF results are readiness gaps, not confirmed vulnerabilities.
 
-## Stable v1.7.x Inputs
+## Stable v1.8.x Inputs
 
 | Input | Default | Stable | Purpose |
 |---|---|---|---|
@@ -139,11 +139,11 @@ SARIF results are readiness gaps, not confirmed vulnerabilities.
 
 ## Config Files In Actions
 
-v1.7.0 keeps config local and safe. Commit a `.arkheionx.json` file or pass a
+v1.8.0 keeps config local and safe. Commit a `.arkheionx.json` file or pass a
 repo-relative config path:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
   with:
     root: "."
     config: ".arkheionx.json"
@@ -170,7 +170,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
     with:
       protocol-type: "auto"
       json-output: "reports/arkheionx-report.json"
@@ -207,7 +207,7 @@ and local; Arkheionx does not install Slither automatically.
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.7.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.8.0
     with:
       protocol-type: "auto"
       slither: "true"

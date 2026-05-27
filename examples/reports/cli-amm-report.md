@@ -2,10 +2,10 @@
 
 ## Scope
 
-- Repository root: `examples/amm-lending-hybrid-fixture`
-- Generated at: `2026-05-27T09:51:55+00:00`
+- Repository root: `examples/amm-fixture`
+- Generated at: `2026-05-27T10:29:45+00:00`
 - Protocol type: `amm`
-- Protocol confidence: `medium`
+- Protocol confidence: `manual`
 - Files scanned: `4`
 - Scanner version: `1.9.0`
 - Output profile: `standard` (Standard)
@@ -55,23 +55,24 @@ This is an automated pre-audit readiness report. It is not a formal audit, does 
 
 ## Executive Summary
 
-Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness context. This is a local/static pre-audit readiness report, not a formal audit.
+Arkheionx scanned `examples/amm-fixture` as `amm` readiness context. This is a local/static pre-audit readiness report, not a formal audit.
 
-- Readiness score: **38/100**
-- Score band: **Not audit-ready**
-- Active readiness gaps: `13`
+- Readiness score: **43/100**
+- Score band: **Early readiness**
+- Active readiness gaps: `12`
 - Suppressed readiness gaps: `0`
 - Active rule packs: `access-control, amm, docs, lending, oracle, reentrancy-value-flow, rewards, testing, vault`
 - Generated artifacts ignored: `0`
 - Top readiness gaps:
-  - **ARK-AMM-001 (High readiness gap):** AMM invariant assumptions not covered by tests - Add local tests or invariants showing swaps and liquidity operations preserve documented AMM accounting within fee and rounding bounds.
+  - **ARK-AMM-002 (High readiness gap):** LP share accounting without mint/burn boundary tests - Add tests for first liquidity provider behavior, proportional LP minting/burning, withdrawal rounding, and dust handling.
   - **ARK-AMM-003 (High readiness gap):** Spot-price or reserve-price dependency without manipulation-resistance tests - Add local reserve-movement tests and document whether spot, TWAP, or external oracle assumptions are intended.
+  - **ARK-AMM-001 (Medium readiness gap):** AMM invariant assumptions not covered by tests - Add local tests or invariants showing swaps and liquidity operations preserve documented AMM accounting within fee and rounding bounds.
   - **ARK-AMM-004 (Medium readiness gap):** Fee-on-transfer or non-standard token assumptions not documented - Document supported token assumptions or add balanceBefore/balanceAfter accounting tests for fee-on-transfer and non-standard token behavior.
   - **ARK-AMM-005 (Medium readiness gap):** Slippage/min-output constraints missing or unclear - Add user-provided min-output and stale-quote tests, or document why swaps are not user-facing and how price movement is bounded.
-  - **ARK-LEND-001 (Medium readiness gap):** Collateral/debt solvency invariant not covered by tests - Add collateral/debt invariants and boundary tests for borrow, repay, deposit, withdrawal, and liquidation readiness.
 - Top recommended actions:
   - Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
   - Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
+  - Review state update order and add malicious local receiver tests for callback-capable flows.
   - Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.
   - Run a formal smart contract audit before mainnet launch or before handling real user funds.
 
@@ -79,30 +80,30 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 
 | Rank | Finding                                                                                    | Rule Family | Why Fix First                                                                                                                          | Next Action                                                                                                                                    |
 | ---- | ------------------------------------------------------------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | ARK-AMM-001 - AMM invariant assumptions not covered by tests                               | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.          |
+| 1    | ARK-AMM-002 - LP share accounting without mint/burn boundary tests                         | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.     |
 | 2    | ARK-AMM-003 - Spot-price or reserve-price dependency without manipulation-resistance tests | amm         | higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available. | Add or review: Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions. |
-| 3    | ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented             | amm         | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.               |
-| 4    | ARK-AMM-005 - Slippage/min-output constraints missing or unclear                           | amm         | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.             |
-| 5    | ARK-LEND-005 - Reserve/cash accounting assumptions not covered                             | lending     | high-confidence local evidence; appears across multiple files; clear defensive tests are available.                                    | Add or review: Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.           |
+| 3    | ARK-AMM-001 - AMM invariant assumptions not covered by tests                               | amm         | appears across multiple files; clear defensive tests are available.                                                                    | Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.          |
+| 4    | ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented             | amm         | appears across multiple files; clear defensive tests are available.                                                                    | Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.               |
+| 5    | ARK-AMM-005 - Slippage/min-output constraints missing or unclear                           | amm         | appears across multiple files; clear defensive tests are available.                                                                    | Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.             |
 
 ## Finding Groups
 
 ### Findings by Rule Family
 
-| Rule Family | Active Findings |
-| ----------- | --------------- |
-| amm         | 4               |
-| lending     | 4               |
-| oracle      | 4               |
-| testing     | 1               |
+| Rule Family           | Active Findings |
+| --------------------- | --------------- |
+| amm                   | 5               |
+| oracle                | 4               |
+| reentrancy-value-flow | 2               |
+| testing               | 1               |
 
 ### Findings by Confidence
 
 | Confidence | Active Findings |
 | ---------- | --------------- |
-| high       | 5               |
-| low        | 6               |
-| medium     | 2               |
+| high       | 2               |
+| low        | 5               |
+| medium     | 5               |
 
 ## Suppression Summary
 
@@ -113,8 +114,8 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 ## Detected Protocol Shape
 
 - Detected protocol type: `amm`
-- Confidence: `medium`
-- Protocol score signals: `{"amm": 102, "lending": 94, "oracle": 0, "staking": 0, "vault": 0}`
+- Confidence: `manual`
+- Protocol score signals: `{"amm": 163, "lending": 0, "oracle": 0, "staking": 0, "vault": 0}`
 - Arkheionx memory metadata loaded: `18` entries
 
 ## Readiness Score Breakdown
@@ -124,19 +125,19 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 | Repository Structure        | 12    | 15  | Solidity sources detected.; Recognized build or analysis config detected.; Clear src/test/docs structure detected.                                             |
 | Test Presence               | 20    | 20  | Solidity test files detected.; Assert usage detected.; Foundry or Hardhat test environment detected.; Protocol-specific terms appear in the testable codebase. |
 | Invariant Fuzz Readiness    | 0     | 20  | No positive signal detected.                                                                                                                                   |
-| Defi Risk Coverage          | 0     | 20  | No positive signal detected.                                                                                                                                   |
+| Defi Risk Coverage          | 5     | 20  | Accounting assumptions have at least some documented or tested controls.                                                                                       |
 | Documentation Readiness     | 3     | 10  | README detected.                                                                                                                                               |
 | Operational Admin Readiness | 3     | 15  | Upgradeability is absent or has visible documentation/test terms.                                                                                              |
 
 ## Top Readiness Gaps
 
-| ID           | Priority             | Category              | Title                                                                        |
-| ------------ | -------------------- | --------------------- | ---------------------------------------------------------------------------- |
-| ARK-AMM-001  | High readiness gap   | amm-invariant         | AMM invariant assumptions not covered by tests                               |
-| ARK-AMM-003  | High readiness gap   | amm-pricing           | Spot-price or reserve-price dependency without manipulation-resistance tests |
-| ARK-AMM-004  | Medium readiness gap | amm-token-assumptions | Fee-on-transfer or non-standard token assumptions not documented             |
-| ARK-AMM-005  | Medium readiness gap | amm-slippage          | Slippage/min-output constraints missing or unclear                           |
-| ARK-LEND-001 | Medium readiness gap | lending-solvency      | Collateral/debt solvency invariant not covered by tests                      |
+| ID          | Priority             | Category              | Title                                                                        |
+| ----------- | -------------------- | --------------------- | ---------------------------------------------------------------------------- |
+| ARK-AMM-002 | High readiness gap   | amm-lp-accounting     | LP share accounting without mint/burn boundary tests                         |
+| ARK-AMM-003 | High readiness gap   | amm-pricing           | Spot-price or reserve-price dependency without manipulation-resistance tests |
+| ARK-AMM-001 | Medium readiness gap | amm-invariant         | AMM invariant assumptions not covered by tests                               |
+| ARK-AMM-004 | Medium readiness gap | amm-token-assumptions | Fee-on-transfer or non-standard token assumptions not documented             |
+| ARK-AMM-005 | Medium readiness gap | amm-slippage          | Slippage/min-output constraints missing or unclear                           |
 
 ## Rule Pack Coverage
 
@@ -145,15 +146,15 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 | Vault Rule Pack                           | yes      | 0        | docs/VAULT_RULE_PACK.md                 |
 | Oracle Rule Pack                          | yes      | 4        | docs/ORACLE_RULE_PACK.md                |
 | Access Control / Upgradeability Rule Pack | no       | 0        | docs/ACCESS_CONTROL_RULE_PACK.md        |
-| Reentrancy / Value Flow Rule Pack         | no       | 0        | docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md |
+| Reentrancy / Value Flow Rule Pack         | yes      | 2        | docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md |
 | Staking / Reward Accounting Rule Pack     | yes      | 0        | docs/REWARD_ACCOUNTING_RULE_PACK.md     |
-| AMM Rule Pack                             | yes      | 4        | docs/AMM_RULE_PACK.md                   |
-| Lending Rule Pack                         | yes      | 4        | docs/LENDING_RULE_PACK.md               |
+| AMM Rule Pack                             | yes      | 5        | docs/AMM_RULE_PACK.md                   |
+| Lending Rule Pack                         | no       | 0        | docs/LENDING_RULE_PACK.md               |
 
 ### Vault Rule Pack
 
-- Signals detected: `1`
-- Signal terms: `debt`
+- Signals detected: `4`
+- Signal terms: `balanceOf, mint, shares, totalSupply`
 - Findings: `0`
 - Docs: `docs/VAULT_RULE_PACK.md`
 - Suggested tests:
@@ -174,10 +175,22 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
   - price bounds
   - TWAP vs spot behavior
 
-### Staking / Reward Accounting Rule Pack
+### Reentrancy / Value Flow Rule Pack
 
 - Signals detected: `2`
-- Signal terms: `collateral, debt`
+- Signal terms: `transfer, transferFrom`
+- Findings: `2`
+- Docs: `docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md`
+- Suggested tests:
+  - reentrant receiver mock
+  - state update ordering
+  - double claim prevention
+  - failed external call behavior
+
+### Staking / Reward Accounting Rule Pack
+
+- Signals detected: `1`
+- Signal terms: `shares`
 - Findings: `0`
 - Docs: `docs/REWARD_ACCOUNTING_RULE_PACK.md`
 - Suggested tests:
@@ -188,9 +201,9 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 
 ### AMM Rule Pack
 
-- Signals detected: `9`
-- Signal terms: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1, swap`
-- Findings: `4`
+- Signals detected: `14`
+- Signal terms: `addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves, kLast, mint, pool, removeLiquidity, reserve0, reserve1, swap, totalSupply`
+- Findings: `5`
 - Docs: `docs/AMM_RULE_PACK.md`
 - Suggested tests:
   - swap invariant conservation
@@ -198,55 +211,49 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
   - TWAP or reserve bounds
   - minOut enforcement
 
-### Lending Rule Pack
-
-- Signals detected: `9`
-- Signal terms: `borrow, cash, collateral, debt, healthFactor, liquidate, liquidationThreshold, repay, totalBorrows`
-- Findings: `4`
-- Docs: `docs/LENDING_RULE_PACK.md`
-- Suggested tests:
-  - collateral/debt invariant
-  - liquidation boundary tests
-  - interest index monotonicity
-  - oracle shock tests
-
 ## Risk Signal Summary
 
-### Vault Strategy
+### Vault Erc4626
 
-- Detected signals: `debt`
+- Detected signals: `balanceOf, mint, shares, totalSupply`
 - Files with signals: `2`
-- Example files: `src/ToyHybridMarket.sol, test/ToyHybridMarket.t.sol`
+- Example files: `src/ToyAMMPool.sol, test/ToyAMMPool.t.sol`
+
+### Vault Accounting
+
+- Detected signals: `balanceOf, mint, shares, totalSupply`
+- Files with signals: `2`
+- Example files: `src/ToyAMMPool.sol, test/ToyAMMPool.t.sol`
 
 ### Vault Pricing
 
 - Detected signals: `getReserves`
 - Files with signals: `1`
-- Example files: `src/ToyHybridMarket.sol`
+- Example files: `src/ToyAMMPool.sol`
 
 ### Oracle
 
 - Detected signals: `getReserves, pool, reserve0, reserve1`
 - Files with signals: `2`
-- Example files: `src/ToyHybridMarket.sol, test/ToyHybridMarket.t.sol`
+- Example files: `src/ToyAMMPool.sol, test/ToyAMMPool.t.sol`
 
-### Accounting Complexity
+### Reentrancy Value Flow
 
-- Detected signals: `collateral, debt`
+- Detected signals: `transfer, transferFrom`
 - Files with signals: `2`
-- Example files: `src/ToyHybridMarket.sol, test/ToyHybridMarket.t.sol`
+- Example files: `src/ToyAMMPool.sol, test/ToyAMMPool.t.sol`
+
+### Staking Rewards
+
+- Detected signals: `shares`
+- Files with signals: `1`
+- Example files: `src/ToyAMMPool.sol`
 
 ### Amm
 
-- Detected signals: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1, swap`
+- Detected signals: `addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves, kLast, mint, pool, removeLiquidity, reserve0, reserve1, swap, totalSupply`
 - Files with signals: `2`
-- Example files: `src/ToyHybridMarket.sol, test/ToyHybridMarket.t.sol`
-
-### Lending
-
-- Detected signals: `borrow, cash, collateral, debt, healthFactor, liquidate, liquidationThreshold, repay, totalBorrows`
-- Files with signals: `2`
-- Example files: `src/ToyHybridMarket.sol, test/ToyHybridMarket.t.sol`
+- Example files: `src/ToyAMMPool.sol, test/ToyAMMPool.t.sol`
 
 ### Testing And Documentation
 
@@ -266,14 +273,70 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 - Edge Case Tests: `False`
 - Negative Evidence Count: `0`
 - Negative Evidence Terms: `[]`
-- Test files: `test/ToyHybridMarket.t.sol`
+- Test files: `test/ToyAMMPool.t.sol`
 
 ## Historical Exploit-Pattern Similarity
+
+### Harvest/Yearn-style oracle or pool price readiness gap
+
+- Confidence: `high`
+- Detected signals: `balanceOf, getReserves, mint, pool, reserve0, reserve1, shares, totalSupply`
+- Why it matters: Vault accounting that depends on oracle, pool, LP, or reserve pricing needs explicit tests for stale, spot, and manipulated local price assumptions.
+- Failed assumption class: Price source remains representative during deposits, withdrawals, and share conversions.
+- Broken invariant class: Share/accounting value cannot be moved by transient price state.
+- Recommended defensive checks:
+  - Document oracle freshness, bounds, and fallback behavior.
+  - Test deposit, withdraw, and totalAssets under mocked stale and bounded prices.
+  - Prefer TWAP, sanity bounds, or explicit staleness checks where the design depends on external prices.
+- Suggested test/invariant: Invariant: share price and totalAssets cannot be inflated by a single mocked price or pool-state movement.
+- Search tags: `vault-accounting, oracle-risk, pool-pricing, historical-vault-pattern, invariant-testing`
+
+### Vault accounting invariant readiness gap
+
+- Confidence: `medium`
+- Detected signals: `balanceOf, mint, shares, totalSupply`
+- Why it matters: Vaults need explicit conservation and roundtrip properties because share math, fees, donations, and rounding can break user-value assumptions.
+- Failed assumption class: Shares and assets remain exchangeable according to documented accounting rules.
+- Broken invariant class: Deposits, withdrawals, redemptions, and fee paths conserve value within expected rounding bounds.
+- Recommended defensive checks:
+  - Add totalAssets consistency tests.
+  - Add deposit-withdraw roundtrip tests across small and large amounts.
+  - Test donation, zero-supply, rounding, and fee paths.
+- Suggested test/invariant: Invariant: deposit followed by withdraw does not create value and does not strand assets beyond expected rounding.
+- Search tags: `vault-security, share-accounting, totalAssets, audit-readiness`
+
+### Reentrancy-sensitive value flow review recommended
+
+- Confidence: `medium`
+- Detected signals: `balanceOf, mint, shares, totalSupply, transfer, transferFrom`
+- Why it matters: External calls around withdrawals, claims, callbacks, or token transfers have repeatedly exposed state-ordering assumptions.
+- Failed assumption class: External receivers cannot re-enter before internal accounting reaches a safe state.
+- Broken invariant class: Value flow remains single-entry and accounting is updated before control leaves the contract.
+- Recommended defensive checks:
+  - Review checks-effects-interactions order.
+  - Add reentrancy tests using local receiver mocks.
+  - Use guards where the protocol design requires them.
+- Suggested test/invariant: Test: malicious local receiver cannot withdraw, claim, or redeem twice through a callback.
+- Search tags: `reentrancy-review, value-flow, checks-effects-interactions`
+
+### Reward accounting mismatch review recommended
+
+- Confidence: `low`
+- Detected signals: `shares`
+- Why it matters: Reward indexes and accumulators are common sources of overclaim, underclaim, and precision drift when supply changes across epochs.
+- Failed assumption class: Reward index math always reflects actual funded rewards and stake weights.
+- Broken invariant class: Claimable rewards cannot exceed funded rewards beyond documented rounding.
+- Recommended defensive checks:
+  - Test claim conservation across multiple users.
+  - Test stake/unstake around reward updates.
+  - Check precision and rounding around small balances.
+- Suggested test/invariant: Invariant: total claimed plus remaining claimable never exceeds funded rewards beyond expected rounding.
+- Search tags: `reward-accounting, staking, index-math, precision`
 
 ### AMM invariant manipulation review recommended
 
 - Confidence: `high`
-- Detected signals: `amountIn, amountOut, getReserves, kLast, pool, quote, reserve0, reserve1, swap`
+- Detected signals: `addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves, kLast, mint, pool, removeLiquidity, reserve0, reserve1, swap, totalSupply`
 - Why it matters: AMM integrations need invariant and reserve assumptions tested under swaps, liquidity changes, fees, and price movements.
 - Failed assumption class: Pool reserves and quote functions remain representative for protocol decisions.
 - Broken invariant class: Swaps and liquidity changes cannot create value outside documented fee mechanics.
@@ -283,20 +346,6 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
   - Avoid relying on same-block spot reserves without documented controls.
 - Suggested test/invariant: Invariant: swaps and liquidity operations preserve the AMM invariant within fee and rounding bounds.
 - Search tags: `amm-invariant, liquidity, spot-price, reserve-manipulation`
-
-### Liquidation and collateral accounting review recommended
-
-- Confidence: `high`
-- Detected signals: `borrow, cash, collateral, debt, getReserves, healthFactor, liquidate, liquidationThreshold, pool, repay, reserve0, reserve1, totalBorrows`
-- Why it matters: Lending systems depend on collateral, debt, oracle, and liquidation assumptions staying consistent through edge cases.
-- Failed assumption class: Collateral value and debt state stay aligned with liquidation and solvency rules.
-- Broken invariant class: Borrowers cannot become undercollateralized without expected liquidation or protocol accounting response.
-- Recommended defensive checks:
-  - Test collateralization and liquidation boundaries.
-  - Test oracle movement around borrow and liquidation flows.
-  - Check interest index monotonicity and debt accounting.
-- Suggested test/invariant: Invariant: positions below required collateralization are liquidatable and solvent positions are not incorrectly liquidated.
-- Search tags: `lending, liquidation, collateral, oracle-risk`
 
 ## All Readiness Gaps
 
@@ -309,8 +358,8 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 - Category: `testing-readiness`
 
 Evidence:
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding.
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding.
+- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.
+- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding.
 
 False-positive notes:
 
@@ -320,8 +369,8 @@ Detected signals:
 - scanner signal
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -357,8 +406,8 @@ Search tags: `invariant-testing, amm`
 
 Evidence:
 - `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding.
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding.
+- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.
+- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding.
 
 False-positive notes:
 
@@ -368,8 +417,8 @@ Detected signals:
 - scanner signal
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -389,6 +438,49 @@ Invariant candidates:
 
 Search tags: `oracle-risk, price-assumptions`
 
+### ARK-REENT-001 - External-call value flow needs reentrancy review
+
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
+- Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
+- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`
+
+Detected signals:
+- scanner signal
+
+Affected files:
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
+
+What was detected:
+
+External call or token transfer terms were detected without guard or reentrancy-review signals.
+
+Related Knowledge:
+
+- Historical patterns: pattern-external-call-before-state-update, pattern-callback-capable-token
+- Suggested defensive tests: reentrant-receiver-mock, state-update-before-external-call-test, double-claim-prevention
+- Related PoCs: poc-2018-10-spankchain, poc-2020-04-uniswap-imbtc, poc-2021-03-dodo-crowdpool
+
+Suggested tests:
+
+- Review state update order and add local malicious-receiver tests where callbacks are possible.
+- Add a benign callback-capable receiver stub.
+- Assert state updates happen before external value transfer where required.
+- Test withdraw, claim, refund, or swap flows for accounting consistency.
+
+Invariant candidates:
+
+- External-call flows cannot observe or preserve inconsistent accounting state.
+
+Search tags: `reentrancy-review, value-flow`
+
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
 - Priority: `Low readiness gap`
@@ -399,8 +491,8 @@ Search tags: `oracle-risk, price-assumptions`
 
 Evidence:
 - `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
 
 False-positive notes:
 
@@ -413,8 +505,8 @@ Detected signals:
 - `reserve1`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -464,8 +556,8 @@ Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 
 Evidence:
 - `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
 
 False-positive notes:
 
@@ -478,8 +570,8 @@ Detected signals:
 - `reserve1`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -529,8 +621,8 @@ Search tags: `oracle-risk, spot-price, reserve-pricing, oracle-rule-pack`
 
 Evidence:
 - `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
 
 False-positive notes:
 
@@ -543,8 +635,8 @@ Detected signals:
 - `reserve1`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -579,33 +671,91 @@ Invariant candidates:
 
 Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
-### ARK-AMM-001 - AMM invariant assumptions not covered by tests
+### ARK-REENT-004 - External call path without documented ordering assumptions
 
-- Priority: `High readiness gap`
-- Confidence: `high`
+- Priority: `Low readiness gap`
+- Confidence: `medium`
 - Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
 - Detection sources: `keyword, semantic-lite, test-coverage`
+- Category: `reentrancy-value-flow`
+
+Evidence:
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
+- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`
+
+Detected signals:
+- `transfer`
+- `transferFrom`
+
+Affected files:
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
+
+What was detected:
+
+External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.
+
+Why it matters:
+
+Reviewers need clear state-ordering assumptions to evaluate external call safety.
+
+Historical pattern similarity:
+
+Maps to checks-effects-interactions and callback boundary readiness classes.
+
+Recommended defensive checks:
+
+- ordering documentation
+- callback assumptions
+- external call failure behavior
+
+
+Suggested tests:
+
+- Pair ordering documentation with a local receiver test that exercises the documented boundary.
+- Document checks-effects-interactions or guard assumptions.
+- Test state before and after external calls.
+- Assert failure paths preserve accounting state.
+
+Invariant candidates:
+
+- External call ordering follows documented state-transition policy.
+
+Search tags: `reentrancy-review, documentation-readiness, reentrancy-rule-pack`
+
+### ARK-AMM-001 - AMM invariant assumptions not covered by tests
+
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `amm-invariant`
 
 Evidence:
-- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
-- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
-- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
 
 Detected signals:
+- `addLiquidity`
 - `amountIn`
 - `amountOut`
+- `balanceOf`
+- `getAmountOut`
 - `getReserves`
 - `kLast`
+- `mint`
 - `pool`
-- `quote`
+- `removeLiquidity`
 - `reserve0`
 - `reserve1`
 - `swap`
+- `totalSupply`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -646,33 +796,109 @@ Invariant candidates:
 
 Search tags: `amm-invariant, amm-rule-pack, pre-audit-readiness`
 
+### ARK-AMM-002 - LP share accounting without mint/burn boundary tests
+
+- Priority: `High readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
+- Category: `amm-lp-accounting`
+
+Evidence:
+- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
+
+Detected signals:
+- `addLiquidity`
+- `amountIn`
+- `amountOut`
+- `balanceOf`
+- `getAmountOut`
+- `getReserves`
+- `kLast`
+- `mint`
+- `pool`
+- `removeLiquidity`
+- `reserve0`
+- `reserve1`
+- `swap`
+- `totalSupply`
+
+Affected files:
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
+
+What was detected:
+
+LP supply, mint, burn, or share-accounting signals were detected without visible first-provider, proportional mint/burn, or rounding boundary tests.
+
+Why it matters:
+
+LP share accounting controls who owns pool value; boundary mistakes can distort deposits, withdrawals, or low-liquidity behavior.
+
+Historical pattern similarity:
+
+Maps to share inflation and liquidity accounting readiness classes.
+
+Recommended defensive checks:
+
+- first liquidity provider behavior
+- proportional minting
+- proportional withdrawal
+- dust handling
+
+Related Knowledge:
+
+- Historical patterns: pattern-share-inflation-donation, pattern-amm-invariant-steering
+- Suggested defensive tests: first-liquidity-provider-test, proportional-minting-test, proportional-withdrawal-test
+- Related PoCs: poc-2021-10-indexed-finance, poc-2025-12-yeth
+
+Suggested tests:
+
+- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.
+- Test first liquidity provider behavior.
+- Test proportional minting and proportional withdrawal.
+- Cover rounding and dust handling during mint/burn.
+
+Invariant candidates:
+
+- LP share supply tracks pool ownership within documented rounding.
+
+Search tags: `amm-lp-accounting, amm-rule-pack, share-accounting`
+
 ### ARK-AMM-003 - Spot-price or reserve-price dependency without manipulation-resistance tests
 
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `keyword, semantic-lite, test-coverage`
+- Detection sources: `semantic-lite`
 - Category: `amm-pricing`
 
 Evidence:
-- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
-- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
-- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
 
 Detected signals:
+- `addLiquidity`
 - `amountIn`
 - `amountOut`
+- `balanceOf`
+- `getAmountOut`
 - `getReserves`
 - `kLast`
+- `mint`
 - `pool`
-- `quote`
+- `removeLiquidity`
 - `reserve0`
 - `reserve1`
 - `swap`
+- `totalSupply`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -714,30 +940,35 @@ Search tags: `amm-pricing, spot-price, oracle-risk, amm-rule-pack`
 ### ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `keyword, semantic-lite, test-coverage`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `amm-token-assumptions`
 
 Evidence:
-- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
-- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
-- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
 
 Detected signals:
+- `addLiquidity`
 - `amountIn`
 - `amountOut`
+- `balanceOf`
+- `getAmountOut`
 - `getReserves`
 - `kLast`
+- `mint`
 - `pool`
-- `quote`
+- `removeLiquidity`
 - `reserve0`
 - `reserve1`
 - `swap`
+- `totalSupply`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -779,30 +1010,35 @@ Search tags: `amm-token-assumptions, fee-on-transfer, amm-rule-pack`
 ### ARK-AMM-005 - Slippage/min-output constraints missing or unclear
 
 - Priority: `Medium readiness gap`
-- Confidence: `high`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `keyword, semantic-lite, test-coverage`
+- Confidence: `medium`
+- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
+- Detection sources: `semantic-lite`
 - Category: `amm-slippage`
 
 Evidence:
-- `src/ToyHybridMarket.sol:9` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
-- `src/ToyHybridMarket.sol:13` in `quote`: Solidity function shape matches this readiness finding. Snippet: `quote`
-- `src/ToyHybridMarket.sol:17` in `swap`: Solidity function shape matches this readiness finding. Snippet: `kLast = reserve0 * reserve1;`
+- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`
+- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`
+- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`
 
 Detected signals:
+- `addLiquidity`
 - `amountIn`
 - `amountOut`
+- `balanceOf`
+- `getAmountOut`
 - `getReserves`
 - `kLast`
+- `mint`
 - `pool`
-- `quote`
+- `removeLiquidity`
 - `reserve0`
 - `reserve1`
 - `swap`
+- `totalSupply`
 
 Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
+- `src/ToyAMMPool.sol`
+- `test/ToyAMMPool.t.sol`
 
 What was detected:
 
@@ -841,214 +1077,6 @@ Invariant candidates:
 
 Search tags: `amm-slippage, min-output, amm-rule-pack`
 
-### ARK-LEND-001 - Collateral/debt solvency invariant not covered by tests
-
-- Priority: `Medium readiness gap`
-- Confidence: `medium`
-- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
-- Detection sources: `semantic-lite`
-- Category: `lending-solvency`
-
-Evidence:
-- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
-- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`
-- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-
-Detected signals:
-- `borrow`
-- `cash`
-- `collateral`
-- `debt`
-- `healthFactor`
-- `liquidate`
-- `liquidationThreshold`
-- `repay`
-- `totalBorrows`
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Collateral, debt, borrow, repay, or health-factor signals were detected without visible solvency invariant tests.
-
-Why it matters:
-
-Lending systems depend on collateral and debt accounting staying aligned across every user action.
-
-Historical pattern similarity:
-
-Maps to collateral/debt invariant and oracle-dependent lending readiness classes. This is defensive review context, not vulnerability confirmation.
-
-Recommended defensive checks:
-
-- collateral debt invariant
-- unsafe withdrawal rejection
-- borrow limit boundary
-- repay/deposit accounting
-
-Related Knowledge:
-
-- Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price
-- Suggested defensive tests: collateral-debt-invariant, borrow-limit-boundary-test, unsafe-withdrawal-rejection
-- Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank
-
-Suggested tests:
-
-- Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.
-- Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.
-- Test debt cannot exceed documented collateral constraints.
-- Test unsafe withdrawals are rejected or explicitly documented.
-
-Invariant candidates:
-
-- Collateral value and debt remain inside documented solvency constraints after allowed user actions.
-
-Search tags: `lending-solvency, lending-rule-pack, pre-audit-readiness`
-
-### ARK-LEND-002 - Liquidation boundary tests missing
-
-- Priority: `Medium readiness gap`
-- Confidence: `medium`
-- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.
-- Detection sources: `semantic-lite`
-- Category: `lending-liquidation`
-
-Evidence:
-- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
-- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`
-- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-
-Detected signals:
-- `borrow`
-- `cash`
-- `collateral`
-- `debt`
-- `healthFactor`
-- `liquidate`
-- `liquidationThreshold`
-- `repay`
-- `totalBorrows`
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Liquidation, threshold, bonus, close factor, or seize signals were detected without visible just-above/just-below boundary tests.
-
-Why it matters:
-
-Liquidation boundary errors can reject valid liquidations, liquidate solvent positions, or distort seized collateral accounting.
-
-Historical pattern similarity:
-
-Maps to liquidation boundary and collateral accounting readiness classes.
-
-Recommended defensive checks:
-
-- just-above threshold
-- just-below threshold
-- bonus bounds
-- partial liquidation math
-
-Related Knowledge:
-
-- Historical patterns: pattern-collateral-debt-invariant, pattern-oracle-stale-price
-- Suggested defensive tests: just-above-threshold-test, just-below-threshold-test, partial-liquidation-math
-- Related PoCs: poc-2025-11-moonwell, poc-2020-11-cheese-bank
-
-Suggested tests:
-
-- Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.
-- Test just-above-threshold positions cannot be liquidated.
-- Test just-below-threshold positions can be liquidated according to policy.
-- Assert liquidation bonus and close factor stay within documented bounds.
-
-Invariant candidates:
-
-- Liquidation eligibility changes only at documented threshold boundaries.
-
-Search tags: `lending-liquidation, liquidation-boundary, lending-rule-pack`
-
-### ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword, test-coverage`
-- Category: `lending-oracle`
-
-Evidence:
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `borrow, cash, collateral, debt, getReserves, healthFactor, liquidate, liquidationThreshold`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `borrow, cash, collateral, debt, getReserves, healthFactor, liquidate, liquidationThreshold`
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- `borrow`
-- `cash`
-- `collateral`
-- `debt`
-- `getReserves`
-- `healthFactor`
-- `liquidate`
-- `liquidationThreshold`
-- `pool`
-- `repay`
-- `reserve0`
-- `reserve1`
-- `totalBorrows`
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.
-
-Why it matters:
-
-Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices.
-
-Historical pattern similarity:
-
-Maps to oracle-dependent liquidation and collateral valuation readiness classes.
-
-Recommended defensive checks:
-
-- stale oracle rejection
-- decimals normalization
-- price shock boundary
-- borrow blocked on invalid price
-
-Related Knowledge:
-
-- Historical patterns: pattern-oracle-stale-price, pattern-collateral-debt-invariant
-- Suggested defensive tests: stale-oracle-rejection, decimals-normalization-test, price-shock-boundary-test
-- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest
-
-Suggested tests:
-
-- Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
-- Test stale oracle rejection for borrow and liquidation paths.
-- Test decimals normalization for collateral valuation.
-- Test price shock boundaries around health-factor transitions.
-
-Invariant candidates:
-
-- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
-
-Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
-
-_Profile `standard` shows 12 detailed findings. Use `output_profile: full` for all findings._
-
 ## Suppressed Readiness Gaps
 
 No readiness gaps were suppressed in this run.
@@ -1058,6 +1086,14 @@ No readiness gaps were suppressed in this run.
 - Skeleton not generated in this run.
 - To generate: `python3 scripts/pre_audit_scan.py --root . --generate-invariant-skeletons`
 
+- **totalAssets consistency** (`vault`): totalAssets should match local asset accounting and strategy balances within documented rounding.
+- **deposit/withdraw roundtrip** (`vault`): A user should not create value by depositing and withdrawing through normal paths.
+- **convertToShares/convertToAssets consistency** (`vault`): Conversion functions should be mutually consistent within documented rounding across supply states.
+- **share price donation resistance** (`vault`): Donations, low supply, and external balances should not let one actor distort share value unexpectedly.
+- **fee accounting conservation** (`vault`): Fees should be bounded, documented, and unable to overcharge beyond configured limits.
+- **strategy balance drift handling** (`vault`): Strategy gains, losses, and withdrawals should remain reflected in accounting assumptions.
+- **withdrawal lifecycle conservation** (`vault`): Queued or delayed withdrawals should conserve shares/assets through request, cooldown, claim, and cancellation.
+- **pause behavior** (`vault`): Pause should block risky flows while preserving documented emergency exits.
 - **stale price rejection** (`oracle`): Stale oracle rounds should be rejected or handled according to documented policy.
 - **decimals normalization** (`oracle`): Price decimals should be normalized consistently before accounting decisions.
 - **price bounds** (`oracle`): Outlier prices should hit documented bounds or review paths.
@@ -1067,11 +1103,7 @@ No readiness gaps were suppressed in this run.
 - **swap does not create value** (`amm`): No swap sequence should create value outside documented fee mechanics.
 - **liquidity add/remove proportionality** (`amm`): Liquidity mint/burn should be proportional to reserves within expected rounding.
 - **fee growth consistency** (`amm`): Fee growth should be monotonic and attributable to swaps or configured fee paths.
-- **collateralization invariant** (`lending`): Borrower positions should respect collateralization requirements after every user action.
-- **liquidation solvency** (`lending`): Liquidations should improve solvency and preserve accounting assumptions.
-- **interest index monotonicity** (`lending`): Interest indexes should move monotonically according to configured rate logic.
-- **oracle manipulation resistance** (`lending`): Borrow and liquidation paths should resist transient price manipulation.
-- **borrow/repay accounting consistency** (`lending`): Debt and collateral balances should reconcile after borrow and repay sequences.
+- **reward conservation** (`staking`): Total claimed plus remaining claimable should not exceed funded rewards beyond rounding.
 
 ## Audit Readiness Checklist
 
@@ -1087,15 +1119,15 @@ No readiness gaps were suppressed in this run.
 
 - No issue checklist file was requested in this run.
 - To generate one: `python3 scripts/pre_audit_scan.py --root . --issue-checklist-output ARKHEIONX_ISSUE_CHECKLIST.md`
-- Generated issue plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`
+- Generated issue plan: `examples/reports/cli-amm-issue-plan.json`
 - Issue plan JSON can be used with `scripts/create_github_issues.py` in dry-run, create, or update mode.
 
 ## GitHub Action Outputs
 
-- Markdown Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md`
-- Json Report: `examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json`
-- Sarif Report: `examples/reports/amm-lending-hybrid-fixture.sarif.json`
-- Issue Plan: `examples/reports/amm-lending-hybrid-fixture-issue-plan.json`
+- Markdown Report: `examples/reports/cli-amm-report.md`
+- Json Report: `examples/reports/cli-amm-report.json`
+- Sarif Report: `examples/reports/cli-amm.sarif.json`
+- Issue Plan: `examples/reports/cli-amm-issue-plan.json`
 
 ## Search Tags
 
@@ -1105,8 +1137,9 @@ No readiness gaps were suppressed in this run.
 
 1. Add Foundry invariant tests for accounting, roles, and value-flow boundaries.
 2. Document and test oracle freshness, decimals normalization, bounds, and fallback behavior.
-3. Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.
-4. Run a formal smart contract audit before mainnet launch or before handling real user funds.
+3. Review state update order and add malicious local receiver tests for callback-capable flows.
+4. Write a formal audit scope with contracts, roles, assumptions, known limitations, and test commands.
+5. Run a formal smart contract audit before mainnet launch or before handling real user funds.
 
 ## What This Report Does Not Prove
 

@@ -61,6 +61,21 @@ and keep scanner outputs separate from protocol source files when possible.
 Generated artifacts are local/static outputs. They are not formal audit reports
 and do not confirm vulnerabilities.
 
+## Module CLI Outputs
+
+v1.9.0 can write the same artifacts through the pre-v2 module CLI candidate:
+
+```sh
+python3 -m arkheionx.cli.main scan examples/amm-fixture \
+  --protocol-type amm \
+  --output examples/reports/cli-amm-report.md \
+  --json-output examples/reports/cli-amm-report.json \
+  --sarif-output examples/reports/cli-amm.sarif.json \
+  --issue-plan-output examples/reports/cli-amm-issue-plan.json
+```
+
+The module CLI wraps the existing scripts and does not change artifact schemas.
+
 ## Protocol-Pack Examples
 
 v1.4.0 adds AMM and lending fixture outputs that use the same artifact shapes:
