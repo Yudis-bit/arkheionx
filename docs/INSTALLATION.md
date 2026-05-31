@@ -61,11 +61,13 @@ arkheionx doctor --install
 ## First run
 
 ```sh
-arkheionx open examples/oracle-staking-fixture
-arkheionx hunt examples/oracle-staking-fixture --top 5
+arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx open ./arkheionx-demo
+arkheionx hunt ./arkheionx-demo --top 5
 ```
 
-See [`ONBOARDING.md`](ONBOARDING.md) and [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md).
+See the guided [`DEMO_WORKFLOW.md`](DEMO_WORKFLOW.md), plus
+[`ONBOARDING.md`](ONBOARDING.md) and [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md).
 
 ## Uninstall
 

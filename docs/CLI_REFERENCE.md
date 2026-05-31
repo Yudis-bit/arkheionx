@@ -21,8 +21,20 @@ test prompts, issue plans, SARIF, and security-memory lookups. The future
 - `arkheionx test-plan`
 - `arkheionx search`
 - `arkheionx validate-config`
+- `arkheionx demo`
 - `arkheionx doctor`
 - `arkheionx version`
+
+## Demo
+
+Guided, local-only demo workflows (no RPC, no secrets, no mainnet):
+
+- `arkheionx demo --list` — list available demos.
+- `arkheionx demo --show <id>` — demo details, target, and safety notice (`--json`).
+- `arkheionx demo --commands <id>` — print the heuristic and Foundry-backed command sequences.
+- `arkheionx demo --copy <id> <dest>` — copy the fixture (source entries only) to `<dest>`; refuses a non-empty destination unless `--force`.
+
+See [`DEMO_WORKFLOW.md`](DEMO_WORKFLOW.md).
 
 ## Workbench Commands
 

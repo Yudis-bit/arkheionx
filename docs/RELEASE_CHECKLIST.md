@@ -12,6 +12,19 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v2.7.0 Guided Demo Fixtures & First Real Workflow Checks
+
+- [ ] `arkheionx demo --list` lists `oracle-staking`.
+- [ ] `arkheionx demo --show oracle-staking` prints target + safety notice.
+- [ ] `arkheionx demo --commands oracle-staking` prints heuristic + Foundry commands.
+- [ ] `arkheionx demo --copy oracle-staking DEST` copies source entries only.
+- [ ] Copy refuses a non-empty destination without `--force`; never writes outside DEST.
+- [ ] Unknown demo id fails with valid options (exit 2).
+- [ ] Demo fixture has no RPC URLs, private keys, secrets, or live-chain instructions.
+- [ ] `docs/DEMO_WORKFLOW.md` present; `demo` documented in CLI reference and README.
+- [ ] `release-notes/v2.7.0.md` and `## v2.7.0` changelog section present.
+- [ ] `tests/test_demo_workflow.py` passes; no generated demo artifacts tracked.
+
 ## v2.6.0 arkup & Version-Manager MVP Checks
 
 - [ ] `sh -n install.sh`, `sh -n uninstall.sh`, `sh -n arkup` pass.

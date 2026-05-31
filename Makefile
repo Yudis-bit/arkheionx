@@ -59,7 +59,12 @@ validate:
 		arkheionx/generators/ecosystem_report.py \
 		arkheionx/cli/main.py \
 		arkheionx/cli/commands.py \
-		arkheionx/cli/exit_codes.py
+		arkheionx/cli/exit_codes.py \
+		arkheionx/demo/__init__.py \
+		arkheionx/demo/model.py \
+		arkheionx/demo/registry.py \
+		arkheionx/demo/copy.py \
+		arkheionx/demo/render.py
 	PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install -e . --no-build-isolation
 	arkheionx --help
 	arkheionx version

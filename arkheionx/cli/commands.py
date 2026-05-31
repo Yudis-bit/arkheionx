@@ -200,3 +200,61 @@ def scan_command(args: Namespace) -> int:
         return _module_main("scripts.pre_audit_scan", argv)
     finally:
         _cleanup_paths([temp_config])
+
+
+def demo_command(args: Namespace) -> int:
+    """List, show, and copy safe local demo workflows."""
+    from dataclasses import asdict
+
+    from arkheionx import demo as demo_pkg
+
+    def _unknown(demo_id: str) -> int:
+        print(f"error: unknown demo: {demo_id}", file=sys.stderr)
+        print(f"valid demos: {', '.join(demo_pkg.demo_ids())}", file=sys.stderr)
+        return exit_codes.INVALID_ARGUMENTS
+
+    show_id = getattr(args, "show", "") or ""
+    commands_id = getattr(args, "commands", "") or ""
+    copy_args = getattr(args, "copy", None)
+    use_json = bool(getattr(args, "json", False))
+
+    if show_id:
+        demo = demo_pkg.get_demo(show_id)
+        if demo is None:
+            return _unknown(show_id)
+        print(json.dumps(asdict(demo), indent=2) if use_json else demo_pkg.render_show(demo))
+        return exit_codes.SUCCESS
+
+    if commands_id:
+        demo = demo_pkg.get_demo(commands_id)
+        if demo is None:
+            return _unknown(commands_id)
+        print(demo_pkg.render_commands(demo, "./arkheionx-demo"))
+        return exit_codes.SUCCESS
+
+    if copy_args:
+        demo_id, dest = copy_args[0], copy_args[1]
+        demo = demo_pkg.get_demo(demo_id)
+        if demo is None:
+            return _unknown(demo_id)
+        try:
+            target, copied = demo_pkg.copy_demo(demo, dest, force=bool(getattr(args, "force", False)))
+        except demo_pkg.DemoCopyError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return exit_codes.INVALID_ARGUMENTS
+        print(f"Copied demo '{demo.id}' to {target}")
+        print(f"Entries: {', '.join(copied)}")
+        print("")
+        print("Next")
+        print(f"  arkheionx open {target}")
+        print(f"  arkheionx hunt {target} --top 5")
+        print(f"  arkheionx demo --commands {demo.id}")
+        return exit_codes.SUCCESS
+
+    # Default action (including --list): list available demos.
+    demos = demo_pkg.list_demos()
+    if use_json:
+        print(json.dumps([asdict(demo) for demo in demos], indent=2))
+    else:
+        print(demo_pkg.render_list(demos))
+    return exit_codes.SUCCESS

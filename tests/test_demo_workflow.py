@@ -1,0 +1,168 @@
+"""Tests for the v2.7.0 guided demo workflow.
+
+Local-only: no network, no RPC, no private keys. Foundry is not required.
+"""
+import subprocess
+import tempfile
+import unittest
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+FIXTURE = REPO_ROOT / "examples" / "oracle-staking-fixture"
+
+
+def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["python3", "-m", "arkheionx.cli.main", *args],
+        cwd=REPO_ROOT, text=True, capture_output=True,
+    )
+
+
+class DemoCommandTests(unittest.TestCase):
+    def test_demo_in_help(self) -> None:
+        result = run_cli("--help")
+        self.assertIn("demo", result.stdout)
+
+    def test_list(self) -> None:
+        result = run_cli("demo", "--list")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("oracle-staking", result.stdout)
+        self.assertIn("ARKHEIONX DEMOS", result.stdout)
+
+    def test_list_json(self) -> None:
+        import json
+
+        result = run_cli("demo", "--list", "--json")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertTrue(any(d["id"] == "oracle-staking" for d in payload))
+
+    def test_show(self) -> None:
+        result = run_cli("demo", "--show", "oracle-staking")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("OracleRewardFixture.stake", result.stdout)
+        self.assertIn("Safety:", result.stdout)
+        self.assertIn("no RPC", result.stdout)
+
+    def test_commands(self) -> None:
+        result = run_cli("demo", "--commands", "oracle-staking")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("arkheionx hunt", result.stdout)
+        self.assertIn("Heuristic workflow", result.stdout)
+        self.assertIn("Foundry-backed workflow", result.stdout)
+        self.assertIn("--target OracleRewardFixture.stake --run", result.stdout)
+
+    def test_unknown_id_fails_with_options(self) -> None:
+        result = run_cli("demo", "--show", "does-not-exist")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("unknown demo", result.stderr)
+        self.assertIn("oracle-staking", result.stderr)
+
+    def test_copy_copies_source_only(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "arkheionx-demo"
+            result = run_cli("demo", "--copy", "oracle-staking", str(dest))
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue((dest / "README.md").exists())
+            self.assertTrue((dest / "foundry.toml").exists())
+            self.assertTrue((dest / "src" / "OracleRewardFixture.sol").exists())
+            self.assertTrue((dest / "test" / "OracleRewardFixture.t.sol").exists())
+            # Generated build artifacts must NOT be copied.
+            self.assertFalse((dest / "out").exists())
+            self.assertFalse((dest / "cache").exists())
+
+    def test_copy_refuses_non_empty_without_force(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "arkheionx-demo"
+            dest.mkdir()
+            (dest / "keep.txt").write_text("x", encoding="utf-8")
+            result = run_cli("demo", "--copy", "oracle-staking", str(dest))
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("not empty", result.stderr)
+            self.assertTrue((dest / "keep.txt").exists())
+
+    def test_copy_force_into_non_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "arkheionx-demo"
+            dest.mkdir()
+            (dest / "keep.txt").write_text("x", encoding="utf-8")
+            result = run_cli("demo", "--copy", "oracle-staking", str(dest), "--force")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue((dest / "src" / "OracleRewardFixture.sol").exists())
+
+    def test_copy_does_not_write_outside_destination(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            dest = parent / "nested" / "arkheionx-demo"
+            result = run_cli("demo", "--copy", "oracle-staking", str(dest))
+            self.assertEqual(result.returncode, 0, result.stderr)
+            # Only the destination tree should exist under parent/nested.
+            self.assertEqual([p.name for p in (parent / "nested").iterdir()], ["arkheionx-demo"])
+
+    def test_copied_demo_opens(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "arkheionx-demo"
+            run_cli("demo", "--copy", "oracle-staking", str(dest))
+            result = run_cli("open", str(dest), "--no-artifacts")
+            # 0 (compiler/exec) or 1 (heuristic) are both acceptable; must not crash (2).
+            self.assertIn(result.returncode, (0, 1), result.stdout + result.stderr)
+            self.assertIn("ARKHEIONX OPEN", result.stdout)
+
+
+class DemoFixtureSafetyTests(unittest.TestCase):
+    def test_fixture_and_readme_exist(self) -> None:
+        self.assertTrue(FIXTURE.is_dir())
+        self.assertTrue((FIXTURE / "README.md").exists())
+        self.assertTrue((FIXTURE / "src" / "OracleRewardFixture.sol").exists())
+
+    def test_fixture_has_no_secrets_or_rpc(self) -> None:
+        banned = [
+            "rpc", "mnemonic", "private key", "privatekey", "private_key",
+            "http://", "https://", "createselectfork", "fork-url", "secret",
+        ]
+        for path in FIXTURE.rglob("*"):
+            if not path.is_file() or path.suffix not in {".sol", ".toml", ".md"}:
+                continue
+            text = path.read_text(encoding="utf-8", errors="ignore").lower()
+            for phrase in banned:
+                self.assertNotIn(phrase, text, f"{path.name} contains '{phrase}'")
+
+    def test_only_source_entries_tracked(self) -> None:
+        tracked = subprocess.run(
+            ["git", "ls-files", "examples/oracle-staking-fixture"],
+            cwd=REPO_ROOT, text=True, capture_output=True,
+        ).stdout.split()
+        for entry in tracked:
+            self.assertFalse(
+                entry.startswith("examples/oracle-staking-fixture/out/")
+                or entry.startswith("examples/oracle-staking-fixture/cache/"),
+                f"generated artifact tracked: {entry}",
+            )
+
+
+class DemoDocsAndMetadataTests(unittest.TestCase):
+    def test_demo_workflow_doc_exists(self) -> None:
+        self.assertTrue((REPO_ROOT / "docs" / "DEMO_WORKFLOW.md").exists())
+
+    def test_readme_concise_and_mentions_demo(self) -> None:
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertLess(len(readme.splitlines()), 300)
+        self.assertIn("arkheionx demo", readme)
+        self.assertIn("docs/DEMO_WORKFLOW.md", readme)
+
+    def test_changelog_and_release_notes(self) -> None:
+        changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("## v2.7.0 - Unreleased", changelog)
+        self.assertTrue((REPO_ROOT / "release-notes" / "v2.7.0.md").exists())
+
+    def test_version_metadata(self) -> None:
+        from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
+
+        self.assertEqual(__version__, "2.7.0-dev")
+        self.assertEqual(STABLE_RELEASE, "v2.6.0")
+        self.assertEqual(CURRENT_MILESTONE, "v2.7.0")
+        self.assertEqual(NEXT_MILESTONE, "v2.8.0")
+
+
+if __name__ == "__main__":
+    unittest.main()

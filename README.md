@@ -67,10 +67,22 @@ arkheionx report . --target Contract.function
 If proof artifacts do not exist yet, Arkheionx prints the next command instead
 of crashing.
 
+Try the bundled demo (local-only, no RPC):
+
+```sh
+arkheionx demo --list
+arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx open ./arkheionx-demo
+arkheionx hunt ./arkheionx-demo --top 5
+```
+
+See [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md) for the full guided run.
+
 ## Command Set
 
 | Command              | Purpose                                            |
 | -------------------- | -------------------------------------------------- |
+| `demo`               | List and copy a safe local demo workflow           |
 | `doctor`             | Check install, Foundry, and project layout         |
 | `open`               | One-command project orientation                    |
 | `map`                | Show protocol roles, journeys, and money flow      |

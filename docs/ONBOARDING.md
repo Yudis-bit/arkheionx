@@ -42,12 +42,24 @@ command to run.
 
 ## 4. Run on a repository
 
-Use the bundled demo fixture (no Foundry required):
+Fastest first real run — copy the bundled demo and work in it:
+
+```sh
+arkheionx demo --list
+arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx open ./arkheionx-demo
+arkheionx hunt ./arkheionx-demo --top 5
+```
+
+Or run directly against the in-repo fixture (no Foundry required):
 
 ```sh
 arkheionx open examples/oracle-staking-fixture
 arkheionx hunt examples/oracle-staking-fixture --top 5
 ```
+
+For the full guided loop (prove/trace/evidence/report), see
+[`DEMO_WORKFLOW.md`](DEMO_WORKFLOW.md).
 
 ## 5. Heuristic vs Foundry-backed mode
 

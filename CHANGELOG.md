@@ -3,6 +3,60 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.7.0 - Unreleased
+
+Guided Demo Fixtures & First Real Workflow. Makes the first real Arkheionx run
+easy to experience on a safe local fixture.
+
+### Added
+
+- `arkheionx demo` command: `--list`, `--show <id>` (`--json`),
+  `--commands <id>`, and `--copy <id> <dest>` (with `--force`).
+- Demo fixture registry (`arkheionx/demo/`) with the `oracle-staking` demo
+  (target `OracleRewardFixture.stake`).
+- `docs/DEMO_WORKFLOW.md`: a safe, local, end-to-end walkthrough.
+
+### Changed
+
+- Version metadata moved to `2.7.0-dev` (`PACKAGE_VERSION = 2.7.0.dev0`);
+  stable remains `v2.6.0`; next milestone `v2.8.0`.
+- Onboarding/installation/try-in-5-minutes docs now lead with the guided demo.
+
+### Safety
+
+- Demo is local-only: no RPC, no private keys, no secrets, no mainnet, no
+  live-chain instructions, no bounty framing, no final severity. The fixture is
+  a toy, not a real protocol or a vulnerability report.
+
+### Demo
+
+- `--copy` copies source entries only (`README.md`, `foundry.toml`, `src/`,
+  `test/`), refuses a non-empty destination unless `--force`, and never writes
+  outside the chosen destination.
+- `--commands` prints both the heuristic (no-Foundry) and Foundry-backed paths.
+
+### CLI
+
+- `demo` is additive; existing commands are unchanged.
+
+### Docs
+
+- New `docs/DEMO_WORKFLOW.md`; updated `docs/ONBOARDING.md`,
+  `docs/TRY_IN_5_MINUTES.md`, `docs/INSTALLATION.md`, `docs/CLI_REFERENCE.md`,
+  `docs/ROADMAP.md`, `docs/RELEASE_CHECKLIST.md`; `release-notes/v2.7.0.md`.
+
+### Tests
+
+- `tests/test_demo_workflow.py`: list/show/commands/copy/force/errors, fixture
+  safety (no RPC/keys/secrets), docs presence, and copied-demo smoke.
+
+### Known limitations
+
+- Demo fixtures ship with the source checkout / editable install (not bundled
+  as package data); `--copy` resolves them from the repository.
+- `arkheionx demo --run` is intentionally not implemented; use `--commands`.
+- No PyPI, Homebrew, standalone binaries, or domain installer.
+
 ## v2.6.0 - 2026-05-31
 
 arkup & Version-Manager MVP. Turns the v2.5.0 installer into a clean local

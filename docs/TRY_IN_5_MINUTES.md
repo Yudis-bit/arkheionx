@@ -10,8 +10,17 @@ contracts, submit transactions, or create GitHub issues.
 ## Workbench Demo (Fastest Path)
 
 After installing (see [`INSTALLER.md`](INSTALLER.md) or
-[`INSTALLATION.md`](INSTALLATION.md)), run the workbench against the bundled
-fixture. No Foundry is required for these steps:
+[`INSTALLATION.md`](INSTALLATION.md)), copy the guided demo fixture and run the
+workbench in it. No Foundry is required for these steps:
+
+```sh
+arkheionx demo --list
+arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx open ./arkheionx-demo
+arkheionx hunt ./arkheionx-demo --top 5
+```
+
+You can also run directly against the in-repo fixture:
 
 ```sh
 arkheionx doctor

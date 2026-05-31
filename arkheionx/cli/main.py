@@ -86,6 +86,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     search.set_defaults(func=commands.search_command)
 
+    demo = subparsers.add_parser("demo", help="List, show, and copy safe local demo workflows.")
+    demo.add_argument("--list", action="store_true", help="List available demos.")
+    demo.add_argument("--show", metavar="ID", default="", help="Show details for a demo.")
+    demo.add_argument("--commands", metavar="ID", default="", help="Print the demo workflow commands.")
+    demo.add_argument("--copy", nargs=2, metavar=("ID", "DEST"), default=None, help="Copy a demo fixture to DEST.")
+    demo.add_argument("--force", action="store_true", help="Allow copy into a non-empty destination.")
+    demo.add_argument("--json", action="store_true", help="JSON output for --list/--show.")
+    demo.set_defaults(func=commands.demo_command)
+
     _add_workbench_commands(subparsers)
 
     help_command = subparsers.add_parser("help", help="Print CLI help.")
