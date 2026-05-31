@@ -143,6 +143,18 @@ def _add_workbench_commands(subparsers) -> None:
     trace.add_argument("--run", action="store_true", help="Run targeted Foundry tests, then summarize.")
     trace.set_defaults(func=workbench.trace_command)
 
+    evidence = subparsers.add_parser("evidence", help="Build a compact evidence package from proof + trace artifacts.")
+    _common(evidence)
+    evidence.add_argument("--target", default="", help="Fully-qualified target, e.g. Vault.withdraw.")
+    evidence.add_argument("--from-proof", default="", help="Build from a specific proof.json artifact.")
+    evidence.set_defaults(func=workbench.evidence_command)
+
+    report = subparsers.add_parser("report", help="Create a responsible local report draft from evidence.")
+    _common(report)
+    report.add_argument("--target", default="", help="Fully-qualified target, e.g. Vault.withdraw.")
+    report.add_argument("--from-evidence", default="", help="Build from a specific evidence.json artifact.")
+    report.set_defaults(func=workbench.report_command)
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()

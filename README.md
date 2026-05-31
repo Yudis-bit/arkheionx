@@ -334,7 +334,14 @@ arkheionx hunt . --top 5                 # rank bug-hunting surfaces
 arkheionx prove . --target Contract.function          # local Foundry proof scaffold
 arkheionx prove . --target Contract.function --run    # run targeted Foundry tests
 arkheionx trace . --target Contract.function          # summarize the proof/trace
+arkheionx evidence . --target Contract.function       # package proof + trace as evidence
+arkheionx report . --target Contract.function         # responsible local report draft
 ```
+
+Full loop: `doctor → open → map → flow → hunt → prove --run → trace → evidence
+→ report → manual review`. The `evidence` and `report` commands are local draft
+tools: they never auto-submit, never claim a final severity, and include
+explicit limitations and a safety notice.
 
 Find the money. Map the protocol. Prove the bug. Every major result carries an
 explicit evidence level:
@@ -357,6 +364,8 @@ Read:
 - [`docs/PROTOCOL_MAP.md`](docs/PROTOCOL_MAP.md)
 - [`docs/EXECUTION_PROOF.md`](docs/EXECUTION_PROOF.md)
 - [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
+- [`docs/EVIDENCE_PACKAGE.md`](docs/EVIDENCE_PACKAGE.md)
+- [`docs/REPORT_DRAFTS.md`](docs/REPORT_DRAFTS.md)
 - [`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md)
 - [`docs/FOUNDRY_INTEGRATION.md`](docs/FOUNDRY_INTEGRATION.md)
 

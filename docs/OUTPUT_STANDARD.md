@@ -84,6 +84,12 @@ the chosen base directory, default: current working directory):
     proof.json
     generated-test.sol
     foundry-build.txt
+  evidence/<target>/
+    evidence.json
+    evidence.txt
+  reports/<target>/
+    report.json
+    report.md
 ```
 
 Overwrites are allowed only inside `.arkheionx/out/` and are deterministic.

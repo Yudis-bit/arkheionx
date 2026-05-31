@@ -20,10 +20,14 @@ from arkheionx.flow.mermaid import render_mermaid
 from arkheionx.flow.render import render_flow
 from arkheionx.hunt.render import render_hunt
 from arkheionx.hunt.test_suggestions import suggest_tests
+from arkheionx.evidence.builder import build_evidence
+from arkheionx.evidence.render import render_evidence
 from arkheionx.proof.generator import generate_scaffold, harness_name
 from arkheionx.proof.payloads import build_proof_payload, build_trace_payload, target_slug
 from arkheionx.proof.render import render_trace
 from arkheionx.proof.runner import ExecResult, execute_target
+from arkheionx.reporting.builder import build_report
+from arkheionx.reporting.render import render_report
 from arkheionx.protocol import foundry as foundry_mod
 from arkheionx.protocol.detector import analyze
 from arkheionx.protocol.model import COMPILER_CONFIRMED, EXECUTION_CONFIRMED, HEURISTIC, to_dict
@@ -327,7 +331,7 @@ def trace_command(args: Namespace) -> int:
         if getattr(args, "json", False):
             print(json.dumps(build_trace_payload(match.qualified_id, status, evidence, raw_path, result.trace), indent=2))
             return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
-        nxt = f"arkheionx trace {args.repo} --target {match.display_id}" if result.trace else next_no_proof
+        nxt = f"arkheionx evidence {args.repo} --target {match.display_id}" if evidence == EXECUTION_CONFIRMED else next_no_proof
         print(render_trace(match.qualified_id, args.repo, status, evidence, foundry_header(result.foundry), result.trace, artifacts, nxt))
         return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
@@ -340,7 +344,7 @@ def trace_command(args: Namespace) -> int:
         if getattr(args, "json", False):
             print(json.dumps(payload, indent=2))
             return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
-        nxt = f"arkheionx prove {args.repo} --target {match.display_id} --run"
+        nxt = f"arkheionx evidence {args.repo} --target {match.display_id}" if evidence == EXECUTION_CONFIRMED else next_no_proof
         print(render_trace(match.qualified_id, args.repo, payload.get("status", ""), evidence, "ready", payload, artifacts, nxt))
         return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
@@ -418,3 +422,114 @@ def doctor_command(args: Namespace) -> int:
     else:
         print("  Install Foundry (forge) for compiler-confirmed results.")
     return SUCCESS
+
+
+# --------------------------------------------------------------------------
+# evidence / report (v2.3.0)
+# --------------------------------------------------------------------------
+_PROVEN = {"EXECUTION_CONFIRMED", "EVIDENCE_READY"}
+
+
+def _resolve_match(args: Namespace, root: Path):
+    """Return (match, analysis, error_code). error_code is None on success."""
+    target = str(getattr(args, "target", "") or "").strip()
+    if not target:
+        print("error: --target Contract.function is required")
+        return None, None, FAILED
+    analysis = _run_analysis(args, root)
+    matches = _resolve_target(analysis.all_functions, target)
+    if not matches:
+        print(f"error: could not resolve target `{target}`. Run `arkheionx hunt {args.repo}` to list targets.")
+        return None, None, FAILED
+    if len({(m.contract_name, m.function_name) for m in matches}) > 1:
+        print("Target is ambiguous. Choose one:\n")
+        ordered = sorted(matches, key=lambda x: x.contract_name)
+        for i, m in enumerate(ordered, 1):
+            print(f"{i}. {m.display_id}")
+        print(f"\nThen run, for example:\narkheionx {args.command} {args.repo} --target {ordered[0].display_id}")
+        return None, None, FAILED
+    return matches[0], analysis, None
+
+
+def _display_from_target_id(target_id: str) -> str:
+    tail = target_id.split(":")[-1].split("#")[0]
+    return tail.split("(")[0]
+
+
+def _read_json_file(path_str: str):
+    candidate = Path(path_str).expanduser()
+    if not candidate.exists():
+        return None
+    try:
+        return json.loads(candidate.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def evidence_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    proof_override = trace_override = None
+    from_proof = str(getattr(args, "from_proof", "") or "").strip()
+    if from_proof:
+        proof_override = _read_json_file(from_proof)
+        if proof_override is None:
+            print(f"error: could not read proof artifact: {from_proof}")
+            return FAILED
+        trace_override = _read_json_file(str(Path(from_proof).expanduser().parent / "trace.json")) or {}
+        if not getattr(args, "target", ""):
+            args.target = _display_from_target_id(str(proof_override.get("target_id", proof_override.get("target", ""))))
+
+    match, analysis, err = _resolve_match(args, root)
+    if err is not None:
+        return err
+    pkg = build_evidence(
+        match, root, writer, analysis,
+        write=not getattr(args, "no_artifacts", False),
+        proof_override=proof_override, trace_override=trace_override,
+    )
+    if getattr(args, "json", False):
+        print(json.dumps(pkg.payload, indent=2) if pkg.payload else json.dumps({"status": pkg.status, "next": pkg.next_command}))
+        return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
+    print(render_evidence(pkg, args.repo))
+    return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
+
+
+def report_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    from_evidence = str(getattr(args, "from_evidence", "") or "").strip()
+
+    if from_evidence:
+        evidence = _read_json_file(from_evidence)
+        if evidence is None:
+            print(f"error: could not read evidence package: {from_evidence}")
+            return FAILED
+    else:
+        match, analysis, err = _resolve_match(args, root)
+        if err is not None:
+            return err
+        pkg = build_evidence(match, root, writer, analysis, write=not getattr(args, "no_artifacts", False))
+        if pkg.status == "no_proof":
+            print(
+                "ARKHEIONX REPORT\n"
+                f"Project: {args.repo}\nTarget: {pkg.target}\nStatus: no-evidence\nMode: heuristic\n\n"
+                "No evidence package found.\n\nNext\n"
+                f"  arkheionx prove {args.repo} --target {match.display_id} --run\n"
+                f"  arkheionx evidence {args.repo} --target {match.display_id}"
+            )
+            return WARNING
+        evidence = pkg.payload
+
+    draft = build_report(evidence, root, writer, write=not getattr(args, "no_artifacts", False))
+    if getattr(args, "json", False):
+        print(json.dumps(draft.payload, indent=2))
+        return SUCCESS if draft.evidence_level in _PROVEN else WARNING
+    print(render_report(draft, args.repo))
+    return SUCCESS if draft.evidence_level in _PROVEN else WARNING

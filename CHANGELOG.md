@@ -3,6 +3,57 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.3.0 - Unreleased
+
+Evidence & Report Package. Closes the loop:
+open → map → flow → hunt → prove --run → trace → evidence → report.
+
+### Added
+
+- `arkheionx evidence <repo> --target <target>`: build a compact, structured
+  evidence package (`evidence.json` + `evidence.txt`) from proof + trace
+  artifacts and protocol/hunt context. Supports `--from-proof <path>`.
+- `arkheionx report <repo> --target <target>`: create a responsible local
+  report draft (`report.md` + `report.json`). Supports `--from-evidence <path>`.
+
+### Changed
+
+- Next-command chain extended: trace → evidence → report → manual review.
+
+### Safety
+
+- No auto-submit, no final severity claim, no live-chain reproduction steps.
+- Reports include an explicit safety notice and limitations.
+- Local only: no RPC, no broadcast, no private keys.
+
+### Evidence model
+
+- Adds `EVIDENCE_READY`, used only when an execution-confirmed proof and a
+  trace artifact both exist and an evidence package was built. Otherwise the
+  package keeps HEURISTIC / COMPILER_CONFIRMED / EXECUTION_CONFIRMED.
+
+### CLI
+
+- Commands: doctor, open, map, flow, hunt, prove, trace, evidence, report.
+
+### Docs
+
+- New `docs/EVIDENCE_PACKAGE.md`, `docs/REPORT_DRAFTS.md`, and
+  `release-notes/v2.3.0.md`; updated README, CLI_REFERENCE, SOLO_RESEARCH_WORKFLOW,
+  OUTPUT_STANDARD, FOUNDRY_INTEGRATION, ROADMAP, VALUE_FLOW_WORKBENCH.
+
+### Tests
+
+- Evidence (no-proof, with-proof, levels, schema, compact), report (no-evidence,
+  from-evidence, no final severity, no live-chain steps, schema), the full
+  next-command chain, and release-readiness.
+
+### Known limitations
+
+- Evidence/report are local draft tools; they do not submit or grade severity.
+- EVIDENCE_READY still requires human validation of the underlying property.
+- Not published to PyPI. Not a formal audit; no severity guarantee.
+
 ## v2.2.0 - 2026-05-31
 
 Execution Proof & Trace Workbench. Builds on the v2.1.0 Foundry-style workbench

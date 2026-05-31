@@ -602,3 +602,30 @@ gh release create v2.2.0 \
 ```
 
 - [ ] Verify the GitHub release page renders the notes correctly.
+
+
+## v2.3.0 — Evidence & Report Package
+
+Prepared locally (dev). Do not push/tag/release without maintainer approval.
+
+### Validate
+
+- [ ] `python3 -m unittest discover -s tests -p "test_*.py"` passes.
+- [ ] `make validate` passes.
+- [ ] CLI smoke: `arkheionx evidence . --target <t>` / `arkheionx report . --target <t>`
+      give useful next commands when no proof/evidence exists.
+- [ ] Full chain on a Foundry fixture:
+      `prove --run` → `trace` → `evidence` → `report` produces evidence.json + report.md.
+
+### Inspect
+
+- [ ] README lists `evidence` and `report` and the full workflow.
+- [ ] CHANGELOG has `## v2.3.0 - Unreleased`.
+- [ ] `release-notes/v2.3.0.md` matches implemented behavior.
+- [ ] `arkheionx version` reports `2.3.0-dev`, `v2.3.0`, `v2.4.0`.
+- [ ] Reports contain no final-severity / live-chain / auto-submit language.
+
+### Final cut (after approval)
+
+- [ ] Set `__version__`/pyproject to `2.3.0`, date the CHANGELOG section.
+- [ ] `git tag -a v2.3.0`, push branch + tag, create the GitHub release.

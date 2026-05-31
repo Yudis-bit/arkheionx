@@ -34,12 +34,15 @@ The Foundry-style workbench commands are available now:
 - `arkheionx hunt <repo>` — ranked bug-hunting surfaces.
 - `arkheionx prove <repo> --target Contract.function [--run]` — Foundry proof scaffold / execution.
 - `arkheionx trace <repo> --target Contract.function [--run]` — proof/trace summary.
+- `arkheionx evidence <repo> --target Contract.function` — evidence package (also `--from-proof`).
+- `arkheionx report <repo> --target Contract.function` — responsible report draft (also `--from-evidence`).
 
 Shared flags: `--full`, `--show-all`, `--json`, `--build`, `--no-artifacts`,
 `--top N` (`--mermaid` for `flow`). Evidence levels: `HEURISTIC`,
-`COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`. See
+`COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`, `EVIDENCE_READY`. See
 [`PROTOCOL_MAP.md`](PROTOCOL_MAP.md), [`EXECUTION_PROOF.md`](EXECUTION_PROOF.md),
-and [`TRACE_ENGINE.md`](TRACE_ENGINE.md).
+[`TRACE_ENGINE.md`](TRACE_ENGINE.md), [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md),
+and [`REPORT_DRAFTS.md`](REPORT_DRAFTS.md).
 
 ## Planned Future Commands
 

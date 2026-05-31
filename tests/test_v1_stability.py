@@ -81,8 +81,8 @@ class V1StabilityTests(unittest.TestCase):
         self.assertIn("v1.8.0: Report UX + Noise Reduction released", roadmap)
         self.assertIn("v1.9.0: Pre-v2 CLI Candidate released", roadmap)
         self.assertIn("v2.0.0: Installable Arkheionx CLI / Package released", roadmap)
-        self.assertIn("v2.2.0: Execution Proof & Trace Workbench current milestone", roadmap)
-        self.assertIn("v2.3.0: Evidence & Report Package next milestone", roadmap)
+        self.assertIn("v2.2.0: Execution Proof & Trace Workbench shipped", roadmap)
+        self.assertIn("v2.3.0: Evidence & Report Package current milestone", roadmap)
 
 
 if __name__ == "__main__":

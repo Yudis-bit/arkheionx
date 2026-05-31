@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Report Draft",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "generated_at", "target", "title",
+    "evidence_level", "status", "summary", "affected_components", "proof",
+    "trace_summary", "impact_reasoning", "assumptions", "limitations",
+    "reproduction_steps", "recommended_next_steps", "safety_notice",
+    "artifact_paths"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "target": {"type": "string"},
+    "title": {"type": "string"},
+    "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "EVIDENCE_READY"]},
+    "status": {"type": "string"},
+    "summary": {"type": "string"},
+    "affected_components": {"type": "array", "items": {"type": "string"}},
+    "proof": {"type": "object"},
+    "trace_summary": {"type": "object"},
+    "impact_reasoning": {"type": "string"},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "reproduction_steps": {"type": "array", "items": {"type": "string"}},
+    "recommended_next_steps": {"type": "array", "items": {"type": "string"}},
+    "safety_notice": {"type": "string"},
+    "artifact_paths": {"type": "object"}
+  }
+}

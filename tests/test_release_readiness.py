@@ -13,18 +13,23 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "2.2.0")
-        self.assertEqual(CURRENT_MILESTONE, "v2.2.0")
-        self.assertEqual(NEXT_MILESTONE, "v2.3.0")
+        self.assertEqual(__version__, "2.3.0-dev")
+        self.assertEqual(CURRENT_MILESTONE, "v2.3.0")
+        self.assertEqual(NEXT_MILESTONE, "v2.4.0")
 
     def test_release_artifacts_exist(self) -> None:
         for path in [
             "release-notes/v2.2.0.md",
+            "release-notes/v2.3.0.md",
             "docs/EXECUTION_PROOF.md",
             "docs/TRACE_ENGINE.md",
+            "docs/EVIDENCE_PACKAGE.md",
+            "docs/REPORT_DRAFTS.md",
             "docs/RELEASE_CHECKLIST.md",
             "schemas/proof-artifact.schema.json",
             "schemas/trace.schema.json",
+            "schemas/evidence.schema.json",
+            "schemas/report-draft.schema.json",
         ]:
             self.assertTrue((REPO_ROOT / path).exists(), path)
 
@@ -42,17 +47,26 @@ class ReleaseReadinessTests(unittest.TestCase):
         readme = read("README.md")
         self.assertIn("a relevant local Foundry test actually executed", readme)
 
-    def test_changelog_has_v220(self) -> None:
+    def test_changelog_has_current_milestone(self) -> None:
         changelog = read("CHANGELOG.md")
+        self.assertIn("## v2.3.0 - Unreleased", changelog)
         self.assertIn("## v2.2.0", changelog)
         self.assertNotIn("## v2.2.0 - Unreleased", changelog)
 
-    def test_trace_not_marked_planned(self) -> None:
-        # trace is implemented; it must not appear under a "Planned" section.
+    def test_v230_release_notes_define_evidence_and_safety(self) -> None:
+        notes = read("release-notes/v2.3.0.md")
+        for marker in ["arkheionx evidence", "arkheionx report", "EVIDENCE_READY", "Safety Boundaries"]:
+            self.assertIn(marker, notes)
+        self.assertIn("not a formal audit", notes.lower())
+        self.assertIn("no auto-submit", notes.lower())
+
+    def test_implemented_commands_not_marked_planned(self) -> None:
+        # trace/evidence/report are implemented; they must not appear as planned.
         for doc in ["docs/SOLO_RESEARCH_WORKFLOW.md", "docs/FOUNDRY_INTEGRATION.md"]:
             text = read(doc)
             planned = text.split("Planned commands", 1)[-1] if "Planned commands" in text else ""
-            self.assertNotIn("arkheionx trace", planned)
+            for cmd in ["arkheionx trace", "arkheionx evidence", "arkheionx report"]:
+                self.assertNotIn(cmd, planned)
 
     def test_generated_output_is_gitignored(self) -> None:
         self.assertIn(".arkheionx/", read(".gitignore"))

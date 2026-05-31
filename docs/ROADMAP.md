@@ -14,9 +14,9 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v2.2.0 — Execution Proof & Trace Workbench.
-Next milestone: v2.3.0 — Evidence & Report Package.
-Foundation shipped: v2.1.0 — Value Flow Map MVP (Foundry-style workbench CLI).
+Current milestone: v2.3.0 — Evidence & Report Package.
+Next milestone: v2.4.0 — Evidence Workflow Hardening.
+Foundation shipped: v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench.
 
 - [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
@@ -107,9 +107,14 @@ v3.0.0 target: DeFi Value Flow Workbench.
 - [x] **v2.1.0: Value Flow Map MVP shipped (Foundry-style workbench CLI).**
       Local/static protocol map, money-flow graph, hunter ranking, source-kind
       filtering, fully-qualified targets, and proof scaffolding.
-- [ ] **v2.2.0: Execution Proof & Trace Workbench current milestone.**
+- [x] **v2.2.0: Execution Proof & Trace Workbench shipped.**
       Targeted Foundry execution proof, structured proof artifacts, trace
       summaries, and honest evidence levels.
+- [ ] **v2.3.0: Evidence & Report Package current milestone.**
+      Package proof/trace into a structured evidence package and a responsible
+      local report draft (no auto-submit, no final severity).
+- [ ] **v2.4.0: Evidence Workflow Hardening next milestone.**
+      Strengthen evidence/report quality, existing-test matching, and CI flows.
 - [ ] **v2.3.0: Evidence & Report Package next milestone.**
       Package execution-confirmed evidence into reviewer-ready report drafts.
 - [ ] **v2.4.0: Flow-Based Foundry Test Templates.**
