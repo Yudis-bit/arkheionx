@@ -3,13 +3,13 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v3.0.0 - Unreleased
+## v3.0.0 - 2026-05-31
 
 Public Stable Launch. Consolidates the v2.x workbench into a coherent, documented
 public-stable surface. No new product features beyond presentation, docs, and
 release hardening; the workflow, demos, evidence model, and safety boundaries are
-unchanged. Not released; package version is `3.0.0-dev` and `STABLE_RELEASE`
-remains `v2.10.0` until v3.0.0 is published.
+unchanged. Package version is `3.0.0`; `STABLE_RELEASE` remains `v2.10.0` until
+v3.0.0 is published, then moves to `v3.0.0` in post-release cleanup.
 
 ### Added
 
@@ -21,7 +21,7 @@ remains `v2.10.0` until v3.0.0 is published.
 
 ### Changed
 
-- Version metadata to `3.0.0-dev` (stable `v2.10.0`, current `v3.0.0`, next
+- Version metadata to `3.0.0` (stable `v2.10.0`, current `v3.0.0`, next
   `v3.1.0`).
 - Root README redesigned as a public-stable launch landing page.
 - Readiness gate extended to check GitHub Action tag and install/arkup stable
@@ -36,7 +36,7 @@ remains `v2.10.0` until v3.0.0 is published.
 ### Docs
 
 - Public-surface, stability-contract, v3-readiness, roadmap, release-checklist,
-  and GitHub-repo-surface docs aligned to the v3.0.0 launch candidate.
+  and GitHub-repo-surface docs aligned to the v3.0.0 public stable launch.
 
 ### CLI Output
 
@@ -50,7 +50,7 @@ remains `v2.10.0` until v3.0.0 is published.
 
 ### Tests
 
-- v3 launch-candidate tests: version `3.0.0-dev`, README v3 positioning and
+- v3 launch tests: version `3.0.0`, README v3 positioning and
   visuals, SVG parse, docs map, roadmap/changelog/release-notes, and forbidden
   public claims.
 

@@ -13,7 +13,7 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "3.0.0-dev")
+        self.assertEqual(__version__, "3.0.0")
         self.assertEqual(CURRENT_MILESTONE, "v3.0.0")
         self.assertEqual(NEXT_MILESTONE, "v3.1.0")
 

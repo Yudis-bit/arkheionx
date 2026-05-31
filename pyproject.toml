@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arkheionx"
-version = "3.0.0.dev0"
+version = "3.0.0"
 description = "Foundry-style local security workbench for DeFi protocol mapping, money-flow analysis, hunter ranking, and execution-aware proof artifacts."
 readme = "README.md"
 requires-python = ">=3.11"

@@ -5,7 +5,7 @@ Workbench** (public stable). v3.0 is **not released** and is not claimed as
 stable yet; this tracks the public-stable launch candidate.
 
 **Status: ready for release candidate.** The readiness items below are
-satisfied on the current `3.0.0-dev` surface; what remains is the human release
+satisfied on the finalized `3.0.0` surface; what remains is the human release
 cut (tag, publish, post-release cleanup), not further engineering.
 
 ## 1. Public command surface

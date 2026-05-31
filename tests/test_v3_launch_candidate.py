@@ -27,8 +27,8 @@ class V3VersionTests(unittest.TestCase):
             __version__,
         )
 
-        self.assertEqual(__version__, "3.0.0-dev")
-        self.assertEqual(PACKAGE_VERSION, "3.0.0.dev0")
+        self.assertEqual(__version__, "3.0.0")
+        self.assertEqual(PACKAGE_VERSION, "3.0.0")
         self.assertEqual(STABLE_RELEASE, "v2.10.0")  # not v3.0.0 until published
         self.assertEqual(CURRENT_MILESTONE, "v3.0.0")
         self.assertEqual(NEXT_MILESTONE, "v3.1.0")
@@ -64,7 +64,7 @@ class V3ReadmeTests(unittest.TestCase):
 
 class V3DocsTests(unittest.TestCase):
     def test_changelog_has_v3_unreleased(self) -> None:
-        self.assertIn("## v3.0.0 - Unreleased", read("CHANGELOG.md"))
+        self.assertIn("## v3.0.0 - 2026-05-31", read("CHANGELOG.md"))
 
     def test_roadmap_marks_v3_current_and_v2_10_shipped(self) -> None:
         roadmap = read("docs/ROADMAP.md")
