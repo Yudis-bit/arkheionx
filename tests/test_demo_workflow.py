@@ -169,7 +169,7 @@ class DemoDocsAndMetadataTests(unittest.TestCase):
 
     def test_readme_concise_and_mentions_demo(self) -> None:
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertLess(len(readme.splitlines()), 300)
+        self.assertLess(len(readme.splitlines()), 650)  # v3 launch README bound (300-650)
         self.assertIn("arkheionx demo", readme)
         self.assertIn("docs/DEMO_WORKFLOW.md", readme)
 
@@ -182,10 +182,10 @@ class DemoDocsAndMetadataTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "2.10.0")
+        self.assertEqual(__version__, "3.0.0-dev")
         self.assertEqual(STABLE_RELEASE, "v2.10.0")
-        self.assertEqual(CURRENT_MILESTONE, "v2.10.0")
-        self.assertEqual(NEXT_MILESTONE, "v3.0.0")
+        self.assertEqual(CURRENT_MILESTONE, "v3.0.0")
+        self.assertEqual(NEXT_MILESTONE, "v3.1.0")
 
 
 if __name__ == "__main__":

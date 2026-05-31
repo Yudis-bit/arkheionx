@@ -15,9 +15,12 @@ value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
 Current milestone: v3.0.0.
+Next milestone: v3.1.0.
 Latest stable: v2.10.0 — Pre-v3 Public Readiness & Stability Hardening.
 Foundation shipped: v2.10.0 — Pre-v3 Public Readiness & Stability Hardening; v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening; v2.8.0 — Package Data & Distribution Hardening; v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
-v3.0.0 target: DeFi Value Flow Workbench.
+v3.0.0 target: DeFi Value Flow Workbench. v3.0.0 is the public stable launch
+candidate (consolidation and public-readiness, not yet released). v3.1.0 is the
+next milestone after the v3.0.0 cut.
 
 Pre-v3 readiness is tracked in [`V3_READINESS.md`](V3_READINESS.md); the public
 command contract is in [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md) and

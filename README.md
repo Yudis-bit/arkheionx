@@ -27,6 +27,22 @@ workflow, and trace summaries, evidence packages, and responsible report drafts.
 Foundry proves. Arkheionx maps, ranks, guides, summarizes, validates, and
 packages the evidence — locally, with no RPC and no secrets.
 
+Arkheionx v3.0.0 is the public stable launch: one coherent, documented local
+workflow with a stable command surface, honest evidence levels, and a safe
+install/update lifecycle. v3.0.0 is in preparation; the latest published release
+is v2.10.0.
+
+## Architecture
+
+<p align="center">
+  <img src="docs/assets/arkheionx-v3-architecture.svg" alt="Arkheionx v3 architecture: CLI to demo fixtures and package data, protocol map / value flow / hunt, Foundry proof and trace, evidence package and report draft, validate and human review" width="900">
+</p>
+
+The CLI and install lifecycle sit on top. Bundled demo fixtures and package data
+feed a local pipeline: protocol map, value flow, and hunt ranking, then optional
+Foundry proof and trace, then evidence and report drafts, then artifact
+validation. Human review is the final, required step.
+
 ## Who it is for
 
 Solo auditors, protocol engineers, and security researchers who want to
@@ -92,6 +108,10 @@ guided run.
 
 ## Demo Fixtures
 
+<p align="center">
+  <img src="docs/assets/arkheionx-v3-demo-fixtures.svg" alt="Arkheionx v3 demo fixtures: oracle-staking (staking/rewards), amm-swap (AMM/reserves), lending-vault (collateral/debt)" width="900">
+</p>
+
 Three small, local-only toy fixtures ship as package data (so `demo --copy`
 works from an installed Arkheionx, not only a source checkout):
 
@@ -105,6 +125,10 @@ They are demonstrations, not real protocols or vulnerability reports. See
 [`docs/PACKAGE_DATA.md`](docs/PACKAGE_DATA.md).
 
 ## Command Set
+
+<p align="center">
+  <img src="docs/assets/arkheionx-v3-public-surface.svg" alt="Arkheionx v3 public command surface grouped by setup, demo, understand, prove/trace, evidence/report, validate, and install lifecycle" width="900">
+</p>
 
 | Command | Purpose |
 | --- | --- |
@@ -153,6 +177,25 @@ Arkheionx keeps evidence levels explicit so a local finding is not overstated.
 
 A passing test does not prove absence of bugs. A failing test does not
 automatically prove a vulnerability. Human review is required.
+
+## What's Stable in v3.0.0
+
+<p align="center">
+  <img src="docs/assets/arkheionx-v3-stability.svg" alt="Arkheionx v3 stability contract: human text may improve, JSON and artifacts additive, command names stable, safety boundaries fixed" width="900">
+</p>
+
+v3.0.0 commits to a clear public contract:
+
+- Public command names are stable; no removal or rename without a compatibility
+  bridge and documentation.
+- JSON output and schemas change additively where possible, and stay plain.
+- Human-readable terminal output may be polished over time — do not parse it.
+- Safety boundaries are fixed and never weakened.
+
+Not guaranteed: vulnerability discovery, severity, bounty eligibility, or that a
+heuristic finding is a real bug. Internal Python modules are not a public API.
+See [`docs/STABILITY_CONTRACT.md`](docs/STABILITY_CONTRACT.md) and
+[`docs/V3_READINESS.md`](docs/V3_READINESS.md).
 
 ## Terminal Output
 

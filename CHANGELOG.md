@@ -3,6 +3,66 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v3.0.0 - Unreleased
+
+Public Stable Launch. Consolidates the v2.x workbench into a coherent, documented
+public-stable surface. No new product features beyond presentation, docs, and
+release hardening; the workflow, demos, evidence model, and safety boundaries are
+unchanged. Not released; package version is `3.0.0-dev` and `STABLE_RELEASE`
+remains `v2.10.0` until v3.0.0 is published.
+
+### Added
+
+- v3 README visuals: `docs/assets/arkheionx-v3-architecture.svg`,
+  `docs/assets/arkheionx-v3-public-surface.svg`,
+  `docs/assets/arkheionx-v3-demo-fixtures.svg`,
+  `docs/assets/arkheionx-v3-stability.svg`.
+- `release-notes/v3.0.0.md` (public stable launch notes, draft).
+
+### Changed
+
+- Version metadata to `3.0.0-dev` (stable `v2.10.0`, current `v3.0.0`, next
+  `v3.1.0`).
+- Root README redesigned as a public-stable launch landing page.
+- Readiness gate extended to check GitHub Action tag and install/arkup stable
+  tag track `STABLE_RELEASE`, required v3 visuals exist, and no stale dev wording
+  on the live surface.
+
+### Public Stable
+
+- Public command surface, stability contract, and v3 readiness docs matured to
+  v3.0 launch-candidate state.
+
+### Docs
+
+- Public-surface, stability-contract, v3-readiness, roadmap, release-checklist,
+  and GitHub-repo-surface docs aligned to the v3.0.0 launch candidate.
+
+### CLI Output
+
+- No behavior change: restrained TTY-gated color retained; JSON and artifact
+  files remain ANSI-free.
+
+### Safety
+
+- Safety boundaries unchanged and restated: local-first, no RPC by default, no
+  secrets, no live-chain, no auto-submit, human review required.
+
+### Tests
+
+- v3 launch-candidate tests: version `3.0.0-dev`, README v3 positioning and
+  visuals, SVG parse, docs map, roadmap/changelog/release-notes, and forbidden
+  public claims.
+
+### Release Readiness
+
+- `make validate` runs the upgraded readiness gate.
+
+### Known limitations
+
+- Heuristic-first; Foundry optional; local-only; not a formal audit. Not on
+  PyPI; no Homebrew, standalone binary, or domain installer.
+
 ## v2.10.0 - 2026-05-31
 
 Pre-v3 Public Readiness & Stability Hardening. The final v2 hardening milestone

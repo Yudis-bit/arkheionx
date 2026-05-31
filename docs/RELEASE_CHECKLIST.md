@@ -12,6 +12,16 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v3.0.0 Public Stable Launch Checks
+
+- [ ] Version finalized `3.0.0` (from `3.0.0-dev`); `STABLE_RELEASE` stays `v2.10.0` until publish.
+- [ ] `python3 scripts/check_release_readiness.py --check` passes (also run by `make validate`).
+- [ ] README is the public-stable landing page; references all v3 visuals (architecture, public-surface, demo-fixtures, stability) and they parse as XML.
+- [ ] `docs/PUBLIC_SURFACE.md`, `docs/STABILITY_CONTRACT.md`, `docs/V3_READINESS.md` are launch-candidate accurate and linked from README.
+- [ ] `docs/ROADMAP.md` marks v2.10.0 shipped, v3.0.0 current, v3.1.0 next.
+- [ ] `release-notes/v3.0.0.md` and `## v3.0.0` changelog section present; no published/PyPI/Homebrew/binary/audit/severity/bounty claims.
+- [ ] Post-release: finalize `3.0.0`, tag `v3.0.0`, publish, then cleanup (`STABLE_RELEASE`→`v3.0.0`, README/Action/install.sh/arkup→v3.0.0, ROADMAP shipped).
+
 ## v2.10.0 Pre-v3 Public Readiness & Stability Hardening Checks
 
 - [ ] `python3 scripts/check_release_readiness.py --check` passes (also run by `make validate`).

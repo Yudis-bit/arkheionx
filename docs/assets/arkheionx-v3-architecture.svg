@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="210" viewBox="0 0 980 210" role="img" aria-label="Arkheionx v3 architecture: CLI to demo fixtures and package data, protocol map value flow and hunt, Foundry proof and trace, evidence package and report draft, validate and human review">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .title { fill: #0f172a; font: 700 17px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .stage { fill: #f8fafc; stroke: #2563eb; stroke-width: 1.5; }
+      .lbl { fill: #0f172a; font: 600 13px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .sub { fill: #475569; font: 400 11px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .foot { fill: #64748b; font: 400 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="ar-ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="978" height="208" rx="14" class="panel" />
+  <text x="30" y="38" class="title">Local-first workbench architecture</text>
+
+  <g>
+    <rect x="22"  y="66" width="140" height="70" rx="8" class="stage" />
+    <text x="92"  y="98"  text-anchor="middle" class="lbl">CLI</text>
+    <text x="92"  y="117" text-anchor="middle" class="sub">arkheionx / arkup</text>
+
+    <rect x="180" y="66" width="150" height="70" rx="8" class="stage" />
+    <text x="255" y="92"  text-anchor="middle" class="lbl">Demo + data</text>
+    <text x="255" y="110" text-anchor="middle" class="sub">fixtures /</text>
+    <text x="255" y="125" text-anchor="middle" class="sub">package data</text>
+
+    <rect x="348" y="66" width="160" height="70" rx="8" class="stage" />
+    <text x="428" y="92"  text-anchor="middle" class="lbl">Understand</text>
+    <text x="428" y="110" text-anchor="middle" class="sub">map / flow /</text>
+    <text x="428" y="125" text-anchor="middle" class="sub">hunt</text>
+
+    <rect x="526" y="66" width="150" height="70" rx="8" class="stage" />
+    <text x="601" y="92"  text-anchor="middle" class="lbl">Prove</text>
+    <text x="601" y="110" text-anchor="middle" class="sub">Foundry proof /</text>
+    <text x="601" y="125" text-anchor="middle" class="sub">trace</text>
+
+    <rect x="694" y="66" width="160" height="70" rx="8" class="stage" />
+    <text x="774" y="92"  text-anchor="middle" class="lbl">Package</text>
+    <text x="774" y="110" text-anchor="middle" class="sub">evidence /</text>
+    <text x="774" y="125" text-anchor="middle" class="sub">report draft</text>
+
+    <rect x="872" y="66" width="86" height="70" rx="8" class="stage" />
+    <text x="915" y="92"  text-anchor="middle" class="lbl">Review</text>
+    <text x="915" y="110" text-anchor="middle" class="sub">validate /</text>
+    <text x="915" y="125" text-anchor="middle" class="sub">human</text>
+  </g>
+
+  <g>
+    <path class="arrow" d="M164,101 L178,101" marker-end="url(#ar-ah)" />
+    <path class="arrow" d="M332,101 L346,101" marker-end="url(#ar-ah)" />
+    <path class="arrow" d="M510,101 L524,101" marker-end="url(#ar-ah)" />
+    <path class="arrow" d="M678,101 L692,101" marker-end="url(#ar-ah)" />
+    <path class="arrow" d="M856,101 L870,101" marker-end="url(#ar-ah)" />
+  </g>
+
+  <text x="30" y="176" class="foot">No RPC by default. No secrets. No live-chain mutation. Foundry is optional; heuristics are not proven vulnerabilities.</text>
+  <text x="30" y="195" class="foot">Every stage writes deterministic local artifacts under .arkheionx/out/ for human review.</text>
+</svg>

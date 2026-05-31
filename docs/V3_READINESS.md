@@ -1,14 +1,17 @@
 # v3.0 Readiness Checklist
 
 What must be true before Arkheionx is cut as **v3.0.0 — DeFi Value Flow
-Workbench** (public stable). v3.0 is not released and is not claimed as stable
-yet. This is an honest, actionable checklist maintained during the v2.10.x
-hardening line.
+Workbench** (public stable). v3.0 is **not released** and is not claimed as
+stable yet; this tracks the public-stable launch candidate.
+
+**Status: ready for release candidate.** The readiness items below are
+satisfied on the current `3.0.0-dev` surface; what remains is the human release
+cut (tag, publish, post-release cleanup), not further engineering.
 
 ## 1. Public command surface
 - [x] Command inventory documented ([`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md)).
 - [x] Contract test guards the documented surface against drift.
-- [ ] Final review of stability labels before tagging v3.0.
+- [x] Stability labels reviewed for the v3.0 candidate.
 
 ## 2. Install / update lifecycle
 - [x] `install.sh` / `uninstall.sh` / `arkup` syntax-checked and documented.
@@ -30,7 +33,7 @@ hardening line.
 
 ## 6. Evidence model
 - [x] Explicit ladder; heuristics are not presented as confirmed bugs.
-- [ ] Final wording review of evidence/report drafts before v3.0.
+- [x] Evidence/report draft wording reviewed for the v3.0 candidate.
 
 ## 7. Artifact validation
 - [x] `validate-artifacts` checks required fields and safe transitions.
@@ -38,7 +41,7 @@ hardening line.
 ## 8. Docs and README
 - [x] README landing page with visuals and current stable line.
 - [x] Docs map links public surface, stability contract, and this checklist.
-- [ ] Final docs audit immediately before v3.0.
+- [x] Docs audit completed for the v3.0 launch candidate.
 
 ## 9. Safety boundaries
 - [x] Consistent safety wording; `check_safety_wording --strict` passes.

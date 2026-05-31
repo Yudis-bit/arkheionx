@@ -25,12 +25,16 @@ SCRIPTS = ROOT / "scripts"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from arkheionx.version import CURRENT_MILESTONE, STABLE_RELEASE  # noqa: E402
+from arkheionx.version import CURRENT_MILESTONE, STABLE_RELEASE, __version__  # noqa: E402
 
 REQUIRED_VISUALS = [
     "docs/assets/arkheionx-workflow-v27.svg",
     "docs/assets/arkheionx-output-pipeline.svg",
     "docs/assets/arkheionx-evidence-ladder.svg",
+    "docs/assets/arkheionx-v3-architecture.svg",
+    "docs/assets/arkheionx-v3-public-surface.svg",
+    "docs/assets/arkheionx-v3-demo-fixtures.svg",
+    "docs/assets/arkheionx-v3-stability.svg",
 ]
 READINESS_DOCS = [
     "docs/PUBLIC_SURFACE.md",
@@ -144,6 +148,23 @@ def check() -> list[str]:
         failures.append(f"missing release notes: release-notes/{CURRENT_MILESTONE}.md")
     if f"## {CURRENT_MILESTONE}" not in read("CHANGELOG.md"):
         failures.append(f"CHANGELOG.md missing section: ## {CURRENT_MILESTONE}")
+
+    # GitHub Action examples and install/arkup stable tag track STABLE_RELEASE.
+    action_tag = f"pre-audit@{STABLE_RELEASE}"
+    for doc in ("README.md", "docs/GITHUB_ACTION_USAGE.md"):
+        if action_tag not in read(doc):
+            failures.append(f"{doc} GitHub Action example does not use {action_tag}")
+    stable_tag_line = f'ARKHEIONX_STABLE_TAG:-{STABLE_RELEASE}'
+    for script in ("install.sh", "arkup"):
+        if stable_tag_line not in read(script):
+            failures.append(f"{script} stable tag does not track STABLE_RELEASE ({STABLE_RELEASE})")
+
+    # No stale dev wording on the live README surface (dev version must not leak).
+    if __version__.endswith("-dev") and __version__ in readme:
+        failures.append(f"README.md leaks dev version string {__version__}")
+    for claim in (f"{CURRENT_MILESTONE} is released", f"{CURRENT_MILESTONE} released", "now on PyPI", "available on PyPI"):
+        if claim.lower() in readme.lower():
+            failures.append(f"README.md contains premature/forbidden claim: {claim}")
 
     return failures
 
