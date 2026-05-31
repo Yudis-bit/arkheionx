@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.5.0 - Unreleased
+## v2.5.0 - 2026-05-31
 
 Installer & Onboarding. Makes Arkheionx easier to install, verify, and try
 safely without weakening any local-first boundary.
@@ -24,8 +24,8 @@ safely without weakening any local-first boundary.
 
 ### Changed
 
-- Version metadata moved to `2.5.0-dev` (`PACKAGE_VERSION = 2.5.0.dev0`).
-  Stable release remains `v2.4.0`; next milestone is `v2.6.0`.
+- Version metadata finalized to `2.5.0` (`PACKAGE_VERSION = 2.5.0`). Stable
+  release remains `v2.4.0` until v2.5.0 is published; next milestone is `v2.6.0`.
 
 ### Safety
 

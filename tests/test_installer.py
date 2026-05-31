@@ -119,12 +119,13 @@ class OnboardingSurfaceTests(unittest.TestCase):
     def test_release_notes_and_changelog_present(self) -> None:
         self.assertTrue((REPO_ROOT / "release-notes/v2.5.0.md").exists())
         changelog = read(REPO_ROOT / "CHANGELOG.md")
-        self.assertIn("## v2.5.0 - Unreleased", changelog)
+        self.assertIn("## v2.5.0", changelog)
+        self.assertNotIn("## v2.5.0 - Unreleased", changelog)
 
-    def test_version_metadata_is_dev(self) -> None:
+    def test_version_metadata_is_final(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "2.5.0-dev")
+        self.assertEqual(__version__, "2.5.0")
         self.assertEqual(STABLE_RELEASE, "v2.4.0")
         self.assertEqual(CURRENT_MILESTONE, "v2.5.0")
         self.assertEqual(NEXT_MILESTONE, "v2.6.0")

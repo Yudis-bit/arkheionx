@@ -21,7 +21,7 @@ repository (pinned to a stable ref) or from a local checkout.
 
 ## Quick start
 
-From a local checkout (recommended while testing v2.5.0-dev):
+From a local checkout (works before the release is published):
 
 ```sh
 ARKHEIONX_LOCAL_PATH="$PWD" sh install.sh
