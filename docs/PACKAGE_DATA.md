@@ -11,17 +11,20 @@ development but not for a package installed elsewhere (for example via a future
 
 ## What is bundled
 
-Bundled under the package as `arkheionx/demo/fixtures/oracle-staking/`:
+Bundled under `arkheionx/demo/fixtures/<demo-id>/` (one directory per demo):
 
-- `README.md`
-- `foundry.toml`
-- `src/OracleRewardFixture.sol`
-- `test/OracleRewardFixture.t.sol`
+- `oracle-staking/` — `OracleRewardFixture`
+- `amm-swap/` — `AMMSwapFixture`
+- `lending-vault/` — `LendingVaultFixture`
+
+Each fixture directory contains only `README.md`, `foundry.toml`,
+`src/*.sol`, and `test/*.sol`.
 
 Only source files (`*.md`, `*.toml`, `*.sol`) are included via
-`[tool.setuptools.package-data]`. Generated directories (`out/`, `cache/`,
+`[tool.setuptools.package-data]` (`"arkheionx.demo.fixtures" = ["**/*.md",
+"**/*.toml", "**/*.sol"]`). Generated directories (`out/`, `cache/`,
 `.arkheionx/`), build output, secrets, RPC URLs, and private keys are **not**
-bundled. The fixture is a toy — not a real protocol or vulnerability report.
+bundled. The fixtures are toys — not real protocols or vulnerability reports.
 
 ## How resolution works
 
@@ -59,6 +62,6 @@ python3 -m venv /tmp/ark-venv
 
 ## Known limitations
 
-- Only the `oracle-staking` demo is bundled.
+- Bundled demos: `oracle-staking`, `amm-swap`, `lending-vault` (toy fixtures).
 - Not published to PyPI; no Homebrew, standalone binary, or domain installer.
-- Foundry remains optional; without it the demo runs in `HEURISTIC` mode.
+- Foundry remains optional; without it the demos run in `HEURISTIC` mode.

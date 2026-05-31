@@ -3,6 +3,67 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.9.0 - Unreleased
+
+Multi-Fixture Demo Expansion & Public Workflow Hardening. Broadens the bundled
+demo set beyond a single fixture so Arkheionx demonstrates multiple DeFi
+surfaces, while staying local-only and safe.
+
+### Added
+
+- Two new bundled demo fixtures (package data): `amm-swap` (`AMMSwapFixture`,
+  swap/reserves/liquidity) and `lending-vault` (`LendingVaultFixture`,
+  collateral/debt/liquidation).
+- Demo registry metadata: `category`, `risk_theme`, and `safety_label`.
+
+### Changed
+
+- `arkheionx demo --list` shows each demo's category; `demo --show` reports
+  category and risk theme. `demo --commands`/`--copy` work for every demo.
+- Version metadata moved to `2.9.0-dev` (`PACKAGE_VERSION = 2.9.0.dev0`);
+  stable remains `v2.8.0`; next milestone `v2.10.0`.
+- Removed the unused dummy `ark-shot.sh`.
+
+### Safety
+
+- All demos are local-only toy fixtures: no RPC, no private keys, no secrets,
+  no real deployed addresses, no mainnet fork, no live-chain instructions, no
+  bounty framing, no severity claims. Bundled data stays source-only.
+
+### Demo Fixtures
+
+- `oracle-staking` (staking), `amm-swap` (amm), `lending-vault` (lending), each
+  with `README.md`, `foundry.toml`, `src/*.sol`, `test/*.sol`.
+
+### CLI
+
+- `demo` output hardened for multiple demos; unknown ids still list all valid
+  ids. Existing `oracle-staking` behavior is unchanged.
+
+### Packaging
+
+- `[tool.setuptools.package-data]` (`**/*.md`/`**/*.toml`/`**/*.sol`) covers all
+  fixture directories; verified bundled in a non-editable wheel install.
+
+### Docs
+
+- Updated `docs/DEMO_WORKFLOW.md` (demo selection table), `docs/PACKAGE_DATA.md`
+  (multiple fixtures), `docs/CLI_REFERENCE.md`, `docs/TRY_IN_5_MINUTES.md`,
+  `docs/ONBOARDING.md`, `docs/ROADMAP.md`, `docs/RELEASE_CHECKLIST.md`;
+  `release-notes/v2.9.0.md`.
+
+### Tests
+
+- `tests/test_demo_workflow.py` and `tests/test_package_data.py` now cover all
+  demos parametrically (list/show/commands/copy, resource integrity, source-only
+  copy, no secrets/RPC, and the non-editable venv install smoke).
+
+### Known limitations
+
+- Three bundled toy demos; no real protocol targets.
+- No PyPI, Homebrew, standalone binary, or domain installer.
+- Foundry remains optional; without it demos run in `HEURISTIC` mode.
+
 ## v2.8.0 - 2026-05-31
 
 Package Data & Distribution Hardening. Bundles demo fixtures as package data so

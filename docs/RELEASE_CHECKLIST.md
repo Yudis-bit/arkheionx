@@ -12,6 +12,18 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v2.9.0 Multi-Fixture Demo Expansion & Public Workflow Hardening Checks
+
+- [ ] `arkheionx demo --list` lists `oracle-staking`, `amm-swap`, `lending-vault` with categories.
+- [ ] `arkheionx demo --show <id>` prints category, risk theme, target, and safety notice.
+- [ ] `arkheionx demo --commands <id>` uses the correct per-demo target.
+- [ ] `arkheionx demo --copy <id> DEST` works (from a non-repo cwd) for every demo; source-only.
+- [ ] Package resources exist for every demo (README, foundry.toml, src/*.sol, test/*.sol).
+- [ ] No fixture bundles `out/`/`cache/`/`.arkheionx/`, RPC URLs, private keys, or live addresses.
+- [ ] `docs/DEMO_WORKFLOW.md` selection table + `docs/PACKAGE_DATA.md` list all demos.
+- [ ] `release-notes/v2.9.0.md` and `## v2.9.0` changelog section present.
+- [ ] `tests/test_demo_workflow.py` + `tests/test_package_data.py` cover all demos.
+
 ## v2.8.0 Package Data & Distribution Hardening Checks
 
 - [ ] Demo fixture bundled under `arkheionx/demo/fixtures/oracle-staking/`.

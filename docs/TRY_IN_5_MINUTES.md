@@ -20,6 +20,9 @@ arkheionx open ./arkheionx-demo
 arkheionx hunt ./arkheionx-demo --top 5
 ```
 
+Other bundled demos: `amm-swap` (swap/reserves) and `lending-vault`
+(collateral/debt). Swap the id in `demo --copy` to try a different surface.
+
 You can also run directly against the in-repo fixture:
 
 ```sh

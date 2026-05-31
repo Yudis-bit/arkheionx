@@ -51,6 +51,9 @@ arkheionx open ./arkheionx-demo
 arkheionx hunt ./arkheionx-demo --top 5
 ```
 
+Choose a surface: `oracle-staking` (staking), `amm-swap` (swap/reserves), or
+`lending-vault` (collateral/debt) — swap the id in `demo --copy`.
+
 Or run directly against the in-repo fixture (no Foundry required):
 
 ```sh

@@ -34,6 +34,14 @@ Guided, local-only demo workflows (no RPC, no secrets, no mainnet):
 - `arkheionx demo --commands <id>` — print the heuristic and Foundry-backed command sequences.
 - `arkheionx demo --copy <id> <dest>` — copy the fixture (source entries only) to `<dest>`; refuses a non-empty destination unless `--force`.
 
+Available demos: `oracle-staking` (staking), `amm-swap` (amm),
+`lending-vault` (lending). Example:
+
+```sh
+arkheionx demo --copy amm-swap ./demo-amm
+arkheionx hunt ./demo-amm --top 5
+```
+
 Demo fixtures are bundled as package data and work from an installed package
 (see [`PACKAGE_DATA.md`](PACKAGE_DATA.md)).
 

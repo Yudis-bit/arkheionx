@@ -17,5 +17,8 @@ class Demo:
     expected_mode: str
     docs: str
     notes: str
+    category: str
+    risk_theme: str
+    safety_label: str = "local-only toy demo"
     safe: bool = True
     local_only: bool = True

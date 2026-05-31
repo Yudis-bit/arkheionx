@@ -14,7 +14,7 @@ def render_list(demos: list[Demo]) -> str:
     lines = ["ARKHEIONX DEMOS", "Available demos", ""]
     for demo in demos:
         foundry = "recommended" if not demo.requires_foundry else "required"
-        lines.append(f"  {demo.id}")
+        lines.append(f"  {demo.id}  [{demo.category}]")
         lines.append(f"    {demo.description}")
         lines.append(f"    Foundry: optional but {foundry}")
         lines.append(f"    Target: {demo.recommended_target}")
@@ -30,6 +30,8 @@ def render_show(demo: Demo) -> str:
         f"ARKHEIONX DEMO: {demo.id}",
         f"Name: {demo.name}",
         f"Purpose: {demo.description}",
+        f"Category: {demo.category}",
+        f"Risk theme: {demo.risk_theme}",
         f"Source: {resolve_source_kind(demo)}",
         f"Recommended target: {demo.recommended_target}",
         f"Expected mode: {demo.expected_mode}",

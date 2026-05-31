@@ -10,6 +10,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = REPO_ROOT / "examples" / "oracle-staking-fixture"
 
+# demo id -> (recommended target, category)
+DEMOS = {
+    "oracle-staking": ("OracleRewardFixture.stake", "staking"),
+    "amm-swap": ("AMMSwapFixture.swapAForB", "amm"),
+    "lending-vault": ("LendingVaultFixture.borrow", "lending"),
+}
+
 
 def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
@@ -26,8 +33,10 @@ class DemoCommandTests(unittest.TestCase):
     def test_list(self) -> None:
         result = run_cli("demo", "--list")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("oracle-staking", result.stdout)
         self.assertIn("ARKHEIONX DEMOS", result.stdout)
+        for demo_id, (_target, category) in DEMOS.items():
+            self.assertIn(demo_id, result.stdout)
+            self.assertIn(f"[{category}]", result.stdout)
 
     def test_list_json(self) -> None:
         import json
@@ -35,22 +44,31 @@ class DemoCommandTests(unittest.TestCase):
         result = run_cli("demo", "--list", "--json")
         self.assertEqual(result.returncode, 0, result.stderr)
         payload = json.loads(result.stdout)
-        self.assertTrue(any(d["id"] == "oracle-staking" for d in payload))
+        ids = {d["id"] for d in payload}
+        for demo_id in DEMOS:
+            self.assertIn(demo_id, ids)
+        # metadata present
+        for d in payload:
+            self.assertIn("category", d)
+            self.assertIn("risk_theme", d)
 
     def test_show(self) -> None:
-        result = run_cli("demo", "--show", "oracle-staking")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("OracleRewardFixture.stake", result.stdout)
-        self.assertIn("Safety:", result.stdout)
-        self.assertIn("no RPC", result.stdout)
+        for demo_id, (target, category) in DEMOS.items():
+            result = run_cli("demo", "--show", demo_id)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn(target, result.stdout)
+            self.assertIn(f"Category: {category}", result.stdout)
+            self.assertIn("Risk theme:", result.stdout)
+            self.assertIn("Safety:", result.stdout)
+            self.assertIn("no RPC", result.stdout)
 
     def test_commands(self) -> None:
-        result = run_cli("demo", "--commands", "oracle-staking")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("arkheionx hunt", result.stdout)
-        self.assertIn("Heuristic workflow", result.stdout)
-        self.assertIn("Foundry-backed workflow", result.stdout)
-        self.assertIn("--target OracleRewardFixture.stake --run", result.stdout)
+        for demo_id, (target, _category) in DEMOS.items():
+            result = run_cli("demo", "--commands", demo_id)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Heuristic workflow", result.stdout)
+            self.assertIn("Foundry-backed workflow", result.stdout)
+            self.assertIn(f"--target {target} --run", result.stdout)
 
     def test_unknown_id_fails_with_options(self) -> None:
         result = run_cli("demo", "--show", "does-not-exist")
@@ -59,17 +77,18 @@ class DemoCommandTests(unittest.TestCase):
         self.assertIn("oracle-staking", result.stderr)
 
     def test_copy_copies_source_only(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            dest = Path(tmp) / "arkheionx-demo"
-            result = run_cli("demo", "--copy", "oracle-staking", str(dest))
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertTrue((dest / "README.md").exists())
-            self.assertTrue((dest / "foundry.toml").exists())
-            self.assertTrue((dest / "src" / "OracleRewardFixture.sol").exists())
-            self.assertTrue((dest / "test" / "OracleRewardFixture.t.sol").exists())
-            # Generated build artifacts must NOT be copied.
-            self.assertFalse((dest / "out").exists())
-            self.assertFalse((dest / "cache").exists())
+        for demo_id in DEMOS:
+            with tempfile.TemporaryDirectory() as tmp:
+                dest = Path(tmp) / "arkheionx-demo"
+                result = run_cli("demo", "--copy", demo_id, str(dest))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertTrue((dest / "README.md").exists(), demo_id)
+                self.assertTrue((dest / "foundry.toml").exists(), demo_id)
+                self.assertTrue(list((dest / "src").glob("*.sol")), demo_id)
+                self.assertTrue(list((dest / "test").glob("*.sol")), demo_id)
+                # Generated build artifacts must NOT be copied.
+                self.assertFalse((dest / "out").exists(), demo_id)
+                self.assertFalse((dest / "cache").exists(), demo_id)
 
     def test_copy_refuses_non_empty_without_force(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -142,7 +161,11 @@ class DemoFixtureSafetyTests(unittest.TestCase):
 
 class DemoDocsAndMetadataTests(unittest.TestCase):
     def test_demo_workflow_doc_exists(self) -> None:
-        self.assertTrue((REPO_ROOT / "docs" / "DEMO_WORKFLOW.md").exists())
+        doc = (REPO_ROOT / "docs" / "DEMO_WORKFLOW.md")
+        self.assertTrue(doc.exists())
+        text = doc.read_text(encoding="utf-8")
+        for demo_id in DEMOS:
+            self.assertIn(demo_id, text)
 
     def test_readme_concise_and_mentions_demo(self) -> None:
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
@@ -159,10 +182,10 @@ class DemoDocsAndMetadataTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "2.8.0")
+        self.assertEqual(__version__, "2.9.0-dev")
         self.assertEqual(STABLE_RELEASE, "v2.8.0")
-        self.assertEqual(CURRENT_MILESTONE, "v2.8.0")
-        self.assertEqual(NEXT_MILESTONE, "v2.9.0")
+        self.assertEqual(CURRENT_MILESTONE, "v2.9.0")
+        self.assertEqual(NEXT_MILESTONE, "v2.10.0")
 
 
 if __name__ == "__main__":

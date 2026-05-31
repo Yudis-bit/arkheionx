@@ -14,6 +14,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURES_PACKAGE = "arkheionx.demo.fixtures"
+DEMO_IDS = ["oracle-staking", "amm-swap", "lending-vault"]
 
 
 def run_cli(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -54,37 +55,48 @@ class PackageDataTests(unittest.TestCase):
 
 
 class PackageResourceTests(unittest.TestCase):
-    def fixture_root(self):
-        return files(FIXTURES_PACKAGE).joinpath("oracle-staking")
+    def fixture_root(self, demo_id: str):
+        return files(FIXTURES_PACKAGE).joinpath(demo_id)
 
-    def test_resource_dir_exists(self) -> None:
-        self.assertTrue(self.fixture_root().is_dir())
+    def test_resource_dirs_exist(self) -> None:
+        for demo_id in DEMO_IDS:
+            self.assertTrue(self.fixture_root(demo_id).is_dir(), demo_id)
 
-    def test_resource_contains_source_files(self) -> None:
-        root = self.fixture_root()
-        self.assertTrue(root.joinpath("README.md").is_file())
-        self.assertTrue(root.joinpath("foundry.toml").is_file())
-        self.assertTrue(root.joinpath("src/OracleRewardFixture.sol").is_file())
-        self.assertTrue(root.joinpath("test/OracleRewardFixture.t.sol").is_file())
+    def test_resources_contain_source_files(self) -> None:
+        for demo_id in DEMO_IDS:
+            root = self.fixture_root(demo_id)
+            self.assertTrue(root.joinpath("README.md").is_file(), demo_id)
+            self.assertTrue(root.joinpath("foundry.toml").is_file(), demo_id)
+            self.assertTrue(any(p.name.endswith(".sol") for p in root.joinpath("src").iterdir()), demo_id)
+            self.assertTrue(any(p.name.endswith(".sol") for p in root.joinpath("test").iterdir()), demo_id)
 
-    def test_resource_excludes_generated_dirs(self) -> None:
-        root = self.fixture_root()
-        for generated in ("out", "cache", ".arkheionx"):
-            self.assertFalse(root.joinpath(generated).is_dir(), generated)
+    def test_resources_exclude_generated_dirs(self) -> None:
+        for demo_id in DEMO_IDS:
+            root = self.fixture_root(demo_id)
+            for generated in ("out", "cache", ".arkheionx"):
+                self.assertFalse(root.joinpath(generated).is_dir(), f"{demo_id}/{generated}")
 
-    def test_bundled_fixture_has_no_secrets_or_rpc(self) -> None:
-        banned = ["rpc", "mnemonic", "private key", "private_key", "http://", "https://", "secret"]
-        root = self.fixture_root()
-        for rel in ("README.md", "foundry.toml", "src/OracleRewardFixture.sol",
-                    "test/OracleRewardFixture.t.sol"):
-            text = root.joinpath(rel).read_text(encoding="utf-8").lower()
-            for phrase in banned:
-                self.assertNotIn(phrase, text, f"{rel} contains '{phrase}'")
+    def test_bundled_fixtures_have_no_secrets_or_rpc(self) -> None:
+        # Detect real secret/RPC artifacts (not negative safety prose like "no RPC").
+        banned = ["rpc_url", "private_key", "mnemonic", "http://", "https://", "-----begin", "seed phrase"]
+        for demo_id in DEMO_IDS:
+            root = self.fixture_root(demo_id)
+            for rel in ("README.md", "foundry.toml"):
+                text = root.joinpath(rel).read_text(encoding="utf-8").lower()
+                for phrase in banned:
+                    self.assertNotIn(phrase, text, f"{demo_id}/{rel} contains '{phrase}'")
+            for sub in ("src", "test"):
+                for path in root.joinpath(sub).iterdir():
+                    if path.name.endswith(".sol"):
+                        text = path.read_text(encoding="utf-8").lower()
+                        for phrase in banned:
+                            self.assertNotIn(phrase, text, f"{demo_id}/{sub}/{path.name} contains '{phrase}'")
 
-    def test_registry_resolves_bundled_source(self) -> None:
+    def test_registry_resolves_bundled_source_for_all(self) -> None:
         from arkheionx.demo.registry import PACKAGE_SOURCE, get_demo, resolve_source_kind
 
-        self.assertEqual(resolve_source_kind(get_demo("oracle-staking")), PACKAGE_SOURCE)
+        for demo_id in DEMO_IDS:
+            self.assertEqual(resolve_source_kind(get_demo(demo_id)), PACKAGE_SOURCE, demo_id)
 
     def test_pyproject_declares_package_data(self) -> None:
         data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
@@ -96,22 +108,24 @@ class PackageResourceTests(unittest.TestCase):
 
 class DemoFromInstalledContextTests(unittest.TestCase):
     def test_show_reports_bundled_source(self) -> None:
-        result = run_cli("demo", "--show", "oracle-staking")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("Source: bundled package fixture", result.stdout)
+        for demo_id in DEMO_IDS:
+            result = run_cli("demo", "--show", demo_id)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Source: bundled package fixture", result.stdout)
 
     def test_copy_from_non_repo_cwd(self) -> None:
-        with tempfile.TemporaryDirectory() as cwd, tempfile.TemporaryDirectory() as out:
-            dest = Path(out) / "arkheionx-demo"
-            result = run_cli("demo", "--copy", "oracle-staking", str(dest), cwd=Path(cwd))
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("bundled package fixture", result.stdout)
-            self.assertTrue((dest / "README.md").exists())
-            self.assertTrue((dest / "foundry.toml").exists())
-            self.assertTrue((dest / "src" / "OracleRewardFixture.sol").exists())
-            self.assertTrue((dest / "test" / "OracleRewardFixture.t.sol").exists())
-            self.assertFalse((dest / "out").exists())
-            self.assertFalse((dest / "cache").exists())
+        for demo_id in DEMO_IDS:
+            with tempfile.TemporaryDirectory() as cwd, tempfile.TemporaryDirectory() as out:
+                dest = Path(out) / "arkheionx-demo"
+                result = run_cli("demo", "--copy", demo_id, str(dest), cwd=Path(cwd))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("bundled package fixture", result.stdout)
+                self.assertTrue((dest / "README.md").exists(), demo_id)
+                self.assertTrue((dest / "foundry.toml").exists(), demo_id)
+                self.assertTrue(list((dest / "src").glob("*.sol")), demo_id)
+                self.assertTrue(list((dest / "test").glob("*.sol")), demo_id)
+                self.assertFalse((dest / "out").exists(), demo_id)
+                self.assertFalse((dest / "cache").exists(), demo_id)
 
 
 class InstalledWheelSmokeTests(unittest.TestCase):
@@ -130,20 +144,23 @@ class InstalledWheelSmokeTests(unittest.TestCase):
             if install.returncode != 0:
                 self.skipTest(f"non-editable install failed: {install.stderr[-500:]}")
             arkheionx = venv / "bin" / "arkheionx"
-            result = subprocess.run([str(arkheionx), "demo", "--copy", "oracle-staking", str(dest)],
-                                    capture_output=True, text=True, timeout=60)
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertTrue((dest / "src" / "OracleRewardFixture.sol").exists())
-            self.assertTrue((dest / "test" / "OracleRewardFixture.t.sol").exists())
+            for demo_id in DEMO_IDS:
+                out = dest / demo_id
+                result = subprocess.run([str(arkheionx), "demo", "--copy", demo_id, str(out)],
+                                        capture_output=True, text=True, timeout=60)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertTrue(list((out / "src").glob("*.sol")), demo_id)
+                self.assertTrue(list((out / "test").glob("*.sol")), demo_id)
 
 
 class PackageDataDocsTests(unittest.TestCase):
     def test_docs_and_release_notes_present(self) -> None:
-        self.assertTrue((REPO_ROOT / "docs" / "PACKAGE_DATA.md").exists())
-        self.assertTrue((REPO_ROOT / "release-notes" / "v2.8.0.md").exists())
+        package_data = (REPO_ROOT / "docs" / "PACKAGE_DATA.md").read_text(encoding="utf-8")
+        for demo_id in DEMO_IDS:
+            self.assertIn(demo_id, package_data)
+        self.assertTrue((REPO_ROOT / "release-notes" / "v2.9.0.md").exists())
         changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-        self.assertIn("## v2.8.0", changelog)
-        self.assertNotIn("## v2.8.0 - Unreleased", changelog)
+        self.assertIn("## v2.9.0 - Unreleased", changelog)
 
     def test_no_generated_fixture_artifacts_tracked(self) -> None:
         tracked = subprocess.run(

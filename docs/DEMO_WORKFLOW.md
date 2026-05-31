@@ -25,10 +25,21 @@ arkheionx demo --list
 arkheionx demo --show oracle-staking
 ```
 
+Pick a demo by the protocol surface you want to explore:
+
+| Demo | Category | Surface | Recommended target |
+| --- | --- | --- | --- |
+| `oracle-staking` | staking | staking / reward / oracle | `OracleRewardFixture.stake` |
+| `amm-swap` | amm | swap / reserves / liquidity | `AMMSwapFixture.swapAForB` |
+| `lending-vault` | lending | collateral / debt / liquidation | `LendingVaultFixture.borrow` |
+
+All demos are local-only toy fixtures (no RPC, no secrets, no mainnet) and are
+bundled as package data (see [`PACKAGE_DATA.md`](PACKAGE_DATA.md)).
+
 ## 4. Copy the demo fixture
 
 ```sh
-arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx demo --copy oracle-staking ./arkheionx-demo   # or amm-swap / lending-vault
 ```
 
 The copy includes only source entries (`README.md`, `foundry.toml`, `src/`,
