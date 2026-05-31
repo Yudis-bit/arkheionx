@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.9.0 - Unreleased
+## v2.9.0 - 2026-05-31
 
 Multi-Fixture Demo Expansion & Public Workflow Hardening. Broadens the bundled
 demo set beyond a single fixture so Arkheionx demonstrates multiple DeFi
@@ -20,7 +20,7 @@ surfaces, while staying local-only and safe.
 
 - `arkheionx demo --list` shows each demo's category; `demo --show` reports
   category and risk theme. `demo --commands`/`--copy` work for every demo.
-- Version metadata moved to `2.9.0-dev` (`PACKAGE_VERSION = 2.9.0.dev0`);
+- Version metadata finalized to `2.9.0` (`PACKAGE_VERSION = 2.9.0`);
   stable remains `v2.8.0`; next milestone `v2.10.0`.
 - Removed the unused dummy `ark-shot.sh`.
 
