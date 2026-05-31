@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <code>Stable: v2.5.0</code> ·
+  <code>Stable: v2.6.0</code> ·
   <code>Python 3.11+</code> ·
   <code>Local-first</code> ·
   <code>No RPC by default</code> ·
@@ -173,7 +173,7 @@ Advanced:
 
 ## Current Release
 
-Latest stable release: **v2.5.0 — Installer & Onboarding**.
+Latest stable release: **v2.6.0 — arkup & Version-Manager MVP**.
 
 Current stable workflow:
 
@@ -181,7 +181,7 @@ Current stable workflow:
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Next milestone: **v2.6.0 — arkup & Version-Manager MVP** (in development).
+Next milestone: **v2.7.0**.
 
 ## GitHub Action
 
@@ -189,7 +189,7 @@ Minimal static pre-audit workflow:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.5.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.6.0
   with:
     protocol-type: "auto"
 ```

@@ -91,7 +91,7 @@ permissions:
 
 steps:
   - uses: actions/checkout@v4
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.5.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.6.0
     with:
       protocol-type: auto
       issue-plan-output: ARKHEIONX_ISSUE_PLAN.json

@@ -24,7 +24,7 @@ class CliCommandTests(unittest.TestCase):
         version = self.run_cli("version")
         self.assertIn("package version: 2.6.0", version.stdout)
         self.assertNotIn("2.6.0-dev", version.stdout)
-        self.assertIn("Latest stable release: v2.5.0", version.stdout)
+        self.assertIn("Latest stable release: v2.6.0", version.stdout)
         self.assertIn("Current milestone: v2.6.0", version.stdout)
         self.assertIn("Next milestone: v2.7.0", version.stdout)
         doctor = self.run_cli("doctor")

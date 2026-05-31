@@ -6,7 +6,7 @@ lifecycle: **install → check → update → inspect → uninstall**.
 
 ## What arkup is
 
-- An MVP convenience layer over the v2.5.0 installer scripts.
+- An MVP convenience layer over the `install.sh` / `uninstall.sh` scripts.
 - A reader of the local install receipt (`~/.arkheionx/install.json`).
 - A way to update while keeping your recorded source kind.
 
@@ -83,7 +83,7 @@ sh arkup --update --yes
 sh arkup --install --local "$PWD" --yes
 
 # Pin a specific tag
-sh arkup --install --ref v2.5.0 --yes
+sh arkup --install --ref v2.6.0 --yes
 ```
 
 ## Safety

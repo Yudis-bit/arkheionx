@@ -36,7 +36,7 @@ sh install.sh --local "$PWD"
 Pin an explicit ref, or use development `main`:
 
 ```sh
-sh install.sh --ref v2.5.0
+sh install.sh --ref v2.6.0
 sh install.sh --channel main
 ```
 
@@ -80,7 +80,7 @@ Precedence: **local > ref > channel**.
 
 | Kind | How | Notes |
 | --- | --- | --- |
-| `stable` | default | Documented stable tag (`ARKHEIONX_STABLE_TAG`, currently `v2.5.0`). |
+| `stable` | default | Documented stable tag (`ARKHEIONX_STABLE_TAG`, currently `v2.6.0`). |
 | `main` | `--channel main` | Development `main`; opt-in. |
 | `ref` | `--ref vX.Y.Z` | Pinned explicit ref. |
 | `local` | `--local PATH` | Local checkout. |
@@ -93,7 +93,7 @@ update predictably. See [`UPDATE_FLOW.md`](UPDATE_FLOW.md).
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `ARKHEIONX_REPO_URL` | `https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git` | Git URL to install from. |
-| `ARKHEIONX_STABLE_TAG` | `v2.5.0` | Tag used by the stable channel. |
+| `ARKHEIONX_STABLE_TAG` | `v2.6.0` | Tag used by the stable channel. |
 | `ARKHEIONX_CHANNEL` | `stable` | `stable` or `main`. |
 | `ARKHEIONX_REF` | (unset) | Explicit git ref (sets source kind `ref`). |
 | `ARKHEIONX_LOCAL_PATH` | (unset) | Local checkout (sets source kind `local`). |

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Arkheionx uninstaller (v2.5.0 — Installer & Onboarding).
+# Arkheionx uninstaller (v2.6.0 — arkup & install lifecycle).
 #
 # Removes only Arkheionx-managed paths created by install.sh. It never uses
 # root, never edits your shell profile, never deletes a repository checkout,

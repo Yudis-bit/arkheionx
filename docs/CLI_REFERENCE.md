@@ -46,7 +46,7 @@ Shared flags: `--full`, `--show-all`, `--json`, `--build`, `--no-artifacts`,
 [`TRACE_ENGINE.md`](TRACE_ENGINE.md), [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md),
 and [`REPORT_DRAFTS.md`](REPORT_DRAFTS.md).
 
-## Install & Onboarding (v2.5.0)
+## Install & Onboarding
 
 - `arkheionx doctor` — install, Foundry, and project-layout diagnosis.
 - `arkheionx doctor --install` — focused install-health view: resolved command
