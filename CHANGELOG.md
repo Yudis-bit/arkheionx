@@ -3,7 +3,113 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.0.0 - Unreleased
+## v2.2.0 - Unreleased
+
+Execution Proof & Trace Workbench. Builds on the v2.1.0 Foundry-style workbench
+CLI foundation.
+
+### Added
+
+- `arkheionx trace <repo> --target <target>`: summarize the latest Foundry
+  proof/trace into a compact terminal view plus `trace.txt`/`trace.json`.
+- Execution proof layer for `arkheionx prove --run`: targeted `forge test`,
+  conservative output parsing, and structured `proof.json`.
+- Proof statuses: scaffolded, build_failed, no_foundry, no_tests_matched,
+  skipped_not_proof, tested_passed, tested_failed, tested_mixed.
+
+### Changed
+
+- `prove --run` now runs targeted Foundry tests (never broad) and only reaches
+  EXECUTION_CONFIRMED when a relevant test actually executed.
+
+### Safety
+
+- Local only: no broadcast, no `cast send`, no RPC by default, no private keys.
+- `forge test` runs require a `--match-test`/`--match-contract` filter.
+- Raw Foundry output is written to artifacts, not dumped to the terminal.
+
+### Evidence model
+
+- HEURISTIC: static scan only.
+- COMPILER_CONFIRMED: `forge build` passed.
+- EXECUTION_CONFIRMED: a relevant Foundry test actually executed (passed or
+  failed). Skipped/TODO/no-match never counts as proof.
+
+### CLI
+
+- Commands: doctor, open, map, flow, hunt, prove, trace.
+
+### Docs
+
+- New `docs/EXECUTION_PROOF.md`, `docs/TRACE_ENGINE.md`, and
+  `release-notes/v2.2.0.md`; updated README, OUTPUT_STANDARD, FOUNDRY_INTEGRATION,
+  SOLO_RESEARCH_WORKFLOW, PROTOCOL_MAP, CLI_REFERENCE.
+
+### Tests
+
+- Trace parser, proof/trace payloads, execution runner (mocked forge), and
+  trace CLI fallback tests.
+
+### Known limitations
+
+- Static classification stays heuristic when Foundry is missing.
+- Trace parsing is conservative; balance/state deltas are not inferred.
+- EXECUTION_CONFIRMED requires an actual local Foundry test execution.
+- Not published to PyPI. Not a formal audit; no severity guarantee.
+
+## v2.0.1 — Packaging + Product Repositioning Hotfix
+
+### Changed
+
+- Repositioned Arkheionx from a pre-audit-first tool to a local-first DeFi
+  value-flow workbench.
+- Reframed audit-prep outputs as advanced workflows rather than the main entry
+  point.
+- Updated public messaging around builders, researchers, value flows, and
+  missing tests.
+
+### Added
+
+- Foundry-powered solo security testing workbench (preview): `arkheionx open`,
+  `arkheionx map`, `arkheionx flow`, `arkheionx hunt`, and `arkheionx prove`.
+- Additive engine packages: `arkheionx/protocol`, `arkheionx/flow`,
+  `arkheionx/hunt`, `arkheionx/proof`, and `arkheionx/artifacts`.
+- Explicit evidence levels on every major result: `HEURISTIC`,
+  `COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`, `REPORT_READY`.
+- Foundry-style compact terminal output (the product surface), with `--full`,
+  `--show-all`, `--json`, `--mermaid`, and `--no-artifacts`.
+- Source-kind classifier that hides interfaces, libraries, tests, invariants,
+  mocks, fixtures, archives, generated, and scripts by default.
+- Fully-qualified target identities (display/qualified/stable) and ambiguous
+  `--target` rejection with suggestions.
+- `arkheionx doctor` project + Foundry diagnostics.
+- Exit codes: 0 ok, 1 heuristic-only warning, 2 failure (doctor stays 0 when usable).
+- Deterministic JSON + Mermaid artifacts written under `.arkheionx/out/`.
+- Optional Foundry precision backend with graceful heuristic fallback.
+- Schemas: `protocol-map`, `value-flow`, `hunt-report`, `proof-artifact`.
+- Docs: `PROTOCOL_MAP.md`, `SOLO_RESEARCH_WORKFLOW.md`, `OUTPUT_STANDARD.md`,
+  `FOUNDRY_INTEGRATION.md`.
+- Value Flow Workbench documentation.
+- Value Flow Roadmap documentation.
+- Developer and researcher workflow documentation.
+- GitHub About recommendation for the new positioning.
+
+### Safety
+
+- No RPC/live-chain behavior added.
+- No exploit automation added.
+- No package publishing added.
+- Existing script, module CLI, and console CLI entrypoints remain supported.
+
+### Known Limitations
+
+- The workbench commands are a preview; classification is heuristic by default.
+- Advanced flow sub-modes (`flow --test-gaps`, `flow explain`,
+  `flow test-template`, `flow review-map`, `flow verify`) are not implemented yet.
+- `prove` generates Foundry proof scaffolds; it does not auto-prove bugs.
+- Existing scan/report workflows remain fully supported.
+
+## v2.0.0
 
 ### Added
 

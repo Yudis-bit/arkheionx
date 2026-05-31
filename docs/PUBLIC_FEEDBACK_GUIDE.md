@@ -1,8 +1,9 @@
 # Public Feedback Guide
 
-Arkheionx is a GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
+Arkheionx is a local-first DeFi value-flow workbench with security memory,
+reports, test-plan generation, and advanced pre-audit readiness workflows.
 
-Short version: not an audit. A way to prepare for one.
+Short version: Map the money flow. Find the missing tests.
 
 This guide is for people trying Arkheionx from GitHub, LinkedIn, Discord, audit
 or contest communities, or open-source security circles.

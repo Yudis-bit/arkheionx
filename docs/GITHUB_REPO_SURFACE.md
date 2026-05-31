@@ -4,19 +4,20 @@ This page keeps Arkheionx's public GitHub About panel aligned with the current
 project identity.
 
 Arkheionx started as an independent DeFi exploit PoC archive and now includes a
-GitHub-native pre-audit readiness workflow, security memory graph, reports,
-issue plans, and feedback calibration. The repository surface should reflect
-that full scope without claiming audits, customers, adoption, or guarantees.
+local-first DeFi value-flow workbench, security memory graph, reports, issue
+plans, test plans, and advanced pre-audit readiness workflows. The repository
+surface should reflect that full scope without claiming audits, customers,
+adoption, or guarantees.
 
 ## Recommended GitHub About
 
 Use this as the repository description:
 
-> GitHub-native DeFi pre-audit readiness and security memory OS for finding readiness gaps before audits, contests, and bug bounty launches.
+> Local-first DeFi value-flow workbench for mapping how assets move through protocols and finding missing security tests.
 
 Alternative shorter version:
 
-> DeFi pre-audit readiness, SARIF reports, issue plans, and security memory for authorized smart contract repos.
+> Map DeFi value flows and missing security tests from your local repo.
 
 ## Recommended Topics
 
@@ -24,23 +25,17 @@ Recommended final topic set:
 
 - `arkheionx`
 - `defi-security`
-- `web3-security`
 - `smart-contract-security`
-- `solidity`
 - `foundry`
-- `forge`
-- `github-actions`
-- `sarif`
-- `pre-audit`
+- `solidity`
+- `value-flow`
+- `security-testing`
 - `audit-readiness`
+- `test-coverage`
 - `security-research`
-- `root-cause-analysis`
-- `exploit-patterns`
-- `security-memory`
-- `rule-calibration`
-- `smart-contract-auditing`
-- `open-source-security`
-- `ethereum`
+- `web3-security`
+- `local-first`
+- `sarif`
 
 The old archive terms `ethereum-archival` and `exploit-poc` can be
 de-emphasized in the About topics. The archive identity remains documented in
@@ -67,28 +62,22 @@ update repository metadata. They require authenticated `gh` CLI access.
 
 ```sh
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs \
-  --description "GitHub-native DeFi pre-audit readiness and security memory OS for finding readiness gaps before audits, contests, and bug bounty launches." \
+  --description "Local-first DeFi value-flow workbench for mapping how assets move through protocols and finding missing security tests." \
   --homepage "https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
 
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic arkheionx
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic defi-security
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic web3-security
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic smart-contract-security
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic solidity
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic foundry
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic forge
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic github-actions
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic sarif
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic pre-audit
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic solidity
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic value-flow
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic security-testing
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic audit-readiness
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic test-coverage
 gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic security-research
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic root-cause-analysis
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic exploit-patterns
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic security-memory
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic rule-calibration
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic smart-contract-auditing
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic open-source-security
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic ethereum
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic web3-security
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic local-first
+gh repo edit Yudis-bit/DeFi-Exploit-PoCs --add-topic sarif
 ```
 
 `gh repo edit --help` confirms support for `--description`, `--homepage`, and
@@ -115,6 +104,7 @@ Do not add About text or topics that imply:
 - customers, adoption, auditor trust, or partnerships without committed public
   evidence.
 
-Use wording around pre-audit readiness, local/static analysis, authorized
-repositories, security memory, evidence-backed findings, and defensive security
-research.
+Use wording around local-first value-flow review, local/static analysis,
+authorized repositories, security memory, evidence-backed findings, missing
+tests, and defensive security research. Pre-audit readiness should be framed
+as an advanced workflow, not the only public entry point.

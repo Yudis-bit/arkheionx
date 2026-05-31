@@ -1,12 +1,14 @@
 # Arkheionx Pre-Audit Readiness OS
 
-Arkheionx Readiness is the GitHub-native layer that turns the historical
-exploit memory archive into practical preparation for indie DeFi builders.
+Arkheionx Readiness is now documented as an advanced workflow within the
+local-first DeFi value-flow workbench direction. It turns local/static
+value-flow signals and historical exploit memory into practical preparation
+for DeFi builders and researchers.
 
-It is built for teams that are not ready to spend serious money on a formal
-audit yet, but still need to know whether their repository has obvious audit
-blockers: missing invariants, untested accounting assumptions, weak docs,
-unclear privileged roles, and historical exploit-pattern similarity.
+It is useful when a repository needs review artifacts before developer review,
+AI-agent work, CI hardening, contests, bounty review, or formal audit prep.
+It helps identify missing invariants, untested accounting assumptions, weak
+docs, unclear privileged roles, and historical exploit-pattern similarity.
 
 ## What It Is
 
@@ -53,12 +55,12 @@ does not claim real-world validation.
 
 Core message:
 
-> Find exploit-pattern risks, missing invariants, and audit blockers before
-> paying for a formal smart contract audit.
+> Map the money flow. Find the missing tests.
 
 Short message:
 
-> Not an audit. A way to prepare for one.
+> Foundry tells you if your tests pass. Arkheionx shows where value moves -
+> and what you forgot to test.
 
 ## GitHub-Only Flow
 

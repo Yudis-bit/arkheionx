@@ -5,6 +5,20 @@ committed artifacts support it.
 
 ## Product Roadmap
 
+Arkheionx is now oriented around a local-first DeFi value-flow workbench:
+map how value moves, find missing tests, and support builders and researchers
+with evidence-backed local/static review artifacts.
+
+Existing audit-prep, SARIF, CI, issue-plan, report, search, and test-plan
+outputs remain supported as advanced workflows. Future work prioritizes
+value-flow mapping, missing tests, developer workflow, and researcher review
+maps.
+
+Current milestone: v2.2.0 — Execution Proof & Trace Workbench.
+Next milestone: v2.3.0 — Evidence & Report Package.
+Foundation shipped: v2.1.0 — Value Flow Map MVP (Foundry-style workbench CLI).
+v3.0.0 target: DeFi Value Flow Workbench.
+
 - [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
       JSON report, mini-vault fixture, safe invariant skeleton generator.
 - [x] **v0.2.0: Vault rule pack shipped.** ERC4626 and vault-accounting
@@ -83,13 +97,39 @@ committed artifacts support it.
 - [x] **v1.9.0: Pre-v2 CLI Candidate released.**
       Prepare the installable CLI surface while preserving stable scripts,
       schemas, GitHub Action usage, and local/static safety boundaries.
-- [ ] **v2.0.0: Installable Arkheionx CLI / Package current milestone.**
-      Package distribution only after schemas, docs, and GitHub-native flows
-      remain stable.
-- [ ] **v2.0.1: Packaging/Release Hotfix next milestone.**
-      Follow-up patch target for packaging metadata or release hygiene issues.
-- [ ] **v2.1.0: CLI Command Polish.**
-      Refine installed command UX after the first local package milestone.
+- [x] **v2.0.0: Installable Arkheionx CLI / Package released.**
+      Local editable installation, `arkheionx` console entrypoint, module CLI,
+      old script compatibility, and packaging hygiene.
+- [x] **v2.0.1: Packaging + Product Repositioning Hotfix shipped.**
+      Reframed Arkheionx as a local-first DeFi value-flow workbench while
+      preserving existing CLI, report, SARIF, issue-plan, test-plan, and CI
+      workflows.
+- [x] **v2.1.0: Value Flow Map MVP shipped (Foundry-style workbench CLI).**
+      Local/static protocol map, money-flow graph, hunter ranking, source-kind
+      filtering, fully-qualified targets, and proof scaffolding.
+- [ ] **v2.2.0: Execution Proof & Trace Workbench current milestone.**
+      Targeted Foundry execution proof, structured proof artifacts, trace
+      summaries, and honest evidence levels.
+- [ ] **v2.3.0: Evidence & Report Package next milestone.**
+      Package execution-confirmed evidence into reviewer-ready report drafts.
+- [ ] **v2.4.0: Flow-Based Foundry Test Templates.**
+      Generate safe local starter templates from mapped flows.
+- [ ] **v2.5.0: Researcher Review Map.**
+      Prioritize high-signal review areas for security researchers and junior
+      reviewers.
+- [ ] **v2.6.0: Flow Verify / Before-After.**
+      Compare whether local changes address mapped flow assumptions and test
+      gaps.
+- [ ] **v2.7.0: Flow Baseline + Diff.**
+      Track mapped value-flow changes over time.
+- [ ] **v2.8.0: AI-Agent Fix Specs from Value Flows.**
+      Produce bounded, defensive implementation specs for authorized local
+      AI-agent work.
+- [ ] **v2.9.0: Pre-v3 Hardening.**
+      Stabilize docs, tests, CLI UX, and safety language before v3.
+- [ ] **v3.0.0: DeFi Value Flow Workbench target.**
+      Value-flow maps, missing tests, explain mode, Foundry templates,
+      researcher review maps, verify/before-after, and diff workflows.
 
 ## Archive Roadmap
 

@@ -1,6 +1,6 @@
 # Packaging
 
-Arkheionx v2.0.0 adds package metadata for local editable installation:
+Arkheionx v2.0.1 keeps package metadata for local editable installation:
 
 ```sh
 python3 -m pip install -e .
@@ -15,13 +15,19 @@ arkheionx = "arkheionx.cli.main:main"
 
 ## Scope
 
-v2.0.0 is a local package milestone. It does not publish to PyPI, upload
-artifacts, add publishing workflows, or require tokens.
+v2.0.1 is a packaging and product repositioning hotfix. It does not publish to
+PyPI, upload artifacts, add publishing workflows, or require tokens. The
+package surface remains the current foundation for local/static value-flow
+review through `scan`, `test-plan`, `search`, `validate-config`, `doctor`, and
+`version`.
 
 ## Versioning
 
-The CLI prints `2.0.0-dev` during release preparation. `pyproject.toml` uses
-the PEP 440 package metadata form `2.0.0.dev0`.
+The CLI prints `2.0.1-dev` during release preparation. `pyproject.toml` uses
+the PEP 440 package metadata form `2.0.1.dev0`.
+
+Planned future `arkheionx flow` commands are roadmap items and are not part of
+the v2.0.1 package surface.
 
 ## Build Artifacts
 
@@ -33,4 +39,3 @@ Generated packaging directories are ignored:
 - `.eggs/`
 
 Do not commit packaging artifacts from local editable installs.
-

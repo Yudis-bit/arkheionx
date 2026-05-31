@@ -1,17 +1,21 @@
 # Arkheionx
 
-GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
+A local-first DeFi value-flow workbench.
 
-**Not an audit. A way to prepare for one.**
+**Map the money flow. Find the missing tests.**
 
-Arkheionx helps DeFi builders and security reviewers surface readiness gaps
-before audits, contests, and bug bounty launches.
+Arkheionx helps DeFi builders and security researchers map how value moves
+through a protocol, identify critical assumptions, and find missing security
+tests.
 
-`Stable: v1.9.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
+Foundry tells you if your tests pass.
+Arkheionx shows where value moves - and what you forgot to test.
+
+`Stable: v2.0.0` | `Python: 3.x` | `Mode: local/static` | `No RPC required` | `Outputs: SARIF / JSON / Markdown`
 
 It combines:
 
-- local/static DeFi readiness scanning;
+- local/static DeFi value-flow review;
 - evidence-backed findings;
 - SARIF output;
 - GitHub issue plans;
@@ -21,9 +25,33 @@ It combines:
 - feedback and rule calibration workflows.
 
 Arkheionx started as an independent DeFi exploit PoC archive and now includes a
-pre-audit readiness workflow, security memory graph, reports, issue plans, and
-feedback calibration. Maintained by **Yudistira Putra**, creator of Arkheionx -
+local-first value-flow workbench, security memory graph, reports, issue plans,
+test-plan generation, and advanced pre-audit readiness workflows. Maintained by
+**Yudistira Putra**, creator of Arkheionx -
 `arkheionx` / [@Yudis-bit](https://github.com/Yudis-bit).
+
+## What Arkheionx Is For
+
+- Mapping DeFi value flows.
+- Finding missing value-flow tests.
+- Identifying high-signal review areas.
+- Generating reports, test plans, SARIF, issue plans, and review artifacts.
+- Preparing repos for developer review, AI-agent work, CI, audit-prep,
+  contests, or bounty review.
+
+## What Arkheionx Is Not
+
+- Not a formal audit.
+- Not a security guarantee.
+- Not exploit automation.
+- Not live-chain scanning.
+- Not a replacement for Foundry, auditors, or human review.
+
+## Advanced Workflow
+
+Arkheionx can also produce pre-audit readiness reports, SARIF, issue plans,
+test plans, and CI artifacts. Those outputs remain supported as advanced
+workflows built on the local value-flow direction.
 
 ## Start Here
 
@@ -32,6 +60,9 @@ feedback calibration. Maintained by **Yudistira Putra**, creator of Arkheionx -
 | Try it in 5 minutes | [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) |
 | Install locally | [`docs/INSTALLATION.md`](docs/INSTALLATION.md) |
 | Run the CLI | [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) |
+| Understand the value-flow workbench | [`docs/VALUE_FLOW_WORKBENCH.md`](docs/VALUE_FLOW_WORKBENCH.md) |
+| See the value-flow roadmap | [`docs/VALUE_FLOW_ROADMAP.md`](docs/VALUE_FLOW_ROADMAP.md) |
+| Developer and researcher workflow | [`docs/DEVELOPER_RESEARCHER_WORKFLOW.md`](docs/DEVELOPER_RESEARCHER_WORKFLOW.md) |
 | Use GitHub Action | [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) |
 | Understand outputs | [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md) |
 | Search security memory | [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md) |
@@ -82,12 +113,12 @@ local editable installs; this repository does not claim PyPI availability.
 
 | Output | Purpose |
 |---|---|
-| Pre-Audit Report | Technical readiness findings with evidence. |
-| JSON Report | Machine-readable readiness output. |
-| SARIF | GitHub Code Scanning-compatible readiness signals. |
-| Issue Plan | GitHub-native remediation tasks. |
+| Pre-Audit Report | Advanced technical readiness findings with evidence. |
+| JSON Report | Machine-readable scan and value-flow review output. |
+| SARIF | GitHub Code Scanning-compatible review signals. |
+| Issue Plan | GitHub-native remediation and missing-test tasks. |
 | Launch Report | Founder/client-facing readiness summary. |
-| Sprint Plan | Day-by-day remediation workflow. |
+| Sprint Plan | Day-by-day test and remediation workflow. |
 | Contest Readiness | Prep for authorized contest or review scope. |
 | Remediation Roadmap | Prioritized work plan. |
 | Security Memory Search | Finding-to-pattern knowledge lookup. |
@@ -141,11 +172,15 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v1.9.0 - Pre-v2 CLI Candidate**.
+Latest stable release: **v2.0.0 - Installable Local CLI Package**.
 
-v2.0.0 is prepared locally as the Installable Arkheionx CLI / Package
-milestone. It adds editable local installation and the `arkheionx` console
-command while preserving every existing script entrypoint:
+v2.0.1 is prepared locally as the Packaging + Product Repositioning Hotfix. It
+reframes Arkheionx as a local-first DeFi value-flow workbench while preserving
+the installable CLI, module CLI, old scripts, reports, SARIF, issue plans, and
+test-plan workflows from v2.0.0.
+
+v2.0.0 added editable local installation and the `arkheionx` console command
+while preserving every existing script entrypoint:
 
 - `arkheionx scan`;
 - `arkheionx validate-config`;
@@ -179,11 +214,12 @@ command while preserving every existing script entrypoint:
 | v1.7.0 | Config + Rule Pack Stabilization | Released |
 | v1.8.0 | Report UX + Noise Reduction | Released |
 | v1.9.0 | Pre-v2 CLI Candidate | Released |
-| v2.0.0 | Installable Arkheionx CLI / Package | Prepared, not tagged |
+| v2.0.0 | Installable Arkheionx CLI / Package | Released |
+| v2.0.1 | Packaging + Product Repositioning Hotfix | Unreleased |
 
-## Stable v1.9.x Surface
+## Stable v2.0.0 Surface
 
-Arkheionx v1.9.x treats these surfaces as stable unless a future changelog
+Arkheionx v2.0.0 treats these surfaces as stable unless a future changelog
 explicitly says otherwise:
 
 - CLI flags documented in [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -192,7 +228,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v1.9.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v2.0.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Configuration
@@ -252,7 +288,7 @@ python3 -m arkheionx.cli.main test-plan --report reports/arkheionx-report.json
 python3 -m arkheionx.cli.main search "oracle stale price"
 ```
 
-Existing scripts remain supported and first-class in v2.0.0.
+Existing scripts remain supported and first-class in v2.0.1.
 
 Read:
 
@@ -262,9 +298,11 @@ Read:
 
 ## Engine and CLI Roadmap
 
-Arkheionx v1.6.0 began the internal engine split toward a future installable
-CLI/package. v2.0.0 adds local editable installation and the `arkheionx`
-console command while preserving the module CLI and old scripts.
+Arkheionx v1.6.0 began the internal engine split toward an installable
+CLI/package. v2.0.0 added local editable installation and the `arkheionx`
+console command while preserving the module CLI and old scripts. v2.0.1 keeps
+that package surface stable and updates the public roadmap toward value-flow
+mapping.
 
 ```sh
 python3 -m arkheionx.cli.main version
@@ -276,6 +314,52 @@ Read:
 - [`docs/INTERNAL_ENGINE_SPLIT.md`](docs/INTERNAL_ENGINE_SPLIT.md)
 - [`docs/PACKAGE_ARCHITECTURE.md`](docs/PACKAGE_ARCHITECTURE.md)
 - [`docs/CLI_ROADMAP.md`](docs/CLI_ROADMAP.md)
+- [`docs/VALUE_FLOW_ROADMAP.md`](docs/VALUE_FLOW_ROADMAP.md)
+
+## Foundry-Powered Workbench (Preview)
+
+Arkheionx now ships a Foundry-style solo security testing workbench:
+
+```sh
+pip install -e .
+arkheionx doctor                         # check install + Foundry
+arkheionx open .                         # one-command project understanding
+arkheionx map .                          # draw the protocol: roles, journeys, money flow
+arkheionx flow .                         # money-flow graph (Mermaid + JSON)
+arkheionx hunt . --top 5                 # rank bug-hunting surfaces
+arkheionx prove . --target Contract.function          # local Foundry proof scaffold
+arkheionx prove . --target Contract.function --run    # run targeted Foundry tests
+arkheionx trace . --target Contract.function          # summarize the proof/trace
+```
+
+Find the money. Map the protocol. Prove the bug. Every major result carries an
+explicit evidence level:
+
+- `HEURISTIC` — static scan only (useful for direction, not proof).
+- `COMPILER_CONFIRMED` — `forge build` passed.
+- `EXECUTION_CONFIRMED` — a relevant local Foundry test actually executed.
+
+Foundry is an optional precision backend; commands degrade gracefully to
+heuristic analysis when it is unavailable. Generated artifacts (JSON, Mermaid,
+proof, trace) are written under `.arkheionx/out/`.
+
+Safety boundaries: local analysis only; no RPC by default; no live-chain
+transaction; no private keys; no exploit automation; not a formal audit and no
+bounty/severity guarantee.
+
+Read:
+
+- [`docs/SOLO_RESEARCH_WORKFLOW.md`](docs/SOLO_RESEARCH_WORKFLOW.md)
+- [`docs/PROTOCOL_MAP.md`](docs/PROTOCOL_MAP.md)
+- [`docs/EXECUTION_PROOF.md`](docs/EXECUTION_PROOF.md)
+- [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
+- [`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md)
+- [`docs/FOUNDRY_INTEGRATION.md`](docs/FOUNDRY_INTEGRATION.md)
+
+Advanced flow sub-modes such as `arkheionx flow --test-gaps`,
+`arkheionx flow explain`, `arkheionx flow test-template`,
+`arkheionx flow review-map`, and `arkheionx flow verify` are roadmap items.
+They are not yet available commands in v2.0.1.
 
 ## Protocol Packs
 
@@ -355,36 +439,38 @@ permission exists.
 1. **Arkheionx Memory** - historical DeFi exploit research, root-cause
    taxonomy, exploit primitives, broken invariants, failed assumptions,
    assertion families, reproducibility status, and case references.
-2. **Arkheionx Readiness** - a GitHub-native pre-audit scanner for authorized
-   repositories that generates practical Markdown and JSON reports.
+2. **Arkheionx Flow** - local/static value-flow review for asset movements,
+   accounting assumptions, admin-controlled value impact, and missing tests.
 3. **Arkheionx Tests** - suggested invariant tests, Foundry skeletons,
-   readiness checklists, test coverage guidance, and audit preparation
+   readiness checklists, test coverage guidance, and review preparation
    templates.
 4. **Arkheionx Search** - searchable security knowledge base with tags,
    indexes, category maps, metadata, reports, and GitHub search terms.
-5. **Arkheionx Market** - GitHub Sponsors, Launch Reports, Pre-Audit Sprints,
-   Ecosystem Packs, training, and research sponsorship.
+5. **Arkheionx Advanced Workflows** - GitHub Action usage, Launch Reports,
+   Pre-Audit Sprints, Ecosystem Packs, training, and research sponsorship.
 
 ## What Arkheionx Is
 
 - Historical DeFi exploit memory.
 - Assertion-driven research archive.
-- Pre-audit readiness scanner.
+- Local-first DeFi value-flow workbench.
+- Static repository scanner.
 - GitHub Action.
 - Markdown report generator.
 - JSON report generator.
 - Safe Foundry invariant skeleton generator.
 - Searchable root-cause knowledge base.
-- Indie-builder support and services surface.
+- Builder and researcher support surface.
 
 ## What Arkheionx Is Not
 
 - Not a formal audit.
 - Not a security guarantee.
-- Not live-target abuse tooling.
+- Not live-chain scanning.
+- Not exploit automation.
 - Not a bounty guarantee.
 - Not an attack framework.
-- Not a replacement for professional review.
+- Not a replacement for Foundry, auditors, or human review.
 - Not affiliated with any audit firm, contest platform, bounty program, or
   protocol unless a relationship is explicitly documented in committed public
   artifacts.
@@ -423,7 +509,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v1.9.0` for stable usage:
+Use `@v2.0.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -438,7 +524,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0
         with:
           root: "."
           protocol-type: "auto"
@@ -472,7 +558,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -501,7 +587,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v1.9.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
@@ -552,7 +638,7 @@ python3 scripts/pre_audit_scan.py \
   --issue-plan-output ARKHEIONX_ISSUE_PLAN.json
 ```
 
-See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the stable v1.5.x CLI
+See [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) for the current CLI
 surface.
 
 Vault builders can force the v0.4.0 Vault Rule Pack:
@@ -685,14 +771,14 @@ blocker, and defensive check.
 
 | Artifact | Purpose |
 |---|---|
-| Markdown report | Human-readable readiness report and audit-prep checklist. |
+| Markdown report | Human-readable value-flow/readiness report and review checklist. |
 | JSON report | Machine-readable score, findings, signals, outputs, and metadata. |
-| SARIF report | GitHub Code Scanning-compatible readiness findings. |
+| SARIF report | GitHub Code Scanning-compatible review findings. |
 | Baseline JSON | Compact readiness snapshot for future comparison. |
 | Diff report | New, resolved, unchanged, changed, and suppressed readiness gaps. |
 | Actions summary | Short CI summary for GitHub Actions runs. |
 | PR comment body | Optional pull request feedback with top readiness gaps. |
-| Issue checklist | Copyable remediation checklist for GitHub Issues. |
+| Issue checklist | Copyable remediation and missing-test checklist for GitHub Issues. |
 | Issue plan | Structured remediation issue plan for optional dry-run/create/update workflows. |
 | Launch Report | Client-facing launch readiness report. |
 | Sprint Plan | 3/5/7/10 day Pre-Audit Sprint plan. |
@@ -730,6 +816,11 @@ oracle manipulation
 reentrancy-review
 access-control-review
 missing invariant
+value flow
+money flow
+flow map
+missing security tests
+map the money flow
 pre-audit readiness
 root-cause analysis
 Foundry invariant testing
@@ -740,23 +831,17 @@ Recommended GitHub topics:
 ```text
 arkheionx
 defi-security
-web3-security
 smart-contract-security
-solidity
 foundry
-forge
-github-actions
-sarif
-pre-audit
+solidity
+value-flow
+security-testing
 audit-readiness
+test-coverage
 security-research
-root-cause-analysis
-exploit-patterns
-security-memory
-rule-calibration
-smart-contract-auditing
-open-source-security
-ethereum
+web3-security
+local-first
+sarif
 ```
 
 ## Research Standard
@@ -790,6 +875,9 @@ Core standards:
 - [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
 - [`docs/INSTALLATION.md`](docs/INSTALLATION.md)
 - [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
+- [`docs/VALUE_FLOW_WORKBENCH.md`](docs/VALUE_FLOW_WORKBENCH.md)
+- [`docs/VALUE_FLOW_ROADMAP.md`](docs/VALUE_FLOW_ROADMAP.md)
+- [`docs/DEVELOPER_RESEARCHER_WORKFLOW.md`](docs/DEVELOPER_RESEARCHER_WORKFLOW.md)
 - [`docs/CLI_INSTALLABLE.md`](docs/CLI_INSTALLABLE.md)
 - [`docs/CLI_CANDIDATE.md`](docs/CLI_CANDIDATE.md)
 - [`docs/CLI_COMMANDS.md`](docs/CLI_COMMANDS.md)
@@ -982,6 +1070,14 @@ Read [`docs/ETHICS.md`](docs/ETHICS.md).
   grouped findings, suppression/config summaries, and CI-oriented reports.
 - **v1.9.0: Pre-v2 CLI Candidate.** Local module CLI commands for scan,
   config validation, test-plan generation, and security memory search.
+- **v2.0.0: Installable Local CLI Package.** Editable local install,
+  `arkheionx` console entrypoint, module CLI, old script compatibility, and
+  packaging hygiene.
+- **v2.0.1: Packaging + Product Repositioning Hotfix.** Public docs and
+  roadmap shift Arkheionx toward a local-first DeFi value-flow workbench.
+- **v2.1.0: Value Flow Map MVP.** Planned first value-flow map surface.
+- **v3.0.0: DeFi Value Flow Workbench.** Target product shape for value-flow
+  maps, test gaps, review maps, templates, verification, and diffs.
 
 Archive milestones remain honest:
 

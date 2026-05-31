@@ -1,7 +1,8 @@
 # Arkheionx Package Architecture
 
-The `arkheionx/` package is the local/static CLI package for v2.0.0. It remains
-stdlib-only at runtime and keeps existing scripts supported.
+The `arkheionx/` package is the local/static CLI package for v2.0.1. It remains
+stdlib-only at runtime and keeps existing scripts supported while Arkheionx
+repositions toward a DeFi value-flow workbench.
 
 ```text
 arkheionx/
@@ -70,6 +71,17 @@ arkheionx scan .
 
 Package-data resolution remains source-tree compatible for editable installs.
 See [`PACKAGE_DATA.md`](PACKAGE_DATA.md).
+
+v2.0.1 keeps that package surface stable and updates public direction toward
+value-flow mapping and missing-test workflows. The current available commands
+remain `scan`, `test-plan`, `search`, `validate-config`, `doctor`, and
+`version`.
+
+Planned future commands such as `arkheionx flow`,
+`arkheionx flow --test-gaps`, `arkheionx flow explain`,
+`arkheionx flow test-template`, `arkheionx flow review-map`, and
+`arkheionx flow verify` are roadmap items, not implemented package commands in
+v2.0.1.
 
 ## Not Yet Included
 

@@ -19,29 +19,23 @@ set -euo pipefail
 
 REPO="Yudis-bit/DeFi-Exploit-PoCs"
 
-DESCRIPTION="GitHub-native DeFi pre-audit readiness and security memory OS for finding readiness gaps before audits, contests, and bug bounty launches."
+DESCRIPTION="Local-first DeFi value-flow workbench for mapping how assets move through protocols and finding missing security tests."
 HOMEPAGE="https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
 
 TOPICS=(
   "arkheionx"
-  "web3-security"
   "defi-security"
   "smart-contract-security"
-  "smart-contract-auditing"
-  "solidity"
   "foundry"
-  "forge"
-  "github-actions"
-  "sarif"
-  "pre-audit"
+  "solidity"
+  "value-flow"
+  "security-testing"
   "audit-readiness"
+  "test-coverage"
   "security-research"
-  "root-cause-analysis"
-  "exploit-patterns"
-  "security-memory"
-  "rule-calibration"
-  "open-source-security"
-  "ethereum"
+  "web3-security"
+  "local-first"
+  "sarif"
 )
 
 mode="dry-run"

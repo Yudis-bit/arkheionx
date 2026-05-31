@@ -27,6 +27,7 @@ def check() -> list[str]:
     readme = read("README.md")
     changelog = read("CHANGELOG.md")
     roadmap = read("docs/ROADMAP.md")
+    value_roadmap = read("docs/VALUE_FLOW_ROADMAP.md")
     action_docs = read("docs/GITHUB_ACTION_USAGE.md")
     scanner = read("scripts/pre_audit_scan.py")
 
@@ -36,17 +37,23 @@ def check() -> list[str]:
         failures.append(f"README.md does not name {STABLE_RELEASE} as latest stable release")
     if f"## {CURRENT_MILESTONE} - Unreleased" not in changelog:
         failures.append(f"CHANGELOG.md is missing {CURRENT_MILESTONE} - Unreleased")
-    if "## v1.9.0" not in changelog or "## v1.9.0 - Unreleased" in changelog:
-        failures.append("CHANGELOG.md does not treat v1.9.0 as released")
-    if CURRENT_MILESTONE not in roadmap or "Installable Arkheionx CLI / Package current milestone" not in roadmap:
-        failures.append(f"docs/ROADMAP.md does not mark {CURRENT_MILESTONE} as current packaging milestone")
-    if NEXT_MILESTONE not in roadmap or "Packaging/Release Hotfix next milestone" not in roadmap:
-        failures.append(f"docs/ROADMAP.md does not keep {NEXT_MILESTONE} as next milestone")
+    if f"## {STABLE_RELEASE}" not in changelog or f"## {STABLE_RELEASE} - Unreleased" in changelog:
+        failures.append(f"CHANGELOG.md does not treat {STABLE_RELEASE} as released")
+    if CURRENT_MILESTONE not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not mention current milestone {CURRENT_MILESTONE}")
+    if NEXT_MILESTONE not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not mention next milestone {NEXT_MILESTONE}")
+    if "v2.1.0 — Value Flow Map MVP" not in roadmap:
+        failures.append("docs/ROADMAP.md is missing v2.1.0 — Value Flow Map MVP")
+    if "v3.0.0 target: DeFi Value Flow Workbench" not in roadmap:
+        failures.append("docs/ROADMAP.md is missing the v3.0.0 DeFi Value Flow Workbench target")
+    if "Value Flow Map MVP" not in value_roadmap or "DeFi Value Flow Workbench" not in value_roadmap:
+        failures.append("docs/VALUE_FLOW_ROADMAP.md is missing value-flow milestone wording")
     if STABLE_ACTION not in readme:
         failures.append(f"README.md is missing stable {STABLE_RELEASE} action example")
     if STABLE_ACTION not in action_docs:
         failures.append(f"docs/GITHUB_ACTION_USAGE.md is missing stable {STABLE_RELEASE} action example")
-    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.0\.1[^*]*|v1\.1\.[^*]*|v1\.2\.0[^*]*|v1\.3\.0[^*]*|v1\.4\.0[^*]*|v1\.5\.0[^*]*|v1\.6\.0[^*]*|v1\.7\.0[^*]*|v1\.8\.0[^*]*)", readme)
+    stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.[^*]*)", readme)
     if stale:
         failures.append("README.md still has stale latest stable wording")
     if "## v1.0.0 - Unreleased" in changelog:

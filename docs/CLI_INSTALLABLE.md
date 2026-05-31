@@ -1,7 +1,8 @@
 # Installable CLI
 
-Arkheionx v2.0.0 adds the `arkheionx` console command for local editable
-installs.
+Arkheionx v2.0.1 keeps the `arkheionx` console command for local editable
+installs. The installed CLI is the current foundation for the local-first
+DeFi value-flow workbench direction.
 
 ```sh
 python3 -m pip install -e .
@@ -27,13 +28,26 @@ python3 -m arkheionx.cli.main ...
 
 Existing scripts remain supported.
 
+## Planned Flow Commands
+
+The following value-flow commands are planned future roadmap items and are not
+available in v2.0.1:
+
+```sh
+arkheionx flow
+arkheionx flow --test-gaps
+arkheionx flow explain
+arkheionx flow test-template
+arkheionx flow review-map
+arkheionx flow verify
+```
+
 ## Not Published
 
-v2.0.0 does not publish a PyPI package. Install from this source checkout for
+v2.0.1 does not publish a PyPI package. Install from this source checkout for
 local development and validation.
 
 ## Safety
 
 The CLI is for authorized local repositories only. It does not require secrets
 or RPC keys and does not add live-chain behavior or exploit automation.
-

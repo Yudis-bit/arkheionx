@@ -2,8 +2,10 @@
 
 The supported CLI surface includes the installed console command, the module
 CLI, and the legacy script surface documented in [`docs/CLI_REFERENCE.md`](CLI_REFERENCE.md).
+v2.0.1 keeps those commands as the current functional foundation while the
+roadmap shifts toward local DeFi value-flow mapping.
 
-v2.0.0 adds local editable installation:
+v2.0.0 added local editable installation:
 
 ```sh
 python3 -m pip install -e .
@@ -45,15 +47,27 @@ python3 -m arkheionx.cli.main search "oracle stale price"
 `scan`, `validate-config`, `test-plan`, and `search` wrap the existing script
 entrypoints so script compatibility remains testable after v2 packaging.
 
+## Planned Flow Commands
+
+These commands are planned future roadmap items and are not available in
+v2.0.1:
+
+- `arkheionx flow`
+- `arkheionx flow --test-gaps`
+- `arkheionx flow explain`
+- `arkheionx flow test-template`
+- `arkheionx flow review-map`
+- `arkheionx flow verify`
+
 ## Future Path
 
 - v1.7.0: stabilize config and rule-pack metadata inside package modules.
 - v1.8.0: add report UX helpers, output profiles, Fix First ranking, and
   noise-reduction summaries.
 - v1.9.0: Pre-v2 CLI Candidate released.
-- v2.0.0: Installable Arkheionx CLI / Package current milestone.
-- v2.0.1: Packaging/Release Hotfix next milestone.
-- v2.1.0: CLI Command Polish follow-up.
+- v2.0.0: Installable Arkheionx CLI / Package released.
+- v2.0.1: Packaging + Product Repositioning Hotfix current milestone.
+- v2.1.0: Value Flow Map MVP next milestone.
 
 ## Boundary
 

@@ -1,14 +1,118 @@
 {
-  "version": "2.0.0",
-  "description": "Search metadata for Arkheionx Security Memory and Pre-Audit Readiness OS.",
+  "version": "2.0.1",
+  "description": "Search metadata for the Arkheionx local-first DeFi value-flow workbench.",
   "topics": [
     {
       "term": "Arkheionx",
-      "aliases": ["Arkheionx Security Memory", "Arkheionx Readiness", "pre-audit readiness OS", "GitHub-native security memory"],
+      "aliases": ["Arkheionx value-flow workbench", "Arkheionx Security Memory", "Arkheionx Readiness", "pre-audit readiness OS", "GitHub-native security memory"],
       "category": "product",
-      "related_patterns": ["historical exploit memory", "pre-audit readiness workflow"],
+      "related_patterns": ["DeFi value-flow workbench", "historical exploit memory", "pre-audit readiness workflow"],
       "related_checks": ["GitHub Action", "Markdown report", "SARIF output", "baseline diff"],
-      "search_tags": ["arkheionx", "security-memory", "pre-audit-readiness", "indie-defi"]
+      "search_tags": ["arkheionx", "value-flow-workbench", "security-memory", "pre-audit-readiness", "indie-defi"]
+    },
+    {
+      "term": "value flow",
+      "aliases": ["money flow", "asset flow", "DeFi value flow", "value-flow workbench"],
+      "category": "product positioning",
+      "related_patterns": ["map the money flow", "value movement through protocols", "critical accounting assumptions"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "docs/VALUE_FLOW_ROADMAP.md", "arkheionx scan"],
+      "search_tags": ["value-flow", "money-flow", "asset-flow", "missing-security-tests"]
+    },
+    {
+      "term": "money flow",
+      "aliases": ["map the money flow", "where value moves", "value movement"],
+      "category": "product positioning",
+      "related_patterns": ["asset movement", "share mint", "borrow limit", "liquidation payout", "reward claim"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "docs/DEVELOPER_RESEARCHER_WORKFLOW.md"],
+      "search_tags": ["money-flow", "value-flow", "flow-map"]
+    },
+    {
+      "term": "asset flow",
+      "aliases": ["token flow", "balance flow", "asset movement"],
+      "category": "DeFi review",
+      "related_patterns": ["user asset to vault balance", "collateral to liquidation payout", "reward funding to user claim"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "arkheionx scan"],
+      "search_tags": ["asset-flow", "value-flow", "defi-security"]
+    },
+    {
+      "term": "DeFi value flow",
+      "aliases": ["DeFi money flow", "DeFi asset flow", "protocol value flow"],
+      "category": "DeFi review",
+      "related_patterns": ["oracle price to borrow limit", "vault deposit to share mint", "admin parameter to value impact"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "docs/VALUE_FLOW_ROADMAP.md"],
+      "search_tags": ["defi-value-flow", "value-flow", "review-map"]
+    },
+    {
+      "term": "value-flow workbench",
+      "aliases": ["value flow workbench", "DeFi value-flow workbench", "local-first value-flow workbench"],
+      "category": "product positioning",
+      "related_patterns": ["Map the money flow. Find the missing tests.", "Foundry tells you if tests pass"],
+      "related_checks": ["README.md", "docs/VALUE_FLOW_WORKBENCH.md", "docs/GITHUB_REPO_SURFACE.md"],
+      "search_tags": ["value-flow-workbench", "local-first", "arkheionx"]
+    },
+    {
+      "term": "missing security tests",
+      "aliases": ["missing value-flow tests", "what you forgot to test", "missing tests"],
+      "category": "testing",
+      "related_patterns": ["value-flow test gap", "critical assumption without coverage", "review prompt"],
+      "related_checks": ["docs/DEVELOPER_RESEARCHER_WORKFLOW.md", "scripts/generate_test_plan.py", "arkheionx test-plan"],
+      "search_tags": ["missing-security-tests", "test-coverage", "value-flow"]
+    },
+    {
+      "term": "flow map",
+      "aliases": ["value flow map", "money flow map", "protocol flow map"],
+      "category": "roadmap",
+      "related_patterns": ["planned local value-flow map", "assets shares debt rewards oracle assumptions"],
+      "related_checks": ["docs/VALUE_FLOW_ROADMAP.md", "docs/ROADMAP.md"],
+      "search_tags": ["flow-map", "value-flow-map", "roadmap"]
+    },
+    {
+      "term": "value flow roadmap",
+      "aliases": ["Value Flow Map MVP", "DeFi Value Flow Workbench", "v2.1.0 roadmap"],
+      "category": "roadmap",
+      "related_patterns": ["v2.1.0 Value Flow Map MVP", "v3.0.0 DeFi Value Flow Workbench"],
+      "related_checks": ["docs/VALUE_FLOW_ROADMAP.md", "docs/ROADMAP.md"],
+      "search_tags": ["value-flow-roadmap", "v2.1.0", "v3.0.0"]
+    },
+    {
+      "term": "developer researcher workflow",
+      "aliases": ["developer workflow", "researcher workflow", "builders and researchers"],
+      "category": "workflow",
+      "related_patterns": ["flow map to missing tests", "flow review-map to issue candidate"],
+      "related_checks": ["docs/DEVELOPER_RESEARCHER_WORKFLOW.md", "docs/VALUE_FLOW_WORKBENCH.md"],
+      "search_tags": ["developer-workflow", "researcher-workflow", "value-flow"]
+    },
+    {
+      "term": "review map",
+      "aliases": ["researcher review map", "flow review-map", "review areas"],
+      "category": "roadmap",
+      "related_patterns": ["researcher orientation", "high-signal review areas", "evidence-backed issue candidate"],
+      "related_checks": ["docs/VALUE_FLOW_ROADMAP.md", "docs/DEVELOPER_RESEARCHER_WORKFLOW.md"],
+      "search_tags": ["review-map", "security-research", "value-flow"]
+    },
+    {
+      "term": "map the money flow",
+      "aliases": ["Map the money flow. Find the missing tests.", "money flow slogan"],
+      "category": "product positioning",
+      "related_patterns": ["value-flow workbench promise"],
+      "related_checks": ["README.md", "docs/VALUE_FLOW_WORKBENCH.md"],
+      "search_tags": ["map-the-money-flow", "value-flow-workbench"]
+    },
+    {
+      "term": "Foundry tells you if tests pass",
+      "aliases": ["Foundry tells you if your tests pass", "where value moves", "what you forgot to test"],
+      "category": "product positioning",
+      "related_patterns": ["Foundry test pass/fail plus missing value-flow tests"],
+      "related_checks": ["README.md", "docs/VALUE_FLOW_WORKBENCH.md"],
+      "search_tags": ["foundry", "missing-security-tests", "value-flow"]
+    },
+    {
+      "term": "what you forgot to test",
+      "aliases": ["forgot to test", "missing tests", "missing security tests"],
+      "category": "testing",
+      "related_patterns": ["value-flow test gaps", "critical assumption review"],
+      "related_checks": ["README.md", "docs/DEVELOPER_RESEARCHER_WORKFLOW.md", "arkheionx test-plan"],
+      "search_tags": ["forgot-to-test", "missing-tests", "test-coverage"]
     },
     {
       "term": "GitHub repo surface",

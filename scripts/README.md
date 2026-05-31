@@ -1,14 +1,16 @@
 # Scripts
 
 Internal tooling for Arkheionx. The repository includes the historical
-Arkheionx Vault archive plus pre-audit readiness, security memory, reporting,
-and feedback calibration tooling. All scripts are pure-stdlib Python 3.11+ and
-run from the repository root unless noted.
+Arkheionx Vault archive plus local/static value-flow review, pre-audit
+readiness, security memory, reporting, and feedback calibration tooling. All
+scripts are pure-stdlib Python 3.11+ and run from the repository root unless
+noted.
 
 ## Pre-v2 Module CLI Candidate
 
 v1.9.0 defines a local module CLI candidate. v2.0.0 adds the installable
-`arkheionx` console command. Shared helpers live under
+`arkheionx` console command. v2.0.1 keeps those interfaces as the current
+functional foundation for the value-flow workbench direction. Shared helpers live under
 `arkheionx/`, but the scripts in this directory remain supported entrypoints
 for scans, generated reports, indexes, dashboards, and validation checks.
 
@@ -27,6 +29,11 @@ python3 -m arkheionx.cli.main search "oracle stale price"
 
 The console and module CLIs wrap existing scripts/modules. They do not replace
 `scripts/pre_audit_scan.py`.
+
+Planned future commands such as `arkheionx flow`,
+`arkheionx flow --test-gaps`, `arkheionx flow explain`,
+`arkheionx flow test-template`, `arkheionx flow review-map`, and
+`arkheionx flow verify` are roadmap items and are not available in v2.0.1.
 
 ## `validate_config.py`
 
