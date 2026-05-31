@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.3.0 - Unreleased
+## v2.3.0 - 2026-05-31
 
 Evidence & Report Package. Closes the loop:
 open → map → flow → hunt → prove --run → trace → evidence → report.

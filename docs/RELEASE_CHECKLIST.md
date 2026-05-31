@@ -620,9 +620,9 @@ Prepared locally (dev). Do not push/tag/release without maintainer approval.
 ### Inspect
 
 - [ ] README lists `evidence` and `report` and the full workflow.
-- [ ] CHANGELOG has `## v2.3.0 - Unreleased`.
+- [ ] CHANGELOG dates the `## v2.3.0` section (no longer "Unreleased").
 - [ ] `release-notes/v2.3.0.md` matches implemented behavior.
-- [ ] `arkheionx version` reports `2.3.0-dev`, `v2.3.0`, `v2.4.0`.
+- [ ] `arkheionx version` reports `2.3.0`, `v2.3.0`, `v2.4.0`.
 - [ ] Reports contain no final-severity / live-chain / auto-submit language.
 
 ### Final cut (after approval)
