@@ -29,7 +29,7 @@ class V3VersionTests(unittest.TestCase):
 
         self.assertEqual(__version__, "3.0.0")
         self.assertEqual(PACKAGE_VERSION, "3.0.0")
-        self.assertEqual(STABLE_RELEASE, "v2.10.0")  # not v3.0.0 until published
+        self.assertEqual(STABLE_RELEASE, "v3.0.0")  # published
         self.assertEqual(CURRENT_MILESTONE, "v3.0.0")
         self.assertEqual(NEXT_MILESTONE, "v3.1.0")
 
@@ -68,9 +68,9 @@ class V3DocsTests(unittest.TestCase):
 
     def test_roadmap_marks_v3_current_and_v2_10_shipped(self) -> None:
         roadmap = read("docs/ROADMAP.md")
-        self.assertIn("Current milestone: v3.0.0", roadmap)
-        self.assertIn("Next milestone: v3.1.0", roadmap)
-        self.assertIn("Latest stable: v2.10.0", roadmap)
+        self.assertIn("Current milestone: v3.1.0", roadmap)
+        self.assertIn("Latest stable: v3.0.0", roadmap)
+        self.assertIn("v3.0.0 — Public Stable Launch", roadmap)
 
     def test_release_notes_exist_with_required_sections(self) -> None:
         notes = read("release-notes/v3.0.0.md")
@@ -84,17 +84,17 @@ class V3DocsTests(unittest.TestCase):
                       "is a formal audit", "homebrew tap", "pip install arkheionx"]:
             self.assertNotIn(claim, lowered)
 
-    def test_v3_readiness_is_release_candidate(self) -> None:
+    def test_v3_readiness_is_shipped(self) -> None:
         readiness = read("docs/V3_READINESS.md")
-        self.assertIn("ready for release candidate", readiness.lower())
-        self.assertIn("not released", readiness.lower())
+        self.assertIn("shipped", readiness.lower())
+        self.assertIn("v3.1.0", readiness)
 
 
 class V3StableTagTests(unittest.TestCase):
-    def test_install_and_arkup_track_v2_10_stable(self) -> None:
+    def test_install_and_arkup_track_v3_stable(self) -> None:
         for script in ("install.sh", "arkup"):
-            self.assertIn("ARKHEIONX_STABLE_TAG:-v2.10.0", read(script))
-        self.assertIn("pre-audit@v2.10.0", read("README.md"))
+            self.assertIn("ARKHEIONX_STABLE_TAG:-v3.0.0", read(script))
+        self.assertIn("pre-audit@v3.0.0", read("README.md"))
 
 
 if __name__ == "__main__":

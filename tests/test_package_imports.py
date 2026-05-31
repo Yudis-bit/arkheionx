@@ -8,7 +8,7 @@ class PackageImportTests(unittest.TestCase):
 
         self.assertEqual(arkheionx.__version__, "3.0.0")
         self.assertEqual(__version__, "3.0.0")
-        self.assertEqual(STABLE_RELEASE, "v2.10.0")
+        self.assertEqual(STABLE_RELEASE, "v3.0.0")
         self.assertEqual(CURRENT_MILESTONE, "v3.0.0")
         self.assertEqual(NEXT_MILESTONE, "v3.1.0")
 

@@ -1,12 +1,12 @@
 # v3.0 Readiness Checklist
 
-What must be true before Arkheionx is cut as **v3.0.0 — DeFi Value Flow
-Workbench** (public stable). v3.0 is **not released** and is not claimed as
-stable yet; this tracks the public-stable launch candidate.
+The readiness criteria for cutting Arkheionx **v3.0.0 — DeFi Value Flow
+Workbench** (public stable). v3.0.0 has shipped as the public stable launch;
+this remains as the record of what the launch required.
 
-**Status: ready for release candidate.** The readiness items below are
-satisfied on the finalized `3.0.0` surface; what remains is the human release
-cut (tag, publish, post-release cleanup), not further engineering.
+**Status: shipped.** All readiness items below were satisfied for the v3.0.0
+public stable release. The current active milestone is **v3.1.0** (incremental
+workbench improvements after the v3.0.0 cut).
 
 ## 1. Public command surface
 - [x] Command inventory documented ([`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md)).
@@ -41,7 +41,7 @@ cut (tag, publish, post-release cleanup), not further engineering.
 ## 8. Docs and README
 - [x] README landing page with visuals and current stable line.
 - [x] Docs map links public surface, stability contract, and this checklist.
-- [x] Docs audit completed for the v3.0 launch candidate.
+- [x] Docs audit completed for the v3.0 public stable launch.
 
 ## 9. Safety boundaries
 - [x] Consistent safety wording; `check_safety_wording --strict` passes.

@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <code>Stable: v2.10.0</code> ·
+  <code>Stable: v3.0.0</code> ·
   <code>Python 3.11+</code> ·
   <code>Local-first</code> ·
   <code>No RPC by default</code> ·
@@ -29,8 +29,7 @@ packages the evidence — locally, with no RPC and no secrets.
 
 Arkheionx v3.0.0 is the public stable launch: one coherent, documented local
 workflow with a stable command surface, honest evidence levels, and a safe
-install/update lifecycle. v3.0.0 is in preparation; the latest published release
-is v2.10.0.
+install/update lifecycle. v3.0.0 is the current latest stable release.
 
 ## Architecture
 
@@ -268,14 +267,14 @@ Stability and v3 readiness:
 
 ## Current Release
 
-Latest stable release: **v2.10.0 — Pre-v3 Public Readiness & Stability Hardening**.
+Latest stable release: **v3.0.0 — Public Stable Launch**.
 
 ```text
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Active development: **v3.0.0 — DeFi Value Flow Workbench** (public-stable
-direction, not yet released). See [`docs/ROADMAP.md`](docs/ROADMAP.md) and
+Active development: **v3.1.0** (incremental workbench improvements after the
+v3.0.0 cut). See [`docs/ROADMAP.md`](docs/ROADMAP.md) and
 [`docs/V3_READINESS.md`](docs/V3_READINESS.md).
 
 ## GitHub Action
@@ -284,7 +283,7 @@ Minimal static pre-audit workflow:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.10.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v3.0.0
   with:
     protocol-type: "auto"
 ```

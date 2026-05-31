@@ -8,7 +8,7 @@ understanding, money-flow mapping, hunter target ranking, proof/trace evidence,
 and responsible report drafting. The historical DeFi exploit-reproduction
 archive remains documented and still backs the workbench's pattern knowledge.
 
-Latest stable release: **v2.10.0 — Pre-v3 Public Readiness & Stability Hardening**.
+Latest stable release: **v3.0.0 — Public Stable Launch**.
 
 ## Recommended GitHub About
 
