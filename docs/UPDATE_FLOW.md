@@ -35,7 +35,7 @@ The receipt is **local runtime state**. It is never committed and is removed by
 Precedence when resolving a source: **local > ref > channel**.
 
 - **stable** — default. Installs the documented stable tag
-  (`ARKHEIONX_STABLE_TAG`, currently `v2.6.0`).
+  (`ARKHEIONX_STABLE_TAG`, currently `v2.7.0`).
 - **main** — `--channel main`. Latest development `main`; opt-in and
   development-risk.
 - **ref** — `--ref <tag|branch|sha>`. Pinned to an explicit ref.
@@ -78,8 +78,8 @@ sh arkup --update --dry-run
 sh arkup --update --yes
 
 # Pinned ref stays pinned on update
-sh arkup --install --ref v2.6.0 --yes
-sh arkup --update --yes      # still v2.6.0
+sh arkup --install --ref v2.7.0 --yes
+sh arkup --update --yes      # still v2.7.0
 
 # Move from stable to main explicitly (opt-in)
 sh arkup --update --channel main --yes

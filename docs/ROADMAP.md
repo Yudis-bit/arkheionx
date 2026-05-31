@@ -14,10 +14,9 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v2.7.0 — Guided Demo Fixtures & First Real Workflow.
-Next milestone: v2.8.0.
-Latest stable: v2.6.0 — arkup & Version-Manager MVP.
-Foundation shipped: v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
+Current milestone: v2.8.0.
+Latest stable: v2.7.0 — Guided Demo Fixtures & First Real Workflow.
+Foundation shipped: v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench.
 
 - [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
@@ -123,7 +122,7 @@ v3.0.0 target: DeFi Value Flow Workbench.
 - [x] **v2.6.0: arkup & Version-Manager MVP shipped.**
       `arkup` lifecycle helper, local install receipt, stable/main/ref/local
       source model, and explicit update flow (no PyPI, no Homebrew, no binaries).
-- [ ] **v2.7.0: Guided Demo Fixtures & First Real Workflow current milestone.**
+- [x] **v2.7.0: Guided Demo Fixtures & First Real Workflow shipped.**
       `arkheionx demo` (list/show/commands/copy), a demo fixture registry, and a
       safe local first-run workflow (no RPC, no secrets, no mainnet).
 - [ ] **v2.3.0: Evidence & Report Package next milestone.**
