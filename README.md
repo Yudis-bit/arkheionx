@@ -149,11 +149,10 @@ Advanced:
 
 ## Current Release
 
-Latest stable release: **v2.3.0 — Evidence & Report Package**. It closes the
+Latest stable release: **v2.4.0 — Evidence Workflow Hardening**. It hardens the
 local research loop: `open → map → flow → hunt → prove --run → trace → evidence
-→ report → manual review`. In progress: v2.4.0 — Evidence Workflow Hardening
-(`evidence-status`, `validate-artifacts`); next: v2.5.0. See
-[`docs/ROADMAP.md`](docs/ROADMAP.md) and [`CHANGELOG.md`](CHANGELOG.md).
+→ report → manual review` with `evidence-status` and `validate-artifacts`.
+Next: v2.5.0. See [`docs/ROADMAP.md`](docs/ROADMAP.md) and [`CHANGELOG.md`](CHANGELOG.md).
 
 ## GitHub Action
 
@@ -161,7 +160,7 @@ A local/static pre-audit Action is available (no secrets, no RPC). Minimal use:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.3.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.4.0
   with:
     protocol-type: "auto"
 ```

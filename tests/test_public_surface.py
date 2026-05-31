@@ -6,8 +6,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ABOUT_DESCRIPTION = (
-    "Local-first DeFi value-flow workbench for mapping how assets move through "
-    "protocols and finding missing security tests."
+    "Foundry-style local security workbench for DeFi protocol mapping, "
+    "money-flow analysis, proof/trace evidence, and report drafting."
 )
 
 
@@ -26,13 +26,13 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("## Evidence Model", readme)
         self.assertIn("## Safety Boundaries", readme)
         self.assertIn("## Documentation", readme)
-        self.assertIn("Latest stable release: **v2.3.0", readme)
+        self.assertIn("Latest stable release: **v2.4.0", readme)
         # Workbench command suite is the front-page focus.
         for command in ["arkheionx open", "arkheionx hunt", "arkheionx prove",
                         "arkheionx trace", "arkheionx evidence", "arkheionx report"]:
             self.assertIn(command, readme)
-        # No stale v2.2.0-as-latest-stable wording.
-        self.assertNotIn("Latest stable release: **v2.2.0", readme)
+        # No stale v2.3.0-as-latest-stable wording.
+        self.assertNotIn("Latest stable release: **v2.3.0", readme)
 
     def test_github_repo_surface_doc_exists(self) -> None:
         surface = self.read("docs/GITHUB_REPO_SURFACE.md")
@@ -41,12 +41,18 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("## Recommended Topics", surface)
         for topic in [
             "arkheionx",
-            "value-flow",
-            "security-testing",
+            "defi-security",
+            "smart-contract-security",
+            "foundry",
+            "solidity",
+            "security-tools",
+            "web3-security",
             "audit-readiness",
-            "test-coverage",
             "local-first",
-            "sarif",
+            "static-analysis",
+            "trace-analysis",
+            "invariant-testing",
+            "developer-tools",
         ]:
             self.assertIn(f"`{topic}`", surface)
         self.assertIn("https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme", surface)

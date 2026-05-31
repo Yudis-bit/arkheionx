@@ -3,7 +3,7 @@ from __future__ import annotations
 
 __version__ = "2.4.0"
 PACKAGE_VERSION = "2.4.0"
-STABLE_RELEASE = "v2.3.0"
+STABLE_RELEASE = "v2.4.0"
 CURRENT_MILESTONE = "v2.4.0"
 NEXT_MILESTONE = "v2.5.0"
 

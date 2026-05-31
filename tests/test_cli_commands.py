@@ -24,7 +24,7 @@ class CliCommandTests(unittest.TestCase):
         version = self.run_cli("version")
         self.assertIn("2.4.0", version.stdout)
         self.assertNotIn("2.4.0-dev", version.stdout)
-        self.assertIn("Latest stable release: v2.3.0", version.stdout)
+        self.assertIn("Latest stable release: v2.4.0", version.stdout)
         self.assertIn("v2.4.0", version.stdout)
         self.assertIn("v2.5.0", version.stdout)
         doctor = self.run_cli("doctor")
