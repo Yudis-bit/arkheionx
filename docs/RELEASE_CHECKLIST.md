@@ -646,9 +646,9 @@ Prepared locally (dev). Do not push/tag/release without maintainer approval.
 ### Inspect
 
 - [ ] README lists `evidence-status` and `validate-artifacts`.
-- [ ] CHANGELOG has `## v2.4.0 - Unreleased`.
+- [ ] CHANGELOG dates the `## v2.4.0` section (no longer "Unreleased").
 - [ ] `release-notes/v2.4.0.md` matches implemented behavior.
-- [ ] `arkheionx version` reports `2.4.0-dev`, `v2.4.0`, `v2.5.0`.
+- [ ] `arkheionx version` reports `2.4.0`, `v2.4.0`, `v2.5.0`.
 - [ ] Reports keep NEEDS_HUMAN_REVIEW, no final severity, no live-chain steps.
 
 ### Final cut (after approval)

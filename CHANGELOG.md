@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.4.0 - Unreleased
+## v2.4.0 - 2026-05-31
 
 Evidence Workflow Hardening. Makes the hunt → prove --run → trace → evidence →
 report loop easier to inspect, validate, and trust.

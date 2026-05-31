@@ -13,7 +13,7 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "2.4.0-dev")
+        self.assertEqual(__version__, "2.4.0")
         self.assertEqual(CURRENT_MILESTONE, "v2.4.0")
         self.assertEqual(NEXT_MILESTONE, "v2.5.0")
 
@@ -53,7 +53,8 @@ class ReleaseReadinessTests(unittest.TestCase):
 
     def test_changelog_has_current_milestone(self) -> None:
         changelog = read("CHANGELOG.md")
-        self.assertIn("## v2.4.0 - Unreleased", changelog)
+        self.assertIn("## v2.4.0", changelog)
+        self.assertNotIn("## v2.4.0 - Unreleased", changelog)
         self.assertIn("## v2.3.0", changelog)
         self.assertNotIn("## v2.3.0 - Unreleased", changelog)
 
