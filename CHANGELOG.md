@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.6.0 - Unreleased
+## v2.6.0 - 2026-05-31
 
 arkup & Version-Manager MVP. Turns the v2.5.0 installer into a clean local
 lifecycle: install → check → update → inspect → uninstall.
@@ -28,8 +28,8 @@ lifecycle: install → check → update → inspect → uninstall.
 - `uninstall.sh` shows receipt details before removal and removes the receipt.
 - `arkheionx doctor --install` now reports the install receipt (source kind,
   ref/local, method, version) and stays consistent with `arkup --check`.
-- Version metadata moved to `2.6.0-dev` (`PACKAGE_VERSION = 2.6.0.dev0`); stable
-  remains `v2.5.0`; next milestone `v2.7.0`.
+- Version metadata finalized to `2.6.0` (`PACKAGE_VERSION = 2.6.0`); stable
+  remains `v2.5.0` until v2.6.0 is published; next milestone `v2.7.0`.
 
 ### Safety
 

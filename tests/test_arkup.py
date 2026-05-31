@@ -39,7 +39,7 @@ def write_receipt(install_dir: Path, **fields) -> Path:
         "bin_dir": str(install_dir / "bin"),
         "command_path": str(install_dir / "bin" / "arkheionx"),
         "detected_python": "/usr/bin/python3",
-        "installed_version": "2.6.0-dev",
+        "installed_version": "2.6.0",
         "installer_version": "2.6.0",
         "notes": "",
     }
