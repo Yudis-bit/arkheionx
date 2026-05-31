@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="250" viewBox="0 0 980 250" role="img" aria-label="Arkheionx workflow: Install/Update, Doctor/Open, Map/Flow/Hunt, Prove/Trace, Evidence/Report, Validate/Review">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .box { fill: #f8fafc; stroke: #2563eb; stroke-width: 1.5; }
+      .stage { fill: #0f172a; font: 600 15px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .cmd { fill: #475569; font: 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .title { fill: #0f172a; font: 700 18px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .foot { fill: #64748b; font: 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="978" height="248" rx="14" class="panel" />
+  <text x="32" y="40" class="title">Arkheionx workflow</text>
+
+  <!-- stage boxes: step 158, box width 132, row y=86 height=72 -->
+  <g>
+    <rect x="32"  y="86" width="132" height="72" rx="10" class="box" />
+    <text x="98"  y="118" text-anchor="middle" class="stage">Install /</text>
+    <text x="98"  y="136" text-anchor="middle" class="stage">Update</text>
+    <text x="98"  y="152" text-anchor="middle" class="cmd">arkup · install.sh</text>
+
+    <rect x="190" y="86" width="132" height="72" rx="10" class="box" />
+    <text x="256" y="118" text-anchor="middle" class="stage">Doctor /</text>
+    <text x="256" y="136" text-anchor="middle" class="stage">Open</text>
+    <text x="256" y="152" text-anchor="middle" class="cmd">doctor · open</text>
+
+    <rect x="348" y="86" width="132" height="72" rx="10" class="box" />
+    <text x="414" y="118" text-anchor="middle" class="stage">Map / Flow /</text>
+    <text x="414" y="136" text-anchor="middle" class="stage">Hunt</text>
+    <text x="414" y="152" text-anchor="middle" class="cmd">map · flow · hunt</text>
+
+    <rect x="506" y="86" width="132" height="72" rx="10" class="box" />
+    <text x="572" y="118" text-anchor="middle" class="stage">Prove /</text>
+    <text x="572" y="136" text-anchor="middle" class="stage">Trace</text>
+    <text x="572" y="152" text-anchor="middle" class="cmd">prove --run · trace</text>
+
+    <rect x="664" y="86" width="132" height="72" rx="10" class="box" />
+    <text x="730" y="118" text-anchor="middle" class="stage">Evidence /</text>
+    <text x="730" y="136" text-anchor="middle" class="stage">Report</text>
+    <text x="730" y="152" text-anchor="middle" class="cmd">evidence · report</text>
+
+    <rect x="822" y="86" width="132" height="72" rx="10" class="box" />
+    <text x="888" y="118" text-anchor="middle" class="stage">Validate /</text>
+    <text x="888" y="136" text-anchor="middle" class="stage">Review</text>
+    <text x="888" y="152" text-anchor="middle" class="cmd">validate-artifacts</text>
+  </g>
+
+  <!-- arrows between boxes (gaps at x 164-190, 322-348, 480-506, 638-664, 796-822) -->
+  <g>
+    <path class="arrow" d="M166,122 L188,122" marker-end="url(#ah)" />
+    <path class="arrow" d="M324,122 L346,122" marker-end="url(#ah)" />
+    <path class="arrow" d="M482,122 L504,122" marker-end="url(#ah)" />
+    <path class="arrow" d="M640,122 L662,122" marker-end="url(#ah)" />
+    <path class="arrow" d="M798,122 L820,122" marker-end="url(#ah)" />
+  </g>
+
+  <text x="32" y="210" class="foot">Foundry proves. Arkheionx maps, ranks, guides, summarizes, validates, and packages the evidence.</text>
+  <text x="32" y="230" class="foot">Local-first · No RPC by default · Foundry-aware · Human review required</text>
+</svg>

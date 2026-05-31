@@ -16,29 +16,20 @@
   <code>Foundry-aware</code>
 </p>
 
+<p align="center">
+  <img src="docs/assets/arkheionx-workflow-v27.svg" alt="Arkheionx workflow: install, doctor/open, map/flow/hunt, prove/trace, evidence/report, validate/review" width="900">
+</p>
+
 Arkheionx turns a DeFi codebase into a focused local research workflow:
 
 - a protocol map
 - a money-flow graph
 - a ranked hunter plan
 - a local Foundry proof workflow
-- trace summaries
-- evidence packages
-- responsible report drafts
+- trace summaries, evidence packages, and responsible report drafts
 
 Foundry proves. Arkheionx maps, ranks, guides, summarizes, validates, and
-packages the evidence.
-
-```mermaid
-flowchart LR
-  Repo["DeFi repo"] --> Open["open / map / flow"]
-  Open --> Hunt["hunt<br/>rank targets"]
-  Hunt --> Prove["prove --run<br/>local Foundry"]
-  Prove --> Trace["trace<br/>summarize output"]
-  Trace --> Evidence["evidence<br/>package proof"]
-  Evidence --> Report["report<br/>draft findings"]
-  Report --> Review["manual review"]
-```
+packages the evidence — locally, with no RPC and no secrets.
 
 ## Why Arkheionx
 
@@ -46,26 +37,30 @@ Foundry tells you whether tests pass. Arkheionx helps you decide what to test
 first, then packages the result for human review.
 
 - Map where value enters, exits, and is controlled.
-- Rank high-signal review targets.
+- Rank high-signal review targets instead of guessing.
 - Run targeted local proof workflows.
-- Turn proof/trace output into evidence and report drafts.
+- Turn proof/trace output into evidence and report drafts with honest evidence
+  levels.
+
+## Core Workflow
+
+```mermaid
+flowchart LR
+  Install["install / arkup"] --> Open["doctor / open"]
+  Open --> Hunt["map / flow / hunt"]
+  Hunt --> Prove["prove --run / trace"]
+  Prove --> Evidence["evidence / report"]
+  Evidence --> Review["validate / human review"]
+```
 
 ## 60-Second Quickstart
 
+Install (local-first, no sudo, no PyPI):
+
 ```sh
-python3 -m pip install -e .
-
+sh install.sh
 arkheionx doctor
-arkheionx open .
-arkheionx hunt . --top 5
-arkheionx prove . --target Contract.function --run
-arkheionx trace . --target Contract.function
-arkheionx evidence . --target Contract.function
-arkheionx report . --target Contract.function
 ```
-
-If proof artifacts do not exist yet, Arkheionx prints the next command instead
-of crashing.
 
 Try the bundled demo (local-only, no RPC):
 
@@ -76,7 +71,20 @@ arkheionx open ./arkheionx-demo
 arkheionx hunt ./arkheionx-demo --top 5
 ```
 
-See [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md) for the full guided run.
+Run the full loop on a repo you own or are authorized to review:
+
+```sh
+arkheionx open .
+arkheionx hunt . --top 5
+arkheionx prove . --target Contract.function --run
+arkheionx trace . --target Contract.function
+arkheionx evidence . --target Contract.function
+arkheionx report . --target Contract.function
+```
+
+If proof artifacts do not exist yet, Arkheionx prints the next command instead
+of crashing. See [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md) for the full
+guided run.
 
 ## Command Set
 
@@ -95,8 +103,21 @@ See [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md) for the full guided run.
 | `evidence-status`    | Show which artifacts exist per target              |
 | `validate-artifacts` | Validate generated proof/evidence/report artifacts |
 
-Legacy and advanced commands (`scan`, `validate-config`, `test-plan`,
-`search`) remain supported for specialized workflows.
+Install lifecycle: `sh install.sh`, `sh arkup --check`, `sh uninstall.sh`.
+Legacy/advanced commands (`scan`, `validate-config`, `test-plan`, `search`)
+remain supported for specialized workflows.
+
+## Outputs
+
+Every run writes deterministic local artifacts under `.arkheionx/out/`
+(gitignored):
+
+- protocol understanding and a money-flow graph (JSON + Mermaid)
+- a ranked hunter plan of high-signal review targets
+- Foundry proof scaffolds and execution summaries
+- compact trace summaries
+- structured evidence packages
+- responsible report drafts labelled for human review
 
 ## Evidence Model
 
@@ -110,32 +131,16 @@ Arkheionx keeps evidence levels explicit so a local finding is not overstated.
 A passing test does not prove absence of bugs. A failing test does not
 automatically prove a vulnerability. Human review is required.
 
-## Example Terminal Output
-
-```text
-ARKHEIONX HUNT
-Project: .
-Status: warning
-Mode: heuristic
-Foundry: not-a-foundry-project
-
-Top targets
-  1. Vault.withdraw       92 high    asset exit + share accounting
-  2. Rewards.claim        84 high    reward claim + token out
-  3. Oracle.setPrice      78 medium  pricing control
-
-Next
-  arkheionx prove . --target Vault.withdraw --run
-```
-
 ## Safety Boundaries
 
 - Local repository analysis only.
 - No RPC by default.
 - No live-chain mutation.
 - No private keys or secrets.
+- No transaction broadcasting.
 - No automated exploitation.
 - No auto-submit.
+- No guaranteed vulnerability discovery.
 - Not an audit, certification, or replacement for manual review.
 - No severity guarantee.
 - Use only on repositories you own or are authorized to review.
@@ -162,6 +167,7 @@ for options and the install/update lifecycle, and
 Start:
 
 - [`docs/INSTALLATION.md`](docs/INSTALLATION.md)
+- [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md)
 - [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
 - [`docs/SOLO_RESEARCH_WORKFLOW.md`](docs/SOLO_RESEARCH_WORKFLOW.md)
 
@@ -173,27 +179,24 @@ Core workflow:
 - [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
 - [`docs/EVIDENCE_PACKAGE.md`](docs/EVIDENCE_PACKAGE.md)
 - [`docs/REPORT_DRAFTS.md`](docs/REPORT_DRAFTS.md)
-- [`docs/EVIDENCE_WORKFLOW_HARDENING.md`](docs/EVIDENCE_WORKFLOW_HARDENING.md)
-- [`docs/ARTIFACT_VALIDATION.md`](docs/ARTIFACT_VALIDATION.md)
 
 Advanced:
 
+- [`docs/ARKUP.md`](docs/ARKUP.md) · [`docs/UPDATE_FLOW.md`](docs/UPDATE_FLOW.md)
 - [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
 - [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
-- [`docs/SEARCH_KNOWLEDGE.md`](docs/SEARCH_KNOWLEDGE.md)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 
 ## Current Release
 
 Latest stable release: **v2.6.0 — arkup & Version-Manager MVP**.
 
-Current stable workflow:
-
 ```text
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Next milestone: **v2.7.0**.
+Current milestone: **v2.7.0 — Guided Demo Fixtures & First Real Workflow**.
+Next milestone: **v2.8.0**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## GitHub Action
 
@@ -210,8 +213,8 @@ See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md) for options.
 
 ## Research Archive
 
-Arkheionx began as a defensive DeFi exploit-reproduction archive. The archive
-remains available as background research material:
+Arkheionx began as a defensive DeFi exploit-reproduction archive, still
+available as background research material:
 
 - [`docs/VULNERABILITY_REGISTRY.md`](docs/VULNERABILITY_REGISTRY.md)
 - [`reports/research_dashboard.md`](reports/research_dashboard.md)

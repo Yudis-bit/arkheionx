@@ -152,13 +152,14 @@ class DemoDocsAndMetadataTests(unittest.TestCase):
 
     def test_changelog_and_release_notes(self) -> None:
         changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-        self.assertIn("## v2.7.0 - Unreleased", changelog)
+        self.assertIn("## v2.7.0", changelog)
+        self.assertNotIn("## v2.7.0 - Unreleased", changelog)
         self.assertTrue((REPO_ROOT / "release-notes" / "v2.7.0.md").exists())
 
     def test_version_metadata(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "2.7.0-dev")
+        self.assertEqual(__version__, "2.7.0")
         self.assertEqual(STABLE_RELEASE, "v2.6.0")
         self.assertEqual(CURRENT_MILESTONE, "v2.7.0")
         self.assertEqual(NEXT_MILESTONE, "v2.8.0")

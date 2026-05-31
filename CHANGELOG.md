@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.7.0 - Unreleased
+## v2.7.0 - 2026-05-31
 
 Guided Demo Fixtures & First Real Workflow. Makes the first real Arkheionx run
 easy to experience on a safe local fixture.
@@ -18,8 +18,8 @@ easy to experience on a safe local fixture.
 
 ### Changed
 
-- Version metadata moved to `2.7.0-dev` (`PACKAGE_VERSION = 2.7.0.dev0`);
-  stable remains `v2.6.0`; next milestone `v2.8.0`.
+- Version metadata finalized to `2.7.0` (`PACKAGE_VERSION = 2.7.0`);
+  stable remains `v2.6.0` until v2.7.0 is published; next milestone `v2.8.0`.
 - Onboarding/installation/try-in-5-minutes docs now lead with the guided demo.
 
 ### Safety
