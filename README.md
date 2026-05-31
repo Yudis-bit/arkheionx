@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <code>Stable: v2.9.0</code> ·
+  <code>Stable: v2.10.0</code> ·
   <code>Python 3.11+</code> ·
   <code>Local-first</code> ·
   <code>No RPC by default</code> ·
@@ -225,14 +225,15 @@ Stability and v3 readiness:
 
 ## Current Release
 
-Latest stable release: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening**.
+Latest stable release: **v2.10.0 — Pre-v3 Public Readiness & Stability Hardening**.
 
 ```text
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Active development: **v2.10.0** (pre-v3 hardening). Public-stable direction:
-**v3.0.0 — DeFi Value Flow Workbench**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Active development: **v3.0.0 — DeFi Value Flow Workbench** (public-stable
+direction, not yet released). See [`docs/ROADMAP.md`](docs/ROADMAP.md) and
+[`docs/V3_READINESS.md`](docs/V3_READINESS.md).
 
 ## GitHub Action
 
@@ -240,7 +241,7 @@ Minimal static pre-audit workflow:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.9.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.10.0
   with:
     protocol-type: "auto"
 ```

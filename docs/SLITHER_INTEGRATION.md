@@ -53,7 +53,7 @@ you want Slither enrichment:
 steps:
   - uses: actions/checkout@v4
   - run: pipx install slither-analyzer
-  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.9.0
+  - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.10.0
     with:
       protocol-type: auto
       slither: "true"

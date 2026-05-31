@@ -1,5 +1,5 @@
 #!/bin/sh
-# Arkheionx local installer (v2.9.0 — arkup & install lifecycle).
+# Arkheionx local installer (v2.10.0 — arkup & install lifecycle).
 #
 # Safe, local-first, no-root install of the Arkheionx CLI. It prefers pipx and
 # falls back to an isolated virtual environment under your home directory, and
@@ -21,7 +21,7 @@
 #
 # Environment (all optional):
 #   ARKHEIONX_REPO_URL       Git URL (default: https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git)
-#   ARKHEIONX_STABLE_TAG     Stable tag for the stable channel (default: v2.6.0)
+#   ARKHEIONX_STABLE_TAG     Stable tag for the stable channel (default: v2.10.0)
 #   ARKHEIONX_CHANNEL        stable | main (default: stable)
 #   ARKHEIONX_REF            Explicit git ref (sets source kind = ref)
 #   ARKHEIONX_LOCAL_PATH     Local checkout path (sets source kind = local)
@@ -33,9 +33,9 @@
 #   ARKHEIONX_DRY_RUN        1 to print actions without executing them
 set -eu
 
-INSTALLER_VERSION="2.9.0"
+INSTALLER_VERSION="2.10.0"
 ARKHEIONX_REPO_URL="${ARKHEIONX_REPO_URL:-https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git}"
-ARKHEIONX_STABLE_TAG="${ARKHEIONX_STABLE_TAG:-v2.9.0}"
+ARKHEIONX_STABLE_TAG="${ARKHEIONX_STABLE_TAG:-v2.10.0}"
 ARKHEIONX_CHANNEL="${ARKHEIONX_CHANNEL:-stable}"
 ARKHEIONX_REF="${ARKHEIONX_REF:-}"
 ARKHEIONX_LOCAL_PATH="${ARKHEIONX_LOCAL_PATH:-}"

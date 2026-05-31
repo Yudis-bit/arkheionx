@@ -83,7 +83,7 @@ sh arkup --update --yes
 sh arkup --install --local "$PWD" --yes
 
 # Pin a specific tag
-sh arkup --install --ref v2.9.0 --yes
+sh arkup --install --ref v2.10.0 --yes
 ```
 
 ## Safety
