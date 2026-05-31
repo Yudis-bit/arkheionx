@@ -90,6 +90,7 @@ the chosen base directory, default: current working directory):
   reports/<target>/
     report.json
     report.md
+  artifacts-index.json
 ```
 
 Overwrites are allowed only inside `.arkheionx/out/` and are deterministic.

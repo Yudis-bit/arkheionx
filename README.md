@@ -55,6 +55,8 @@ instead of crashing.
 | `trace` | Summarize proof / trace output |
 | `evidence` | Package proof + trace artifacts |
 | `report` | Create a responsible local report draft |
+| `evidence-status` | Show which artifacts exist per target |
+| `validate-artifacts` | Validate generated artifacts |
 
 Legacy/advanced commands (`scan`, `validate-config`, `test-plan`, `search`)
 remain supported — see [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
@@ -149,8 +151,9 @@ Advanced:
 
 Latest stable release: **v2.3.0 — Evidence & Report Package**. It closes the
 local research loop: `open → map → flow → hunt → prove --run → trace → evidence
-→ report → manual review`. Next milestone: v2.4.0 — Evidence Workflow
-Hardening. See [`docs/ROADMAP.md`](docs/ROADMAP.md) and [`CHANGELOG.md`](CHANGELOG.md).
+→ report → manual review`. In progress: v2.4.0 — Evidence Workflow Hardening
+(`evidence-status`, `validate-artifacts`); next: v2.5.0. See
+[`docs/ROADMAP.md`](docs/ROADMAP.md) and [`CHANGELOG.md`](CHANGELOG.md).
 
 ## GitHub Action
 

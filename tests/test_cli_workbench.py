@@ -117,6 +117,25 @@ class CliWorkbenchTests(unittest.TestCase):
         self.assertIn("prove", result.stdout)
         self.assertIn("hunt", result.stdout)
 
+    # --- evidence-status / validate-artifacts (v2.4.0) ------------------
+    def test_evidence_status_no_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli("evidence-status", FIXTURE, "--artifacts-dir", tmp)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("no-artifacts", result.stdout)
+        self.assertIn("hunt", result.stdout)
+
+    def test_validate_artifacts_empty_is_ok(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli("validate-artifacts", FIXTURE, "--artifacts-dir", tmp)
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("Status: ok", result.stdout)
+
+    def test_status_and_validate_in_help(self) -> None:
+        result = self.run_cli("--help")
+        self.assertIn("evidence-status", result.stdout)
+        self.assertIn("validate-artifacts", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

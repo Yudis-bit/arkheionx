@@ -70,3 +70,76 @@ def evidence_text(payload: dict) -> str:
     lines += ["", "Source artifacts:"]
     lines += [f"- {k}: {v}" for k, v in payload["source_artifacts"].items() if v]
     return "\n".join(lines) + "\n"
+
+
+def render_status(payload: dict, project: str) -> str:
+    if payload["status"] == "no-artifacts":
+        return (
+            "ARKHEIONX EVIDENCE STATUS\n"
+            f"Project: {project}\n"
+            "Status: no-artifacts\n\n"
+            "No proof/evidence/report artifacts found.\n\n"
+            "Next\n"
+            f"  {payload['next_command']}\n"
+        )
+    c = payload["counts"]
+    out = [
+        "ARKHEIONX EVIDENCE STATUS",
+        f"Project: {project}",
+        f"Status: {payload['status']}",
+        "Mode: local",
+        "",
+        "Targets",
+        f"  {c['proof']} proof, {c['trace']} trace, {c['evidence']} evidence, {c['report']} report",
+        "",
+    ]
+    if payload["ready"]:
+        out.append("Ready")
+        for r in payload["ready"]:
+            out.append(f"  {_short(r['target'])}  {r['review_status']}  ({r['evidence_level']})")
+        out.append("")
+    if payload["needs_work"]:
+        out.append("Needs work")
+        for r in payload["needs_work"]:
+            flags = "".join(k[0].upper() if r[k] else "-" for k in ("proof", "trace", "evidence", "report"))
+            out.append(f"  {_short(r['target'])}  {r['review_status']}  [{flags}]")
+            if r["malformed"]:
+                out.append(f"    invalid: {', '.join(r['malformed'])}")
+            out.append(f"    next: {r['next']}")
+        out.append("")
+    out.append("Artifacts")
+    out.append(f"  Root: {payload['artifacts_root']}")
+    out.append("")
+    out.append("Next")
+    out.append(f"  {payload['next_command']}")
+    return "\n".join(out) + "\n"
+
+
+def render_validate(counts: dict, issues: list[str], project: str) -> str:
+    out = [
+        "ARKHEIONX VALIDATE ARTIFACTS",
+        f"Project: {project}",
+        f"Status: {'warning' if issues else 'ok'}",
+        "",
+        "Checked",
+    ]
+    for name in ("proof.json", "trace.json", "evidence.json", "report.json"):
+        out.append(f"  {name}: {counts.get(name, 0)}")
+    out.append("")
+    out.append("Issues")
+    if issues:
+        for i in issues:
+            out.append(f"  - {i}")
+    else:
+        out.append("  none")
+    out.append("")
+    out.append("Next")
+    if issues:
+        out.append("  Regenerate the affected artifacts (prove --run / trace / evidence / report).")
+    else:
+        out.append("  Review the drafts manually before any submission.")
+    return "\n".join(out) + "\n"
+
+
+def _short(target: str) -> str:
+    return target.split(":")[-1].split("#")[0]

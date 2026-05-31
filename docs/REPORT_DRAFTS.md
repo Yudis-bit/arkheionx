@@ -40,4 +40,5 @@ arkheionx report . --from-evidence .arkheionx/out/evidence/Vault_withdraw/eviden
 
 [`../schemas/report-draft.schema.json`](../schemas/report-draft.schema.json).
 
-See also [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md).
+See also [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md) and
+[`EVIDENCE_WORKFLOW_HARDENING.md`](EVIDENCE_WORKFLOW_HARDENING.md).

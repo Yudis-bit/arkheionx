@@ -155,6 +155,19 @@ def _add_workbench_commands(subparsers) -> None:
     report.add_argument("--from-evidence", default="", help="Build from a specific evidence.json artifact.")
     report.set_defaults(func=workbench.report_command)
 
+    ev_status = subparsers.add_parser("evidence-status", help="Inspect proof/evidence/report artifact state for a repo.")
+    ev_status.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    ev_status.add_argument("--target", default="", help="Limit to a single target.")
+    ev_status.add_argument("--artifacts-dir", default="", help="Base directory for .arkheionx/out (default: cwd).")
+    ev_status.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout.")
+    ev_status.set_defaults(func=workbench.evidence_status_command)
+
+    validate = subparsers.add_parser("validate-artifacts", help="Validate generated proof/evidence/report artifacts.")
+    validate.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    validate.add_argument("--artifacts-dir", default="", help="Base directory for .arkheionx/out (default: cwd).")
+    validate.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout.")
+    validate.set_defaults(func=workbench.validate_artifacts_command)
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()

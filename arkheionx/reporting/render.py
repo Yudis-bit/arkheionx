@@ -18,6 +18,7 @@ def render_report(draft: ReportDraft, project: str) -> str:
         f"Project: {project}",
         f"Target: {draft.target}",
         "Status: draft-created",
+        f"Review status: {draft.review_status}",
         f"Mode: {_mode(draft.evidence_level)}",
         "",
         "Draft",

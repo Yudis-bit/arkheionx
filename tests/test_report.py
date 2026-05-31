@@ -83,5 +83,21 @@ class ReportTests(unittest.TestCase):
         self.assertIn("report", result.stdout)
 
 
+    def test_report_markdown_hardening(self) -> None:
+        md = report_markdown(build_report(_EVIDENCE, Path("."), ArtifactWriter(Path(tempfile.mkdtemp())), write=False).payload)
+        for section in ["## Review Status", "## What Is Proven", "## What Is Not Proven",
+                        "## Required Human Checks", "## Safety Notice"]:
+            self.assertIn(section, md)
+        self.assertIn("NEEDS_HUMAN_REVIEW", md)
+        lowered = md.lower()
+        for banned in ["ready to submit", "guaranteed", "final severity:"]:
+            self.assertNotIn(banned, lowered)
+
+    def test_report_review_status_field(self) -> None:
+        draft = build_report(_EVIDENCE, Path("."), ArtifactWriter(Path(tempfile.mkdtemp())), write=False)
+        self.assertEqual(draft.payload["review_status"], "NEEDS_HUMAN_REVIEW")
+        self.assertIn("exploitability", draft.payload["what_is_not_proven"])
+
+
 if __name__ == "__main__":
     unittest.main()

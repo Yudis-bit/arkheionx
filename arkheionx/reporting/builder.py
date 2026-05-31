@@ -50,6 +50,22 @@ def _reproduction_steps(evidence: dict) -> list[str]:
     return steps
 
 
+def _what_is_proven(evidence: dict) -> list[str]:
+    level = evidence.get("evidence_level", "HEURISTIC")
+    proof = evidence.get("proof_summary", {})
+    items: list[str] = []
+    if level in {"EXECUTION_CONFIRMED", "EVIDENCE_READY"}:
+        items.append(
+            f"A relevant local Foundry test executed "
+            f"({proof.get('passed', 0)} passed, {proof.get('failed', 0)} failed)."
+        )
+    if level in {"COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "EVIDENCE_READY"}:
+        items.append("`forge build` compiled the target locally.")
+    if not items:
+        items.append("Static heuristic classification only; nothing is execution-confirmed.")
+    return items
+
+
 def build_report(evidence: dict, root: Path, writer: ArtifactWriter, write: bool = True) -> ReportDraft:
     target = evidence["target"]
     display = evidence.get("target_id", target).split(":")[-1].split("#")[0].split("(")[0]
@@ -73,6 +89,22 @@ def build_report(evidence: dict, root: Path, writer: ArtifactWriter, write: bool
         "proof": evidence["source_artifacts"],
         "trace_summary": evidence["trace_summary"],
         "impact_reasoning": _impact_reasoning(evidence),
+        "review_status": "NEEDS_HUMAN_REVIEW",
+        "what_is_proven": _what_is_proven(evidence),
+        "what_is_not_proven": [
+            "exploitability",
+            "final severity",
+            "absence of other bugs",
+            "live-chain impact",
+            "bounty eligibility",
+        ],
+        "required_human_checks": [
+            "validate the target context",
+            "review the trace manually",
+            "confirm the affected components",
+            "add project-specific impact analysis",
+            "decide if this is reportable",
+        ],
         "assumptions": evidence["impact_notes"]["assumptions"],
         "limitations": evidence["impact_notes"]["limitations"],
         "reproduction_steps": _reproduction_steps(evidence),
@@ -107,6 +139,10 @@ def report_markdown(p: dict) -> str:
     md = [
         f"# {p['title']}",
         "",
+        "## Review Status",
+        "",
+        p.get("review_status", "NEEDS_HUMAN_REVIEW"),
+        "",
         "## Summary",
         "",
         p["summary"],
@@ -115,9 +151,15 @@ def report_markdown(p: dict) -> str:
         "",
         p["evidence_level"],
         "",
-        "## Affected Components",
+        "## What Is Proven",
         "",
     ]
+    md += [f"- {x}" for x in p.get("what_is_proven", [])]
+    md += ["", "## What Is Not Proven", ""]
+    md += [f"- {x}" for x in p.get("what_is_not_proven", [])]
+    md += ["", "## Required Human Checks", ""]
+    md += [f"- {x}" for x in p.get("required_human_checks", [])]
+    md += ["", "## Affected Components", ""]
     md += [f"- {c}" for c in p["affected_components"]] or ["- (none recorded)"]
     md += ["", "## Proof Artifacts", ""]
     md += [f"- {k}: `{v}`" for k, v in p["proof"].items() if v] or ["- (none)"]

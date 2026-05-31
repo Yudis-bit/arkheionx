@@ -36,6 +36,8 @@ The Foundry-style workbench commands are available now:
 - `arkheionx trace <repo> --target Contract.function [--run]` — proof/trace summary.
 - `arkheionx evidence <repo> --target Contract.function` — evidence package (also `--from-proof`).
 - `arkheionx report <repo> --target Contract.function` — responsible report draft (also `--from-evidence`).
+- `arkheionx evidence-status <repo>` — which proof/evidence/report artifacts exist per target (`--target`, `--json`).
+- `arkheionx validate-artifacts <repo>` — validate generated artifacts (`--json`; exit 0 valid / 1 issues / 2 failure).
 
 Shared flags: `--full`, `--show-all`, `--json`, `--build`, `--no-artifacts`,
 `--top N` (`--mermaid` for `flow`). Evidence levels: `HEURISTIC`,

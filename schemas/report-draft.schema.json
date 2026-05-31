@@ -4,7 +4,8 @@
   "type": "object",
   "required": [
     "schema_version", "arkheionx_version", "generated_at", "target", "title",
-    "evidence_level", "status", "summary", "affected_components", "proof",
+    "evidence_level", "status", "review_status", "summary", "what_is_proven",
+    "what_is_not_proven", "required_human_checks", "affected_components", "proof",
     "trace_summary", "impact_reasoning", "assumptions", "limitations",
     "reproduction_steps", "recommended_next_steps", "safety_notice",
     "artifact_paths"
@@ -17,7 +18,11 @@
     "title": {"type": "string"},
     "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "EVIDENCE_READY"]},
     "status": {"type": "string"},
+    "review_status": {"type": "string"},
     "summary": {"type": "string"},
+    "what_is_proven": {"type": "array", "items": {"type": "string"}},
+    "what_is_not_proven": {"type": "array", "items": {"type": "string"}},
+    "required_human_checks": {"type": "array", "items": {"type": "string"}},
     "affected_components": {"type": "array", "items": {"type": "string"}},
     "proof": {"type": "object"},
     "trace_summary": {"type": "object"},

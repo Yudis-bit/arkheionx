@@ -1,11 +1,11 @@
 """Shared Arkheionx version metadata."""
 from __future__ import annotations
 
-__version__ = "2.3.0"
-PACKAGE_VERSION = "2.3.0"
+__version__ = "2.4.0-dev"
+PACKAGE_VERSION = "2.4.0.dev0"
 STABLE_RELEASE = "v2.3.0"
-CURRENT_MILESTONE = "v2.3.0"
-NEXT_MILESTONE = "v2.4.0"
+CURRENT_MILESTONE = "v2.4.0"
+NEXT_MILESTONE = "v2.5.0"
 
 # The legacy pre-audit scanner emits a frozen output version so committed
 # example reports remain stable across package milestones. It is intentionally

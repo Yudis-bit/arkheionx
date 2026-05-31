@@ -21,7 +21,10 @@ from arkheionx.flow.render import render_flow
 from arkheionx.hunt.render import render_hunt
 from arkheionx.hunt.test_suggestions import suggest_tests
 from arkheionx.evidence.builder import build_evidence
-from arkheionx.evidence.render import render_evidence
+from arkheionx.evidence import index as _evindex
+from arkheionx.evidence.status import build_status
+from arkheionx.evidence.validate import validate_artifacts
+from arkheionx.evidence.render import render_evidence, render_status, render_validate
 from arkheionx.proof.generator import generate_scaffold, harness_name
 from arkheionx.proof.payloads import build_proof_payload, build_trace_payload, target_slug
 from arkheionx.proof.render import render_trace
@@ -257,6 +260,7 @@ def prove_command(args: Namespace) -> int:
             result, generated_files, raw_test_path, (raw_test_path, trace_json_path), next_cmds,
         )
         generated_files.append(str(writer.write_text(f"proof/{slug}/proof.json", json.dumps(payload, indent=2))))
+        _refresh_index(args, writer)
         if getattr(args, "json", False):
             print(json.dumps(payload, indent=2))
             return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
@@ -326,6 +330,7 @@ def trace_command(args: Namespace) -> int:
             payload = build_trace_payload(match.qualified_id, status, evidence, raw_path, result.trace)
             tj = str(writer.write_text(f"proof/{slug}/trace.json", json.dumps(payload, indent=2)))
             artifacts = {"Raw": raw_path, "JSON": tj}
+            _refresh_index(args, writer)
         else:
             artifacts = {}
         if getattr(args, "json", False):
@@ -491,6 +496,7 @@ def evidence_command(args: Namespace) -> int:
         write=not getattr(args, "no_artifacts", False),
         proof_override=proof_override, trace_override=trace_override,
     )
+    _refresh_index(args, writer)
     if getattr(args, "json", False):
         print(json.dumps(pkg.payload, indent=2) if pkg.payload else json.dumps({"status": pkg.status, "next": pkg.next_command}))
         return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
@@ -528,8 +534,50 @@ def report_command(args: Namespace) -> int:
         evidence = pkg.payload
 
     draft = build_report(evidence, root, writer, write=not getattr(args, "no_artifacts", False))
+    _refresh_index(args, writer)
     if getattr(args, "json", False):
         print(json.dumps(draft.payload, indent=2))
         return SUCCESS if draft.evidence_level in _PROVEN else WARNING
     print(render_report(draft, args.repo))
     return SUCCESS if draft.evidence_level in _PROVEN else WARNING
+
+
+# --------------------------------------------------------------------------
+# evidence-status / validate-artifacts (v2.4.0)
+# --------------------------------------------------------------------------
+def _refresh_index(args: Namespace, writer) -> None:
+    if getattr(args, "no_artifacts", False):
+        return
+    try:
+        _evindex.refresh_index(args.repo, writer)
+    except Exception:  # index is a cache; never fail the command over it
+        pass
+
+
+def evidence_status_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    target = str(getattr(args, "target", "") or "").strip() or None
+    payload = build_status(args.repo, writer, target=target)
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+    else:
+        print(render_status(payload, args.repo))
+    return SUCCESS if payload["status"] == "ok" else WARNING
+
+
+def validate_artifacts_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    counts, issues = validate_artifacts(writer)
+    if getattr(args, "json", False):
+        print(json.dumps({"status": "warning" if issues else "ok", "checked": counts, "issues": issues}, indent=2))
+    else:
+        print(render_validate(counts, issues, args.repo))
+    return WARNING if issues else SUCCESS

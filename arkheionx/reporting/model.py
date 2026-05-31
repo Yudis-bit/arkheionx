@@ -10,6 +10,7 @@ class ReportDraft:
     title: str
     evidence_level: str
     status: str = "draft-created"
+    review_status: str = "NEEDS_HUMAN_REVIEW"
     md_path: str = ""
     json_path: str = ""
     proof_path: str = ""

@@ -629,3 +629,29 @@ Prepared locally (dev). Do not push/tag/release without maintainer approval.
 
 - [ ] Set `__version__`/pyproject to `2.3.0`, date the CHANGELOG section.
 - [ ] `git tag -a v2.3.0`, push branch + tag, create the GitHub release.
+
+
+## v2.4.0 — Evidence Workflow Hardening
+
+Prepared locally (dev). Do not push/tag/release without maintainer approval.
+
+### Validate
+
+- [ ] `python3 -m unittest discover -s tests -p "test_*.py"` passes.
+- [ ] `make validate` passes.
+- [ ] `arkheionx evidence-status .` and `arkheionx validate-artifacts .` exit
+      gracefully on an empty repo and on a full Foundry-fixture loop.
+- [ ] Malformed artifacts are reported as invalid, not ignored.
+
+### Inspect
+
+- [ ] README lists `evidence-status` and `validate-artifacts`.
+- [ ] CHANGELOG has `## v2.4.0 - Unreleased`.
+- [ ] `release-notes/v2.4.0.md` matches implemented behavior.
+- [ ] `arkheionx version` reports `2.4.0-dev`, `v2.4.0`, `v2.5.0`.
+- [ ] Reports keep NEEDS_HUMAN_REVIEW, no final severity, no live-chain steps.
+
+### Final cut (after approval)
+
+- [ ] Set `__version__`/pyproject to `2.4.0`, date the CHANGELOG section.
+- [ ] `git tag -a v2.4.0`, push branch + tag, create the GitHub release.

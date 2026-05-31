@@ -45,4 +45,5 @@ Severity is never final. Human review is required to determine whether a result
 represents a valid vulnerability. Not a formal audit; no severity guarantee.
 
 See also [`REPORT_DRAFTS.md`](REPORT_DRAFTS.md) and
-[`EXECUTION_PROOF.md`](EXECUTION_PROOF.md).
+[`EXECUTION_PROOF.md`](EXECUTION_PROOF.md). To inspect or validate artifacts
+across a repo, see [`EVIDENCE_WORKFLOW_HARDENING.md`](EVIDENCE_WORKFLOW_HARDENING.md).

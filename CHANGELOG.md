@@ -3,6 +3,64 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.4.0 - Unreleased
+
+Evidence Workflow Hardening. Makes the hunt → prove --run → trace → evidence →
+report loop easier to inspect, validate, and trust.
+
+### Added
+
+- `arkheionx evidence-status <repo>`: compact view of which proof/trace/evidence/
+  report artifacts exist per target, with a review status and next command.
+- `arkheionx validate-artifacts <repo>`: local validation of generated artifacts
+  (required fields, legal evidence-level transitions, referenced paths, report
+  safety wording). Exit 0 valid / 1 issues / 2 failure.
+- Artifact index `.arkheionx/out/artifacts-index.json` (rebuilds by scanning).
+- Report review statuses: NO_PROOF, PROOF_ONLY, TRACE_READY, EVIDENCE_READY,
+  REPORT_DRAFTED; drafted reports are labelled NEEDS_HUMAN_REVIEW.
+- Report drafts now include Review Status, What Is Proven, What Is Not Proven,
+  and Required Human Checks sections.
+- Schema `schemas/artifacts-index.schema.json`.
+
+### Changed
+
+- Consistent next-command chain across hunt/prove/trace/evidence/report/
+  evidence-status/validate-artifacts.
+- prove/trace/evidence/report refresh the artifact index after writing.
+
+### Safety
+
+- No auto-submit, no final severity, no live-chain reproduction. Validation
+  flags reports that omit a safety notice or include disallowed phrasing.
+
+### Evidence model
+
+- Adds review-status classification on top of the existing evidence levels;
+  EVIDENCE_READY still requires execution-confirmed proof plus a trace artifact.
+
+### CLI
+
+- Commands: doctor, open, map, flow, hunt, prove, trace, evidence, report,
+  evidence-status, validate-artifacts.
+
+### Docs
+
+- New `docs/EVIDENCE_WORKFLOW_HARDENING.md`, `docs/ARTIFACT_VALIDATION.md`, and
+  `release-notes/v2.4.0.md`; updated EVIDENCE_PACKAGE, REPORT_DRAFTS,
+  OUTPUT_STANDARD, CLI_REFERENCE, SOLO_RESEARCH_WORKFLOW, ROADMAP.
+
+### Tests
+
+- evidence-status (empty / proof-only / full / malformed), validate-artifacts
+  (valid + invalid cases), artifact index, report hardening, and next-command
+  consistency.
+
+### Known limitations
+
+- Status/validation are local inspection tools, not submission or grading.
+- Validation is internal and deterministic (no third-party schema runtime).
+- Not published to PyPI. Not a formal audit; no severity guarantee.
+
 ## v2.3.0 - 2026-05-31
 
 Evidence & Report Package. Closes the loop:

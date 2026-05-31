@@ -13,23 +13,27 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "2.3.0")
-        self.assertEqual(CURRENT_MILESTONE, "v2.3.0")
-        self.assertEqual(NEXT_MILESTONE, "v2.4.0")
+        self.assertEqual(__version__, "2.4.0-dev")
+        self.assertEqual(CURRENT_MILESTONE, "v2.4.0")
+        self.assertEqual(NEXT_MILESTONE, "v2.5.0")
 
     def test_release_artifacts_exist(self) -> None:
         for path in [
             "release-notes/v2.2.0.md",
             "release-notes/v2.3.0.md",
+            "release-notes/v2.4.0.md",
             "docs/EXECUTION_PROOF.md",
             "docs/TRACE_ENGINE.md",
             "docs/EVIDENCE_PACKAGE.md",
             "docs/REPORT_DRAFTS.md",
+            "docs/EVIDENCE_WORKFLOW_HARDENING.md",
+            "docs/ARTIFACT_VALIDATION.md",
             "docs/RELEASE_CHECKLIST.md",
             "schemas/proof-artifact.schema.json",
             "schemas/trace.schema.json",
             "schemas/evidence.schema.json",
             "schemas/report-draft.schema.json",
+            "schemas/artifacts-index.schema.json",
         ]:
             self.assertTrue((REPO_ROOT / path).exists(), path)
 
@@ -49,10 +53,9 @@ class ReleaseReadinessTests(unittest.TestCase):
 
     def test_changelog_has_current_milestone(self) -> None:
         changelog = read("CHANGELOG.md")
+        self.assertIn("## v2.4.0 - Unreleased", changelog)
         self.assertIn("## v2.3.0", changelog)
         self.assertNotIn("## v2.3.0 - Unreleased", changelog)
-        self.assertIn("## v2.2.0", changelog)
-        self.assertNotIn("## v2.2.0 - Unreleased", changelog)
 
     def test_v230_release_notes_define_evidence_and_safety(self) -> None:
         notes = read("release-notes/v2.3.0.md")
