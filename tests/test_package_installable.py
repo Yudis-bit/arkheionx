@@ -39,7 +39,7 @@ class PackageInstallableTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("package version: 2.9.0", result.stdout)
         self.assertNotIn("2.9.0-dev", result.stdout)
-        self.assertIn("Latest stable release: v2.8.0", result.stdout)
+        self.assertIn("Latest stable release: v2.9.0", result.stdout)
         self.assertIn("Current milestone: v2.9.0", result.stdout)
         self.assertIn("Next milestone: v2.10.0", result.stdout)
 

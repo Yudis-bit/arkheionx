@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <code>Stable: v2.8.0</code> ·
+  <code>Stable: v2.9.0</code> ·
   <code>Python 3.11+</code> ·
   <code>Local-first</code> ·
   <code>No RPC by default</code> ·
@@ -194,14 +194,14 @@ Advanced:
 
 ## Current Release
 
-Latest stable release: **v2.8.0 — Package Data & Distribution Hardening**.
+Latest stable release: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening**.
 
 ```text
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Current milestone: **v2.8.0 — Package Data & Distribution Hardening** (shipped).
-Active development: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Current milestone: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening** (shipped).
+Active development: **v2.10.0**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## GitHub Action
 
@@ -209,7 +209,7 @@ Minimal static pre-audit workflow:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.8.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.9.0
   with:
     protocol-type: "auto"
 ```

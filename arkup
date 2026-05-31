@@ -17,8 +17,8 @@
 # Shared modifiers: --dry-run --yes --install-dir PATH --bin-dir PATH
 set -eu
 
-ARKUP_VERSION="2.8.0"
-ARKHEIONX_STABLE_TAG="${ARKHEIONX_STABLE_TAG:-v2.8.0}"
+ARKUP_VERSION="2.9.0"
+ARKHEIONX_STABLE_TAG="${ARKHEIONX_STABLE_TAG:-v2.9.0}"
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 INSTALL_SH="${ARKHEIONX_INSTALL_SH:-$SCRIPT_DIR/install.sh}"
