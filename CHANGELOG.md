@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.2.0 - Unreleased
+## v2.2.0 - 2026-05-31
 
 Execution Proof & Trace Workbench. Builds on the v2.1.0 Foundry-style workbench
 CLI foundation.

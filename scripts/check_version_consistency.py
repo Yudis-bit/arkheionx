@@ -35,8 +35,8 @@ def check() -> list[str]:
         failures.append(f"scripts/pre_audit_scan.py does not use scanner version {SCANNER_VERSION}")
     if f"Latest stable release: **{STABLE_RELEASE}" not in readme:
         failures.append(f"README.md does not name {STABLE_RELEASE} as latest stable release")
-    if f"## {CURRENT_MILESTONE} - Unreleased" not in changelog:
-        failures.append(f"CHANGELOG.md is missing {CURRENT_MILESTONE} - Unreleased")
+    if f"## {CURRENT_MILESTONE}" not in changelog:
+        failures.append(f"CHANGELOG.md is missing a {CURRENT_MILESTONE} section")
     if f"## {STABLE_RELEASE}" not in changelog or f"## {STABLE_RELEASE} - Unreleased" in changelog:
         failures.append(f"CHANGELOG.md does not treat {STABLE_RELEASE} as released")
     if CURRENT_MILESTONE not in roadmap:

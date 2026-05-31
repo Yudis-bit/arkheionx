@@ -174,6 +174,12 @@ evidence of users.
 
 Latest stable release: **v2.0.0 - Installable Local CLI Package**.
 
+v2.2.0 — Execution Proof & Trace Workbench is finalized as the current release
+candidate (package version 2.2.0). It adds the Foundry-style workbench
+(`open`/`map`/`flow`/`hunt`/`prove`/`trace`), execution proof, and trace
+summaries. The latest published stable GitHub release and Action tag remain
+`v2.0.0` until the `v2.2.0` tag is pushed.
+
 v2.0.1 is prepared locally as the Packaging + Product Repositioning Hotfix. It
 reframes Arkheionx as a local-first DeFi value-flow workbench while preserving
 the installable CLI, module CLI, old scripts, reports, SARIF, issue plans, and
@@ -359,7 +365,7 @@ Read:
 Advanced flow sub-modes such as `arkheionx flow --test-gaps`,
 `arkheionx flow explain`, `arkheionx flow test-template`,
 `arkheionx flow review-map`, and `arkheionx flow verify` are roadmap items.
-They are not yet available commands in v2.0.1.
+They are not yet available commands.
 
 ## Protocol Packs
 

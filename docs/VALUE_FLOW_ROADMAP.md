@@ -19,8 +19,8 @@ Existing audit-prep, SARIF, CI, issue-plan, report, search, and test-plan
 outputs remain supported. Future work prioritizes value-flow mapping, missing
 tests, developer workflow, and researcher review maps.
 
-Current milestone: v2.0.1 — Packaging + Product Repositioning Hotfix.
-Next milestone: v2.1.0 — Value Flow Map MVP.
+Current milestone: v2.2.0 — Execution Proof & Trace Workbench.
+Next milestone: v2.3.0 — Evidence & Report Package.
 v3.0.0 target: DeFi Value Flow Workbench.
 
 ## Milestones

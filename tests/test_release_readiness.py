@@ -13,7 +13,7 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "2.2.0-dev")
+        self.assertEqual(__version__, "2.2.0")
         self.assertEqual(CURRENT_MILESTONE, "v2.2.0")
         self.assertEqual(NEXT_MILESTONE, "v2.3.0")
 
@@ -43,7 +43,9 @@ class ReleaseReadinessTests(unittest.TestCase):
         self.assertIn("a relevant local Foundry test actually executed", readme)
 
     def test_changelog_has_v220(self) -> None:
-        self.assertIn("## v2.2.0 - Unreleased", read("CHANGELOG.md"))
+        changelog = read("CHANGELOG.md")
+        self.assertIn("## v2.2.0", changelog)
+        self.assertNotIn("## v2.2.0 - Unreleased", changelog)
 
     def test_trace_not_marked_planned(self) -> None:
         # trace is implemented; it must not appear under a "Planned" section.

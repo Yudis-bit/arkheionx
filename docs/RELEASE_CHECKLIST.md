@@ -583,9 +583,9 @@ Prepared locally. Do not push/tag/release without maintainer approval.
 ### Inspect
 
 - [ ] README names current commands (incl. `trace`) and evidence levels.
-- [ ] CHANGELOG has `## v2.2.0 - Unreleased`.
+- [ ] CHANGELOG dates the `## v2.2.0` section (no longer "Unreleased").
 - [ ] `release-notes/v2.2.0.md` matches implemented behavior.
-- [ ] `arkheionx version` reports `2.2.0-dev`, `v2.2.0`, `v2.3.0`.
+- [ ] `arkheionx version` reports `2.2.0`, `v2.2.0`, `v2.3.0`.
 - [ ] `git status` clean (no generated `.arkheionx/` output tracked).
 
 ### Release commands (run only after approval)

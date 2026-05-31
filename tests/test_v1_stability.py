@@ -53,7 +53,8 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_changelog_and_roadmap_mark_v1_candidate(self) -> None:
         changelog = self.read("CHANGELOG.md")
-        self.assertIn("## v2.2.0 - Unreleased", changelog)
+        self.assertIn("## v2.2.0", changelog)
+        self.assertNotIn("## v2.2.0 - Unreleased", changelog)
         self.assertIn("## v2.0.0", changelog)
         self.assertNotIn("## v2.0.0 - Unreleased", changelog)
         self.assertIn("## v1.9.0", changelog)

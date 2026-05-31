@@ -96,7 +96,7 @@ and [`FOUNDRY_INTEGRATION.md`](FOUNDRY_INTEGRATION.md).
 ## Future Flow Direction
 
 The base `arkheionx flow` money-flow map is available. Advanced flow sub-modes
-remain planned, not implemented in v2.0.1.
+remain planned, not implemented yet.
 
 Planned directions include:
 
