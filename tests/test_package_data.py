@@ -142,7 +142,8 @@ class PackageDataDocsTests(unittest.TestCase):
         self.assertTrue((REPO_ROOT / "docs" / "PACKAGE_DATA.md").exists())
         self.assertTrue((REPO_ROOT / "release-notes" / "v2.8.0.md").exists())
         changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-        self.assertIn("## v2.8.0 - Unreleased", changelog)
+        self.assertIn("## v2.8.0", changelog)
+        self.assertNotIn("## v2.8.0 - Unreleased", changelog)
 
     def test_no_generated_fixture_artifacts_tracked(self) -> None:
         tracked = subprocess.run(

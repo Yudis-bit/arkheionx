@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.8.0 - Unreleased
+## v2.8.0 - 2026-05-31
 
 Package Data & Distribution Hardening. Bundles demo fixtures as package data so
 `arkheionx demo --copy` works from an installed package, not only a source
@@ -25,7 +25,7 @@ checkout.
 - `arkheionx demo --show` reports the resolved source
   (`Source: bundled package fixture` / `source checkout fixture`); `--copy`
   prints the source kind.
-- Version metadata moved to `2.8.0-dev` (`PACKAGE_VERSION = 2.8.0.dev0`);
+- Version metadata finalized to `2.8.0` (`PACKAGE_VERSION = 2.8.0`);
   stable remains `v2.7.0`; next milestone `v2.9.0`.
 
 ### Safety
