@@ -2,7 +2,7 @@
 """Generate downstream artifacts from metadata/registry.json.
 
 Outputs:
-  - README.md vulnerability registry section (between markers)
+  - docs/VULNERABILITY_REGISTRY.md registry section (between markers)
 
 Usage:
   python3 scripts/generate_registry.py            # write
@@ -17,7 +17,7 @@ import json
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = REPO_ROOT / "metadata" / "registry.json"
-README = REPO_ROOT / "README.md"
+README = REPO_ROOT / "docs" / "VULNERABILITY_REGISTRY.md"
 
 REGISTRY_BEGIN = "<!-- BEGIN: registry -->"
 REGISTRY_END = "<!-- END: registry -->"

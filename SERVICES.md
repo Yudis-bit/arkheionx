@@ -242,6 +242,9 @@ funds are at risk.
 
 Price range: pilot USD 5,000-15,000; expanded USD 15,000-40,000+.
 
+See [`docs/ecosystem/ECOSYSTEM_PACK.md`](docs/ecosystem/ECOSYSTEM_PACK.md) and
+[`reports/ecosystem_readiness_summary.md`](reports/ecosystem_readiness_summary.md).
+
 Best for:
 
 - chain ecosystems;

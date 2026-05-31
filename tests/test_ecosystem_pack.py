@@ -57,10 +57,10 @@ class EcosystemPackTests(unittest.TestCase):
             self.assertTrue((REPO_ROOT / path).exists(), path)
 
     def test_readme_links_ecosystem_workflow(self) -> None:
-        readme = self.read("README.md")
-        self.assertIn("## Ecosystem Readiness", readme)
-        self.assertIn("docs/ecosystem/ECOSYSTEM_PACK.md", readme)
-        self.assertIn("reports/ecosystem_readiness_summary.md", readme)
+        services = self.read("SERVICES.md")
+        self.assertIn("## Ecosystem Pack", services)
+        self.assertIn("docs/ecosystem/ECOSYSTEM_PACK.md", services)
+        self.assertIn("reports/ecosystem_readiness_summary.md", services)
 
     def test_ecosystem_docs_keep_boundaries(self) -> None:
         combined = "\n".join(

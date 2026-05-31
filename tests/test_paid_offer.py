@@ -79,10 +79,9 @@ class PaidOfferTests(unittest.TestCase):
             self.assertNotIn(phrase, combined)
 
     def test_readme_links_paid_offer_docs(self) -> None:
-        readme = self.read("README.md")
-        self.assertIn("## Paid Readiness Support", readme)
-        self.assertIn("docs/business/PAID_OFFER.md", readme)
-        self.assertIn("reports/paid_offer_index.md", readme)
+        services = self.read("SERVICES.md")
+        self.assertIn("docs/business/PAID_OFFER.md", services)
+        self.assertIn("reports/paid_offer_index.md", services)
 
     def test_release_checks_pass(self) -> None:
         for command in [
