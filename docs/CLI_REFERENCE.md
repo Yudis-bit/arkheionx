@@ -34,6 +34,9 @@ Guided, local-only demo workflows (no RPC, no secrets, no mainnet):
 - `arkheionx demo --commands <id>` — print the heuristic and Foundry-backed command sequences.
 - `arkheionx demo --copy <id> <dest>` — copy the fixture (source entries only) to `<dest>`; refuses a non-empty destination unless `--force`.
 
+Demo fixtures are bundled as package data and work from an installed package
+(see [`PACKAGE_DATA.md`](PACKAGE_DATA.md)).
+
 See [`DEMO_WORKFLOW.md`](DEMO_WORKFLOW.md).
 
 ## Workbench Commands

@@ -71,6 +71,9 @@ arkheionx open ./arkheionx-demo
 arkheionx hunt ./arkheionx-demo --top 5
 ```
 
+Demo fixtures ship as package data, so `demo --copy` works from an installed
+Arkheionx, not only a source checkout ([`docs/PACKAGE_DATA.md`](docs/PACKAGE_DATA.md)).
+
 Run the full loop on a repo you own or are authorized to review:
 
 ```sh
@@ -196,7 +199,7 @@ doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> rep
 ```
 
 Current milestone: **v2.7.0 — Guided Demo Fixtures & First Real Workflow** (shipped).
-Active development: **v2.8.0**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Active development: **v2.8.0 — Package Data & Distribution Hardening**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## GitHub Action
 

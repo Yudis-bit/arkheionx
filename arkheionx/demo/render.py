@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from arkheionx.demo.model import Demo
-from arkheionx.demo.registry import source_dir, workflow_commands
+from arkheionx.demo.registry import resolve_source_kind, workflow_commands
 
 SAFETY_NOTICE = (
     "Local-only and safe: no RPC, no private keys, no secrets, no mainnet. "
@@ -30,7 +30,7 @@ def render_show(demo: Demo) -> str:
         f"ARKHEIONX DEMO: {demo.id}",
         f"Name: {demo.name}",
         f"Purpose: {demo.description}",
-        f"Source path: {demo.path}",
+        f"Source: {resolve_source_kind(demo)}",
         f"Recommended target: {demo.recommended_target}",
         f"Expected mode: {demo.expected_mode}",
         f"Docs: {demo.docs}",

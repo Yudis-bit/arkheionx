@@ -157,10 +157,10 @@ class OnboardingSurfaceTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "2.7.0")
+        self.assertEqual(__version__, "2.8.0-dev")
         self.assertEqual(STABLE_RELEASE, "v2.7.0")
-        self.assertEqual(CURRENT_MILESTONE, "v2.7.0")
-        self.assertEqual(NEXT_MILESTONE, "v2.8.0")
+        self.assertEqual(CURRENT_MILESTONE, "v2.8.0")
+        self.assertEqual(NEXT_MILESTONE, "v2.9.0")
 
 
 if __name__ == "__main__":

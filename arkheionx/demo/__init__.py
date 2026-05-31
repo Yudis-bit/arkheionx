@@ -4,9 +4,10 @@ from arkheionx.demo.model import Demo
 from arkheionx.demo.registry import (
     DEMOS,
     demo_ids,
+    fixture_source,
     get_demo,
     list_demos,
-    source_dir,
+    resolve_source_kind,
     workflow_commands,
 )
 from arkheionx.demo.render import render_commands, render_list, render_show
@@ -17,11 +18,12 @@ __all__ = [
     "DemoCopyError",
     "copy_demo",
     "demo_ids",
+    "fixture_source",
     "get_demo",
     "list_demos",
     "render_commands",
     "render_list",
     "render_show",
-    "source_dir",
+    "resolve_source_kind",
     "workflow_commands",
 ]

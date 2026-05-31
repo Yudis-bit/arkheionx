@@ -72,6 +72,13 @@ arkheionx hunt . --top 5
 ARKHEIONX_INSTALL_DIR="$HOME/.arkheionx" sh uninstall.sh --dry-run
 ```
 
+## demo fixture resource not found
+
+This appears only if the package is installed without its bundled demo data.
+Reinstall Arkheionx (`sh install.sh` or `pip install .`) so the package data is
+present, or run from a source checkout that contains
+`examples/oracle-staking-fixture`. See [`PACKAGE_DATA.md`](PACKAGE_DATA.md).
+
 ## `arkup --update` says the receipt is missing or malformed
 
 `arkup --update` needs a valid receipt at `~/.arkheionx/install.json`. If you

@@ -14,7 +14,8 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v2.8.0.
+Current milestone: v2.8.0 — Package Data & Distribution Hardening.
+Next milestone: v2.9.0.
 Latest stable: v2.7.0 — Guided Demo Fixtures & First Real Workflow.
 Foundation shipped: v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench.
@@ -125,6 +126,9 @@ v3.0.0 target: DeFi Value Flow Workbench.
 - [x] **v2.7.0: Guided Demo Fixtures & First Real Workflow shipped.**
       `arkheionx demo` (list/show/commands/copy), a demo fixture registry, and a
       safe local first-run workflow (no RPC, no secrets, no mainnet).
+- [ ] **v2.8.0: Package Data & Distribution Hardening current milestone.**
+      Demo fixtures bundled as package data, resolved via importlib.resources so
+      `arkheionx demo --copy` works from an installed package (no PyPI claim).
 - [ ] **v2.3.0: Evidence & Report Package next milestone.**
       Package execution-confirmed evidence into reviewer-ready report drafts.
 - [ ] **v2.4.0: Flow-Based Foundry Test Templates.**

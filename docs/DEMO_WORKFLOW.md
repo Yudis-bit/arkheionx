@@ -35,6 +35,10 @@ The copy includes only source entries (`README.md`, `foundry.toml`, `src/`,
 `test/`). It refuses a non-empty destination unless you pass `--force`, and never
 writes outside the destination you choose.
 
+Fixtures ship as bundled package data, so this works from an installed package
+(not only a source checkout). `arkheionx demo --show oracle-staking` reports the
+resolved source. See [`PACKAGE_DATA.md`](PACKAGE_DATA.md).
+
 ## 5. Run doctor in the demo
 
 ```sh

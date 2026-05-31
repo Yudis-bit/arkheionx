@@ -61,6 +61,7 @@ validate:
 		arkheionx/cli/commands.py \
 		arkheionx/cli/exit_codes.py \
 		arkheionx/demo/__init__.py \
+		arkheionx/demo/fixtures/__init__.py \
 		arkheionx/demo/model.py \
 		arkheionx/demo/registry.py \
 		arkheionx/demo/copy.py \

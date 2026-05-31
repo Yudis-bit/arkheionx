@@ -12,6 +12,18 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v2.8.0 Package Data & Distribution Hardening Checks
+
+- [ ] Demo fixture bundled under `arkheionx/demo/fixtures/oracle-staking/`.
+- [ ] `importlib.resources.files("arkheionx.demo.fixtures").joinpath("oracle-staking")` resolves.
+- [ ] `pyproject.toml` has `[tool.setuptools.package-data]` for `arkheionx.demo.fixtures` (md/toml/sol only).
+- [ ] `arkheionx demo --show oracle-staking` reports `Source: bundled package fixture`.
+- [ ] `arkheionx demo --copy oracle-staking DEST` works from a non-repo cwd.
+- [ ] Copy excludes `out/`, `cache/`, `.arkheionx/`; bundled fixture has no secrets/RPC/keys.
+- [ ] Non-editable venv install can run `demo --copy` (no source checkout present).
+- [ ] `docs/PACKAGE_DATA.md` present; `release-notes/v2.8.0.md` and `## v2.8.0` changelog present.
+- [ ] `tests/test_package_data.py` passes; no generated demo artifacts tracked.
+
 ## v2.7.0 Guided Demo Fixtures & First Real Workflow Checks
 
 - [ ] `arkheionx demo --list` lists `oracle-staking`.

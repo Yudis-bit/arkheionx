@@ -3,6 +3,67 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.8.0 - Unreleased
+
+Package Data & Distribution Hardening. Bundles demo fixtures as package data so
+`arkheionx demo --copy` works from an installed package, not only a source
+checkout.
+
+### Added
+
+- Bundled demo fixture package data under
+  `arkheionx/demo/fixtures/oracle-staking/` (README, foundry.toml, src, test).
+- `importlib.resources`-based fixture resolution with a source-checkout
+  fallback and a `fixture_source()` context manager.
+- `docs/PACKAGE_DATA.md`; `tests/test_package_data.py` (resource integrity +
+  non-editable venv install smoke).
+
+### Changed
+
+- `arkheionx demo --copy` resolves the bundled package fixture first (then the
+  source checkout) and no longer depends on the current directory.
+- `arkheionx demo --show` reports the resolved source
+  (`Source: bundled package fixture` / `source checkout fixture`); `--copy`
+  prints the source kind.
+- Version metadata moved to `2.8.0-dev` (`PACKAGE_VERSION = 2.8.0.dev0`);
+  stable remains `v2.7.0`; next milestone `v2.9.0`.
+
+### Safety
+
+- Bundled package data is source-only (`*.md`, `*.toml`, `*.sol`); no `out/`,
+  `cache/`, `.arkheionx/`, secrets, RPC URLs, private keys, or live-chain
+  instructions. The fixture remains a toy, not a real protocol.
+
+### Packaging
+
+- `pyproject.toml` adds `[tool.setuptools.package-data]` for
+  `arkheionx.demo.fixtures` (md/toml/sol only). Verified bundled in a
+  non-editable wheel install.
+
+### Demo
+
+- Copy keeps the source allowlist and no-overwrite safety; copy output now
+  shows the resolved source kind.
+
+### Docs
+
+- New `docs/PACKAGE_DATA.md`; updated `docs/DEMO_WORKFLOW.md`,
+  `docs/CLI_REFERENCE.md`, `docs/TROUBLESHOOTING.md`, `docs/ROADMAP.md`,
+  `docs/RELEASE_CHECKLIST.md`; `release-notes/v2.8.0.md`.
+
+### Tests
+
+- `tests/test_package_data.py`: package resource exists/contents, no generated
+  artifacts bundled, copy from a non-repo cwd, and a non-editable venv install
+  smoke (skips gracefully if unavailable).
+
+### Known limitations
+
+- Only the `oracle-staking` demo is bundled.
+- No PyPI, Homebrew, standalone binary, or domain installer.
+- `examples/oracle-staking-fixture` is retained as the source-checkout copy and
+  for the broader test suite.
+
 ## v2.7.0 - 2026-05-31
 
 Guided Demo Fixtures & First Real Workflow. Makes the first real Arkheionx run

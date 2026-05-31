@@ -238,11 +238,12 @@ def demo_command(args: Namespace) -> int:
         if demo is None:
             return _unknown(demo_id)
         try:
-            target, copied = demo_pkg.copy_demo(demo, dest, force=bool(getattr(args, "force", False)))
+            target, copied, source_kind = demo_pkg.copy_demo(demo, dest, force=bool(getattr(args, "force", False)))
         except demo_pkg.DemoCopyError as exc:
             print(f"error: {exc}", file=sys.stderr)
             return exit_codes.INVALID_ARGUMENTS
         print(f"Copied demo '{demo.id}' to {target}")
+        print(f"Source: {source_kind}")
         print(f"Entries: {', '.join(copied)}")
         print("")
         print("Next")
