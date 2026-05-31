@@ -21,16 +21,23 @@ repository (pinned to a stable ref) or from a local checkout.
 
 ## Quick start
 
-From a local checkout (works before the release is published):
-
-```sh
-ARKHEIONX_LOCAL_PATH="$PWD" sh install.sh
-```
-
-From the stable repository ref:
+Stable channel (default):
 
 ```sh
 sh install.sh
+```
+
+From a local checkout (contributors / dev testing):
+
+```sh
+sh install.sh --local "$PWD"
+```
+
+Pin an explicit ref, or use development `main`:
+
+```sh
+sh install.sh --ref v2.5.0
+sh install.sh --channel main
 ```
 
 Preview without changing anything:
@@ -39,8 +46,8 @@ Preview without changing anything:
 sh install.sh --dry-run
 ```
 
-When v2.5.0 is finalized, a one-line form will be documented here. Until then,
-clone the repository and run `sh install.sh` locally.
+For a friendlier lifecycle (`install → check → update → uninstall`), use
+[`arkup`](ARKUP.md), which wraps this script and reads the install receipt.
 
 ## Methods
 
@@ -63,22 +70,50 @@ sh install.sh --method pipx
 | `--help` | Show usage and exit. |
 | `--dry-run` | Print actions without changing anything. |
 | `--method auto\|pipx\|venv` | Choose the install method (default `auto`). |
+| `--channel stable\|main` | Source channel (default `stable`). |
+| `--ref REF` | Install a pinned tag/branch/sha. |
 | `--local PATH` | Install from a local repository checkout. |
+
+## Source model
+
+Precedence: **local > ref > channel**.
+
+| Kind | How | Notes |
+| --- | --- | --- |
+| `stable` | default | Documented stable tag (`ARKHEIONX_STABLE_TAG`, currently `v2.5.0`). |
+| `main` | `--channel main` | Development `main`; opt-in. |
+| `ref` | `--ref vX.Y.Z` | Pinned explicit ref. |
+| `local` | `--local PATH` | Local checkout. |
+
+The chosen source is recorded in the install receipt so [`arkup`](ARKUP.md) can
+update predictably. See [`UPDATE_FLOW.md`](UPDATE_FLOW.md).
 
 ## Environment variables
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `ARKHEIONX_REPO_URL` | `https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git` | Git URL to install from. |
-| `ARKHEIONX_REF` | `v2.4.0` | Git ref to install (stable until v2.5.0 final). |
+| `ARKHEIONX_STABLE_TAG` | `v2.5.0` | Tag used by the stable channel. |
+| `ARKHEIONX_CHANNEL` | `stable` | `stable` or `main`. |
+| `ARKHEIONX_REF` | (unset) | Explicit git ref (sets source kind `ref`). |
+| `ARKHEIONX_LOCAL_PATH` | (unset) | Local checkout (sets source kind `local`). |
 | `ARKHEIONX_INSTALL_DIR` | `$HOME/.arkheionx` | Base install directory. |
 | `ARKHEIONX_BIN_DIR` | `$HOME/.arkheionx/bin` | Wrapper directory. |
 | `ARKHEIONX_INSTALL_METHOD` | `auto` | `auto`, `pipx`, or `venv`. |
-| `ARKHEIONX_LOCAL_PATH` | (unset) | Install from this local checkout. |
 | `ARKHEIONX_YES` | `0` | Set `1` to skip the confirmation prompt. |
 | `ARKHEIONX_DRY_RUN` | `0` | Set `1` to print actions only. |
 
 The installer never modifies `PATH` for you; it only prints the line to add.
+
+## Install receipt
+
+On success the installer writes a local receipt to
+`$ARKHEIONX_INSTALL_DIR/install.json` (schema:
+[`../schemas/install-receipt.schema.json`](../schemas/install-receipt.schema.json)).
+It records the install method, source kind, ref/local path, install/bin dirs,
+command path, detected Python, and installed version. The receipt is local
+runtime state, is never committed, and is removed by `uninstall.sh`.
+[`arkup`](ARKUP.md) and `arkheionx doctor --install` read it.
 
 ## After install
 

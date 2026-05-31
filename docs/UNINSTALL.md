@@ -7,6 +7,7 @@ intentionally conservative.
 
 - `~/.arkheionx/bin/arkheionx` (the wrapper)
 - `~/.arkheionx/venv` (the isolated environment)
+- `~/.arkheionx/install.json` (the install receipt; details shown before removal)
 - `~/.arkheionx/bin` and `~/.arkheionx` **only if empty afterwards**
 
 ## What it never touches

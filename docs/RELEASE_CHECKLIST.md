@@ -12,6 +12,23 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v2.6.0 arkup & Version-Manager MVP Checks
+
+- [ ] `sh -n install.sh`, `sh -n uninstall.sh`, `sh -n arkup` pass.
+- [ ] `sh arkup --help`, `--version`, `--check` work (check works with no receipt).
+- [ ] `arkup --check` and `arkheionx doctor --install` agree on install state.
+- [ ] `install.sh` writes `~/.arkheionx/install.json` with required fields.
+- [ ] Source model verified: stable/main/ref/local resolve correctly.
+- [ ] `arkup --update` keeps the recorded source kind (no silent channel change).
+- [ ] `uninstall.sh` shows and removes the receipt; path guard still enforced.
+- [ ] Dry-run flows change nothing (`install`, `update`, `uninstall`).
+- [ ] No sudo, no shell-profile edits, no secrets, no RPC anywhere.
+- [ ] No PyPI / Homebrew / binary / domain-installer claims.
+- [ ] `schemas/install-receipt.schema.json` present; no runtime receipt committed.
+- [ ] `docs/ARKUP.md`, `docs/UPDATE_FLOW.md`, `release-notes/v2.6.0.md`,
+      and `## v2.6.0` changelog section present.
+- [ ] `tests/test_arkup.py` passes.
+
 ## v2.5.0 Installer & Onboarding Checks
 
 - [ ] `sh -n install.sh` and `sh -n uninstall.sh` pass.

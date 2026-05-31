@@ -72,6 +72,21 @@ arkheionx hunt . --top 5
 ARKHEIONX_INSTALL_DIR="$HOME/.arkheionx" sh uninstall.sh --dry-run
 ```
 
+## `arkup --update` says the receipt is missing or malformed
+
+`arkup --update` needs a valid receipt at `~/.arkheionx/install.json`. If you
+installed with a plain `pip install -e .` there is no receipt; reinstall via the
+script to create one:
+
+```sh
+sh arkup --install --local "$PWD"
+sh arkup --check
+```
+
+A malformed receipt is reported clearly (never crashes). Reinstalling repairs
+it. `arkup --check` and `arkheionx doctor --install` read the same receipt and
+should agree.
+
 ## Still stuck?
 
 Run `arkheionx doctor` and `arkheionx doctor --install` and read the reported

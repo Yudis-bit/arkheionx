@@ -58,11 +58,18 @@ Local install/uninstall helpers live at the repository root:
 ```sh
 sh install.sh --help
 sh uninstall.sh --help
+sh arkup --help
 ```
+
+`arkup` is the MVP install/update lifecycle helper: `sh arkup --check`,
+`sh arkup --install`, `sh arkup --update`, `sh arkup --uninstall`. It reads the
+local install receipt (`~/.arkheionx/install.json`) and keeps your recorded
+source kind (stable/main/ref/local) on update.
 
 They use no root, edit no shell profile, ask for no secrets, and make no RPC or
 live-chain calls. Arkheionx is not published to PyPI. See
 [`INSTALLER.md`](INSTALLER.md), [`UNINSTALL.md`](UNINSTALL.md),
+[`ARKUP.md`](ARKUP.md), [`UPDATE_FLOW.md`](UPDATE_FLOW.md),
 [`ONBOARDING.md`](ONBOARDING.md), and [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
 
 ## Planned Future Commands

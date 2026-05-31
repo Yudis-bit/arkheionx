@@ -16,6 +16,15 @@ under `~/.arkheionx`. It uses no root, edits no shell profile, asks for no
 secrets, and makes no RPC or live-chain calls. See [`INSTALLER.md`](INSTALLER.md)
 for options, environment variables, and a dry-run preview.
 
+For a managed lifecycle (`install → check → update → uninstall`), use
+[`arkup`](ARKUP.md):
+
+```sh
+sh arkup --install --local "$PWD"
+sh arkup --check
+sh arkup --update --dry-run
+```
+
 ## Option B — editable pip install
 
 ```sh

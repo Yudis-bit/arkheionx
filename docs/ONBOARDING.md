@@ -18,6 +18,9 @@ Or a plain editable install:
 python3 -m pip install -e .
 ```
 
+For a managed lifecycle (install → check → update → uninstall), use
+[`arkup`](ARKUP.md): `sh arkup --install`, `sh arkup --check`, `sh arkup --update`.
+
 ## 2. Verify the install
 
 ```sh

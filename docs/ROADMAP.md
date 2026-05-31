@@ -14,7 +14,8 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v2.6.0.
+Current milestone: v2.6.0 — arkup & Version-Manager MVP.
+Next milestone: v2.7.0.
 Latest stable: v2.5.0 — Installer & Onboarding.
 Foundation shipped: v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench.
@@ -119,6 +120,9 @@ v3.0.0 target: DeFi Value Flow Workbench.
 - [x] **v2.5.0: Installer & Onboarding shipped.**
       Safe local `install.sh`/`uninstall.sh`, `doctor --install` health view,
       and first-run onboarding docs (no PyPI, no sudo, no profile edits).
+- [ ] **v2.6.0: arkup & Version-Manager MVP current milestone.**
+      `arkup` lifecycle helper, local install receipt, stable/main/ref/local
+      source model, and explicit update flow (no PyPI, no Homebrew, no binaries).
 - [ ] **v2.3.0: Evidence & Report Package next milestone.**
       Package execution-confirmed evidence into reviewer-ready report drafts.
 - [ ] **v2.4.0: Flow-Based Foundry Test Templates.**

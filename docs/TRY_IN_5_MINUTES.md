@@ -37,8 +37,9 @@ arkheionx report examples/oracle-staking-fixture --target OracleRewardFixture.st
 Generated artifacts are written under `.arkheionx/out/` (gitignored). A passing
 test does not prove absence of bugs; human review is required.
 
-For a guided first run, see [`ONBOARDING.md`](ONBOARDING.md). For problems, see
-[`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+For a guided first run, see [`ONBOARDING.md`](ONBOARDING.md). To install, check,
+and update via the lifecycle helper, see [`ARKUP.md`](ARKUP.md). For problems,
+see [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
 
 ## Prerequisites
 

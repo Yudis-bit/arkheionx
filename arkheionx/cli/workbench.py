@@ -406,6 +406,23 @@ def _doctor_install_view(root: Path) -> int:
     else:
         print(f'  Add the install dir to PATH: export PATH="{bin_hint}:$PATH"')
     print("")
+    import json
+    install_dir = Path(os.environ.get("ARKHEIONX_INSTALL_DIR", str(Path.home() / ".arkheionx")))
+    receipt = install_dir / "install.json"
+    print("Install receipt")
+    if not receipt.is_file():
+        print("  none (install state unknown; managed by install.sh / arkup)")
+    else:
+        try:
+            data = json.loads(receipt.read_text(encoding="utf-8"))
+            for key in ("source_kind", "ref", "local_path", "install_method", "installed_version", "updated_at"):
+                value = data.get(key)
+                if value:
+                    print(f"  {key}: {value}")
+            print(f"  path: {receipt}")
+        except Exception:
+            print(f"  malformed receipt at {receipt} (reinstall to repair)")
+    print("")
     print(LOCAL_ONLY_DISCLAIMER)
     print("")
     print("Next")

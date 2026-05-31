@@ -36,6 +36,7 @@ Usage:
 Removes only Arkheionx-managed paths:
   $ARKHEIONX_BIN_DIR/arkheionx
   $ARKHEIONX_INSTALL_DIR/venv
+  $ARKHEIONX_INSTALL_DIR/install.json (install receipt)
   $ARKHEIONX_INSTALL_DIR (only if empty after the above)
 
 It does not use root, does not edit shell profiles, and never deletes a repo
@@ -82,20 +83,44 @@ confirm() {
     case "$reply" in y|Y|yes|YES) return 0 ;; *) err "Aborted by user."; exit 1 ;; esac
 }
 
+show_receipt() {
+    rcp="$1"
+    [ -f "$rcp" ] || return 0
+    log "Found install receipt: $rcp"
+    if command -v python3 >/dev/null 2>&1; then
+        python3 - "$rcp" <<'PY' 2>/dev/null || log "  (receipt unreadable)"
+import json, sys
+try:
+    data = json.load(open(sys.argv[1], encoding="utf-8"))
+except Exception:
+    print("  (receipt malformed; will still be removed)"); sys.exit(0)
+for key in ("source_kind", "ref", "local_path", "installed_version", "install_method"):
+    value = data.get(key)
+    if value:
+        print(f"  {key}: {value}")
+PY
+    fi
+    log ""
+}
+
 main() {
     wrapper="$ARKHEIONX_BIN_DIR/arkheionx"
     venv="$ARKHEIONX_INSTALL_DIR/venv"
+    receipt="$ARKHEIONX_INSTALL_DIR/install.json"
 
     log "Arkheionx uninstaller"
+    show_receipt "$receipt"
     log "Will remove only these Arkheionx-managed paths:"
     log "  $wrapper"
     log "  $venv"
+    log "  $receipt"
     log "  $ARKHEIONX_INSTALL_DIR (only if empty afterwards)"
     log ""
 
     confirm
     remove "$wrapper"
     remove "$venv"
+    remove "$receipt"
 
     # Remove the managed bin dir only if it is now empty.
     if [ -d "$ARKHEIONX_BIN_DIR" ] && [ -z "$(ls -A "$ARKHEIONX_BIN_DIR" 2>/dev/null)" ]; then

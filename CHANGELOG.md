@@ -3,6 +3,75 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.6.0 - Unreleased
+
+arkup & Version-Manager MVP. Turns the v2.5.0 installer into a clean local
+lifecycle: install → check → update → inspect → uninstall.
+
+### Added
+
+- Root-level `arkup`: a safe, local-first install/update lifecycle helper
+  (`--help`, `--version`, `--check`/`--status`, `--install`, `--update`,
+  `--uninstall`) with `--channel`/`--ref`/`--local`/`--dry-run`/`--yes`/
+  `--install-dir`/`--bin-dir`. MVP wrapper, not a full version manager.
+- Local install receipt at `$ARKHEIONX_INSTALL_DIR/install.json` written by
+  `install.sh` (source kind, ref/local, method, dirs, command path, versions).
+- `schemas/install-receipt.schema.json`.
+- Source model: `stable` / `main` / `ref` / `local` (precedence local > ref >
+  channel).
+
+### Changed
+
+- `install.sh` resolves the source model and writes/refreshes the receipt
+  (preserving `installed_at` across updates); stable channel defaults to
+  `ARKHEIONX_STABLE_TAG` (`v2.5.0`).
+- `uninstall.sh` shows receipt details before removal and removes the receipt.
+- `arkheionx doctor --install` now reports the install receipt (source kind,
+  ref/local, method, version) and stays consistent with `arkup --check`.
+- Version metadata moved to `2.6.0-dev` (`PACKAGE_VERSION = 2.6.0.dev0`); stable
+  remains `v2.5.0`; next milestone `v2.7.0`.
+
+### Safety
+
+- No root, no shell-profile edits, no secrets, no RPC, no live-chain activity.
+- No PyPI, Homebrew, binary, or domain-installer claims. No background updaters
+  or telemetry. The receipt is local runtime state and is never committed.
+
+### Installer
+
+- `install.sh` keeps POSIX `sh` quality (`sh -n` clean) and dry-run safety.
+
+### Arkup
+
+- `arkup --update` keeps the recorded source kind and never silently changes
+  channel/ref; explicit `--channel`/`--ref`/`--local` overrides are honored.
+- `arkup --check` works (and does not crash) when the receipt is missing or
+  malformed.
+
+### CLI
+
+- `arkheionx doctor` default output is unchanged; the receipt block is additive
+  to `doctor --install`.
+
+### Docs
+
+- New `docs/ARKUP.md`, `docs/UPDATE_FLOW.md`; updated `docs/INSTALLER.md`,
+  `docs/UNINSTALL.md`, `docs/ONBOARDING.md`, `docs/TROUBLESHOOTING.md`,
+  `docs/INSTALLATION.md`, `docs/TRY_IN_5_MINUTES.md`, `docs/CLI_REFERENCE.md`,
+  `docs/ROADMAP.md`, `docs/RELEASE_CHECKLIST.md`; `release-notes/v2.6.0.md`.
+
+### Tests
+
+- `tests/test_arkup.py` (help/version/check/dry-run flows, receipt handling,
+  no-sudo/no-profile-edit guarantees) and receipt coverage in
+  `tests/test_installer.py`.
+
+### Known limitations
+
+- `arkup` is an MVP wrapper, not a full version manager (no foundryup parity).
+- No PyPI, Homebrew, standalone binaries, or domain installer.
+- Update fetches from git/local only; no background or automatic updates.
+
 ## v2.5.0 - 2026-05-31
 
 Installer & Onboarding. Makes Arkheionx easier to install, verify, and try

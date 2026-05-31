@@ -136,12 +136,14 @@ Next
 
 ```sh
 sh install.sh                # safe local installer (pipx or venv, no sudo)
+sh arkup --check             # inspect/update an existing install (MVP)
 python3 -m pip install -e .  # or a plain editable install
 arkheionx doctor
 ```
 
-See [`docs/INSTALLER.md`](docs/INSTALLER.md) for options, environment variables,
-and [`docs/UNINSTALL.md`](docs/UNINSTALL.md) to remove it.
+See [`docs/INSTALLER.md`](docs/INSTALLER.md) and [`docs/ARKUP.md`](docs/ARKUP.md)
+for options and the install/update lifecycle, and
+[`docs/UNINSTALL.md`](docs/UNINSTALL.md) to remove it.
 
 ## Documentation
 
@@ -179,7 +181,7 @@ Current stable workflow:
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Next milestone: **v2.6.0**.
+Next milestone: **v2.6.0 — arkup & Version-Manager MVP** (in development).
 
 ## GitHub Action
 
