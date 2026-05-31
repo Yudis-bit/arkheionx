@@ -3,6 +3,8 @@ node_modules/
 out/
 cache/
 .venv/
+artifacts/arkheionx/
+.arkheionx/
 __pycache__/
 *.pyc
 .pytest_cache/

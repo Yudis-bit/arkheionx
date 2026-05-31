@@ -16,6 +16,25 @@ maintainer explicitly cuts them.
 
 ### Added
 
+- Foundry-powered solo security testing workbench (preview): `arkheionx open`,
+  `arkheionx map`, `arkheionx flow`, `arkheionx hunt`, and `arkheionx prove`.
+- Additive engine packages: `arkheionx/protocol`, `arkheionx/flow`,
+  `arkheionx/hunt`, `arkheionx/proof`, and `arkheionx/artifacts`.
+- Explicit evidence levels on every major result: `HEURISTIC`,
+  `COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`, `REPORT_READY`.
+- Foundry-style compact terminal output (the product surface), with `--full`,
+  `--show-all`, `--json`, `--mermaid`, and `--no-artifacts`.
+- Source-kind classifier that hides interfaces, libraries, tests, invariants,
+  mocks, fixtures, archives, generated, and scripts by default.
+- Fully-qualified target identities (display/qualified/stable) and ambiguous
+  `--target` rejection with suggestions.
+- `arkheionx doctor` project + Foundry diagnostics.
+- Exit codes: 0 ok, 1 heuristic-only warning, 2 failure (doctor stays 0 when usable).
+- Deterministic JSON + Mermaid artifacts written under `.arkheionx/out/`.
+- Optional Foundry precision backend with graceful heuristic fallback.
+- Schemas: `protocol-map`, `value-flow`, `hunt-report`, `proof-artifact`.
+- Docs: `PROTOCOL_MAP.md`, `SOLO_RESEARCH_WORKFLOW.md`, `OUTPUT_STANDARD.md`,
+  `FOUNDRY_INTEGRATION.md`.
 - Value Flow Workbench documentation.
 - Value Flow Roadmap documentation.
 - Developer and researcher workflow documentation.
@@ -30,9 +49,11 @@ maintainer explicitly cuts them.
 
 ### Known Limitations
 
-- v2.0.1 is a repositioning hotfix.
-- The future `arkheionx flow` command is not implemented yet.
-- Existing scan/report workflows remain the current functional interface.
+- The workbench commands are a preview; classification is heuristic by default.
+- Advanced flow sub-modes (`flow --test-gaps`, `flow explain`,
+  `flow test-template`, `flow review-map`, `flow verify`) are not implemented yet.
+- `prove` generates Foundry proof scaffolds; it does not auto-prove bugs.
+- Existing scan/report workflows remain fully supported.
 
 ## v2.0.0
 

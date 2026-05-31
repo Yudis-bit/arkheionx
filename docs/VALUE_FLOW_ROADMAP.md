@@ -49,12 +49,16 @@ Available in v2.0.1:
 - `arkheionx validate-config`;
 - `arkheionx doctor`;
 - `arkheionx version`;
+- `arkheionx open` (workbench preview);
+- `arkheionx map` (workbench preview);
+- `arkheionx flow` (workbench preview, money-flow map);
+- `arkheionx hunt` (workbench preview);
+- `arkheionx prove` (workbench preview, Foundry proof scaffold);
 - module CLI equivalents;
 - legacy script entrypoints.
 
 Planned for future releases, not available in v2.0.1:
 
-- `arkheionx flow`;
 - `arkheionx flow --test-gaps`;
 - `arkheionx flow explain`;
 - `arkheionx flow test-template`;

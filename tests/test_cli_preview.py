@@ -26,9 +26,9 @@ class CliPreviewTests(unittest.TestCase):
     def test_doctor_command(self) -> None:
         result = self.run_cli("doctor")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("Package imports: ok", result.stdout)
-        self.assertIn("amm", result.stdout)
-        self.assertIn("lending", result.stdout)
+        self.assertIn("ARKHEIONX DOCTOR", result.stdout)
+        self.assertIn("Foundry", result.stdout)
+        self.assertIn("Rule packs:", result.stdout)
         self.assertIn("local/static", result.stdout)
 
 

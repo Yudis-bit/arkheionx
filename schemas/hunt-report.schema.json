@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Hunt Report",
+  "type": "object",
+  "required": ["hunter_targets"],
+  "properties": {
+    "hunter_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rank", "target_id", "score", "priority", "evidence_level"],
+        "properties": {
+          "rank": {"type": "integer"},
+          "score": {"type": "integer", "minimum": 0, "maximum": 100},
+          "priority": {"type": "string", "enum": ["low", "medium", "high"]},
+          "bug_classes": {"type": "array", "items": {"type": "string"}},
+          "suggested_tests": {"type": "array", "items": {"type": "string"}},
+          "suggested_invariants": {"type": "array", "items": {"type": "string"}},
+          "evidence_level": {"type": "string"},
+          "next_command": {"type": "string"}
+        }
+      }
+    }
+  }
+}

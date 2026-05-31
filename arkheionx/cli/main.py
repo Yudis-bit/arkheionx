@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from arkheionx.cli import commands, exit_codes
+from arkheionx.cli import commands, exit_codes, workbench
 
 
 PROTOCOL_TYPES = [
@@ -36,8 +36,9 @@ def build_parser() -> argparse.ArgumentParser:
     version = subparsers.add_parser("version", help="Print package and release milestone metadata.")
     version.set_defaults(func=commands.version_command)
 
-    doctor = subparsers.add_parser("doctor", help="Check local package imports, rule packs, and safety posture.")
-    doctor.set_defaults(func=commands.doctor_command)
+    doctor = subparsers.add_parser("doctor", help="Diagnose Arkheionx install, Foundry, and project layout.")
+    doctor.add_argument("repo", nargs="?", default=".", help="Project root to diagnose (default: current dir).")
+    doctor.set_defaults(func=workbench.doctor_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
@@ -84,6 +85,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     search.set_defaults(func=commands.search_command)
 
+    _add_workbench_commands(subparsers)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser
@@ -92,6 +95,47 @@ def build_parser() -> argparse.ArgumentParser:
 def _print_help(parser: argparse.ArgumentParser) -> int:
     parser.print_help()
     return exit_codes.SUCCESS
+
+
+def _add_workbench_commands(subparsers) -> None:
+    """Register the Foundry-powered workbench commands: open/map/flow/hunt/prove."""
+
+    def _common(sub) -> None:
+        sub.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+        sub.add_argument("--from-report", default="", help="Reuse semantic_lite from an existing scan report JSON.")
+        sub.add_argument("--foundry", action="store_true", help="Detect Foundry (no build) to label evidence.")
+        sub.add_argument("--build", action="store_true", help="Run forge build for compiler-confirmed evidence.")
+        sub.add_argument("--show-all", action="store_true", help="Include interfaces/tests/mocks/fixtures hidden by default.")
+        sub.add_argument("--full", action="store_true", help="Detailed terminal output (tables, all edges).")
+        sub.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout.")
+        sub.add_argument("--no-artifacts", action="store_true", help="Do not write artifact files.")
+        sub.add_argument("--artifacts-dir", default="", help="Base directory for .arkheionx/out (default: cwd).")
+        sub.add_argument("--verbose", action="store_true", help="Verbose diagnostic output.")
+        sub.add_argument("--raw", action="store_true", help="Include raw backend output.")
+        sub.add_argument("--top", type=int, default=10, help="Number of top targets to consider/show.")
+
+    opener = subparsers.add_parser("open", help="One-command project understanding (scan + orient).")
+    _common(opener)
+    opener.set_defaults(func=workbench.open_command)
+
+    mapper = subparsers.add_parser("map", help="Draw the protocol: roles, journeys, money flow, hunter targets.")
+    _common(mapper)
+    mapper.set_defaults(func=workbench.map_command)
+
+    flow = subparsers.add_parser("flow", help="Build the money-flow graph (compact summary + Mermaid).")
+    _common(flow)
+    flow.add_argument("--mermaid", action="store_true", help="Print Mermaid graph to stdout.")
+    flow.set_defaults(func=workbench.flow_command)
+
+    hunt = subparsers.add_parser("hunt", help="Rank bug-hunting surfaces for a solo researcher.")
+    _common(hunt)
+    hunt.set_defaults(func=workbench.hunt_command)
+
+    prove = subparsers.add_parser("prove", help="Generate a local Foundry proof scaffold for a target.")
+    _common(prove)
+    prove.add_argument("--target", default="", help="Fully-qualified target, e.g. Vault.withdraw or src/Vault.sol:Vault.withdraw(uint256).")
+    prove.add_argument("--run", action="store_true", help="Run Foundry when an executable test exists (never fakes proof).")
+    prove.set_defaults(func=workbench.prove_command)
 
 
 def main(argv: list[str] | None = None) -> int:

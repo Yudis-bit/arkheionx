@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Money Flow",
+  "type": "object",
+  "required": ["entrypoints", "exits", "value_holders", "edges", "evidence_level"],
+  "properties": {
+    "entrypoints": {"type": "array", "items": {"type": "string"}},
+    "exits": {"type": "array", "items": {"type": "string"}},
+    "value_holders": {"type": "array", "items": {"type": "string"}},
+    "asset_movements": {"type": "array"},
+    "accounting_surfaces": {"type": "array", "items": {"type": "string"}},
+    "pricing_dependencies": {"type": "array", "items": {"type": "string"}},
+    "privileged_movers": {"type": "array", "items": {"type": "string"}},
+    "external_integrations": {"type": "array", "items": {"type": "string"}},
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "kind", "confidence"],
+        "properties": {
+          "kind": {"type": "string"},
+          "confidence": {"type": "string", "enum": ["low", "medium", "high"]}
+        }
+      }
+    },
+    "evidence_level": {"type": "string"}
+  }
+}

@@ -40,7 +40,7 @@ class ValueFlowPositioningTests(unittest.TestCase):
         self.assertIn("v3.0.0 target: DeFi Value Flow Workbench", roadmap)
         self.assertIn("v2.1.0 — Value Flow Map MVP", value_roadmap)
 
-    def test_future_flow_commands_are_marked_planned(self) -> None:
+    def test_advanced_flow_submodes_are_marked_planned(self) -> None:
         docs = "\n".join(
             self.read(path)
             for path in [
@@ -57,7 +57,6 @@ class ValueFlowPositioningTests(unittest.TestCase):
             ]
         )
         for command in [
-            "arkheionx flow",
             "arkheionx flow --test-gaps",
             "arkheionx flow explain",
             "arkheionx flow test-template",
@@ -67,6 +66,27 @@ class ValueFlowPositioningTests(unittest.TestCase):
             self.assertIn(command, docs)
         self.assertIn("not available in v2.0.1", docs)
         self.assertIn("planned", docs.lower())
+
+    def test_workbench_commands_documented_as_available(self) -> None:
+        readme = self.read("README.md")
+        for command in [
+            "arkheionx open",
+            "arkheionx map",
+            "arkheionx flow",
+            "arkheionx hunt",
+            "arkheionx prove",
+        ]:
+            self.assertIn(command, readme)
+        for doc in [
+            "docs/PROTOCOL_MAP.md",
+            "docs/SOLO_RESEARCH_WORKFLOW.md",
+            "docs/OUTPUT_STANDARD.md",
+            "docs/FOUNDRY_INTEGRATION.md",
+        ]:
+            self.assertTrue((REPO_ROOT / doc).exists(), doc)
+            self.assertIn(doc, readme)
+        workflow = self.read("docs/SOLO_RESEARCH_WORKFLOW.md")
+        self.assertIn("Find the money. Map the protocol. Prove the bug.", workflow)
 
     def test_safety_and_archive_truth_are_preserved(self) -> None:
         readme = self.read("README.md")

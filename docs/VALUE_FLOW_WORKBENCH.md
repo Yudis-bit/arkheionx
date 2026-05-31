@@ -78,21 +78,35 @@ Advanced workflows built on this foundation include pre-audit readiness
 reports, SARIF, issue plans, CI artifacts, baseline/diff outputs, delivery
 reports, and ecosystem summaries.
 
+## Foundry-Powered Workbench (Preview)
+
+Arkheionx now ships a Foundry-powered solo security testing workbench. These
+commands are available now:
+
+- `arkheionx open <repo>` — one-command project understanding;
+- `arkheionx map <repo>` — draw the protocol (roles, journeys, money flow);
+- `arkheionx flow <repo>` — build the money-flow graph (Mermaid + JSON);
+- `arkheionx hunt <repo>` — rank bug-hunting surfaces;
+- `arkheionx prove <repo> --target <fn>` — generate a local Foundry proof scaffold.
+
+See [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md),
+[`PROTOCOL_MAP.md`](PROTOCOL_MAP.md), [`OUTPUT_STANDARD.md`](OUTPUT_STANDARD.md),
+and [`FOUNDRY_INTEGRATION.md`](FOUNDRY_INTEGRATION.md).
+
 ## Future Flow Direction
 
-The future `arkheionx flow` command is planned, not implemented in v2.0.1.
+The base `arkheionx flow` money-flow map is available. Advanced flow sub-modes
+remain planned, not implemented in v2.0.1.
 
 Planned directions include:
 
-- `arkheionx flow` for a local value-flow map;
 - `arkheionx flow --test-gaps` for missing value-flow tests;
 - `arkheionx flow explain` for plain-language flow explanations;
 - `arkheionx flow test-template` for flow-based Foundry starter tests;
 - `arkheionx flow review-map` for researcher-oriented review areas;
 - `arkheionx flow verify` for before/after checks.
 
-These are roadmap items. Use the current `scan`, `test-plan`, and `search`
-commands for v2.0.1.
+These are roadmap items.
 
 ## Safety Boundaries
 

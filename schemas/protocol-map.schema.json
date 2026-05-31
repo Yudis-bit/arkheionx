@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Protocol Map",
+  "type": "object",
+  "required": [
+    "meta", "protocol_snapshot", "user_journeys", "money_flow", "contracts",
+    "functions", "value_hotspots", "hunter_targets", "suggested_tests",
+    "invariants", "foundry", "artifacts", "limitations", "next_commands"
+  ],
+  "properties": {
+    "meta": {"type": "object"},
+    "protocol_snapshot": {
+      "type": "object",
+      "required": ["root", "protocol_types", "foundry_status", "evidence_level"],
+      "properties": {
+        "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "REPORT_READY"]}
+      }
+    },
+    "user_journeys": {"type": "array"},
+    "money_flow": {"type": "object"},
+    "contracts": {"type": "array"},
+    "functions": {"type": "array"},
+    "value_hotspots": {"type": "array"},
+    "hunter_targets": {"type": "array"},
+    "suggested_tests": {"type": "array"},
+    "invariants": {"type": "array"},
+    "foundry": {"type": "object"},
+    "artifacts": {"type": "object"},
+    "limitations": {"type": "array"},
+    "next_commands": {"type": "array"}
+  }
+}

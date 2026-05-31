@@ -316,11 +316,35 @@ Read:
 - [`docs/CLI_ROADMAP.md`](docs/CLI_ROADMAP.md)
 - [`docs/VALUE_FLOW_ROADMAP.md`](docs/VALUE_FLOW_ROADMAP.md)
 
-Planned future commands such as `arkheionx flow`,
-`arkheionx flow --test-gaps`, `arkheionx flow explain`,
-`arkheionx flow test-template`, `arkheionx flow review-map`, and
-`arkheionx flow verify` are roadmap items. They are not available commands in
-v2.0.1.
+## Foundry-Powered Workbench (Preview)
+
+Arkheionx now ships a Foundry-powered solo security testing workbench:
+
+```sh
+arkheionx open .    # one-command project understanding
+arkheionx map .     # draw the protocol: roles, journeys, money flow
+arkheionx flow .    # money-flow graph (Mermaid + JSON)
+arkheionx hunt .    # rank bug-hunting surfaces
+arkheionx prove . --target claimReward   # local Foundry proof scaffold
+```
+
+Find the money. Map the protocol. Prove the bug. Results carry an explicit
+evidence level (`HEURISTIC`, `COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`,
+`REPORT_READY`), and generated artifacts are written under
+`.arkheionx/out/`. Foundry is an optional precision backend; commands
+degrade gracefully to heuristic analysis when it is unavailable.
+
+Read:
+
+- [`docs/SOLO_RESEARCH_WORKFLOW.md`](docs/SOLO_RESEARCH_WORKFLOW.md)
+- [`docs/PROTOCOL_MAP.md`](docs/PROTOCOL_MAP.md)
+- [`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md)
+- [`docs/FOUNDRY_INTEGRATION.md`](docs/FOUNDRY_INTEGRATION.md)
+
+Advanced flow sub-modes such as `arkheionx flow --test-gaps`,
+`arkheionx flow explain`, `arkheionx flow test-template`,
+`arkheionx flow review-map`, and `arkheionx flow verify` are roadmap items.
+They are not yet available commands in v2.0.1.
 
 ## Protocol Packs
 
