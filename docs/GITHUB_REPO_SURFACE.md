@@ -8,7 +8,7 @@ understanding, money-flow mapping, hunter target ranking, proof/trace evidence,
 and responsible report drafting. The historical DeFi exploit-reproduction
 archive remains documented and still backs the workbench's pattern knowledge.
 
-Latest stable release: **v2.4.0 — Evidence Workflow Hardening**.
+Latest stable release: **v2.5.0 — Installer & Onboarding**.
 
 ## Recommended GitHub About
 

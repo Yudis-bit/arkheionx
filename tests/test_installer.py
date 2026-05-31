@@ -126,7 +126,7 @@ class OnboardingSurfaceTests(unittest.TestCase):
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
         self.assertEqual(__version__, "2.5.0")
-        self.assertEqual(STABLE_RELEASE, "v2.4.0")
+        self.assertEqual(STABLE_RELEASE, "v2.5.0")
         self.assertEqual(CURRENT_MILESTONE, "v2.5.0")
         self.assertEqual(NEXT_MILESTONE, "v2.6.0")
 

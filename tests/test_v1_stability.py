@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.4.0"
+STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.5.0"
 
 
 class V1StabilityTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_public_docs_name_stable_surface(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("Latest stable release: **v2.4.0", readme)
+        self.assertIn("Latest stable release: **v2.5.0", readme)
         self.assertIn(STABLE_ACTION, readme)
         self.assertIn("docs/CLI_REFERENCE.md", readme)
 
@@ -81,7 +81,7 @@ class V1StabilityTests(unittest.TestCase):
         self.assertIn("v2.2.0: Execution Proof & Trace Workbench shipped", roadmap)
         self.assertIn("v2.3.0: Evidence & Report Package shipped", roadmap)
         self.assertIn("v2.4.0: Evidence Workflow Hardening shipped", roadmap)
-        self.assertIn("v2.5.0: Installer & Onboarding current milestone", roadmap)
+        self.assertIn("v2.5.0: Installer & Onboarding shipped", roadmap)
 
 
 if __name__ == "__main__":
