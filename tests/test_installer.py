@@ -46,7 +46,7 @@ class InstallerScriptTests(unittest.TestCase):
     def test_default_repo_and_ref_documented(self) -> None:
         text = read(INSTALL)
         self.assertIn("github.com/Yudis-bit/DeFi-Exploit-PoCs", text)
-        self.assertIn("v2.7.0", text)  # stable tag default (ARKHEIONX_STABLE_TAG)
+        self.assertIn("v2.8.0", text)  # stable tag default (ARKHEIONX_STABLE_TAG)
 
     def test_no_pypi_claim(self) -> None:
         text = (read(INSTALL) + read(REPO_ROOT / "docs/INSTALLER.md")).lower()
@@ -158,7 +158,7 @@ class OnboardingSurfaceTests(unittest.TestCase):
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
         self.assertEqual(__version__, "2.8.0")
-        self.assertEqual(STABLE_RELEASE, "v2.7.0")
+        self.assertEqual(STABLE_RELEASE, "v2.8.0")
         self.assertEqual(CURRENT_MILESTONE, "v2.8.0")
         self.assertEqual(NEXT_MILESTONE, "v2.9.0")
 
