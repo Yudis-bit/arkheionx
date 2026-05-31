@@ -17,7 +17,7 @@ written reason in the release PR.
 - [ ] `python3 scripts/check_release_readiness.py --check` passes (also run by `make validate`).
 - [ ] `docs/PUBLIC_SURFACE.md` lists every `arkheionx --help` command and the three shell scripts.
 - [ ] `docs/STABILITY_CONTRACT.md` and `docs/V3_READINESS.md` present and linked from README/ROADMAP.
-- [ ] Version metadata is `2.10.0-dev` (stable `v2.9.0`, current `v2.10.0`, next `v3.0.0`).
+- [ ] Version metadata is `2.10.0` (stable `v2.9.0`, current `v2.10.0`, next `v3.0.0`).
 - [ ] `release-notes/v2.10.0.md` and `## v2.10.0` changelog section present.
 
 ## v2.9.0 Multi-Fixture Demo Expansion & Public Workflow Hardening Checks

@@ -3,7 +3,7 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.10.0 - Unreleased
+## v2.10.0 - 2026-05-31
 
 Pre-v3 Public Readiness & Stability Hardening. The final v2 hardening milestone
 before the v3.0 public-stable cut. No new product features: this milestone
@@ -26,7 +26,7 @@ release-readiness gating. Not released; not tagged.
 
 ### Changed
 
-- Version metadata to `2.10.0-dev` (stable `v2.9.0`, current `v2.10.0`, next
+- Version metadata to `2.10.0` (stable `v2.9.0`, current `v2.10.0`, next
   `v3.0.0`).
 - Root README redesigned into a polished landing page; docs map links the new
   public-surface, stability-contract, and v3-readiness docs.
@@ -59,7 +59,7 @@ release-readiness gating. Not released; not tagged.
 
 - `tests/test_public_surface_contract.py`, `tests/test_public_workflow.py`,
   `tests/test_release_readiness_gate.py`; `tests/test_cli_colors.py`; updated
-  version-metadata assertions to `2.10.0-dev` / `v3.0.0`.
+  version-metadata assertions to `2.10.0` / `v3.0.0`.
 
 ### Release Readiness
 
