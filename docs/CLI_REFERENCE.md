@@ -46,6 +46,25 @@ Shared flags: `--full`, `--show-all`, `--json`, `--build`, `--no-artifacts`,
 [`TRACE_ENGINE.md`](TRACE_ENGINE.md), [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md),
 and [`REPORT_DRAFTS.md`](REPORT_DRAFTS.md).
 
+## Install & Onboarding (v2.5.0)
+
+- `arkheionx doctor` — install, Foundry, and project-layout diagnosis.
+- `arkheionx doctor --install` — focused install-health view: resolved command
+  path, Python executable, package import/version, optional Foundry status, and
+  a PATH hint. Exit `0`.
+
+Local install/uninstall helpers live at the repository root:
+
+```sh
+sh install.sh --help
+sh uninstall.sh --help
+```
+
+They use no root, edit no shell profile, ask for no secrets, and make no RPC or
+live-chain calls. Arkheionx is not published to PyPI. See
+[`INSTALLER.md`](INSTALLER.md), [`UNINSTALL.md`](UNINSTALL.md),
+[`ONBOARDING.md`](ONBOARDING.md), and [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+
 ## Planned Future Commands
 
 These commands are roadmap items and are not available in v2.0.1:

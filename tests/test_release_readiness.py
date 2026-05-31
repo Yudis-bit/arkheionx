@@ -13,9 +13,9 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "2.4.0")
-        self.assertEqual(CURRENT_MILESTONE, "v2.4.0")
-        self.assertEqual(NEXT_MILESTONE, "v2.5.0")
+        self.assertEqual(__version__, "2.5.0-dev")
+        self.assertEqual(CURRENT_MILESTONE, "v2.5.0")
+        self.assertEqual(NEXT_MILESTONE, "v2.6.0")
 
     def test_release_artifacts_exist(self) -> None:
         for path in [
@@ -49,7 +49,7 @@ class ReleaseReadinessTests(unittest.TestCase):
         self.assertIn("does not prove the absence of a bug", proof)
         # EXECUTION_CONFIRMED must be tied to actual execution everywhere it appears.
         readme = read("README.md")
-        self.assertIn("a relevant local Foundry test actually executed", readme)
+        self.assertIn("a relevant local Foundry test executed", readme)
 
     def test_changelog_has_current_milestone(self) -> None:
         changelog = read("CHANGELOG.md")

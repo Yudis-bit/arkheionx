@@ -38,6 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor = subparsers.add_parser("doctor", help="Diagnose Arkheionx install, Foundry, and project layout.")
     doctor.add_argument("repo", nargs="?", default=".", help="Project root to diagnose (default: current dir).")
+    doctor.add_argument("--install", action="store_true", help="Focus on install health: command path, Python, package import, PATH hint.")
     doctor.set_defaults(func=workbench.doctor_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")

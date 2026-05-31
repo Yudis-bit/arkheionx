@@ -3,6 +3,69 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v2.5.0 - Unreleased
+
+Installer & Onboarding. Makes Arkheionx easier to install, verify, and try
+safely without weakening any local-first boundary.
+
+### Added
+
+- Root-level `install.sh`: safe, local-first installer (POSIX `sh`). Prefers
+  `pipx`, falls back to an isolated venv under `~/.arkheionx`. Supports
+  `--help`, `--dry-run`, `--method auto|pipx|venv`, `--local`, and the
+  `ARKHEIONX_*` environment variables. No root, no shell-profile edits, no
+  secrets, no RPC.
+- Root-level `uninstall.sh`: removes only Arkheionx-managed paths, with a
+  `--dry-run`, a guard that refuses non-`.arkheionx` install dirs, and `pipx`
+  guidance.
+- `arkheionx doctor --install`: focused install-health view (command path,
+  Python executable, package import/version, optional Foundry status, PATH
+  hint).
+
+### Changed
+
+- Version metadata moved to `2.5.0-dev` (`PACKAGE_VERSION = 2.5.0.dev0`).
+  Stable release remains `v2.4.0`; next milestone is `v2.6.0`.
+
+### Safety
+
+- Installer/uninstaller use no root, edit no shell profile, ask for no secrets,
+  and make no RPC or live-chain calls. Arkheionx remains unpublished on PyPI.
+
+### Installer
+
+- pipx and venv methods; deterministic local-checkout install via
+  `ARKHEIONX_LOCAL_PATH`; exit codes `0`/`1`/`2`.
+
+### Onboarding
+
+- First-run guide and a no-RPC 5-minute demo on the bundled
+  `examples/oracle-staking-fixture`.
+
+### CLI
+
+- `doctor` default output is unchanged; `doctor --install` is additive.
+
+### Docs
+
+- New `docs/INSTALLER.md`, `docs/UNINSTALL.md`, `docs/ONBOARDING.md`,
+  `docs/TROUBLESHOOTING.md`; updated `docs/INSTALLATION.md`,
+  `docs/TRY_IN_5_MINUTES.md`, `docs/CLI_REFERENCE.md`, `docs/ROADMAP.md`,
+  `docs/RELEASE_CHECKLIST.md`; `release-notes/v2.5.0.md`.
+
+### Tests
+
+- `tests/test_installer.py`: script existence, `sh -n` syntax, help/dry-run,
+  no-sudo / no-profile-edit guarantees, default repo/ref, uninstall safety
+  guard, docs presence, version metadata, and no-PyPI claim.
+
+### Known limitations
+
+- `arkup` version manager is deferred to v2.6.0 or later.
+- No PyPI, domain installer, standalone binary, or Homebrew distribution.
+- The one-line `curl | sh` form is documented as available only after v2.5.0
+  is finalized; until then, install from a local checkout.
+
 ## v2.4.0 - 2026-05-31
 
 Evidence Workflow Hardening. Makes the hunt → prove --run → trace → evidence →

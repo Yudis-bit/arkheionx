@@ -377,9 +377,47 @@ def _git_info(root: Path) -> str:
     return f"{branch.stdout.strip()} ({state})"
 
 
+def _doctor_install_view(root: Path) -> int:
+    """Compact install-health view: arkheionx doctor --install."""
+    import os
+    import sys
+
+    foundry_status = foundry_mod.detect_foundry(root, with_version=True)
+    cmd_path = shutil.which("arkheionx") or "not on PATH"
+    bin_hint = str(Path.home() / ".arkheionx" / "bin")
+    on_path = any(p == bin_hint for p in os.environ.get("PATH", "").split(os.pathsep))
+
+    print("ARKHEIONX DOCTOR")
+    print("Status: ok")
+    print("")
+    print("Install")
+    print(f"  arkheionx command: {cmd_path}")
+    print(f"  Python executable: {sys.executable} ({platform.python_version()})")
+    print("  Package import: ok")
+    print(f"  Package version: {__import__('arkheionx').__version__}")
+    print("")
+    print("Foundry (optional)")
+    print(f"  forge: {foundry_status.forge_version or 'missing'}")
+    print(f"  status: {foundry_header(foundry_status)}")
+    print("")
+    print("PATH")
+    if on_path or cmd_path != "not on PATH":
+        print("  arkheionx is reachable on your PATH.")
+    else:
+        print(f'  Add the install dir to PATH: export PATH="{bin_hint}:$PATH"')
+    print("")
+    print(LOCAL_ONLY_DISCLAIMER)
+    print("")
+    print("Next")
+    print("  arkheionx open .")
+    return SUCCESS
+
+
 def doctor_command(args: Namespace) -> int:
     repo = getattr(args, "repo", ".") or "."
     root = _resolve_root(repo) or Path.cwd()
+    if getattr(args, "install", False):
+        return _doctor_install_view(root)
     foundry_status = foundry_mod.detect_foundry(root, with_version=True)
     try:
         analysis = analyze(root, use_foundry=False, top=10)

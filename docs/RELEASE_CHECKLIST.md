@@ -12,6 +12,24 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v2.5.0 Installer & Onboarding Checks
+
+- [ ] `sh -n install.sh` and `sh -n uninstall.sh` pass.
+- [ ] `sh install.sh --help` and `sh uninstall.sh --help` print usage.
+- [ ] `ARKHEIONX_DRY_RUN=1 sh install.sh` prints actions without changes.
+- [ ] Local install verified: `ARKHEIONX_LOCAL_PATH="$PWD" sh install.sh` then
+      `arkheionx version`.
+- [ ] `sh uninstall.sh --dry-run` removes nothing; full run removes only
+      `~/.arkheionx`-managed paths.
+- [ ] Installer uses no root, edits no shell profile, asks for no secrets, and
+      makes no RPC or live-chain calls.
+- [ ] No PyPI, domain installer, standalone binary, or Homebrew claims.
+- [ ] `arkheionx doctor` unchanged; `arkheionx doctor --install` exits `0`.
+- [ ] `docs/INSTALLER.md`, `docs/UNINSTALL.md`, `docs/ONBOARDING.md`,
+      `docs/TROUBLESHOOTING.md` present and linked.
+- [ ] `release-notes/v2.5.0.md` and `## v2.5.0` changelog section present.
+- [ ] `tests/test_installer.py` passes.
+
 ## v1.7 Config Stabilization Checks
 
 - [ ] `schemas/arkheionx_config.schema.json` exists and parses.

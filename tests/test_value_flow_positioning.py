@@ -14,10 +14,10 @@ class ValueFlowPositioningTests(unittest.TestCase):
         readme = self.read("README.md")
         self.assertIn("money-flow graph", readme)
         self.assertIn("Find the money. Map the protocol. Prove the path.", readme)
-        self.assertIn("Foundry tells you whether your tests pass.", readme)
+        self.assertIn("Foundry tells you whether tests pass.", readme)
         self.assertIn("Show protocol roles, journeys, and money flow", readme)
-        self.assertIn("Not a formal audit", readme)
-        self.assertIn("no final severity guarantee", readme)
+        self.assertIn("Not an audit", readme)
+        self.assertIn("No severity guarantee.", readme)
 
     def test_value_flow_docs_exist_and_are_linked(self) -> None:
         for path in [
@@ -75,8 +75,8 @@ class ValueFlowPositioningTests(unittest.TestCase):
         for doc in [
             "docs/PROTOCOL_MAP.md",
             "docs/SOLO_RESEARCH_WORKFLOW.md",
-            "docs/OUTPUT_STANDARD.md",
-            "docs/FOUNDRY_INTEGRATION.md",
+            "docs/TRACE_ENGINE.md",
+            "docs/EVIDENCE_PACKAGE.md",
         ]:
             self.assertTrue((REPO_ROOT / doc).exists(), doc)
             self.assertIn(doc, readme)
@@ -87,11 +87,13 @@ class ValueFlowPositioningTests(unittest.TestCase):
         readme = self.read("README.md")
         for phrase in [
             "Local repository analysis only.",
-            "No RPC by default; no live-chain mutation.",
-            "No private keys, mnemonics, or secret handling.",
-            "No exploit automation.",
-            "No auto-submit of reports.",
-            "Not a formal audit; no final severity guarantee.",
+            "No RPC by default.",
+            "No live-chain mutation.",
+            "No private keys or secrets.",
+            "No automated exploitation.",
+            "No auto-submit.",
+            "Not an audit, certification, or replacement for manual review.",
+            "No severity guarantee.",
         ]:
             self.assertIn(phrase, readme)
         # The archive corpus truth now lives in the research dashboard, linked from README.

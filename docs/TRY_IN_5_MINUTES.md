@@ -7,6 +7,39 @@ to map value movement, spot missing tests, and prepare advanced review outputs.
 The demo is local and static. It does not call RPC, inspect deployed
 contracts, submit transactions, or create GitHub issues.
 
+## Workbench Demo (Fastest Path)
+
+After installing (see [`INSTALLER.md`](INSTALLER.md) or
+[`INSTALLATION.md`](INSTALLATION.md)), run the workbench against the bundled
+fixture. No Foundry is required for these steps:
+
+```sh
+arkheionx doctor
+arkheionx open examples/oracle-staking-fixture
+arkheionx hunt examples/oracle-staking-fixture --top 5
+arkheionx evidence-status examples/oracle-staking-fixture
+arkheionx validate-artifacts examples/oracle-staking-fixture
+```
+
+In `HEURISTIC` mode (no Foundry), `open` and `hunt` exit `1` to signal that the
+output is static-only ranking, not execution-confirmed.
+
+If Foundry (`forge`) is available inside a Foundry project, you can continue to
+the execution-backed loop:
+
+```sh
+arkheionx prove examples/oracle-staking-fixture --target OracleRewardFixture.stake --run
+arkheionx trace examples/oracle-staking-fixture --target OracleRewardFixture.stake
+arkheionx evidence examples/oracle-staking-fixture --target OracleRewardFixture.stake
+arkheionx report examples/oracle-staking-fixture --target OracleRewardFixture.stake
+```
+
+Generated artifacts are written under `.arkheionx/out/` (gitignored). A passing
+test does not prove absence of bugs; human review is required.
+
+For a guided first run, see [`ONBOARDING.md`](ONBOARDING.md). For problems, see
+[`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+
 ## Prerequisites
 
 - Python 3.11 or newer.

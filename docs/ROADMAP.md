@@ -14,9 +14,9 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v2.4.0 — Evidence Workflow Hardening.
-Next milestone: v2.5.0 — Installer / Onboarding.
-Foundation shipped: v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
+Current milestone: v2.5.0 — Installer & Onboarding.
+Next milestone: v2.6.0.
+Foundation shipped: v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench.
 
 - [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
@@ -113,11 +113,12 @@ v3.0.0 target: DeFi Value Flow Workbench.
 - [x] **v2.3.0: Evidence & Report Package shipped.**
       Package proof/trace into a structured evidence package and a responsible
       local report draft (no auto-submit, no final severity).
-- [ ] **v2.4.0: Evidence Workflow Hardening current milestone.**
+- [x] **v2.4.0: Evidence Workflow Hardening shipped.**
       evidence-status, validate-artifacts, artifact index, report readiness,
       and a stronger next-command chain.
-- [ ] **v2.5.0: Installer / Onboarding next milestone.**
-      Smoother local install and first-run onboarding.
+- [ ] **v2.5.0: Installer & Onboarding current milestone.**
+      Safe local `install.sh`/`uninstall.sh`, `doctor --install` health view,
+      and first-run onboarding docs (no PyPI, no sudo, no profile edits).
 - [ ] **v2.3.0: Evidence & Report Package next milestone.**
       Package execution-confirmed evidence into reviewer-ready report drafts.
 - [ ] **v2.4.0: Flow-Based Foundry Test Templates.**

@@ -132,13 +132,16 @@ Next
 
 - Python 3.11+.
 - Foundry is optional but recommended for compiler and execution confirmation.
-- Local editable install is the supported path.
-- No PyPI package is published.
+- Local install is the supported path. No PyPI package is published.
 
 ```sh
-python3 -m pip install -e .
+sh install.sh                # safe local installer (pipx or venv, no sudo)
+python3 -m pip install -e .  # or a plain editable install
 arkheionx doctor
 ```
+
+See [`docs/INSTALLER.md`](docs/INSTALLER.md) for options, environment variables,
+and [`docs/UNINSTALL.md`](docs/UNINSTALL.md) to remove it.
 
 ## Documentation
 
@@ -176,7 +179,7 @@ Current stable workflow:
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Next milestone: **v2.5.0**.
+Next milestone: **v2.5.0 — Installer & Onboarding** (in development).
 
 ## GitHub Action
 

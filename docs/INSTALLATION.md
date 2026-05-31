@@ -1,17 +1,27 @@
 # Installation
 
-Arkheionx v2.0.1 uses local editable installation for development and
-authorized repository review. The CLI remains local-first and static while the
-public direction shifts toward a DeFi value-flow workbench.
+Arkheionx is local-first and installs from a source checkout. It is **not
+published to PyPI**. There are two supported paths.
+
+## Option A — installer script (recommended)
+
+```sh
+ARKHEIONX_LOCAL_PATH="$PWD" sh install.sh
+export PATH="$HOME/.arkheionx/bin:$PATH"   # venv method only
+arkheionx doctor --install
+```
+
+The installer prefers `pipx` and falls back to an isolated virtual environment
+under `~/.arkheionx`. It uses no root, edits no shell profile, asks for no
+secrets, and makes no RPC or live-chain calls. See [`INSTALLER.md`](INSTALLER.md)
+for options, environment variables, and a dry-run preview.
+
+## Option B — editable pip install
 
 ```sh
 python3 -m pip install -e .
 arkheionx doctor
-arkheionx scan .
 ```
-
-This repository does not publish a PyPI package in v2.0.1. Install from the
-source checkout you are working in.
 
 If your system Python blocks editable installs because it is externally
 managed, create a virtual environment first:
@@ -26,33 +36,39 @@ python3 -m pip install -e .
 
 - Python 3.11 or newer.
 - No runtime Python dependencies.
-- No RPC endpoint, private key, mnemonic, GitHub token, or hosted service.
+- Foundry (`forge`) is optional but recommended for compiler- and
+  execution-confirmed evidence.
+- No RPC endpoint, no private keys, no secrets, no GitHub token, no hosted
+  service.
 
-## Local Workflow
+## Verify
 
 ```sh
 arkheionx version
-arkheionx validate-config --config examples/arkheionx.config.example.json
-arkheionx search "oracle stale price"
+arkheionx doctor
+arkheionx doctor --install
 ```
 
-Existing scripts still work:
+## First run
 
 ```sh
-python3 scripts/pre_audit_scan.py --root . --protocol-type auto
-python3 scripts/generate_test_plan.py --check
+arkheionx open examples/oracle-staking-fixture
+arkheionx hunt examples/oracle-staking-fixture --top 5
 ```
 
-## Planned Flow Workflow
+See [`ONBOARDING.md`](ONBOARDING.md) and [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md).
 
-Future value-flow commands such as `arkheionx flow`,
-`arkheionx flow --test-gaps`, `arkheionx flow explain`,
-`arkheionx flow test-template`, `arkheionx flow review-map`, and
-`arkheionx flow verify` are planned roadmap items. They are not installed or
-documented as available commands in v2.0.1.
+## Uninstall
+
+```sh
+sh uninstall.sh --dry-run
+sh uninstall.sh
+```
+
+See [`UNINSTALL.md`](UNINSTALL.md).
 
 ## Safety
 
 The installed CLI is local/static only. It does not perform live-chain calls,
 transaction execution, deployed-contract scanning, remote cloning, or exploit
-automation.
+automation. Trouble? See [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).

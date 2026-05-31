@@ -18,9 +18,9 @@ class PublicSurfaceTests(unittest.TestCase):
     def test_readme_front_page_positioning(self) -> None:
         readme = self.read("README.md")
         self.assertIn("# Arkheionx", readme)
-        self.assertIn("A Foundry-style local security workbench for DeFi protocol research.", readme)
+        self.assertIn("Foundry-style local security workbench for DeFi protocol research.", readme)
         self.assertIn("Find the money. Map the protocol. Prove the path.", readme)
-        self.assertIn("Foundry tells you whether your tests pass.", readme)
+        self.assertIn("Foundry tells you whether tests pass.", readme)
         self.assertIn("## Why Arkheionx", readme)
         self.assertIn("## 60-Second Quickstart", readme)
         self.assertIn("## Evidence Model", readme)
