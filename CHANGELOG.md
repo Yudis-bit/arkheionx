@@ -3,36 +3,73 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## Unreleased
+## v2.10.0 - Unreleased
 
-Post-release public-surface polish on top of the published v2.9.0 (no version
-change, no new tag, no release-notes file). Toward v2.10.0.
+Pre-v3 Public Readiness & Stability Hardening. The final v2 hardening milestone
+before the v3.0 public-stable cut. No new product features: this milestone
+documents and locks the public surface, polishes output and errors, and adds
+release-readiness gating. Not released; not tagged.
 
 ### Added
 
-- `arkheionx/cli/colors.py`: restrained, TTY-gated terminal color for
-  human-facing output (`ARKHEIONX_COLOR=always|never|auto`, honors `NO_COLOR`
-  and `CI`). Applied to version, doctor/`--install`, demo, open/map/flow/hunt,
-  prove, and trace headings/statuses/evidence levels.
+- `docs/PUBLIC_SURFACE.md` — public command + script inventory with stability
+  labels and the intended v3.0 contract.
+- `docs/STABILITY_CONTRACT.md` — CLI/JSON/artifact/safety stability policy.
+- `docs/V3_READINESS.md` — actionable checklist for the v3.0 cut.
+- `scripts/check_release_readiness.py` — aggregate release-readiness gate
+  (wired into `make validate`).
+- Restrained, TTY-gated terminal color (`arkheionx/cli/colors.py`,
+  `ARKHEIONX_COLOR=always|never|auto`, honors `NO_COLOR`/`CI`) across version,
+  doctor/`--install`, demo, open/map/flow/hunt/prove/trace.
 - README visuals: `docs/assets/arkheionx-evidence-ladder.svg` and
   `docs/assets/arkheionx-output-pipeline.svg`.
 
 ### Changed
 
-- Root README redesigned into a polished landing page (who it is for, demo
-  table, outputs, evidence ladder, terminal-color note).
+- Version metadata to `2.10.0-dev` (stable `v2.9.0`, current `v2.10.0`, next
+  `v3.0.0`).
+- Root README redesigned into a polished landing page; docs map links the new
+  public-surface, stability-contract, and v3-readiness docs.
 - Output color is never applied to `--json` output or to artifact files written
   under `.arkheionx/out/`.
 
+### Public Surface
+
+- 18 CLI commands and 3 shell scripts inventoried; a contract test guards the
+  documented surface against drift.
+
+### CLI Output
+
+- Shared color-aware report helper keeps headings, `Status:`, and evidence
+  levels consistent; plain output unchanged for non-TTY/CI/pipes.
+
+### Safety
+
+- Safety boundaries restated unchanged in the stability contract and v3
+  readiness docs; `check_safety_wording --strict` and the readiness gate guard
+  against forbidden distribution/over-promise claims.
+
 ### Docs
 
-- Color note added to `docs/CLI_REFERENCE.md`, `docs/OUTPUT_STANDARD.md`, and
-  `docs/TROUBLESHOOTING.md`.
+- Color note in `docs/CLI_REFERENCE.md`, `docs/OUTPUT_STANDARD.md`,
+  `docs/TROUBLESHOOTING.md`; ROADMAP and RELEASE_CHECKLIST link the readiness
+  gate and v3 readiness checklist.
 
 ### Tests
 
-- `tests/test_cli_colors.py` (TTY/NO_COLOR/CI/ARKHEIONX_COLOR gating, JSON and
-  artifact files stay plain).
+- `tests/test_public_surface_contract.py`, `tests/test_public_workflow.py`,
+  `tests/test_release_readiness_gate.py`; `tests/test_cli_colors.py`; updated
+  version-metadata assertions to `2.10.0-dev` / `v3.0.0`.
+
+### Release Readiness
+
+- `make validate` now runs the readiness gate alongside docs-links, version, and
+  safety checks.
+
+### Known limitations
+
+- Heuristic-first; Foundry optional; local-only; not a formal audit. Not on
+  PyPI; no Homebrew, standalone binary, or domain installer.
 
 ## v2.9.0 - 2026-05-31
 

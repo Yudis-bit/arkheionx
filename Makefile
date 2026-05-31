@@ -36,6 +36,7 @@ validate:
 		scripts/check_docs_links.py \
 		scripts/check_version_consistency.py \
 		scripts/check_safety_wording.py \
+		scripts/check_release_readiness.py \
 		arkheionx/__init__.py \
 		arkheionx/version.py \
 		arkheionx/core/models.py \
@@ -94,6 +95,7 @@ validate:
 	python3 scripts/check_docs_links.py --check
 	python3 scripts/check_version_consistency.py --check
 	python3 scripts/check_safety_wording.py --strict
+	python3 scripts/check_release_readiness.py --check
 
 search:
 	python3 scripts/search_knowledge.py "oracle stale price"

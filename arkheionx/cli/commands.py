@@ -215,8 +215,9 @@ def demo_command(args: Namespace) -> int:
     from arkheionx.cli import colors
 
     def _unknown(demo_id: str) -> int:
-        print(f"error: unknown demo: {demo_id}", file=sys.stderr)
-        print(f"valid demos: {', '.join(demo_pkg.demo_ids())}", file=sys.stderr)
+        print(f"error: unknown demo '{demo_id}'.", file=sys.stderr)
+        print(f"Available demos: {', '.join(demo_pkg.demo_ids())}", file=sys.stderr)
+        print("Next: arkheionx demo --list", file=sys.stderr)
         return exit_codes.INVALID_ARGUMENTS
 
     show_id = getattr(args, "show", "") or ""

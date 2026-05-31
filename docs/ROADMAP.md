@@ -19,6 +19,10 @@ Latest stable: v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardeni
 Foundation shipped: v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening; v2.8.0 — Package Data & Distribution Hardening; v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench.
 
+Pre-v3 readiness is tracked in [`V3_READINESS.md`](V3_READINESS.md); the public
+command contract is in [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md) and
+[`STABILITY_CONTRACT.md`](STABILITY_CONTRACT.md).
+
 - [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
       JSON report, mini-vault fixture, safe invariant skeleton generator.
 - [x] **v0.2.0: Vault rule pack shipped.** ERC4626 and vault-accounting

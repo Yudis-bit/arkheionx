@@ -194,7 +194,7 @@ def _resolve_or_explain(args: Namespace, root: Path):
     """Return (match, error_exit_code). On success error_exit_code is None."""
     target = str(getattr(args, "target", "") or "").strip()
     if not target:
-        print("error: --target Contract.function is required")
+        print(f"error: --target Contract.function is required. Run `arkheionx hunt {args.repo}` to list targets.")
         return None, FAILED
     analysis = _run_analysis(args, root)
     matches = _resolve_target(analysis.all_functions, target)

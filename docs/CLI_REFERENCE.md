@@ -15,6 +15,10 @@ or live-chain access. Current commands help produce review reports, missing
 test prompts, issue plans, SARIF, and security-memory lookups. The future
 `arkheionx flow` command family is planned, not available in v2.0.1.
 
+For the full public command + script inventory with stability labels, see
+[`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md). For what stays stable into v3.0, see
+[`STABILITY_CONTRACT.md`](STABILITY_CONTRACT.md).
+
 ## Current Commands
 
 - `arkheionx scan`

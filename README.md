@@ -217,6 +217,12 @@ Advanced:
 - [`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 
+Stability and v3 readiness:
+
+- [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md)
+- [`docs/STABILITY_CONTRACT.md`](docs/STABILITY_CONTRACT.md)
+- [`docs/V3_READINESS.md`](docs/V3_READINESS.md)
+
 ## Current Release
 
 Latest stable release: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening**.
