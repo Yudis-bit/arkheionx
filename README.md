@@ -172,13 +172,11 @@ evidence of users.
 
 ## Latest Release
 
-Latest stable release: **v2.0.0 - Installable Local CLI Package**.
+Latest stable release: **v2.2.0 - Execution Proof & Trace Workbench**.
 
-v2.2.0 — Execution Proof & Trace Workbench is finalized as the current release
-candidate (package version 2.2.0). It adds the Foundry-style workbench
+v2.2.0 is the current published release. It adds the Foundry-style workbench
 (`open`/`map`/`flow`/`hunt`/`prove`/`trace`), execution proof, and trace
-summaries. The latest published stable GitHub release and Action tag remain
-`v2.0.0` until the `v2.2.0` tag is pushed.
+summaries on top of the v2.0.0 installable local CLI package.
 
 v2.0.1 is prepared locally as the Packaging + Product Repositioning Hotfix. It
 reframes Arkheionx as a local-first DeFi value-flow workbench while preserving
@@ -234,7 +232,7 @@ explicitly says otherwise:
 - SARIF 2.1.0 readiness output behavior.
 - Recommended output names in [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md).
 
-Stable GitHub Action examples use `@v2.0.0`. Use `@main` only for development
+Stable GitHub Action examples use `@v2.2.0`. Use `@main` only for development
 or testing unreleased changes.
 
 ## Configuration
@@ -515,7 +513,7 @@ Current dashboards:
 
 ## Quick Start: GitHub Action
 
-Use `@v2.0.0` for stable usage:
+Use `@v2.2.0` for stable usage:
 
 ```yaml
 name: Arkheionx Pre-Audit Scan
@@ -530,7 +528,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.2.0
         with:
           root: "."
           protocol-type: "auto"
@@ -564,7 +562,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0
+      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.2.0
         with:
           protocol-type: "auto"
           json-output: "arkheionx-report.json"
@@ -593,7 +591,7 @@ SARIF results are readiness gaps, not confirmed vulnerabilities. Generate the
 SARIF file with Arkheionx, then upload it with GitHub's SARIF action:
 
 ```yaml
-- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.0.0
+- uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v2.2.0
   with:
     protocol-type: "auto"
     output: "ARKHEIONX_PRE_AUDIT_REPORT.md"

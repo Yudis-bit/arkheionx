@@ -25,7 +25,7 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("Advanced Workflow", readme)
         self.assertIn("## Start Here", readme)
         self.assertIn("## Safety Boundaries", readme)
-        self.assertIn("Latest stable release: **v2.0.0", readme)
+        self.assertIn("Latest stable release: **v2.2.0", readme)
         self.assertIn("v1.1.1 | Public surface polish | Released", readme)
         self.assertIn("v1.2.0 | Paid offer refinement | Released", readme)
         self.assertIn("v1.3.0 | Ecosystem Pack | Released", readme)
