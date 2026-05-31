@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="200" viewBox="0 0 900 200" role="img" aria-label="Arkheionx evidence ladder: HEURISTIC, COMPILER_CONFIRMED, EXECUTION_CONFIRMED, EVIDENCE_READY, HUMAN_REVIEWED">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .title { fill: #0f172a; font: 700 17px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .lvl { font: 600 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .desc { fill: #475569; font: 11px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .foot { fill: #64748b; font: 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="el-ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="898" height="198" rx="14" class="panel" />
+  <text x="28" y="38" class="title">Evidence ladder</text>
+
+  <!-- 5 steps, step 172, box 150x66 at y=70 -->
+  <g>
+    <rect x="20"  y="70" width="150" height="66" rx="9" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5" />
+    <text x="95"  y="100" text-anchor="middle" class="lvl" fill="#854d0e">HEURISTIC</text>
+    <text x="95"  y="120" text-anchor="middle" class="desc">static analysis only</text>
+
+    <rect x="192" y="70" width="150" height="66" rx="9" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5" />
+    <text x="267" y="96"  text-anchor="middle" class="lvl" fill="#155e75">COMPILER_</text>
+    <text x="267" y="112" text-anchor="middle" class="lvl" fill="#155e75">CONFIRMED</text>
+    <text x="267" y="128" text-anchor="middle" class="desc">compiles locally</text>
+
+    <rect x="364" y="70" width="150" height="66" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+    <text x="439" y="96"  text-anchor="middle" class="lvl" fill="#166534">EXECUTION_</text>
+    <text x="439" y="112" text-anchor="middle" class="lvl" fill="#166534">CONFIRMED</text>
+    <text x="439" y="128" text-anchor="middle" class="desc">a test executed</text>
+
+    <rect x="536" y="70" width="150" height="66" rx="9" fill="#f0fdf4" stroke="#15803d" stroke-width="2" />
+    <text x="611" y="100" text-anchor="middle" class="lvl" fill="#14532d">EVIDENCE_READY</text>
+    <text x="611" y="120" text-anchor="middle" class="desc">proof + trace packaged</text>
+
+    <rect x="708" y="70" width="172" height="66" rx="9" fill="#f8fafc" stroke="#475569" stroke-width="1.5" />
+    <text x="794" y="100" text-anchor="middle" class="lvl" fill="#1e293b">HUMAN_REVIEWED</text>
+    <text x="794" y="120" text-anchor="middle" class="desc">required, always</text>
+  </g>
+
+  <g>
+    <path class="arrow" d="M172,103 L190,103" marker-end="url(#el-ah)" />
+    <path class="arrow" d="M344,103 L362,103" marker-end="url(#el-ah)" />
+    <path class="arrow" d="M516,103 L534,103" marker-end="url(#el-ah)" />
+    <path class="arrow" d="M688,103 L706,103" marker-end="url(#el-ah)" />
+  </g>
+
+  <text x="28" y="172" class="foot">Higher levels require real local execution. A passing test does not prove absence of bugs; a failing test does not by itself prove a vulnerability.</text>
+</svg>

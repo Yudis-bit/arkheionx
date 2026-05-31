@@ -3,6 +3,37 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## Unreleased
+
+Post-release public-surface polish on top of the published v2.9.0 (no version
+change, no new tag, no release-notes file). Toward v2.10.0.
+
+### Added
+
+- `arkheionx/cli/colors.py`: restrained, TTY-gated terminal color for
+  human-facing output (`ARKHEIONX_COLOR=always|never|auto`, honors `NO_COLOR`
+  and `CI`). Applied to version, doctor/`--install`, demo, open/map/flow/hunt,
+  prove, and trace headings/statuses/evidence levels.
+- README visuals: `docs/assets/arkheionx-evidence-ladder.svg` and
+  `docs/assets/arkheionx-output-pipeline.svg`.
+
+### Changed
+
+- Root README redesigned into a polished landing page (who it is for, demo
+  table, outputs, evidence ladder, terminal-color note).
+- Output color is never applied to `--json` output or to artifact files written
+  under `.arkheionx/out/`.
+
+### Docs
+
+- Color note added to `docs/CLI_REFERENCE.md`, `docs/OUTPUT_STANDARD.md`, and
+  `docs/TROUBLESHOOTING.md`.
+
+### Tests
+
+- `tests/test_cli_colors.py` (TTY/NO_COLOR/CI/ARKHEIONX_COLOR gating, JSON and
+  artifact files stay plain).
+
 ## v2.9.0 - 2026-05-31
 
 Multi-Fixture Demo Expansion & Public Workflow Hardening. Broadens the bundled

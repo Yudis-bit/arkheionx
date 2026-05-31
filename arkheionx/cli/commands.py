@@ -95,10 +95,15 @@ def _cleanup_paths(paths: Iterable[str | None]) -> None:
 
 
 def version_command(_args: Namespace) -> int:
-    print(f"Arkheionx package version: {__version__}")
-    print(f"Latest stable release: {STABLE_RELEASE}")
-    print(f"Current milestone: {CURRENT_MILESTONE}")
-    print(f"Next milestone: {NEXT_MILESTONE}")
+    from arkheionx.cli import colors
+
+    lines = [
+        f"Arkheionx package version: {__version__}",
+        f"Latest stable release: {STABLE_RELEASE}",
+        f"Current milestone: {CURRENT_MILESTONE}",
+        f"Next milestone: {NEXT_MILESTONE}",
+    ]
+    print(colors.colorize_report("\n".join(lines)))
     return exit_codes.SUCCESS
 
 
@@ -207,6 +212,7 @@ def demo_command(args: Namespace) -> int:
     from dataclasses import asdict
 
     from arkheionx import demo as demo_pkg
+    from arkheionx.cli import colors
 
     def _unknown(demo_id: str) -> int:
         print(f"error: unknown demo: {demo_id}", file=sys.stderr)
@@ -222,14 +228,14 @@ def demo_command(args: Namespace) -> int:
         demo = demo_pkg.get_demo(show_id)
         if demo is None:
             return _unknown(show_id)
-        print(json.dumps(asdict(demo), indent=2) if use_json else demo_pkg.render_show(demo))
+        print(json.dumps(asdict(demo), indent=2) if use_json else colors.colorize_report(demo_pkg.render_show(demo)))
         return exit_codes.SUCCESS
 
     if commands_id:
         demo = demo_pkg.get_demo(commands_id)
         if demo is None:
             return _unknown(commands_id)
-        print(demo_pkg.render_commands(demo, "./arkheionx-demo"))
+        print(colors.colorize_report(demo_pkg.render_commands(demo, "./arkheionx-demo")))
         return exit_codes.SUCCESS
 
     if copy_args:
@@ -242,14 +248,17 @@ def demo_command(args: Namespace) -> int:
         except demo_pkg.DemoCopyError as exc:
             print(f"error: {exc}", file=sys.stderr)
             return exit_codes.INVALID_ARGUMENTS
-        print(f"Copied demo '{demo.id}' to {target}")
-        print(f"Source: {source_kind}")
-        print(f"Entries: {', '.join(copied)}")
-        print("")
-        print("Next")
-        print(f"  arkheionx open {target}")
-        print(f"  arkheionx hunt {target} --top 5")
-        print(f"  arkheionx demo --commands {demo.id}")
+        summary = "\n".join([
+            f"Copied demo '{demo.id}' to {target}",
+            f"Source: {source_kind}",
+            f"Entries: {', '.join(copied)}",
+            "",
+            "Next",
+            f"  arkheionx open {target}",
+            f"  arkheionx hunt {target} --top 5",
+            f"  arkheionx demo --commands {demo.id}",
+        ])
+        print(colors.colorize_report(summary))
         return exit_codes.SUCCESS
 
     # Default action (including --list): list available demos.
@@ -257,5 +266,5 @@ def demo_command(args: Namespace) -> int:
     if use_json:
         print(json.dumps([asdict(demo) for demo in demos], indent=2))
     else:
-        print(demo_pkg.render_list(demos))
+        print(colors.colorize_report(demo_pkg.render_list(demos)))
     return exit_codes.SUCCESS

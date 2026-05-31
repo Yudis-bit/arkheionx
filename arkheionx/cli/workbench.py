@@ -14,7 +14,7 @@ from argparse import Namespace
 from pathlib import Path
 
 from arkheionx.artifacts import ArtifactWriter
-from arkheionx.cli import exit_codes
+from arkheionx.cli import colors, exit_codes
 from arkheionx.core.safety import LOCAL_ONLY_DISCLAIMER
 from arkheionx.flow.mermaid import render_mermaid
 from arkheionx.flow.render import render_flow
@@ -41,6 +41,11 @@ from arkheionx.rules.registry import list_rule_packs
 SUCCESS = exit_codes.SUCCESS          # 0
 WARNING = exit_codes.RUNTIME_ERROR    # 1 (heuristic-only / usable warning)
 FAILED = exit_codes.INVALID_ARGUMENTS # 2 (cannot complete)
+
+
+def _print_report(text: str) -> None:
+    """Print a human report with restrained color (no-op when color disabled)."""
+    print(colors.colorize_report(text))
 
 
 def _resolve_root(repo: str) -> Path | None:
@@ -96,7 +101,7 @@ def open_command(args: Namespace) -> int:
     if getattr(args, "json", False):
         print(json.dumps(build_json(analysis, {}, [f"arkheionx map {args.repo}"]), indent=2))
         return _exit_for(analysis)
-    print(render_open(analysis, args.repo))
+    _print_report(render_open(analysis, args.repo))
     return _exit_for(analysis)
 
 
@@ -111,7 +116,7 @@ def map_command(args: Namespace) -> int:
         print(json.dumps(payload, indent=2))
         return _exit_for(analysis)
     artifacts = _emit(args, payload, _writer(args), "map.json")
-    print(render_map(analysis, args.repo, artifacts, full=bool(getattr(args, "full", False))))
+    _print_report(render_map(analysis, args.repo, artifacts, full=bool(getattr(args, "full", False))))
     return _exit_for(analysis)
 
 
@@ -130,7 +135,7 @@ def flow_command(args: Namespace) -> int:
         print(mermaid)
         return _exit_for(analysis)
     artifacts = _emit(args, payload, _writer(args), "flow.json", {"Mermaid": ("money-flow.mmd", mermaid)})
-    print(render_flow(analysis, args.repo, artifacts, full=bool(getattr(args, "full", False))))
+    _print_report(render_flow(analysis, args.repo, artifacts, full=bool(getattr(args, "full", False))))
     return _exit_for(analysis)
 
 
@@ -145,7 +150,7 @@ def hunt_command(args: Namespace) -> int:
         print(json.dumps(payload, indent=2))
         return _exit_for(analysis)
     artifacts = _emit(args, payload, _writer(args), "hunt.json")
-    print(render_hunt(analysis, args.repo, int(getattr(args, "top", 10) or 10), artifacts, full=bool(getattr(args, "full", False))))
+    _print_report(render_hunt(analysis, args.repo, int(getattr(args, "top", 10) or 10), artifacts, full=bool(getattr(args, "full", False))))
     return _exit_for(analysis)
 
 
@@ -265,27 +270,31 @@ def prove_command(args: Namespace) -> int:
             print(json.dumps(payload, indent=2))
             return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
-    print("ARKHEIONX PROVE")
-    print(f"Target: {match.qualified_id}")
-    print(f"Status: {status}")
-    print(f"Mode: {_mode_label(evidence)}")
-    print(f"Foundry: {foundry_header(result.foundry)}")
-    print("")
-    print("Generated")
-    for f in generated_files:
-        print(f"  {f}")
-    print("")
-    print("Proof")
-    print(f"  {_proof_note(status, result)}")
-    print(f"  Evidence level: {evidence}")
-    print("")
-    print("Next")
+    lines = [
+        "ARKHEIONX PROVE",
+        f"Target: {match.qualified_id}",
+        f"Status: {status}",
+        f"Mode: {_mode_label(evidence)}",
+        f"Foundry: {foundry_header(result.foundry)}",
+        "",
+        "Generated",
+    ]
+    lines += [f"  {f}" for f in generated_files]
+    lines += [
+        "",
+        "Proof",
+        f"  {_proof_note(status, result)}",
+        f"  Evidence level: {evidence}",
+        "",
+        "Next",
+    ]
     if evidence == EXECUTION_CONFIRMED:
-        print(f"  arkheionx trace {args.repo} --target {match.display_id}")
+        lines.append(f"  arkheionx trace {args.repo} --target {match.display_id}")
     else:
-        print("  Complete the scaffold TODOs, then run:")
-        print(f"  forge test --match-contract {harness} -vvvv")
-        print(f"  or: arkheionx prove {args.repo} --target {match.display_id} --run")
+        lines.append("  Complete the scaffold TODOs, then run:")
+        lines.append(f"  forge test --match-contract {harness} -vvvv")
+        lines.append(f"  or: arkheionx prove {args.repo} --target {match.display_id} --run")
+    _print_report("\n".join(lines))
     return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
 
@@ -337,7 +346,7 @@ def trace_command(args: Namespace) -> int:
             print(json.dumps(build_trace_payload(match.qualified_id, status, evidence, raw_path, result.trace), indent=2))
             return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
         nxt = f"arkheionx evidence {args.repo} --target {match.display_id}" if evidence == EXECUTION_CONFIRMED else next_no_proof
-        print(render_trace(match.qualified_id, args.repo, status, evidence, foundry_header(result.foundry), result.trace, artifacts, nxt))
+        _print_report(render_trace(match.qualified_id, args.repo, status, evidence, foundry_header(result.foundry), result.trace, artifacts, nxt))
         return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
     # No --run: summarize an existing proof artifact if present.
@@ -350,13 +359,13 @@ def trace_command(args: Namespace) -> int:
             print(json.dumps(payload, indent=2))
             return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
         nxt = f"arkheionx evidence {args.repo} --target {match.display_id}" if evidence == EXECUTION_CONFIRMED else next_no_proof
-        print(render_trace(match.qualified_id, args.repo, payload.get("status", ""), evidence, "ready", payload, artifacts, nxt))
+        _print_report(render_trace(match.qualified_id, args.repo, payload.get("status", ""), evidence, "ready", payload, artifacts, nxt))
         return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
     if getattr(args, "json", False):
         print(json.dumps(build_trace_payload(match.qualified_id, "no_proof", HEURISTIC, "", {}), indent=2))
         return WARNING
-    print(render_trace(match.qualified_id, args.repo, "no_proof", HEURISTIC, foundry_header(foundry_mod.detect_foundry(root)), {}, {}, next_no_proof))
+    _print_report(render_trace(match.qualified_id, args.repo, "no_proof", HEURISTIC, foundry_header(foundry_mod.detect_foundry(root)), {}, {}, next_no_proof))
     return WARNING
 
 
@@ -387,46 +396,43 @@ def _doctor_install_view(root: Path) -> int:
     bin_hint = str(Path.home() / ".arkheionx" / "bin")
     on_path = any(p == bin_hint for p in os.environ.get("PATH", "").split(os.pathsep))
 
-    print("ARKHEIONX DOCTOR")
-    print("Status: ok")
-    print("")
-    print("Install")
-    print(f"  arkheionx command: {cmd_path}")
-    print(f"  Python executable: {sys.executable} ({platform.python_version()})")
-    print("  Package import: ok")
-    print(f"  Package version: {__import__('arkheionx').__version__}")
-    print("")
-    print("Foundry (optional)")
-    print(f"  forge: {foundry_status.forge_version or 'missing'}")
-    print(f"  status: {foundry_header(foundry_status)}")
-    print("")
-    print("PATH")
-    if on_path or cmd_path != "not on PATH":
-        print("  arkheionx is reachable on your PATH.")
-    else:
-        print(f'  Add the install dir to PATH: export PATH="{bin_hint}:$PATH"')
-    print("")
-    import json
     install_dir = Path(os.environ.get("ARKHEIONX_INSTALL_DIR", str(Path.home() / ".arkheionx")))
     receipt = install_dir / "install.json"
-    print("Install receipt")
+    lines = [
+        "ARKHEIONX DOCTOR",
+        "Status: ok",
+        "",
+        "Install",
+        f"  arkheionx command: {cmd_path}",
+        f"  Python executable: {sys.executable} ({platform.python_version()})",
+        "  Package import: ok",
+        f"  Package version: {__import__('arkheionx').__version__}",
+        "",
+        "Foundry (optional)",
+        f"  forge: {foundry_status.forge_version or 'missing'}",
+        f"  status: {foundry_header(foundry_status)}",
+        "",
+        "PATH",
+    ]
+    if on_path or cmd_path != "not on PATH":
+        lines.append("  arkheionx is reachable on your PATH.")
+    else:
+        lines.append(f'  Add the install dir to PATH: export PATH="{bin_hint}:$PATH"')
+    lines += ["", "Install receipt"]
     if not receipt.is_file():
-        print("  none (install state unknown; managed by install.sh / arkup)")
+        lines.append("  none (install state unknown; managed by install.sh / arkup)")
     else:
         try:
             data = json.loads(receipt.read_text(encoding="utf-8"))
             for key in ("source_kind", "ref", "local_path", "install_method", "installed_version", "updated_at"):
                 value = data.get(key)
                 if value:
-                    print(f"  {key}: {value}")
-            print(f"  path: {receipt}")
+                    lines.append(f"  {key}: {value}")
+            lines.append(f"  path: {receipt}")
         except Exception:
-            print(f"  malformed receipt at {receipt} (reinstall to repair)")
-    print("")
-    print(LOCAL_ONLY_DISCLAIMER)
-    print("")
-    print("Next")
-    print("  arkheionx open .")
+            lines.append(f"  malformed receipt at {receipt} (reinstall to repair)")
+    lines += ["", LOCAL_ONLY_DISCLAIMER, "", "Next", "  arkheionx open ."]
+    _print_report("\n".join(lines))
     return SUCCESS
 
 
@@ -443,44 +449,49 @@ def doctor_command(args: Namespace) -> int:
         hidden = sum(analysis.hidden_counts.values())
         usable = True
     except Exception as exc:  # package/parse failure
-        print("ARKHEIONX DOCTOR\nStatus: failed\n")
+        _print_report("ARKHEIONX DOCTOR\nStatus: failed")
         print(f"error: {exc}")
         return FAILED
 
     status = "ok" if foundry_status.status in {foundry_mod.AVAILABLE_NOT_BUILT, foundry_mod.BUILD_PASSED} else "warning"
-    print("ARKHEIONX DOCTOR")
-    print(f"Status: {status}")
-    print("")
-    print("Core")
-    print(f"  Arkheionx: ok {__import__('arkheionx').__version__}")
-    print(f"  Python: ok {platform.python_version()}")
-    git = _git_info(root)
-    if git:
-        print(f"  Git: {git}")
-    print("")
-    print("Foundry")
-    print(f"  foundry.toml: {'present' if foundry_status.has_foundry_toml else 'missing'}")
-    print(f"  forge: {foundry_status.forge_version or 'missing'}")
-    print(f"  status: {foundry_header(foundry_status)}")
-    print(f"  mode: {'compiler-capable' if foundry_status.forge_available and foundry_status.has_foundry_toml else 'heuristic only'}")
-    print("")
-    print("Project")
-    print(f"  Solidity files: {len(sources)}")
-    print(f"  Active source contracts: {active}")
-    print(f"  Hidden by default: {hidden}")
     import os
-    print(f"  Artifacts dir writable: {'yes' if os.access(root, os.W_OK) else 'no'}")
-    print("")
-    print(f"Rule packs: {len(list_rule_packs())}")
-    print(LOCAL_ONLY_DISCLAIMER)
-    print("")
-    print("Next")
+    git = _git_info(root)
+    lines = [
+        "ARKHEIONX DOCTOR",
+        f"Status: {status}",
+        "",
+        "Core",
+        f"  Arkheionx: ok {__import__('arkheionx').__version__}",
+        f"  Python: ok {platform.python_version()}",
+    ]
+    if git:
+        lines.append(f"  Git: {git}")
+    lines += [
+        "",
+        "Foundry",
+        f"  foundry.toml: {'present' if foundry_status.has_foundry_toml else 'missing'}",
+        f"  forge: {foundry_status.forge_version or 'missing'}",
+        f"  status: {foundry_header(foundry_status)}",
+        f"  mode: {'compiler-capable' if foundry_status.forge_available and foundry_status.has_foundry_toml else 'heuristic only'}",
+        "",
+        "Project",
+        f"  Solidity files: {len(sources)}",
+        f"  Active source contracts: {active}",
+        f"  Hidden by default: {hidden}",
+        f"  Artifacts dir writable: {'yes' if os.access(root, os.W_OK) else 'no'}",
+        "",
+        f"Rule packs: {len(list_rule_packs())}",
+        LOCAL_ONLY_DISCLAIMER,
+        "",
+        "Next",
+    ]
     if foundry_status.has_foundry_toml and foundry_status.forge_available:
-        print("  Run `arkheionx map .` then `arkheionx hunt .` to start. Use --build for compiler-confirmed results.")
+        lines.append("  Run `arkheionx map .` then `arkheionx hunt .` to start. Use --build for compiler-confirmed results.")
     elif not foundry_status.has_foundry_toml:
-        print("  Not a Foundry project here. Run inside a Foundry project for compiler-confirmed results.")
+        lines.append("  Not a Foundry project here. Run inside a Foundry project for compiler-confirmed results.")
     else:
-        print("  Install Foundry (forge) for compiler-confirmed results.")
+        lines.append("  Install Foundry (forge) for compiler-confirmed results.")
+    _print_report("\n".join(lines))
     return SUCCESS
 
 
@@ -555,7 +566,7 @@ def evidence_command(args: Namespace) -> int:
     if getattr(args, "json", False):
         print(json.dumps(pkg.payload, indent=2) if pkg.payload else json.dumps({"status": pkg.status, "next": pkg.next_command}))
         return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
-    print(render_evidence(pkg, args.repo))
+    _print_report(render_evidence(pkg, args.repo))
     return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
 
 
@@ -593,7 +604,7 @@ def report_command(args: Namespace) -> int:
     if getattr(args, "json", False):
         print(json.dumps(draft.payload, indent=2))
         return SUCCESS if draft.evidence_level in _PROVEN else WARNING
-    print(render_report(draft, args.repo))
+    _print_report(render_report(draft, args.repo))
     return SUCCESS if draft.evidence_level in _PROVEN else WARNING
 
 
@@ -620,7 +631,7 @@ def evidence_status_command(args: Namespace) -> int:
     if getattr(args, "json", False):
         print(json.dumps(payload, indent=2))
     else:
-        print(render_status(payload, args.repo))
+        _print_report(render_status(payload, args.repo))
     return SUCCESS if payload["status"] == "ok" else WARNING
 
 
@@ -634,5 +645,5 @@ def validate_artifacts_command(args: Namespace) -> int:
     if getattr(args, "json", False):
         print(json.dumps({"status": "warning" if issues else "ok", "checked": counts, "issues": issues}, indent=2))
     else:
-        print(render_validate(counts, issues, args.repo))
+        _print_report(render_validate(counts, issues, args.repo))
     return WARNING if issues else SUCCESS

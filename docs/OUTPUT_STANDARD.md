@@ -15,6 +15,12 @@ Mode: <heuristic | compiler | execution | report-ready>
 Status: <ok | warning | error>
 ```
 
+Human-facing terminal output uses restrained color (bold headings; green/yellow/
+red statuses; evidence levels colored by level) when stdout is a TTY. Color is
+disabled automatically for pipes, captured output, and CI, and is never applied
+to JSON output or to artifact files written under `.arkheionx/out/`. Control it
+with `ARKHEIONX_COLOR=always|never|auto` or `NO_COLOR`.
+
 `map` then prints the full section set:
 
 1. Protocol Snapshot

@@ -72,6 +72,13 @@ arkheionx hunt . --top 5
 ARKHEIONX_INSTALL_DIR="$HOME/.arkheionx" sh uninstall.sh --dry-run
 ```
 
+## Terminal color looks wrong, or I want plain output
+
+Arkheionx colors human output only when stdout is a TTY. To force plain text
+(for logs, pipes, or unsupported terminals), set `NO_COLOR=1` or
+`ARKHEIONX_COLOR=never`. To force color in a pipe, use `ARKHEIONX_COLOR=always`.
+`--json` output and artifact files are always plain.
+
 ## demo fixture resource not found
 
 This appears only if the package is installed without its bundled demo data.

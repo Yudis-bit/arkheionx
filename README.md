@@ -17,24 +17,28 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/arkheionx-workflow-v27.svg" alt="Arkheionx workflow: install, doctor/open, map/flow/hunt, prove/trace, evidence/report, validate/review" width="900">
+  <img src="docs/assets/arkheionx-workflow-v27.svg" alt="Arkheionx workflow: install/update, doctor/open, map/flow/hunt, prove/trace, evidence/report, validate/review" width="900">
 </p>
 
-Arkheionx turns a DeFi codebase into a focused local research workflow:
-
-- a protocol map
-- a money-flow graph
-- a ranked hunter plan
-- a local Foundry proof workflow
-- trace summaries, evidence packages, and responsible report drafts
+Arkheionx turns a DeFi codebase into a focused local research workflow: a
+protocol map, a money-flow graph, a ranked hunter plan, a local Foundry proof
+workflow, and trace summaries, evidence packages, and responsible report drafts.
 
 Foundry proves. Arkheionx maps, ranks, guides, summarizes, validates, and
 packages the evidence — locally, with no RPC and no secrets.
 
+## Who it is for
+
+Solo auditors, protocol engineers, and security researchers who want to
+organize what to review in a DeFi repository they own or are authorized to
+review — before reaching for heavier tooling.
+
 ## Why Arkheionx
 
 Foundry tells you whether tests pass. Arkheionx helps you decide what to test
-first, then packages the result for human review.
+first, then packages the result for human review. Protocol structure and value
+flow are usually scattered across files; review notes and proof artifacts end
+up ad hoc. Arkheionx gives that work a repeatable local shape.
 
 - Map where value enters, exits, and is controlled.
 - Rank high-signal review targets instead of guessing.
@@ -59,74 +63,88 @@ Install (local-first, no sudo, no PyPI):
 
 ```sh
 sh install.sh
+arkheionx version
 arkheionx doctor
 ```
 
-Try the bundled demo (local-only, no RPC):
+Copy a bundled demo and explore it (local-only, no RPC):
 
 ```sh
 arkheionx demo --list
-arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx demo --copy amm-swap ./arkheionx-demo
 arkheionx open ./arkheionx-demo
 arkheionx hunt ./arkheionx-demo --top 5
 ```
 
-Bundled demos cover staking (`oracle-staking`), AMM (`amm-swap`), and lending
-(`lending-vault`) surfaces. Demo fixtures ship as package data, so `demo --copy`
-works from an installed
-Arkheionx, not only a source checkout ([`docs/PACKAGE_DATA.md`](docs/PACKAGE_DATA.md)).
-
-Run the full loop on a repo you own or are authorized to review:
+With Foundry available, run the proof/evidence path:
 
 ```sh
-arkheionx open .
-arkheionx hunt . --top 5
-arkheionx prove . --target Contract.function --run
-arkheionx trace . --target Contract.function
-arkheionx evidence . --target Contract.function
-arkheionx report . --target Contract.function
+arkheionx prove ./arkheionx-demo --target AMMSwapFixture.swapAForB --run
+arkheionx trace ./arkheionx-demo --target AMMSwapFixture.swapAForB
+arkheionx evidence ./arkheionx-demo --target AMMSwapFixture.swapAForB
+arkheionx report ./arkheionx-demo --target AMMSwapFixture.swapAForB
+arkheionx validate-artifacts ./arkheionx-demo
 ```
 
 If proof artifacts do not exist yet, Arkheionx prints the next command instead
 of crashing. See [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md) for the full
 guided run.
 
+## Demo Fixtures
+
+Three small, local-only toy fixtures ship as package data (so `demo --copy`
+works from an installed Arkheionx, not only a source checkout):
+
+| Demo | Surface | Recommended target |
+| --- | --- | --- |
+| `oracle-staking` | staking / reward / oracle | `OracleRewardFixture.stake` |
+| `amm-swap` | swap / reserves / liquidity | `AMMSwapFixture.swapAForB` |
+| `lending-vault` | collateral / debt / liquidation | `LendingVaultFixture.borrow` |
+
+They are demonstrations, not real protocols or vulnerability reports. See
+[`docs/PACKAGE_DATA.md`](docs/PACKAGE_DATA.md).
+
 ## Command Set
 
-| Command              | Purpose                                            |
-| -------------------- | -------------------------------------------------- |
-| `demo`               | List and copy a safe local demo workflow           |
-| `doctor`             | Check install, Foundry, and project layout         |
-| `open`               | One-command project orientation                    |
-| `map`                | Show protocol roles, journeys, and money flow      |
-| `flow`               | Build the money-flow graph                         |
-| `hunt`               | Rank bug-hunting surfaces                          |
-| `prove`              | Generate or run a targeted local Foundry proof     |
-| `trace`              | Summarize proof/trace output                       |
-| `evidence`           | Package proof and trace artifacts                  |
-| `report`             | Create a responsible local report draft            |
-| `evidence-status`    | Show which artifacts exist per target              |
+| Command | Purpose |
+| --- | --- |
+| `demo` | List and copy a safe local demo workflow |
+| `doctor` | Check install, Foundry, and project layout |
+| `open` | One-command project orientation |
+| `map` | Show protocol roles, journeys, and money flow |
+| `flow` | Build the money-flow graph |
+| `hunt` | Rank bug-hunting surfaces |
+| `prove` | Generate or run a targeted local Foundry proof |
+| `trace` | Summarize proof/trace output |
+| `evidence` | Package proof and trace artifacts |
+| `report` | Create a responsible local report draft |
+| `evidence-status` | Show which artifacts exist per target |
 | `validate-artifacts` | Validate generated proof/evidence/report artifacts |
 
 Install lifecycle: `sh install.sh`, `sh arkup --check`, `sh uninstall.sh`.
 Legacy/advanced commands (`scan`, `validate-config`, `test-plan`, `search`)
-remain supported for specialized workflows.
+remain supported for specialized workflows. Full reference:
+[`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md).
 
 ## Outputs
 
-Every run writes deterministic local artifacts under `.arkheionx/out/`
-(gitignored):
+<p align="center">
+  <img src="docs/assets/arkheionx-output-pipeline.svg" alt="Arkheionx output pipeline: protocol map, money flow, hunt targets, proof scaffold, trace summary, evidence package, report draft" width="900">
+</p>
 
-- protocol understanding and a money-flow graph (JSON + Mermaid)
-- a ranked hunter plan of high-signal review targets
-- Foundry proof scaffolds and execution summaries
-- compact trace summaries
-- structured evidence packages
-- responsible report drafts labelled for human review
+Every run writes deterministic local artifacts under `.arkheionx/out/`
+(gitignored): protocol understanding and a money-flow graph (JSON + Mermaid), a
+ranked hunter plan, Foundry proof scaffolds and execution summaries, compact
+trace summaries, structured evidence packages, and responsible report drafts
+labelled for human review.
 
 ## Evidence Model
 
 Arkheionx keeps evidence levels explicit so a local finding is not overstated.
+
+<p align="center">
+  <img src="docs/assets/arkheionx-evidence-ladder.svg" alt="Arkheionx evidence ladder: HEURISTIC, COMPILER_CONFIRMED, EXECUTION_CONFIRMED, EVIDENCE_READY, HUMAN_REVIEWED" width="860">
+</p>
 
 - `HEURISTIC` - static analysis and pattern matching only.
 - `COMPILER_CONFIRMED` - the target compiles in the local project.
@@ -135,6 +153,13 @@ Arkheionx keeps evidence levels explicit so a local finding is not overstated.
 
 A passing test does not prove absence of bugs. A failing test does not
 automatically prove a vulnerability. Human review is required.
+
+## Terminal Output
+
+Human-facing output uses restrained color (headings, statuses, evidence levels)
+when attached to a TTY. Set `NO_COLOR` or `ARKHEIONX_COLOR=never` to disable it,
+or `ARKHEIONX_COLOR=always` to force it. JSON output and files written to disk
+are always plain.
 
 ## Safety Boundaries
 
@@ -187,9 +212,9 @@ Core workflow:
 
 Advanced:
 
-- [`docs/ARKUP.md`](docs/ARKUP.md) · [`docs/UPDATE_FLOW.md`](docs/UPDATE_FLOW.md)
+- [`docs/PACKAGE_DATA.md`](docs/PACKAGE_DATA.md) · [`docs/UPDATE_FLOW.md`](docs/UPDATE_FLOW.md)
 - [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md)
-- [`docs/SARIF_OUTPUT.md`](docs/SARIF_OUTPUT.md)
+- [`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 
 ## Current Release
@@ -200,8 +225,8 @@ Latest stable release: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workfl
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Current milestone: **v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening** (shipped).
-Active development: **v2.10.0**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Active development: **v2.10.0** (pre-v3 hardening). Public-stable direction:
+**v3.0.0 — DeFi Value Flow Workbench**. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## GitHub Action
 

@@ -59,6 +59,7 @@ validate:
 		arkheionx/generators/ecosystem_report.py \
 		arkheionx/cli/main.py \
 		arkheionx/cli/commands.py \
+		arkheionx/cli/colors.py \
 		arkheionx/cli/exit_codes.py \
 		arkheionx/demo/__init__.py \
 		arkheionx/demo/fixtures/__init__.py \

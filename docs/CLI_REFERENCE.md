@@ -25,6 +25,17 @@ test prompts, issue plans, SARIF, and security-memory lookups. The future
 - `arkheionx doctor`
 - `arkheionx version`
 
+## Terminal color
+
+Human-facing output uses restrained color when stdout is a TTY: bold headings,
+green/yellow/red statuses, and evidence levels colored by level. Color is
+disabled automatically for pipes, captured output, and CI, and is never applied
+to `--json` output or to files written under `.arkheionx/out/`.
+
+- `ARKHEIONX_COLOR=auto` (default) — color only on a TTY.
+- `ARKHEIONX_COLOR=always` — force color on.
+- `ARKHEIONX_COLOR=never` or `NO_COLOR` — force color off.
+
 ## Demo
 
 Guided, local-only demo workflows (no RPC, no secrets, no mainnet):
