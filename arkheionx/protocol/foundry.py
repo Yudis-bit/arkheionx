@@ -101,6 +101,38 @@ def run_build(root: Path, timeout: int = 240) -> tuple[bool, str]:
     return result.returncode == 0, output
 
 
+def run_test(
+    root: Path,
+    match_test: str = "",
+    match_contract: str = "",
+    verbose: bool = True,
+    timeout: int = 300,
+) -> tuple[int, str, str]:
+    """Run a targeted ``forge test`` locally (no broadcast, no network by default).
+
+    Returns ``(returncode, combined_output, command_string)``. Requires a
+    ``--match-test`` or ``--match-contract`` filter; a broad run is refused.
+    """
+
+    if not match_test and not match_contract:
+        return 2, "refused: run_test requires a --match-test or --match-contract filter", ""
+    cmd = ["forge", "test"]
+    if match_test:
+        cmd += ["--match-test", match_test]
+    if match_contract:
+        cmd += ["--match-contract", match_contract]
+    if verbose:
+        cmd.append("-vvvv")
+    command_string = " ".join(cmd)
+    try:
+        result = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return 124, f"forge test timed out after {timeout}s", command_string
+    except (OSError, subprocess.SubprocessError) as exc:
+        return 1, f"forge test could not be launched: {exc}", command_string
+    return result.returncode, (result.stdout or "") + (result.stderr or ""), command_string
+
+
 def collect_compiled_contracts(root: Path, out_dir: str = "out") -> list[str]:
     """List contract names that produced a compiled artifact under ``out/``."""
 

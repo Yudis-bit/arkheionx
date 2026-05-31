@@ -134,8 +134,14 @@ def _add_workbench_commands(subparsers) -> None:
     prove = subparsers.add_parser("prove", help="Generate a local Foundry proof scaffold for a target.")
     _common(prove)
     prove.add_argument("--target", default="", help="Fully-qualified target, e.g. Vault.withdraw or src/Vault.sol:Vault.withdraw(uint256).")
-    prove.add_argument("--run", action="store_true", help="Run Foundry when an executable test exists (never fakes proof).")
+    prove.add_argument("--run", action="store_true", help="Run targeted Foundry tests (never fakes proof).")
     prove.set_defaults(func=workbench.prove_command)
+
+    trace = subparsers.add_parser("trace", help="Summarize the latest Foundry proof/trace for a target.")
+    _common(trace)
+    trace.add_argument("--target", default="", help="Fully-qualified target, e.g. Vault.withdraw.")
+    trace.add_argument("--run", action="store_true", help="Run targeted Foundry tests, then summarize.")
+    trace.set_defaults(func=workbench.trace_command)
 
 
 def main(argv: list[str] | None = None) -> int:

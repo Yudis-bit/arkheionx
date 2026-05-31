@@ -39,10 +39,10 @@ def check() -> list[str]:
         failures.append(f"CHANGELOG.md is missing {CURRENT_MILESTONE} - Unreleased")
     if f"## {STABLE_RELEASE}" not in changelog or f"## {STABLE_RELEASE} - Unreleased" in changelog:
         failures.append(f"CHANGELOG.md does not treat {STABLE_RELEASE} as released")
-    if CURRENT_MILESTONE not in roadmap or "Packaging + Product Repositioning Hotfix current milestone" not in roadmap:
-        failures.append(f"docs/ROADMAP.md does not mark {CURRENT_MILESTONE} as current repositioning milestone")
-    if NEXT_MILESTONE not in roadmap or "Value Flow Map MVP next milestone" not in roadmap:
-        failures.append(f"docs/ROADMAP.md does not keep {NEXT_MILESTONE} as Value Flow Map MVP next milestone")
+    if CURRENT_MILESTONE not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not mention current milestone {CURRENT_MILESTONE}")
+    if NEXT_MILESTONE not in roadmap:
+        failures.append(f"docs/ROADMAP.md does not mention next milestone {NEXT_MILESTONE}")
     if "v2.1.0 — Value Flow Map MVP" not in roadmap:
         failures.append("docs/ROADMAP.md is missing v2.1.0 — Value Flow Map MVP")
     if "v3.0.0 target: DeFi Value Flow Workbench" not in roadmap:

@@ -53,7 +53,7 @@ class V1StabilityTests(unittest.TestCase):
 
     def test_changelog_and_roadmap_mark_v1_candidate(self) -> None:
         changelog = self.read("CHANGELOG.md")
-        self.assertIn("## v2.0.1 - Unreleased", changelog)
+        self.assertIn("## v2.2.0 - Unreleased", changelog)
         self.assertIn("## v2.0.0", changelog)
         self.assertNotIn("## v2.0.0 - Unreleased", changelog)
         self.assertIn("## v1.9.0", changelog)
@@ -80,8 +80,8 @@ class V1StabilityTests(unittest.TestCase):
         self.assertIn("v1.8.0: Report UX + Noise Reduction released", roadmap)
         self.assertIn("v1.9.0: Pre-v2 CLI Candidate released", roadmap)
         self.assertIn("v2.0.0: Installable Arkheionx CLI / Package released", roadmap)
-        self.assertIn("v2.0.1: Packaging + Product Repositioning Hotfix current milestone", roadmap)
-        self.assertIn("v2.1.0: Value Flow Map MVP next milestone", roadmap)
+        self.assertIn("v2.2.0: Execution Proof & Trace Workbench current milestone", roadmap)
+        self.assertIn("v2.3.0: Evidence & Report Package next milestone", roadmap)
 
 
 if __name__ == "__main__":

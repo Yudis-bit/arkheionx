@@ -24,7 +24,7 @@ Arkheionx detects:
 
 - No Foundry → `HEURISTIC`.
 - `forge build` passed and artifacts parsed → `COMPILER_CONFIRMED`.
-- Foundry tests run and parsed → `EXECUTION_CONFIRMED` (roadmap for `trace`).
+- Foundry tests run and parsed → `EXECUTION_CONFIRMED` (via `prove --run` / `trace --run`).
 
 A failed or missing build never fails the command:
 

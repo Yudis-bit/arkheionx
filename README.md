@@ -318,26 +318,41 @@ Read:
 
 ## Foundry-Powered Workbench (Preview)
 
-Arkheionx now ships a Foundry-powered solo security testing workbench:
+Arkheionx now ships a Foundry-style solo security testing workbench:
 
 ```sh
-arkheionx open .    # one-command project understanding
-arkheionx map .     # draw the protocol: roles, journeys, money flow
-arkheionx flow .    # money-flow graph (Mermaid + JSON)
-arkheionx hunt .    # rank bug-hunting surfaces
-arkheionx prove . --target claimReward   # local Foundry proof scaffold
+pip install -e .
+arkheionx doctor                         # check install + Foundry
+arkheionx open .                         # one-command project understanding
+arkheionx map .                          # draw the protocol: roles, journeys, money flow
+arkheionx flow .                         # money-flow graph (Mermaid + JSON)
+arkheionx hunt . --top 5                 # rank bug-hunting surfaces
+arkheionx prove . --target Contract.function          # local Foundry proof scaffold
+arkheionx prove . --target Contract.function --run    # run targeted Foundry tests
+arkheionx trace . --target Contract.function          # summarize the proof/trace
 ```
 
-Find the money. Map the protocol. Prove the bug. Results carry an explicit
-evidence level (`HEURISTIC`, `COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`,
-`REPORT_READY`), and generated artifacts are written under
-`.arkheionx/out/`. Foundry is an optional precision backend; commands
-degrade gracefully to heuristic analysis when it is unavailable.
+Find the money. Map the protocol. Prove the bug. Every major result carries an
+explicit evidence level:
+
+- `HEURISTIC` — static scan only (useful for direction, not proof).
+- `COMPILER_CONFIRMED` — `forge build` passed.
+- `EXECUTION_CONFIRMED` — a relevant local Foundry test actually executed.
+
+Foundry is an optional precision backend; commands degrade gracefully to
+heuristic analysis when it is unavailable. Generated artifacts (JSON, Mermaid,
+proof, trace) are written under `.arkheionx/out/`.
+
+Safety boundaries: local analysis only; no RPC by default; no live-chain
+transaction; no private keys; no exploit automation; not a formal audit and no
+bounty/severity guarantee.
 
 Read:
 
 - [`docs/SOLO_RESEARCH_WORKFLOW.md`](docs/SOLO_RESEARCH_WORKFLOW.md)
 - [`docs/PROTOCOL_MAP.md`](docs/PROTOCOL_MAP.md)
+- [`docs/EXECUTION_PROOF.md`](docs/EXECUTION_PROOF.md)
+- [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
 - [`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md)
 - [`docs/FOUNDRY_INTEGRATION.md`](docs/FOUNDRY_INTEGRATION.md)
 

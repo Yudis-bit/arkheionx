@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Trace",
+  "type": "object",
+  "required": ["schema_version", "target", "status", "evidence_level", "tests_run", "passed", "failed", "skipped", "limitations"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "target": {"type": "string"},
+    "status": {"type": "string"},
+    "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "REPORT_READY"]},
+    "source_raw_output": {"type": "string"},
+    "tests_run": {"type": "integer"},
+    "passed": {"type": "integer"},
+    "failed": {"type": "integer"},
+    "skipped": {"type": "integer"},
+    "failing_tests": {"type": "array", "items": {"type": "string"}},
+    "skipped_tests": {"type": "array", "items": {"type": "string"}},
+    "reverts": {"type": "array", "items": {"type": "string"}},
+    "assertion_failures": {"type": "array", "items": {"type": "string"}},
+    "call_sequence": {"type": "array", "items": {"type": "string"}},
+    "logs": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

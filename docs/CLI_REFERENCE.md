@@ -24,6 +24,23 @@ test prompts, issue plans, SARIF, and security-memory lookups. The future
 - `arkheionx doctor`
 - `arkheionx version`
 
+## Workbench Commands
+
+The Foundry-style workbench commands are available now:
+
+- `arkheionx open <repo>` — one-command project understanding.
+- `arkheionx map <repo>` — protocol map (roles, journeys, money flow).
+- `arkheionx flow <repo>` — money-flow graph (Mermaid + JSON).
+- `arkheionx hunt <repo>` — ranked bug-hunting surfaces.
+- `arkheionx prove <repo> --target Contract.function [--run]` — Foundry proof scaffold / execution.
+- `arkheionx trace <repo> --target Contract.function [--run]` — proof/trace summary.
+
+Shared flags: `--full`, `--show-all`, `--json`, `--build`, `--no-artifacts`,
+`--top N` (`--mermaid` for `flow`). Evidence levels: `HEURISTIC`,
+`COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`. See
+[`PROTOCOL_MAP.md`](PROTOCOL_MAP.md), [`EXECUTION_PROOF.md`](EXECUTION_PROOF.md),
+and [`TRACE_ENGINE.md`](TRACE_ENGINE.md).
+
 ## Planned Future Commands
 
 These commands are roadmap items and are not available in v2.0.1:

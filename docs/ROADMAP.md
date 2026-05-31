@@ -14,8 +14,9 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v2.0.1 — Packaging + Product Repositioning Hotfix.
-Next milestone: v2.1.0 — Value Flow Map MVP.
+Current milestone: v2.2.0 — Execution Proof & Trace Workbench.
+Next milestone: v2.3.0 — Evidence & Report Package.
+Foundation shipped: v2.1.0 — Value Flow Map MVP (Foundry-style workbench CLI).
 v3.0.0 target: DeFi Value Flow Workbench.
 
 - [x] **v0.1.0: Scanner MVP shipped.** Local scanner, GitHub Action, Markdown report,
@@ -99,17 +100,18 @@ v3.0.0 target: DeFi Value Flow Workbench.
 - [x] **v2.0.0: Installable Arkheionx CLI / Package released.**
       Local editable installation, `arkheionx` console entrypoint, module CLI,
       old script compatibility, and packaging hygiene.
-- [ ] **v2.0.1: Packaging + Product Repositioning Hotfix current milestone.**
-      Reframe Arkheionx as a local-first DeFi value-flow workbench while
+- [x] **v2.0.1: Packaging + Product Repositioning Hotfix shipped.**
+      Reframed Arkheionx as a local-first DeFi value-flow workbench while
       preserving existing CLI, report, SARIF, issue-plan, test-plan, and CI
       workflows.
-- [ ] **v2.1.0: Value Flow Map MVP next milestone.**
-      Begin a local/static value-flow map surface for assets, shares, debt,
-      rewards, oracle assumptions, and admin-controlled value impact.
-- [ ] **v2.2.0: Value Flow Test Gaps.**
-      Surface missing tests from value-flow paths and current evidence.
-- [ ] **v2.3.0: Flow Explain Mode.**
-      Explain mapped flows and assumptions in developer/researcher language.
+- [x] **v2.1.0: Value Flow Map MVP shipped (Foundry-style workbench CLI).**
+      Local/static protocol map, money-flow graph, hunter ranking, source-kind
+      filtering, fully-qualified targets, and proof scaffolding.
+- [ ] **v2.2.0: Execution Proof & Trace Workbench current milestone.**
+      Targeted Foundry execution proof, structured proof artifacts, trace
+      summaries, and honest evidence levels.
+- [ ] **v2.3.0: Evidence & Report Package next milestone.**
+      Package execution-confirmed evidence into reviewer-ready report drafts.
 - [ ] **v2.4.0: Flow-Based Foundry Test Templates.**
       Generate safe local starter templates from mapped flows.
 - [ ] **v2.5.0: Researcher Review Map.**

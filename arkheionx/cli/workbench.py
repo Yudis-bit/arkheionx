@@ -21,10 +21,12 @@ from arkheionx.flow.render import render_flow
 from arkheionx.hunt.render import render_hunt
 from arkheionx.hunt.test_suggestions import suggest_tests
 from arkheionx.proof.generator import generate_scaffold, harness_name
-from arkheionx.proof.model import ProofArtifact
+from arkheionx.proof.payloads import build_proof_payload, build_trace_payload, target_slug
+from arkheionx.proof.render import render_trace
+from arkheionx.proof.runner import ExecResult, execute_target
 from arkheionx.protocol import foundry as foundry_mod
 from arkheionx.protocol.detector import analyze
-from arkheionx.protocol.model import COMPILER_CONFIRMED, HEURISTIC, to_dict
+from arkheionx.protocol.model import COMPILER_CONFIRMED, EXECUTION_CONFIRMED, HEURISTIC, to_dict
 from arkheionx.protocol.render import build_json, foundry_header, render_map, render_open
 from arkheionx.protocol.semantic_adapter import find_solidity_files
 from arkheionx.rules.registry import list_rule_packs
@@ -176,96 +178,176 @@ def _resolve_target(functions, target: str):
     return matches
 
 
+def _resolve_or_explain(args: Namespace, root: Path):
+    """Return (match, error_exit_code). On success error_exit_code is None."""
+    target = str(getattr(args, "target", "") or "").strip()
+    if not target:
+        print("error: --target Contract.function is required")
+        return None, FAILED
+    analysis = _run_analysis(args, root)
+    matches = _resolve_target(analysis.all_functions, target)
+    if not matches:
+        print(f"error: could not resolve target `{target}`. Run `arkheionx hunt {args.repo}` to list targets.")
+        return None, FAILED
+    if len({(m.contract_name, m.function_name) for m in matches}) > 1:
+        print("Target is ambiguous. Choose one:\n")
+        ordered = sorted(matches, key=lambda x: x.contract_name)
+        for i, m in enumerate(ordered, 1):
+            print(f"{i}. {m.display_id}")
+        print("\nThen run, for example:")
+        print(f"arkheionx prove {args.repo} --target {ordered[0].display_id}")
+        return None, FAILED
+    return matches[0], None
+
+
 def prove_command(args: Namespace) -> int:
     root = _resolve_root(args.repo)
     if root is None:
         print(f"error: not a directory: {args.repo}")
         return FAILED
-    target = str(getattr(args, "target", "") or "").strip()
-    if not target:
-        print("error: --target Contract.function is required for prove")
-        return FAILED
-    analysis = _run_analysis(args, root)
-
-    matches = _resolve_target(analysis.all_functions, target)
-    if not matches:
-        print(f"error: could not resolve target `{target}`. Run `arkheionx map {args.repo}` or `arkheionx hunt {args.repo}` to list targets.")
-        return FAILED
-    if len({(m.contract_name, m.function_name) for m in matches}) > 1:
-        print(f"Target is ambiguous. Choose one:\n")
-        for i, m in enumerate(sorted(matches, key=lambda x: x.contract_name), 1):
-            print(f"{i}. {m.display_id}")
-        print("\nThen run, for example:")
-        first = sorted(matches, key=lambda x: x.contract_name)[0]
-        print(f"arkheionx prove {args.repo} --target {first.display_id}")
-        return FAILED
-    match = matches[0]
+    match, err = _resolve_or_explain(args, root)
+    if err is not None:
+        return err
 
     tests, invariants = suggest_tests(match)
     scaffold = generate_scaffold(match.contract_name, match.function_name, tests, invariants)
     harness = harness_name(match.contract_name, match.function_name)
     writer = _writer(args)
-    safe = match.display_id.replace(".", "_").replace("/", "_")
-    proof = ProofArtifact(
-        target_id=match.stable_id or match.display_id,
-        status="scaffolded",
-        tests_generated=len(tests) + len(invariants),
-        evidence_level=HEURISTIC,
-        remaining_manual=[
-            "Deploy the target contract and mocks in setUp().",
-            "Replace each vm.skip(true) with a real arrange/act/assert.",
-            "Run forge test to reach EXECUTION_CONFIRMED.",
-        ],
-    )
-    foundry_status = foundry_mod.detect_foundry(root)
-    proof.foundry_available = foundry_status.forge_available
+    slug = target_slug(match.display_id)
+    no_artifacts = bool(getattr(args, "no_artifacts", False))
 
     run = bool(getattr(args, "run", False))
-    do_build = bool(getattr(args, "build", False)) or run
-    if do_build and foundry_status.status == foundry_mod.AVAILABLE_NOT_BUILT:
-        status, output = foundry_mod.build_and_confirm(root)
-        proof.build_status = status.status
-        if status.status == foundry_mod.BUILD_PASSED:
-            proof.evidence_level = COMPILER_CONFIRMED
-        if not getattr(args, "no_artifacts", False):
-            writer.write_text(f"proof/{safe}/foundry-build.txt", output or "(no output)")
-    else:
-        proof.build_status = "not_attempted" if foundry_status.forge_available else "no_foundry"
+    do_build = bool(getattr(args, "build", False))
+    result = ExecResult(foundry=foundry_mod.detect_foundry(root))
+    status = "scaffolded"
+    evidence = HEURISTIC
 
-    # Honesty: a skip-only scaffold is never EXECUTION_CONFIRMED.
-    scaffold_executable = "vm.skip(true)" not in scaffold
-    run_note = ""
-    if run and not scaffold_executable:
-        run_note = "Scaffold contains vm.skip(true)/TODOs; not executed as proof."
+    if run:
+        result = execute_target(root, match.function_name)
+        status, evidence = result.status, result.evidence_level
+    elif do_build and result.foundry.status == foundry_mod.AVAILABLE_NOT_BUILT:
+        fstat, build_out = foundry_mod.build_and_confirm(root)
+        result.foundry = fstat
+        result.build_status = fstat.status
+        result.build_output = build_out
+        if fstat.status == foundry_mod.BUILD_PASSED:
+            evidence = COMPILER_CONFIRMED
+        elif fstat.status == foundry_mod.BUILD_FAILED:
+            status = "build_failed"
+    elif result.foundry.status not in {foundry_mod.AVAILABLE_NOT_BUILT, foundry_mod.BUILD_PASSED}:
+        status = "scaffolded"  # foundry not available; scaffold only
 
-    if not getattr(args, "no_artifacts", False):
-        proof.files.append(str(writer.write_text(f"proof/{safe}/generated-test.sol", scaffold)))
-        proof.files.append(str(writer.write_text(f"proof/{safe}/proof.json", json.dumps(to_dict(proof), indent=2))))
+    generated_files: list[str] = []
+    raw_test_path = trace_json_path = ""
+    if not no_artifacts:
+        generated_files.append(str(writer.write_text(f"proof/{slug}/generated-test.sol", scaffold)))
+        if result.build_output:
+            writer.write_text(f"proof/{slug}/foundry-build.txt", result.build_output)
+        if result.test_output:
+            raw_test_path = str(writer.write_text(f"proof/{slug}/foundry-test.txt", result.test_output))
+            trace_payload = build_trace_payload(match.qualified_id, status, evidence, raw_test_path, result.trace)
+            trace_json_path = str(writer.write_text(f"proof/{slug}/trace.json", json.dumps(trace_payload, indent=2)))
+        next_cmds = [f"arkheionx trace {args.repo} --target {match.display_id}"]
+        payload = build_proof_payload(
+            match.display_id, match.stable_id or match.display_id, str(root), status, evidence,
+            result, generated_files, raw_test_path, (raw_test_path, trace_json_path), next_cmds,
+        )
+        generated_files.append(str(writer.write_text(f"proof/{slug}/proof.json", json.dumps(payload, indent=2))))
+        if getattr(args, "json", False):
+            print(json.dumps(payload, indent=2))
+            return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
 
-    if getattr(args, "json", False):
-        print(json.dumps(to_dict(proof), indent=2))
-        return WARNING
-
-    print(f"ARKHEIONX PROVE")
+    print("ARKHEIONX PROVE")
     print(f"Target: {match.qualified_id}")
-    print(f"Status: {proof.status}")
-    print(f"Mode: {'compiler-confirmed' if proof.evidence_level == COMPILER_CONFIRMED else 'heuristic'}")
-    print(f"Foundry: {foundry_header(foundry_status)}")
+    print(f"Status: {status}")
+    print(f"Mode: {_mode_label(evidence)}")
+    print(f"Foundry: {foundry_header(result.foundry)}")
     print("")
     print("Generated")
-    for f in proof.files:
+    for f in generated_files:
         print(f"  {f}")
     print("")
     print("Proof")
-    if run_note:
-        print(f"  {run_note}")
-    print("  Not executed. Scaffold contains TODOs.")
-    print(f"  Evidence level: {proof.evidence_level}")
+    print(f"  {_proof_note(status, result)}")
+    print(f"  Evidence level: {evidence}")
     print("")
     print("Next")
-    print("  Complete the TODOs, then run:")
-    print(f"  forge test --match-contract {harness} -vvvv")
-    print(f"  or: arkheionx prove {args.repo} --target {match.display_id} --run")
+    if evidence == EXECUTION_CONFIRMED:
+        print(f"  arkheionx trace {args.repo} --target {match.display_id}")
+    else:
+        print("  Complete the scaffold TODOs, then run:")
+        print(f"  forge test --match-contract {harness} -vvvv")
+        print(f"  or: arkheionx prove {args.repo} --target {match.display_id} --run")
+    return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+
+_PROOF_NOTES = {
+    "no_foundry": "Foundry not available; generated scaffold only. Not proof.",
+    "build_failed": "forge build failed; not proof. See foundry-build.txt.",
+    "no_tests_matched": "No existing test matched this target; not proof.",
+    "skipped_not_proof": "Matched tests were skipped; a skipped test is not proof.",
+    "scaffolded": "Scaffold generated (contains vm.skip TODOs); not executed as proof.",
+    "tested_passed": "A relevant test executed and passed (does not prove absence of a bug).",
+    "tested_failed": "A relevant test executed and failed (does not by itself prove a vulnerability).",
+    "tested_mixed": "Relevant tests executed with mixed results.",
+}
+
+
+def _proof_note(status: str, result: ExecResult) -> str:
+    return _PROOF_NOTES.get(status, "Scaffold generated; not executed as proof.")
+
+
+def _mode_label(evidence: str) -> str:
+    return {"EXECUTION_CONFIRMED": "execution-confirmed", "COMPILER_CONFIRMED": "compiler-confirmed"}.get(evidence, "heuristic")
+
+
+def trace_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    match, err = _resolve_or_explain(args, root)
+    if err is not None:
+        return err
+    writer = _writer(args)
+    slug = target_slug(match.display_id)
+    next_no_proof = f"arkheionx prove {args.repo} --target {match.display_id} --run"
+
+    if bool(getattr(args, "run", False)):
+        result = execute_target(root, match.function_name)
+        status, evidence = result.status, result.evidence_level
+        raw_path = ""
+        if not getattr(args, "no_artifacts", False) and result.test_output:
+            raw_path = str(writer.write_text(f"proof/{slug}/foundry-test.txt", result.test_output))
+            payload = build_trace_payload(match.qualified_id, status, evidence, raw_path, result.trace)
+            tj = str(writer.write_text(f"proof/{slug}/trace.json", json.dumps(payload, indent=2)))
+            artifacts = {"Raw": raw_path, "JSON": tj}
+        else:
+            artifacts = {}
+        if getattr(args, "json", False):
+            print(json.dumps(build_trace_payload(match.qualified_id, status, evidence, raw_path, result.trace), indent=2))
+            return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+        nxt = f"arkheionx trace {args.repo} --target {match.display_id}" if result.trace else next_no_proof
+        print(render_trace(match.qualified_id, args.repo, status, evidence, foundry_header(result.foundry), result.trace, artifacts, nxt))
+        return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+    # No --run: summarize an existing proof artifact if present.
+    trace_json = writer.path_for(f"proof/{slug}/trace.json")
+    if trace_json.exists():
+        payload = json.loads(trace_json.read_text(encoding="utf-8"))
+        evidence = payload.get("evidence_level", HEURISTIC)
+        artifacts = {"Raw": payload.get("source_raw_output", ""), "JSON": str(trace_json)}
+        if getattr(args, "json", False):
+            print(json.dumps(payload, indent=2))
+            return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+        nxt = f"arkheionx prove {args.repo} --target {match.display_id} --run"
+        print(render_trace(match.qualified_id, args.repo, payload.get("status", ""), evidence, "ready", payload, artifacts, nxt))
+        return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(build_trace_payload(match.qualified_id, "no_proof", HEURISTIC, "", {}), indent=2))
+        return WARNING
+    print(render_trace(match.qualified_id, args.repo, "no_proof", HEURISTIC, foundry_header(foundry_mod.detect_foundry(root)), {}, {}, next_no_proof))
     return WARNING
 
 

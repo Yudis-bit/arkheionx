@@ -3,7 +3,61 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v2.0.1 - Unreleased
+## v2.2.0 - Unreleased
+
+Execution Proof & Trace Workbench. Builds on the v2.1.0 Foundry-style workbench
+CLI foundation.
+
+### Added
+
+- `arkheionx trace <repo> --target <target>`: summarize the latest Foundry
+  proof/trace into a compact terminal view plus `trace.txt`/`trace.json`.
+- Execution proof layer for `arkheionx prove --run`: targeted `forge test`,
+  conservative output parsing, and structured `proof.json`.
+- Proof statuses: scaffolded, build_failed, no_foundry, no_tests_matched,
+  skipped_not_proof, tested_passed, tested_failed, tested_mixed.
+
+### Changed
+
+- `prove --run` now runs targeted Foundry tests (never broad) and only reaches
+  EXECUTION_CONFIRMED when a relevant test actually executed.
+
+### Safety
+
+- Local only: no broadcast, no `cast send`, no RPC by default, no private keys.
+- `forge test` runs require a `--match-test`/`--match-contract` filter.
+- Raw Foundry output is written to artifacts, not dumped to the terminal.
+
+### Evidence model
+
+- HEURISTIC: static scan only.
+- COMPILER_CONFIRMED: `forge build` passed.
+- EXECUTION_CONFIRMED: a relevant Foundry test actually executed (passed or
+  failed). Skipped/TODO/no-match never counts as proof.
+
+### CLI
+
+- Commands: doctor, open, map, flow, hunt, prove, trace.
+
+### Docs
+
+- New `docs/EXECUTION_PROOF.md`, `docs/TRACE_ENGINE.md`, and
+  `release-notes/v2.2.0.md`; updated README, OUTPUT_STANDARD, FOUNDRY_INTEGRATION,
+  SOLO_RESEARCH_WORKFLOW, PROTOCOL_MAP, CLI_REFERENCE.
+
+### Tests
+
+- Trace parser, proof/trace payloads, execution runner (mocked forge), and
+  trace CLI fallback tests.
+
+### Known limitations
+
+- Static classification stays heuristic when Foundry is missing.
+- Trace parsing is conservative; balance/state deltas are not inferred.
+- EXECUTION_CONFIRMED requires an actual local Foundry test execution.
+- Not published to PyPI. Not a formal audit; no severity guarantee.
+
+## v2.0.1 — Packaging + Product Repositioning Hotfix
 
 ### Changed
 

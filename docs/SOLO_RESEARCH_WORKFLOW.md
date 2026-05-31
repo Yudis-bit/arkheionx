@@ -38,26 +38,32 @@ open  ->  map  ->  flow  ->  hunt  ->  prove  ->  (forge test)
    arkheionx hunt . --top 10
    ```
 
-5. **Prove** — generate a local Foundry proof scaffold for a chosen target.
+5. **Prove** — generate a local Foundry proof scaffold and optionally run it.
 
    ```sh
-   arkheionx prove . --target claimReward
-   forge test --match-contract Arkheionx<...>ProofTest
+   arkheionx prove . --target Vault.withdraw            # scaffold only
+   arkheionx prove . --target Vault.withdraw --run      # run targeted Foundry tests
+   ```
+
+6. **Trace** — summarize the latest proof/trace into human-readable evidence.
+
+   ```sh
+   arkheionx trace . --target Vault.withdraw
    ```
 
 ## Evidence discipline
 
-Results are labeled `HEURISTIC`, `COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`, or
-`REPORT_READY`. A scaffold is a starting point, not a proof. No bug is confirmed
-until a real test or trace passes. See [`OUTPUT_STANDARD.md`](OUTPUT_STANDARD.md)
-and [`FOUNDRY_INTEGRATION.md`](FOUNDRY_INTEGRATION.md).
+Results are labeled `HEURISTIC`, `COMPILER_CONFIRMED`, or `EXECUTION_CONFIRMED`.
+A scaffold is a starting point, not a proof. A bug is only EXECUTION_CONFIRMED
+when a relevant Foundry test actually executed. See
+[`EXECUTION_PROOF.md`](EXECUTION_PROOF.md), [`TRACE_ENGINE.md`](TRACE_ENGINE.md),
+[`OUTPUT_STANDARD.md`](OUTPUT_STANDARD.md), and
+[`FOUNDRY_INTEGRATION.md`](FOUNDRY_INTEGRATION.md).
 
 ## Planned commands
 
 These are roadmap items, not yet available:
 
-- `arkheionx trace <repo> --target <test>` — summarize Foundry traces into
-  human-readable evidence (raw traces stored as artifacts).
 - `arkheionx report <repo> --from-proof <artifact>` — build a structured report
   draft from proof artifacts.
 

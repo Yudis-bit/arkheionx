@@ -30,15 +30,15 @@ class ValueFlowPositioningTests(unittest.TestCase):
             self.assertTrue((REPO_ROOT / path).exists(), path)
             self.assertIn(path, self.read("README.md"))
 
-    def test_roadmap_and_changelog_name_v2_0_1_direction(self) -> None:
+    def test_roadmap_and_changelog_name_current_direction(self) -> None:
         roadmap = self.read("docs/ROADMAP.md")
         value_roadmap = self.read("docs/VALUE_FLOW_ROADMAP.md")
         changelog = self.read("CHANGELOG.md")
-        self.assertIn("v2.0.1 - Unreleased", changelog)
-        self.assertIn("v2.0.1 — Packaging + Product Repositioning Hotfix", roadmap)
+        self.assertIn("## v2.2.0 - Unreleased", changelog)
+        self.assertIn("v2.2.0 — Execution Proof & Trace Workbench", roadmap)
         self.assertIn("v2.1.0 — Value Flow Map MVP", roadmap)
         self.assertIn("v3.0.0 target: DeFi Value Flow Workbench", roadmap)
-        self.assertIn("v2.1.0 — Value Flow Map MVP", value_roadmap)
+        self.assertIn("DeFi Value Flow Workbench", value_roadmap)
 
     def test_advanced_flow_submodes_are_marked_planned(self) -> None:
         docs = "\n".join(

@@ -100,6 +100,23 @@ class CliWorkbenchTests(unittest.TestCase):
     def test_bad_path_is_failure(self) -> None:
         self.assertEqual(self.run_cli("map", "no/such/dir").returncode, 2)
 
+    # --- trace ----------------------------------------------------------
+    def test_trace_no_proof_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli("trace", FIXTURE, "--target", "OracleRewardFixture.claimReward", "--artifacts-dir", tmp)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("No proof artifact found", result.stdout)
+        self.assertIn("--run", result.stdout)
+
+    def test_trace_requires_target(self) -> None:
+        self.assertEqual(self.run_cli("trace", FIXTURE).returncode, 2)
+
+    def test_trace_registered_in_help(self) -> None:
+        result = self.run_cli("--help")
+        self.assertIn("trace", result.stdout)
+        self.assertIn("prove", result.stdout)
+        self.assertIn("hunt", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

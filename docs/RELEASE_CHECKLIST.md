@@ -564,3 +564,41 @@ written reason in the release PR.
 - [ ] Announce only with honest, bounded language.
 
 Releases are checkpoints, not finish lines.
+
+
+## v2.2.0 — Execution Proof & Trace Workbench
+
+Prepared locally. Do not push/tag/release without maintainer approval.
+
+### Validate
+
+- [ ] `python3 -m unittest discover -s tests -p "test_*.py"` passes.
+- [ ] `make validate` passes.
+- [ ] CLI smoke: `arkheionx doctor`, `arkheionx open .`, `arkheionx map . --top 5`,
+      `arkheionx flow .`, `arkheionx hunt . --top 5`.
+- [ ] Proof/trace smoke on a Foundry fixture:
+      `arkheionx prove examples/oracle-staking-fixture --target OracleRewardFixture.stake --run`
+      then `arkheionx trace examples/oracle-staking-fixture --target OracleRewardFixture.stake`.
+
+### Inspect
+
+- [ ] README names current commands (incl. `trace`) and evidence levels.
+- [ ] CHANGELOG has `## v2.2.0 - Unreleased`.
+- [ ] `release-notes/v2.2.0.md` matches implemented behavior.
+- [ ] `arkheionx version` reports `2.2.0-dev`, `v2.2.0`, `v2.3.0`.
+- [ ] `git status` clean (no generated `.arkheionx/` output tracked).
+
+### Release commands (run only after approval)
+
+```sh
+git status
+git log --oneline -n 3
+git tag -a v2.2.0 -m "Arkheionx v2.2.0 — Execution Proof & Trace Workbench"
+git push origin pivot/value-flow-workbench-v2.0.1
+git push origin v2.2.0
+gh release create v2.2.0 \
+  --title "Arkheionx v2.2.0 — Execution Proof & Trace Workbench" \
+  --notes-file release-notes/v2.2.0.md
+```
+
+- [ ] Verify the GitHub release page renders the notes correctly.

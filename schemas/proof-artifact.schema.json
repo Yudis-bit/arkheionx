@@ -2,19 +2,54 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Arkheionx Proof Artifact",
   "type": "object",
-  "required": ["target_id", "status", "evidence_level", "files"],
+  "required": ["schema_version", "target", "target_id", "project_root", "status", "evidence_level", "foundry", "test_result", "trace", "generated_files", "limitations", "next_commands"],
   "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "package_version": {"type": "string"},
+    "target": {"type": "string"},
     "target_id": {"type": "string"},
-    "status": {"type": "string"},
-    "foundry_available": {"type": "boolean"},
-    "build_status": {"type": "string"},
-    "tests_generated": {"type": "integer"},
-    "tests_run": {"type": "integer"},
-    "tests_passed": {"type": "integer"},
-    "tests_failed": {"type": "integer"},
-    "trace_summary": {"type": "string"},
+    "project_root": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["scaffolded", "build_failed", "no_foundry", "no_tests_matched", "skipped_not_proof", "tested_passed", "tested_failed", "tested_mixed"]
+    },
     "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "REPORT_READY"]},
-    "files": {"type": "array", "items": {"type": "string"}},
-    "remaining_manual": {"type": "array", "items": {"type": "string"}}
+    "foundry": {
+      "type": "object",
+      "required": ["available", "build_status"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "version": {"type": "string"},
+        "build_status": {"type": "string"},
+        "test_command": {"type": "string"},
+        "cwd": {"type": "string"}
+      }
+    },
+    "test_result": {
+      "type": "object",
+      "required": ["tests_run", "passed", "failed", "skipped"],
+      "properties": {
+        "tests_run": {"type": "integer"},
+        "passed": {"type": "integer"},
+        "failed": {"type": "integer"},
+        "skipped": {"type": "integer"},
+        "duration": {"type": "string"},
+        "failed_tests": {"type": "array", "items": {"type": "string"}},
+        "skipped_tests": {"type": "array", "items": {"type": "string"}},
+        "raw_output_path": {"type": "string"}
+      }
+    },
+    "trace": {
+      "type": "object",
+      "properties": {
+        "raw_trace_path": {"type": "string"},
+        "trace_json_path": {"type": "string"},
+        "summary_available": {"type": "boolean"}
+      }
+    },
+    "generated_files": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "next_commands": {"type": "array", "items": {"type": "string"}}
   }
 }
