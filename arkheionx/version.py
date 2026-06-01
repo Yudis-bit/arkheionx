@@ -1,8 +1,8 @@
 """Shared Arkheionx version metadata."""
 from __future__ import annotations
 
-__version__ = "3.1.0-dev"
-PACKAGE_VERSION = "3.1.0.dev0"
+__version__ = "3.1.0"
+PACKAGE_VERSION = "3.1.0"
 STABLE_RELEASE = "v3.0.0"
 CURRENT_MILESTONE = "v3.1.0"
 NEXT_MILESTONE = "v3.2.0"

@@ -3,15 +3,16 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v3.1.0 - Unreleased
+## v3.1.0 - 2026-05-31
 
 Protocol Review Map. Adds a structured, developer-native review surface on top of
 the workbench. The new `arkheionx review-map` command maps contracts, value
 paths, assumptions, test gaps, proof suggestions, and links to existing evidence
 artifacts, and writes JSON/Markdown artifacts for reviewers. Local/static and
-heuristic by default. Package version is `3.1.0.dev0` (`__version__` is
-`3.1.0-dev`); `STABLE_RELEASE` remains `v3.0.0`; current milestone `v3.1.0`, next
-`v3.2.0`. Not yet cut, tagged, or published.
+heuristic by default; review-map output is review guidance, most signals start at
+`HEURISTIC`, and human review remains required. Package version is `3.1.0`;
+`STABLE_RELEASE` remains `v3.0.0` until v3.1.0 is published, then moves to
+`v3.1.0` in post-release cleanup; current milestone `v3.1.0`, next `v3.2.0`.
 
 ### Added
 
@@ -25,8 +26,8 @@ heuristic by default. Package version is `3.1.0.dev0` (`__version__` is
 
 ### Changed
 
-- Version metadata to `3.1.0-dev` / `3.1.0.dev0` (stable `v3.0.0`, current
-  `v3.1.0`, next `v3.2.0`).
+- Version metadata to `3.1.0` (stable `v3.0.0`, current `v3.1.0`, next
+  `v3.2.0`).
 - README, CLI reference, public surface, stability contract, output standard,
   demo workflow, roadmap, release checklist, and v3 readiness updated for
   review-map. Latest stable release remains `v3.0.0`.
@@ -60,7 +61,7 @@ heuristic by default. Package version is `3.1.0.dev0` (`__version__` is
 
 - Added `tests/test_review_map.py`, `tests/test_review_map_cli.py`,
   `tests/test_review_map_artifacts.py`, and `tests/test_review_map_schema.py`;
-  updated version-asserting tests for `3.1.0-dev`.
+  updated version-asserting tests for `3.1.0`.
 
 ### Known limitations
 
