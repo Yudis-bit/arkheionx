@@ -143,6 +143,7 @@ They are demonstrations, not real protocols or vulnerability reports. See
 | `report` | Create a responsible local report draft |
 | `evidence-status` | Show which artifacts exist per target |
 | `validate-artifacts` | Validate generated proof/evidence/report artifacts |
+| `review-map` | Build a local protocol review map (value paths, assumptions, test gaps, proof suggestions) |
 
 Install lifecycle: `sh install.sh`, `sh arkup --check`, `sh uninstall.sh`.
 Legacy/advanced commands (`scan`, `validate-config`, `test-plan`, `search`)
@@ -251,6 +252,7 @@ Core workflow:
 - [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
 - [`docs/EVIDENCE_PACKAGE.md`](docs/EVIDENCE_PACKAGE.md)
 - [`docs/REPORT_DRAFTS.md`](docs/REPORT_DRAFTS.md)
+- [`docs/REVIEW_MAP.md`](docs/REVIEW_MAP.md)
 
 Advanced:
 
@@ -273,8 +275,11 @@ Latest stable release: **v3.0.0 — Public Stable Launch**.
 doctor -> open -> map -> flow -> hunt -> prove --run -> trace -> evidence -> report -> manual review
 ```
 
-Active development: **v3.1.0** (incremental workbench improvements after the
-v3.0.0 cut). See [`docs/ROADMAP.md`](docs/ROADMAP.md) and
+Active development: **v3.1.0 — Protocol Review Map** (a structured local review
+surface built on the workbench: `arkheionx review-map` maps value paths,
+assumptions, test gaps, proof suggestions, and evidence links). Not yet cut; the
+latest stable release remains v3.0.0. See [`docs/REVIEW_MAP.md`](docs/REVIEW_MAP.md),
+[`docs/ROADMAP.md`](docs/ROADMAP.md) and
 [`docs/V3_READINESS.md`](docs/V3_READINESS.md).
 
 ## GitHub Action

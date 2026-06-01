@@ -76,6 +76,7 @@ The Foundry-style workbench commands are available now:
 - `arkheionx report <repo> --target Contract.function` — responsible report draft (also `--from-evidence`).
 - `arkheionx evidence-status <repo>` — which proof/evidence/report artifacts exist per target (`--target`, `--json`).
 - `arkheionx validate-artifacts <repo>` — validate generated artifacts (`--json`; exit 0 valid / 1 issues / 2 failure).
+- `arkheionx review-map <repo>` — build a local protocol review map: contracts, value paths, assumptions, test gaps, proof suggestions, and evidence links (`--out`, `--top`, `--json`, `--no-write`, `--include-low-confidence`, `--target`). See [`REVIEW_MAP.md`](REVIEW_MAP.md).
 
 Shared flags: `--full`, `--show-all`, `--json`, `--build`, `--no-artifacts`,
 `--top N` (`--mermaid` for `flow`). Evidence levels: `HEURISTIC`,

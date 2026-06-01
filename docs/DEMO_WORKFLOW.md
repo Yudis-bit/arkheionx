@@ -69,6 +69,20 @@ arkheionx hunt . --top 5
 In `HEURISTIC` mode (no Foundry) `open`/`hunt` exit `1` to signal static-only
 ranking, not execution-confirmed results.
 
+## 6b. Review map (heuristic, no Foundry required)
+
+Build the structured review map — value paths, assumptions, test gaps, proof
+suggestions, and links to any evidence you have already produced:
+
+```sh
+arkheionx review-map .
+arkheionx review-map . --target OracleRewardFixture.claimReward
+arkheionx review-map . --json
+```
+
+Artifacts are written under `.arkheionx/out/review-map/`. Review-map outputs are
+review guidance, not confirmed vulnerabilities. See [`REVIEW_MAP.md`](REVIEW_MAP.md).
+
 ## 7. Prove (Foundry optional)
 
 If `forge` is available:

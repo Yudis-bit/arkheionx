@@ -30,7 +30,8 @@ line is the run-up to it.
 - Generated artifacts live under `.arkheionx/out/` and are gitignored.
 - Artifact file contents are never colored.
 - Evidence levels (`HEURISTIC`, `COMPILER_CONFIRMED`, `EXECUTION_CONFIRMED`,
-  `EVIDENCE_READY`) keep their meaning; new levels would be additive.
+  `EVIDENCE_READY`, `HUMAN_REVIEWED`) keep their meaning; new levels would be
+  additive. Review-map signals start at `HEURISTIC`.
 
 ## Install / update lifecycle
 

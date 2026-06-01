@@ -27,11 +27,11 @@ class V3VersionTests(unittest.TestCase):
             __version__,
         )
 
-        self.assertEqual(__version__, "3.0.0")
-        self.assertEqual(PACKAGE_VERSION, "3.0.0")
+        self.assertEqual(__version__, "3.1.0-dev")
+        self.assertEqual(PACKAGE_VERSION, "3.1.0.dev0")
         self.assertEqual(STABLE_RELEASE, "v3.0.0")  # published
-        self.assertEqual(CURRENT_MILESTONE, "v3.0.0")
-        self.assertEqual(NEXT_MILESTONE, "v3.1.0")
+        self.assertEqual(CURRENT_MILESTONE, "v3.1.0")
+        self.assertEqual(NEXT_MILESTONE, "v3.2.0")
 
 
 class V3ReadmeTests(unittest.TestCase):

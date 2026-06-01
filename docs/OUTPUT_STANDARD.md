@@ -68,6 +68,7 @@ Schemas live under [`../schemas`](../schemas):
 - [`value-flow.schema.json`](../schemas/value-flow.schema.json)
 - [`hunt-report.schema.json`](../schemas/hunt-report.schema.json)
 - [`proof-artifact.schema.json`](../schemas/proof-artifact.schema.json)
+- [`review-map.schema.json`](../schemas/review-map.schema.json)
 
 ## Mermaid
 
@@ -96,6 +97,16 @@ the chosen base directory, default: current working directory):
   reports/<target>/
     report.json
     report.md
+  review-map/
+    review-map.json
+    review-map.md
+    value-paths.json
+    test-gaps.json
+    assumptions.json
+    proof-plan.json
+    evidence-links.json
+    review-summary.md
+    review-map.mmd
   artifacts-index.json
 ```
 

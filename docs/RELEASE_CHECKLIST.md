@@ -12,6 +12,18 @@ written reason in the release PR.
 - [ ] Current archive truth preserved: 18 structured PoCs, 0 L4+ archival
       confirmed entries unless regenerated artifacts prove otherwise.
 
+## v3.1.0 Protocol Review Map Checks
+
+- [ ] Version metadata is `3.1.0-dev` / `3.1.0.dev0`; `STABLE_RELEASE` stays `v3.0.0`; current `v3.1.0`, next `v3.2.0`.
+- [ ] `arkheionx review-map <repo>` works on all three bundled demos and writes the nine artifacts under `.arkheionx/out/review-map/`.
+- [ ] `--json` emits valid JSON only (no ANSI, even with `ARKHEIONX_COLOR=always`); `--no-write` writes nothing; `--out <dir>` writes to the given dir; `--target` filters; unknown target errors cleanly.
+- [ ] `docs/REVIEW_MAP.md` present and linked from README; `docs/PUBLIC_SURFACE.md` lists `arkheionx review-map`; `docs/CLI_REFERENCE.md` documents it.
+- [ ] `schemas/review-map.schema.json` present; generated `review-map.json` satisfies it.
+- [ ] `release-notes/v3.1.0.md` and `## v3.1.0` changelog section present; no published/PyPI/Homebrew/binary/audit/severity/bounty claims; review-map described as review guidance, not findings.
+- [ ] `python3 scripts/check_release_readiness.py --check` passes (also run by `make validate`).
+- [ ] Latest stable release remains `v3.0.0`; no tag/publish/release performed for v3.1.0.
+- [ ] `tests/test_review_map*.py` cover data model, CLI, artifacts, and schema.
+
 ## v3.0.0 Public Stable Launch Checks
 
 - [ ] Version finalized `3.0.0`; stable pointer moved `v2.10.0` → `v3.0.0` in post-release cleanup.

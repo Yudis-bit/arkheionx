@@ -149,6 +149,18 @@ def check() -> list[str]:
     if f"## {CURRENT_MILESTONE}" not in read("CHANGELOG.md"):
         failures.append(f"CHANGELOG.md missing section: ## {CURRENT_MILESTONE}")
 
+    # Review Map feature surface (v3.1.0+). Only enforced when the command is
+    # present, so the gate stays correct across milestones.
+    if "review-map" in public_commands():
+        if not (ROOT / "docs/REVIEW_MAP.md").is_file():
+            failures.append("missing docs/REVIEW_MAP.md")
+        if not (ROOT / "schemas/review-map.schema.json").is_file():
+            failures.append("missing schemas/review-map.schema.json")
+        if "review-map" not in read("docs/CLI_REFERENCE.md"):
+            failures.append("docs/CLI_REFERENCE.md does not document review-map")
+        if "review-map" not in readme:
+            failures.append("README.md does not mention review-map")
+
     # GitHub Action examples and install/arkup stable tag track STABLE_RELEASE.
     action_tag = f"pre-audit@{STABLE_RELEASE}"
     for doc in ("README.md", "docs/GITHUB_ACTION_USAGE.md"):

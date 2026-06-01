@@ -97,6 +97,19 @@ def build_parser() -> argparse.ArgumentParser:
 
     _add_workbench_commands(subparsers)
 
+    review_map = subparsers.add_parser(
+        "review-map",
+        help="Build a local protocol review map: contracts, value paths, assumptions, test gaps, proof suggestions, evidence links.",
+    )
+    review_map.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    review_map.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/out/review-map/).")
+    review_map.add_argument("--top", type=int, default=10, help="Number of top review targets to show.")
+    review_map.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout (no human text).")
+    review_map.add_argument("--no-write", action="store_true", help="Print the summary only; do not write artifact files.")
+    review_map.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence test gaps.")
+    review_map.add_argument("--target", default="", help="Limit the map to a single Contract.function.")
+    review_map.set_defaults(func=workbench.review_map_command)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser

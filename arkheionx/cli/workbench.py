@@ -36,6 +36,7 @@ from arkheionx.protocol.detector import analyze
 from arkheionx.protocol.model import COMPILER_CONFIRMED, EXECUTION_CONFIRMED, HEURISTIC, to_dict
 from arkheionx.protocol.render import build_json, foundry_header, render_map, render_open
 from arkheionx.protocol.semantic_adapter import find_solidity_files
+from arkheionx.review_map import build_review_map, default_out_dir, render_cli, status_of, write_artifacts
 from arkheionx.rules.registry import list_rule_packs
 
 SUCCESS = exit_codes.SUCCESS          # 0
@@ -647,3 +648,63 @@ def validate_artifacts_command(args: Namespace) -> int:
     else:
         _print_report(render_validate(counts, issues, args.repo))
     return WARNING if issues else SUCCESS
+
+
+# --------------------------------------------------------------------------
+# review-map (v3.1.0)
+# --------------------------------------------------------------------------
+def _rel_display(path: str, root: Path) -> str:
+    try:
+        return Path(path).resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path
+
+
+def review_map_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    sources, _tests = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy amm-swap ./arkheionx-demo")
+        print("  arkheionx review-map ./arkheionx-demo")
+        return FAILED
+
+    top = getattr(args, "top", 10)
+    top = 10 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    try:
+        review_map = build_review_map(
+            root, top=top, target=target,
+            include_low_confidence=bool(getattr(args, "include_low_confidence", False)),
+        )
+    except ValueError as exc:
+        print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return FAILED
+
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(review_map.to_payload(), indent=2))
+        return exit_code
+
+    artifacts: dict[str, str] = {}
+    if not getattr(args, "no_write", False):
+        out = str(getattr(args, "out", "") or "").strip()
+        out_dir = Path(out).expanduser() if out else default_out_dir(root)
+        try:
+            written = write_artifacts(review_map, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+
+    _print_report(render_cli(review_map, args.repo, artifacts, top))
+    return exit_code

@@ -25,6 +25,7 @@ files written under `.arkheionx/out/` are always plain (no color). See
 | `arkheionx report` | Responsible local report draft | human + `--json` | `report/<slug>/*` | stable |
 | `arkheionx evidence-status` | Artifact state per target | human + `--json` | reads index | stable |
 | `arkheionx validate-artifacts` | Validate generated artifacts | human + `--json` | reads artifacts | stable |
+| `arkheionx review-map` | Protocol review map: value paths, assumptions, test gaps, proof suggestions, evidence links | human + `--json` | `review-map/*` | stable-additive (v3.1.0-dev) |
 
 ## Setup and lifecycle commands
 

@@ -3,6 +3,74 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v3.1.0 - Unreleased
+
+Protocol Review Map. Adds a structured, developer-native review surface on top of
+the workbench. The new `arkheionx review-map` command maps contracts, value
+paths, assumptions, test gaps, proof suggestions, and links to existing evidence
+artifacts, and writes JSON/Markdown artifacts for reviewers. Local/static and
+heuristic by default. Package version is `3.1.0.dev0` (`__version__` is
+`3.1.0-dev`); `STABLE_RELEASE` remains `v3.0.0`; current milestone `v3.1.0`, next
+`v3.2.0`. Not yet cut, tagged, or published.
+
+### Added
+
+- `arkheionx review-map <repo>` public command with `--out`, `--top`, `--json`,
+  `--no-write`, `--include-low-confidence`, and `--target` options.
+- `arkheionx/review_map/` package: model, detection, test-gap, assumption,
+  proof-plan, evidence-link, build, render, and artifact modules.
+- `schemas/review-map.schema.json` (plus `assumptions.schema.json` and
+  `test-gaps.schema.json`).
+- `docs/REVIEW_MAP.md` and `release-notes/v3.1.0.md`.
+
+### Changed
+
+- Version metadata to `3.1.0-dev` / `3.1.0.dev0` (stable `v3.0.0`, current
+  `v3.1.0`, next `v3.2.0`).
+- README, CLI reference, public surface, stability contract, output standard,
+  demo workflow, roadmap, release checklist, and v3 readiness updated for
+  review-map. Latest stable release remains `v3.0.0`.
+
+### Review Map
+
+- Value-direction detection (in/out/both) from token-transfer primitives and
+  function-name keyword groups; review-priority heuristic (high/medium/low).
+- Heuristic assumptions, test gaps, and proof suggestions for value-sensitive
+  functions; read-only linking of existing proof/trace/evidence/report artifacts.
+
+### Artifacts
+
+- Writes nine artifacts under `.arkheionx/out/review-map/`: `review-map.json`,
+  `review-map.md`, `value-paths.json`, `test-gaps.json`, `assumptions.json`,
+  `proof-plan.json`, `evidence-links.json`, `review-summary.md`, `review-map.mmd`.
+  All plain text (no ANSI), gitignored, with repo-relative paths where possible.
+
+### CLI
+
+- `review-map` prints a human summary with restrained color; `--json` emits
+  plain JSON only; `--no-write` writes nothing; clean errors for bad path, no
+  Solidity files, invalid `--top`, and unknown `--target`.
+
+### Docs
+
+- Added `docs/REVIEW_MAP.md`; documented review-map across the public surface
+  and stability docs with consistent safety wording.
+
+### Tests
+
+- Added `tests/test_review_map.py`, `tests/test_review_map_cli.py`,
+  `tests/test_review_map_artifacts.py`, and `tests/test_review_map_schema.py`;
+  updated version-asserting tests for `3.1.0-dev`.
+
+### Known limitations
+
+- Static/heuristic mapping: it may miss value paths and may suggest
+  false-positive test gaps.
+- It does not replace manual review and makes no vulnerability, severity, or
+  bounty claim.
+- Most review-map signals start at `HEURISTIC` unless linked to proof, trace, or
+  evidence artifacts.
+
 ## v3.0.0 - 2026-05-31
 
 Public Stable Launch. Consolidates the v2.x workbench into a coherent, documented

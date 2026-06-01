@@ -59,4 +59,13 @@ workbench improvements after the v3.0.0 cut).
   eligibility, no live-chain testing, no auto-submission, no PyPI/Homebrew/
   binary/domain-installer availability unless actually implemented.
 
+## 13. v3.1.0 — Protocol Review Map (active milestone)
+The current active milestone after v3.0.0 is **v3.1.0 — Protocol Review Map**.
+It adds the public `arkheionx review-map` command, a structured review surface
+(contracts, value paths, assumptions, test gaps, proof suggestions, evidence
+links), JSON/Markdown artifacts under `.arkheionx/out/review-map/`, and a
+`schemas/review-map.schema.json` schema. It is local/static and heuristic by
+default; review-map outputs are review guidance, not confirmed findings. The
+latest stable release remains **v3.0.0**. See [`REVIEW_MAP.md`](REVIEW_MAP.md).
+
 See [`STABILITY_CONTRACT.md`](STABILITY_CONTRACT.md) and [`ROADMAP.md`](ROADMAP.md).

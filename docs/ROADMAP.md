@@ -14,12 +14,13 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v3.1.0.
+Current milestone: v3.1.0 — Protocol Review Map.
 Latest stable: v3.0.0 — Public Stable Launch.
 Foundation shipped: v3.0.0 — Public Stable Launch; v2.10.0 — Pre-v3 Public Readiness & Stability Hardening; v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening; v2.8.0 — Package Data & Distribution Hardening; v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench. v3.0.0 shipped as the public stable
-launch; v3.1.0 is the current active milestone (incremental workbench
-improvements after the v3.0.0 cut).
+launch. v3.1.0 — Protocol Review Map is the current active milestone (a
+structured, developer-native review surface built on the workbench); v3.2.0 is
+the next milestone (review-map deepening / test-gap map).
 
 Pre-v3 readiness is tracked in [`V3_READINESS.md`](V3_READINESS.md); the public
 command contract is in [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md) and
@@ -137,6 +138,16 @@ command contract is in [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md) and
 - [x] **v2.9.0: Multi-Fixture Demo Expansion & Public Workflow Hardening shipped.**
       Adds amm-swap and lending-vault bundled demos, demo registry category/risk
       metadata, and broader first-use workflow coverage (local-only toy demos).
+- [x] **v3.0.0: Public Stable Launch shipped.**
+      Coherent local workflow, stable command surface, honest evidence levels,
+      and a safe install/update lifecycle.
+- [ ] **v3.1.0: Protocol Review Map (current milestone).**
+      `arkheionx review-map`: contracts, value paths, assumptions, test gaps,
+      proof suggestions, and evidence links, written as JSON/Markdown artifacts.
+      Local/static and heuristic by default; review guidance, not findings.
+- [ ] **v3.2.0: Review Map Deepening / Test Gap Map (next milestone).**
+      Deepen value-path and test-gap analysis and consider promoting review-map
+      sub-outputs into focused commands.
 - [ ] **v2.3.0: Evidence & Report Package next milestone.**
       Package execution-confirmed evidence into reviewer-ready report drafts.
 - [ ] **v2.4.0: Flow-Based Foundry Test Templates.**
