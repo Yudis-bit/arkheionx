@@ -39,6 +39,63 @@ class ValueDirectionTests(unittest.TestCase):
         self.assertEqual(value_direction("getPrice", []), "none")
 
 
+class TestGapMappingTests(unittest.TestCase):
+    """Suggestions must be targeted per function type, not generic."""
+
+    @staticmethod
+    def _fs(name: str, direction: str = "none", risk=None):
+        from arkheionx.review_map.model import FunctionSurface
+
+        return FunctionSurface(contract="C", name=name, value_direction=direction,
+                               risk_signals=risk or [], mutability="state-changing")
+
+    def _suggest(self, name: str, direction: str = "none", risk=None) -> list[str]:
+        from arkheionx.review_map.tests import suggested_tests_for
+
+        return suggested_tests_for(self._fs(name, direction, risk))
+
+    def test_swap_does_not_get_withdrawal_only(self) -> None:
+        s = self._suggest("swapAForB", "both", ["value-out", "value-in"])
+        self.assertIn("slippage bound", s)
+        self.assertIn("invariant preservation", s)
+        for withdrawal_only in ("withdrawal boundary", "full balance", "partial balance"):
+            self.assertNotIn(withdrawal_only, s)
+
+    def test_remove_liquidity_gets_withdrawal_and_sync(self) -> None:
+        s = self._suggest("removeLiquidity", "out", ["value-out"])
+        self.assertIn("withdrawal boundary", s)
+        self.assertIn("reserve/accounting sync", s)
+
+    def test_admin_gets_access_and_config(self) -> None:
+        s = self._suggest("setFeeBps", "none", ["privileged"])
+        self.assertIn("access control", s)
+        self.assertIn("role revocation", s)
+        self.assertNotIn("withdrawal boundary", s)
+
+    def test_reward_gets_reward_specific(self) -> None:
+        s = self._suggest("claimReward", "out", ["value-out"])
+        self.assertIn("double claim", s)
+        self.assertIn("reward index monotonicity", s)
+        self.assertNotIn("withdrawal boundary", s)
+
+    def test_borrow_gets_oracle_lending(self) -> None:
+        s = self._suggest("borrow", "out", ["value-out"])
+        self.assertIn("stale oracle rejection", s)
+        self.assertIn("health factor boundary", s)
+        self.assertNotIn("withdrawal boundary", s)
+
+    def test_liquidate_gets_liquidation_specific(self) -> None:
+        s = self._suggest("liquidate", "out", ["value-out", "debt-or-liquidation"])
+        self.assertIn("liquidation threshold", s)
+        self.assertIn("bad debt edge case", s)
+        self.assertNotIn("borrow cap boundary", s)
+
+    def test_plain_exit_gets_withdrawal(self) -> None:
+        s = self._suggest("withdrawCollateral", "out", ["value-out"])
+        self.assertIn("withdrawal boundary", s)
+        self.assertIn("reentrancy receiver", s)
+
+
 class BuildReviewMapTests(unittest.TestCase):
     def test_builds_on_all_demo_fixtures(self) -> None:
         for demo in DEMOS:

@@ -160,6 +160,8 @@ def check() -> list[str]:
             failures.append("docs/CLI_REFERENCE.md does not document review-map")
         if "review-map" not in readme:
             failures.append("README.md does not mention review-map")
+        if notes.is_file() and "review-map" not in notes.read_text(encoding="utf-8", errors="ignore"):
+            failures.append(f"release notes {notes.name} do not describe review-map")
 
     # GitHub Action examples and install/arkup stable tag track STABLE_RELEASE.
     action_tag = f"pre-audit@{STABLE_RELEASE}"

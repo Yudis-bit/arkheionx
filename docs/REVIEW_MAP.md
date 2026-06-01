@@ -65,6 +65,17 @@ arkheionx review-map . --include-low-confidence
 | `--include-low-confidence` | Include low-confidence test gaps. |
 | `--target <Contract.function>` | Limit the map to a single function. |
 
+## Status and exit codes
+
+A static run reports `Status: warning` **by design**, with a `Reason:` line:
+review-map output is heuristic guidance until connected to proof, trace, and
+evidence. It is not an error. Exit codes follow the workbench convention:
+
+- `0` — ok (only when the map is compiler-confirmed).
+- `1` — heuristic review guidance (the normal static case).
+- `2` — usage/input error (bad path, no Solidity files, invalid `--top`,
+  unknown `--target`).
+
 ## Output artifacts
 
 By default, artifacts are written under `<repo>/.arkheionx/out/review-map/`

@@ -14,15 +14,26 @@ from .detect import is_value_sensitive
 from .model import HIGH, LOW, MEDIUM, FunctionSurface, TestGap
 
 # Suggested local Foundry test scenarios per surface kind. Review guidance only.
+# Each function maps to exactly one primary kind so suggestions stay targeted
+# (a swap never receives withdrawal-only scenarios, etc.).
 _SCENARIOS = {
-    "exit": ["withdrawal boundary", "reentrancy receiver", "zero amount", "full balance", "partial balance"],
-    "borrow_oracle": ["stale oracle", "decimals normalization", "price shock", "borrow cap", "health factor"],
-    "reward": ["reward index monotonicity", "double claim", "zero rewards", "distribution after stake/unstake"],
-    "swap_liquidity": ["slippage bound", "reserve sync", "fee rounding", "low liquidity"],
+    "exit": ["withdrawal boundary", "zero amount", "full balance", "partial balance", "reentrancy receiver"],
+    "liquidity_exit": ["withdrawal boundary", "zero amount", "full balance", "partial balance",
+                       "reentrancy receiver", "reserve/accounting sync"],
+    "swap": ["slippage bound", "reserve sync", "fee rounding", "low liquidity",
+             "invariant preservation", "non-standard ERC20 behavior", "failed transfer behavior"],
+    "borrow": ["stale oracle rejection", "decimals normalization", "borrow cap boundary",
+               "health factor boundary", "price shock regression"],
+    "liquidate": ["liquidation threshold", "price shock", "partial liquidation",
+                  "bad debt edge case", "decimals normalization"],
+    "reward": ["double claim", "reward index monotonicity", "zero reward",
+               "stake/unstake ordering", "distribution after balance change"],
     "admin": ["access control", "zero address", "parameter bounds", "pause behavior", "role revocation"],
-    "external": ["reentrancy ordering", "failure behavior", "non-standard ERC20 behavior"],
     "entry": ["zero amount", "accounting after deposit", "balance update", "double counting"],
 }
+
+_EXIT_KEYWORDS = ("withdraw", "redeem", "unstake", "burn", "collect", "payout", "sweep", "rescue")
+_ENTRY_KEYWORDS = ("deposit", "stake", "mint", "addliquidity", "supply", "lock", "fund", "contribute")
 
 
 def find_test_files(root: Path) -> list[Path]:
@@ -50,29 +61,32 @@ def function_test_references(name: str, blobs: list[tuple[str, str]]) -> list[st
     return sorted({rel for rel, text in blobs if needle in text})
 
 
-def suggested_tests_for(fs: FunctionSurface) -> list[str]:
+def _scenario_kind(fs: FunctionSurface) -> str | None:
+    """Pick one primary scenario kind for a function. Most specific wins."""
+
     name = fs.name.lower()
-    out: list[str] = []
-    if any(k in name for k in ("borrow", "liquidate")):
-        out += _SCENARIOS["borrow_oracle"]
-    if fs.value_direction in ("out", "both") or any(
-        k in name for k in ("withdraw", "redeem", "unstake", "removeliquidity", "collect", "sweep", "rescue")
-    ):
-        out += _SCENARIOS["exit"]
+    if "liquidate" in name:
+        return "liquidate"
+    if "borrow" in name:
+        return "borrow"
+    if "swap" in name:
+        return "swap"
     if any(k in name for k in ("claim", "reward", "distribute", "accrue", "harvest")):
-        out += _SCENARIOS["reward"]
-    if any(k in name for k in ("swap", "liquidity", "sync")):
-        out += _SCENARIOS["swap_liquidity"]
-    if "external-call" in fs.risk_signals:
-        out += _SCENARIOS["external"]
-    if "privileged" in fs.risk_signals or fs.mutability == "state-changing" and name.startswith("set"):
-        out += _SCENARIOS["admin"]
-    if not out and fs.value_direction == "in":
-        out += _SCENARIOS["entry"]
-    # De-duplicate while preserving order.
-    seen: set[str] = set()
-    ordered = [s for s in out if not (s in seen or seen.add(s))]
-    return ordered
+        return "reward"
+    if "removeliquidity" in name:
+        return "liquidity_exit"
+    if fs.value_direction in ("out", "both") or any(k in name for k in _EXIT_KEYWORDS):
+        return "exit"
+    if "privileged" in fs.risk_signals or (fs.mutability == "state-changing" and name.startswith("set")):
+        return "admin"
+    if fs.value_direction == "in" or any(k in name for k in _ENTRY_KEYWORDS):
+        return "entry"
+    return None
+
+
+def suggested_tests_for(fs: FunctionSurface) -> list[str]:
+    kind = _scenario_kind(fs)
+    return list(_SCENARIOS[kind]) if kind else []
 
 
 def _gap_confidence(fs: FunctionSurface, has_reference: bool) -> str:

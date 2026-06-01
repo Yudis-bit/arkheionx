@@ -93,6 +93,55 @@ class ReviewMapCliTests(unittest.TestCase):
         self.assertNotIn("Traceback", bad.stderr)
 
 
+class ReviewMapEdgeCaseTests(unittest.TestCase):
+    def _src_repo(self, base: Path, body: str) -> Path:
+        repo = base / "repo"
+        (repo / "src").mkdir(parents=True)
+        (repo / "src" / "C.sol").write_text(body, encoding="utf-8")
+        return repo
+
+    def test_empty_solidity_file_no_traceback(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = self._src_repo(Path(tmp), "")
+            result = run_cli("review-map", str(repo), "--no-write")
+            self.assertIn(result.returncode, (0, 1))
+            self.assertIn("ARKHEIONX REVIEW MAP", result.stdout)
+            self.assertNotIn("Traceback", result.stderr)
+
+    def test_contract_without_functions_no_traceback(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = self._src_repo(
+                Path(tmp),
+                "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\ncontract C { uint256 public x; }\n",
+            )
+            result = run_cli("review-map", str(repo), "--no-write")
+            self.assertIn(result.returncode, (0, 1))
+            self.assertNotIn("Traceback", result.stderr)
+
+    def test_only_test_files_clean_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            (repo / "test").mkdir(parents=True)
+            (repo / "test" / "X.t.sol").write_text("contract T { function test_x() public {} }\n", encoding="utf-8")
+            result = run_cli("review-map", str(repo), "--no-write")
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("no Solidity files", result.stdout)
+            self.assertNotIn("Traceback", result.stderr)
+
+    def test_negative_top_clean_error(self) -> None:
+        result = run_cli("review-map", str(FIXTURE), "--top", "-3", "--no-write")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("--top", result.stdout)
+
+    def test_json_with_no_write_emits_json_and_writes_nothing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "demo"
+            self.assertEqual(run_cli("demo", "--copy", "amm-swap", str(repo)).returncode, 0)
+            result = run_cli("review-map", str(repo), "--json", "--no-write")
+            json.loads(result.stdout)  # valid JSON
+            self.assertFalse((repo / ".arkheionx" / "out" / "review-map").exists())
+
+
 class ReviewMapDemoIntegrationTests(unittest.TestCase):
     def test_review_map_on_each_demo(self) -> None:
         for demo in ("oracle-staking", "amm-swap", "lending-vault"):

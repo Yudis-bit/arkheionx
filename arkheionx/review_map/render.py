@@ -29,14 +29,18 @@ def _summary_lines(rm: ReviewMap) -> list[str]:
 
 
 def render_cli(rm: ReviewMap, project: str, artifacts: dict[str, str], top: int) -> str:
-    out = ["ARKHEIONX REVIEW MAP", f"Status: {status_of(rm)}", ""]
+    status = status_of(rm)
+    out = ["ARKHEIONX REVIEW MAP", f"Status: {status}"]
+    if status == "warning":
+        out.append("Reason: review-map output is heuristic guidance until connected to proof/trace/evidence.")
+    out.append("")
     out += _summary_lines(rm)
-    out += ["", "Top Review Targets"]
+    out += ["", "Top Review Targets (review priority, not confirmed findings)"]
     if rm.reviewer_notes:
         for i, note in enumerate(rm.reviewer_notes[:top], 1):
             out.append(f"{i}. {note.title} [{note.priority}]")
             out.append(f"   Why: {note.body}")
-            out.append(f"   Suggested next step: {note.next_step.replace('arkheionx prove . ', f'arkheionx prove {project} ')}")
+            out.append(f"   Look at: {note.next_step.replace('arkheionx prove . ', f'arkheionx prove {project} ')}")
     else:
         out.append("  No value-sensitive review targets detected.")
     out += ["", "Value Paths"]
@@ -102,10 +106,13 @@ def render_markdown(rm: ReviewMap) -> str:
         "",
         "## Top Review Targets",
         "",
+        "_Review priority order — what to look at first, not confirmed findings._",
+        "",
     ]
     if rm.reviewer_notes:
+        md += ["| # | Priority | Target | Why | Look at |", "| --- | --- | --- | --- | --- |"]
         for i, note in enumerate(rm.reviewer_notes, 1):
-            md += [f"{i}. **{note.title}** ({note.priority})", f"   - {note.body}", f"   - Next: `{note.next_step}`"]
+            md.append(f"| {i} | {note.priority} | `{note.title}` | {note.body} | `{note.next_step}` |")
     else:
         md.append("_None detected._")
     md += ["", "## Value Paths", ""]
@@ -193,19 +200,25 @@ def render_summary_md(rm: ReviewMap) -> str:
         "",
         f"{s.text}",
         "",
+        f"- Contracts: {s.contracts_analyzed} · Functions: {s.functions_mapped} · "
+        f"Value paths: {s.value_paths} · Assumptions: {s.assumptions} · "
+        f"Test gaps: {s.test_gaps} · Proof suggestions: {s.proof_suggestions}",
+        "",
         "## Look at these first",
         "",
     ]
     if rm.reviewer_notes:
         for i, note in enumerate(rm.reviewer_notes[:5], 1):
             md.append(f"{i}. `{note.title}` ({note.priority}) — {note.body}")
+            md.append(f"   - Look at: `{note.next_step}`")
     else:
         md.append("_No high-priority targets detected._")
     md += [
         "",
         "## Reminder",
         "",
-        "Review-map outputs are review guidance, not confirmed vulnerabilities. Human review remains required.",
+        "Review-map outputs are review guidance, not confirmed vulnerabilities. Most signals start at",
+        "HEURISTIC and only rise when connected to proof, trace, and evidence. Human review remains required.",
         "",
     ]
     return "\n".join(md) + "\n"
