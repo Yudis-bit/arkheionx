@@ -41,3 +41,38 @@ jobs:
 
       - name: Release readiness
         run: python3 scripts/check_release_readiness.py --check
+
+  installer-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          # Python 3.12 venvs do not provision setuptools by default; this is
+          # the exact condition the fresh-install fix guards against, so the
+          # smoke test must run here to prevent regression.
+          python-version: "3.12"
+
+      - name: Smoke test source installer
+        run: |
+          set -euo pipefail
+
+          bash -n install.sh
+          bash -n site/public/install.sh
+
+          TMP_HOME="$(mktemp -d)"
+          TMP_BIN="$(mktemp -d)"
+          cleanup() {
+            rm -rf "$TMP_HOME" "$TMP_BIN"
+          }
+          trap cleanup EXIT
+
+          ARKHEIONX_HOME="$TMP_HOME/.arkheionx" \
+          ARKHEIONX_BIN_DIR="$TMP_BIN" \
+          bash site/public/install.sh
+
+          "$TMP_BIN/arkheionx" version
+          "$TMP_BIN/arkheionx" doctor
