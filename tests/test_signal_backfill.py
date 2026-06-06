@@ -51,24 +51,45 @@ class SignalCategoryMappingTests(unittest.TestCase):
 
     def test_rule_family_category_maps_to_signal_bucket(self) -> None:
         gap = make_gap(self.module, "oracle-pricing")
-        self.assertEqual(
-            self.module.signal_categories_for_gap(gap, "lending"), ("oracle",)
-        )
+        self.assertEqual(self.module.signal_categories_for_gap(gap), ("oracle",))
         gap = make_gap(self.module, "reentrancy-value-flow")
         self.assertEqual(
-            self.module.signal_categories_for_gap(gap, "amm"),
+            self.module.signal_categories_for_gap(gap),
             ("reentrancy_value_flow",),
         )
 
-    def test_testing_category_maps_to_protocol_shape(self) -> None:
+    def test_testing_category_has_no_rule_family_mapping(self) -> None:
+        # Testing-readiness findings fire on absent test types, not a code term,
+        # so they must not borrow a rule-family signal bucket.
         gap = make_gap(self.module, "testing-readiness")
-        self.assertEqual(self.module.signal_categories_for_gap(gap, "amm"), ("amm",))
-        # Unknown protocol type yields no mapping rather than a wrong guess.
-        self.assertEqual(self.module.signal_categories_for_gap(gap, "generic"), ())
+        self.assertEqual(self.module.signal_categories_for_gap(gap), ())
 
     def test_unmapped_category_returns_no_signals(self) -> None:
         gap = make_gap(self.module, "generic")
-        self.assertEqual(self.module.signal_categories_for_gap(gap, "amm"), ())
+        self.assertEqual(self.module.signal_categories_for_gap(gap), ())
+
+
+class TestingCoverageSignalTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.module = load_scanner_module()
+
+    def test_names_each_missing_test_type_in_review_order(self) -> None:
+        readiness = {"invariant_tests": False, "fuzz_tests": False, "handler_contracts": False}
+        self.assertEqual(
+            self.module.testing_coverage_signals(readiness),
+            ["invariant_tests_missing", "fuzz_tests_missing", "handler_contracts_missing"],
+        )
+
+    def test_present_test_types_are_not_flagged(self) -> None:
+        readiness = {"invariant_tests": True, "fuzz_tests": False, "handler_contracts": True}
+        self.assertEqual(
+            self.module.testing_coverage_signals(readiness), ["fuzz_tests_missing"]
+        )
+
+    def test_signals_are_testing_specific_not_protocol_terms(self) -> None:
+        readiness = {"invariant_tests": False, "fuzz_tests": False, "handler_contracts": False}
+        for token in self.module.testing_coverage_signals(readiness):
+            self.assertTrue(token.endswith("_missing"))
 
 
 class BackfillDetectedSignalsTests(unittest.TestCase):
@@ -99,10 +120,18 @@ class BackfillDetectedSignalsTests(unittest.TestCase):
         self.module.backfill_detected_signals([gap], self.signals, "amm")
         self.assertEqual(gap.detected, [])
 
-    def test_protocol_shape_finding_names_protocol_signals(self) -> None:
+    def test_testing_finding_names_missing_coverage_not_protocol_signals(self) -> None:
+        # A testing finding must surface missing-coverage signals, never the
+        # protocol vocabulary (swap/mint) it would otherwise inherit.
         gap = make_gap(self.module, "testing-readiness")
-        self.module.backfill_detected_signals([gap], self.signals, "amm")
-        self.assertEqual(gap.detected, ["mint", "swap"])
+        readiness = {"invariant_tests": False, "fuzz_tests": False, "handler_contracts": False}
+        self.module.backfill_detected_signals([gap], self.signals, "amm", readiness)
+        self.assertEqual(
+            gap.detected,
+            ["invariant_tests_missing", "fuzz_tests_missing", "handler_contracts_missing"],
+        )
+        self.assertNotIn("swap", gap.detected)
+        self.assertTrue(gap.fingerprint)
 
 
 class RenderedSignalQualityTests(unittest.TestCase):
@@ -172,6 +201,27 @@ class RenderedSignalQualityTests(unittest.TestCase):
         self.assertIn("transferFrom", reentrancy_signals)
         # The named signal must also appear in the rendered Detected signals list.
         self.assertIn("`transferFrom`", markdown)
+
+    def test_testing_finding_uses_coverage_signals_not_protocol_terms(self) -> None:
+        # ARK-TST-002 ("no invariant tests for DeFi protocol shape") must point at
+        # the missing test types, not borrow AMM/lending/oracle vocabulary.
+        for root, ptype, protocol_terms in (
+            ("examples/amm-fixture", "amm", {"swap", "addLiquidity", "getReserves"}),
+            ("examples/lending-fixture", "lending", {"borrow", "liquidate", "collateral"}),
+        ):
+            _markdown, report = self.run_scanner(root, ptype)
+            testing = self.finding(report, "ARK-TST-002")
+            self.assertIsNotNone(testing, f"expected ARK-TST-002 in {root}")
+            signals = testing.get("detected_signals") or []
+            self.assertIn("invariant_tests_missing", signals)
+            self.assertTrue(
+                all(s.endswith("_missing") for s in signals),
+                f"ARK-TST-002 should only carry testing-coverage signals: {signals}",
+            )
+            self.assertFalse(
+                protocol_terms & set(signals),
+                f"ARK-TST-002 must not inherit protocol terms {protocol_terms & set(signals)}",
+            )
 
     def test_naming_signals_does_not_inflate_confidence(self) -> None:
         # ARK-ORC-002 in the lending fixture has strong oracle signals and

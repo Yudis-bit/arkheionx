@@ -3187,31 +3187,36 @@ GAP_CATEGORY_SIGNAL_CATEGORIES: dict[str, tuple[str, ...]] = {
     "reward-accounting": ("staking_rewards",),
 }
 
-# Protocol-shape findings (e.g. "no invariant tests for DeFi protocol shape") fire
-# on the detected protocol type rather than a single rule family; name the signals
-# that made the repository look like that protocol.
-PROTOCOL_TYPE_SIGNAL_CATEGORIES: dict[str, tuple[str, ...]] = {
-    "amm": ("amm",),
-    "lending": ("lending",),
-    "vault": ("vault_accounting",),
-    "staking": ("staking_rewards",),
-    "oracle": ("oracle",),
-}
+# Testing-readiness findings fire on the *absence* of a test type, not on a code
+# term, so naming protocol vocabulary (swap, borrow, ...) would misattribute them.
+# Surface the missing-coverage signals instead, most decision-relevant first.
+TESTING_COVERAGE_SIGNAL_CHECKS: tuple[tuple[str, str], ...] = (
+    ("invariant_tests", "invariant_tests_missing"),
+    ("fuzz_tests", "fuzz_tests_missing"),
+    ("handler_contracts", "handler_contracts_missing"),
+)
 
 
-def signal_categories_for_gap(gap: ReadinessGap, protocol_type: str) -> tuple[str, ...]:
-    categories = GAP_CATEGORY_SIGNAL_CATEGORIES.get(gap.category)
-    if categories:
-        return categories
-    if "testing" in gap.category:
-        return PROTOCOL_TYPE_SIGNAL_CATEGORIES.get(protocol_type, ())
-    return ()
+def signal_categories_for_gap(gap: ReadinessGap) -> tuple[str, ...]:
+    return GAP_CATEGORY_SIGNAL_CATEGORIES.get(gap.category, ())
+
+
+def testing_coverage_signals(test_readiness: dict[str, object]) -> list[str]:
+    """Name the missing-coverage signals behind a testing-readiness finding so it
+    points at the test types to add rather than borrowing unrelated protocol
+    vocabulary. Ordered by review relevance and deterministic."""
+    return [
+        token
+        for key, token in TESTING_COVERAGE_SIGNAL_CHECKS
+        if not test_readiness.get(key)
+    ]
 
 
 def backfill_detected_signals(
     gaps: list[ReadinessGap],
     signals: dict[str, dict[str, object]],
     protocol_type: str,
+    test_readiness: dict[str, object] | None = None,
 ) -> None:
     """Name the matched local/static signals for findings created without an
     explicit signal list, so reports never fall back to a generic placeholder.
@@ -3223,15 +3228,16 @@ def backfill_detected_signals(
     scoring therefore stay identical while the named signals strengthen evidence
     snippets, evidence summaries, and downstream test-plan matched signals.
     """
+    testing_signals = testing_coverage_signals(test_readiness or {})
     for gap in gaps:
         if gap.detected:
             continue
-        categories = signal_categories_for_gap(gap, protocol_type)
-        if not categories:
-            continue
-        terms = detected_terms(signals, *categories)
+        if "testing" in gap.category:
+            terms = testing_signals
+        else:
+            terms = detected_terms(signals, *signal_categories_for_gap(gap))
         if terms:
-            gap.detected = terms
+            gap.detected = list(terms)
             gap.fingerprint = compute_finding_fingerprint(gap, protocol_type)
 
 
@@ -6776,7 +6782,7 @@ def main(argv: list[str] | None = None) -> int:
     apply_finding_metadata(gaps, signals, protocol_type)
     add_rule_pack_gaps(gaps, contents, classified, signals)
     apply_finding_metadata(gaps, signals, protocol_type)
-    backfill_detected_signals(gaps, signals, protocol_type)
+    backfill_detected_signals(gaps, signals, protocol_type, test_readiness)
     attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type, negative_evidence)
     gaps = filter_gaps_by_rule_packs(gaps, enabled_rule_packs)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
