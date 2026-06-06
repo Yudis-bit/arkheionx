@@ -1,38 +1,97 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
+
+const concepts = [
+  {
+    term: "Protocol surface",
+    meaning: "The reviewable shape of a protocol: contracts, actors, permissions, dependencies, value movement, assumptions, and evidence."
+  },
+  {
+    term: "Role",
+    meaning: "An actor or authority that can affect protocol behavior, such as owner, admin, keeper, user, oracle, governance, or emergency role."
+  },
+  {
+    term: "Value path",
+    meaning: "A route where assets, shares, rewards, collateral, or accounting value can move through the system."
+  },
+  {
+    term: "Assumption",
+    meaning: "A condition the protocol appears to rely on, such as oracle freshness, access control correctness, accounting invariants, or timing behavior."
+  },
+  {
+    term: "Test gap",
+    meaning: "A review-relevant behavior that appears important but is not clearly covered by tests or deterministic fixture checks."
+  },
+  {
+    term: "Evidence link",
+    meaning: "A reference that connects review context back to source files, fixtures, snapshots, or generated artifacts."
+  },
+  {
+    term: "Review package",
+    meaning: "A structured set of artifacts that helps humans inspect what was reviewed, what changed, and what still needs judgment."
+  },
+  {
+    term: "Snapshot drift",
+    meaning: "A change between expected deterministic output and newly generated output."
+  },
+  {
+    term: "Source fingerprint",
+    meaning: "A deterministic identifier that helps track the source inputs used to generate artifacts."
+  }
+];
 ---
 
-<Layout title="Concepts | ArkheionX Docs" description="Core ArkheionX concepts for protocol mapping and review artifacts.">
-  <DocShell>
-    <p class="page-kicker">Model</p>
-    <h1>Concepts.</h1>
-    <p class="doc-deck">ArkheionX separates observed repository structure, generated review context, execution evidence, and human conclusions.</p>
+<Layout
+  title="Concepts — ArkheionX"
+  description="Core ArkheionX concepts for deterministic smart contract review maps."
+>
+  <main class="concepts-page">
+    <section class="concepts-hero">
+      <p class="concepts-kicker">Concepts</p>
+      <h1>The vocabulary behind a review map.</h1>
+      <p>
+        ArkheionX is built around a simple idea: security review needs reproducible context before
+        it needs conclusions. These concepts define the context the tool is meant to preserve.
+      </p>
+    </section>
 
-    <h2>Review surface</h2>
-    <p>A review surface is the structured set of contracts, functions, roles, value paths, assumptions, gaps, and artifact links presented for inspection.</p>
+    <section class="concepts-map">
+      <div>
+        <span>Input</span>
+        <strong>Local repository</strong>
+      </div>
+      <div>
+        <span>Mapping layer</span>
+        <strong>Protocol surface</strong>
+      </div>
+      <div>
+        <span>Artifacts</span>
+        <strong>Roles · paths · assumptions · gaps · evidence</strong>
+      </div>
+      <div>
+        <span>Reviewer</span>
+        <strong>Human judgment</strong>
+      </div>
+    </section>
 
-    <dl class="definition-grid">
-      <div><dt>Protocol role</dt><dd>A machine-classified orientation label for a contract or function. It is a navigation aid, not semantic proof.</dd></div>
-      <div><dt>Value path</dt><dd>A candidate route through calls, transfers, accounting, or exits that a reviewer should trace against source.</dd></div>
-      <div><dt>Assumption</dt><dd>A trust, state, timing, authority, or integration condition inferred from local context and exposed for verification.</dd></div>
-      <div><dt>Test gap</dt><dd>A protocol surface for which the available local test evidence appears incomplete or absent.</dd></div>
-      <div><dt>Evidence link</dt><dd>A cross-reference from a review target to proof, trace, validation, report, or package artifacts.</dd></div>
-      <div><dt>Review package</dt><dd>A local manifest, validation result, README, and selected copies of existing artifacts for handoff.</dd></div>
-      <div><dt>Source fingerprint</dt><dd>A SHA-256 digest and byte count for a registered fixture source file.</dd></div>
-      <div><dt>Snapshot drift</dt><dd>A difference between current deterministic fixture output and its recorded baseline.</dd></div>
-    </dl>
+    <section class="concepts-grid">
+      {concepts.map((concept, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <h2>{concept.term}</h2>
+          <p>{concept.meaning}</p>
+        </article>
+      ))}
+    </section>
 
-    <h2>Evidence levels</h2>
-    <p>
-      Static observations and executed local tests carry different provenance. ArkheionX records those distinctions,
-      but it does not convert execution success into a final security judgment.
-    </p>
-
-    <h2>Generated output</h2>
-    <p>
-      The default artifact root is <code>.arkheionx/out/</code>. Generated output is local, reproducible context and
-      is normally excluded from source control unless a review process explicitly decides otherwise.
-    </p>
-  </DocShell>
+    <section class="concepts-boundary">
+      <p class="concepts-kicker">Important</p>
+      <h2>Concepts are not verdicts.</h2>
+      <p>
+        A role, assumption, value path, or test gap is review context. It is not automatically a
+        vulnerability. Human validation is required before any security conclusion.
+      </p>
+      <a href="/docs/safety-model" class="concepts-button">Read safety model</a>
+    </section>
+  </main>
 </Layout>

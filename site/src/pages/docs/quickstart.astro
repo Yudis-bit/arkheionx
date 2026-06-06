@@ -1,41 +1,63 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
-import CommandBlock from "../../components/CommandBlock.astro";
 ---
 
-<Layout title="Quickstart | ArkheionX Docs" description="A short ArkheionX workflow from environment check to review package.">
-  <DocShell>
-    <p class="page-kicker">Start</p>
-    <h1>Quickstart.</h1>
-    <p class="doc-deck">A compact sequence for producing and inspecting a local review surface.</p>
+<Layout
+  title="Quickstart — ArkheionX"
+  description="Run the first ArkheionX commands and understand the local review workflow."
+>
+  <main class="doc-readable">
+    <section class="doc-readable__hero">
+      <p class="docs-kicker">Quickstart</p>
+      <h1>Run the smallest useful ArkheionX workflow.</h1>
+      <p>
+        Start by verifying the installed command and local environment. Keep the first workflow
+        boring, inspectable, and easy to debug.
+      </p>
+    </section>
 
-    <h2>Check the command</h2>
-    <CommandBlock command={`arkheionx version
-arkheionx doctor .`} />
+    <section class="doc-readable__section">
+      <h2>1. Install from source</h2>
+      <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      <p>
+        For first use, inspect the script before running it.
+      </p>
+      <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+less arkheionx-install.sh
+bash arkheionx-install.sh</code></pre>
+    </section>
 
-    <h2>Orient the repository</h2>
-    <CommandBlock command={`arkheionx open .
-arkheionx map .
-arkheionx flow .`} />
-    <p><code>open</code> provides a compact orientation. <code>map</code> expands roles and journeys. <code>flow</code> focuses on candidate money-flow edges.</p>
+    <section class="doc-readable__section">
+      <h2>2. Check the installed command</h2>
+      <pre><code>arkheionx version</code></pre>
+      <p>
+        This confirms that the wrapper is available and that the installed package can start.
+      </p>
+    </section>
 
-    <h2>Build focused review artifacts</h2>
-    <CommandBlock command={`arkheionx review-map .
-arkheionx value-paths .
-arkheionx assumptions .
-arkheionx test-gap-map .
-arkheionx evidence-links .`} />
+    <section class="doc-readable__section">
+      <h2>3. Check the environment</h2>
+      <pre><code>arkheionx doctor</code></pre>
+      <p>
+        The doctor command should be the first place to look when something feels wrong locally.
+      </p>
+    </section>
 
-    <h2>Package the current state</h2>
-    <CommandBlock command={`arkheionx validate-artifacts .
-arkheionx review-package . --strict`} />
-    <p>The package collects existing local artifacts, writes a manifest and validation report, and can be regenerated from the same repository state.</p>
+    <section class="doc-readable__section">
+      <h2>4. Read the safety model</h2>
+      <p>
+        ArkheionX creates review context. It does not confirm vulnerabilities, assign final
+        severity, prove protocol safety, submit reports, or stand in for human review.
+      </p>
+      <a class="doc-link-button" href="/docs/safety-model">Open safety model</a>
+    </section>
 
-    <h2>Inspect before extending execution</h2>
-    <p>
-      Stop and read the generated map before using commands with <code>--build</code> or <code>--run</code>. Those flags can invoke local Foundry
-      operations. They remain explicit because execution changes the evidence and trust boundary.
-    </p>
-  </DocShell>
+    <section class="doc-readable__section">
+      <h2>5. What comes next</h2>
+      <p>
+        After the environment is working, use ArkheionX as a structured review layer around your
+        codebase. Treat outputs as review context that must be inspected by a human.
+      </p>
+    </section>
+  </main>
 </Layout>

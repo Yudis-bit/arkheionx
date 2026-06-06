@@ -19,7 +19,7 @@ import CommandBlock from "../../components/CommandBlock.astro";
     </ul>
 
     <h2>Website installer</h2>
-    <CommandBlock command="curl -fsSL https://arkheionx.dev/install | bash" />
+    <CommandBlock command="curl -fsSL https://arkheionx.dev/install.sh | bash" />
     <p>Managed paths:</p>
     <ul>
       <li><code>~/.arkheionx/src</code>: public repository checkout on <code>main</code></li>
@@ -29,7 +29,7 @@ import CommandBlock from "../../components/CommandBlock.astro";
     </ul>
 
     <h2>Inspect before execution</h2>
-    <CommandBlock command={`curl -fsSL https://arkheionx.dev/install -o /tmp/arkheionx-install
+    <CommandBlock command={`curl -fsSL https://arkheionx.dev/install.sh -o /tmp/arkheionx-install
 sh -n /tmp/arkheionx-install
 sed -n '1,240p' /tmp/arkheionx-install
 bash /tmp/arkheionx-install`} />
@@ -42,7 +42,7 @@ git -C ~/.arkheionx/src rev-parse HEAD`} />
 
     <h2>Update and remove</h2>
     <p>Rerun the installer to fast-forward the dedicated checkout and refresh the editable install.</p>
-    <CommandBlock command={`curl -fsSL https://arkheionx.dev/install | bash
+    <CommandBlock command={`curl -fsSL https://arkheionx.dev/install.sh | bash
 
 # remove website-managed installation
 rm -f ~/.local/bin/arkheionx ~/.local/bin/arkup

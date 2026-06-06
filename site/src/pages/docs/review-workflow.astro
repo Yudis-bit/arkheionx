@@ -1,55 +1,82 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
-import CommandBlock from "../../components/CommandBlock.astro";
+
+const steps = [
+  {
+    title: "Install locally",
+    body: "Start from the source installer or a manual GitHub checkout. Keep the first run local and inspectable."
+  },
+  {
+    title: "Verify the environment",
+    body: "Run basic checks before reviewing any codebase. A broken setup should be fixed before outputs are trusted."
+  },
+  {
+    title: "Inspect the repository",
+    body: "Understand the contract system, repository layout, dependencies, and tests before relying on generated context."
+  },
+  {
+    title: "Build review context",
+    body: "Use ArkheionX outputs to organize contracts, roles, value paths, assumptions, test gaps, and evidence links."
+  },
+  {
+    title: "Compare deterministic artifacts",
+    body: "Use source fingerprints and snapshot drift to understand when review artifacts changed."
+  },
+  {
+    title: "Review manually",
+    body: "Treat all output as context. Human security review owns the final conclusion."
+  },
+  {
+    title: "Draft outside automation",
+    body: "Write reports, severity decisions, and disclosure material outside automated output."
+  }
+];
 ---
 
-<Layout title="Review Workflow | ArkheionX Docs" description="A practical local ArkheionX workflow for Solidity and Foundry review.">
-  <DocShell>
-    <p class="page-kicker">Use</p>
-    <h1>Review workflow.</h1>
-    <p class="doc-deck">Use ArkheionX to preserve orientation and evidence state while keeping source reading and judgment in the foreground.</p>
+<Layout
+  title="Review Workflow — ArkheionX"
+  description="A local-first ArkheionX review workflow for smart contract security teams."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Review workflow</p>
+      <h1>Use ArkheionX as review infrastructure, not as an automatic auditor.</h1>
+      <p>
+        The workflow starts locally, builds structured context, compares deterministic artifacts,
+        and ends with human security review.
+      </p>
+    </section>
 
-    <h2>1. Pin the working state</h2>
-    <CommandBlock command={`git status --short
-git rev-parse HEAD
-arkheionx version`} />
-    <p>Record the exact repository commit and tool version before comparing artifacts across reviewers or time.</p>
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Start small</p>
+        <h2>Verify the tool before reviewing a codebase.</h2>
+      </div>
 
-    <h2>2. Establish orientation</h2>
-    <CommandBlock command={`arkheionx doctor .
-arkheionx open .
-arkheionx map .
-arkheionx flow .`} />
-    <p>Read the source alongside the output. Correct any mental model that conflicts with implementation; the generated labels are provisional.</p>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx version</code></pre>
+        <pre><code>arkheionx doctor</code></pre>
+      </div>
+    </section>
 
-    <h2>3. Build the review map</h2>
-    <CommandBlock command={`arkheionx review-map .
-arkheionx value-paths . --top 10
-arkheionx assumptions . --top 10
-arkheionx test-gap-map . --top 10`} />
-    <p>Use the focused views to form a review queue. Trace authority and value paths before spending time on isolated low-context signals.</p>
+    <section class="workflow-steps">
+      {steps.map((step, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <h2>{step.title}</h2>
+          <p>{step.body}</p>
+        </article>
+      ))}
+    </section>
 
-    <h2>4. Attach evidence</h2>
-    <p>
-      Evidence commands can reuse generated proof, trace, and local validation artifacts. Execution remains optional
-      and explicit. Review project test configuration before enabling <code>--run</code> or <code>--build</code>.
-    </p>
-    <CommandBlock command={`arkheionx proof-plan .
-arkheionx evidence-status .
-arkheionx evidence-links .
-arkheionx validate-artifacts .`} />
-
-    <h2>5. Build a handoff package</h2>
-    <CommandBlock command={`arkheionx review-package . --strict
-find .arkheionx/out/review-package -maxdepth 2 -type f -print`} />
-    <p>Inspect the manifest, checksums, validation result, and copied artifacts. Remove sensitive or out-of-scope material before sharing.</p>
-
-    <h2>6. Write conclusions separately</h2>
-    <p>
-      Keep the human conclusion distinct from generated context. Document source references, impact reasoning,
-      preconditions, contradictory evidence, and confidence. Final severity belongs to the review process, not the
-      artifact generator.
-    </p>
-  </DocShell>
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>The workflow ends with human judgment.</h2>
+      <p>
+        ArkheionX can organize evidence and context. It does not confirm vulnerabilities, assign
+        final severity, prove protocol safety, or submit reports.
+      </p>
+      <a href="/docs/safety-model" class="workflow-button">Read safety model</a>
+    </section>
+  </main>
 </Layout>

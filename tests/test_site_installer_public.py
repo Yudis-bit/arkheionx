@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-INSTALLER = ROOT / "site/public/install"
+INSTALLER = ROOT / "site/public/install.sh"
 
 
 class SiteInstallerPublicTests(unittest.TestCase):

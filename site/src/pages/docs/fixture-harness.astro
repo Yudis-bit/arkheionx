@@ -1,50 +1,103 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
-import CommandBlock from "../../components/CommandBlock.astro";
+
+const fixtures = [
+  "ERC20-like token",
+  "Lending vault",
+  "Staking rewards",
+  "AMM swap",
+  "Oracle-dependent vault",
+  "Upgradeable proxy",
+  "Bridge message",
+  "Liquidation engine",
+  "Governance timelock"
+];
 ---
 
-<Layout title="Fixture Harness | ArkheionX Docs" description="The deterministic local/static fixture benchmark harness in ArkheionX v3.9.0.">
-  <DocShell>
-    <p class="page-kicker">Model</p>
-    <h1>Fixture harness.</h1>
-    <p class="doc-deck">A controlled benchmark layer for checking ArkheionX artifact stability against nine small protocol shapes.</p>
+<Layout
+  title="Fixture Harness — ArkheionX"
+  description="ArkheionX fixture benchmark harness for local deterministic review-surface checks."
+>
+  <main class="fixtures-page">
+    <section class="fixtures-hero">
+      <p class="fixtures-kicker">Fixture harness</p>
+      <h1>Local benchmark shapes for review-surface drift.</h1>
+      <p>
+        Fixtures give ArkheionX stable protocol shapes to test against. They are not real protocol
+        audits. They are local/static benchmark inputs for deterministic artifact checks.
+      </p>
+    </section>
 
-    <h2>What is included</h2>
-    <p>Three fixture sets contain nine static Solidity-like source inputs:</p>
-    <ul>
-      <li>Set 1: token, lending vault, and staking/reward shapes.</li>
-      <li>Set 2: AMM/swap, oracle-dependent vault, and upgradeable proxy shapes.</li>
-      <li>Set 3: bridge/message, liquidation/borrow-repay, and governance/timelock shapes.</li>
-    </ul>
+    <section class="fixtures-section fixtures-section--split">
+      <div>
+        <p class="fixtures-kicker">Purpose</p>
+        <h2>Why fixtures exist.</h2>
+      </div>
 
-    <h2>What the benchmark checks</h2>
-    <ul>
-      <li>Deterministic fixture, artifact, run, result, and suite IDs.</li>
-      <li>Stable JSON-safe serialization.</li>
-      <li>Path confinement to registered local fixture sources.</li>
-      <li>Source SHA-256 fingerprints and byte sizes.</li>
-      <li>Snapshot drift and safety-boundary flags.</li>
-      <li>Copy scans that prevent unsupported claims from entering fixture output.</li>
-    </ul>
+      <div class="fixtures-copy">
+        <p>
+          A security review tool needs regression checks. If a tool claims to preserve review
+          context, it should be able to regenerate known artifact shapes and detect when output
+          changes unexpectedly.
+        </p>
+        <p>
+          The fixture harness exists to support that discipline: local inputs, expected snapshots,
+          source fingerprints, and visible drift.
+        </p>
+      </div>
+    </section>
 
-    <h2>Python surface</h2>
-    <CommandBlock
-      title="python"
-      command={`python3 - <<'PY'
-import arkheionx.fixture_harness as fh
+    <section class="fixtures-section">
+      <div class="fixtures-heading">
+        <p class="fixtures-kicker">Fixture categories</p>
+        <h2>Nine protocol shapes used for local review context.</h2>
+      </div>
 
-suite = fh.build_all_fixture_suite()
-print(len(suite.fixtures))
-print(suite.id)
-PY`}
-    />
+      <div class="fixtures-grid">
+        {fixtures.map((name, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <h3>{name}</h3>
+            <p>Used as a local/static shape for deterministic artifact and drift checks.</p>
+          </article>
+        ))}
+      </div>
+    </section>
 
-    <h2>Boundary</h2>
-    <p>
-      The harness does not compile or execute fixture source. It does not perform network access. A passing fixture
-      benchmark means the expected review infrastructure behavior remained stable for that controlled input; it says
-      nothing final about the security of a real protocol.
-    </p>
-  </DocShell>
+    <section class="fixtures-section fixtures-section--split">
+      <div>
+        <p class="fixtures-kicker">What the harness tracks</p>
+        <h2>Inputs, outputs, and drift.</h2>
+      </div>
+
+      <div class="fixtures-table">
+        <div>
+          <span>Fixture source</span>
+          <strong>Local benchmark input</strong>
+        </div>
+        <div>
+          <span>Fingerprint</span>
+          <strong>Deterministic source identifier</strong>
+        </div>
+        <div>
+          <span>Snapshot</span>
+          <strong>Expected review artifact output</strong>
+        </div>
+        <div>
+          <span>Drift</span>
+          <strong>Difference between expected and regenerated output</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="fixtures-boundary">
+      <p class="fixtures-kicker">Limitations</p>
+      <h2>Fixtures are not safety proofs.</h2>
+      <p>
+        A passing fixture check does not prove a protocol is safe. It only supports confidence that
+        the tool is producing expected deterministic artifact shapes for known local inputs.
+      </p>
+      <a href="/docs/safety-model" class="fixtures-button">Read safety model</a>
+    </section>
+  </main>
 </Layout>

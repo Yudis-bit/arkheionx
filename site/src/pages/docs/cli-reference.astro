@@ -1,61 +1,91 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
-import CommandBlock from "../../components/CommandBlock.astro";
+
+const commands = [
+  {
+    command: "arkheionx version",
+    purpose: "Print the installed ArkheionX version and milestone metadata.",
+    use: "Run immediately after install to confirm the command wrapper works."
+  },
+  {
+    command: "arkheionx doctor",
+    purpose: "Inspect the local environment and setup assumptions.",
+    use: "Run before relying on generated review context."
+  },
+  {
+    command: "arkheionx --help",
+    purpose: "Show commands available in the installed build.",
+    use: "Use this as the source of truth for your local checkout."
+  },
+  {
+    command: "arkup",
+    purpose: "Managed update wrapper when installed by the source installer.",
+    use: "Use only if the installer created it in your local environment."
+  }
+];
 ---
 
-<Layout title="CLI Reference | ArkheionX Docs" description="ArkheionX public command reference and execution boundaries.">
-  <DocShell>
-    <p class="page-kicker">Use</p>
-    <h1>CLI reference.</h1>
-    <p class="doc-deck">Public commands in the v3.9.0 source state. Use <code>arkheionx COMMAND --help</code> for complete flags.</p>
+<Layout
+  title="CLI Reference — ArkheionX"
+  description="Conservative ArkheionX CLI reference for source installs and local verification."
+>
+  <main class="cli-page">
+    <section class="cli-hero">
+      <p class="cli-kicker">CLI reference</p>
+      <h1>Small commands first. Trust comes from local verification.</h1>
+      <p>
+        This page lists conservative commands used for installation verification and local setup.
+        Your installed checkout is the source of truth; use <code>arkheionx --help</code> to inspect
+        available commands.
+      </p>
+    </section>
 
-    <h2>Environment and demos</h2>
-    <div class="definition-grid">
-      <div><dt><code>version</code></dt><dd>Print package and milestone metadata.</dd></div>
-      <div><dt><code>doctor [repo]</code></dt><dd>Check install health, project layout, and Foundry availability without building.</dd></div>
-      <div><dt><code>demo</code></dt><dd>List, inspect, or copy bundled local demo fixtures.</dd></div>
-      <div><dt><code>validate-config</code></dt><dd>Validate an ArkheionX JSON configuration.</dd></div>
-    </div>
+    <section class="cli-table">
+      {commands.map((item) => (
+        <article>
+          <div>
+            <h2>{item.command}</h2>
+            <pre><code>{item.command}</code></pre>
+          </div>
+          <div>
+            <h3>Purpose</h3>
+            <p>{item.purpose}</p>
+            <h3>When to use</h3>
+            <p>{item.use}</p>
+          </div>
+        </article>
+      ))}
+    </section>
 
-    <h2>Orientation</h2>
-    <div class="definition-grid">
-      <div><dt><code>scan ROOT</code></dt><dd>Run the local readiness and value-flow scan.</dd></div>
-      <div><dt><code>open [repo]</code></dt><dd>Compact project orientation.</dd></div>
-      <div><dt><code>map [repo]</code></dt><dd>Render protocol roles, journeys, flow, and review targets.</dd></div>
-      <div><dt><code>flow [repo]</code></dt><dd>Focus on candidate money-flow edges and Mermaid output.</dd></div>
-      <div><dt><code>hunt [repo]</code></dt><dd>Rank surfaces for manual investigation.</dd></div>
-      <div><dt><code>search QUERY</code></dt><dd>Search bundled local security-memory metadata.</dd></div>
-    </div>
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Install path</p>
+        <h2>Source install command.</h2>
+      </div>
+      <div>
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      </div>
+    </section>
 
-    <h2>Review map</h2>
-    <div class="definition-grid">
-      <div><dt><code>review-map [repo]</code></dt><dd>Build the combined roles, paths, assumptions, gaps, proof suggestions, and evidence-link surface.</dd></div>
-      <div><dt><code>value-paths [repo]</code></dt><dd>Render focused candidate value paths.</dd></div>
-      <div><dt><code>assumptions [repo]</code></dt><dd>Render focused inferred assumptions.</dd></div>
-      <div><dt><code>test-gap-map [repo]</code></dt><dd>Render focused local test gaps.</dd></div>
-      <div><dt><code>proof-plan [repo]</code></dt><dd>Generate target-specific local proof suggestions.</dd></div>
-      <div><dt><code>evidence-links [repo]</code></dt><dd>Cross-reference review targets and existing local artifacts.</dd></div>
-    </div>
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Inspect first</p>
+        <h2>Recommended first-use path.</h2>
+      </div>
+      <div>
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+less arkheionx-install.sh
+bash arkheionx-install.sh</code></pre>
+      </div>
+    </section>
 
-    <h2>Evidence and packaging</h2>
-    <div class="definition-grid">
-      <div><dt><code>prove [repo]</code></dt><dd>Generate a local Foundry proof scaffold. <code>--run</code> explicitly enables targeted test execution.</dd></div>
-      <div><dt><code>trace [repo]</code></dt><dd>Summarize proof or trace state. <code>--run</code> explicitly enables targeted execution.</dd></div>
-      <div><dt><code>evidence [repo]</code></dt><dd>Build a compact local evidence package from existing artifacts.</dd></div>
-      <div><dt><code>report [repo]</code></dt><dd>Create a responsible local report draft from evidence.</dd></div>
-      <div><dt><code>evidence-status [repo]</code></dt><dd>Inspect artifact state by target.</dd></div>
-      <div><dt><code>validate-artifacts [repo]</code></dt><dd>Validate generated proof, evidence, and report artifacts.</dd></div>
-      <div><dt><code>local-validate REPO</code></dt><dd>Parse saved Foundry output; this command records provenance and does not run Foundry.</dd></div>
-      <div><dt><code>review-package [repo]</code></dt><dd>Collect existing artifacts into a manifest-backed local package.</dd></div>
-    </div>
-
-    <h2>Output control</h2>
-    <CommandBlock command={`arkheionx review-map . --json --no-write
-arkheionx value-paths . --top 5
-arkheionx review-package . --strict --export zip`} />
-    <p>Common focused commands support JSON output, no-write operation, target filtering, and explicit output paths. Check command help before scripting.</p>
-
-    <div class="doc-note"><strong>Execution boundary:</strong> options named <code>--run</code> and <code>--build</code> can invoke local Foundry operations. They are not enabled by default.</div>
-  </DocShell>
+    <section class="cli-boundary">
+      <p class="cli-kicker">Safety</p>
+      <h2>Do not treat command output as a final security verdict.</h2>
+      <p>
+        CLI output is review context. Human validation is required before reporting, disclosing,
+        or making security decisions.
+      </p>
+    </section>
+  </main>
 </Layout>

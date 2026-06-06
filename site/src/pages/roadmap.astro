@@ -1,41 +1,99 @@
 ---
 import Layout from "../components/Layout.astro";
+
+const nearTerm = [
+  "Finalize public source package validation.",
+  "Validate the source installer on a fresh machine.",
+  "Keep the official website and docs in the public repository.",
+  "Improve CLI documentation and troubleshooting paths.",
+  "Harden fixture benchmark and snapshot drift documentation."
+];
+
+const v4 = [
+  "Stronger review workspace structure.",
+  "More explicit protocol-surface output format.",
+  "Better fixture benchmark reporting.",
+  "Cleaner install and update experience.",
+  "Preparation for future binary release pipeline."
+];
+
+const deferred = [
+  "Hosted dashboard.",
+  "Prebuilt binary release artifacts.",
+  "Package registry distribution.",
+  "Signed checksums and versioned release channels.",
+  "Optional integrations with external analysis tools."
+];
+
+const nonGoals = [
+  "Automatic vulnerability confirmation.",
+  "Replacing auditors or security researchers.",
+  "Assigning final severity.",
+  "Submitting bounty reports automatically.",
+  "Running live-chain actions by default."
+];
 ---
 
-<Layout title="ArkheionX Roadmap" description="Public-safe ArkheionX roadmap without date promises.">
-  <header class="page-intro page-shell">
-    <p class="page-kicker">Public direction</p>
-    <h1>Roadmap.</h1>
-    <p>Current source state and intended work. Sequence may change; no dates or delivery promises are attached.</p>
-  </header>
+<Layout
+  title="Roadmap — ArkheionX"
+  description="Public ArkheionX roadmap for source distribution, documentation, fixture harness, and review infrastructure."
+>
+  <main class="roadmap-page">
+    <section class="roadmap-hero">
+      <p class="roadmap-kicker">Roadmap</p>
+      <h1>Public roadmap without false maturity.</h1>
+      <p>
+        ArkheionX is being built as local-first review infrastructure for smart contract security.
+        This roadmap describes direction, not guaranteed delivery dates.
+      </p>
+    </section>
 
-  <div class="page-shell prose-section">
-    <div class="timeline">
-      <article class="current">
-        <p class="timeline-label">CURRENT</p>
-        <h2>v3.9.0 public-safe source state</h2>
-        <p>Local review artifacts, protocol mapping, review packages, deterministic fixture benchmarks, source fingerprints, and snapshot drift checks.</p>
-      </article>
+    <section class="roadmap-current">
+      <div>
+        <p class="roadmap-kicker">Current public state</p>
+        <h2>Source-first and public-safe.</h2>
+      </div>
+      <div class="roadmap-current__card">
+        <p>
+          The public repository is intended to expose a clean source branch, official website source,
+          documentation, and a source install path. Binary releases are not published yet.
+        </p>
+      </div>
+    </section>
+
+    <section class="roadmap-grid">
       <article>
-        <p class="timeline-label">NEXT SURFACE</p>
-        <h2>Official website</h2>
-        <p>Static developer documentation, source installer, public safety model, and deployment operations.</p>
+        <span>Near-term</span>
+        <h2>Distribution and docs hardening</h2>
+        <ul>{nearTerm.map((item) => <li>{item}</li>)}</ul>
       </article>
+
       <article>
-        <p class="timeline-label">DISTRIBUTION</p>
-        <h2>Installer polish and binary release pipeline</h2>
-        <p>Improve source-install verification, then define reproducible binary packaging and publication. No binary is currently published.</p>
+        <span>v4 direction</span>
+        <h2>Review workspace maturity</h2>
+        <ul>{v4.map((item) => <li>{item}</li>)}</ul>
       </article>
+
       <article>
-        <p class="timeline-label">DOCUMENTATION</p>
-        <h2>Stronger docs</h2>
-        <p>Expand artifact schemas, review workflows, troubleshooting, and examples while keeping public claims tied to implemented behavior.</p>
+        <span>Deferred</span>
+        <h2>After source install is reliable</h2>
+        <ul>{deferred.map((item) => <li>{item}</li>)}</ul>
       </article>
+
       <article>
-        <p class="timeline-label">ARCHITECTURE</p>
-        <h2>v4.0 architecture</h2>
-        <p>Refine the protocol intelligence boundaries, optional static parser adapters, and a focused review workspace.</p>
+        <span>Non-goals</span>
+        <h2>What ArkheionX should not claim</h2>
+        <ul>{nonGoals.map((item) => <li>{item}</li>)}</ul>
       </article>
-    </div>
-  </div>
+    </section>
+
+    <section class="roadmap-boundary">
+      <p class="roadmap-kicker">Boundary</p>
+      <h2>No date promises. No audit promises.</h2>
+      <p>
+        Roadmap items are directional. ArkheionX does not claim to confirm vulnerabilities, prove
+        protocol safety, or stand in for human review.
+      </p>
+    </section>
+  </main>
 </Layout>

@@ -1,31 +1,82 @@
 ---
 import Layout from "../components/Layout.astro";
-import CommandBlock from "../components/CommandBlock.astro";
+
+const available = [
+  "Public source branch",
+  "Source installer endpoint",
+  "Manual GitHub install path",
+  "Static documentation site source",
+  "Local-first review workflow documentation"
+];
+
+const notYet = [
+  "Prebuilt binaries",
+  "Signed checksums",
+  "GitHub release artifacts",
+  "Package registry release",
+  "Versioned installer channels"
+];
 ---
 
-<Layout title="ArkheionX Releases" description="ArkheionX source distribution and binary release status.">
-  <header class="page-intro page-shell">
-    <p class="page-kicker">Distribution</p>
-    <h1>Releases.</h1>
-    <p>Source install is available from the public <code>main</code> branch. Binary releases are planned but have not been published.</p>
-  </header>
+<Layout
+  title="Releases — ArkheionX"
+  description="ArkheionX release status, source install path, and future binary release direction."
+>
+  <main class="releases-page">
+    <section class="releases-hero">
+      <p class="releases-kicker">Releases</p>
+      <h1>Source install is available. Binary releases are not published yet.</h1>
+      <p>
+        The current public distribution model is intentionally source-first. Binary distribution,
+        checksums, and versioned release channels should come after fresh install validation and
+        release pipeline hardening.
+      </p>
+    </section>
 
-  <div class="page-shell">
-    <section class="prose-section">
-      <h2>Current installation path</h2>
-      <CommandBlock command="curl -fsSL https://arkheionx.dev/install | bash" />
-      <p>The installer creates an isolated editable install from GitHub <code>main</code>. It is not an immutable release artifact.</p>
+    <section class="releases-install">
+      <div>
+        <p class="releases-kicker">Current install path</p>
+        <h2>Install from public source.</h2>
+      </div>
+      <div>
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      </div>
     </section>
-    <section class="prose-section">
-      <h2>Public source state</h2>
-      <p><strong>v3.9.0</strong> identifies the current public-safe technical state in source metadata and documentation.</p>
-      <p>No binary download, package registry distribution, or matching GitHub Release is claimed here.</p>
+
+    <section class="releases-columns">
+      <article>
+        <span>Available</span>
+        <h2>Current public surface</h2>
+        <ul>{available.map((item) => <li>{item}</li>)}</ul>
+      </article>
+
+      <article>
+        <span>Not yet available</span>
+        <h2>Future release work</h2>
+        <ul>{notYet.map((item) => <li>{item}</li>)}</ul>
+      </article>
     </section>
-    <section class="prose-section">
-      <h2>Verify what is installed</h2>
-      <CommandBlock command={`arkheionx version
-git -C ~/.arkheionx/src rev-parse HEAD
-git -C ~/.arkheionx/src status --short`} />
+
+    <section class="releases-section">
+      <div>
+        <p class="releases-kicker">Release discipline</p>
+        <h2>Do not publish before validation.</h2>
+      </div>
+      <div class="releases-card">
+        <p>
+          A public release should only be promoted after fresh source install validation, release
+          readiness checks, docs checks, safety wording checks, and the full test suite pass.
+        </p>
+      </div>
     </section>
-  </div>
+
+    <section class="releases-boundary">
+      <p class="releases-kicker">Boundary</p>
+      <h2>A release is not an audit result.</h2>
+      <p>
+        Publishing software does not mean ArkheionX confirms vulnerabilities, proves protocol
+        safety, or stands in for human security review.
+      </p>
+    </section>
+  </main>
 </Layout>

@@ -1,161 +1,299 @@
 ---
 import Layout from "../components/Layout.astro";
-import CommandBlock from "../components/CommandBlock.astro";
-import ManifestPanel from "../components/ManifestPanel.astro";
-import SafetyNotice from "../components/SafetyNotice.astro";
-import SignalCard from "../components/SignalCard.astro";
-
-const installCommand = "curl -fsSL https://arkheionx.dev/install | bash";
 ---
 
 <Layout
-  title="ArkheionX | Deterministic review artifacts"
-  description="Local-first infrastructure for mapping Solidity and Foundry repositories into reproducible review surfaces."
+  title="ArkheionX — Review maps for smart contract security"
+  description="ArkheionX turns Solidity and Foundry repositories into deterministic review maps for human security researchers."
 >
-  <section class="hero">
-    <div class="hero-inner page-shell">
-      <div class="hero-copy">
-        <p class="page-kicker">Local security review infrastructure</p>
-        <h1>ArkheionX</h1>
-        <p class="hero-tagline">Deterministic review artifacts for human security researchers.</p>
-        <p class="hero-summary">
-          Local-first infrastructure for mapping Solidity / Foundry repositories into reviewable protocol surfaces:
-          roles, value paths, assumptions, test gaps, evidence links, and fixture benchmark snapshots.
-        </p>
-        <CommandBlock title="install / main" command={installCommand} />
-        <div class="hero-actions">
-          <a class="text-link" href="/docs">Read the docs</a>
-          <a class="text-link" href="https://github.com/Yudis-bit/DeFi-Exploit-PoCs">View GitHub</a>
-        </div>
-        <div class="status-strip" aria-label="Operating boundaries">
-          <span>LOCAL-FIRST</span>
-          <span>NO RPC BY DEFAULT</span>
-          <span>NO EXPLOIT AUTOMATION</span>
-          <span>HUMAN REVIEW REQUIRED</span>
-        </div>
-      </div>
-      <ManifestPanel />
-    </div>
-  </section>
+  <main class="vc-home">
+    <section class="vc-hero">
+      <div class="vc-hero__inner">
+        <div class="vc-hero__copy">
+          <p class="vc-kicker">FOR SECURITY TEAMS REVIEWING DEFI CODE</p>
 
-  <section class="content-section">
-    <div class="section-inner">
-      <div class="section-grid">
-        <div>
-          <p class="eyebrow amber">Review surface</p>
-          <h2 class="section-title">Review context without scanner noise.</h2>
-        </div>
-        <div class="section-copy">
-          <p>ArkheionX focuses on reproducible review context, not automatic vulnerability claims.</p>
-          <p>
-            A review starts with structure: which contracts hold authority, where value enters and exits, which
-            assumptions connect components, and where test evidence is absent. ArkheionX records that surface in
-            inspectable local artifacts so a researcher can trace, question, and regenerate it.
+          <h1>A review map for smart contracts.</h1>
+
+          <p class="vc-lede">
+            ArkheionX turns a local Solidity or Foundry repository into a structured review map:
+            who can move value, where trust assumptions live, which tests are missing, and what
+            changed between review runs.
           </p>
-          <p>
-            The output is a map for investigation. It is not a verdict, a score to trust without inspection, or a
-            substitute for protocol-specific reasoning.
+
+          <div class="vc-one-line">
+            <span>Input</span>
+            <strong>Smart contract repo</strong>
+            <span>Output</span>
+            <strong>Deterministic review context</strong>
+            <span>Decision</span>
+            <strong>Human reviewer</strong>
+          </div>
+
+          <div class="vc-install-card">
+            <div class="vc-install-card__top">
+              <span>Install from source</span>
+              <span>public main</span>
+            </div>
+            <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+          </div>
+
+          <p class="vc-note">
+            Source install is available. Binary releases are not published yet.
+            Inspect-first and manual install paths are documented on the Install page.
           </p>
+
+          <div class="vc-actions">
+            <a class="vc-button vc-button--primary" href="/docs">Read the docs</a>
+            <a class="vc-button" href="/install">Install guide</a>
+            <a class="vc-button" href="https://github.com/Yudis-bit/DeFi-Exploit-PoCs" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
         </div>
+
+        <aside class="vc-artifact" aria-label="Review map artifact preview">
+          <div class="vc-artifact__top">
+            <span>Review map</span>
+            <span>local / deterministic</span>
+          </div>
+
+          <div class="vc-artifact__body">
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Contracts</span>
+              <strong>Vault · Strategy · Oracle · Token</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Roles</span>
+              <strong>Owner · Keeper · User · Emergency admin</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Value paths</span>
+              <strong>Deposit → Allocate → Harvest → Withdraw</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Assumptions</span>
+              <strong>Oracle freshness · Access control · Accounting invariant</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Test gaps</span>
+              <strong>Paused withdraw · Oracle delay · Strategy loss</strong>
+            </div>
+          </div>
+
+          <div class="vc-artifact__mini">
+            <div>
+              <span>Source fingerprints</span>
+              <strong>tracked</strong>
+            </div>
+            <div>
+              <span>Snapshot drift</span>
+              <strong>checked</strong>
+            </div>
+            <div>
+              <span>RPC</span>
+              <strong>off by default</strong>
+            </div>
+            <div>
+              <span>Review result</span>
+              <strong>human required</strong>
+            </div>
+          </div>
+        </aside>
       </div>
-    </div>
-  </section>
-
-  <section class="content-section">
-    <div class="section-inner">
-      <p class="eyebrow blue">Artifact inventory</p>
-      <h2 class="section-title">What the machine preserves.</h2>
-      <p class="section-lead">
-        Stable identifiers and bounded local evidence make review state easier to compare across commits, machines,
-        and researchers.
-      </p>
-      <div class="signal-grid">
-        <SignalCard index="01" title="Protocol roles" tone="green">Contract and function roles that orient manual inspection.</SignalCard>
-        <SignalCard index="02" title="Value paths" tone="blue">Candidate flows across deposits, accounting, transfers, and exits.</SignalCard>
-        <SignalCard index="03" title="Assumptions" tone="amber">Explicit trust and state conditions that need researcher verification.</SignalCard>
-        <SignalCard index="04" title="Test gaps" tone="amber">Missing local evidence attached to specific protocol surfaces.</SignalCard>
-        <SignalCard index="05" title="Evidence links" tone="blue">Cross-references between targets and generated local artifacts.</SignalCard>
-        <SignalCard index="06" title="Fixture benchmarks" tone="green">Repeatable checks over nine controlled local/static protocol shapes.</SignalCard>
-        <SignalCard index="07" title="Source fingerprints" tone="blue">SHA-256 fingerprints for the exact fixture source bytes inspected.</SignalCard>
-        <SignalCard index="08" title="Snapshot drift" tone="amber">Visible changes when deterministic benchmark output moves.</SignalCard>
-      </div>
-    </div>
-  </section>
-
-  <div class="split-band">
-    <section>
-      <p class="eyebrow green">Default posture</p>
-      <h2>Local-first by design.</h2>
-      <p>
-        The standard workflow reads an authorized repository on your machine. It requires no RPC endpoint, deployed
-        target, account credential, or hosted service.
-      </p>
-      <ul class="evidence-list">
-        <li><span>NET/00</span><span>Repository files</span><span>LOCAL</span></li>
-        <li><span>RPC/00</span><span>Network calls</span><span>OFF</span></li>
-        <li><span>KEY/00</span><span>Secret material</span><span>NONE</span></li>
-        <li><span>TX/00</span><span>Transaction broadcast</span><span>NONE</span></li>
-      </ul>
     </section>
-    <section>
-      <p class="eyebrow blue">Benchmark layer</p>
-      <h2>Fixture benchmark harness.</h2>
-      <p>
-        Nine small, controlled Solidity-like fixtures exercise deterministic IDs, JSON serialization, path safety,
-        source fingerprints, snapshot stability, and safety-boundary checks.
-      </p>
-      <p>
-        Fixtures are static inputs. The harness does not compile them, execute them, or treat a passing snapshot as
-        evidence that a protocol is secure.
-      </p>
-      <a class="text-link" href="/docs/fixture-harness">Inspect the fixture model</a>
-    </section>
-  </div>
 
-  <section class="content-section">
-    <div class="section-inner">
-      <SafetyNotice>
+    <section class="vc-proof">
+      <span>Public-safe source</span>
+      <span>Local-first</span>
+      <span>No RPC by default</span>
+      <span>No private keys</span>
+      <span>Snapshot drift checks</span>
+      <span>Human review required</span>
+    </section>
+
+
+    <section class="vc-artifact-map">
+      <div class="vc-artifact-map__copy">
+        <p class="vc-kicker">What the review map captures</p>
+        <h2>One repository becomes a structured security review surface.</h2>
         <p>
-          A machine-generated role, path, gap, or evidence state can prioritize investigation. Impact,
-          exploitability, and severity remain decisions for an authorized human reviewer working from the source and
-          supporting evidence.
+          ArkheionX does not try to replace the reviewer. It organizes the context a reviewer
+          needs before making a judgment: permissions, value movement, assumptions, test gaps,
+          evidence, and drift between runs.
         </p>
-      </SafetyNotice>
-    </div>
-  </section>
+      </div>
 
-  <section class="content-section">
-    <div class="section-inner quickstart-grid">
-      <div>
-        <p class="eyebrow green">Five commands</p>
-        <h2 class="section-title">Establish a local review surface.</h2>
-        <p class="section-lead">Check the install, inspect a bundled demo, then map an authorized repository.</p>
-        <div class="inline-actions">
-          <a class="text-link" href="/docs/quickstart">Quickstart details</a>
-          <a class="text-link" href="/docs/cli-reference">CLI reference</a>
+      <div class="artifact-map-visual" aria-label="ArkheionX review artifact map">
+        <div class="artifact-map-visual__input">
+          <span>Input</span>
+          <strong>Solidity / Foundry repository</strong>
+        </div>
+
+        <div class="artifact-map-visual__engine">
+          <span>ArkheionX</span>
+          <strong>Local deterministic mapping</strong>
+        </div>
+
+        <div class="artifact-map-visual__outputs">
+          <article>
+            <span>01</span>
+            <strong>Roles</strong>
+            <p>Who can act?</p>
+          </article>
+          <article>
+            <span>02</span>
+            <strong>Value paths</strong>
+            <p>Where can funds move?</p>
+          </article>
+          <article>
+            <span>03</span>
+            <strong>Assumptions</strong>
+            <p>What must stay true?</p>
+          </article>
+          <article>
+            <span>04</span>
+            <strong>Test gaps</strong>
+            <p>What is not covered?</p>
+          </article>
+          <article>
+            <span>05</span>
+            <strong>Evidence</strong>
+            <p>What supports review?</p>
+          </article>
+          <article>
+            <span>06</span>
+            <strong>Drift</strong>
+            <p>What changed?</p>
+          </article>
         </div>
       </div>
-      <CommandBlock
-        title="review session"
-        command={`arkheionx version
-arkheionx doctor
-arkheionx demo
-arkheionx scan .
-arkheionx review-map .`}
-      />
-    </div>
-  </section>
+    </section>
 
-  <section class="content-section">
-    <div class="section-inner">
-      <p class="eyebrow amber">Distribution state</p>
-      <h2 class="section-title">Public artifact status.</h2>
-      <div class="artifact-status">
-        <div><span>Source</span><strong>v3.9.0 public-safe state</strong></div>
-        <div><span>Binary releases</span><strong>Not yet published</strong></div>
-        <div><span>Installer</span><strong>Source install from GitHub main</strong></div>
-        <div><span>License</span><strong>Pending maintainer decision</strong></div>
+    <section class="vc-section vc-section--intro">
+      <div>
+        <p class="vc-kicker">What problem does this solve?</p>
+        <h2>Security review loses context.</h2>
       </div>
-    </div>
-  </section>
+      <div class="vc-copy">
+        <p>
+          A smart contract reviewer needs to understand permissions, value movement, dependencies,
+          assumptions, test coverage, and evidence before making a judgment. That context is often
+          rebuilt manually and inconsistently.
+        </p>
+        <p>
+          ArkheionX makes the review surface explicit and repeatable, so teams can compare what
+          changed instead of rebuilding the same mental model from scratch.
+        </p>
+      </div>
+    </section>
+
+    <section class="vc-section">
+      <div class="vc-heading">
+        <p class="vc-kicker">How it works</p>
+        <h2>From codebase to review context.</h2>
+      </div>
+
+      <div class="vc-flow">
+        <article>
+          <span>01</span>
+          <h3>Read the local repo</h3>
+          <p>Start from Solidity and Foundry source files on your machine.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Build a protocol map</h3>
+          <p>Organize contracts, roles, value paths, assumptions, and test gaps.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Record artifacts</h3>
+          <p>Produce deterministic, JSON-safe review context that can be inspected.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Compare drift</h3>
+          <p>Use fixture benchmarks, fingerprints, and snapshots to detect changes.</p>
+        </article>
+        <article>
+          <span>05</span>
+          <h3>Review manually</h3>
+          <p>Use the output as evidence context. A human still makes the security call.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="vc-section">
+      <div class="vc-heading">
+        <p class="vc-kicker">Why it matters</p>
+        <h2>Less noise. More review structure.</h2>
+      </div>
+
+      <div class="vc-cards">
+        <article>
+          <h3>For security researchers</h3>
+          <p>Keep a repeatable map of what matters before writing findings or reports.</p>
+        </article>
+        <article>
+          <h3>For audit teams</h3>
+          <p>Standardize review context across reviewers, revisions, and protocol versions.</p>
+        </article>
+        <article>
+          <h3>For protocol engineers</h3>
+          <p>Pre-review assumptions, test gaps, and value paths before external review.</p>
+        </article>
+        <article>
+          <h3>For future automation</h3>
+          <p>Build reliable review infrastructure before trusting automated conclusions.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="vc-section vc-section--split">
+      <div>
+        <p class="vc-kicker">Try it locally</p>
+        <h2>Start with simple checks.</h2>
+      </div>
+      <div class="vc-command-list">
+        <pre><code>arkheionx version</code></pre>
+        <pre><code>arkheionx doctor</code></pre>
+      </div>
+    </section>
+
+    <section class="vc-section vc-section--split">
+      <div>
+        <p class="vc-kicker">Current status</p>
+        <h2>Public source is available. Distribution is still being hardened.</h2>
+      </div>
+      <div class="vc-status-grid">
+        <article>
+          <h3>Available now</h3>
+          <ul>
+            <li>Public-safe source branch</li>
+            <li>Local source install path</li>
+            <li>Fixture benchmark harness</li>
+            <li>Source fingerprints</li>
+            <li>Snapshot drift checks</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Not yet available</h3>
+          <ul>
+            <li>Prebuilt binary releases</li>
+            <li>Hosted dashboard</li>
+            <li>Automatic vulnerability confirmation</li>
+            <li>Audit certification</li>
+            <li>Public bounty submission workflow</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="vc-boundary">
+      <p class="vc-kicker">Safety boundary</p>
+      <h2>ArkheionX is not an auditor.</h2>
+      <p>
+        ArkheionX creates review context. It does not confirm vulnerabilities, assign final
+        severity, prove protocol safety, submit reports, or stand in for human security review.
+      </p>
+      <a class="vc-button" href="/docs/safety-model">Read the safety model</a>
+    </section>
+  </main>
 </Layout>

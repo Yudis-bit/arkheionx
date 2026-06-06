@@ -51,7 +51,7 @@ class OfficialSitePublicSurfaceTests(unittest.TestCase):
             self.assertTrue((SITE / "src/components" / component).is_file(), component)
 
     def test_install_command_is_on_home_and_install_page(self) -> None:
-        command = "curl -fsSL https://arkheionx.dev/install | bash"
+        command = "curl -fsSL https://arkheionx.dev/install.sh | bash"
         self.assertIn(command, read("site/src/pages/index.astro"))
         self.assertIn(command, read("site/src/pages/install.astro"))
 

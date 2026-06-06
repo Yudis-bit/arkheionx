@@ -1,108 +1,239 @@
 ---
 import Layout from "../components/Layout.astro";
-import CommandBlock from "../components/CommandBlock.astro";
-import SafetyNotice from "../components/SafetyNotice.astro";
-
-const installCommand = "curl -fsSL https://arkheionx.dev/install | bash";
 ---
 
 <Layout
   title="Install ArkheionX"
-  description="Install ArkheionX from the public main branch into an isolated local Python environment."
-  canonicalPath="/install.html"
+  description="Install ArkheionX from public source, inspect the installer, update, uninstall, and understand what the installer does."
 >
-  <header class="page-intro page-shell">
-    <p class="page-kicker">Source installation</p>
-    <h1>Install ArkheionX.</h1>
-    <p>The public installer clones GitHub <code>main</code>, creates an isolated virtual environment, and places command wrappers in <code>~/.local/bin</code>.</p>
-  </header>
+  <main class="install-page">
+    <section class="install-hero">
+      <div class="install-hero__copy">
+        <p class="install-kicker">Install</p>
+        <h1>Install ArkheionX from source.</h1>
+        <p>
+          The current public distribution path is a source install from GitHub main. Binary releases
+          are not published yet. The installer creates a local checkout, Python virtual environment,
+          and command wrappers on your machine.
+        </p>
+      </div>
 
-  <div class="page-shell">
-    <section class="prose-section">
-      <h2>Install from main</h2>
-      <CommandBlock title="shell" command={installCommand} />
+      <aside class="install-status">
+        <div>
+          <span>Channel</span>
+          <strong>source install</strong>
+        </div>
+        <div>
+          <span>Branch</span>
+          <strong>main</strong>
+        </div>
+        <div>
+          <span>Binary release</span>
+          <strong>not published</strong>
+        </div>
+        <div>
+          <span>Review mode</span>
+          <strong>local-first</strong>
+        </div>
+      </aside>
+    </section>
+
+    <section class="install-section install-section--primary">
+      <div>
+        <p class="install-kicker">Fast path</p>
+        <h2>Install with one command.</h2>
+        <p>
+          Use this after you are comfortable with the installer behavior. For a more cautious path,
+          inspect the script first.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Recommended for first use</p>
+        <h2>Inspect first, then run.</h2>
+        <p>
+          This path downloads the installer, lets you read it locally, and only runs it after you
+          explicitly approve.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+less arkheionx-install.sh
+bash arkheionx-install.sh</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Manual path</p>
+        <h2>Install directly from GitHub.</h2>
+        <p>
+          This is the transparent source path. It is useful for local development, auditability,
+          or when you want to control every step yourself.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>git clone https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git
+cd DeFi-Exploit-PoCs
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -e .
+arkheionx version</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Requirements</p>
+        <h2>What you need.</h2>
+      </div>
+
+      <div class="install-grid">
+        <article>
+          <h3>Operating system</h3>
+          <p>Linux or macOS for the installer path.</p>
+        </article>
+        <article>
+          <h3>Python</h3>
+          <p>Python 3.11 or newer.</p>
+        </article>
+        <article>
+          <h3>Git</h3>
+          <p>Used to clone or update the public source checkout.</p>
+        </article>
+        <article>
+          <h3>Network</h3>
+          <p>Needed for GitHub clone and Python package installation.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Installer behavior</p>
+        <h2>What the installer does.</h2>
+      </div>
+
+      <div class="install-list-card">
+        <ul>
+          <li>Checks for Linux or macOS.</li>
+          <li>Checks for Git and Python 3.11 or newer.</li>
+          <li>Clones or updates the public GitHub repository.</li>
+          <li>Creates a managed virtual environment under <code>~/.arkheionx</code>.</li>
+          <li>Installs ArkheionX in editable source mode.</li>
+          <li>Creates command wrappers under <code>~/.local/bin</code>.</li>
+          <li>Runs <code>arkheionx version</code> as a basic installation check.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Safety boundary</p>
+        <h2>What the installer does not do.</h2>
+      </div>
+
+      <div class="install-list-card install-list-card--warning">
+        <ul>
+          <li>It does not ask for private keys, seed phrases, or secrets.</li>
+          <li>It does not call RPC endpoints by default.</li>
+          <li>It does not run live-chain transactions.</li>
+          <li>It does not run Foundry or exploit tests during installation.</li>
+          <li>It does not confirm vulnerabilities or produce audit conclusions.</li>
+          <li>It does not submit reports or automate bounty workflows.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Update</p>
+        <h2>Update an existing source install.</h2>
+        <p>
+          Re-running the installer should update the managed checkout and refresh the local
+          environment.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash
+arkheionx version</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Uninstall</p>
+        <h2>Remove the local install.</h2>
+        <p>
+          This removes the managed ArkheionX directory and command wrappers created by the installer.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>rm -rf "$HOME/.arkheionx"
+rm -f "$HOME/.local/bin/arkheionx" "$HOME/.local/bin/arkup"</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Troubleshooting</p>
+        <h2>Common install issues.</h2>
+      </div>
+
+      <div class="install-troubleshooting">
+        <details>
+          <summary><span>Command not found after install</span></summary>
+          <p>
+            Add <code>$HOME/.local/bin</code> to your shell PATH, then restart your terminal.
+          </p>
+          <pre><code>export PATH="$HOME/.local/bin:$PATH"</code></pre>
+        </details>
+
+        <details>
+          <summary><span>Python version is too old</span></summary>
+          <p>
+            Install Python 3.11 or newer, then rerun the installer.
+          </p>
+        </details>
+
+        <details>
+          <summary><span>Git is missing</span></summary>
+          <p>
+            Install Git with your system package manager, then rerun the installer.
+          </p>
+        </details>
+
+        <details>
+          <summary><span>Clean reinstall</span></summary>
+          <p>
+            Remove the managed directory and wrappers, then run the installer again.
+          </p>
+          <pre><code>rm -rf "$HOME/.arkheionx"
+rm -f "$HOME/.local/bin/arkheionx" "$HOME/.local/bin/arkup"
+curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="install-boundary">
+      <p class="install-kicker">Current limitation</p>
+      <h2>Installer promotion waits on final package validation.</h2>
       <p>
-        This is a source install. Binary releases are planned but are not published. Review the trust notes below
-        before running a remote script.
+        The website can document the install path now, but public promotion should wait until a fresh
+        source install confirms <code>arkheionx version</code>, <code>arkheionx doctor</code>, release
+        readiness, and the full validation suite.
       </p>
     </section>
-
-    <section class="prose-section">
-      <h2>Inspect first</h2>
-      <p>Download the installer, inspect it locally, then execute the exact file you reviewed.</p>
-      <CommandBlock
-        title="inspect-first"
-        command={`curl -fsSL https://arkheionx.dev/install -o /tmp/arkheionx-install
-sed -n '1,240p' /tmp/arkheionx-install
-bash /tmp/arkheionx-install`}
-      />
-    </section>
-
-    <section class="prose-section">
-      <h2>Manual GitHub install</h2>
-      <p>The installer is convenience, not a required trust layer. The equivalent manual path is:</p>
-      <CommandBlock
-        title="manual install"
-        command={`git clone --branch main --single-branch https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git ~/.arkheionx/src
-python3 -m venv ~/.arkheionx/venv
-~/.arkheionx/venv/bin/python -m pip install --no-build-isolation -e ~/.arkheionx/src
-~/.arkheionx/venv/bin/arkheionx version`}
-      />
-      <p>Add <code>~/.arkheionx/venv/bin</code> to your shell path or create your own wrapper in a directory already on it.</p>
-    </section>
-
-    <section class="prose-section">
-      <h2>Requirements</h2>
-      <ul>
-        <li>Linux or macOS.</li>
-        <li>Git available on the shell path.</li>
-        <li>Python 3.11 or newer with <code>venv</code> support.</li>
-        <li>Network access to GitHub for clone and update operations.</li>
-        <li>Write access to <code>~/.arkheionx</code> and <code>~/.local/bin</code>.</li>
-      </ul>
-    </section>
-
-    <section class="prose-section">
-      <h2>What the installer does</h2>
-      <ul>
-        <li>Checks the operating system, Git, and Python version.</li>
-        <li>Clones or fast-forwards the public repository at <code>main</code> under <code>~/.arkheionx/src</code>.</li>
-        <li>Creates <code>~/.arkheionx/venv</code> and installs the local checkout in editable mode.</li>
-        <li>Creates or updates <code>~/.local/bin/arkheionx</code> and an <code>arkup</code> wrapper when possible.</li>
-        <li>Runs <code>arkheionx version</code> as an installation check.</li>
-      </ul>
-
-      <h2>What it does not do</h2>
-      <ul>
-        <li>It does not request elevated privileges or edit shell startup files.</li>
-        <li>It does not run Foundry, project tests, remote-chain calls, or transaction workflows.</li>
-        <li>It does not request keys, credentials, endpoint URLs, or other secret material.</li>
-        <li>It does not scan the current directory or any project repository.</li>
-      </ul>
-    </section>
-
-    <section class="prose-section">
-      <h2>Update</h2>
-      <p>Rerun the public installer. The dedicated checkout must be clean enough to fast-forward.</p>
-      <CommandBlock title="update" command={installCommand} />
-      <p>You can also run <code>arkup --update --channel main</code> when the optional wrapper was created.</p>
-
-      <h2>Uninstall</h2>
-      <p>Remove the managed source, environment, and wrappers. Project-local <code>.arkheionx/</code> artifacts are separate and are not included here.</p>
-      <CommandBlock title="uninstall" command={`rm -f ~/.local/bin/arkheionx ~/.local/bin/arkup
-rm -rf ~/.arkheionx`} />
-    </section>
-
-    <section class="prose-section">
-      <h2>Trust notes</h2>
-      <ul>
-        <li>The endpoint is a readable Bash script served from this repository's <code>site/public/install</code> file.</li>
-        <li>The default source is the public <code>main</code> branch, not a versioned binary or immutable release artifact.</li>
-        <li>For a repeatable install, inspect the repository commit after clone and record its SHA.</li>
-        <li>License selection is pending. Evaluate that state before organization-wide deployment.</li>
-      </ul>
-    </section>
-
-    <SafetyNotice />
-  </div>
+  </main>
 </Layout>

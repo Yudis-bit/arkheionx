@@ -1,4 +1,29 @@
 #!/usr/bin/env bash
+# ArkheionX official source installer
+# Website: https://arkheionx.dev
+# Source:  https://github.com/Yudis-bit/DeFi-Exploit-PoCs
+#
+# Recommended first-use path:
+#   curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+#   less arkheionx-install.sh
+#   bash arkheionx-install.sh
+#
+# Direct install:
+#   curl -fsSL https://arkheionx.dev/install.sh | bash
+#
+# This installer:
+# - clones or updates the public GitHub source checkout
+# - creates a local Python virtual environment
+# - installs ArkheionX in editable source mode
+# - creates local command wrappers
+#
+# This installer does not:
+# - ask for private keys, seed phrases, or secrets
+# - call RPC endpoints by default
+# - run live-chain transactions
+# - run exploit tests during installation
+# - confirm vulnerabilities or produce audit conclusions
+
 set -euo pipefail
 
 REPO_URL="https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git"

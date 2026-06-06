@@ -1,44 +1,146 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
-import SafetyNotice from "../../components/SafetyNotice.astro";
+
+const boundaries = [
+  {
+    title: "No private keys",
+    body: "Default ArkheionX workflows do not need private keys, seed phrases, wallet credentials, or signing material."
+  },
+  {
+    title: "No RPC by default",
+    body: "The public review workflow is designed around local files and deterministic artifacts, not live-chain calls."
+  },
+  {
+    title: "No exploit execution",
+    body: "ArkheionX should not be treated as an exploit runner or transaction automation system."
+  },
+  {
+    title: "No automatic security verdict",
+    body: "Outputs are review context. They are not final vulnerability confirmations, severity decisions, or audit conclusions."
+  },
+  {
+    title: "Human review required",
+    body: "A human reviewer must inspect assumptions, evidence, test gaps, and context before making security decisions."
+  },
+  {
+    title: "Authorized use only",
+    body: "Use ArkheionX only on systems, repositories, and review engagements where you have appropriate permission."
+  }
+];
+
+const workflowRules = [
+  "Read source locally before trusting any generated context.",
+  "Treat every artifact as a starting point for review, not a conclusion.",
+  "Verify assumptions against code, tests, docs, and protocol behavior.",
+  "Do not publish sensitive security details without responsible coordination.",
+  "Do not submit reports directly from tool output without human validation.",
+  "Do not claim protocol safety based on ArkheionX output alone."
+];
 ---
 
-<Layout title="Safety Model | ArkheionX Docs" description="The operating and claim boundaries for ArkheionX review artifacts.">
-  <DocShell>
-    <p class="page-kicker">Model</p>
-    <h1>Safety model.</h1>
-    <p class="doc-deck">ArkheionX is designed to make local review context inspectable without turning generated signals into security verdicts.</p>
+<Layout
+  title="Safety Model — ArkheionX"
+  description="ArkheionX safety boundaries for local-first smart contract security review workflows."
+>
+  <main class="safety-page">
+    <section class="safety-hero">
+      <p class="safety-kicker">Safety model</p>
+      <h1>ArkheionX creates review context. It does not make the final security judgment.</h1>
+      <p>
+        ArkheionX is designed to help humans organize protocol review surfaces. It can preserve
+        evidence, assumptions, fixture output, and drift context, but every security conclusion
+        still requires careful human review.
+      </p>
+    </section>
 
-    <SafetyNotice />
+    <section class="safety-warning">
+      <span>Important boundary</span>
+      <p>
+        ArkheionX does not confirm vulnerabilities, assign final severity, prove protocol safety,
+        submit reports, or stand in for security researchers.
+      </p>
+    </section>
 
-    <h2>Authorized repositories only</h2>
-    <p>Run the tool only where you have permission to read the source, create local artifacts, and execute any optional project commands you select.</p>
+    <section class="safety-section">
+      <div>
+        <p class="safety-kicker">Core boundaries</p>
+        <h2>What the system is designed not to do.</h2>
+      </div>
 
-    <h2>Local/static default</h2>
-    <ul>
-      <li>No RPC call is required for the standard scan, map, review-map, or package workflow.</li>
-      <li>No private key, seed phrase, signer, or production credential is required.</li>
-      <li>No transaction is broadcast.</li>
-      <li>No remote target is scanned by default.</li>
-    </ul>
+      <div class="safety-boundary-grid">
+        {boundaries.map((item) => (
+          <article>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
 
-    <h2>Execution is explicit</h2>
-    <p>
-      Some workbench commands expose <code>--build</code> or <code>--run</code>. Those options can invoke local
-      Foundry commands in the selected project. Read the command help and project configuration before enabling them.
-    </p>
+    <section class="safety-section safety-section--split">
+      <div>
+        <p class="safety-kicker">Responsible workflow</p>
+        <h2>Use outputs as review evidence, not as final truth.</h2>
+      </div>
 
-    <h2>Claims remain bounded</h2>
-    <ul>
-      <li>A role label does not prove a contract's complete purpose.</li>
-      <li>A value path does not prove exploitability.</li>
-      <li>A test gap does not prove a defect.</li>
-      <li>A passing test does not prove the absence of defects.</li>
-      <li>An evidence package does not establish final impact or severity.</li>
-    </ul>
+      <div class="safety-list-card">
+        <ol>
+          {workflowRules.map((rule) => (
+            <li>{rule}</li>
+          ))}
+        </ol>
+      </div>
+    </section>
 
-    <h2>Sensitive disclosure</h2>
-    <p>Do not post sensitive details to a public issue when doing so could create risk. Use the repository's private security advisory channel.</p>
-  </DocShell>
+    <section class="safety-section safety-section--split">
+      <div>
+        <p class="safety-kicker">Default operation</p>
+        <h2>Local-first by default.</h2>
+      </div>
+
+      <div class="safety-table">
+        <div>
+          <span>Input</span>
+          <strong>Local repository files</strong>
+        </div>
+        <div>
+          <span>Network</span>
+          <strong>No RPC required by default</strong>
+        </div>
+        <div>
+          <span>Secrets</span>
+          <strong>Private keys not required</strong>
+        </div>
+        <div>
+          <span>Output</span>
+          <strong>Review context for human inspection</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="safety-section safety-section--split">
+      <div>
+        <p class="safety-kicker">Disclosure</p>
+        <h2>Handle sensitive findings carefully.</h2>
+      </div>
+
+      <div class="safety-copy">
+        <p>
+          If ArkheionX helps you organize evidence around a possible security issue, verify it
+          manually before sharing it. Avoid posting sensitive exploit details publicly. Follow the
+          protocol’s responsible disclosure process or the agreed engagement process.
+        </p>
+        <p>
+          If you are reporting an issue in ArkheionX itself, use the project security policy and
+          avoid placing sensitive operational details in public issues.
+        </p>
+      </div>
+    </section>
+
+    <section class="safety-final">
+      <p class="safety-kicker">Summary</p>
+      <h2>The tool supports the reviewer. The reviewer owns the conclusion.</h2>
+      <a href="/docs/faq" class="safety-button">Read FAQ</a>
+    </section>
+  </main>
 </Layout>

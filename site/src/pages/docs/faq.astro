@@ -1,64 +1,201 @@
 ---
 import Layout from "../../components/Layout.astro";
-import DocShell from "../../components/DocShell.astro";
 
-const questions = [
-  ["Is ArkheionX an auditor?", "No. It is local review infrastructure that organizes protocol context and evidence for human reviewers."],
-  ["Does it find vulnerabilities?", "It can surface roles, paths, assumptions, gaps, and heuristic signals worth investigating. A human must determine whether any signal represents a defect."],
-  ["Does it run exploit code?", "The default scan and review-map workflow does not. ArkheionX does not provide a general exploit automation mode."],
-  ["Does it call RPC?", "No RPC call is required by default. Standard repository mapping is local/static."],
-  ["Does it need private keys?", "No. Do not provide private keys, seed phrases, signers, or production credentials."],
-  ["Can I use it on a private repo?", "Yes, if you are authorized and your handling policy permits local generated artifacts. The source stays on the machine in the default workflow."],
-  ["What is a review package?", "A local folder containing a manifest, validation result, README, checksums, and selected existing review artifacts."],
-  ["What is a fixture benchmark?", "A deterministic check over controlled local/static protocol shapes used to detect changes in ArkheionX artifact behavior."],
-  ["What is snapshot drift?", "A difference between current deterministic fixture output and its recorded baseline. It requires inspection before accepting a new baseline."],
-  ["Why source fingerprints?", "They identify the exact fixture source bytes used by a benchmark with SHA-256 and byte size."],
-  ["Is there a binary release?", "No. The current website installer performs a source install from the public main branch."],
-  ["Is there a license?", "License selection is pending. Review LICENSE_PENDING.md before adoption or redistribution."],
-  ["How do I uninstall?", "Remove ~/.local/bin/arkheionx, ~/.local/bin/arkup, and ~/.arkheionx. Project-local output remains separate."],
-  ["How do I update?", "Rerun the website installer, or use arkup --update --channel main when the optional wrapper is available."],
-  ["What does doctor check?", "It checks command and package health, Python, project layout, configuration, and Foundry availability. It does not build the project by default."],
-  ["Can it run Foundry?", "Some commands can invoke local Foundry operations when you explicitly pass --build or --run. Read project configuration first."],
-  ["Does it replace Slither or fuzzing?", "No. Static analyzers, fuzzers, invariant tests, symbolic tools, and manual review answer different questions and can be used together."],
-  ["How should audit teams use it?", "Use it to pin repository orientation, compare maps across commits, track assumptions and evidence, and assemble a reproducible handoff package."],
-  ["Where are artifacts written?", "Most generated artifacts are written below the target repository's .arkheionx/out/ directory."],
-  ["Should generated artifacts be committed?", "Usually no. They are local generated state. Commit them only when a specific review process requires versioned artifacts and sensitive content has been checked."],
-  ["What does local-first mean?", "The default workflow starts from local files, runs without a hosted analysis service, and does not require remote-chain state."],
-  ["Is the output deterministic?", "Specific IDs, fixture serialization, fingerprints, snapshots, and package checksums are designed for reproducibility. Inputs and tool versions still matter."],
-  ["Does a clean run prove safety?", "No. Absence of generated warnings is not evidence that all relevant behavior was reviewed."],
-  ["Does a test gap prove a bug?", "No. It identifies missing or unlinked local evidence for a review surface."],
-  ["Does a value path prove exploitability?", "No. It is a candidate flow to trace and validate against source, state transitions, and authorization."],
-  ["Does ArkheionX assign severity?", "No. Final severity requires human analysis of impact, likelihood, reachability, assumptions, and protocol context."],
-  ["Can it scan deployed contracts?", "The default public workflow is repository-based and local. Deployed-target scanning is not part of this website surface."],
-  ["Does it upload source code?", "No upload is required by the default CLI workflow. Review any separate CI or hosting configuration before using it with sensitive source."],
-  ["Does it use telemetry?", "The website includes no analytics or tracking scripts, and the documented CLI workflow does not depend on a telemetry service."],
-  ["Can I run it offline?", "After installation and dependency availability, the local/static commands can run without network access. Git-based installation and updates require network access."],
-  ["What Python versions are supported?", "The current package requires Python 3.11 or newer."],
-  ["Does the installer require root?", "No. It writes under ~/.arkheionx and ~/.local/bin."],
-  ["Does the installer edit my shell profile?", "No. It prints a path hint when ~/.local/bin is not already on the shell path."],
-  ["Why install from main?", "No current binary publication is claimed. The website installer follows the public-safe main source state until a versioned distribution pipeline exists."],
-  ["Can I pin a commit?", "Yes. Use the manual installation path, check out the desired public commit, and record its SHA before installing the editable checkout."],
-  ["What should I attach to a review handoff?", "Include the repository commit, ArkheionX version, commands, configuration, manifest, checksums, relevant artifacts, and separate human conclusions."],
-  ["How do I report a sensitive issue?", "Use the repository's private GitHub Security Advisory channel. Avoid public issues when details could create risk."],
-  ["Are the examples real findings?", "No. Website examples are toy or local fixtures and make no claim about a production protocol."],
-  ["What is the v3.9.0 status?", "It is the current public-safe source state described by the repository. It is not a claim that a matching binary release exists."],
-  ["What is planned next?", "Website operations, installer polish, a binary release pipeline, stronger documentation, v4.0 architecture, optional static parser adapters, and a review workspace."]
+const faqs = [
+  {
+    q: "What is ArkheionX?",
+    a: "ArkheionX is local-first review infrastructure for Solidity and Foundry projects. It helps turn a repository into structured review context."
+  },
+  {
+    q: "What is a review map?",
+    a: "A review map is organized context about contracts, roles, value paths, assumptions, test gaps, evidence links, fixture output, and drift."
+  },
+  {
+    q: "Who is ArkheionX for?",
+    a: "It is for security researchers, audit teams, protocol engineers, and developers preparing a smart contract system for review."
+  },
+  {
+    q: "Is ArkheionX an auditor?",
+    a: "No. ArkheionX supports review work, but it is not an auditor and does not stand in for human security review."
+  },
+  {
+    q: "Does ArkheionX find vulnerabilities?",
+    a: "It can help organize evidence and suspicious review surfaces, but it does not provide final vulnerability confirmation."
+  },
+  {
+    q: "Does ArkheionX assign severity?",
+    a: "No. Severity requires human analysis, protocol context, impact assessment, likelihood, and validation."
+  },
+  {
+    q: "Does ArkheionX prove a protocol is safe?",
+    a: "No. It does not prove safety. It helps preserve context that a human reviewer can inspect."
+  },
+  {
+    q: "Does it replace Slither?",
+    a: "No. ArkheionX is not a replacement for static analyzers. It is a review-context layer around a codebase."
+  },
+  {
+    q: "Does it replace Foundry?",
+    a: "No. Foundry is a development and testing toolchain. ArkheionX is focused on review maps and deterministic context."
+  },
+  {
+    q: "Does it replace fuzzing?",
+    a: "No. Fuzzing remains useful. ArkheionX can help organize what is tested, what is assumed, and where gaps may remain."
+  },
+  {
+    q: "Does ArkheionX run exploit code?",
+    a: "No default public workflow should be treated as exploit execution. It is designed around local review context."
+  },
+  {
+    q: "Does it call RPC endpoints?",
+    a: "No RPC is required by default for the public local-first workflow."
+  },
+  {
+    q: "Does it need private keys?",
+    a: "No. Default workflows do not require private keys, seed phrases, or wallet credentials."
+  },
+  {
+    q: "Can I use it on private repositories?",
+    a: "Yes, if you have permission. The local-first design is intended to support private review workflows."
+  },
+  {
+    q: "What does local-first mean?",
+    a: "It means the primary workflow starts from files and execution on your machine rather than a hosted dashboard or live-chain connection."
+  },
+  {
+    q: "What does deterministic mean here?",
+    a: "It means outputs should be stable and reproducible when inputs and configuration have not changed."
+  },
+  {
+    q: "What are source fingerprints?",
+    a: "Source fingerprints are deterministic identifiers for local source inputs, used to help track whether reviewed inputs changed."
+  },
+  {
+    q: "What is snapshot drift?",
+    a: "Snapshot drift is a change between expected deterministic output and newly generated output."
+  },
+  {
+    q: "What is a fixture benchmark?",
+    a: "A fixture benchmark is a local/static protocol shape used to test output consistency and review-surface behavior."
+  },
+  {
+    q: "Why use fixtures?",
+    a: "Fixtures make behavior easier to compare because they avoid relying on live external systems during benchmark checks."
+  },
+  {
+    q: "What examples does ArkheionX model?",
+    a: "Examples include token-like systems, lending vaults, staking rewards, AMM swaps, oracle-dependent vaults, proxies, bridge messages, liquidation engines, and timelocks."
+  },
+  {
+    q: "Is the installer production-final?",
+    a: "The public install path is source-based. Promotion should wait until fresh install validation and package checks pass."
+  },
+  {
+    q: "Why no binary release yet?",
+    a: "Binary releases are planned but not published. The current distribution path is source install from GitHub main."
+  },
+  {
+    q: "How do I install?",
+    a: "Use the install page. The direct source command is curl -fsSL https://arkheionx.dev/install.sh | bash."
+  },
+  {
+    q: "Should I inspect the installer first?",
+    a: "Yes, especially on first use. Download the script, read it locally, then run it if you accept its behavior."
+  },
+  {
+    q: "How do I update?",
+    a: "Re-run the source installer, then verify with arkheionx version."
+  },
+  {
+    q: "How do I uninstall?",
+    a: "Remove the managed ~/.arkheionx directory and the ~/.local/bin command wrappers created by the installer."
+  },
+  {
+    q: "What if arkheionx command is not found?",
+    a: "Make sure $HOME/.local/bin is in your PATH, then restart your terminal."
+  },
+  {
+    q: "What Python version is required?",
+    a: "Python 3.11 or newer is required for the source install path."
+  },
+  {
+    q: "What if Git is missing?",
+    a: "Install Git with your operating system package manager, then rerun the installer."
+  },
+  {
+    q: "What does arkheionx version check?",
+    a: "It confirms that the command wrapper and installed package can start."
+  },
+  {
+    q: "What does arkheionx doctor check?",
+    a: "It is intended to help inspect the local environment and identify setup issues."
+  },
+  {
+    q: "Can ArkheionX generate reports?",
+    a: "It can help organize review context, but final reports should be written and validated by humans."
+  },
+  {
+    q: "Can it be used during an audit?",
+    a: "It can support review workflows if the team chooses to use it, but it does not replace the audit process."
+  },
+  {
+    q: "Can it support responsible disclosure?",
+    a: "It can help organize evidence, but disclosure decisions and report contents require human validation."
+  },
+  {
+    q: "Can I submit tool output as a final report?",
+    a: "No. Treat tool output as context. Verify manually and write the final report outside automation."
+  },
+  {
+    q: "Does ArkheionX require a hosted dashboard?",
+    a: "No. The public workflow is local-first."
+  },
+  {
+    q: "Does ArkheionX collect telemetry?",
+    a: "The website and local workflow should avoid external analytics and tracking by default."
+  },
+  {
+    q: "Is ArkheionX open source?",
+    a: "The public-safe source branch is available on GitHub. License status should be checked in the repository."
+  },
+  {
+    q: "What should I read next?",
+    a: "Read Getting Started, Installation, Quickstart, Concepts, Fixture Harness, Determinism, and Safety Model."
+  }
 ];
 ---
 
-<Layout title="FAQ | ArkheionX Docs" description="Answers about ArkheionX installation, local review artifacts, execution, and safety boundaries.">
-  <DocShell>
-    <p class="page-kicker">Use</p>
-    <h1>Frequently asked questions.</h1>
-    <p class="doc-deck">Direct answers about what ArkheionX does, what it preserves, and where human review remains required.</p>
+<Layout
+  title="FAQ — ArkheionX"
+  description="Frequently asked questions about ArkheionX, local-first review workflows, installation, safety boundaries, and deterministic artifacts."
+>
+  <main class="faq-page">
+    <section class="faq-hero">
+      <p class="faq-kicker">FAQ</p>
+      <h1>Questions people should ask before trusting a security tool.</h1>
+      <p>
+        ArkheionX is intentionally cautious: it organizes review context, but it does not produce
+        final security conclusions.
+      </p>
+    </section>
 
-    <div class="faq-list">
-      {questions.map(([question, answer]) => (
+    <section class="faq-list-official" aria-label="Frequently asked questions">
+      {faqs.map((item) => (
         <details>
-          <summary>{question}</summary>
-          <p>{answer}</p>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
         </details>
       ))}
-    </div>
-  </DocShell>
+    </section>
+
+    <section class="faq-boundary">
+      <p class="faq-kicker">Safety boundary</p>
+      <h2>Review context is not a security verdict.</h2>
+      <p>
+        ArkheionX outputs must be inspected and validated by humans before any security conclusion,
+        disclosure, report, or protocol decision.
+      </p>
+      <a href="/docs/safety-model" class="faq-button">Read safety model</a>
+    </section>
+  </main>
 </Layout>
