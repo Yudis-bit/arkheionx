@@ -3,6 +3,8 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from arkheionx.generators import test_plan as tp_gen
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -109,6 +111,54 @@ class TestPlanGeneratorTests(unittest.TestCase):
             "guaranteed secure",
         ):
             self.assertNotIn(forbidden, low)
+
+
+class InvariantCandidatePropertyTests(unittest.TestCase):
+    """Invariant candidates should read as properties, not as suggested tests."""
+
+    def test_looks_like_instruction_flags_test_verbs(self) -> None:
+        self.assertTrue(tp_gen.looks_like_instruction("Assert swaps preserve the invariant."))
+        self.assertTrue(tp_gen.looks_like_instruction("Test minOut enforcement."))
+        self.assertFalse(
+            tp_gen.looks_like_instruction("Swaps preserve documented AMM accounting.")
+        )
+        self.assertFalse(
+            tp_gen.looks_like_instruction("Collateral value and debt remain solvent.")
+        )
+
+    def test_property_candidates_drops_instructions_keeps_properties(self) -> None:
+        items = [
+            "Swaps and liquidity operations preserve documented AMM accounting.",
+            "Assert swaps preserve the documented constant-product invariant.",
+        ]
+        self.assertEqual(
+            tp_gen.property_candidates(items),
+            ["Swaps and liquidity operations preserve documented AMM accounting."],
+        )
+
+    def test_property_candidates_keeps_original_if_all_instructions(self) -> None:
+        # Never leave a finding without any candidate, even if all read as tests.
+        items = ["Assert the property holds.", "Test the boundary."]
+        self.assertEqual(tp_gen.property_candidates(items), items)
+
+    def test_committed_test_plans_have_property_style_invariants(self) -> None:
+        for path in [
+            "examples/reports/amm-fixture-test-plan.json",
+            "examples/reports/lending-fixture-test-plan.json",
+            "examples/reports/amm-lending-hybrid-fixture-test-plan.json",
+        ]:
+            data = load_json(path)
+            candidates = list(data.get("invariant_candidates", []))
+            for finding in data.get("findings", []):
+                candidates.extend(finding.get("invariant_candidates", []))
+            for family in data.get("rule_families", []):
+                candidates.extend(family.get("invariant_candidates", []))
+            self.assertTrue(candidates, f"{path} has no invariant candidates")
+            for candidate in candidates:
+                self.assertFalse(
+                    tp_gen.looks_like_instruction(candidate),
+                    f"{path}: invariant candidate reads as a test instruction: {candidate!r}",
+                )
 
 
 if __name__ == "__main__":

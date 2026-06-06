@@ -38,7 +38,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - LP share supply tracks pool ownership within documented rounding.
   - Reserve-based price consumers respect documented bounds and delay assumptions.
   - Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.
-  - Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
   - Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.
   - Swap execution respects user-provided output bounds and documented deadline policy.
 
@@ -166,7 +165,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
 - Invariant candidates:
   - Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.
-  - Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
 - Project bindings to fill in:
   - AMM pool
   - Token0 and token1 mocks

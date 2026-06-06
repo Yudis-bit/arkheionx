@@ -8,8 +8,7 @@
         "invariant_ammAccountingPreservesDocumentedInvariant"
       ],
       "invariant_candidates": [
-        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
       ],
       "manual_review_notes": [
         "Review exact AMM curve before choosing assertion tolerance."
@@ -540,7 +539,6 @@
   "generated_at": "1970-01-01T00:00:00+00:00",
   "invariant_candidates": [
     "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-    "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
     "Reserve-based price consumers respect documented bounds and delay assumptions.",
     "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
     "Swap execution respects user-provided output bounds and documented deadline policy.",
@@ -567,7 +565,6 @@
       ],
       "invariant_candidates": [
         "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
         "Reserve-based price consumers respect documented bounds and delay assumptions.",
         "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
         "Swap execution respects user-provided output bounds and documented deadline policy."

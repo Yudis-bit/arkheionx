@@ -71,6 +71,45 @@ def dedupe(items: list[str]) -> list[str]:
     return output
 
 
+# Invariant candidates should read as properties (declarative statements about
+# what must always hold), not as suggested-test instructions. Sentences that open
+# with an imperative testing verb are suggested tests, so they are filtered out of
+# the invariant-candidate lists to avoid restating a test as a property.
+INSTRUCTION_LEADING_VERBS = frozenset(
+    {
+        "assert",
+        "test",
+        "document",
+        "add",
+        "use",
+        "simulate",
+        "move",
+        "reject",
+        "check",
+        "review",
+        "pair",
+        "cover",
+        "run",
+        "wire",
+        "replace",
+        "build",
+    }
+)
+
+
+def looks_like_instruction(text: str) -> bool:
+    first = re.split(r"[\s:]", str(text).strip(), maxsplit=1)[0].lower()
+    return first in INSTRUCTION_LEADING_VERBS
+
+
+def property_candidates(items: list[str]) -> list[str]:
+    """Keep only declarative invariant properties, dropping suggested-test style
+    instructions. If every candidate reads like an instruction, keep the original
+    list so a finding is never left without any candidate."""
+    properties = [item for item in items if not looks_like_instruction(item)]
+    return properties if properties else items
+
+
 def class_name_from_path(path: Path | None, protocol_type: str) -> str:
     if path:
         name = path.name
@@ -123,9 +162,11 @@ def collect_plan(report: dict, plan_map: dict[str, dict], foundry_output: Path |
             [str(item) for item in mapping.get("suggested_tests", [])]
             + [str(item) for item in finding.get("suggested_tests", [])]
         )
-        invariant_candidates = dedupe(
-            [str(item) for item in mapping.get("invariant_candidates", [])]
-            + [str(item) for item in finding.get("invariant_candidates", [])]
+        invariant_candidates = property_candidates(
+            dedupe(
+                [str(item) for item in mapping.get("invariant_candidates", [])]
+                + [str(item) for item in finding.get("invariant_candidates", [])]
+            )
         )
         functions = dedupe([str(item) for item in mapping.get("foundry_skeleton_functions", [])])
         bindings = dedupe([str(item) for item in mapping.get("required_project_bindings", [])])
