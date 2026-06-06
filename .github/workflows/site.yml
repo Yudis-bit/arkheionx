@@ -55,6 +55,6 @@ jobs:
 
       - name: Verify install endpoint outputs
         run: |
-          test -f site/dist/install
+          test -f site/dist/install.sh
           test -f site/dist/install.html
-          bash -n site/dist/install
+          bash -n site/dist/install.sh
