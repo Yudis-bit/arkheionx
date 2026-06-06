@@ -13,6 +13,14 @@
       "manual_review_notes": [
         "Review minimum-liquidity and initial-share policy."
       ],
+      "matched_signals": [
+        "addLiquidity",
+        "amountIn",
+        "amountOut",
+        "balanceOf",
+        "getAmountOut",
+        "getReserves"
+      ],
       "priority": "High readiness gap",
       "required_project_bindings": [
         "AMM pool",
@@ -44,6 +52,14 @@
       "manual_review_notes": [
         "Review whether price output is advisory or used for critical accounting."
       ],
+      "matched_signals": [
+        "addLiquidity",
+        "amountIn",
+        "amountOut",
+        "balanceOf",
+        "getAmountOut",
+        "getReserves"
+      ],
       "priority": "High readiness gap",
       "required_project_bindings": [
         "AMM price function",
@@ -74,6 +90,7 @@
       "manual_review_notes": [
         "Review inherited guards and pull-payment patterns."
       ],
+      "matched_signals": [],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
         "External-call flow",
@@ -99,11 +116,18 @@
         "invariant_ammAccountingPreservesDocumentedInvariant"
       ],
       "invariant_candidates": [
-        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
       ],
       "manual_review_notes": [
         "Review exact AMM curve before choosing assertion tolerance."
+      ],
+      "matched_signals": [
+        "addLiquidity",
+        "amountIn",
+        "amountOut",
+        "balanceOf",
+        "getAmountOut",
+        "getReserves"
       ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
@@ -136,6 +160,14 @@
       "manual_review_notes": [
         "Review token support policy before adding mocks."
       ],
+      "matched_signals": [
+        "addLiquidity",
+        "amountIn",
+        "amountOut",
+        "balanceOf",
+        "getAmountOut",
+        "getReserves"
+      ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
         "Transfer path",
@@ -165,6 +197,14 @@
       ],
       "manual_review_notes": [
         "Review whether slippage is enforced by a router outside this repository."
+      ],
+      "matched_signals": [
+        "addLiquidity",
+        "amountIn",
+        "amountOut",
+        "balanceOf",
+        "getAmountOut",
+        "getReserves"
       ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
@@ -198,6 +238,7 @@
       "manual_review_notes": [
         "Review whether the protocol uses another property-testing framework outside Foundry."
       ],
+      "matched_signals": [],
       "priority": "Low readiness gap",
       "required_project_bindings": [
         "Target contracts",
@@ -229,6 +270,7 @@
       "manual_review_notes": [
         "Review whether feed decimals are fixed at deployment."
       ],
+      "matched_signals": [],
       "priority": "Low readiness gap",
       "required_project_bindings": [
         "Oracle adapter",
@@ -238,7 +280,7 @@
       "safety_notes": [
         "Use synthetic feed answers and local mocks."
       ],
-      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "source_report_evidence_summary": "No semantic-lite oracle test coverage terms were detected.",
       "suggested_tests": [
         "Test decimals normalization across expected feed decimals.",
         "Test zero, negative, or invalid oracle answers if applicable.",
@@ -259,6 +301,12 @@
       "manual_review_notes": [
         "Check whether freshness validation is implemented in an imported adapter."
       ],
+      "matched_signals": [
+        "getReserves",
+        "pool",
+        "reserve0",
+        "reserve1"
+      ],
       "priority": "Low readiness gap",
       "required_project_bindings": [
         "Oracle adapter or mock feed",
@@ -268,7 +316,7 @@
       "safety_notes": [
         "Use local mock oracle responses only."
       ],
-      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "source_report_evidence_summary": "No semantic-lite oracle test coverage terms were detected.",
       "suggested_tests": [
         "Reject stale oracle rounds or document fallback behavior.",
         "Test updatedAt or heartbeat boundaries.",
@@ -289,6 +337,12 @@
       "manual_review_notes": [
         "Review whether price source is advisory or authoritative."
       ],
+      "matched_signals": [
+        "getReserves",
+        "pool",
+        "reserve0",
+        "reserve1"
+      ],
       "priority": "Low readiness gap",
       "required_project_bindings": [
         "AMM or price source mock",
@@ -298,7 +352,7 @@
       "safety_notes": [
         "Use local reserve changes and avoid production market assumptions."
       ],
-      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "source_report_evidence_summary": "No semantic-lite oracle test coverage terms were detected.",
       "suggested_tests": [
         "Test spot-price movement bounds.",
         "Test TWAP or delay assumptions when used.",
@@ -319,6 +373,12 @@
       "manual_review_notes": [
         "Review whether fallback behavior is intentionally unavailable."
       ],
+      "matched_signals": [
+        "getReserves",
+        "pool",
+        "reserve0",
+        "reserve1"
+      ],
       "priority": "Low readiness gap",
       "required_project_bindings": [
         "Oracle adapter",
@@ -328,7 +388,7 @@
       "safety_notes": [
         "Use local invalid-value mocks."
       ],
-      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "source_report_evidence_summary": "No semantic-lite oracle test coverage terms were detected.",
       "suggested_tests": [
         "Test documented price bounds.",
         "Test invalid answer fallback behavior.",
@@ -348,6 +408,10 @@
       ],
       "manual_review_notes": [
         "Review code paths manually before deciding severity."
+      ],
+      "matched_signals": [
+        "transfer",
+        "transferFrom"
       ],
       "priority": "Low readiness gap",
       "required_project_bindings": [
@@ -413,13 +477,12 @@
       "Failure-mode stub"
     ]
   },
-  "generated_at": "2026-05-27T11:05:35+00:00",
+  "generated_at": "1970-01-01T00:00:00+00:00",
   "invariant_candidates": [
     "LP share supply tracks pool ownership within documented rounding.",
     "Reserve-based price consumers respect documented bounds and delay assumptions.",
     "External-call flows cannot observe or preserve inconsistent accounting state.",
     "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-    "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
     "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
     "Swap execution respects user-provided output bounds and documented deadline policy.",
     "Core accounting relationships hold after any allowed user action.",
@@ -445,7 +508,6 @@
         "LP share supply tracks pool ownership within documented rounding.",
         "Reserve-based price consumers respect documented bounds and delay assumptions.",
         "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
         "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
         "Swap execution respects user-provided output bounds and documented deadline policy."
       ],
@@ -606,5 +668,5 @@
     "Pair ordering documentation with a local receiver test that exercises the documented boundary."
   ],
   "tool": "Arkheionx Test Plan Generator",
-  "version": "2.0.0"
+  "version": "2.0.1"
 }

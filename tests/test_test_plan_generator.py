@@ -113,6 +113,29 @@ class TestPlanGeneratorTests(unittest.TestCase):
             self.assertNotIn(forbidden, low)
 
 
+class CommittedTestPlanHygieneTests(unittest.TestCase):
+    """Guard every committed test-plan against malformed evidence punctuation."""
+
+    def test_no_malformed_evidence_summary_punctuation(self) -> None:
+        plans = sorted((REPO_ROOT / "examples" / "reports").glob("*test-plan*.md"))
+        self.assertTrue(plans, "expected committed test-plan markdown files")
+        for path in plans:
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn(
+                "Source evidence summary: :",
+                text,
+                f"{path.name} has a dangling-colon evidence summary",
+            )
+            for line in text.splitlines():
+                if line.startswith("- Source evidence summary:"):
+                    value = line.split(":", 1)[1].strip()
+                    self.assertTrue(value, f"{path.name}: empty evidence summary: {line!r}")
+                    self.assertFalse(
+                        value.startswith(":"),
+                        f"{path.name}: malformed evidence reference: {line!r}",
+                    )
+
+
 class InvariantCandidatePropertyTests(unittest.TestCase):
     """Invariant candidates should read as properties, not as suggested tests."""
 
