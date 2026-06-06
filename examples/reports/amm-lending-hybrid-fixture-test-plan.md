@@ -101,6 +101,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: amountIn, amountOut, getReserves, kLast, pool, quote
 - Suggested tests:
   - Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.
   - Test repeated swaps across small and large reserve states.
@@ -122,6 +123,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: amountIn, amountOut, getReserves, kLast, pool, quote
 - Suggested tests:
   - Test reserve-price movement bounds.
   - Test TWAP or delay assumptions if used.
@@ -141,6 +143,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: amountIn, amountOut, getReserves, kLast, pool, quote
 - Suggested tests:
   - Test actual received amount accounting with balanceBefore/balanceAfter pattern.
   - Simulate fee-on-transfer behavior with a local mock if supported.
@@ -160,6 +163,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyHybridMarket.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: amountIn, amountOut, getReserves, kLast, pool, quote
 - Suggested tests:
   - Test minOut enforcement.
   - Test stale quote or deadline behavior if supported.
@@ -179,6 +183,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: borrow, cash, collateral, debt, healthFactor, liquidate
 - Suggested tests:
   - Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.
   - Test debt cannot exceed documented collateral constraints.
@@ -200,6 +205,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: borrow, cash, collateral, debt, healthFactor, liquidate
 - Suggested tests:
   - Test just-above-threshold positions cannot be liquidated.
   - Test just-below-threshold positions can be liquidated according to policy.
@@ -220,6 +226,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: borrow, cash, collateral, debt, healthFactor, liquidate
 - Suggested tests:
   - Test borrow cannot exceed available liquidity.
   - Test repay updates cash, debt, and reserves consistently.
@@ -260,7 +267,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
 - Suggested tests:
   - Test decimals normalization across expected feed decimals.
   - Test zero, negative, or invalid oracle answers if applicable.
@@ -279,7 +286,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Reject stale oracle rounds or document fallback behavior.
   - Test updatedAt or heartbeat boundaries.
@@ -298,7 +306,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Test spot-price movement bounds.
   - Test TWAP or delay assumptions when used.
@@ -317,7 +326,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Test documented price bounds.
   - Test invalid answer fallback behavior.
@@ -336,7 +346,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `lending`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: borrow, cash, collateral, debt, getReserves, healthFactor
 - Suggested tests:
   - Test stale oracle rejection for borrow and liquidation paths.
   - Test decimals normalization for collateral valuation.

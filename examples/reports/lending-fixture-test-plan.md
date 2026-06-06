@@ -110,6 +110,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.
+- Matched signals: answer, getPrice, latestRoundData, priceFeed
 - Suggested tests:
   - Reject stale oracle rounds or document fallback behavior.
   - Test updatedAt or heartbeat boundaries.
@@ -129,6 +130,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.
+- Matched signals: LTV, accrueInterest, answer, borrow, borrowIndex, cash
 - Suggested tests:
   - Test stale oracle rejection for borrow and liquidation paths.
   - Test decimals normalization for collateral valuation.
@@ -149,6 +151,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.
+- Matched signals: answer, getPrice, latestRoundData, priceFeed
 - Suggested tests:
   - Test documented price bounds.
   - Test invalid answer fallback behavior.
@@ -168,6 +171,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyLendingMarket.sol in `setGuardian`: Solidity function contains access-control or lifecycle modifier evidence.
+- Matched signals: guardian, onlyOwner, owner, pause
 - Suggested tests:
   - Test unauthorized callers cannot change critical parameters.
   - Test authorized role can perform expected setter actions.
@@ -187,6 +191,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: LTV, accrueInterest, borrow, borrowIndex, cash, closeFactor
 - Suggested tests:
   - Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.
   - Test debt cannot exceed documented collateral constraints.
@@ -208,6 +213,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: LTV, accrueInterest, borrow, borrowIndex, cash, closeFactor
 - Suggested tests:
   - Test just-above-threshold positions cannot be liquidated.
   - Test just-below-threshold positions can be liquidated according to policy.
@@ -228,6 +234,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: LTV, accrueInterest, borrow, borrowIndex, cash, closeFactor
 - Suggested tests:
   - Test interest or borrow index monotonicity.
   - Cover small balances and repeated accrual.
@@ -248,6 +255,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: LTV, accrueInterest, borrow, borrowIndex, cash, closeFactor
 - Suggested tests:
   - Test borrow cannot exceed available liquidity.
   - Test repay updates cash, debt, and reserves consistently.

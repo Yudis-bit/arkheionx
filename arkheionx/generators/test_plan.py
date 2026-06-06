@@ -46,6 +46,12 @@ SAFETY_NOTES = [
 ]
 
 
+def clean_evidence_summary(summary: str) -> str:
+    """Drop a leading location-less ": <reason>" colon so the rendered evidence
+    reference reads cleanly even for older source reports."""
+    return str(summary or "").strip().lstrip(":").strip()
+
+
 def load_plan_map() -> dict[str, dict]:
     payload = load_json(MAP_PATH)
     entries = payload.get("findings", {})
@@ -136,7 +142,8 @@ def collect_plan(report: dict, plan_map: dict[str, dict], foundry_output: Path |
             "required_project_bindings": bindings,
             "safety_notes": mapping.get("safety_notes", []),
             "manual_review_notes": mapping.get("manual_review_notes", []),
-            "source_report_evidence_summary": finding.get("evidence_summary", ""),
+            "source_report_evidence_summary": clean_evidence_summary(finding.get("evidence_summary", "")),
+            "matched_signals": [str(s) for s in finding.get("detected_signals", []) if str(s).strip()][:6],
         }
         planned_findings.append(entry)
         all_tests.extend(suggested_tests)
@@ -240,6 +247,8 @@ def render_markdown(plan: dict) -> str:
         lines.append(f"- Confidence: `{finding['confidence']}`")
         if finding.get("source_report_evidence_summary"):
             lines.append(f"- Source evidence summary: {finding['source_report_evidence_summary']}")
+        if finding.get("matched_signals"):
+            lines.append(f"- Matched signals: {', '.join(finding['matched_signals'])}")
         lines.append("- Suggested tests:")
         for test in finding.get("suggested_tests", [])[:8]:
             lines.append(f"  - {test}")

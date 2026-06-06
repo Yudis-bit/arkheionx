@@ -13,6 +13,7 @@
       "manual_review_notes": [
         "Review whether feed decimals are fixed at deployment."
       ],
+      "matched_signals": [],
       "priority": "High readiness gap",
       "required_project_bindings": [
         "Oracle adapter",
@@ -43,6 +44,12 @@
       "manual_review_notes": [
         "Check whether freshness validation is implemented in an imported adapter."
       ],
+      "matched_signals": [
+        "answer",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed"
+      ],
       "priority": "High readiness gap",
       "required_project_bindings": [
         "Oracle adapter or mock feed",
@@ -72,6 +79,14 @@
       ],
       "manual_review_notes": [
         "Review fallback behavior and collateral-specific feed assumptions."
+      ],
+      "matched_signals": [
+        "LTV",
+        "accrueInterest",
+        "answer",
+        "borrow",
+        "borrowIndex",
+        "cash"
       ],
       "priority": "High readiness gap",
       "required_project_bindings": [
@@ -104,6 +119,12 @@
       "manual_review_notes": [
         "Review whether fallback behavior is intentionally unavailable."
       ],
+      "matched_signals": [
+        "answer",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed"
+      ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
         "Oracle adapter",
@@ -134,6 +155,12 @@
       "manual_review_notes": [
         "Review role inheritance and deployment ownership transfer."
       ],
+      "matched_signals": [
+        "guardian",
+        "onlyOwner",
+        "owner",
+        "pause"
+      ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
         "Privileged setter functions",
@@ -163,6 +190,14 @@
       ],
       "manual_review_notes": [
         "Review collateral factor and price-unit assumptions."
+      ],
+      "matched_signals": [
+        "LTV",
+        "accrueInterest",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor"
       ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
@@ -196,6 +231,14 @@
       "manual_review_notes": [
         "Review rounding around exact threshold values."
       ],
+      "matched_signals": [
+        "LTV",
+        "accrueInterest",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor"
+      ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
         "Liquidation function",
@@ -227,6 +270,14 @@
       "manual_review_notes": [
         "Review whether index math is inherited from a shared library."
       ],
+      "matched_signals": [
+        "LTV",
+        "accrueInterest",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor"
+      ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
         "Interest accrual function",
@@ -257,6 +308,14 @@
       ],
       "manual_review_notes": [
         "Review reserve factor and protocol fee accounting."
+      ],
+      "matched_signals": [
+        "LTV",
+        "accrueInterest",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor"
       ],
       "priority": "Medium readiness gap",
       "required_project_bindings": [
@@ -291,6 +350,7 @@
       "manual_review_notes": [
         "Review whether the protocol uses another property-testing framework outside Foundry."
       ],
+      "matched_signals": [],
       "priority": "Low readiness gap",
       "required_project_bindings": [
         "Target contracts",

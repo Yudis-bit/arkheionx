@@ -98,6 +98,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves
 - Suggested tests:
   - Test first liquidity provider behavior.
   - Test proportional minting and proportional withdrawal.
@@ -118,6 +119,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `High readiness gap`
 - Confidence: `high`
 - Source evidence summary: src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves
 - Suggested tests:
   - Test reserve-price movement bounds.
   - Test TWAP or delay assumptions if used.
@@ -156,6 +158,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves
 - Suggested tests:
   - Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.
   - Test repeated swaps across small and large reserve states.
@@ -177,6 +180,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves
 - Suggested tests:
   - Test actual received amount accounting with balanceBefore/balanceAfter pattern.
   - Simulate fee-on-transfer behavior with a local mock if supported.
@@ -196,6 +200,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Medium readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.
+- Matched signals: addLiquidity, amountIn, amountOut, balanceOf, getAmountOut, getReserves
 - Suggested tests:
   - Test minOut enforcement.
   - Test stale quote or deadline behavior if supported.
@@ -235,7 +240,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
 - Suggested tests:
   - Test decimals normalization across expected feed decimals.
   - Test zero, negative, or invalid oracle answers if applicable.
@@ -254,7 +259,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Reject stale oracle rounds or document fallback behavior.
   - Test updatedAt or heartbeat boundaries.
@@ -273,7 +279,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Test spot-price movement bounds.
   - Test TWAP or delay assumptions when used.
@@ -292,7 +299,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: : No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Test documented price bounds.
   - Test invalid answer fallback behavior.
@@ -312,6 +320,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Priority: `Low readiness gap`
 - Confidence: `medium`
 - Source evidence summary: src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.
+- Matched signals: transfer, transferFrom
 - Suggested tests:
   - Document checks-effects-interactions or guard assumptions.
   - Test state before and after external calls.

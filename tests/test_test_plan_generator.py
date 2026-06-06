@@ -81,6 +81,35 @@ class TestPlanGeneratorTests(unittest.TestCase):
         self.assertIn("invariant_candidates", issue)
         self.assertTrue(issue["suggested_tests"])
 
+    def test_evidence_references_are_clean_and_signal_specific(self) -> None:
+        md = (REPO_ROOT / "examples/reports/amm-fixture-test-plan.md").read_text(encoding="utf-8")
+        # Regression guard: no malformed location-less evidence reference.
+        self.assertNotIn("Source evidence summary: :", md)
+        for line in md.splitlines():
+            if line.startswith("- Source evidence summary:"):
+                value = line.split(":", 1)[1].strip()
+                self.assertTrue(value, f"empty evidence summary: {line!r}")
+                self.assertFalse(value.startswith(":"), f"malformed evidence reference: {line!r}")
+        # Findings with detected signals must name them so the plan is specific.
+        data = load_json("examples/reports/amm-fixture-test-plan.json")
+        signal_findings = [f for f in data["findings"] if f.get("matched_signals")]
+        self.assertTrue(signal_findings, "expected at least one finding with matched signals")
+        for finding in signal_findings:
+            self.assertTrue(all(isinstance(s, str) and s for s in finding["matched_signals"]))
+        self.assertIn("Matched signals:", md)
+        # The oracle coverage finding connects to the reserve-pricing signal.
+        orc = next(f for f in data["findings"] if f["finding_id"] == "ARK-ORC-001")
+        self.assertIn("getReserves", orc["matched_signals"])
+        # Conservative wording preserved; no confirmed-vulnerability claims.
+        low = md.lower()
+        for forbidden in (
+            "vulnerability confirmed",
+            "confirmed vulnerability",
+            "exploit confirmed",
+            "guaranteed secure",
+        ):
+            self.assertNotIn(forbidden, low)
+
 
 if __name__ == "__main__":
     unittest.main()
