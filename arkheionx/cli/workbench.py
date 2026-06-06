@@ -901,7 +901,7 @@ def _review_map_priorities(ui: TerminalUI, rm, repo: str, top: int) -> None:
     for i, note in enumerate(notes, 1):
         why = note.body.split(".")[0].strip() or "value-relevant surface"
         step = note.next_step.replace("arkheionx prove . ", f"arkheionx prove {repo} ")
-        ui.info(f"  {i}. {note.title} [{note.priority}] - {why}")
+        ui.info(f"  {i}. {note.title} {colors.priority_tag(note.priority)} - {why}")
         ui.info(f"     Inspect, then prove locally: {step}")
 
 

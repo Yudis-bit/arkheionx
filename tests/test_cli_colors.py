@@ -94,6 +94,66 @@ class ColorUtilityTests(unittest.TestCase):
         finally:
             os.environ.pop("ARKHEIONX_COLOR", None)
 
+    def test_premium_tokens_colored_and_strip_is_lossless(self) -> None:
+        os.environ["ARKHEIONX_COLOR"] = "always"
+        try:
+            sample = (
+                "ARKHEIONX DOCTOR\n"
+                "Status: warning\n"
+                "Core\n"
+                "  Arkheionx: ok 3.9.0\n"
+                "  foundry.toml: missing\n"
+                "  mode: heuristic only\n"
+                "  Artifacts dir writable: yes\n"
+                "Review Priorities (review order, not confirmed findings)\n"
+                "  1. ToyHybridMarket.borrow [high] - value-out\n"
+                "  3. ToyReserveOracle.quote [low] - value-in\n"
+                "Boundary"
+            )
+            out = colors.colorize_report(sample)
+            self.assertIn(ESC, out)
+            # Color is purely additive: stripping restores the exact text.
+            self.assertEqual(colors.strip(out), sample)
+            # Each premium line actually gained color.
+            for line in sample.split("\n"):
+                self.assertNotEqual(
+                    colors.colorize_report(line), line, f"expected color on: {line!r}"
+                )
+        finally:
+            os.environ.pop("ARKHEIONX_COLOR", None)
+
+    def test_command_and_count_lines_stay_plain(self) -> None:
+        # Copyable command lines and plain counts must not be recolored.
+        os.environ["ARKHEIONX_COLOR"] = "always"
+        try:
+            for line in (
+                "     Inspect, then prove locally: arkheionx prove examples/x --target Y --run",
+                "  Solidity files: 24",
+                "  forge: forge Version: 1.7.1",
+            ):
+                self.assertEqual(colors.colorize_report(line), line, f"unexpected color: {line!r}")
+        finally:
+            os.environ.pop("ARKHEIONX_COLOR", None)
+
+    def test_priority_tag_colors_known_levels_losslessly(self) -> None:
+        os.environ["ARKHEIONX_COLOR"] = "always"
+        try:
+            for level in ("critical", "high", "medium", "low"):
+                tag = colors.priority_tag(level)
+                self.assertIn(ESC, tag, f"expected color for [{level}]")
+                self.assertEqual(colors.strip(tag), f"[{level}]")
+            # Unknown levels stay plain rather than guessing a color.
+            self.assertEqual(colors.priority_tag("informational"), "[informational]")
+        finally:
+            os.environ.pop("ARKHEIONX_COLOR", None)
+
+    def test_priority_tag_plain_when_disabled(self) -> None:
+        os.environ["ARKHEIONX_COLOR"] = "never"
+        try:
+            self.assertEqual(colors.priority_tag("high"), "[high]")
+        finally:
+            os.environ.pop("ARKHEIONX_COLOR", None)
+
 
 class CliColorBehaviorTests(unittest.TestCase):
     def test_default_capture_is_plain(self) -> None:
@@ -137,6 +197,31 @@ class CliColorBehaviorTests(unittest.TestCase):
             hunt_json = Path(tmp) / ".arkheionx" / "out" / "hunt.json"
             self.assertTrue(hunt_json.exists())
             self.assertNotIn(ESC, hunt_json.read_text(encoding="utf-8"))
+
+    def test_doctor_plain_and_safe_under_ci_and_no_color(self) -> None:
+        # Both CI and NO_COLOR must yield plain output, and the safety boundary
+        # must survive regardless of color mode.
+        for env in ({"CI": "1"}, {"NO_COLOR": "1"}):
+            result = run_cli("doctor", env_extra=env)
+            self.assertNotIn(ESC, result.stdout)
+            stripped = result.stdout
+            self.assertIn("ARKHEIONX DOCTOR", stripped)
+            self.assertIn("local/static repository analysis only", stripped)
+            self.assertIn("Next", stripped)
+
+    def test_review_map_color_modes_preserve_text_and_boundary(self) -> None:
+        hybrid = "examples/amm-lending-hybrid-fixture"
+        plain = run_cli("review-map", hybrid, env_extra={"NO_COLOR": "1"})
+        self.assertIn(plain.returncode, (0, 1), plain.stderr)
+        self.assertNotIn(ESC, plain.stdout)
+        for text in ("ARKHEIONX REVIEW MAP", "Review Priorities", "Boundary", "Human review required"):
+            self.assertIn(text, plain.stdout)
+        colored = run_cli("review-map", hybrid, env_extra={"ARKHEIONX_COLOR": "always"})
+        self.assertIn(ESC, colored.stdout)
+        # Safety boundary and structure remain intact once color is stripped.
+        stripped = colors.strip(colored.stdout)
+        for text in ("ARKHEIONX REVIEW MAP", "Boundary", "Human review required"):
+            self.assertIn(text, stripped)
 
 
 if __name__ == "__main__":

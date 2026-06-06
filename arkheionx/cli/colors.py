@@ -48,7 +48,45 @@ _SECTIONS = {
     "Install receipt", "Generated", "Proof", "Summary", "Money", "Top Surfaces",
     "Top Contracts", "Money Flow Summary", "Roles", "Journeys", "Next", "Safety",
     "Available demos", "Artifacts", "Evidence", "Report", "Status legend",
+    "Boundary", "Progress",
 }
+
+# Section headers that carry trailing descriptive text, e.g.
+# "Review Priorities (review order, not confirmed findings)".
+_SECTION_PREFIXES = ("Review Priorities", "Inspect first")
+
+# Review/hunt priority tags, e.g. "[high]". Red is reserved for real errors, so
+# severity escalates through bold amber and dim rather than red.
+_PRIORITY_STYLE = {
+    "critical": ("red", "bold"),
+    "high": ("yellow", "bold"),
+    "medium": ("yellow",),
+    "low": ("dim",),
+}
+_PRIORITY_RE = re.compile(r"\[(" + "|".join(_PRIORITY_STYLE) + r")\]")
+
+# Inline status values in an indented "  label: value" health line (doctor).
+# Only the leading status token of the value is colored; versions, counts, and
+# free text are left untouched so the line stays readable and copyable.
+_VALUE_STATUS_STYLE = {
+    "ok": ("green",),
+    "yes": ("green",),
+    "clean": ("green",),
+    "passed": ("green",),
+    "ready": ("green",),
+    "valid": ("green",),
+    "writable": ("green",),
+    "enabled": ("green",),
+    "missing": ("yellow",),
+    "warning": ("yellow",),
+    "heuristic": ("yellow",),
+    "disabled": ("yellow",),
+    "scaffolded": ("yellow",),
+    "partial": ("yellow",),
+    "failed": ("red",),
+    "error": ("red",),
+}
+_KV_RE = re.compile(r"^(\s+[\w .()/+-]+:\s+)([A-Za-z][\w-]*)(.*)$")
 
 
 def enabled(stream=None) -> bool:
@@ -84,6 +122,15 @@ def paint(text: str, *styles: str, stream=None) -> str:
     return f"{prefix}{text}{_RESET}" if prefix else text
 
 
+def priority_tag(priority: str, stream=None) -> str:
+    """Render a bracketed review-priority tag (e.g. ``[high]``) with restrained
+    color. Returns the plain ``[priority]`` when color is disabled. Red is
+    reserved for real errors, so severity escalates through bold amber and dim.
+    """
+    style = _PRIORITY_STYLE.get(priority.strip().lower())
+    return paint(f"[{priority}]", *style, stream=stream) if style else f"[{priority}]"
+
+
 def _status_styles(value: str) -> tuple[str, ...]:
     v = value.strip().lower()
     if v in {"error", "failed", "fail", "build_failed", "tested_failed"}:
@@ -95,17 +142,31 @@ def _status_styles(value: str) -> tuple[str, ...]:
     return ("cyan",)
 
 
+def _color_tokens(text: str) -> str:
+    """Color inline evidence-level and priority tokens wherever they appear."""
+    text = _EVIDENCE_RE.sub(lambda m: paint(m.group(0), *_EVIDENCE_STYLE[m.group(0)]), text)
+    text = _PRIORITY_RE.sub(lambda m: paint(m.group(0), *_PRIORITY_STYLE[m.group(1)]), text)
+    return text
+
+
 def _colorize_line(line: str) -> str:
     stripped = line.strip()
+    # Product identity (header / version banner) carries the brand color.
     if line.startswith("ARKHEIONX ") or line.startswith("Arkheionx package version:"):
-        return paint(line, "bold")
+        return paint(line, "cyan", "bold")
     if stripped.startswith("Status:"):
         label, _, value = line.partition(":")
         return f"{label}:{paint(value, *_status_styles(value))}" if value else line
-    if stripped in _SECTIONS and line == stripped:
+    if line == stripped and (
+        stripped in _SECTIONS or any(stripped.startswith(p) for p in _SECTION_PREFIXES)
+    ):
         return paint(line, "bold")
-    # Color evidence/review level tokens wherever they appear.
-    return _EVIDENCE_RE.sub(lambda m: paint(m.group(0), *_EVIDENCE_STYLE[m.group(0)]), line)
+    # Indented "  label: value" health line: color the leading status token only.
+    kv = _KV_RE.match(line)
+    if kv and kv.group(2).lower() in _VALUE_STATUS_STYLE:
+        prefix, value, rest = kv.group(1), kv.group(2), kv.group(3)
+        return prefix + paint(value, *_VALUE_STATUS_STYLE[value.lower()]) + _color_tokens(rest)
+    return _color_tokens(line)
 
 
 def colorize_report(text: str, stream=None) -> str:
