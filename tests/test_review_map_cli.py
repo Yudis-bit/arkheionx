@@ -180,6 +180,25 @@ class ReviewMapUxTests(unittest.TestCase):
         self.assertIn("Human review required", result.stdout)
         self.assertNotIn("Traceback", result.stderr)
 
+    def test_review_priorities_give_actionable_inspection_guidance(self) -> None:
+        result = run_cli("review-map", str(FIXTURE), "--no-write")
+        self.assertIn(result.returncode, (0, 1), result.stderr)
+        out = result.stdout
+        self.assertIn("Review Priorities", out)
+        # Each priority must offer actionable inspection guidance, not a bare command.
+        self.assertIn("Inspect, then prove locally:", out)
+        self.assertRegex(out, r"Inspect, then prove locally: arkheionx prove \S+ --target \S+ --run")
+        # Conservative framing preserved; no confirmed-vulnerability claims.
+        self.assertIn("Not confirmed vulnerabilities", out)
+        for forbidden in (
+            "vulnerability confirmed",
+            "confirmed vulnerability",
+            "exploit confirmed",
+            "guaranteed secure",
+        ):
+            self.assertNotIn(forbidden, out.lower())
+        self.assertNotIn("Traceback", result.stderr)
+
     def test_ci_disables_animation_no_cr_artifacts(self) -> None:
         result = run_cli("review-map", str(FIXTURE), "--no-write", env_extra={"CI": "true"})
         self.assertIn(result.returncode, (0, 1), result.stderr)
