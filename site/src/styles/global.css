@@ -4297,3 +4297,173 @@ svg {
     padding: 2rem 0;
   }
 }
+
+/* Homepage mobile overflow hotfix */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 760px) {
+  .home-page,
+  .home-hero,
+  .hero,
+  .hero-shell,
+  .hero-grid,
+  .hero-copy,
+  .hero-panel,
+  .review-map,
+  .install-card,
+  .command-card,
+  .manifest-panel,
+  .protocol-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .home-page,
+  .home-hero,
+  .hero,
+  .hero-shell {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+
+  .hero-grid,
+  .home-hero__grid,
+  .home-grid,
+  .landing-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .hero-copy,
+  .home-hero__copy,
+  .landing-copy {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hero-copy h1,
+  .home-hero h1,
+  .home-hero__copy h1,
+  .landing-copy h1,
+  .home-page h1 {
+    max-width: 100%;
+    font-size: clamp(2.35rem, 11vw, 3.45rem) !important;
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .hero-copy p,
+  .home-hero p,
+  .home-hero__copy p,
+  .landing-copy p,
+  .home-page p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .command-card,
+  .install-card,
+  .install-command,
+  .ax-copy-shell,
+  pre {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    box-sizing: border-box;
+  }
+
+  .command-card code,
+  .install-card code,
+  .install-command code,
+  .ax-copy-shell code,
+  pre code {
+    white-space: pre;
+    word-break: normal;
+  }
+
+  .review-map,
+  .manifest-panel,
+  .protocol-card,
+  .surface-card,
+  .home-panel {
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .review-map *,
+  .manifest-panel *,
+  .protocol-card *,
+  .surface-card *,
+  .home-panel * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .review-map strong,
+  .manifest-panel strong,
+  .protocol-card strong,
+  .surface-card strong {
+    display: block;
+    max-width: 100%;
+    line-height: 1.5;
+  }
+
+  .home-actions,
+  .hero-actions,
+  .cta-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .home-actions a,
+  .hero-actions a,
+  .cta-row a {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-page,
+  .home-hero,
+  .hero,
+  .hero-shell {
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+  }
+
+  .hero-copy h1,
+  .home-hero h1,
+  .home-hero__copy h1,
+  .landing-copy h1,
+  .home-page h1 {
+    font-size: clamp(2.05rem, 10.4vw, 2.85rem) !important;
+  }
+
+  .review-map,
+  .manifest-panel,
+  .protocol-card,
+  .surface-card,
+  .home-panel,
+  .install-card,
+  .command-card {
+    border-left-width: 1px;
+    border-right-width: 1px;
+  }
+}
