@@ -73,6 +73,7 @@ fi
 
 log "creating isolated Python environment"
 python3 -m venv "$VENV_DIR"
+"$VENV_DIR/bin/python" -m pip install --disable-pip-version-check --upgrade pip setuptools wheel
 "$VENV_DIR/bin/python" -m pip install --disable-pip-version-check --no-build-isolation -e "$SRC_DIR"
 
 cat > "$ARKHEIONX_WRAPPER" <<EOF
