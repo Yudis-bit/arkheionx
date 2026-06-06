@@ -1,0 +1,17 @@
+---
+interface Props {
+  command?: string;
+  title?: string;
+  output?: string;
+}
+
+const { command = "", title = "terminal", output = "" } = Astro.props;
+---
+
+<div class="command-block">
+  <div class="command-head">
+    <span>{title}</span>
+    <span class="command-state">local</span>
+  </div>
+  <pre><code><span class="prompt" aria-hidden="true">$</span> {command}</code>{output && <code class="command-output">{output}</code>}</pre>
+</div>

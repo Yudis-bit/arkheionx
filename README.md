@@ -3,6 +3,10 @@
 Local-first deterministic security review workbench for Solidity / Foundry
 projects.
 
+Official website: [https://arkheionx.dev](https://arkheionx.dev) *(deployment pending)*.
+The website source installer is coming soon and should be used only after the
+deployment verification documented in [`docs/WEBSITE_DEPLOYMENT.md`](docs/WEBSITE_DEPLOYMENT.md).
+
 <!-- Compatibility alias for existing public-surface tests: # Arkheionx -->
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·

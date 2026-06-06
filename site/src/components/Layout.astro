@@ -1,0 +1,45 @@
+---
+import Header from "./Header.astro";
+import Footer from "./Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+}
+
+const {
+  title = "ArkheionX | Deterministic review artifacts",
+  description = "Local-first deterministic security review infrastructure for Solidity and Foundry projects.",
+  canonicalPath = Astro.url.pathname
+} = Astro.props;
+
+const canonical = new URL(canonicalPath, Astro.site ?? "https://arkheionx.dev");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#06080d" />
+    <link rel="canonical" href={canonical} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

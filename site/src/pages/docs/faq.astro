@@ -1,0 +1,64 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+
+const questions = [
+  ["Is ArkheionX an auditor?", "No. It is local review infrastructure that organizes protocol context and evidence for human reviewers."],
+  ["Does it find vulnerabilities?", "It can surface roles, paths, assumptions, gaps, and heuristic signals worth investigating. A human must determine whether any signal represents a defect."],
+  ["Does it run exploit code?", "The default scan and review-map workflow does not. ArkheionX does not provide a general exploit automation mode."],
+  ["Does it call RPC?", "No RPC call is required by default. Standard repository mapping is local/static."],
+  ["Does it need private keys?", "No. Do not provide private keys, seed phrases, signers, or production credentials."],
+  ["Can I use it on a private repo?", "Yes, if you are authorized and your handling policy permits local generated artifacts. The source stays on the machine in the default workflow."],
+  ["What is a review package?", "A local folder containing a manifest, validation result, README, checksums, and selected existing review artifacts."],
+  ["What is a fixture benchmark?", "A deterministic check over controlled local/static protocol shapes used to detect changes in ArkheionX artifact behavior."],
+  ["What is snapshot drift?", "A difference between current deterministic fixture output and its recorded baseline. It requires inspection before accepting a new baseline."],
+  ["Why source fingerprints?", "They identify the exact fixture source bytes used by a benchmark with SHA-256 and byte size."],
+  ["Is there a binary release?", "No. The current website installer performs a source install from the public main branch."],
+  ["Is there a license?", "License selection is pending. Review LICENSE_PENDING.md before adoption or redistribution."],
+  ["How do I uninstall?", "Remove ~/.local/bin/arkheionx, ~/.local/bin/arkup, and ~/.arkheionx. Project-local output remains separate."],
+  ["How do I update?", "Rerun the website installer, or use arkup --update --channel main when the optional wrapper is available."],
+  ["What does doctor check?", "It checks command and package health, Python, project layout, configuration, and Foundry availability. It does not build the project by default."],
+  ["Can it run Foundry?", "Some commands can invoke local Foundry operations when you explicitly pass --build or --run. Read project configuration first."],
+  ["Does it replace Slither or fuzzing?", "No. Static analyzers, fuzzers, invariant tests, symbolic tools, and manual review answer different questions and can be used together."],
+  ["How should audit teams use it?", "Use it to pin repository orientation, compare maps across commits, track assumptions and evidence, and assemble a reproducible handoff package."],
+  ["Where are artifacts written?", "Most generated artifacts are written below the target repository's .arkheionx/out/ directory."],
+  ["Should generated artifacts be committed?", "Usually no. They are local generated state. Commit them only when a specific review process requires versioned artifacts and sensitive content has been checked."],
+  ["What does local-first mean?", "The default workflow starts from local files, runs without a hosted analysis service, and does not require remote-chain state."],
+  ["Is the output deterministic?", "Specific IDs, fixture serialization, fingerprints, snapshots, and package checksums are designed for reproducibility. Inputs and tool versions still matter."],
+  ["Does a clean run prove safety?", "No. Absence of generated warnings is not evidence that all relevant behavior was reviewed."],
+  ["Does a test gap prove a bug?", "No. It identifies missing or unlinked local evidence for a review surface."],
+  ["Does a value path prove exploitability?", "No. It is a candidate flow to trace and validate against source, state transitions, and authorization."],
+  ["Does ArkheionX assign severity?", "No. Final severity requires human analysis of impact, likelihood, reachability, assumptions, and protocol context."],
+  ["Can it scan deployed contracts?", "The default public workflow is repository-based and local. Deployed-target scanning is not part of this website surface."],
+  ["Does it upload source code?", "No upload is required by the default CLI workflow. Review any separate CI or hosting configuration before using it with sensitive source."],
+  ["Does it use telemetry?", "The website includes no analytics or tracking scripts, and the documented CLI workflow does not depend on a telemetry service."],
+  ["Can I run it offline?", "After installation and dependency availability, the local/static commands can run without network access. Git-based installation and updates require network access."],
+  ["What Python versions are supported?", "The current package requires Python 3.11 or newer."],
+  ["Does the installer require root?", "No. It writes under ~/.arkheionx and ~/.local/bin."],
+  ["Does the installer edit my shell profile?", "No. It prints a path hint when ~/.local/bin is not already on the shell path."],
+  ["Why install from main?", "No current binary publication is claimed. The website installer follows the public-safe main source state until a versioned distribution pipeline exists."],
+  ["Can I pin a commit?", "Yes. Use the manual installation path, check out the desired public commit, and record its SHA before installing the editable checkout."],
+  ["What should I attach to a review handoff?", "Include the repository commit, ArkheionX version, commands, configuration, manifest, checksums, relevant artifacts, and separate human conclusions."],
+  ["How do I report a sensitive issue?", "Use the repository's private GitHub Security Advisory channel. Avoid public issues when details could create risk."],
+  ["Are the examples real findings?", "No. Website examples are toy or local fixtures and make no claim about a production protocol."],
+  ["What is the v3.9.0 status?", "It is the current public-safe source state described by the repository. It is not a claim that a matching binary release exists."],
+  ["What is planned next?", "Website operations, installer polish, a binary release pipeline, stronger documentation, v4.0 architecture, optional static parser adapters, and a review workspace."]
+];
+---
+
+<Layout title="FAQ | ArkheionX Docs" description="Answers about ArkheionX installation, local review artifacts, execution, and safety boundaries.">
+  <DocShell>
+    <p class="page-kicker">Use</p>
+    <h1>Frequently asked questions.</h1>
+    <p class="doc-deck">Direct answers about what ArkheionX does, what it preserves, and where human review remains required.</p>
+
+    <div class="faq-list">
+      {questions.map(([question, answer]) => (
+        <details>
+          <summary>{question}</summary>
+          <p>{answer}</p>
+        </details>
+      ))}
+    </div>
+  </DocShell>
+</Layout>

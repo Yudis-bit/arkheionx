@@ -1,0 +1,53 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import CommandBlock from "../../components/CommandBlock.astro";
+---
+
+<Layout title="Installation | ArkheionX Docs" description="ArkheionX source installation requirements and verification.">
+  <DocShell>
+    <p class="page-kicker">Start</p>
+    <h1>Installation.</h1>
+    <p class="doc-deck">The website installer uses a dedicated checkout and virtual environment under your home directory. No system Python package is replaced.</p>
+
+    <h2>Requirements</h2>
+    <ul>
+      <li>Linux or macOS</li>
+      <li>Git</li>
+      <li>Python 3.11+</li>
+      <li>Python <code>venv</code> support</li>
+    </ul>
+
+    <h2>Website installer</h2>
+    <CommandBlock command="curl -fsSL https://arkheionx.dev/install | bash" />
+    <p>Managed paths:</p>
+    <ul>
+      <li><code>~/.arkheionx/src</code>: public repository checkout on <code>main</code></li>
+      <li><code>~/.arkheionx/venv</code>: isolated Python environment</li>
+      <li><code>~/.local/bin/arkheionx</code>: command wrapper</li>
+      <li><code>~/.local/bin/arkup</code>: optional lifecycle wrapper</li>
+    </ul>
+
+    <h2>Inspect before execution</h2>
+    <CommandBlock command={`curl -fsSL https://arkheionx.dev/install -o /tmp/arkheionx-install
+sh -n /tmp/arkheionx-install
+sed -n '1,240p' /tmp/arkheionx-install
+bash /tmp/arkheionx-install`} />
+
+    <h2>Verify</h2>
+    <CommandBlock command={`command -v arkheionx
+arkheionx version
+arkheionx doctor --install
+git -C ~/.arkheionx/src rev-parse HEAD`} />
+
+    <h2>Update and remove</h2>
+    <p>Rerun the installer to fast-forward the dedicated checkout and refresh the editable install.</p>
+    <CommandBlock command={`curl -fsSL https://arkheionx.dev/install | bash
+
+# remove website-managed installation
+rm -f ~/.local/bin/arkheionx ~/.local/bin/arkup
+rm -rf ~/.arkheionx`} />
+
+    <div class="doc-note"><strong>Distribution state:</strong> this is a source install from <code>main</code>. No binary release is published.</div>
+  </DocShell>
+</Layout>

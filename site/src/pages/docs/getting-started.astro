@@ -1,0 +1,36 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import CommandBlock from "../../components/CommandBlock.astro";
+---
+
+<Layout title="Getting Started | ArkheionX Docs" description="Install ArkheionX and produce a first local review map.">
+  <DocShell>
+    <p class="page-kicker">Start</p>
+    <h1>Getting started.</h1>
+    <p class="doc-deck">Install from public source, verify the command, and run the first mapping pass against a repository you are authorized to inspect.</p>
+
+    <h2>1. Install</h2>
+    <CommandBlock command="curl -fsSL https://arkheionx.dev/install | bash" />
+    <p>The installer targets GitHub <code>main</code>. Inspect-first and manual alternatives are documented on the <a href="/install.html">install page</a>.</p>
+
+    <h2>2. Verify the environment</h2>
+    <CommandBlock command={`arkheionx version
+arkheionx doctor .`} />
+    <p><code>doctor</code> checks the Python package, command path, project layout, and Foundry availability. Foundry detection does not run a build.</p>
+
+    <h2>3. Use a controlled demo</h2>
+    <CommandBlock command={`arkheionx demo --list
+arkheionx demo --copy oracle-staking /tmp/arkheionx-demo
+arkheionx review-map /tmp/arkheionx-demo`} />
+    <p>Bundled demos are local toy fixtures. They are useful for learning artifact structure without attaching claims to a production protocol.</p>
+
+    <h2>4. Map your repository</h2>
+    <CommandBlock command={`cd /path/to/authorized-foundry-project
+arkheionx scan .
+arkheionx review-map .`} />
+    <p>Review generated files under <code>.arkheionx/out/</code>. Do not treat the terminal summary as the complete artifact or as a security conclusion.</p>
+
+    <div class="doc-note"><strong>Boundary:</strong> repository authorization and handling policy are your responsibility. Keep sensitive output local unless the review scope permits sharing.</div>
+  </DocShell>
+</Layout>

@@ -1,0 +1,50 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import CommandBlock from "../../components/CommandBlock.astro";
+---
+
+<Layout title="Fixture Harness | ArkheionX Docs" description="The deterministic local/static fixture benchmark harness in ArkheionX v3.9.0.">
+  <DocShell>
+    <p class="page-kicker">Model</p>
+    <h1>Fixture harness.</h1>
+    <p class="doc-deck">A controlled benchmark layer for checking ArkheionX artifact stability against nine small protocol shapes.</p>
+
+    <h2>What is included</h2>
+    <p>Three fixture sets contain nine static Solidity-like source inputs:</p>
+    <ul>
+      <li>Set 1: token, lending vault, and staking/reward shapes.</li>
+      <li>Set 2: AMM/swap, oracle-dependent vault, and upgradeable proxy shapes.</li>
+      <li>Set 3: bridge/message, liquidation/borrow-repay, and governance/timelock shapes.</li>
+    </ul>
+
+    <h2>What the benchmark checks</h2>
+    <ul>
+      <li>Deterministic fixture, artifact, run, result, and suite IDs.</li>
+      <li>Stable JSON-safe serialization.</li>
+      <li>Path confinement to registered local fixture sources.</li>
+      <li>Source SHA-256 fingerprints and byte sizes.</li>
+      <li>Snapshot drift and safety-boundary flags.</li>
+      <li>Copy scans that prevent unsupported claims from entering fixture output.</li>
+    </ul>
+
+    <h2>Python surface</h2>
+    <CommandBlock
+      title="python"
+      command={`python3 - <<'PY'
+import arkheionx.fixture_harness as fh
+
+suite = fh.build_all_fixture_suite()
+print(len(suite.fixtures))
+print(suite.id)
+PY`}
+    />
+
+    <h2>Boundary</h2>
+    <p>
+      The harness does not compile or execute fixture source. It does not perform network access. A passing fixture
+      benchmark means the expected review infrastructure behavior remained stable for that controlled input; it says
+      nothing final about the security of a real protocol.
+    </p>
+  </DocShell>
+</Layout>

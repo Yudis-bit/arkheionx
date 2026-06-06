@@ -1,0 +1,38 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+---
+
+<Layout title="Concepts | ArkheionX Docs" description="Core ArkheionX concepts for protocol mapping and review artifacts.">
+  <DocShell>
+    <p class="page-kicker">Model</p>
+    <h1>Concepts.</h1>
+    <p class="doc-deck">ArkheionX separates observed repository structure, generated review context, execution evidence, and human conclusions.</p>
+
+    <h2>Review surface</h2>
+    <p>A review surface is the structured set of contracts, functions, roles, value paths, assumptions, gaps, and artifact links presented for inspection.</p>
+
+    <dl class="definition-grid">
+      <div><dt>Protocol role</dt><dd>A machine-classified orientation label for a contract or function. It is a navigation aid, not semantic proof.</dd></div>
+      <div><dt>Value path</dt><dd>A candidate route through calls, transfers, accounting, or exits that a reviewer should trace against source.</dd></div>
+      <div><dt>Assumption</dt><dd>A trust, state, timing, authority, or integration condition inferred from local context and exposed for verification.</dd></div>
+      <div><dt>Test gap</dt><dd>A protocol surface for which the available local test evidence appears incomplete or absent.</dd></div>
+      <div><dt>Evidence link</dt><dd>A cross-reference from a review target to proof, trace, validation, report, or package artifacts.</dd></div>
+      <div><dt>Review package</dt><dd>A local manifest, validation result, README, and selected copies of existing artifacts for handoff.</dd></div>
+      <div><dt>Source fingerprint</dt><dd>A SHA-256 digest and byte count for a registered fixture source file.</dd></div>
+      <div><dt>Snapshot drift</dt><dd>A difference between current deterministic fixture output and its recorded baseline.</dd></div>
+    </dl>
+
+    <h2>Evidence levels</h2>
+    <p>
+      Static observations and executed local tests carry different provenance. ArkheionX records those distinctions,
+      but it does not convert execution success into a final security judgment.
+    </p>
+
+    <h2>Generated output</h2>
+    <p>
+      The default artifact root is <code>.arkheionx/out/</code>. Generated output is local, reproducible context and
+      is normally excluded from source control unless a review process explicitly decides otherwise.
+    </p>
+  </DocShell>
+</Layout>

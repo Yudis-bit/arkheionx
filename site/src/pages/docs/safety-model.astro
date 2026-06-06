@@ -1,0 +1,44 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import SafetyNotice from "../../components/SafetyNotice.astro";
+---
+
+<Layout title="Safety Model | ArkheionX Docs" description="The operating and claim boundaries for ArkheionX review artifacts.">
+  <DocShell>
+    <p class="page-kicker">Model</p>
+    <h1>Safety model.</h1>
+    <p class="doc-deck">ArkheionX is designed to make local review context inspectable without turning generated signals into security verdicts.</p>
+
+    <SafetyNotice />
+
+    <h2>Authorized repositories only</h2>
+    <p>Run the tool only where you have permission to read the source, create local artifacts, and execute any optional project commands you select.</p>
+
+    <h2>Local/static default</h2>
+    <ul>
+      <li>No RPC call is required for the standard scan, map, review-map, or package workflow.</li>
+      <li>No private key, seed phrase, signer, or production credential is required.</li>
+      <li>No transaction is broadcast.</li>
+      <li>No remote target is scanned by default.</li>
+    </ul>
+
+    <h2>Execution is explicit</h2>
+    <p>
+      Some workbench commands expose <code>--build</code> or <code>--run</code>. Those options can invoke local
+      Foundry commands in the selected project. Read the command help and project configuration before enabling them.
+    </p>
+
+    <h2>Claims remain bounded</h2>
+    <ul>
+      <li>A role label does not prove a contract's complete purpose.</li>
+      <li>A value path does not prove exploitability.</li>
+      <li>A test gap does not prove a defect.</li>
+      <li>A passing test does not prove the absence of defects.</li>
+      <li>An evidence package does not establish final impact or severity.</li>
+    </ul>
+
+    <h2>Sensitive disclosure</h2>
+    <p>Do not post sensitive details to a public issue when doing so could create risk. Use the repository's private security advisory channel.</p>
+  </DocShell>
+</Layout>

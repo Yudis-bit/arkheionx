@@ -1,0 +1,30 @@
+---
+const path = Astro.url.pathname;
+const links = [
+  { href: "/docs", label: "Docs" },
+  { href: "/install.html", label: "Install" },
+  { href: "/examples", label: "Examples" },
+  { href: "/roadmap", label: "Roadmap" },
+  { href: "/security", label: "Security" }
+];
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/" aria-label="ArkheionX home">
+      <span class="wordmark-mark" aria-hidden="true">AX</span>
+      <span>ArkheionX</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      {links.map((link) => (
+        <a href={link.href} aria-current={path === link.href || path.startsWith(`${link.href}/`) ? "page" : undefined}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <a class="header-source" href="https://github.com/Yudis-bit/DeFi-Exploit-PoCs">
+      <span class="source-dot" aria-hidden="true"></span>
+      Source
+    </a>
+  </div>
+</header>

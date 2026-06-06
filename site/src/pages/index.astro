@@ -1,0 +1,161 @@
+---
+import Layout from "../components/Layout.astro";
+import CommandBlock from "../components/CommandBlock.astro";
+import ManifestPanel from "../components/ManifestPanel.astro";
+import SafetyNotice from "../components/SafetyNotice.astro";
+import SignalCard from "../components/SignalCard.astro";
+
+const installCommand = "curl -fsSL https://arkheionx.dev/install | bash";
+---
+
+<Layout
+  title="ArkheionX | Deterministic review artifacts"
+  description="Local-first infrastructure for mapping Solidity and Foundry repositories into reproducible review surfaces."
+>
+  <section class="hero">
+    <div class="hero-inner page-shell">
+      <div class="hero-copy">
+        <p class="page-kicker">Local security review infrastructure</p>
+        <h1>ArkheionX</h1>
+        <p class="hero-tagline">Deterministic review artifacts for human security researchers.</p>
+        <p class="hero-summary">
+          Local-first infrastructure for mapping Solidity / Foundry repositories into reviewable protocol surfaces:
+          roles, value paths, assumptions, test gaps, evidence links, and fixture benchmark snapshots.
+        </p>
+        <CommandBlock title="install / main" command={installCommand} />
+        <div class="hero-actions">
+          <a class="text-link" href="/docs">Read the docs</a>
+          <a class="text-link" href="https://github.com/Yudis-bit/DeFi-Exploit-PoCs">View GitHub</a>
+        </div>
+        <div class="status-strip" aria-label="Operating boundaries">
+          <span>LOCAL-FIRST</span>
+          <span>NO RPC BY DEFAULT</span>
+          <span>NO EXPLOIT AUTOMATION</span>
+          <span>HUMAN REVIEW REQUIRED</span>
+        </div>
+      </div>
+      <ManifestPanel />
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-inner">
+      <div class="section-grid">
+        <div>
+          <p class="eyebrow amber">Review surface</p>
+          <h2 class="section-title">Review context without scanner noise.</h2>
+        </div>
+        <div class="section-copy">
+          <p>ArkheionX focuses on reproducible review context, not automatic vulnerability claims.</p>
+          <p>
+            A review starts with structure: which contracts hold authority, where value enters and exits, which
+            assumptions connect components, and where test evidence is absent. ArkheionX records that surface in
+            inspectable local artifacts so a researcher can trace, question, and regenerate it.
+          </p>
+          <p>
+            The output is a map for investigation. It is not a verdict, a score to trust without inspection, or a
+            substitute for protocol-specific reasoning.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-inner">
+      <p class="eyebrow blue">Artifact inventory</p>
+      <h2 class="section-title">What the machine preserves.</h2>
+      <p class="section-lead">
+        Stable identifiers and bounded local evidence make review state easier to compare across commits, machines,
+        and researchers.
+      </p>
+      <div class="signal-grid">
+        <SignalCard index="01" title="Protocol roles" tone="green">Contract and function roles that orient manual inspection.</SignalCard>
+        <SignalCard index="02" title="Value paths" tone="blue">Candidate flows across deposits, accounting, transfers, and exits.</SignalCard>
+        <SignalCard index="03" title="Assumptions" tone="amber">Explicit trust and state conditions that need researcher verification.</SignalCard>
+        <SignalCard index="04" title="Test gaps" tone="amber">Missing local evidence attached to specific protocol surfaces.</SignalCard>
+        <SignalCard index="05" title="Evidence links" tone="blue">Cross-references between targets and generated local artifacts.</SignalCard>
+        <SignalCard index="06" title="Fixture benchmarks" tone="green">Repeatable checks over nine controlled local/static protocol shapes.</SignalCard>
+        <SignalCard index="07" title="Source fingerprints" tone="blue">SHA-256 fingerprints for the exact fixture source bytes inspected.</SignalCard>
+        <SignalCard index="08" title="Snapshot drift" tone="amber">Visible changes when deterministic benchmark output moves.</SignalCard>
+      </div>
+    </div>
+  </section>
+
+  <div class="split-band">
+    <section>
+      <p class="eyebrow green">Default posture</p>
+      <h2>Local-first by design.</h2>
+      <p>
+        The standard workflow reads an authorized repository on your machine. It requires no RPC endpoint, deployed
+        target, account credential, or hosted service.
+      </p>
+      <ul class="evidence-list">
+        <li><span>NET/00</span><span>Repository files</span><span>LOCAL</span></li>
+        <li><span>RPC/00</span><span>Network calls</span><span>OFF</span></li>
+        <li><span>KEY/00</span><span>Secret material</span><span>NONE</span></li>
+        <li><span>TX/00</span><span>Transaction broadcast</span><span>NONE</span></li>
+      </ul>
+    </section>
+    <section>
+      <p class="eyebrow blue">Benchmark layer</p>
+      <h2>Fixture benchmark harness.</h2>
+      <p>
+        Nine small, controlled Solidity-like fixtures exercise deterministic IDs, JSON serialization, path safety,
+        source fingerprints, snapshot stability, and safety-boundary checks.
+      </p>
+      <p>
+        Fixtures are static inputs. The harness does not compile them, execute them, or treat a passing snapshot as
+        evidence that a protocol is secure.
+      </p>
+      <a class="text-link" href="/docs/fixture-harness">Inspect the fixture model</a>
+    </section>
+  </div>
+
+  <section class="content-section">
+    <div class="section-inner">
+      <SafetyNotice>
+        <p>
+          A machine-generated role, path, gap, or evidence state can prioritize investigation. Impact,
+          exploitability, and severity remain decisions for an authorized human reviewer working from the source and
+          supporting evidence.
+        </p>
+      </SafetyNotice>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-inner quickstart-grid">
+      <div>
+        <p class="eyebrow green">Five commands</p>
+        <h2 class="section-title">Establish a local review surface.</h2>
+        <p class="section-lead">Check the install, inspect a bundled demo, then map an authorized repository.</p>
+        <div class="inline-actions">
+          <a class="text-link" href="/docs/quickstart">Quickstart details</a>
+          <a class="text-link" href="/docs/cli-reference">CLI reference</a>
+        </div>
+      </div>
+      <CommandBlock
+        title="review session"
+        command={`arkheionx version
+arkheionx doctor
+arkheionx demo
+arkheionx scan .
+arkheionx review-map .`}
+      />
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-inner">
+      <p class="eyebrow amber">Distribution state</p>
+      <h2 class="section-title">Public artifact status.</h2>
+      <div class="artifact-status">
+        <div><span>Source</span><strong>v3.9.0 public-safe state</strong></div>
+        <div><span>Binary releases</span><strong>Not yet published</strong></div>
+        <div><span>Installer</span><strong>Source install from GitHub main</strong></div>
+        <div><span>License</span><strong>Pending maintainer decision</strong></div>
+      </div>
+    </div>
+  </section>
+</Layout>

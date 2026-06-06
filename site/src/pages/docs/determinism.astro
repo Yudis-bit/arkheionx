@@ -1,0 +1,47 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import CommandBlock from "../../components/CommandBlock.astro";
+---
+
+<Layout title="Determinism | ArkheionX Docs" description="How ArkheionX uses canonical inputs, stable IDs, fingerprints, and snapshot checks.">
+  <DocShell>
+    <p class="page-kicker">Model</p>
+    <h1>Determinism.</h1>
+    <p class="doc-deck">Deterministic artifacts make changes visible. They do not make machine interpretation infallible.</p>
+
+    <h2>Stable identity</h2>
+    <p>
+      Fixture harness IDs are derived from canonical JSON seeds using sorted keys, compact separators, and SHA-256.
+      The same registered inputs produce the same prefix-tagged ID. Randomness, wall-clock time, and process hashes
+      are excluded from those IDs.
+    </p>
+
+    <h2>Source fingerprints</h2>
+    <p>
+      A source fingerprint records the SHA-256 digest and byte size of a registered local fixture file. It answers a
+      narrow question: were the source bytes used by this benchmark unchanged?
+    </p>
+
+    <h2>Snapshot drift</h2>
+    <p>
+      Snapshot tests compare current serialized fixture output with committed baselines. Drift is a prompt to review
+      the changed model, registry, or serializer. It is neither automatically acceptable nor automatically a defect.
+    </p>
+
+    <h2>Reproduce a review map</h2>
+    <CommandBlock command={`git rev-parse HEAD
+arkheionx version
+arkheionx review-map . --json --no-write > /tmp/review-map.json
+sha256sum /tmp/review-map.json`} />
+    <p>Record the repository commit, ArkheionX version, command arguments, and relevant configuration with any shared artifact.</p>
+
+    <h2>Limits</h2>
+    <ul>
+      <li>Deterministic serialization does not validate the meaning of an inferred role or path.</li>
+      <li>Different source bytes, configuration, tool versions, or command options may produce different artifacts.</li>
+      <li>External tools can add their own nondeterministic fields or environment-sensitive behavior.</li>
+      <li>Human conclusions are not reduced to a content hash.</li>
+    </ul>
+  </DocShell>
+</Layout>

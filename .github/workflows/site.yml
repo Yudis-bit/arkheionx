@@ -1,0 +1,60 @@
+name: site
+
+on:
+  pull_request:
+    paths:
+      - "site/**"
+      - "tests/test_official_site_public_surface.py"
+      - "tests/test_site_installer_public.py"
+      - "tests/test_site_copy_safety.py"
+      - ".github/workflows/site.yml"
+  push:
+    branches:
+      - main
+      - "website/**"
+    paths:
+      - "site/**"
+      - "tests/test_official_site_public_surface.py"
+      - "tests/test_site_installer_public.py"
+      - "tests/test_site_copy_safety.py"
+      - ".github/workflows/site.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Validate public website contracts
+        run: |
+          python3 -m unittest \
+            tests.test_official_site_public_surface \
+            tests.test_site_installer_public \
+            tests.test_site_copy_safety
+
+      - name: Install website dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Build static website
+        working-directory: site
+        run: npm run build
+
+      - name: Verify install endpoint outputs
+        run: |
+          test -f site/dist/install
+          test -f site/dist/install.html
+          bash -n site/dist/install

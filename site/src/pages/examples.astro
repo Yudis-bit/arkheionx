@@ -1,0 +1,49 @@
+---
+import Layout from "../components/Layout.astro";
+import CommandBlock from "../components/CommandBlock.astro";
+import SafetyNotice from "../components/SafetyNotice.astro";
+---
+
+<Layout title="ArkheionX Examples" description="Public-safe local fixtures and example review workflows for ArkheionX.">
+  <header class="page-intro page-shell">
+    <p class="page-kicker">Controlled inputs</p>
+    <h1>Examples built for inspection.</h1>
+    <p>Every example on this page is a toy or local fixture. It demonstrates artifact shape and workflow, not a real protocol finding.</p>
+  </header>
+
+  <div class="page-shell">
+    <section class="prose-section">
+      <h2>Bundled demo workflow</h2>
+      <p>List the bundled demos, inspect one, then copy it to a disposable directory.</p>
+      <CommandBlock
+        command={`arkheionx demo --list
+arkheionx demo --show oracle-staking
+arkheionx demo --copy oracle-staking /tmp/arkheionx-demo
+arkheionx review-map /tmp/arkheionx-demo`}
+      />
+    </section>
+
+    <section class="prose-section">
+      <h2>Public fixture surfaces</h2>
+      <div class="definition-grid">
+        <div><dt>Oracle staking</dt><dd>A small staking and reward shape with an oracle dependency for mapping roles and assumptions.</dd></div>
+        <div><dt>AMM / lending hybrid</dt><dd>A local composite shape for examining cross-component value paths and accounting boundaries.</dd></div>
+        <div><dt>Mini vault</dt><dd>A compact vault surface suitable for the first scan and review-map commands.</dd></div>
+        <div><dt>Fixture harness sets</dt><dd>Nine static Solidity-like inputs used to check deterministic IDs, fingerprints, and snapshots.</dd></div>
+      </div>
+    </section>
+
+    <section class="prose-section">
+      <h2>Generate a review package</h2>
+      <p>Artifacts stay under the selected repository's <code>.arkheionx/out/</code> directory.</p>
+      <CommandBlock
+        command={`arkheionx scan /tmp/arkheionx-demo
+arkheionx review-map /tmp/arkheionx-demo
+arkheionx review-package /tmp/arkheionx-demo --strict`}
+      />
+      <p>Open the manifest and review-map files directly. Treat every machine-produced signal as a lead to inspect against source.</p>
+    </section>
+
+    <SafetyNotice title="Example boundary" />
+  </div>
+</Layout>

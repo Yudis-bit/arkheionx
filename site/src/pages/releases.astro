@@ -1,0 +1,31 @@
+---
+import Layout from "../components/Layout.astro";
+import CommandBlock from "../components/CommandBlock.astro";
+---
+
+<Layout title="ArkheionX Releases" description="ArkheionX source distribution and binary release status.">
+  <header class="page-intro page-shell">
+    <p class="page-kicker">Distribution</p>
+    <h1>Releases.</h1>
+    <p>Source install is available from the public <code>main</code> branch. Binary releases are planned but have not been published.</p>
+  </header>
+
+  <div class="page-shell">
+    <section class="prose-section">
+      <h2>Current installation path</h2>
+      <CommandBlock command="curl -fsSL https://arkheionx.dev/install | bash" />
+      <p>The installer creates an isolated editable install from GitHub <code>main</code>. It is not an immutable release artifact.</p>
+    </section>
+    <section class="prose-section">
+      <h2>Public source state</h2>
+      <p><strong>v3.9.0</strong> identifies the current public-safe technical state in source metadata and documentation.</p>
+      <p>No binary download, package registry distribution, or matching GitHub Release is claimed here.</p>
+    </section>
+    <section class="prose-section">
+      <h2>Verify what is installed</h2>
+      <CommandBlock command={`arkheionx version
+git -C ~/.arkheionx/src rev-parse HEAD
+git -C ~/.arkheionx/src status --short`} />
+    </section>
+  </div>
+</Layout>

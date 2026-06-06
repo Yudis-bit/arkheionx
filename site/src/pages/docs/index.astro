@@ -1,0 +1,38 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import CommandBlock from "../../components/CommandBlock.astro";
+import SafetyNotice from "../../components/SafetyNotice.astro";
+---
+
+<Layout title="ArkheionX Documentation" description="Documentation for ArkheionX local-first Solidity and Foundry review infrastructure.">
+  <DocShell>
+    <p class="page-kicker">Documentation</p>
+    <h1>Build a review surface you can regenerate.</h1>
+    <p class="doc-deck">
+      ArkheionX reads an authorized local repository and produces structured artifacts for protocol orientation,
+      evidence tracking, and review handoff.
+    </p>
+
+    <CommandBlock command="curl -fsSL https://arkheionx.dev/install | bash" title="install / main" />
+
+    <h2>Choose a path</h2>
+    <div class="definition-grid">
+      <div><dt><a href="/docs/getting-started">Getting started</a></dt><dd>Understand the install, first run, and output locations.</dd></div>
+      <div><dt><a href="/docs/review-workflow">Review workflow</a></dt><dd>Move from repository orientation to a local review package.</dd></div>
+      <div><dt><a href="/docs/concepts">Concepts</a></dt><dd>Roles, value paths, assumptions, gaps, evidence links, and packages.</dd></div>
+      <div><dt><a href="/docs/cli-reference">CLI reference</a></dt><dd>Commands, execution boundaries, and output behavior.</dd></div>
+    </div>
+
+    <h2>Default operating model</h2>
+    <ul>
+      <li>Analysis starts from files on the local machine.</li>
+      <li>Generated artifacts are written under <code>.arkheionx/out/</code>.</li>
+      <li>Network and remote-chain access are not required for the default review-map workflow.</li>
+      <li>Commands that can invoke Foundry require an explicit execution flag.</li>
+      <li>Machine output remains review context until a human validates it against source and evidence.</li>
+    </ul>
+
+    <SafetyNotice />
+  </DocShell>
+</Layout>

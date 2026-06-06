@@ -1,0 +1,21 @@
+---
+import ProtocolGlyph from "./ProtocolGlyph.astro";
+---
+
+<section class="manifest-panel" aria-label="Example protocol evidence manifest">
+  <div class="manifest-head">
+    <div>
+      <p>REVIEW MANIFEST</p>
+      <span>local://protocol/surface</span>
+    </div>
+    <div class="manifest-status"><span></span>DETERMINISTIC</div>
+  </div>
+  <ProtocolGlyph />
+  <div class="manifest-ledger">
+    <div><span>roles</span><strong>07</strong><i>mapped</i></div>
+    <div><span>value_paths</span><strong>12</strong><i>linked</i></div>
+    <div><span>assumptions</span><strong>09</strong><i>review</i></div>
+    <div><span>test_gaps</span><strong>04</strong><i>open</i></div>
+  </div>
+  <div class="manifest-hash"><span>source fingerprint</span><code>sha256:8d30...f19c</code></div>
+</section>

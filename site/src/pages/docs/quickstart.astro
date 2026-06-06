@@ -1,0 +1,41 @@
+---
+import Layout from "../../components/Layout.astro";
+import DocShell from "../../components/DocShell.astro";
+import CommandBlock from "../../components/CommandBlock.astro";
+---
+
+<Layout title="Quickstart | ArkheionX Docs" description="A short ArkheionX workflow from environment check to review package.">
+  <DocShell>
+    <p class="page-kicker">Start</p>
+    <h1>Quickstart.</h1>
+    <p class="doc-deck">A compact sequence for producing and inspecting a local review surface.</p>
+
+    <h2>Check the command</h2>
+    <CommandBlock command={`arkheionx version
+arkheionx doctor .`} />
+
+    <h2>Orient the repository</h2>
+    <CommandBlock command={`arkheionx open .
+arkheionx map .
+arkheionx flow .`} />
+    <p><code>open</code> provides a compact orientation. <code>map</code> expands roles and journeys. <code>flow</code> focuses on candidate money-flow edges.</p>
+
+    <h2>Build focused review artifacts</h2>
+    <CommandBlock command={`arkheionx review-map .
+arkheionx value-paths .
+arkheionx assumptions .
+arkheionx test-gap-map .
+arkheionx evidence-links .`} />
+
+    <h2>Package the current state</h2>
+    <CommandBlock command={`arkheionx validate-artifacts .
+arkheionx review-package . --strict`} />
+    <p>The package collects existing local artifacts, writes a manifest and validation report, and can be regenerated from the same repository state.</p>
+
+    <h2>Inspect before extending execution</h2>
+    <p>
+      Stop and read the generated map before using commands with <code>--build</code> or <code>--run</code>. Those flags can invoke local Foundry
+      operations. They remain explicit because execution changes the evidence and trust boundary.
+    </p>
+  </DocShell>
+</Layout>
