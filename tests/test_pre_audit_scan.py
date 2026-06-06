@@ -90,6 +90,35 @@ class PreAuditScannerTests(unittest.TestCase):
         self.assertIn("vault_rule_pack", report)
         self.assertFalse(report["vault_rule_pack"]["coverage"]["invariant"])
 
+    def test_evidence_summaries_are_well_formed(self) -> None:
+        _markdown, report = self.run_scanner("examples/amm-fixture", "amm")
+        findings = report["findings"]
+        self.assertTrue(findings)
+        for finding in findings:
+            summary = str(finding.get("evidence_summary", ""))
+            # Every active finding must carry a non-empty evidence summary.
+            self.assertTrue(summary.strip(), f"{finding['id']} has an empty evidence_summary")
+            # Regression guard: location-less evidence must not emit a dangling
+            # ": <reason>" prefix with no subject.
+            self.assertFalse(
+                summary.startswith(":"),
+                f"{finding['id']} evidence_summary has an empty location prefix: {summary!r}",
+            )
+        # The AMM fixture has reserve-based pricing without oracle test terms, so
+        # oracle coverage-note findings are expected; their summaries must be
+        # labelled the same way the human report labels them, not blank-prefixed.
+        coverage_notes = [
+            finding
+            for finding in findings
+            if "No semantic-lite oracle test coverage" in str(finding.get("evidence_summary", ""))
+        ]
+        self.assertTrue(coverage_notes, "expected oracle coverage-note findings in the AMM fixture")
+        for finding in coverage_notes:
+            self.assertTrue(
+                str(finding["evidence_summary"]).startswith("test/documentation coverage"),
+                f"{finding['id']} coverage-note summary not labelled: {finding['evidence_summary']!r}",
+            )
+
     def test_product_outputs_do_not_include_banned_phrases(self) -> None:
         markdown, report = self.run_scanner("examples/vault-risk-fixture", "vault")
         combined = markdown.lower() + "\n" + json.dumps(report).lower()

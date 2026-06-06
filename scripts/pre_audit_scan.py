@@ -4183,7 +4183,13 @@ def attach_evidence_and_calibrate(
             first = evidence[0]
             location = str(first.get("file", ""))
             function = str(first.get("function", ""))
-            gap.evidence_summary = f"{location}" + (f" in `{function}`" if function else "")
+            # Location-less evidence (e.g. a test/documentation coverage note) must
+            # not produce a dangling ": <reason>" summary; label it the same way the
+            # human report does so the summary names what was actually observed.
+            prefix = location if location else "test/documentation coverage"
+            if function:
+                prefix += f" in `{function}`"
+            gap.evidence_summary = prefix
             if first.get("reason"):
                 gap.evidence_summary += f": {first.get('reason')}"
         has_semantic = bool(semantic_evidence) or finding_has_semantic_support(gap, semantic)
