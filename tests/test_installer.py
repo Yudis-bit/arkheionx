@@ -76,6 +76,18 @@ class InstallerScriptTests(unittest.TestCase):
         self.assertIn("not published to pypi", text)
         self.assertNotIn("pip install arkheionx\n", text)
 
+    def test_install_venv_bootstraps_build_backend(self) -> None:
+        text = read(INSTALL)
+        bootstrap = "-m pip install --upgrade pip setuptools wheel"
+        package = '-m pip install "$(pip_source)"'
+        self.assertIn(bootstrap, text)
+        self.assertIn(package, text)
+        # A clean Python 3.12+ venv ships no setuptools, so the build backend
+        # (pip/setuptools/wheel) must be bootstrapped before the package build.
+        for name in ("pip", "setuptools", "wheel"):
+            self.assertIn(name, bootstrap)
+        self.assertLess(text.index(bootstrap), text.index(package))
+
     def test_install_dry_run_changes_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             install_dir = Path(tmp) / ".arkheionx"

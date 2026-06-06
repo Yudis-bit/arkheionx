@@ -174,7 +174,10 @@ install_venv() {
     log "Installing Arkheionx into an isolated venv: $venv"
     run mkdir -p "$ARKHEIONX_INSTALL_DIR" "$ARKHEIONX_BIN_DIR"
     run "$PYTHON" -m venv "$venv"
-    run "$venv/bin/python" -m pip install --upgrade pip
+    # Bootstrap the build backend (pip/setuptools/wheel) before installing the
+    # package so source builds succeed in clean Python 3.12+ venvs, which no
+    # longer provision setuptools by default.
+    run "$venv/bin/python" -m pip install --upgrade pip setuptools wheel
     run "$venv/bin/python" -m pip install "$(pip_source)"
     wrapper="$ARKHEIONX_BIN_DIR/arkheionx"
     if [ "$ARKHEIONX_DRY_RUN" = "1" ]; then

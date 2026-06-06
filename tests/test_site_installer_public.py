@@ -57,6 +57,34 @@ class SiteInstallerPublicTests(unittest.TestCase):
         ]:
             self.assertNotIn(forbidden, self.lower)
 
+    def test_installer_bootstraps_build_backend_before_editable_install(self) -> None:
+        bootstrap = (
+            '"$VENV_DIR/bin/python" -m pip install '
+            "--disable-pip-version-check --upgrade pip setuptools wheel"
+        )
+        editable = (
+            '"$VENV_DIR/bin/python" -m pip install '
+            '--disable-pip-version-check --no-build-isolation -e "$SRC_DIR"'
+        )
+        self.assertIn(bootstrap, self.text)
+        self.assertIn(editable, self.text)
+        # The build backend (pip/setuptools/wheel) must be installed into the
+        # managed venv before the editable install runs; otherwise a clean
+        # Python 3.12+ venv fails with "No module named 'setuptools'".
+        for package in ("pip", "setuptools", "wheel"):
+            self.assertIn(package, bootstrap)
+        self.assertLess(self.text.index(bootstrap), self.text.index(editable))
+
+    def test_installer_states_safety_boundaries(self) -> None:
+        for marker in [
+            "private keys, seed phrases, or secrets",
+            "call rpc endpoints by default",
+            "run live-chain transactions",
+            "run exploit tests during installation",
+            "confirm vulnerabilities or produce audit conclusions",
+        ]:
+            self.assertIn(marker, self.lower)
+
 
 if __name__ == "__main__":
     unittest.main()
