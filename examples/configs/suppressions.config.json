@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.7.0",
+  "protocol_type": "vault",
+  "min_confidence": "low",
+  "output_profile": "standard",
+  "suppressions": [
+    {
+      "id": "ARK-VLT-001",
+      "path": "src/",
+      "reason": "Example suppression only: readiness gap is tracked in an active remediation issue.",
+      "expires": "2026-12-31",
+      "owner": "security-lead",
+      "review_after": "2026-06-30"
+    }
+  ],
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [],
+    "extra_ignore_globs": []
+  }
+}

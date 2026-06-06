@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.3.0",
+  "description": "Schema reference for local Arkheionx ecosystem readiness pilot metadata.",
+  "required_fields": [
+    "ecosystem_id",
+    "ecosystem_name_public",
+    "public_permission",
+    "repo_count",
+    "repo_entries",
+    "anonymization_level",
+    "aggregate_score_band",
+    "common_gap_families",
+    "rule_family_counts",
+    "recurring_findings",
+    "recommended_actions",
+    "safety_notes",
+    "disclosure_status",
+    "generated_at",
+    "arkheionx_version"
+  ],
+  "repo_entry_fields": [
+    "repo_alias",
+    "repo_type",
+    "protocol_type",
+    "public_repo",
+    "score",
+    "score_band",
+    "top_findings",
+    "output_artifacts",
+    "public_summary_allowed",
+    "private_details_redacted"
+  ],
+  "notes": [
+    "Examples must be synthetic/internal unless public permission exists.",
+    "Anonymized summaries must not reveal private code or unpatched vulnerability details.",
+    "Readiness findings are not vulnerability confirmations."
+  ]
+}

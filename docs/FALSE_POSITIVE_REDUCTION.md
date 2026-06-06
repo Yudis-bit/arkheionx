@@ -1,0 +1,100 @@
+# False-Positive Reduction
+
+Arkheionx v0.6.0 focuses on better signal quality. The goal is not to hide
+readiness gaps; it is to separate stronger evidence from weak keyword-only
+matches so indie builders can prioritize real pre-audit work.
+
+## Confidence Levels
+
+| Confidence | Meaning |
+|---|---|
+| `high` | Solidity function-level evidence exists and matching test coverage was not detected. |
+| `medium` | Solidity evidence exists, but some related test coverage or mitigating signal was found. |
+| `low` | Keyword-only or weak contextual signal. Manual review recommended before creating remediation tasks. |
+
+Confidence is not a vulnerability verdict. It is a prioritization aid.
+
+## Keyword-Only Downgrades
+
+When `downgrade_keyword_only` is enabled, Arkheionx avoids high-priority
+findings from weak text-only matches. For example, a README that says
+"oracle/reward planning" should not produce the same confidence as Solidity
+code that calls `latestRoundData()` and lacks stale-price test evidence.
+
+Low-confidence findings remain visible in Markdown and JSON. They can be
+excluded from issue plans by setting `min_confidence_for_issue_plan`.
+
+## Test Coverage Mapping
+
+Semantic-lite maps tests to rule-pack themes:
+
+- oracle: stale price, decimals, bounds, TWAP, spot pricing;
+- access control: unauthorized caller, owner, role, admin, revert tests;
+- reentrancy/value flow: reentrant receiver, callback, double claim;
+- reward accounting: multi-user reward conservation, accumulator, precision;
+- vault: deposit, withdraw, redeem, donation, rounding, totalAssets, preview;
+- AMM: constant product, reserve accounting, liquidity, LP share, slippage,
+  TWAP, balance-delta, and non-standard token terms;
+- lending: collateral/debt, solvency, health factor, liquidation boundary,
+  interest index, borrow index, reserve/cash, and oracle shock terms.
+
+Matching tests can reduce priority or confidence because Arkheionx has evidence
+that the team is already reviewing that assumption.
+
+## Negative Coverage Context
+
+Arkheionx v0.9.1 adds negative-context detection for coverage terms. Comments
+or docs such as "missing invariant tests," "no stale oracle tests," or
+"without access-control negative tests" are treated as negative evidence, not
+positive test coverage.
+
+Negative evidence can appear in JSON and Markdown reports as:
+
+```json
+{
+  "type": "negative-test-coverage",
+  "term": "invariant tests",
+  "reason": "Coverage term appears in negative context."
+}
+```
+
+This keeps explicit TODO or missing-coverage notes visible while preventing
+them from increasing the readiness score. If a team documents missing tests,
+Arkheionx uses that as remediation context until matching positive tests are
+added.
+
+v0.9.2 also ignores generated Arkheionx artifacts by default. Previous reports
+often contain finding titles such as "without role-boundary tests"; those
+generated phrases are not source evidence and should not create negative
+evidence in later scans.
+
+AMM and lending rule packs follow the same calibration model. Keyword-only
+mentions of AMMs, liquidations, or collateral in docs/interfaces should be
+downgraded unless source-level function evidence supports a readiness finding.
+
+Generated test plans and invariant skeletons are ignored as generated
+artifacts on future scans, so they should not create positive or negative
+coverage evidence by accident.
+
+## Config Tuning
+
+```json
+{
+  "analysis": {
+    "semantic_lite": true,
+    "slither": false,
+    "min_confidence_for_issue_plan": "medium",
+    "downgrade_keyword_only": true,
+    "max_evidence_per_finding": 5
+  }
+}
+```
+
+Suppression is still available by finding ID, but suppression is not proof of
+safety. Prefer improving tests or documentation when possible.
+
+## Limits
+
+False positives remain possible. Arkheionx does not compile Solidity, build a
+complete call graph, or prove whether a readiness gap is exploitable. Use the
+output to focus defensive review and prepare for professional review.

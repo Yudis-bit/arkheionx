@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="250" viewBox="0 0 980 250" role="img" aria-label="Arkheionx v3 public command surface grouped by setup, demo, understand, prove and trace, evidence and report, validate, and install lifecycle">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .title { fill: #0f172a; font: 700 17px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .group { fill: #f8fafc; stroke: #2563eb; stroke-width: 1.5; }
+      .gname { fill: #1d4ed8; font: 700 13px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .cmd { fill: #0f172a; font: 400 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .foot { fill: #64748b; font: 400 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="978" height="248" rx="14" class="panel" />
+  <text x="30" y="38" class="title">Public command surface</text>
+
+  <g>
+    <rect x="22" y="60" width="220" height="80" rx="8" class="group" />
+    <text x="34" y="82" class="gname">Setup</text>
+    <text x="34" y="104" class="cmd">version · doctor</text>
+    <text x="34" y="124" class="cmd">doctor --install · help</text>
+
+    <rect x="258" y="60" width="220" height="80" rx="8" class="group" />
+    <text x="270" y="82" class="gname">Demo</text>
+    <text x="270" y="104" class="cmd">demo --list / --show</text>
+    <text x="270" y="124" class="cmd">demo --commands / --copy</text>
+
+    <rect x="494" y="60" width="220" height="80" rx="8" class="group" />
+    <text x="506" y="82" class="gname">Understand</text>
+    <text x="506" y="104" class="cmd">open · map</text>
+    <text x="506" y="124" class="cmd">flow · hunt</text>
+
+    <rect x="730" y="60" width="226" height="80" rx="8" class="group" />
+    <text x="742" y="82" class="gname">Prove / Trace</text>
+    <text x="742" y="104" class="cmd">prove --run</text>
+    <text x="742" y="124" class="cmd">trace</text>
+
+    <rect x="22" y="152" width="300" height="72" rx="8" class="group" />
+    <text x="34" y="174" class="gname">Evidence / Report</text>
+    <text x="34" y="196" class="cmd">evidence · report</text>
+    <text x="34" y="214" class="cmd">evidence-status</text>
+
+    <rect x="338" y="152" width="300" height="72" rx="8" class="group" />
+    <text x="350" y="174" class="gname">Validate</text>
+    <text x="350" y="196" class="cmd">validate-artifacts</text>
+    <text x="350" y="214" class="cmd">(local artifact checks)</text>
+
+    <rect x="654" y="152" width="302" height="72" rx="8" class="group" />
+    <text x="666" y="174" class="gname">Install lifecycle</text>
+    <text x="666" y="196" class="cmd">install.sh · arkup</text>
+    <text x="666" y="214" class="cmd">uninstall.sh</text>
+  </g>
+
+  <text x="30" y="242" class="foot">Names are stable into v3.0; legacy commands (scan, validate-config, test-plan, search) remain supported. See PUBLIC_SURFACE.md.</text>
+</svg>

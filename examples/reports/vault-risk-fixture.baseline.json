@@ -1,0 +1,413 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "d474ed51fd47af909b7de386",
+      "id": "ARK-VLT-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "4699c77d2310718cb78ca2c0",
+      "id": "ARK-VLT-002",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "erc4626",
+        "preview-functions",
+        "vault-accounting"
+      ],
+      "title": "ERC4626-like interface without preview function tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "2543fa93b9f4489b285e5d07",
+      "id": "ARK-VLT-003",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "share-accounting",
+        "rounding",
+        "precision"
+      ],
+      "title": "Shares/assets conversion without rounding tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "72f63eeec0f9b95321aaae3d",
+      "id": "ARK-VLT-004",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "totalAssets",
+        "strategy-accounting",
+        "oracle-risk"
+      ],
+      "title": "totalAssets external dependency without manipulation-resistance tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-strategy",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "4a76e66745f3e45b5e8a32aa",
+      "id": "ARK-VLT-005",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "strategy-accounting",
+        "gain-loss",
+        "vault-lifecycle"
+      ],
+      "title": "Strategy accounting without gain/loss tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-withdrawal",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "3e2b22e5dc8e31cae397c485",
+      "id": "ARK-VLT-006",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "withdrawal-queue",
+        "liquidity",
+        "vault-lifecycle"
+      ],
+      "title": "Withdrawal queue/cooldown without lifecycle tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "2a76f44f8e1a1f7d34c242b8",
+      "id": "ARK-ORC-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "vault-pricing",
+        "pool-price"
+      ],
+      "title": "Oracle-dependent vault without stale-price or bounds tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "7f72d71494f71983fafe142d",
+      "id": "ARK-VLT-007",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-operations",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "cebac95341fc47229d46feb4",
+      "id": "ARK-VLT-008",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "pause",
+        "emergency-controls",
+        "vault-operations"
+      ],
+      "title": "Pause/emergency controls without operational tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "4226f4a7f7d39a3169f349ca",
+      "id": "ARK-ORC-002",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "decimals",
+        "precision",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle decimals or normalization not covered by tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "90c5089a8e8d398207a33b44",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "allocate",
+        "harvest",
+        "rebalance",
+        "report",
+        "withdrawFromStrategy"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "873e0dd81bdb487c66494a7b",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "allocate",
+        "harvest",
+        "rebalance",
+        "report",
+        "withdrawFromStrategy"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "9c0f87f7015c0acdf10e7e29",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimWithdraw",
+        "deposit",
+        "mint",
+        "requestWithdraw",
+        "withdraw"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "024b820efcb241936e75e157",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "severity": "High readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimWithdraw",
+        "deposit",
+        "mint",
+        "requestWithdraw",
+        "withdraw"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "28cce94cfe9d588f2d3119f8",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions"
+    },
+    {
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimWithdraw"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "8c351dd4a656aea8a7f8eacc",
+      "id": "ARK-RWD-004",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reward-accounting",
+        "staking-lifecycle",
+        "staking-rule-pack"
+      ],
+      "title": "Lock/cooldown reward lifecycle not tested"
+    }
+  ],
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-25T19:28:59+00:00",
+  "protocol_type": "vault",
+  "repo_root": "examples/vault-risk-fixture",
+  "score": 58,
+  "score_band": "Early readiness",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.6.0"
+}

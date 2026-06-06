@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feat/**"
+      - "hardening/**"
+      - "public/**"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package
+        run: python3 -m pip install -e . --no-build-isolation
+
+      - name: Unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+
+      - name: Docs links
+        run: python3 scripts/check_docs_links.py --check
+
+      - name: Safety wording
+        run: python3 scripts/check_safety_wording.py --strict
+
+      - name: Version consistency
+        run: python3 scripts/check_version_consistency.py --check
+
+      - name: Release readiness
+        run: python3 scripts/check_release_readiness.py --check

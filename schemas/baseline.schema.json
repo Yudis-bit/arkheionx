@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/schemas/baseline.schema.json",
+  "title": "Arkheionx Baseline",
+  "type": "object",
+  "required": ["tool", "version", "schema_version", "generated_at", "repo_root", "protocol_type", "score", "score_band", "findings"],
+  "properties": {
+    "tool": { "const": "Arkheionx Pre-Audit Scanner" },
+    "version": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "repo_root": { "type": "string" },
+    "protocol_type": { "type": "string" },
+    "score": { "type": "integer" },
+    "score_band": { "type": "string" },
+    "findings": { "type": "array" },
+    "suppressed_findings": { "type": "array" }
+  },
+  "additionalProperties": true
+}

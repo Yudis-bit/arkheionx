@@ -1,0 +1,1254 @@
+{
+  "version": "2.0.1",
+  "description": "Search metadata for the Arkheionx local-first DeFi value-flow workbench.",
+  "topics": [
+    {
+      "term": "Arkheionx",
+      "aliases": ["Arkheionx value-flow workbench", "Arkheionx Security Memory", "Arkheionx Readiness", "pre-audit readiness OS", "GitHub-native security memory"],
+      "category": "product",
+      "related_patterns": ["DeFi value-flow workbench", "historical exploit memory", "pre-audit readiness workflow"],
+      "related_checks": ["GitHub Action", "Markdown report", "SARIF output", "baseline diff"],
+      "search_tags": ["arkheionx", "value-flow-workbench", "security-memory", "pre-audit-readiness", "indie-defi"]
+    },
+    {
+      "term": "value flow",
+      "aliases": ["money flow", "asset flow", "DeFi value flow", "value-flow workbench"],
+      "category": "product positioning",
+      "related_patterns": ["map the money flow", "value movement through protocols", "critical accounting assumptions"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "docs/VALUE_FLOW_ROADMAP.md", "arkheionx scan"],
+      "search_tags": ["value-flow", "money-flow", "asset-flow", "missing-security-tests"]
+    },
+    {
+      "term": "money flow",
+      "aliases": ["map the money flow", "where value moves", "value movement"],
+      "category": "product positioning",
+      "related_patterns": ["asset movement", "share mint", "borrow limit", "liquidation payout", "reward claim"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "docs/DEVELOPER_RESEARCHER_WORKFLOW.md"],
+      "search_tags": ["money-flow", "value-flow", "flow-map"]
+    },
+    {
+      "term": "asset flow",
+      "aliases": ["token flow", "balance flow", "asset movement"],
+      "category": "DeFi review",
+      "related_patterns": ["user asset to vault balance", "collateral to liquidation payout", "reward funding to user claim"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "arkheionx scan"],
+      "search_tags": ["asset-flow", "value-flow", "defi-security"]
+    },
+    {
+      "term": "DeFi value flow",
+      "aliases": ["DeFi money flow", "DeFi asset flow", "protocol value flow"],
+      "category": "DeFi review",
+      "related_patterns": ["oracle price to borrow limit", "vault deposit to share mint", "admin parameter to value impact"],
+      "related_checks": ["docs/VALUE_FLOW_WORKBENCH.md", "docs/VALUE_FLOW_ROADMAP.md"],
+      "search_tags": ["defi-value-flow", "value-flow", "review-map"]
+    },
+    {
+      "term": "value-flow workbench",
+      "aliases": ["value flow workbench", "DeFi value-flow workbench", "local-first value-flow workbench"],
+      "category": "product positioning",
+      "related_patterns": ["Map the money flow. Find the missing tests.", "Foundry tells you if tests pass"],
+      "related_checks": ["README.md", "docs/VALUE_FLOW_WORKBENCH.md", "docs/GITHUB_REPO_SURFACE.md"],
+      "search_tags": ["value-flow-workbench", "local-first", "arkheionx"]
+    },
+    {
+      "term": "missing security tests",
+      "aliases": ["missing value-flow tests", "what you forgot to test", "missing tests"],
+      "category": "testing",
+      "related_patterns": ["value-flow test gap", "critical assumption without coverage", "review prompt"],
+      "related_checks": ["docs/DEVELOPER_RESEARCHER_WORKFLOW.md", "scripts/generate_test_plan.py", "arkheionx test-plan"],
+      "search_tags": ["missing-security-tests", "test-coverage", "value-flow"]
+    },
+    {
+      "term": "flow map",
+      "aliases": ["value flow map", "money flow map", "protocol flow map"],
+      "category": "roadmap",
+      "related_patterns": ["planned local value-flow map", "assets shares debt rewards oracle assumptions"],
+      "related_checks": ["docs/VALUE_FLOW_ROADMAP.md", "docs/ROADMAP.md"],
+      "search_tags": ["flow-map", "value-flow-map", "roadmap"]
+    },
+    {
+      "term": "value flow roadmap",
+      "aliases": ["Value Flow Map MVP", "DeFi Value Flow Workbench", "v2.1.0 roadmap"],
+      "category": "roadmap",
+      "related_patterns": ["v2.1.0 Value Flow Map MVP", "v3.0.0 DeFi Value Flow Workbench"],
+      "related_checks": ["docs/VALUE_FLOW_ROADMAP.md", "docs/ROADMAP.md"],
+      "search_tags": ["value-flow-roadmap", "v2.1.0", "v3.0.0"]
+    },
+    {
+      "term": "developer researcher workflow",
+      "aliases": ["developer workflow", "researcher workflow", "builders and researchers"],
+      "category": "workflow",
+      "related_patterns": ["flow map to missing tests", "flow review-map to issue candidate"],
+      "related_checks": ["docs/DEVELOPER_RESEARCHER_WORKFLOW.md", "docs/VALUE_FLOW_WORKBENCH.md"],
+      "search_tags": ["developer-workflow", "researcher-workflow", "value-flow"]
+    },
+    {
+      "term": "review map",
+      "aliases": ["researcher review map", "flow review-map", "review areas"],
+      "category": "roadmap",
+      "related_patterns": ["researcher orientation", "high-signal review areas", "evidence-backed issue candidate"],
+      "related_checks": ["docs/VALUE_FLOW_ROADMAP.md", "docs/DEVELOPER_RESEARCHER_WORKFLOW.md"],
+      "search_tags": ["review-map", "security-research", "value-flow"]
+    },
+    {
+      "term": "map the money flow",
+      "aliases": ["Map the money flow. Find the missing tests.", "money flow slogan"],
+      "category": "product positioning",
+      "related_patterns": ["value-flow workbench promise"],
+      "related_checks": ["README.md", "docs/VALUE_FLOW_WORKBENCH.md"],
+      "search_tags": ["map-the-money-flow", "value-flow-workbench"]
+    },
+    {
+      "term": "Foundry tells you if tests pass",
+      "aliases": ["Foundry tells you if your tests pass", "where value moves", "what you forgot to test"],
+      "category": "product positioning",
+      "related_patterns": ["Foundry test pass/fail plus missing value-flow tests"],
+      "related_checks": ["README.md", "docs/VALUE_FLOW_WORKBENCH.md"],
+      "search_tags": ["foundry", "missing-security-tests", "value-flow"]
+    },
+    {
+      "term": "what you forgot to test",
+      "aliases": ["forgot to test", "missing tests", "missing security tests"],
+      "category": "testing",
+      "related_patterns": ["value-flow test gaps", "critical assumption review"],
+      "related_checks": ["README.md", "docs/DEVELOPER_RESEARCHER_WORKFLOW.md", "arkheionx test-plan"],
+      "search_tags": ["forgot-to-test", "missing-tests", "test-coverage"]
+    },
+    {
+      "term": "GitHub repo surface",
+      "aliases": ["repository about", "repository topics", "public surface polish", "GitHub About description"],
+      "category": "public surface",
+      "related_patterns": ["repository positioning", "first impression", "documentation map"],
+      "related_checks": ["docs/GITHUB_REPO_SURFACE.md", "README.md", "scripts/github_surface_setup.sh"],
+      "search_tags": ["github-repo-surface", "repository-about", "public-surface-polish"]
+    },
+    {
+      "term": "security memory OS",
+      "aliases": ["DeFi Security Memory OS", "Arkheionx positioning", "pre-audit readiness OS"],
+      "category": "product positioning",
+      "related_patterns": ["security memory plus pre-audit readiness workflow"],
+      "related_checks": ["README.md", "docs/GITHUB_REPO_SURFACE.md", "docs/SECURITY_MEMORY_GRAPH.md"],
+      "search_tags": ["security-memory-os", "arkheionx-positioning", "pre-audit-readiness"]
+    },
+    {
+      "term": "internal engine split",
+      "aliases": ["v1.6.0 internal modularization", "script to package migration", "core engine split"],
+      "category": "architecture",
+      "related_patterns": ["incremental package extraction without scanner behavior expansion"],
+      "related_checks": ["docs/INTERNAL_ENGINE_SPLIT.md", "docs/PACKAGE_ARCHITECTURE.md", "arkheionx/version.py"],
+      "search_tags": ["internal-engine-split", "package-architecture", "v1.6.0"]
+    },
+    {
+      "term": "package architecture",
+      "aliases": ["arkheionx package", "core engine", "package scaffold", "modular engine"],
+      "category": "architecture",
+      "related_patterns": ["future installable CLI/package preparation"],
+      "related_checks": ["arkheionx/core/models.py", "arkheionx/core/files.py", "arkheionx/rules/registry.py"],
+      "search_tags": ["arkheionx-package", "core-engine", "package-scaffold"]
+    },
+    {
+      "term": "CLI roadmap",
+      "aliases": ["installable CLI", "v2 package path", "preview internal CLI", "python module CLI"],
+      "category": "architecture",
+      "related_patterns": ["future v2 installable package path"],
+      "related_checks": ["docs/CLI_ROADMAP.md", "arkheionx/cli/main.py", "docs/CLI_REFERENCE.md"],
+      "search_tags": ["cli-roadmap", "installable-cli", "v2-package-path"]
+    },
+    {
+      "term": "installable CLI",
+      "aliases": ["arkheionx command", "console entrypoint", "editable install", "local package install"],
+      "category": "packaging",
+      "related_patterns": ["local/static package installation", "v2 CLI workflow"],
+      "related_checks": ["pyproject.toml", "docs/INSTALLATION.md", "docs/CLI_INSTALLABLE.md"],
+      "search_tags": ["installable-cli", "arkheionx-command", "editable-install"]
+    },
+    {
+      "term": "pyproject",
+      "aliases": ["package metadata", "project scripts", "setuptools package metadata"],
+      "category": "packaging",
+      "related_patterns": ["local editable install", "console script declaration"],
+      "related_checks": ["pyproject.toml", "tests/test_package_installable.py"],
+      "search_tags": ["pyproject", "package-metadata", "console-entrypoint"]
+    },
+    {
+      "term": "package data",
+      "aliases": ["runtime data path", "metadata path resolution", "schema path resolution", "template path resolution"],
+      "category": "packaging",
+      "related_patterns": ["source-tree compatible package data", "editable install path helpers"],
+      "related_checks": ["docs/PACKAGE_DATA.md", "arkheionx/core/paths.py", "tests/test_package_data.py"],
+      "search_tags": ["package-data", "path-resolution", "runtime-data"]
+    },
+    {
+      "term": "v2 CLI",
+      "aliases": ["Arkheionx v2 CLI", "installable Arkheionx CLI", "console CLI"],
+      "category": "packaging",
+      "related_patterns": ["module CLI to console CLI migration", "script compatibility"],
+      "related_checks": ["docs/CLI_INSTALLABLE.md", "docs/CLI_MIGRATION_TO_V2.md", "arkheionx/cli/main.py"],
+      "search_tags": ["v2-cli", "console-cli", "script-compatibility"]
+    },
+    {
+      "term": "rule registry",
+      "aliases": ["rule-pack registry", "RULE_PACKS", "rule family metadata", "canonical rule packs"],
+      "category": "architecture",
+      "related_patterns": ["shared rule-pack metadata for docs and future engine use"],
+      "related_checks": ["arkheionx/rules/registry.py", "docs/RULE_PACKS.md", "reports/search_index.md"],
+      "search_tags": ["rule-registry", "rule-packs", "core-engine"]
+    },
+    {
+      "term": "config reference",
+      "aliases": ["Arkheionx config", ".arkheionx.json", "config validation", "config schema"],
+      "category": "configuration",
+      "related_patterns": ["safe local configuration", "stable config schema", "stdlib validation"],
+      "related_checks": ["docs/CONFIG_REFERENCE.md", "schemas/arkheionx_config.schema.json", "scripts/validate_config.py"],
+      "search_tags": ["config-reference", "config-validation", "arkheionx-config"]
+    },
+    {
+      "term": "rule pack configuration",
+      "aliases": ["rule_packs", "enabled rule packs", "min confidence", "output profile"],
+      "category": "configuration",
+      "related_patterns": ["focused rule-pack readiness review", "finding family control"],
+      "related_checks": ["docs/RULE_PACK_CONFIGURATION.md", "arkheionx/rules/registry.py", "examples/configs/amm-lending.config.json"],
+      "search_tags": ["rule-pack-configuration", "min-confidence", "output-profile"]
+    },
+    {
+      "term": "suppressions",
+      "aliases": ["suppression config", "suppress finding", "suppression reason", "review_after"],
+      "category": "configuration",
+      "related_patterns": ["documented readiness finding suppression", "visible suppression review"],
+      "related_checks": ["docs/SUPPRESSIONS.md", "examples/configs/suppressions.config.json"],
+      "search_tags": ["suppressions", "suppression-review", "readiness-triage"]
+    },
+    {
+      "term": "config safety",
+      "aliases": ["dangerous config keys", "safe config defaults", "generated artifact ignore", "strict audit prep config", "CI config"],
+      "category": "configuration",
+      "related_patterns": ["local static config boundary", "dangerous key rejection"],
+      "related_checks": ["docs/CONFIG_SAFETY.md", "examples/configs/strict-audit-prep.config.json", "examples/configs/ci.config.json"],
+      "search_tags": ["config-safety", "generated-artifact-ignore", "ci-config"]
+    },
+    {
+      "term": "generator modules",
+      "aliases": ["test plan module", "feedback module", "ecosystem report module", "paid offer module"],
+      "category": "architecture",
+      "related_patterns": ["generator scripts backed by reusable package modules"],
+      "related_checks": ["arkheionx/generators/test_plan.py", "arkheionx/generators/ecosystem_report.py", "arkheionx/generators/feedback_dashboard.py"],
+      "search_tags": ["generator-modules", "package-extraction", "internal-engine-split"]
+    },
+    {
+      "term": "GitHub Action",
+      "aliases": ["pre-audit action", "Arkheionx action", "GitHub-native scanner", "Actions summary"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["local/static readiness scan in CI"],
+      "related_checks": ["Markdown report", "JSON report", "PR comment", "issue checklist", "SARIF"],
+      "search_tags": ["github-action", "ci", "pre-audit-readiness"]
+    },
+    {
+      "term": "security memory",
+      "aliases": ["DeFi security memory", "historical exploit memory", "root-cause knowledge base", "security knowledge base"],
+      "category": "research archive",
+      "related_patterns": ["historical exploit pattern", "broken invariant", "failed assumption"],
+      "related_checks": ["registry", "search index", "research dashboard", "PoC maturity index"],
+      "search_tags": ["security-memory", "root-cause-analysis", "exploit-research"]
+    },
+    {
+      "term": "readiness gap",
+      "aliases": ["audit blocker", "risk signal", "review recommended", "missing invariant"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["local/static readiness finding"],
+      "related_checks": ["finding ID", "finding fingerprint", "issue checklist", "baseline diff"],
+      "search_tags": ["readiness-gap", "audit-readiness", "defensive-review"]
+    },
+    {
+      "term": "historical exploit pattern",
+      "aliases": ["historical pattern similarity", "exploit primitive", "broken invariant", "failed assumption"],
+      "category": "research archive",
+      "related_patterns": ["root-cause mapping to defensive checks"],
+      "related_checks": ["registry metadata", "search guide", "scanner historical patterns"],
+      "search_tags": ["historical-exploit-pattern", "root-cause-analysis", "defi-security"]
+    },
+    {
+      "term": "indie DeFi",
+      "aliases": ["indie builder", "solo DeFi founder", "grant-funded builder", "small DAO"],
+      "category": "audience",
+      "related_patterns": ["pre-audit readiness before formal review"],
+      "related_checks": ["Launch Report", "Pre-Audit Sprint", "GitHub Action"],
+      "search_tags": ["indie-defi", "builder-security", "pre-audit"]
+    },
+    {
+      "term": "vault accounting",
+      "aliases": ["share accounting", "totalAssets", "pricePerShare", "convertToShares", "convertToAssets"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["vault accounting invariant readiness gap", "vault/oracle price-manipulation readiness gap"],
+      "related_checks": ["totalAssets consistency", "deposit-withdraw roundtrip", "share price manipulation resistance"],
+      "search_tags": ["vault-security", "invariant-testing", "audit-readiness"]
+    },
+    {
+      "term": "oracle manipulation",
+      "aliases": ["price manipulation", "stale oracle", "TWAP", "latestRoundData", "spot price"],
+      "category": "historical exploit pattern",
+      "related_patterns": ["vault/oracle price-manipulation readiness gap", "liquidation and collateral accounting review"],
+      "related_checks": ["stale price rejection", "decimals normalization", "price bounds", "TWAP or sanity check"],
+      "search_tags": ["oracle-risk", "price-assumptions", "defi-security"]
+    },
+    {
+      "term": "reentrancy",
+      "aliases": ["callback", "external call", "value flow", "nonReentrant", "checks effects interactions"],
+      "category": "historical exploit pattern",
+      "related_patterns": ["reentrancy-sensitive value flow review recommended"],
+      "related_checks": ["malicious local receiver test", "state update order", "callback boundary review"],
+      "search_tags": ["reentrancy-review", "value-flow", "smart-contract-security"]
+    },
+    {
+      "term": "access control",
+      "aliases": ["onlyOwner", "AccessControl", "admin", "role", "privileged setter"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["privileged control and operational risk review recommended"],
+      "related_checks": ["unauthorized role rejection", "privileged setter tests", "pause behavior"],
+      "search_tags": ["access-control-review", "admin-risk", "operational-security"]
+    },
+    {
+      "term": "upgradeability",
+      "aliases": ["initializer", "reinitializer", "proxy", "UUPS", "implementation", "storage gap"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["initialization and upgrade boundary review recommended"],
+      "related_checks": ["initializer runs once", "upgrade authorization", "storage layout documentation"],
+      "search_tags": ["upgradeability", "initialization-bug", "proxy-review"]
+    },
+    {
+      "term": "reward accounting",
+      "aliases": ["rewardPerToken", "accumulator", "index", "claim", "emission"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["reward accounting mismatch review recommended"],
+      "related_checks": ["reward conservation", "no overclaim", "index monotonicity", "precision tests"],
+      "search_tags": ["reward-accounting", "staking", "precision"]
+    },
+    {
+      "term": "AMM invariant",
+      "aliases": ["reserve manipulation", "liquidity", "swap invariant", "kLast", "sqrtPriceX96"],
+      "category": "historical exploit pattern",
+      "related_patterns": ["AMM invariant manipulation review recommended"],
+      "related_checks": ["invariant conservation", "swap does not create value", "liquidity proportionality"],
+      "search_tags": ["amm-invariant", "liquidity", "reserve-manipulation"]
+    },
+    {
+      "term": "lending liquidation",
+      "aliases": ["collateral", "debt", "healthFactor", "liquidate", "loanToValue"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["liquidation and collateral accounting review recommended"],
+      "related_checks": ["collateralization invariant", "liquidation solvency", "interest index monotonicity"],
+      "search_tags": ["lending", "liquidation", "collateral", "oracle-risk"]
+    },
+    {
+      "term": "cross-chain validation",
+      "aliases": ["bridge", "endpoint", "relayer", "message", "LayerZero", "CCIP", "Hyperlane", "Wormhole"],
+      "category": "pre-audit readiness",
+      "related_patterns": ["cross-chain message validation review recommended"],
+      "related_checks": ["source validation", "sender validation", "replay rejection", "trusted endpoint documentation"],
+      "search_tags": ["cross-chain", "bridge-validation", "message-authentication"]
+    },
+    {
+      "term": "pre-audit readiness",
+      "aliases": ["audit preparation", "readiness score", "audit blocker", "missing invariant", "launch report"],
+      "category": "product",
+      "related_patterns": ["repository readiness gap", "missing invariant coverage"],
+      "related_checks": ["readiness report", "GitHub Action", "Markdown report", "JSON report"],
+      "search_tags": ["pre-audit", "audit-readiness", "indie-defi", "github-action"]
+    },
+    {
+      "term": "ERC4626",
+      "aliases": ["vault standard", "previewDeposit", "previewWithdraw", "maxRedeem", "asset()"],
+      "category": "vault rule pack",
+      "related_patterns": ["ERC4626/share inflation or donation sensitivity readiness gap", "vault accounting invariant readiness gap"],
+      "related_checks": ["preview/action equivalence", "convertToShares/convertToAssets consistency", "max function boundaries"],
+      "search_tags": ["erc4626", "vault-security", "share-accounting", "pre-audit"]
+    },
+    {
+      "term": "share inflation",
+      "aliases": ["donation sensitivity", "low supply share accounting", "share price manipulation", "donation risk class"],
+      "category": "vault rule pack",
+      "related_patterns": ["ERC4626/share inflation or donation sensitivity readiness gap"],
+      "related_checks": ["donation tests", "first deposit tests", "rounding direction tests", "low supply tests"],
+      "search_tags": ["share-inflation-risk", "donation-sensitivity", "vault-invariant"]
+    },
+    {
+      "term": "strategy accounting",
+      "aliases": ["strategy debt", "harvest", "gain", "loss", "totalDebt", "withdrawFromStrategy"],
+      "category": "vault rule pack",
+      "related_patterns": ["strategy debt/gain/loss accounting readiness gap"],
+      "related_checks": ["mock strategy gain", "mock strategy loss", "debt update", "harvest/report tests"],
+      "search_tags": ["strategy-accounting", "gain-loss", "vault-lifecycle"]
+    },
+    {
+      "term": "withdrawal queue",
+      "aliases": ["requestWithdraw", "claimWithdraw", "cooldown", "pendingWithdraw", "liquidityBuffer"],
+      "category": "vault rule pack",
+      "related_patterns": ["withdrawal liquidity and queue lifecycle readiness gap"],
+      "related_checks": ["request lifecycle", "claim lifecycle", "cancel lifecycle", "liquidity buffer tests"],
+      "search_tags": ["withdrawal-queue", "vault-lifecycle", "liquidity-buffer"]
+    },
+    {
+      "term": "oracle-dependent vault",
+      "aliases": ["LP token pricing", "pool price", "Chainlink vault", "Yearn-style vault risk", "Harvest-style oracle risk"],
+      "category": "vault rule pack",
+      "related_patterns": ["Harvest/Yearn-style oracle or pool price readiness gap"],
+      "related_checks": ["stale price rejection", "pool price bounds", "TWAP sanity check", "decimals normalization"],
+      "search_tags": ["oracle-risk", "vault-pricing", "pool-pricing"]
+    },
+    {
+      "term": "vault invariant tests",
+      "aliases": ["totalAssets invariant", "share accounting invariant", "fee accounting invariant", "strategy loss invariant"],
+      "category": "vault rule pack",
+      "related_patterns": ["vault accounting invariant readiness gap"],
+      "related_checks": ["totalAssets consistency", "deposit-withdraw roundtrip", "fee accounting conservation", "strategy loss handling"],
+      "search_tags": ["vault-invariant", "foundry", "invariant-testing"]
+    },
+    {
+      "term": "PR readiness comment",
+      "aliases": ["pull request comment", "GitHub Action comment", "Arkheionx PR comment", "readiness comment"],
+      "category": "GitHub Action UX",
+      "related_patterns": ["pre-audit readiness feedback loop"],
+      "related_checks": ["score summary", "top readiness gaps", "marker update mode"],
+      "search_tags": ["github-action", "pull-request", "pre-audit-readiness"]
+    },
+    {
+      "term": "generated issue checklist",
+      "aliases": ["issue checklist", "remediation checklist", "launch checklist", "readiness checklist"],
+      "category": "GitHub Action UX",
+      "related_patterns": ["readiness gap remediation planning"],
+      "related_checks": ["finding IDs", "suggested tests", "documentation tasks"],
+      "search_tags": ["issue-checklist", "audit-readiness", "indie-defi"]
+    },
+    {
+      "term": "finding IDs",
+      "aliases": ["ARK-VLT-001", "ARK-ORC-001", "stable readiness finding", "readiness gap ID"],
+      "category": "report UX",
+      "related_patterns": ["stable finding references"],
+      "related_checks": ["JSON findings", "Markdown gap sections", "suppression by ID"],
+      "search_tags": ["finding-id", "json-schema", "report-ux"]
+    },
+    {
+      "term": "Arkheionx config",
+      "aliases": [".arkheionx.json", "false positive suppression", "ignore paths", "suppress findings"],
+      "category": "configuration",
+      "related_patterns": ["documented false-positive suppression"],
+      "related_checks": ["suppressed_findings", "ignore_paths", "additional_search_tags"],
+      "search_tags": ["config", "false-positive", "local-static-analysis"]
+    },
+    {
+      "term": "SARIF",
+      "aliases": ["SARIF output", "sarif-output", "GitHub Code Scanning", "upload-sarif"],
+      "category": "GitHub security workflow",
+      "related_patterns": ["Code Scanning-compatible readiness output"],
+      "related_checks": ["readiness_gap properties", "not_formal_audit", "SARIF rules and results"],
+      "search_tags": ["sarif", "code-scanning", "github-security-workflow"]
+    },
+    {
+      "term": "GitHub Code Scanning",
+      "aliases": ["code scanning", "security-events", "upload-sarif", "CodeQL upload SARIF"],
+      "category": "GitHub security workflow",
+      "related_patterns": ["pre-audit readiness in GitHub security workflows"],
+      "related_checks": ["security-events: write", "github/codeql-action/upload-sarif", "readiness result severity"],
+      "search_tags": ["github-code-scanning", "sarif", "pre-audit-readiness"]
+    },
+    {
+      "term": "baseline diff",
+      "aliases": ["readiness baseline", "compare baseline", "diff mode", "pre-audit diff"],
+      "category": "report UX",
+      "related_patterns": ["new and resolved readiness gap tracking"],
+      "related_checks": ["new findings", "resolved findings", "unchanged findings", "changed findings"],
+      "search_tags": ["baseline-diff", "readiness-tracking", "report-diff"]
+    },
+    {
+      "term": "finding fingerprint",
+      "aliases": ["stable fingerprint", "fingerprint_version", "readiness fingerprint", "finding hash"],
+      "category": "report UX",
+      "related_patterns": ["stable baseline comparison"],
+      "related_checks": ["id", "category", "title", "detected signals", "affected files"],
+      "search_tags": ["finding-fingerprint", "baseline", "json-schema"]
+    },
+    {
+      "term": "CI gating",
+      "aliases": ["fail threshold", "fail-score-below", "fail-on-new-high", "fail-on-unsuppressed-high"],
+      "category": "GitHub Action UX",
+      "related_patterns": ["optional readiness threshold"],
+      "related_checks": ["score threshold", "new high readiness gaps", "unsuppressed high readiness gaps"],
+      "search_tags": ["ci-gating", "fail-threshold", "audit-readiness"]
+    },
+    {
+      "term": "new readiness gaps",
+      "aliases": ["new findings", "new gaps", "regression readiness", "diff new"],
+      "category": "baseline diff",
+      "related_patterns": ["new local/static readiness signals since baseline"],
+      "related_checks": ["compare-baseline", "diff-output", "diff-json-output"],
+      "search_tags": ["new-readiness-gaps", "baseline-diff", "pre-audit-diff"]
+    },
+    {
+      "term": "resolved readiness gaps",
+      "aliases": ["resolved findings", "closed gaps", "remediated readiness", "diff resolved"],
+      "category": "baseline diff",
+      "related_patterns": ["readiness gap no longer detected since baseline"],
+      "related_checks": ["baseline comparison", "remediation tracking", "diff report"],
+      "search_tags": ["resolved-readiness-gaps", "baseline-diff", "remediation"]
+    },
+    {
+      "term": "pre-audit diff",
+      "aliases": ["readiness diff", "report diff", "baseline comparison", "diff report"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["tracking readiness changes before formal audit"],
+      "related_checks": ["new/resolved/unchanged counts", "PR comment diff", "issue checklist diff"],
+      "search_tags": ["pre-audit-diff", "readiness-baseline", "github-action"]
+    },
+    {
+      "term": "GitHub security workflow",
+      "aliases": ["Actions security workflow", "Code Scanning workflow", "pre-audit CI workflow", "security-events"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["GitHub-native pre-audit readiness process"],
+      "related_checks": ["SARIF upload", "Actions summary", "PR comment", "baseline diff"],
+      "search_tags": ["github-security-workflow", "code-scanning", "pre-audit-readiness"]
+    },
+    {
+      "term": "GitHub issue workflow",
+      "aliases": ["generated issue plan", "issue creation dry-run", "readiness remediation", "issue plan JSON"],
+      "category": "GitHub-native workflow",
+      "related_patterns": ["readiness gap remediation planning"],
+      "related_checks": ["issue markers", "duplicate prevention", "dry-run output", "max issue limit"],
+      "search_tags": ["github-issue-workflow", "issue-plan", "readiness-remediation"]
+    },
+    {
+      "term": "oracle rule pack",
+      "aliases": ["ARK-ORC", "price feed checks", "stale price tests", "oracle readiness"],
+      "category": "rule pack",
+      "related_patterns": ["oracle-dependent logic readiness gap"],
+      "related_checks": ["stale round rejection", "decimals normalization", "price bounds", "oracle update access control"],
+      "search_tags": ["oracle-rule-pack", "oracle-risk", "pre-audit-readiness"]
+    },
+    {
+      "term": "access control rule pack",
+      "aliases": ["ARK-ACC", "upgradeability rule pack", "ARK-UPG", "privileged setters"],
+      "category": "rule pack",
+      "related_patterns": ["privileged control readiness gap", "upgrade boundary readiness gap"],
+      "related_checks": ["role-boundary tests", "initializer tests", "upgrade authorization", "emergency constraints"],
+      "search_tags": ["access-control-rule-pack", "upgradeability", "admin-risk"]
+    },
+    {
+      "term": "reentrancy value flow rule pack",
+      "aliases": ["ARK-REENT", "external call review", "claim flow tests", "callback path"],
+      "category": "rule pack",
+      "related_patterns": ["reentrancy-sensitive value flow review recommended"],
+      "related_checks": ["state transition tests", "double claim prevention", "callback receiver mock", "external call ordering"],
+      "search_tags": ["reentrancy-rule-pack", "value-flow", "defensive-review"]
+    },
+    {
+      "term": "reward accounting rule pack",
+      "aliases": ["ARK-RWD", "staking rule pack", "rewardPerToken", "accumulator"],
+      "category": "rule pack",
+      "related_patterns": ["reward accounting mismatch review recommended"],
+      "related_checks": ["reward conservation", "no overclaim", "accumulator monotonicity", "emission update constraints"],
+      "search_tags": ["reward-accounting-rule-pack", "staking", "precision"]
+    },
+    {
+      "term": "semantic-lite analysis",
+      "aliases": ["Solidity structure extraction", "semantic lite", "function evidence", "local parser"],
+      "category": "analysis quality",
+      "related_patterns": ["evidence-based readiness finding"],
+      "related_checks": ["contracts", "functions", "modifiers", "state variables", "test coverage mapping"],
+      "search_tags": ["semantic-lite", "solidity-structure", "false-positive-reduction"]
+    },
+    {
+      "term": "evidence-based findings",
+      "aliases": ["finding evidence", "confidence reason", "detection sources", "affected functions"],
+      "category": "analysis quality",
+      "related_patterns": ["readiness finding with source evidence"],
+      "related_checks": ["semantic-lite evidence", "test coverage evidence", "Slither evidence", "keyword evidence"],
+      "search_tags": ["finding-evidence", "confidence-scoring", "readiness-gap"]
+    },
+    {
+      "term": "Slither integration",
+      "aliases": ["Slither JSON", "slither analyzer", "optional Slither", "local Slither"],
+      "category": "analysis quality",
+      "related_patterns": ["local static analyzer evidence enrichment"],
+      "related_checks": ["--slither", "--slither-json", "--slither-output", "--slither-strict"],
+      "search_tags": ["slither-integration", "slither-json", "local-static-analysis"]
+    },
+    {
+      "term": "false positive reduction",
+      "aliases": ["keyword-only downgrade", "low-confidence findings", "noise reduction", "confidence scoring"],
+      "category": "analysis quality",
+      "related_patterns": ["downgraded keyword-only readiness signal"],
+      "related_checks": ["downgrade_keyword_only", "min_confidence_for_issue_plan", "test coverage mapping"],
+      "search_tags": ["false-positive-reduction", "low-confidence", "evidence-based"]
+    },
+    {
+      "term": "Launch Report OS",
+      "aliases": ["Launch Readiness Report", "launch report", "client-ready report", "audit handoff package"],
+      "category": "delivery artifact",
+      "related_patterns": ["client-facing readiness deliverable"],
+      "related_checks": ["executive summary", "remediation roadmap", "generated artifacts", "formal audit preparation"],
+      "search_tags": ["launch-report", "client-ready-report", "pre-audit-readiness"]
+    },
+    {
+      "term": "Pre-Audit Sprint",
+      "aliases": ["sprint plan", "pre-audit sprint workflow", "remediation sprint", "sprint checklist"],
+      "category": "delivery artifact",
+      "related_patterns": ["readiness findings converted into sprint backlog"],
+      "related_checks": ["3 day sprint", "5 day sprint", "7 day sprint", "10 day sprint", "sprint exit criteria"],
+      "search_tags": ["pre-audit-sprint", "remediation-roadmap", "delivery-artifacts"]
+    },
+    {
+      "term": "Contest Readiness Mode",
+      "aliases": ["Contest Readiness Report", "pre-contest readiness", "bug bounty readiness", "audit contest preparation"],
+      "category": "delivery artifact",
+      "related_patterns": ["authorized external review preparation"],
+      "related_checks": ["scope checklist", "researcher onboarding checklist", "known limitations", "pre-contest priorities"],
+      "search_tags": ["contest-readiness", "scope-checklist", "researcher-onboarding"]
+    },
+    {
+      "term": "remediation roadmap",
+      "aliases": ["phase-based remediation", "readiness roadmap", "remediation phases", "owner-ready tasks"],
+      "category": "delivery artifact",
+      "related_patterns": ["readiness gaps grouped into launch phases"],
+      "related_checks": ["launch blockers", "high-priority gaps", "documentation hardening", "audit handoff"],
+      "search_tags": ["remediation-roadmap", "issue-plan", "launch-readiness"]
+    },
+    {
+      "term": "executive summary",
+      "aliases": ["founder summary", "stakeholder summary", "one-page summary", "grant update"],
+      "category": "delivery artifact",
+      "related_patterns": ["non-technical readiness handoff"],
+      "related_checks": ["top themes", "top actions", "readiness status", "recommended next step"],
+      "search_tags": ["executive-summary", "founder-ready", "delivery-artifacts"]
+    },
+    {
+      "term": "delivery artifacts",
+      "aliases": ["client-ready artifacts", "Launch Report", "Sprint Plan", "Contest Readiness Report"],
+      "category": "delivery workflow",
+      "related_patterns": ["scanner output converted into service deliverables"],
+      "related_checks": ["Markdown report", "JSON report", "SARIF", "issue plan", "launch report"],
+      "search_tags": ["delivery-artifacts", "github-native", "service-delivery"]
+    },
+    {
+      "term": "try Arkheionx in 5 minutes",
+      "aliases": ["five minute demo", "quick demo", "demo scan", "try in 5 minutes"],
+      "category": "public demo",
+      "related_patterns": ["reproducible local readiness demo"],
+      "related_checks": ["demo reports", "demo issue dry-run", "toy fixture"],
+      "search_tags": ["try-in-5-minutes", "public-demo", "onboarding"]
+    },
+    {
+      "term": "public demo workflow",
+      "aliases": ["demo GitHub Action workflow", "arkheionx-demo.yml", "demo artifacts", "public demo reports"],
+      "category": "public demo",
+      "related_patterns": ["workflow_dispatch demo artifact generation"],
+      "related_checks": ["upload artifact", "no issue creation", "no token required"],
+      "search_tags": ["public-demo-workflow", "github-action", "demo-artifacts"]
+    },
+    {
+      "term": "oracle staking demo",
+      "aliases": ["demo protocol", "oracle staking fixture", "reproducible readiness demo"],
+      "category": "case study",
+      "related_patterns": ["toy oracle and reward accounting readiness workflow"],
+      "related_checks": ["oracle rule pack", "reward accounting rule pack", "case study"],
+      "search_tags": ["oracle-staking-demo", "case-study", "rule-calibration"]
+    },
+    {
+      "term": "before after case study",
+      "aliases": ["before/after remediation", "fixed fixture", "readiness improvement demo"],
+      "category": "case study",
+      "related_patterns": ["toy remediation comparison"],
+      "related_checks": ["before report", "after report", "score comparison", "evidence improvements"],
+      "search_tags": ["before-after", "case-study", "remediation"]
+    },
+    {
+      "term": "rule calibration",
+      "aliases": ["calibration summary", "false positive calibration", "confidence calibration"],
+      "category": "analysis quality",
+      "related_patterns": ["evidence-based rule tuning"],
+      "related_checks": ["confidence model", "downgrade logic", "common false positives"],
+      "search_tags": ["rule-calibration", "false-positive-review", "confidence-scoring"]
+    },
+    {
+      "term": "external validation feedback",
+      "aliases": ["external feedback", "validation feedback", "public feedback", "feedback workflow"],
+      "category": "community feedback",
+      "related_patterns": ["sanitized user feedback for calibration"],
+      "related_checks": ["external validation issue template", "false positive issue template", "no secrets"],
+      "search_tags": ["external-validation", "feedback", "open-source-growth"]
+    },
+    {
+      "term": "case study template",
+      "aliases": ["case_study_template.md", "generated case study", "case study outline"],
+      "category": "case study",
+      "related_patterns": ["structured readiness case study"],
+      "related_checks": ["scope", "score", "top findings", "evidence examples", "limitations"],
+      "search_tags": ["case-study-template", "documentation", "demo"]
+    },
+    {
+      "term": "launch post",
+      "aliases": ["launch posts", "outreach kit", "v0.8 launch posts", "release announcement draft"],
+      "category": "growth",
+      "related_patterns": ["honest public launch communication"],
+      "related_checks": ["no unsupported traction claims", "no guarantee claims", "demo workflow CTA"],
+      "search_tags": ["launch-post", "outreach-kit", "public-demo"]
+    },
+    {
+      "term": "security memory graph",
+      "aliases": ["finding knowledge map", "local knowledge graph", "security memory map"],
+      "category": "security memory",
+      "related_patterns": ["historical pattern similarity", "broken invariant mapping", "failed assumption mapping"],
+      "related_checks": ["metadata/security_memory_graph.json", "reports/security_memory_graph.md", "search_knowledge.py"],
+      "search_tags": ["security-memory-graph", "knowledge-map", "local-static-analysis"]
+    },
+    {
+      "term": "finding knowledge map",
+      "aliases": ["finding-to-pattern mapping", "ARK finding map", "readiness knowledge map"],
+      "category": "security memory",
+      "related_patterns": ["finding ID mapped to historical pattern"],
+      "related_checks": ["ARK-ORC-001", "ARK-VLT-001", "related_pocs", "suggested_tests"],
+      "search_tags": ["finding-knowledge-map", "finding-id", "historical-pattern-similarity"]
+    },
+    {
+      "term": "rule calibration matrix",
+      "aliases": ["calibration matrix", "confidence matrix", "rule confidence requirements"],
+      "category": "analysis quality",
+      "related_patterns": ["false positive reduction", "keyword-only downgrade"],
+      "related_checks": ["high confidence requires", "downgrade conditions", "common false positives"],
+      "search_tags": ["rule-calibration-matrix", "confidence-scoring", "false-positive-reduction"]
+    },
+    {
+      "term": "oracle stale price",
+      "aliases": ["Chainlink updatedAt", "heartbeat validation", "stale round", "oracle freshness"],
+      "category": "security memory",
+      "related_patterns": ["oracle stale price or freshness assumption failure"],
+      "related_checks": ["ARK-ORC-001", "stale round rejection", "heartbeat bound test"],
+      "search_tags": ["oracle-stale-price", "chainlink", "historical-pattern"]
+    },
+    {
+      "term": "vault donation attack",
+      "aliases": ["share inflation", "donation sensitivity", "first deposit attack class"],
+      "category": "security memory",
+      "related_patterns": ["vault share inflation or donation sensitivity"],
+      "related_checks": ["ARK-VLT-001", "ARK-VLT-003", "donation resistance", "share accounting invariant"],
+      "search_tags": ["vault-donation", "share-accounting", "vault-security"]
+    },
+    {
+      "term": "reentrancy value flow",
+      "aliases": ["callback capable token", "external call before state update", "claim refund flow"],
+      "category": "security memory",
+      "related_patterns": ["external call before state update", "callback capable token assumption"],
+      "related_checks": ["ARK-REENT-001", "reentrant receiver mock", "double claim prevention"],
+      "search_tags": ["reentrancy-value-flow", "callback", "defensive-test"]
+    },
+    {
+      "term": "reward overclaim",
+      "aliases": ["accumulator precision", "reward conservation", "claim twice"],
+      "category": "security memory",
+      "related_patterns": ["reward overclaim or emission accounting mismatch"],
+      "related_checks": ["ARK-RWD-001", "reward conservation", "rewardPerToken monotonicity"],
+      "search_tags": ["reward-overclaim", "staking", "accounting-invariant"]
+    },
+    {
+      "term": "initializer protection",
+      "aliases": ["upgrade authorization", "proxy initializer", "initializer runs once"],
+      "category": "security memory",
+      "related_patterns": ["unprotected initializer", "upgrade authorization gap"],
+      "related_checks": ["ARK-UPG-001", "ARK-ACC-001", "initializer cannot run twice"],
+      "search_tags": ["initializer-protection", "upgradeability", "access-control"]
+    },
+    {
+      "term": "broken invariant mapping",
+      "aliases": ["failed assumption mapping", "exploit primitive mapping", "suggested defensive tests"],
+      "category": "security memory",
+      "related_patterns": ["historical PoC to readiness finding mapping"],
+      "related_checks": ["security memory graph", "finding knowledge map", "rule calibration matrix"],
+      "search_tags": ["broken-invariant", "failed-assumption", "suggested-tests"]
+    },
+    {
+      "term": "stable public release",
+      "aliases": ["v1.0.0", "schema freeze", "production-ready documentation"],
+      "category": "release",
+      "related_patterns": ["stable pre-audit readiness workflow"],
+      "related_checks": ["CLI reference", "GitHub Action stable inputs", "schema reference"],
+      "search_tags": ["v1.0.0", "stable-release", "schema-freeze"]
+    },
+    {
+      "term": "CLI reference",
+      "aliases": ["stable CLI flags", "pre_audit_scan.py help", "scanner interface"],
+      "category": "documentation",
+      "related_patterns": ["stable local/static scanner workflow"],
+      "related_checks": ["--root", "--json-output", "--sarif-output", "--issue-plan-output"],
+      "search_tags": ["cli-reference", "stable-flags", "pre-audit-scanner"]
+    },
+    {
+      "term": "JSON schema",
+      "aliases": ["schema reference", "pre-audit report schema", "issue plan schema", "baseline schema"],
+      "category": "schema",
+      "related_patterns": ["machine-readable readiness output"],
+      "related_checks": ["schemas/pre-audit-report.schema.json", "schemas/issue-plan.schema.json"],
+      "search_tags": ["json-schema", "schema-freeze", "stable-output"]
+    },
+    {
+      "term": "output artifact naming",
+      "aliases": ["recommended output names", "generated artifacts", "reports directory"],
+      "category": "documentation",
+      "related_patterns": ["self-ingestion guard", "generated artifact ignore"],
+      "related_checks": ["ARKHEIONX_PRE_AUDIT_REPORT.md", "arkheionx-report.json", "arkheionx.sarif.json"],
+      "search_tags": ["output-artifacts", "generated-artifacts", "reports"]
+    },
+    {
+      "term": "feedback loop",
+      "aliases": ["external calibration", "feedback workflow", "calibration workflow"],
+      "category": "feedback",
+      "related_patterns": ["rule tuning from safe sanitized feedback"],
+      "related_checks": ["false positive report", "false negative report", "report quality feedback"],
+      "search_tags": ["feedback-loop", "external-calibration", "v1.1.0"]
+    },
+    {
+      "term": "false positive report",
+      "aliases": ["noisy finding", "false positive calibration", "finding too noisy"],
+      "category": "feedback",
+      "related_patterns": ["confidence downgrade", "keyword-only downgrade", "evidence source review"],
+      "related_checks": ["rule calibration backlog", "feedback dashboard"],
+      "search_tags": ["false-positive", "calibration", "report-feedback"]
+    },
+    {
+      "term": "false negative report",
+      "aliases": ["missed finding", "missed readiness signal", "missing readiness gap"],
+      "category": "feedback",
+      "related_patterns": ["rule coverage gap", "test coverage gap"],
+      "related_checks": ["rule calibration request", "feedback triage"],
+      "search_tags": ["false-negative", "calibration", "readiness-signal"]
+    },
+    {
+      "term": "rule calibration backlog",
+      "aliases": ["calibration backlog", "rule tuning backlog", "feedback backlog"],
+      "category": "feedback",
+      "related_patterns": ["maintainer triage", "confidence scoring updates"],
+      "related_checks": ["metadata/rule_calibration_backlog.json", "reports/rule_calibration_backlog.md"],
+      "search_tags": ["rule-calibration", "backlog", "feedback-dashboard"]
+    },
+    {
+      "term": "feedback dashboard",
+      "aliases": ["feedback summary", "calibration dashboard", "external feedback dashboard"],
+      "category": "feedback",
+      "related_patterns": ["synthetic feedback separated from public external feedback"],
+      "related_checks": ["reports/feedback_dashboard.md", "generate_feedback_dashboard.py"],
+      "search_tags": ["feedback-dashboard", "external-validation", "calibration"]
+    },
+    {
+      "term": "public feedback guide",
+      "aliases": ["feedback guide", "safe feedback", "public feedback"],
+      "category": "feedback",
+      "related_patterns": ["safe disclosure", "sanitized report sharing"],
+      "related_checks": ["docs/PUBLIC_FEEDBACK_GUIDE.md", "docs/FEEDBACK_LOOP.md"],
+      "search_tags": ["public-feedback", "safe-disclosure", "feedback-guide"]
+    },
+    {
+      "term": "validation levels",
+      "aliases": ["external validation levels", "validation maturity", "allowed claims"],
+      "category": "external validation",
+      "related_patterns": ["toy demo vs public evaluation distinction"],
+      "related_checks": ["docs/VALIDATION_LEVELS.md", "docs/EXTERNAL_VALIDATION.md"],
+      "search_tags": ["validation-levels", "external-evaluation", "honest-claims"]
+    },
+    {
+      "term": "GitHub Action feedback",
+      "aliases": ["action feedback", "workflow feedback", "CI feedback"],
+      "category": "feedback",
+      "related_patterns": ["artifact generation workflow", "stable action inputs"],
+      "related_checks": ["docs/GITHUB_ACTION_USAGE.md", ".github/ISSUE_TEMPLATE/github_action_feedback.yml"],
+      "search_tags": ["github-action-feedback", "ci", "workflow"]
+    },
+    {
+      "term": "report quality feedback",
+      "aliases": ["report wording", "report clarity", "next-step feedback"],
+      "category": "feedback",
+      "related_patterns": ["builder readability", "researcher evidence quality"],
+      "related_checks": ["Launch Report", "Pre-Audit Report", "Executive Summary"],
+      "search_tags": ["report-quality", "readability", "actionability"]
+    },
+    {
+      "term": "paid offer",
+      "aliases": ["paid readiness support", "commercial positioning", "service package"],
+      "category": "business",
+      "related_patterns": ["readiness engagement", "not a formal audit"],
+      "related_checks": ["docs/business/PAID_OFFER.md", "reports/paid_offer_index.md"],
+      "search_tags": ["paid-offer", "readiness-support", "commercial"]
+    },
+    {
+      "term": "readiness snapshot",
+      "aliases": ["Arkheionx Readiness Snapshot", "quick readiness scan", "blocker scan"],
+      "category": "business",
+      "related_patterns": ["top readiness gaps", "issue plan review"],
+      "related_checks": ["docs/business/SERVICE_PACKAGES.md", "templates/readiness_snapshot_scope.md"],
+      "search_tags": ["readiness-snapshot", "pre-audit", "paid-offer"]
+    },
+    {
+      "term": "pre-audit sprint",
+      "aliases": ["Arkheionx Pre-Audit Sprint", "sprint plan", "guided readiness workflow"],
+      "category": "business",
+      "related_patterns": ["remediation roadmap", "issue plan triage"],
+      "related_checks": ["docs/business/SERVICE_PACKAGES.md", "templates/pre_audit_sprint_scope.md"],
+      "search_tags": ["pre-audit-sprint", "remediation-roadmap", "paid-offer"]
+    },
+    {
+      "term": "contest readiness pack",
+      "aliases": ["Contest Readiness Pack", "scope checklist", "researcher onboarding"],
+      "category": "business",
+      "related_patterns": ["contest preparation", "authorized external review"],
+      "related_checks": ["docs/business/SERVICE_PACKAGES.md", "templates/contest_readiness_scope.md"],
+      "search_tags": ["contest-readiness-pack", "scope-checklist", "paid-offer"]
+    },
+    {
+      "term": "GitHub Action setup",
+      "aliases": ["CI setup", "SARIF setup", "report artifact setup"],
+      "category": "business",
+      "related_patterns": ["GitHub-native readiness workflow"],
+      "related_checks": ["docs/GITHUB_ACTION_USAGE.md", "docs/business/SERVICE_PACKAGES.md"],
+      "search_tags": ["github-action-setup", "ci", "paid-offer"]
+    },
+    {
+      "term": "paid work boundaries",
+      "aliases": ["commercial boundaries", "service exclusions", "safety boundaries"],
+      "category": "business",
+      "related_patterns": ["readiness support boundaries", "no live-chain behavior"],
+      "related_checks": ["docs/business/PAID_WORK_BOUNDARIES.md", "docs/business/SALES_FAQ.md"],
+      "search_tags": ["paid-work-boundaries", "safety", "commercial"]
+    },
+    {
+      "term": "client intake",
+      "aliases": ["client intake template", "repo intake", "readiness intake"],
+      "category": "business",
+      "related_patterns": ["authorized repository intake"],
+      "related_checks": ["docs/business/CLIENT_INTAKE.md", "templates/client_intake.md"],
+      "search_tags": ["client-intake", "scope-of-work", "paid-offer"]
+    },
+    {
+      "term": "scope of work",
+      "aliases": ["SOW", "scope template", "proposal template"],
+      "category": "business",
+      "related_patterns": ["paid engagement scoping"],
+      "related_checks": ["docs/business/SAMPLE_SCOPE_OF_WORK.md", "docs/business/PROPOSAL_TEMPLATE.md"],
+      "search_tags": ["scope-of-work", "proposal-template", "paid-offer"]
+    },
+    {
+      "term": "pricing ladder",
+      "aliases": ["pricing guidance", "pilot pricing", "service pricing"],
+      "category": "business",
+      "related_patterns": ["offer tiers", "pilot rules"],
+      "related_checks": ["docs/business/PRICING_LADDER.md", "metadata/paid_offer_catalog.json"],
+      "search_tags": ["pricing-ladder", "paid-offer", "commercial"]
+    },
+    {
+      "term": "ecosystem pack",
+      "aliases": ["Arkheionx Ecosystem Pack", "ecosystem readiness pack", "multi-repo readiness pack"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["multi-repo readiness", "anonymized gap summary"],
+      "related_checks": ["docs/ecosystem/ECOSYSTEM_PACK.md", "reports/ecosystem_readiness_summary.md"],
+      "search_tags": ["ecosystem-pack", "multi-repo-readiness", "readiness-support"]
+    },
+    {
+      "term": "ecosystem readiness",
+      "aliases": ["ecosystem-level readiness", "portfolio readiness", "cohort readiness"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["common readiness gaps", "repo-by-repo readiness"],
+      "related_checks": ["docs/ecosystem/ECOSYSTEM_READINESS_PILOT.md", "templates/ecosystem_readiness_pilot_scope.md"],
+      "search_tags": ["ecosystem-readiness", "cohort-readiness", "audit-prep"]
+    },
+    {
+      "term": "multi-repo readiness",
+      "aliases": ["multiple repo readiness", "repo cohort scan", "authorized multi-repo workflow"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["local JSON report collection", "manifest-based summary"],
+      "related_checks": ["docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md", "templates/ecosystem_manifest.example.json"],
+      "search_tags": ["multi-repo-readiness", "authorized-repositories", "local-static"]
+    },
+    {
+      "term": "ecosystem intake",
+      "aliases": ["ecosystem client intake", "multi-repo intake", "cohort intake"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["authorization collection", "anonymization preference"],
+      "related_checks": ["docs/ecosystem/ECOSYSTEM_INTAKE.md", "templates/ecosystem_intake.md"],
+      "search_tags": ["ecosystem-intake", "authorization", "scope"]
+    },
+    {
+      "term": "anonymized reporting",
+      "aliases": ["anonymized gap summary", "repo aliases", "redacted ecosystem report"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["private details redacted", "public summary boundaries"],
+      "related_checks": ["docs/ecosystem/ANONYMIZED_REPORTING.md", "reports/ecosystem_common_gaps.md"],
+      "search_tags": ["anonymized-reporting", "common-gap-report", "safe-disclosure"]
+    },
+    {
+      "term": "common gap report",
+      "aliases": ["common readiness gaps", "recurring findings", "rule-family heatmap"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["rule-family counts", "recurring blockers"],
+      "related_checks": ["reports/ecosystem_common_gaps.md", "metadata/ecosystem_pilot_example.json"],
+      "search_tags": ["common-gap-report", "recurring-findings", "rule-family-heatmap"]
+    },
+    {
+      "term": "cohort readiness",
+      "aliases": ["audit-prep cohort", "builder cohort readiness", "accelerator readiness"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["shared readiness themes", "ecosystem walkthrough"],
+      "related_checks": ["docs/ecosystem/COHORT_READINESS_GUIDE.md", "docs/ecosystem/ECOSYSTEM_OPERATOR_FAQ.md"],
+      "search_tags": ["cohort-readiness", "ecosystem-operator", "readiness-pilot"]
+    },
+    {
+      "term": "repo-by-repo readiness",
+      "aliases": ["repo readiness table", "repository readiness table", "repository aliases"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["score bands by repo alias", "private details redacted"],
+      "related_checks": ["reports/ecosystem_readiness_summary.md", "metadata/ecosystem_pack_schema.json"],
+      "search_tags": ["repo-by-repo-readiness", "ecosystem-summary", "anonymized"]
+    },
+    {
+      "term": "ecosystem readiness summary",
+      "aliases": ["ecosystem summary", "ecosystem pilot report", "readiness distribution"],
+      "category": "ecosystem readiness",
+      "related_patterns": ["readiness distribution", "operator actions"],
+      "related_checks": ["reports/ecosystem_readiness_summary.md", "scripts/generate_ecosystem_report.py"],
+      "search_tags": ["ecosystem-readiness-summary", "synthetic-report", "markdown"]
+    },
+    {
+      "term": "AMM rule pack",
+      "aliases": ["AMM readiness", "liquidity pool readiness", "swap readiness"],
+      "category": "rule pack",
+      "related_patterns": ["AMM invariant assumptions", "LP share accounting"],
+      "related_checks": ["docs/AMM_RULE_PACK.md", "examples/amm-fixture/README.md"],
+      "search_tags": ["amm-rule-pack", "amm-readiness", "liquidity-pool"]
+    },
+    {
+      "term": "AMM invariant",
+      "aliases": ["constant product", "stableswap invariant", "reserve invariant"],
+      "category": "AMM",
+      "related_patterns": ["swap invariant conservation", "reserve accounting"],
+      "related_checks": ["ARK-AMM-001", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["amm-invariant", "constant-product", "reserve-accounting"]
+    },
+    {
+      "term": "LP share accounting",
+      "aliases": ["liquidity shares", "pool token accounting", "mint burn boundary"],
+      "category": "AMM",
+      "related_patterns": ["first liquidity provider", "proportional withdrawal"],
+      "related_checks": ["ARK-AMM-002", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["lp-share-accounting", "mint-burn", "dust-handling"]
+    },
+    {
+      "term": "slippage boundary",
+      "aliases": ["minOut", "amountOutMin", "deadline", "stale quote"],
+      "category": "AMM",
+      "related_patterns": ["user output bound", "quote freshness"],
+      "related_checks": ["ARK-AMM-005", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["slippage", "min-output", "quote-boundary"]
+    },
+    {
+      "term": "reserve accounting",
+      "aliases": ["reserve0 reserve1", "getReserves", "pool reserve accounting"],
+      "category": "AMM",
+      "related_patterns": ["reserve price", "pool accounting"],
+      "related_checks": ["ARK-AMM-001", "ARK-AMM-003", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["reserve-accounting", "spot-price", "amm"]
+    },
+    {
+      "term": "lending rule pack",
+      "aliases": ["lending readiness", "borrow repay readiness", "lending market readiness"],
+      "category": "rule pack",
+      "related_patterns": ["collateral debt invariant", "liquidation boundary"],
+      "related_checks": ["docs/LENDING_RULE_PACK.md", "examples/lending-fixture/README.md"],
+      "search_tags": ["lending-rule-pack", "lending-readiness", "borrow-repay"]
+    },
+    {
+      "term": "collateral debt invariant",
+      "aliases": ["solvency invariant", "health factor invariant", "lending solvency"],
+      "category": "lending",
+      "related_patterns": ["collateral/debt solvency", "unsafe withdrawal boundary"],
+      "related_checks": ["ARK-LEND-001", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["collateral-debt", "solvency", "health-factor"]
+    },
+    {
+      "term": "liquidation boundary",
+      "aliases": ["liquidation threshold", "close factor", "liquidation bonus"],
+      "category": "lending",
+      "related_patterns": ["just above threshold", "just below threshold"],
+      "related_checks": ["ARK-LEND-002", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["liquidation-boundary", "threshold", "lending"]
+    },
+    {
+      "term": "interest index",
+      "aliases": ["borrow index", "accrueInterest", "interest accounting"],
+      "category": "lending",
+      "related_patterns": ["index monotonicity", "rounding drift"],
+      "related_checks": ["ARK-LEND-003", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["interest-index", "borrow-index", "rounding-drift"]
+    },
+    {
+      "term": "lending health factor",
+      "aliases": ["healthFactor", "collateral value", "oracle-dependent liquidation"],
+      "category": "lending",
+      "related_patterns": ["oracle-dependent borrowing", "price shock boundary"],
+      "related_checks": ["ARK-LEND-004", "docs/LENDING_RULE_PACK.md", "docs/ORACLE_RULE_PACK.md"],
+      "search_tags": ["health-factor", "lending-oracle", "price-shock"]
+    },
+    {
+      "term": "invariant generator",
+      "aliases": ["test plan generator", "Arkheionx test plan generator", "generate_test_plan.py"],
+      "category": "test planning",
+      "related_patterns": ["finding to test plan", "defensive invariant scaffolding"],
+      "related_checks": ["scripts/generate_test_plan.py", "docs/INVARIANT_TEST_PLAN_GENERATOR.md"],
+      "search_tags": ["invariant-generator", "test-plan-generator", "foundry"]
+    },
+    {
+      "term": "Foundry invariant skeleton",
+      "aliases": ["invariant skeleton", "Foundry skeleton", "Arkheionx invariant skeleton"],
+      "category": "test planning",
+      "related_patterns": ["local invariant scaffold", "TODO assertions"],
+      "related_checks": ["docs/FOUNDRY_INVARIANT_SKELETONS.md", "templates/invariant_skeletons/"],
+      "search_tags": ["foundry-invariant-skeleton", "local-testing", "defensive-scaffold"]
+    },
+    {
+      "term": "suggested tests",
+      "aliases": ["finding suggested tests", "test recommendations", "defensive test ideas"],
+      "category": "test planning",
+      "related_patterns": ["readiness finding remediation", "rule-family test plan"],
+      "related_checks": ["metadata/finding_test_plan_map.json", "examples/reports/amm-fixture-test-plan.md"],
+      "search_tags": ["suggested-tests", "readiness-remediation", "test-plan"]
+    },
+    {
+      "term": "invariant candidates",
+      "aliases": ["candidate invariants", "property candidates", "invariant ideas"],
+      "category": "test planning",
+      "related_patterns": ["finding to invariant mapping", "Foundry property planning"],
+      "related_checks": ["metadata/finding_test_plan_map.json", "schemas/test_plan.schema.json"],
+      "search_tags": ["invariant-candidates", "property-testing", "foundry"]
+    },
+    {
+      "term": "AMM invariant skeleton",
+      "aliases": ["AMM test plan", "AMM Foundry skeleton", "pool invariant skeleton"],
+      "category": "AMM",
+      "related_patterns": ["constant product invariant", "reserve accounting"],
+      "related_checks": ["examples/reports/ArkheionxAMMInvariants.t.sol", "docs/AMM_RULE_PACK.md"],
+      "search_tags": ["amm-invariant-skeleton", "constant-product", "reserve-accounting"]
+    },
+    {
+      "term": "lending invariant skeleton",
+      "aliases": ["lending test plan", "lending Foundry skeleton", "collateral debt skeleton"],
+      "category": "lending",
+      "related_patterns": ["collateral debt invariant", "liquidation boundary"],
+      "related_checks": ["examples/reports/ArkheionxLendingInvariants.t.sol", "docs/LENDING_RULE_PACK.md"],
+      "search_tags": ["lending-invariant-skeleton", "collateral-debt", "liquidation-boundary"]
+    },
+    {
+      "term": "oracle test plan",
+      "aliases": ["stale oracle test plan", "oracle freshness tests", "oracle invariant candidates"],
+      "category": "oracle",
+      "related_patterns": ["stale price rejection", "decimals normalization"],
+      "related_checks": ["ARK-ORC-001", "metadata/finding_test_plan_map.json"],
+      "search_tags": ["oracle-test-plan", "stale-price", "heartbeat"]
+    },
+    {
+      "term": "reward index invariant",
+      "aliases": ["reward accumulator invariant", "reward index monotonicity", "staking index test"],
+      "category": "reward",
+      "related_patterns": ["accumulator precision", "reward overclaim"],
+      "related_checks": ["ARK-RWD-002", "docs/REWARD_ACCOUNTING_RULE_PACK.md"],
+      "search_tags": ["reward-index", "accumulator", "staking"]
+    },
+    {
+      "term": "report UX",
+      "aliases": ["report usability", "readiness report UX", "report quality"],
+      "category": "reporting",
+      "related_patterns": ["clear readiness summary", "actionable report layout"],
+      "related_checks": ["docs/REPORT_UX.md", "examples/reports/amm-fixture-pre-audit-report.md"],
+      "search_tags": ["report-ux", "readiness-report", "noise-reduction"]
+    },
+    {
+      "term": "output profile",
+      "aliases": ["concise report", "standard report", "full report", "CI report"],
+      "category": "reporting",
+      "related_patterns": ["profile-driven report verbosity"],
+      "related_checks": ["docs/OUTPUT_PROFILES.md", "examples/configs/ci.config.json"],
+      "search_tags": ["output-profile", "ci-report", "full-report"]
+    },
+    {
+      "term": "fix first",
+      "aliases": ["Fix First", "remediation priority", "top blockers", "fix-first ranking"],
+      "category": "reporting",
+      "related_patterns": ["prioritized readiness remediation"],
+      "related_checks": ["docs/FIX_FIRST.md", "examples/reports/amm-fixture-pre-audit-report.md"],
+      "search_tags": ["fix-first", "remediation-priority", "audit-readiness"]
+    },
+    {
+      "term": "noise reduction",
+      "aliases": ["report noise", "low confidence grouping", "keyword-only downgrade", "suppressed findings"],
+      "category": "reporting",
+      "related_patterns": ["manual review recommended wording", "confidence grouping"],
+      "related_checks": ["docs/NOISE_REDUCTION.md", "docs/FALSE_POSITIVE_REDUCTION.md"],
+      "search_tags": ["noise-reduction", "confidence-summary", "suppressed-findings"]
+    },
+    {
+      "term": "findings by rule family",
+      "aliases": ["rule family grouping", "finding grouping", "grouped findings"],
+      "category": "reporting",
+      "related_patterns": ["rule-pack grouped readiness triage"],
+      "related_checks": ["docs/REPORT_UX.md", "reports/search_index.md"],
+      "search_tags": ["findings-by-rule-family", "rule-pack-summary", "report-ux"]
+    },
+    {
+      "term": "confidence summary",
+      "aliases": ["findings by confidence", "confidence grouping", "low confidence findings"],
+      "category": "reporting",
+      "related_patterns": ["review confidence triage"],
+      "related_checks": ["docs/REPORT_UX.md", "docs/RULE_CALIBRATION.md"],
+      "search_tags": ["confidence-summary", "findings-by-confidence", "rule-calibration"]
+    },
+    {
+      "term": "CLI candidate",
+      "aliases": ["pre-v2 CLI", "module CLI", "local module CLI"],
+      "category": "CLI",
+      "related_patterns": ["candidate command surface", "script compatibility"],
+      "related_checks": ["docs/CLI_CANDIDATE.md", "arkheionx/cli/main.py"],
+      "search_tags": ["cli-candidate", "pre-v2-cli", "module-cli"]
+    },
+    {
+      "term": "arkheionx scan",
+      "aliases": ["module scan command", "CLI scan", "pre-v2 scan command"],
+      "category": "CLI",
+      "related_patterns": ["readiness scan wrapper", "script compatibility"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "examples/reports/cli-amm-report.md"],
+      "search_tags": ["arkheionx-scan", "command-surface", "readiness-scan"]
+    },
+    {
+      "term": "arkheionx validate-config",
+      "aliases": ["CLI validate-config", "module config validator", "config command"],
+      "category": "CLI",
+      "related_patterns": ["safe config validation", "dangerous key rejection"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "scripts/validate_config.py"],
+      "search_tags": ["validate-config", "config-validation", "module-cli"]
+    },
+    {
+      "term": "arkheionx test-plan",
+      "aliases": ["CLI test-plan", "module test plan", "Foundry skeleton command"],
+      "category": "CLI",
+      "related_patterns": ["finding to test plan", "invariant skeleton output"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "examples/reports/cli-test-plan.md"],
+      "search_tags": ["test-plan-command", "invariant-skeleton", "module-cli"]
+    },
+    {
+      "term": "arkheionx search",
+      "aliases": ["CLI search", "module search command", "security memory search command"],
+      "category": "CLI",
+      "related_patterns": ["local security memory lookup", "knowledge search"],
+      "related_checks": ["docs/CLI_COMMANDS.md", "scripts/search_knowledge.py"],
+      "search_tags": ["arkheionx-search", "security-memory-search", "module-cli"]
+    },
+    {
+      "term": "CLI migration to v2",
+      "aliases": ["v2 CLI migration", "package CLI path", "command surface"],
+      "category": "CLI",
+      "related_patterns": ["pre-v2 command stabilization", "installable CLI planning"],
+      "related_checks": ["docs/CLI_MIGRATION_TO_V2.md", "docs/CLI_ROADMAP.md"],
+      "search_tags": ["cli-migration", "v2-package", "command-surface"]
+    }
+  ]
+}

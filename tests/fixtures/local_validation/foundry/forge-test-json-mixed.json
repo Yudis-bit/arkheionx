@@ -1,0 +1,32 @@
+{
+  "test/LendingVault.t.sol:LendingVaultTest": {
+    "duration": { "secs": 0, "nanos": 21400000 },
+    "test_results": {
+      "testDeposit()": {
+        "status": "Success",
+        "reason": null,
+        "kind": { "Unit": { "gas": 42111 } },
+        "duration": { "secs": 0, "nanos": 12000000 }
+      },
+      "testWithdrawRevertsWhenPaused()": {
+        "status": "Success",
+        "reason": null,
+        "kind": { "Unit": { "gas": 30122 } },
+        "duration": { "secs": 0, "nanos": 4000000 }
+      },
+      "testLiquidationEdgeCase()": {
+        "status": "Failure",
+        "reason": "assertion failed: health factor below threshold",
+        "kind": { "Unit": { "gas": 51234 } }
+      },
+      "testOracleStalePrice()": {
+        "status": "Skipped",
+        "reason": "vm.skip: oracle fixture not configured"
+      },
+      "testMalformedSetup()": {
+        "status": "Error",
+        "reason": "setup reverted"
+      }
+    }
+  }
+}

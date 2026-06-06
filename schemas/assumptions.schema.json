@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Review Map Assumptions",
+  "description": "Protective properties value paths appear to rely on. Review prompts, not findings.",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "assumptions"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "category", "evidence_level", "status"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "category": {"type": "string"},
+          "used_by": {"type": "array", "items": {"type": "string"}},
+          "signals": {"type": "array", "items": {"type": "string"}},
+          "missing_tests": {"type": "array", "items": {"type": "string"}},
+          "evidence_level": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      }
+    }
+  }
+}

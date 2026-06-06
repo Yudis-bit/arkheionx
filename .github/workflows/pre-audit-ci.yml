@@ -1,0 +1,909 @@
+name: pre-audit-ci
+
+on:
+  pull_request:
+    paths:
+      - "scripts/pre_audit_scan.py"
+      - "scripts/post_pr_comment.py"
+      - "scripts/create_github_issues.py"
+      - "scripts/generate_knowledge_graph.py"
+      - "scripts/generate_feedback_dashboard.py"
+      - "scripts/generate_paid_offer_index.py"
+      - "scripts/generate_ecosystem_report.py"
+      - "scripts/generate_test_plan.py"
+      - "scripts/validate_config.py"
+      - "scripts/search_knowledge.py"
+      - "scripts/check_docs_links.py"
+      - "scripts/check_version_consistency.py"
+      - "scripts/check_safety_wording.py"
+      - "arkheionx/**"
+      - "tests/**"
+      - "schemas/**"
+      - "pyproject.toml"
+      - "Makefile"
+      - ".github/actions/pre-audit/action.yml"
+      - ".github/workflows/arkheionx-demo.yml"
+      - ".github/workflows/pre-audit-ci.yml"
+      - ".github/ISSUE_TEMPLATE/**"
+      - "examples/mini-vault/**"
+      - "examples/vault-risk-fixture/**"
+      - "examples/oracle-staking-fixture/**"
+      - "examples/oracle-staking-fixture-fixed/**"
+      - "examples/semantic-lite-fixture/**"
+      - "examples/amm-fixture/**"
+      - "examples/lending-fixture/**"
+      - "examples/amm-lending-hybrid-fixture/**"
+      - "examples/arkheionx.config.example.json"
+      - "examples/configs/**"
+      - "examples/reports/**"
+      - "metadata/search_terms.json"
+      - "metadata/security_memory_graph.json"
+      - "metadata/finding_knowledge_map.json"
+      - "metadata/finding_test_plan_map.json"
+      - "metadata/rule_calibration_matrix.json"
+      - "metadata/feedback_schema.json"
+      - "metadata/feedback_examples.json"
+      - "metadata/rule_calibration_backlog.json"
+      - "metadata/paid_offer_catalog.json"
+      - "metadata/ecosystem_pack_schema.json"
+      - "metadata/ecosystem_pilot_example.json"
+      - "reports/search_index.md"
+      - "reports/security_memory_graph.md"
+      - "reports/security_memory_graph_summary.md"
+      - "reports/feedback_dashboard.md"
+      - "reports/rule_calibration_backlog.md"
+      - "reports/paid_offer_index.md"
+      - "reports/ecosystem_readiness_summary.md"
+      - "reports/ecosystem_common_gaps.md"
+      - "templates/**"
+      - "docs/**"
+      - "README.md"
+      - "SERVICES.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pre-audit-scanner:
+    name: validate scanner, action, reports, and safety copy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python syntax check
+        run: |
+          python3 -m py_compile scripts/pre_audit_scan.py
+          python3 -m py_compile scripts/generate_search_index.py
+          python3 -m py_compile scripts/post_pr_comment.py
+          python3 -m py_compile scripts/create_github_issues.py
+          python3 -m py_compile scripts/generate_knowledge_graph.py
+          python3 -m py_compile scripts/generate_feedback_dashboard.py
+          python3 -m py_compile scripts/generate_paid_offer_index.py
+          python3 -m py_compile scripts/generate_ecosystem_report.py
+          python3 -m py_compile scripts/generate_test_plan.py
+          python3 -m py_compile scripts/validate_config.py
+          python3 -m py_compile scripts/search_knowledge.py
+          python3 -m py_compile scripts/check_docs_links.py
+          python3 -m py_compile scripts/check_version_consistency.py
+          python3 -m py_compile scripts/check_safety_wording.py
+          python3 -m py_compile \
+            arkheionx/__init__.py \
+            arkheionx/version.py \
+            arkheionx/core/models.py \
+            arkheionx/core/paths.py \
+            arkheionx/core/files.py \
+            arkheionx/core/constants.py \
+            arkheionx/core/safety.py \
+            arkheionx/config/loader.py \
+            arkheionx/config/schema.py \
+            arkheionx/config/suppressions.py \
+            arkheionx/rules/registry.py \
+            arkheionx/rules/ids.py \
+            arkheionx/reports/artifacts.py \
+            arkheionx/reports/profiles.py \
+            arkheionx/reports/summary.py \
+            arkheionx/reports/ux.py \
+            arkheionx/knowledge/search.py \
+            arkheionx/generators/test_plan.py \
+            arkheionx/generators/feedback_dashboard.py \
+            arkheionx/generators/paid_offer_index.py \
+            arkheionx/generators/ecosystem_report.py \
+            arkheionx/cli/main.py \
+            arkheionx/cli/commands.py \
+            arkheionx/cli/exit_codes.py
+
+      - name: Install local package
+        run: PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install -e . --no-build-isolation
+
+      - name: Verify installable console CLI
+        run: |
+          arkheionx --help
+          arkheionx version
+          arkheionx doctor
+          arkheionx validate-config --config examples/arkheionx.config.example.json
+          arkheionx search "oracle stale price"
+
+      - name: Verify pre-v2 module CLI
+        run: |
+          python3 -m arkheionx.cli.main --help
+          python3 -m arkheionx.cli.main version
+          python3 -m arkheionx.cli.main doctor
+          python3 -m arkheionx.cli.main validate-config --config examples/arkheionx.config.example.json
+          python3 -m arkheionx.cli.main search "oracle stale price"
+
+      - name: Validate Arkheionx config examples
+        run: |
+          python3 scripts/validate_config.py --config examples/arkheionx.config.example.json
+          python3 scripts/validate_config.py --config examples/configs/minimal.config.json
+          python3 scripts/validate_config.py --config examples/configs/ci.config.json
+          python3 scripts/validate_config.py --config examples/configs/amm-lending.config.json
+          python3 scripts/validate_config.py --config examples/configs/strict-audit-prep.config.json
+          python3 scripts/validate_config.py --config examples/configs/suppressions.config.json
+          python3 scripts/validate_config.py --config examples/configs/minimal.config.json --json
+
+      - name: Verify search index is current
+        run: python3 scripts/generate_search_index.py --check
+
+      - name: Verify feedback dashboard is current
+        run: python3 scripts/generate_feedback_dashboard.py --check
+
+      - name: Verify paid offer index is current
+        run: python3 scripts/generate_paid_offer_index.py --check
+
+      - name: Verify ecosystem reports are current
+        run: python3 scripts/generate_ecosystem_report.py --check
+
+      - name: Verify generated test plans are current
+        run: python3 scripts/generate_test_plan.py --check
+
+      - name: Verify security memory graph is current
+        run: |
+          python3 scripts/generate_knowledge_graph.py --check
+          python3 scripts/search_knowledge.py "oracle stale price"
+          python3 scripts/search_knowledge.py "missing invariant" --json
+
+      - name: Verify v1 documentation and release consistency
+        run: |
+          python3 scripts/check_docs_links.py --check
+          python3 scripts/check_version_consistency.py --check
+          python3 scripts/check_safety_wording.py --strict
+
+      - name: Run scanner unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run scanner directly against mini-vault
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/mini-vault \
+            --protocol-type auto \
+            --output examples/reports/mini-vault-pre-audit-report.md \
+            --json-output examples/reports/mini-vault-pre-audit-report.json \
+            --sarif-output examples/reports/mini-vault.sarif.json \
+            --baseline-output examples/reports/mini-vault.baseline.json \
+            --summary-output examples/reports/mini-vault-action-summary.md \
+            --comment-output examples/reports/mini-vault-pr-comment.md \
+            --issue-checklist-output examples/reports/mini-vault-issue-checklist.md \
+            --issue-plan-output examples/reports/mini-vault-issue-plan.json \
+            --generate-invariant-skeletons
+
+      - name: Run scanner directly against vault-risk-fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/vault-risk-fixture \
+            --protocol-type vault \
+            --output examples/reports/vault-risk-fixture-pre-audit-report.md \
+            --json-output examples/reports/vault-risk-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/vault-risk-fixture.sarif.json \
+            --baseline-output examples/reports/vault-risk-fixture.baseline.json \
+            --summary-output examples/reports/vault-risk-fixture-action-summary.md \
+            --comment-output examples/reports/vault-risk-fixture-pr-comment.md \
+            --issue-checklist-output examples/reports/vault-risk-fixture-issue-checklist.md \
+            --issue-plan-output examples/reports/vault-risk-fixture-issue-plan.json \
+            --generate-invariant-skeletons
+
+      - name: Run scanner directly against oracle-staking-fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture \
+            --protocol-type auto \
+            --output examples/reports/oracle-staking-fixture-pre-audit-report.md \
+            --json-output examples/reports/oracle-staking-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/oracle-staking-fixture.sarif.json \
+            --baseline-output examples/reports/oracle-staking-fixture.baseline.json \
+            --issue-checklist-output examples/reports/oracle-staking-fixture-issue-checklist.md \
+            --issue-plan-output examples/reports/oracle-staking-fixture-issue-plan.json \
+            --launch-report-output examples/reports/oracle-staking-fixture-launch-report.md \
+            --sprint-plan-output examples/reports/oracle-staking-fixture-sprint-plan.md \
+            --sprint-days 5 \
+            --contest-readiness-output examples/reports/oracle-staking-fixture-contest-readiness.md \
+            --executive-summary-output examples/reports/oracle-staking-fixture-executive-summary.md \
+            --remediation-roadmap-output examples/reports/oracle-staking-fixture-remediation-roadmap.md
+
+      - name: Run public demo scan
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture \
+            --protocol-type auto \
+            --output examples/reports/demo-pre-audit-report.md \
+            --json-output examples/reports/demo-report.json \
+            --sarif-output examples/reports/demo.sarif.json \
+            --baseline-output examples/reports/demo.baseline.json \
+            --issue-plan-output examples/reports/demo-issue-plan.json \
+            --issue-checklist-output examples/reports/demo-issue-checklist.md \
+            --launch-report-output examples/reports/demo-launch-report.md \
+            --sprint-plan-output examples/reports/demo-sprint-plan.md \
+            --sprint-days 5 \
+            --contest-readiness-output examples/reports/demo-contest-readiness.md \
+            --executive-summary-output examples/reports/demo-executive-summary.md \
+            --remediation-roadmap-output examples/reports/demo-remediation-roadmap.md
+
+      - name: Run scanner against oracle-staking fixed fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture-fixed \
+            --protocol-type auto \
+            --output examples/reports/oracle-staking-fixture-fixed-pre-audit-report.md \
+            --json-output examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json \
+            --baseline-output examples/reports/oracle-staking-fixture-fixed.baseline.json \
+            --launch-report-output examples/reports/oracle-staking-fixture-fixed-launch-report.md \
+            --remediation-roadmap-output examples/reports/oracle-staking-fixture-fixed-remediation-roadmap.md
+
+      - name: Run scanner directly against semantic-lite-fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/semantic-lite-fixture \
+            --protocol-type auto \
+            --output examples/reports/semantic-lite-fixture-pre-audit-report.md \
+            --json-output examples/reports/semantic-lite-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/semantic-lite-fixture.sarif.json \
+            --baseline-output examples/reports/semantic-lite-fixture.baseline.json \
+            --issue-checklist-output examples/reports/semantic-lite-fixture-issue-checklist.md \
+            --issue-plan-output examples/reports/semantic-lite-fixture-issue-plan.json
+
+      - name: Run scanner against negative evidence fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/negative-evidence-fixture \
+            --protocol-type auto \
+            --output examples/reports/negative-evidence-fixture-pre-audit-report.md \
+            --json-output examples/reports/negative-evidence-fixture-pre-audit-report.json
+
+      - name: Run scanner against generated-artifact self-ingestion fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/generated-artifact-self-ingestion-fixture \
+            --protocol-type auto \
+            --output examples/reports/generated-artifact-self-ingestion-pre-audit-report.md \
+            --json-output examples/reports/generated-artifact-self-ingestion-pre-audit-report.json
+
+      - name: Run scanner directly against AMM fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-fixture \
+            --protocol-type amm \
+            --output examples/reports/amm-fixture-pre-audit-report.md \
+            --json-output examples/reports/amm-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/amm-fixture.sarif.json \
+            --issue-plan-output examples/reports/amm-fixture-issue-plan.json
+
+      - name: Run scanner directly against lending fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/lending-fixture \
+            --protocol-type lending \
+            --output examples/reports/lending-fixture-pre-audit-report.md \
+            --json-output examples/reports/lending-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/lending-fixture.sarif.json \
+            --issue-plan-output examples/reports/lending-fixture-issue-plan.json
+
+      - name: Run scanner directly against AMM lending hybrid fixture
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --protocol-type auto \
+            --output examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md \
+            --json-output examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json \
+            --sarif-output examples/reports/amm-lending-hybrid-fixture.sarif.json \
+            --issue-plan-output examples/reports/amm-lending-hybrid-fixture-issue-plan.json
+
+      - name: Run scanner against AMM lending hybrid fixture with config
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --config examples/configs/amm-lending.config.json \
+            --output examples/reports/configured-amm-lending-report.md \
+            --json-output examples/reports/configured-amm-lending-report.json \
+            --sarif-output examples/reports/configured-amm-lending.sarif.json
+
+      - name: Run scanner with report output profiles
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --config examples/configs/ci.config.json \
+            --output examples/reports/ci-profile-report.md \
+            --json-output examples/reports/ci-profile-report.json \
+            --sarif-output examples/reports/ci-profile.sarif.json
+          python3 scripts/pre_audit_scan.py \
+            --root examples/amm-lending-hybrid-fixture \
+            --config examples/configs/strict-audit-prep.config.json \
+            --output examples/reports/full-profile-report.md \
+            --json-output examples/reports/full-profile-report.json \
+            --sarif-output examples/reports/full-profile.sarif.json
+
+      - name: Run pre-v2 module CLI scan and test-plan
+        run: |
+          python3 -m arkheionx.cli.main scan examples/amm-fixture \
+            --protocol-type amm \
+            --output examples/reports/cli-amm-report.md \
+            --json-output examples/reports/cli-amm-report.json \
+            --sarif-output examples/reports/cli-amm.sarif.json \
+            --issue-plan-output examples/reports/cli-amm-issue-plan.json
+          python3 -m arkheionx.cli.main test-plan \
+            --report examples/reports/cli-amm-report.json \
+            --output examples/reports/cli-test-plan.md \
+            --json-output examples/reports/cli-test-plan.json \
+            --foundry-output examples/reports/ArkheionxCLIInvariants.t.sol
+          python3 -m arkheionx.cli.main test-plan --check
+
+      - name: Run installable CLI scan and test-plan
+        run: |
+          arkheionx scan examples/amm-fixture \
+            --protocol-type amm \
+            --output examples/reports/package-cli-amm-report.md \
+            --json-output examples/reports/package-cli-amm-report.json \
+            --sarif-output examples/reports/package-cli-amm.sarif.json \
+            --issue-plan-output examples/reports/package-cli-amm-issue-plan.json
+          arkheionx test-plan \
+            --report examples/reports/package-cli-amm-report.json \
+            --output examples/reports/package-cli-test-plan.md \
+            --json-output examples/reports/package-cli-test-plan.json \
+            --foundry-output examples/reports/ArkheionxPackageCLIInvariants.t.sol
+          arkheionx test-plan --check
+
+      - name: Generate AMM and lending test plans
+        run: |
+          python3 scripts/generate_test_plan.py \
+            --report examples/reports/amm-fixture-pre-audit-report.json \
+            --output examples/reports/amm-fixture-test-plan.md \
+            --json-output examples/reports/amm-fixture-test-plan.json \
+            --foundry-output examples/reports/ArkheionxAMMInvariants.t.sol
+          python3 scripts/generate_test_plan.py \
+            --report examples/reports/lending-fixture-pre-audit-report.json \
+            --output examples/reports/lending-fixture-test-plan.md \
+            --json-output examples/reports/lending-fixture-test-plan.json \
+            --foundry-output examples/reports/ArkheionxLendingInvariants.t.sol
+          python3 scripts/generate_test_plan.py \
+            --report examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json \
+            --output examples/reports/amm-lending-hybrid-fixture-test-plan.md \
+            --json-output examples/reports/amm-lending-hybrid-fixture-test-plan.json \
+            --foundry-output examples/reports/ArkheionxHybridInvariants.t.sol
+
+      - name: Verify Slither unavailable path is graceful
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/oracle-staking-fixture \
+            --protocol-type auto \
+            --output examples/reports/oracle-staking-fixture-slither-attempt-report.md \
+            --json-output examples/reports/oracle-staking-fixture-slither-attempt-report.json \
+            --slither
+
+      - name: Dry-run GitHub issue workflow
+        run: |
+          python3 scripts/create_github_issues.py \
+            --issue-plan examples/reports/vault-risk-fixture-issue-plan.json \
+            --mode dry-run \
+            --dry-run-output examples/reports/vault-risk-fixture-issue-dry-run.md \
+            --max-issues 5
+
+      - name: Dry-run public demo issue workflow
+        run: |
+          python3 scripts/create_github_issues.py \
+            --issue-plan examples/reports/demo-issue-plan.json \
+            --mode dry-run \
+            --dry-run-output examples/reports/demo-issue-dry-run.md \
+            --max-issues 5
+
+      - name: Run scanner diff mode against vault-risk baseline
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/vault-risk-fixture \
+            --protocol-type vault \
+            --compare-baseline examples/reports/vault-risk-fixture.baseline.json \
+            --output examples/reports/vault-risk-fixture-diff-report.md \
+            --json-output examples/reports/vault-risk-fixture-diff-report.json \
+            --diff-output examples/reports/vault-risk-fixture-diff.md \
+            --diff-json-output examples/reports/vault-risk-fixture-diff.json \
+            --sarif-output examples/reports/vault-risk-fixture-diff.sarif.json \
+            --summary-output examples/reports/vault-risk-fixture-diff-summary.md \
+            --comment-output examples/reports/vault-risk-fixture-diff-comment.md \
+            --issue-checklist-output examples/reports/vault-risk-fixture-diff-checklist.md
+
+      - name: Run scanner with config suppression
+        run: |
+          python3 scripts/pre_audit_scan.py \
+            --root examples/vault-risk-fixture \
+            --protocol-type vault \
+            --config examples/arkheionx.config.example.json \
+            --output examples/reports/vault-risk-fixture-config-report.md \
+            --json-output examples/reports/vault-risk-fixture-config-report.json \
+            --summary-output examples/reports/vault-risk-fixture-config-summary.md \
+            --comment-output examples/reports/vault-risk-fixture-config-comment.md \
+            --issue-checklist-output examples/reports/vault-risk-fixture-config-checklist.md
+
+      - name: Run local GitHub Action wrapper
+        uses: ./.github/actions/pre-audit
+        with:
+          root: "examples/mini-vault"
+          protocol-type: "auto"
+          output: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+          json-output: "arkheionx-report.json"
+          sarif-output: "arkheionx.sarif.json"
+          baseline-output: "arkheionx.baseline.json"
+          generate-invariant-skeletons: "false"
+          fail-on-critical-readiness-gap: "false"
+          summary: "true"
+          pr-comment: "true"
+          comment-output: "ARKHEIONX_PR_COMMENT.md"
+          create-issue-checklist: "true"
+          issue-checklist-output: "ARKHEIONX_ISSUE_CHECKLIST.md"
+          issue-plan-output: "ARKHEIONX_ISSUE_PLAN.json"
+          create-github-issues: "true"
+          issue-create-mode: "dry-run"
+          issue-dry-run-output: "ARKHEIONX_ISSUE_DRY_RUN.md"
+          launch-report-output: "ARKHEIONX_LAUNCH_REPORT.md"
+          sprint-plan-output: "ARKHEIONX_SPRINT_PLAN.md"
+          sprint-days: "5"
+          contest-readiness-output: "ARKHEIONX_CONTEST_READINESS.md"
+          executive-summary-output: "ARKHEIONX_EXECUTIVE_SUMMARY.md"
+          remediation-roadmap-output: "ARKHEIONX_REMEDIATION_ROADMAP.md"
+
+      - name: Verify report artifacts
+        run: |
+          test -f examples/reports/mini-vault-pre-audit-report.md
+          test -f examples/reports/mini-vault-pre-audit-report.json
+          test -f examples/reports/mini-vault.sarif.json
+          test -f examples/reports/mini-vault.baseline.json
+          test -f examples/reports/vault-risk-fixture-pre-audit-report.md
+          test -f examples/reports/vault-risk-fixture-pre-audit-report.json
+          test -f examples/reports/vault-risk-fixture.sarif.json
+          test -f examples/reports/vault-risk-fixture.baseline.json
+          test -f examples/reports/mini-vault-action-summary.md
+          test -f examples/reports/mini-vault-pr-comment.md
+          test -f examples/reports/mini-vault-issue-checklist.md
+          test -f examples/reports/mini-vault-issue-plan.json
+          test -f examples/reports/vault-risk-fixture-action-summary.md
+          test -f examples/reports/vault-risk-fixture-pr-comment.md
+          test -f examples/reports/vault-risk-fixture-issue-checklist.md
+          test -f examples/reports/vault-risk-fixture-issue-plan.json
+          test -f examples/reports/vault-risk-fixture-issue-dry-run.md
+          test -f examples/reports/oracle-staking-fixture-pre-audit-report.md
+          test -f examples/reports/oracle-staking-fixture-pre-audit-report.json
+          test -f examples/reports/oracle-staking-fixture.sarif.json
+          test -f examples/reports/oracle-staking-fixture.baseline.json
+          test -f examples/reports/oracle-staking-fixture-issue-checklist.md
+          test -f examples/reports/oracle-staking-fixture-issue-plan.json
+          test -f examples/reports/oracle-staking-fixture-launch-report.md
+          test -f examples/reports/oracle-staking-fixture-sprint-plan.md
+          test -f examples/reports/oracle-staking-fixture-contest-readiness.md
+          test -f examples/reports/oracle-staking-fixture-executive-summary.md
+          test -f examples/reports/oracle-staking-fixture-remediation-roadmap.md
+          test -f examples/reports/demo-pre-audit-report.md
+          test -f examples/reports/demo-report.json
+          test -f examples/reports/demo.sarif.json
+          test -f examples/reports/demo.baseline.json
+          test -f examples/reports/demo-issue-plan.json
+          test -f examples/reports/demo-issue-checklist.md
+          test -f examples/reports/demo-launch-report.md
+          test -f examples/reports/demo-sprint-plan.md
+          test -f examples/reports/demo-contest-readiness.md
+          test -f examples/reports/demo-executive-summary.md
+          test -f examples/reports/demo-remediation-roadmap.md
+          test -f examples/reports/demo-issue-dry-run.md
+          test -f examples/reports/oracle-staking-fixture-fixed-pre-audit-report.md
+          test -f examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json
+          test -f examples/reports/oracle-staking-fixture-fixed.baseline.json
+          test -f examples/reports/oracle-staking-fixture-fixed-launch-report.md
+          test -f examples/reports/oracle-staking-fixture-fixed-remediation-roadmap.md
+          test -f examples/reports/oracle-staking-fixture-slither-attempt-report.md
+          test -f examples/reports/oracle-staking-fixture-slither-attempt-report.json
+          test -f examples/reports/semantic-lite-fixture-pre-audit-report.md
+          test -f examples/reports/semantic-lite-fixture-pre-audit-report.json
+          test -f examples/reports/semantic-lite-fixture.sarif.json
+          test -f examples/reports/semantic-lite-fixture.baseline.json
+          test -f examples/reports/semantic-lite-fixture-issue-checklist.md
+          test -f examples/reports/semantic-lite-fixture-issue-plan.json
+          test -f examples/reports/negative-evidence-fixture-pre-audit-report.md
+          test -f examples/reports/negative-evidence-fixture-pre-audit-report.json
+          test -f examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
+          test -f examples/reports/generated-artifact-self-ingestion-pre-audit-report.json
+          test -f examples/reports/amm-fixture-pre-audit-report.md
+          test -f examples/reports/amm-fixture-pre-audit-report.json
+          test -f examples/reports/amm-fixture.sarif.json
+          test -f examples/reports/amm-fixture-issue-plan.json
+          test -f examples/reports/amm-fixture-test-plan.md
+          test -f examples/reports/amm-fixture-test-plan.json
+          test -f examples/reports/ArkheionxAMMInvariants.t.sol
+          test -f examples/reports/lending-fixture-pre-audit-report.md
+          test -f examples/reports/lending-fixture-pre-audit-report.json
+          test -f examples/reports/lending-fixture.sarif.json
+          test -f examples/reports/lending-fixture-issue-plan.json
+          test -f examples/reports/lending-fixture-test-plan.md
+          test -f examples/reports/lending-fixture-test-plan.json
+          test -f examples/reports/ArkheionxLendingInvariants.t.sol
+          test -f examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
+          test -f examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json
+          test -f examples/reports/amm-lending-hybrid-fixture.sarif.json
+          test -f examples/reports/amm-lending-hybrid-fixture-issue-plan.json
+          test -f examples/reports/amm-lending-hybrid-fixture-test-plan.md
+          test -f examples/reports/amm-lending-hybrid-fixture-test-plan.json
+          test -f examples/reports/ArkheionxHybridInvariants.t.sol
+          test -f examples/reports/configured-amm-lending-report.md
+          test -f examples/reports/configured-amm-lending-report.json
+          test -f examples/reports/configured-amm-lending.sarif.json
+          test -f examples/reports/ci-profile-report.md
+          test -f examples/reports/ci-profile-report.json
+          test -f examples/reports/ci-profile.sarif.json
+          test -f examples/reports/full-profile-report.md
+          test -f examples/reports/full-profile-report.json
+          test -f examples/reports/full-profile.sarif.json
+          test -f examples/reports/cli-amm-report.md
+          test -f examples/reports/cli-amm-report.json
+          test -f examples/reports/cli-amm.sarif.json
+          test -f examples/reports/cli-amm-issue-plan.json
+          test -f examples/reports/cli-test-plan.md
+          test -f examples/reports/cli-test-plan.json
+          test -f examples/reports/ArkheionxCLIInvariants.t.sol
+          test -f examples/reports/package-cli-amm-report.md
+          test -f examples/reports/package-cli-amm-report.json
+          test -f examples/reports/package-cli-amm.sarif.json
+          test -f examples/reports/package-cli-amm-issue-plan.json
+          test -f examples/reports/package-cli-test-plan.md
+          test -f examples/reports/package-cli-test-plan.json
+          test -f examples/reports/ArkheionxPackageCLIInvariants.t.sol
+          test -f examples/reports/vault-risk-fixture-config-report.md
+          test -f examples/reports/vault-risk-fixture-config-report.json
+          test -f examples/reports/vault-risk-fixture-config-summary.md
+          test -f examples/reports/vault-risk-fixture-config-comment.md
+          test -f examples/reports/vault-risk-fixture-config-checklist.md
+          test -f examples/reports/vault-risk-fixture-diff-report.md
+          test -f examples/reports/vault-risk-fixture-diff-report.json
+          test -f examples/reports/vault-risk-fixture-diff.md
+          test -f examples/reports/vault-risk-fixture-diff.json
+          test -f examples/reports/vault-risk-fixture-diff.sarif.json
+          test -f examples/reports/vault-risk-fixture-diff-summary.md
+          test -f examples/reports/vault-risk-fixture-diff-comment.md
+          test -f examples/reports/vault-risk-fixture-diff-checklist.md
+          test -f examples/mini-vault/test/invariant/ArkheionxReadinessInvariants.t.sol
+          test -f examples/vault-risk-fixture/test/invariant/ArkheionxReadinessInvariants.t.sol
+          test -f ARKHEIONX_PRE_AUDIT_REPORT.md
+          test -f arkheionx-report.json
+          test -f arkheionx.sarif.json
+          test -f arkheionx.baseline.json
+          test -f ARKHEIONX_ACTION_SUMMARY.md
+          test -f ARKHEIONX_PR_COMMENT.md
+          test -f ARKHEIONX_ISSUE_CHECKLIST.md
+          test -f ARKHEIONX_ISSUE_PLAN.json
+          test -f ARKHEIONX_ISSUE_DRY_RUN.md
+          test -f ARKHEIONX_LAUNCH_REPORT.md
+          test -f ARKHEIONX_SPRINT_PLAN.md
+          test -f ARKHEIONX_CONTEST_READINESS.md
+          test -f ARKHEIONX_EXECUTIVE_SUMMARY.md
+          test -f ARKHEIONX_REMEDIATION_ROADMAP.md
+
+      - name: Parse JSON output
+        run: |
+          python3 - <<'PY'
+          import json
+
+          for path in [
+              "examples/reports/mini-vault-pre-audit-report.json",
+              "examples/reports/vault-risk-fixture-pre-audit-report.json",
+              "examples/reports/oracle-staking-fixture-pre-audit-report.json",
+              "examples/reports/demo-report.json",
+              "examples/reports/oracle-staking-fixture-fixed-pre-audit-report.json",
+              "examples/reports/semantic-lite-fixture-pre-audit-report.json",
+              "examples/reports/negative-evidence-fixture-pre-audit-report.json",
+              "examples/reports/generated-artifact-self-ingestion-pre-audit-report.json",
+              "examples/reports/amm-fixture-pre-audit-report.json",
+              "examples/reports/lending-fixture-pre-audit-report.json",
+              "examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json",
+              "examples/reports/configured-amm-lending-report.json",
+              "examples/reports/ci-profile-report.json",
+              "examples/reports/full-profile-report.json",
+              "examples/reports/cli-amm-report.json",
+              "examples/reports/package-cli-amm-report.json",
+              "examples/reports/oracle-staking-fixture-slither-attempt-report.json",
+              "arkheionx-report.json",
+          ]:
+              data = json.load(open(path, encoding="utf-8"))
+              assert data["tool"] == "Arkheionx Pre-Audit Scanner"
+              assert data["version"] == "2.0.1"
+              assert data["schema_version"] == "1.0.0"
+              assert isinstance(data["score"], int)
+              assert "disclaimer" in data
+              assert "vault_rule_pack" in data
+              assert "findings" in data
+              assert "summary" in data
+              assert "generated_outputs" in data
+              assert "fingerprint_version" in data
+              assert "rule_packs" in data
+              assert "analysis_quality" in data
+              assert "semantic_lite" in data
+              assert "slither" in data
+              assert "delivery_outputs" in data
+              assert "delivery_summary" in data
+              assert "knowledge" in data
+              assert "scan_sources" in data
+              assert "config_summary" in data
+              assert "fix_first" in data
+              assert "findings_by_rule_family" in data
+              assert "findings_by_confidence" in data
+              assert "suppression_summary" in data
+              assert all(item["id"].startswith("ARK-") for item in data["findings"])
+              assert all(item["fingerprint"] for item in data["findings"])
+              assert all("confidence_reason" in item for item in data["findings"])
+              assert all("detection_sources" in item for item in data["findings"])
+              assert all("evidence" in item for item in data["findings"])
+              assert all("knowledge" in item for item in data["findings"])
+              assert all("suggested_tests" in item for item in data["findings"])
+          oracle = json.load(open("examples/reports/oracle-staking-fixture-pre-audit-report.json", encoding="utf-8"))
+          oracle_ids = {item["id"] for item in oracle["findings"]}
+          assert "ARK-ORC-001" in oracle_ids
+          assert "ARK-RWD-001" in oracle_ids
+          amm = json.load(open("examples/reports/amm-fixture-pre-audit-report.json", encoding="utf-8"))
+          assert any(item["id"].startswith("ARK-AMM-") for item in amm["findings"])
+          lending = json.load(open("examples/reports/lending-fixture-pre-audit-report.json", encoding="utf-8"))
+          assert any(item["id"].startswith("ARK-LEND-") for item in lending["findings"])
+          hybrid = json.load(open("examples/reports/amm-lending-hybrid-fixture-pre-audit-report.json", encoding="utf-8"))
+          hybrid_ids = {item["id"] for item in hybrid["findings"]}
+          assert any(item.startswith("ARK-AMM-") for item in hybrid_ids)
+          assert any(item.startswith("ARK-LEND-") for item in hybrid_ids)
+          for path in [
+              "examples/reports/mini-vault-issue-plan.json",
+              "examples/reports/vault-risk-fixture-issue-plan.json",
+              "examples/reports/oracle-staking-fixture-issue-plan.json",
+              "examples/reports/demo-issue-plan.json",
+              "examples/reports/semantic-lite-fixture-issue-plan.json",
+              "examples/reports/amm-fixture-issue-plan.json",
+              "examples/reports/lending-fixture-issue-plan.json",
+              "examples/reports/amm-lending-hybrid-fixture-issue-plan.json",
+              "examples/reports/cli-amm-issue-plan.json",
+              "examples/reports/package-cli-amm-issue-plan.json",
+              "ARKHEIONX_ISSUE_PLAN.json",
+          ]:
+              plan = json.load(open(path, encoding="utf-8"))
+              assert plan["version"] == "2.0.1"
+              assert plan["schema_version"] == "1.0.0"
+              assert plan["issues"]
+              assert all(issue["marker"].startswith("<!-- arkheionx-issue:") for issue in plan["issues"])
+              assert all("not a formal audit finding" in issue["body"] for issue in plan["issues"])
+              assert all("confidence_reason" in issue for issue in plan["issues"])
+              assert all("evidence" in issue for issue in plan["issues"])
+              assert all("related_knowledge" in issue for issue in plan["issues"])
+              assert all("suggested_tests" in issue for issue in plan["issues"])
+              assert all("invariant_candidates" in issue for issue in plan["issues"])
+          for path in [
+              "examples/reports/amm-fixture-test-plan.json",
+              "examples/reports/lending-fixture-test-plan.json",
+              "examples/reports/amm-lending-hybrid-fixture-test-plan.json",
+              "examples/reports/cli-test-plan.json",
+              "examples/reports/package-cli-test-plan.json",
+          ]:
+              test_plan = json.load(open(path, encoding="utf-8"))
+              assert test_plan["tool"] == "Arkheionx Test Plan Generator"
+              assert test_plan["version"] == "2.0.1"
+              assert test_plan["suggested_tests"]
+              assert test_plan["invariant_candidates"]
+              assert test_plan["manual_review_required"] is True
+          for path in [
+              "metadata/security_memory_graph.json",
+              "metadata/finding_knowledge_map.json",
+              "metadata/finding_test_plan_map.json",
+              "metadata/rule_calibration_matrix.json",
+              "metadata/ecosystem_pack_schema.json",
+              "metadata/ecosystem_pilot_example.json",
+              "schemas/test_plan.schema.json",
+              "schemas/arkheionx_config.schema.json",
+              "examples/arkheionx.config.example.json",
+              "examples/configs/minimal.config.json",
+              "examples/configs/ci.config.json",
+              "examples/configs/amm-lending.config.json",
+              "examples/configs/strict-audit-prep.config.json",
+              "examples/configs/suppressions.config.json",
+          ]:
+              payload = json.load(open(path, encoding="utf-8"))
+              assert payload
+          config = json.load(open("examples/reports/vault-risk-fixture-config-report.json", encoding="utf-8"))
+          assert config["suppressed_findings"]
+          ci_profile = json.load(open("examples/reports/ci-profile-report.json", encoding="utf-8"))
+          assert ci_profile["config_summary"]["output_profile"] == "ci"
+          full_profile = json.load(open("examples/reports/full-profile-report.json", encoding="utf-8"))
+          assert full_profile["config_summary"]["output_profile"] == "full"
+          generated = json.load(open("examples/reports/generated-artifact-self-ingestion-pre-audit-report.json", encoding="utf-8"))
+          assert generated["scan_sources"]["generated_artifacts_ignored"] > 0
+          assert not [
+              item for item in generated.get("negative_evidence", [])
+              if str(item.get("file", "")).startswith("reports/")
+          ]
+          for path in [
+              "examples/reports/mini-vault.sarif.json",
+              "examples/reports/vault-risk-fixture.sarif.json",
+              "examples/reports/vault-risk-fixture-diff.sarif.json",
+              "examples/reports/oracle-staking-fixture.sarif.json",
+              "examples/reports/semantic-lite-fixture.sarif.json",
+              "examples/reports/amm-fixture.sarif.json",
+              "examples/reports/lending-fixture.sarif.json",
+              "examples/reports/amm-lending-hybrid-fixture.sarif.json",
+              "examples/reports/ci-profile.sarif.json",
+              "examples/reports/full-profile.sarif.json",
+              "examples/reports/cli-amm.sarif.json",
+              "examples/reports/package-cli-amm.sarif.json",
+              "arkheionx.sarif.json",
+          ]:
+              sarif = json.load(open(path, encoding="utf-8"))
+              assert sarif["version"] == "2.1.0"
+              assert sarif["runs"][0]["tool"]["driver"]["rules"]
+              assert sarif["runs"][0]["results"]
+              assert sarif["runs"][0]["results"][0]["properties"]["not_a_vulnerability_confirmation"] is True
+              assert "rule_family" in sarif["runs"][0]["results"][0]["properties"]
+              assert sarif["runs"][0]["results"][0]["locations"]
+          baseline = json.load(open("examples/reports/vault-risk-fixture.baseline.json", encoding="utf-8"))
+          assert baseline["schema_version"] == "1.0.0"
+          assert baseline["findings"] and all(item["fingerprint"] for item in baseline["findings"])
+          diff = json.load(open("examples/reports/vault-risk-fixture-diff.json", encoding="utf-8"))
+          assert diff["schema_version"] == "1.0.0"
+          assert "counts" in diff and "unchanged" in diff["counts"]
+          print("JSON valid")
+          PY
+
+      - name: Verify generated UX files
+        run: |
+          grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/mini-vault-pr-comment.md
+          grep -q "<!-- arkheionx-pre-audit-comment -->" examples/reports/vault-risk-fixture-pr-comment.md
+          grep -q "<!-- arkheionx-pre-audit-comment -->" ARKHEIONX_PR_COMMENT.md
+          grep -q -- "- \\[ \\]" examples/reports/mini-vault-issue-checklist.md
+          grep -q -- "- \\[ \\]" examples/reports/vault-risk-fixture-issue-checklist.md
+          grep -q "<!-- arkheionx-issue:" examples/reports/vault-risk-fixture-issue-plan.json
+          grep -q "No GitHub API calls were made." examples/reports/vault-risk-fixture-issue-dry-run.md
+          grep -q "Score:" examples/reports/mini-vault-action-summary.md
+          grep -q "Score:" examples/reports/vault-risk-fixture-action-summary.md
+          grep -q "Suppressed Readiness Gaps" examples/reports/vault-risk-fixture-config-report.md
+          grep -q "Baseline Diff" examples/reports/vault-risk-fixture-diff-report.md
+          grep -q "Diff vs baseline" examples/reports/vault-risk-fixture-diff-comment.md
+          grep -q "Score:" examples/reports/vault-risk-fixture-diff-summary.md
+          grep -q "Executive Summary" examples/reports/oracle-staking-fixture-launch-report.md
+          grep -q "Day 1" examples/reports/oracle-staking-fixture-sprint-plan.md
+          grep -q "Day 5" examples/reports/oracle-staking-fixture-sprint-plan.md
+          grep -q "Scope Preparation Checklist" examples/reports/oracle-staking-fixture-contest-readiness.md
+          grep -q "Phase 1" examples/reports/oracle-staking-fixture-remediation-roadmap.md
+          grep -q "No GitHub API calls were made." examples/reports/demo-issue-dry-run.md
+          grep -q "Executive Summary" examples/reports/demo-launch-report.md
+          grep -q "Scope Preparation Checklist" examples/reports/demo-contest-readiness.md
+          grep -q "Phase 1" examples/reports/demo-remediation-roadmap.md
+          test -f docs/TRY_IN_5_MINUTES.md
+          test -f docs/PUBLIC_DEMO_WORKFLOW.md
+          test -f docs/case-studies/ORACLE_STAKING_FIXTURE_CASE_STUDY.md
+          test -f docs/case-studies/ORACLE_STAKING_BEFORE_AFTER.md
+          test -f .github/ISSUE_TEMPLATE/false_positive_calibration.yml
+          test -f .github/ISSUE_TEMPLATE/external_validation_feedback.yml
+          test -f .github/workflows/arkheionx-demo.yml
+          test -f metadata/security_memory_graph.json
+          test -f metadata/finding_knowledge_map.json
+          test -f metadata/rule_calibration_matrix.json
+          test -f reports/security_memory_graph.md
+          test -f reports/security_memory_graph_summary.md
+          test -f reports/ecosystem_readiness_summary.md
+          test -f reports/ecosystem_common_gaps.md
+          test -f docs/ecosystem/ECOSYSTEM_PACK.md
+          test -f docs/ecosystem/MULTI_REPO_READINESS_WORKFLOW.md
+          test -f templates/ecosystem_intake.md
+          test -f templates/ecosystem_readiness_pilot_scope.md
+          test -f docs/AMM_RULE_PACK.md
+          test -f docs/LENDING_RULE_PACK.md
+          test -f examples/amm-fixture/README.md
+          test -f examples/lending-fixture/README.md
+          test -f examples/amm-lending-hybrid-fixture/README.md
+          grep -q "Repo-By-Repo Readiness Table" reports/ecosystem_readiness_summary.md
+          grep -q "Common Gap Families" reports/ecosystem_common_gaps.md
+          grep -q "ARK-AMM" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "ARK-LEND" examples/reports/lending-fixture-pre-audit-report.md
+          grep -q "ARK-AMM" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
+          grep -q "ARK-LEND" examples/reports/amm-lending-hybrid-fixture-pre-audit-report.md
+          grep -q "Fix First" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Fix First" examples/reports/cli-amm-report.md
+          grep -q "Findings by Rule Family" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Suppression Summary" examples/reports/amm-fixture-pre-audit-report.md
+          grep -q "Output profile: \`ci\`" examples/reports/ci-profile-report.md
+          grep -q "Output profile: \`full\`" examples/reports/full-profile-report.md
+          grep -q "Invariant candidates" examples/reports/amm-fixture-test-plan.md
+          grep -q "Invariant candidates" examples/reports/lending-fixture-test-plan.md
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxAMMInvariants.t.sol
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxLendingInvariants.t.sol
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxHybridInvariants.t.sol
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxCLIInvariants.t.sol
+          grep -q "Arkheionx-generated defensive invariant skeleton" examples/reports/ArkheionxPackageCLIInvariants.t.sol
+          ! grep -RniE "private key|mnemonic|rpc url|mainnet fork|drain|profit|exploit payload|live target" examples/reports/*Invariants.t.sol templates/invariant_skeletons
+          grep -q "Related Knowledge" examples/reports/demo-pre-audit-report.md
+          grep -q "Related Knowledge" examples/reports/demo-issue-plan.json
+          grep -q "Scan Source Summary" examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
+          grep -q "Generated Arkheionx artifacts ignored" examples/reports/generated-artifact-self-ingestion-pre-audit-report.md
+
+      - name: Verify disclaimer is present
+        run: |
+          grep -qi "not a formal audit" examples/reports/mini-vault-pre-audit-report.md
+          grep -qi "does not prove" examples/reports/mini-vault-pre-audit-report.md
+          grep -qi "formal audit is recommended" examples/reports/mini-vault-pre-audit-report.md
+          grep -qi "not a formal audit" examples/reports/vault-risk-fixture-pre-audit-report.md
+          grep -qi "Vault Rule Pack Coverage" examples/reports/vault-risk-fixture-pre-audit-report.md
+          grep -qi "Rule Pack Coverage" examples/reports/oracle-staking-fixture-pre-audit-report.md
+          grep -qi "Analysis Quality" examples/reports/semantic-lite-fixture-pre-audit-report.md
+          grep -qi "Evidence" examples/reports/semantic-lite-fixture-pre-audit-report.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-launch-report.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-sprint-plan.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-contest-readiness.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-executive-summary.md
+          grep -qi "not a formal audit" examples/reports/oracle-staking-fixture-remediation-roadmap.md
+          grep -qi "not a formal audit" examples/reports/demo-launch-report.md
+          grep -qi "not a formal audit" examples/reports/demo-sprint-plan.md
+          grep -qi "not a formal audit" examples/reports/demo-contest-readiness.md
+
+      - name: Verify unsafe marketing phrases are absent
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          phrases = [
+              "guaranteed " + "secure",
+              "audit " + "replacement",
+              "cheap " + "audit",
+              "exploit " + "live",
+              "d" + "rain helper",
+              "profit " + "calculator",
+              "bounty " + "guaranteed",
+              "fully " + "verified database",
+              "autonomous " + "exploit runner",
+              "attack " + "live protocol",
+              "weapon" + "ize",
+              "exploit " + "any protocol",
+              "guaranteed " + "bounty",
+              "guaranteed " + "findings",
+              "auto " + "exploit",
+          ]
+          roots = [
+              Path("README.md"),
+              Path("SERVICES.md"),
+              Path("docs"),
+              Path("docs/PRE_AUDIT_READINESS_OS.md"),
+              Path("docs/GITHUB_ACTION_USAGE.md"),
+              Path("docs/PR_COMMENT_MODE.md"),
+              Path("docs/GENERATED_ISSUE_CHECKLIST.md"),
+              Path("docs/ARKHEIONX_CONFIG.md"),
+              Path("docs/READINESS_SCORE.md"),
+              Path("docs/business/INDIE_BUILDER_OFFER.md"),
+              Path("docs/SEARCH_GUIDE.md"),
+              Path("docs/marketing/MARKETING_ENGINE.md"),
+              Path("docs/business/MONETIZATION.md"),
+              Path("docs/business/SPONSORSHIP.md"),
+              Path("docs/ETHICS.md"),
+              Path(".github/actions"),
+              Path("templates"),
+          ]
+          failures = []
+          for root in roots:
+              files = [root] if root.is_file() else list(root.rglob("*"))
+              for path in files:
+                  if not path.is_file() or path.suffix.lower() not in {".md", ".yml", ".yaml", ".sol"}:
+                      continue
+                  text = path.read_text(encoding="utf-8", errors="ignore").lower()
+                  for phrase in phrases:
+                      if phrase in text:
+                          failures.append(f"{path}: {phrase}")
+          if failures:
+              raise SystemExit("Unsafe phrase check failed:\n" + "\n".join(failures))
+          print("unsafe phrase check passed")
+          PY

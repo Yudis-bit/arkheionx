@@ -1,0 +1,9 @@
+Ran 5 tests for test/LendingVault.t.sol:LendingVaultTest
+[PASS] testDeposit() (gas: 42111)
+[PASS] testWithdrawRevertsWhenPaused() (gas: 30122)
+[FAIL: assertion failed: health factor below threshold] testLiquidationEdgeCase() (gas: 51234)
+[SKIP] testOracleStalePrice()
+[TODO] testMalformedSetup()
+Suite result: FAILED. 2 passed; 1 failed; 1 skipped; finished in 21.40ms
+
+Ran 1 test suite in 24.10ms (21.40ms CPU time): 2 tests passed, 1 failed, 1 skipped (4 total tests)

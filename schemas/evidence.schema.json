@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Evidence Package",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "generated_at", "project_root",
+    "target", "target_id", "evidence_level", "status", "source_artifacts",
+    "proof_summary", "trace_summary", "protocol_context", "impact_notes",
+    "recommended_next_steps"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "evidence_package_id": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "project_root": {"type": "string"},
+    "target": {"type": "string"},
+    "target_id": {"type": "string"},
+    "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "EVIDENCE_READY"]},
+    "status": {"type": "string"},
+    "source_artifacts": {
+      "type": "object",
+      "properties": {
+        "proof_json": {"type": "string"},
+        "trace_json": {"type": "string"},
+        "trace_status": {"type": "string"},
+        "raw_foundry_output": {"type": "string"},
+        "generated_test": {"type": "string"}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {"type": "string"},
+        "package_id": {"type": "string"},
+        "target": {"type": "string"},
+        "target_id": {"type": "string"},
+        "evidence_level": {"type": "string"},
+        "readiness": {"type": "string"},
+        "source_count": {"type": "integer"},
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {"type": "string"},
+              "path": {"type": "string"},
+              "exists": {"type": "boolean"},
+              "receipt_id": {"type": "string"},
+              "target_id": {"type": "string"},
+              "review_map_target": {"type": "string"},
+              "evidence_level": {"type": "string"},
+              "status": {"type": "string"},
+              "source_proof_json": {"type": "string"}
+            }
+          }
+        },
+        "checks": {
+          "type": "object",
+          "properties": {
+            "proof_linked": {"type": "boolean"},
+            "trace_linked": {"type": "boolean"},
+            "trace_required_for_evidence_ready": {"type": "boolean"},
+            "source_paths_recorded": {"type": "boolean"},
+            "human_review_required": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "proof_summary": {
+      "type": "object",
+      "required": ["status", "tests_run", "passed", "failed", "skipped"],
+      "properties": {
+        "tests_run": {"type": "integer"},
+        "passed": {"type": "integer"},
+        "failed": {"type": "integer"},
+        "skipped": {"type": "integer"},
+        "failed_tests": {"type": "array", "items": {"type": "string"}},
+        "skipped_tests": {"type": "array", "items": {"type": "string"}},
+        "foundry_command": {"type": "string"}
+      }
+    },
+    "trace_summary": {
+      "type": "object",
+      "properties": {
+        "summary_available": {"type": "boolean"},
+        "status": {"type": "string"},
+        "source": {"type": "string"},
+        "reverts": {"type": "array"},
+        "assertion_failures": {"type": "array"},
+        "call_sequence": {"type": "array"},
+        "logs": {"type": "array"}
+      }
+    },
+    "protocol_context": {
+      "type": "object",
+      "properties": {
+        "role": {"type": "string"},
+        "score": {"type": "integer"},
+        "why_it_matters": {"type": "array"},
+        "likely_bug_classes": {"type": "array"},
+        "money_flow_role": {"type": "string"}
+      }
+    },
+    "impact_notes": {
+      "type": "object",
+      "required": ["candidate_impact", "affected_components", "assumptions", "limitations"],
+      "properties": {
+        "candidate_impact": {"type": "string"},
+        "affected_components": {"type": "array", "items": {"type": "string"}},
+        "assumptions": {"type": "array", "items": {"type": "string"}},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "recommended_next_steps": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,95 @@
+name: False Positive Report
+description: Report an Arkheionx scanner signal that needs better calibration.
+title: "[False Positive]: "
+labels: ["scanner-calibration", "false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping calibrate Arkheionx.
+
+        Safety first:
+        - Do not disclose unpatched vulnerabilities publicly.
+        - Do not include private keys, secrets, mnemonics, RPC credentials, or API tokens.
+        - Do not include private repository contents unless you are authorized.
+        - Do not include exploit steps for live targets.
+        - For bounty findings, follow the program's disclosure policy.
+  - type: input
+    id: arkheionx_version
+    attributes:
+      label: Arkheionx version
+      placeholder: "v1.1.1 or commit SHA"
+    validations:
+      required: true
+  - type: input
+    id: finding_id
+    attributes:
+      label: Finding ID
+      placeholder: ARK-VLT-001, ARK-ORC-001, ARK-TST-001
+    validations:
+      required: false
+  - type: input
+    id: report_section
+    attributes:
+      label: Report section
+      placeholder: Historical pattern similarity, readiness gap, score category, issue plan
+    validations:
+      required: true
+  - type: input
+    id: rule_or_signal
+    attributes:
+      label: Rule or signal
+      placeholder: vault accounting, oracle-risk, reentrancy-review
+    validations:
+      required: true
+  - type: textarea
+    id: why_false_positive
+    attributes:
+      label: Why it is a false positive
+      description: Keep details sanitized. Focus on why the readiness signal should be downgraded, reworded, or suppressed for this context.
+      placeholder: Explain the protocol context and why the signal should be reduced or reclassified.
+    validations:
+      required: true
+  - type: dropdown
+    id: generated_artifacts_ignored
+    attributes:
+      label: Were generated Arkheionx artifacts ignored?
+      description: This helps maintainers check for self-ingestion regressions.
+      options:
+        - "Yes"
+        - "No"
+        - "Not sure"
+    validations:
+      required: true
+  - type: checkboxes
+    id: evidence_source
+    attributes:
+      label: Where did the evidence appear to come from?
+      options:
+        - label: Source code
+        - label: Tests
+        - label: Documentation
+        - label: Comments
+        - label: Generated artifact
+        - label: Not sure
+  - type: textarea
+    id: code_reference
+    attributes:
+      label: Minimal sanitized code reference if safe
+      description: Remove secrets, private code, addresses, exploit steps, and sensitive details.
+      placeholder: File paths, line references, or public repository links.
+      render: text
+  - type: textarea
+    id: suggested_improvement
+    attributes:
+      label: Suggested improvement
+      placeholder: Detection rule, wording, scoring, or documentation improvement.
+  - type: checkboxes
+    id: safety_confirmation
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not include secrets, private keys, mnemonics, RPC credentials, or unauthorized target details.
+          required: true
+        - label: I did not publicly disclose unpatched vulnerability details.
+          required: true

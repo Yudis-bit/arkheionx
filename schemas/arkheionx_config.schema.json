@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arkheionx.local/schemas/arkheionx_config.schema.json",
+  "title": "Arkheionx Config",
+  "description": "Stable local/static Arkheionx configuration shape for v1.7.0.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.7.0"
+    },
+    "protocol_type": {
+      "type": "string",
+      "enum": ["auto", "generic", "vault", "oracle", "access-control", "rewards", "staking", "amm", "lending", "hybrid"]
+    },
+    "rule_packs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["vault", "oracle", "access-control", "reentrancy-value-flow", "rewards", "testing", "docs", "amm", "lending"]
+      },
+      "uniqueItems": true
+    },
+    "min_confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "output_profile": {
+      "type": "string",
+      "enum": ["concise", "standard", "full", "ci"]
+    },
+    "scan": {
+      "type": "object",
+      "properties": {
+        "ignore_generated_artifacts": {"type": "boolean"},
+        "include_generated_artifacts": {"type": "boolean"},
+        "extra_ignore_paths": {"type": "array", "items": {"type": "string"}},
+        "extra_ignore_globs": {"type": "array", "items": {"type": "string"}},
+        "max_file_size_kb": {"type": ["integer", "null"], "minimum": 1},
+        "include_tests": {"type": "boolean"},
+        "include_docs": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "reports": {
+      "type": "object",
+      "properties": {
+        "include_related_knowledge": {"type": "boolean"},
+        "include_evidence_snippets": {"type": "boolean"},
+        "include_suggested_tests": {"type": "boolean"},
+        "include_issue_plan": {"type": "boolean"},
+        "include_executive_summary": {"type": "boolean"},
+        "max_top_gaps": {"type": "integer", "minimum": 1, "maximum": 20}
+      },
+      "additionalProperties": false
+    },
+    "test_plan": {
+      "type": "object",
+      "properties": {
+        "include_foundry_skeletons": {"type": "boolean"},
+        "group_by_rule_family": {"type": "boolean"},
+        "include_low_confidence": {"type": "boolean"},
+        "output_profile": {"type": "string", "enum": ["concise", "standard", "full"]}
+      },
+      "additionalProperties": false
+    },
+    "suppressions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "reason"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^ARK-[A-Z]+(-[0-9*]+)?$"},
+          "path": {"type": "string"},
+          "reason": {"type": "string", "minLength": 1},
+          "expires": {"type": "string", "format": "date"},
+          "owner": {"type": "string"},
+          "review_after": {"type": "string", "format": "date"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "additional_search_tags": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "analysis": {
+      "type": "object",
+      "description": "Legacy-compatible scanner analysis controls retained for v1.x script compatibility."
+    }
+  },
+  "additionalProperties": true
+}

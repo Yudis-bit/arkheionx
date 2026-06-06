@@ -1,0 +1,1727 @@
+{
+  "baseline_path": "examples/reports/vault-risk-fixture.baseline.json",
+  "changed": [],
+  "counts": {
+    "changed": 0,
+    "new": 0,
+    "resolved": 0,
+    "suppressed": 0,
+    "unchanged": 16
+  },
+  "new": [],
+  "resolved": [],
+  "suppressed_findings": [],
+  "unchanged": [
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Vault/ERC4626-like accounting signals were detected, but no non-placeholder invariant/property testing signal was found.",
+      "detected_signals": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "d474ed51fd47af909b7de386",
+      "historical_pattern_similarity": "Maps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.",
+      "id": "ARK-VLT-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add Foundry invariants for share/accounting conservation across deposit, withdraw, donation, fee, and emergency scenarios.",
+      "recommended_defensive_checks": [
+        "deposit/withdraw roundtrip",
+        "convertToShares/convertToAssets consistency",
+        "donation/inflation resistance",
+        "rounding direction tests",
+        "totalAssets external dependency tests"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
+      ],
+      "suppressible": true,
+      "tags": [
+        "vault-accounting",
+        "invariant-testing",
+        "erc4626"
+      ],
+      "title": "Vault accounting without invariant tests",
+      "why_it_matters": "Vault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Preview function signals were detected, but test files do not visibly cover previewDeposit, previewMint, previewWithdraw, or previewRedeem.",
+      "detected_signals": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "4699c77d2310718cb78ca2c0",
+      "historical_pattern_similarity": "Maps to share/accounting mismatch classes where quoted and realized vault state diverge.",
+      "id": "ARK-VLT-002",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests that preview functions match actual state-changing outcomes within documented rounding bounds.",
+      "recommended_defensive_checks": [
+        "preview/action equivalence",
+        "rounding direction tests",
+        "max function boundary tests"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For each preview function, compare the previewed shares/assets with the actual deposit, mint, withdraw, or redeem result."
+      ],
+      "suppressible": true,
+      "tags": [
+        "erc4626",
+        "preview-functions",
+        "vault-accounting"
+      ],
+      "title": "ERC4626-like interface without preview function tests",
+      "why_it_matters": "ERC4626 integrations often rely on preview functions for quotes and UX; inconsistent previews can create user and integration risk."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Shares/assets conversion signals were detected without visible decimals, precision, mulDiv, or rounding test coverage.",
+      "detected_signals": [
+        "asset()",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "depositFee",
+        "feeRecipient",
+        "managementFee",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "performanceFee",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "redeem",
+        "shares",
+        "totalAssets",
+        "totalSupply",
+        "treasury",
+        "withdraw",
+        "withdrawalFee"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "2543fa93b9f4489b285e5d07",
+      "historical_pattern_similarity": "Maps to historical arithmetic and accounting mismatch classes where precision assumptions failed.",
+      "id": "ARK-VLT-003",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests for rounding direction, small values, decimals mismatch, and conversion reversibility.",
+      "recommended_defensive_checks": [
+        "small amount tests",
+        "decimals normalization",
+        "mulDiv/precision review",
+        "conversion reversibility"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Fuzz assets and shares across small, large, and decimal-edge values and assert conversion error stays within documented bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "share-accounting",
+        "rounding",
+        "precision"
+      ],
+      "title": "Shares/assets conversion without rounding tests",
+      "why_it_matters": "Small rounding mistakes in conversion functions can compound into unfair share issuance, redemption drift, or stranded assets."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "totalAssets appears connected to external strategy, pricing, or balance assumptions without visible manipulation-resistance test coverage.",
+      "detected_signals": [
+        "allocate",
+        "answer",
+        "answeredInRound",
+        "assets",
+        "balanceOf",
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "emergencyExit",
+        "gain",
+        "getPrice",
+        "harvest",
+        "latestRoundData",
+        "loss",
+        "maxDeposit",
+        "maxMint",
+        "maxRedeem",
+        "maxWithdraw",
+        "mint",
+        "previewDeposit",
+        "previewMint",
+        "previewRedeem",
+        "previewWithdraw",
+        "priceFeed",
+        "profit",
+        "rebalance",
+        "redeem",
+        "report",
+        "roundId",
+        "setOracle",
+        "shares",
+        "strategy",
+        "totalAssets",
+        "totalDebt",
+        "totalSupply",
+        "updatedAt",
+        "withdraw",
+        "withdrawFromStrategy"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "72f63eeec0f9b95321aaae3d",
+      "historical_pattern_similarity": "Maps to Harvest/Yearn-style vault readiness classes where pricing or strategy state influenced share accounting.",
+      "id": "ARK-VLT-004",
+      "priority": "Medium readiness gap",
+      "recommendation": "Test totalAssets under donated assets, mocked strategy gain/loss, and mocked stale or bounded pricing where relevant.",
+      "recommended_defensive_checks": [
+        "donation tests",
+        "mock strategy gain/loss",
+        "stale/bounded oracle tests",
+        "share price drift checks"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Mock external strategy or price state and assert totalAssets, share price, and withdrawal accounting remain within documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "totalAssets",
+        "strategy-accounting",
+        "oracle-risk"
+      ],
+      "title": "totalAssets external dependency without manipulation-resistance tests",
+      "why_it_matters": "Vault share value often depends on totalAssets; external balances, strategies, or prices can make the accounting view drift from user expectations."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-strategy",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Strategy, harvest, debt, gain, loss, or migration signals were detected without visible strategy lifecycle tests.",
+      "detected_signals": [
+        "allocate",
+        "emergencyExit",
+        "gain",
+        "harvest",
+        "loss",
+        "profit",
+        "rebalance",
+        "report",
+        "strategy",
+        "totalDebt",
+        "withdrawFromStrategy"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "4a76e66745f3e45b5e8a32aa",
+      "historical_pattern_similarity": "Maps to strategy debt/gain/loss accounting readiness classes.",
+      "id": "ARK-VLT-005",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests for strategy report, harvest, gain, loss, debt changes, withdrawals, and migration or emergency exit if present.",
+      "recommended_defensive_checks": [
+        "gain report",
+        "loss report",
+        "debt update",
+        "withdrawFromStrategy",
+        "strategy migration"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Use a local mock strategy that reports gain and loss, then assert totalAssets and share accounting follow documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "strategy-accounting",
+        "gain-loss",
+        "vault-lifecycle"
+      ],
+      "title": "Strategy accounting without gain/loss tests",
+      "why_it_matters": "Strategy vaults can look solvent until gain/loss, debt, or migration paths update accounting in unexpected ways."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-withdrawal",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Withdrawal queue, cooldown, epoch, pending withdrawal, or liquidity-buffer signals were detected without visible lifecycle tests.",
+      "detected_signals": [
+        "cancelWithdraw",
+        "claimWithdraw",
+        "cooldown",
+        "liquidityBuffer",
+        "pendingWithdraw",
+        "requestWithdraw",
+        "withdrawalQueue"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "3e2b22e5dc8e31cae397c485",
+      "historical_pattern_similarity": "Maps to vault lifecycle readiness classes where exit accounting or liquidity assumptions can break.",
+      "id": "ARK-VLT-006",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests for request, cooldown/epoch movement, claim, cancellation, and insufficient-liquidity behavior.",
+      "recommended_defensive_checks": [
+        "requestWithdraw",
+        "claimWithdraw",
+        "cancelWithdraw",
+        "cooldown",
+        "available liquidity"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Test the full withdrawal lifecycle and assert shares/assets are conserved across request, cooldown, claim, and cancellation."
+      ],
+      "suppressible": true,
+      "tags": [
+        "withdrawal-queue",
+        "liquidity",
+        "vault-lifecycle"
+      ],
+      "title": "Withdrawal queue/cooldown without lifecycle tests",
+      "why_it_matters": "Delayed withdrawals create state machines; audit preparation should prove shares and assets are conserved through each state."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Oracle, price-feed, pool-price, reserve, TWAP, or LP pricing signals were detected without enough stale-price, bounds, or sanity-check coverage.",
+      "detected_signals": [
+        "answer",
+        "answeredInRound",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "getPrice",
+          "line": 242,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: price, updatedat.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/VaultRiskFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt",
+          "type": "keyword"
+        },
+        {
+          "file": "test/VaultRiskFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": "src/VaultRiskFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "2a76f44f8e1a1f7d34c242b8",
+      "historical_pattern_similarity": "Maps to historical vault/oracle and pool-price manipulation readiness classes.",
+      "id": "ARK-ORC-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add local mock price tests for stale rounds, decimals normalization, price bounds, and fallback behavior.",
+      "recommended_defensive_checks": [
+        "stale price rejection",
+        "decimals normalization",
+        "TWAP/sanity check",
+        "bounds",
+        "oracle setter roles"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Use local mock oracles/pools to test stale, out-of-bounds, decimals, and spot-price scenarios without live-chain calls."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "vault-pricing",
+        "pool-price"
+      ],
+      "title": "Oracle-dependent vault without stale-price or bounds tests",
+      "why_it_matters": "Vaults that price assets, LP tokens, or strategies through external sources need explicit assumptions around stale, spot, and bounded prices."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Fee terms were detected without visible tests for fee accounting, recipient balances, or conservation around fee paths.",
+      "detected_signals": [
+        "depositFee",
+        "feeRecipient",
+        "managementFee",
+        "performanceFee",
+        "withdrawalFee"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "7f72d71494f71983fafe142d",
+      "historical_pattern_similarity": "Maps to accounting mismatch classes where protocol fees changed conservation assumptions.",
+      "id": "ARK-VLT-007",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add deposit, withdrawal, management, and performance fee tests where relevant.",
+      "recommended_defensive_checks": [
+        "fee bounds",
+        "recipient accounting",
+        "share conservation",
+        "rounding with fees"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations."
+      ],
+      "suppressible": true,
+      "tags": [
+        "fee-accounting",
+        "vault-accounting"
+      ],
+      "title": "Fee logic without fee accounting tests",
+      "why_it_matters": "Fee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "previewDeposit",
+        "previewMint",
+        "totalAssets"
+      ],
+      "category": "vault-operations",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Pause or emergency signals were detected without visible tests for blocked flows and documented recovery behavior.",
+      "detected_signals": [
+        "emergencyWithdraw",
+        "pause",
+        "rescue",
+        "setDepositLimit",
+        "setFee",
+        "setMaxLoss",
+        "setOracle",
+        "setSlippage",
+        "setStrategy",
+        "setTreasury",
+        "setWithdrawLimit",
+        "sweep",
+        "unpause"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "totalAssets",
+          "line": 63,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToShares",
+          "line": 69,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "convertToAssets",
+          "line": 76,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewDeposit",
+          "line": 83,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewDeposit",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "previewMint",
+          "line": 87,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "previewMint",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "false_positive_notes": "",
+      "fingerprint": "cebac95341fc47229d46feb4",
+      "historical_pattern_similarity": "Maps to operational readiness classes where emergency behavior changes core state transitions.",
+      "id": "ARK-VLT-008",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests showing pause/emergency controls block risky flows and preserve documented exit or recovery paths.",
+      "recommended_defensive_checks": [
+        "pause blocks deposit",
+        "pause blocks withdraw/redeem if intended",
+        "emergency exit behavior",
+        "role boundary"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert pause and emergency states block or allow each vault flow exactly as documented."
+      ],
+      "suppressible": true,
+      "tags": [
+        "pause",
+        "emergency-controls",
+        "vault-operations"
+      ],
+      "title": "Pause/emergency controls without operational tests",
+      "why_it_matters": "Emergency controls are launch-critical; they should behave predictably under stress without bypassing accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Oracle decimals or price normalization signals were detected without visible normalization tests.",
+      "detected_signals": [
+        "answer",
+        "answeredInRound",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "getPrice",
+          "line": 242,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: price, updatedat.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/VaultRiskFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt",
+          "type": "keyword"
+        },
+        {
+          "file": "test/VaultRiskFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": "src/VaultRiskFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "4226f4a7f7d39a3169f349ca",
+      "historical_pattern_similarity": "Maps to arithmetic and oracle normalization failure classes.",
+      "id": "ARK-ORC-002",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests for decimals normalization, precision scaling, and mixed-decimal asset assumptions.",
+      "recommended_defensive_checks": [
+        "decimals normalization",
+        "mixed asset decimals",
+        "precision scaling",
+        "rounding bounds"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Mock price feeds with different decimals and assert protocol accounting normalizes every value before use."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "decimals",
+        "precision",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle decimals or normalization not covered by tests",
+      "why_it_matters": "Decimals mismatches can distort collateral, share, reward, or pricing calculations even when the oracle value itself is fresh."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "getPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Oracle setter or fallback oracle signals were detected without visible unauthorized-call tests.",
+      "detected_signals": [
+        "answer",
+        "answeredInRound",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed",
+        "roundId",
+        "setOracle",
+        "updatedAt"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "getPrice",
+          "line": 242,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: price, updatedat.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/VaultRiskFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt",
+          "type": "keyword"
+        },
+        {
+          "file": "test/VaultRiskFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, answeredInRound, getPrice, latestRoundData, priceFeed, roundId, setOracle, updatedAt",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": "src/VaultRiskFixture.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "90c5089a8e8d398207a33b44",
+      "historical_pattern_similarity": "Maps to privileged control and oracle configuration readiness classes.",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving only documented roles can update oracle configuration.",
+      "recommended_defensive_checks": [
+        "unauthorized setOracle reverts",
+        "trusted role documentation",
+        "fallback oracle controls"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert unprivileged callers cannot change oracle or fallback oracle configuration."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests",
+      "why_it_matters": "Oracle configuration changes can alter all downstream accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "allocate",
+        "harvest",
+        "rebalance",
+        "report",
+        "withdrawFromStrategy"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Privileged setter or role-management signals were detected without visible unauthorized-call coverage.",
+      "detected_signals": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "rescue",
+        "setFee",
+        "setOracle",
+        "setStrategy",
+        "setTreasury",
+        "sweep",
+        "unpause"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "allocate",
+          "line": 168,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "withdrawFromStrategy",
+          "line": 172,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "harvest",
+          "line": 176,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "rebalance",
+          "line": 185,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "report",
+          "line": 187,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `allocate`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "873e0dd81bdb487c66494a7b",
+      "historical_pattern_similarity": "Maps to access-control failure classes where privileged paths were under-specified or incorrectly guarded.",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving unauthorized users cannot call privileged setters or role-management functions.",
+      "recommended_defensive_checks": [
+        "unauthorized setter tests",
+        "role grant/revoke tests",
+        "pause role tests",
+        "timelock/multisig assumptions"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests",
+      "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "allocate",
+        "harvest",
+        "rebalance",
+        "report",
+        "withdrawFromStrategy"
+      ],
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detail": "Admin, owner, guardian, operator, role, multisig, or timelock signals were detected without clear role-concentration documentation.",
+      "detected_signals": [
+        "emergencyWithdraw",
+        "onlyOwner",
+        "owner",
+        "pause",
+        "rescue",
+        "setFee",
+        "setOracle",
+        "setStrategy",
+        "setTreasury",
+        "sweep",
+        "unpause"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "allocate",
+          "line": 168,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "withdrawFromStrategy",
+          "line": 172,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "harvest",
+          "line": 176,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "rebalance",
+          "line": 185,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "report",
+          "line": 187,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `allocate`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "9c0f87f7015c0acdf10e7e29",
+      "historical_pattern_similarity": "Maps to operational control readiness classes.",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "recommendation": "Document who can change critical configuration and whether controls use a multisig, timelock, guardian, or single owner.",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "suppressible": true,
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented",
+      "why_it_matters": "Role concentration affects operational risk and audit scope even when access control code is syntactically correct."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimWithdraw",
+        "deposit",
+        "mint",
+        "requestWithdraw",
+        "withdraw"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Withdraw, redeem, claim, transfer, callback, or low-level call signals were detected without a visible reentrancy guard signal.",
+      "detected_signals": [
+        "redeem",
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "deposit",
+          "line": 115,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "mint",
+          "line": 124,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "withdraw",
+          "line": 131,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets - feeAssets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "requestWithdraw",
+          "line": 148,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(balanceOf[msg.sender] >= shares, \"INSUFFICIENT_SHARES\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "claimWithdraw",
+          "line": 154,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(msg.sender, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `deposit`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "024b820efcb241936e75e157",
+      "historical_pattern_similarity": "Maps to reentrancy and callback-driven value-flow readiness classes.",
+      "id": "ARK-REENT-001",
+      "priority": "High readiness gap",
+      "recommendation": "Review state ordering and add local reentrant receiver tests around every value-flow path.",
+      "recommended_defensive_checks": [
+        "state update before external call",
+        "reentrant receiver mock",
+        "failed external call behavior",
+        "single-claim guarantees"
+      ],
+      "severity": "High readiness gap",
+      "suggested_tests": [
+        "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "value-flow",
+        "reentrancy-rule-pack"
+      ],
+      "title": "Value flow with external calls needs reentrancy review",
+      "why_it_matters": "External calls can hand control to untrusted code before accounting reaches a safe state."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimWithdraw",
+        "deposit",
+        "mint",
+        "requestWithdraw",
+        "withdraw"
+      ],
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation.",
+      "detected_signals": [
+        "redeem",
+        "transfer",
+        "transferFrom",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "deposit",
+          "line": 115,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "mint",
+          "line": 124,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "withdraw",
+          "line": 131,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets - feeAssets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "requestWithdraw",
+          "line": 148,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(balanceOf[msg.sender] >= shares, \"INSUFFICIENT_SHARES\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "claimWithdraw",
+          "line": 154,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(msg.sender, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/VaultRiskFixture.sol in `deposit`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "28cce94cfe9d588f2d3119f8",
+      "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design.",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reentrancy-review",
+        "documentation-readiness",
+        "reentrancy-rule-pack"
+      ],
+      "title": "External call path without documented ordering assumptions",
+      "why_it_matters": "Reviewers need clear state-ordering assumptions to evaluate external call safety."
+    },
+    {
+      "affected_contracts": [
+        "VaultRiskFixture"
+      ],
+      "affected_files": [
+        "src/VaultRiskFixture.sol",
+        "test/VaultRiskFixture.t.sol"
+      ],
+      "affected_functions": [
+        "claimWithdraw"
+      ],
+      "category": "reward-accounting",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Lock, cooldown, epoch, or vesting signals were detected without visible lifecycle tests.",
+      "detected_signals": [
+        "cooldown",
+        "shares",
+        "withdraw"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "VaultRiskFixture",
+          "file": "src/VaultRiskFixture.sol",
+          "function": "claimWithdraw",
+          "line": 154,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(msg.sender, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reward test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/VaultRiskFixture.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "cooldown, shares, withdraw",
+          "type": "keyword"
+        },
+        {
+          "file": "test/VaultRiskFixture.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "cooldown, shares, withdraw",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 4,
+      "evidence_summary": "src/VaultRiskFixture.sol in `claimWithdraw`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "8c351dd4a656aea8a7f8eacc",
+      "historical_pattern_similarity": "Maps to reward lifecycle and state-transition readiness classes.",
+      "id": "ARK-RWD-004",
+      "priority": "Low readiness gap",
+      "recommendation": "Add tests for stake, lock/cooldown, reward accrual, claim, and unstake lifecycle transitions.",
+      "recommended_defensive_checks": [
+        "epoch boundaries",
+        "cooldown transitions",
+        "vesting claim timing"
+      ],
+      "severity": "Low readiness gap",
+      "suggested_tests": [
+        "Advance local time/epochs and assert reward and withdrawal state transitions follow documented policy."
+      ],
+      "suppressible": true,
+      "tags": [
+        "reward-accounting",
+        "staking-lifecycle",
+        "staking-rule-pack"
+      ],
+      "title": "Lock/cooldown reward lifecycle not tested",
+      "why_it_matters": "Time or epoch-based reward states are easy to mis-handle around boundary transitions."
+    }
+  ],
+  "warnings": []
+}

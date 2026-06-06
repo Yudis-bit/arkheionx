@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Install Receipt",
+  "description": "Local install state written by install.sh and read by arkup. Runtime-only; never committed.",
+  "type": "object",
+  "required": ["schema_version", "tool", "install_method", "source_kind", "install_dir", "bin_dir"],
+  "properties": {
+    "schema_version": {"type": "integer", "enum": [1]},
+    "tool": {"type": "string"},
+    "installed_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "install_method": {"type": "string", "enum": ["pipx", "venv"]},
+    "source_kind": {"type": "string", "enum": ["stable", "main", "ref", "local"]},
+    "repo_url": {"type": "string"},
+    "ref": {"type": "string"},
+    "local_path": {"type": "string"},
+    "install_dir": {"type": "string"},
+    "bin_dir": {"type": "string"},
+    "command_path": {"type": "string"},
+    "detected_python": {"type": "string"},
+    "installed_version": {"type": "string"},
+    "installer_version": {"type": "string"},
+    "notes": {"type": "string"}
+  }
+}

@@ -1,0 +1,416 @@
+name: Arkheionx Pre-Audit Scan
+description: GitHub-native pre-audit readiness scanner for indie DeFi protocols.
+inputs:
+  root:
+    description: Repository root to scan.
+    required: false
+    default: "."
+  protocol-type:
+    description: "Protocol type: auto, generic, vault, oracle, access-control, rewards, staking, amm, lending, hybrid."
+    required: false
+    default: "auto"
+  output:
+    description: Markdown report output path.
+    required: false
+    default: "ARKHEIONX_PRE_AUDIT_REPORT.md"
+  json-output:
+    description: Optional JSON report output path.
+    required: false
+    default: ""
+  sarif-output:
+    description: Optional SARIF output path for GitHub Code Scanning upload.
+    required: false
+    default: ""
+  upload-sarif:
+    description: Whether to upload SARIF. Composite action generates SARIF only; use a separate upload-sarif step.
+    required: false
+    default: "false"
+  baseline-output:
+    description: Optional compact Arkheionx baseline JSON output path.
+    required: false
+    default: ""
+  compare-baseline:
+    description: Optional previous Arkheionx baseline JSON path for diff mode.
+    required: false
+    default: ""
+  diff-output:
+    description: Optional standalone Markdown diff report output path.
+    required: false
+    default: ""
+  diff-json-output:
+    description: Optional standalone JSON diff output path.
+    required: false
+    default: ""
+  summary:
+    description: Write an Arkheionx summary to the GitHub Actions job summary.
+    required: false
+    default: "true"
+  summary-output:
+    description: Local Markdown path for generated GitHub Actions summary content.
+    required: false
+    default: "ARKHEIONX_ACTION_SUMMARY.md"
+  pr-comment:
+    description: Post or update an Arkheionx pull request comment.
+    required: false
+    default: "false"
+  github-token:
+    description: GitHub token used only for optional PR comment and issue workflows.
+    required: false
+    default: ""
+  comment-output:
+    description: Path for generated PR comment body.
+    required: false
+    default: "ARKHEIONX_PR_COMMENT.md"
+  comment-mode:
+    description: "PR comment mode: update or append."
+    required: false
+    default: "update"
+  create-issue-checklist:
+    description: Generate a Markdown issue checklist.
+    required: false
+    default: "true"
+  issue-checklist-output:
+    description: Generated issue checklist Markdown path.
+    required: false
+    default: "ARKHEIONX_ISSUE_CHECKLIST.md"
+  issue-plan-output:
+    description: Optional JSON issue plan output path.
+    required: false
+    default: ""
+  create-github-issues:
+    description: Create or update GitHub issues from Arkheionx issue plan.
+    required: false
+    default: "false"
+  issue-create-mode:
+    description: "Issue mode: dry-run, create, update."
+    required: false
+    default: "dry-run"
+  issue-grouping:
+    description: "Issue grouping: one-per-finding or summary."
+    required: false
+    default: "one-per-finding"
+  issue-max:
+    description: Maximum issues to create or update.
+    required: false
+    default: "5"
+  issue-only-priority:
+    description: "Priority filter: critical, high, medium, low, informational, all."
+    required: false
+    default: "high"
+  issue-labels:
+    description: Comma-separated extra issue labels.
+    required: false
+    default: ""
+  issue-assignees:
+    description: Comma-separated issue assignees.
+    required: false
+    default: ""
+  issue-dry-run-output:
+    description: Optional dry-run Markdown output path.
+    required: false
+    default: "ARKHEIONX_ISSUE_DRY_RUN.md"
+  launch-report-output:
+    description: Optional Launch Readiness Report Markdown output path.
+    required: false
+    default: ""
+  sprint-plan-output:
+    description: Optional Pre-Audit Sprint Plan Markdown output path.
+    required: false
+    default: ""
+  sprint-days:
+    description: "Sprint length: 3, 5, 7, or 10 days."
+    required: false
+    default: "5"
+  contest-readiness-output:
+    description: Optional Contest Readiness Report Markdown output path.
+    required: false
+    default: ""
+  executive-summary-output:
+    description: Optional one-page executive summary Markdown output path.
+    required: false
+    default: ""
+  remediation-roadmap-output:
+    description: Optional remediation roadmap Markdown output path.
+    required: false
+    default: ""
+  semantic-lite:
+    description: Enable semantic-lite Solidity structure extraction.
+    required: false
+    default: "true"
+  slither:
+    description: Enable optional local Slither integration if available.
+    required: false
+    default: "false"
+  slither-json:
+    description: Optional pre-generated Slither JSON file.
+    required: false
+    default: ""
+  slither-output:
+    description: Optional normalized Arkheionx Slither summary output path.
+    required: false
+    default: ""
+  slither-timeout:
+    description: Slither timeout in seconds.
+    required: false
+    default: "60"
+  slither-strict:
+    description: Fail if Slither is requested but unavailable or fails.
+    required: false
+    default: "false"
+  min-confidence-for-issue-plan:
+    description: Minimum finding confidence included in generated issue plans.
+    required: false
+    default: "low"
+  config:
+    description: Optional Arkheionx config file path.
+    required: false
+    default: ".arkheionx.json"
+  generate-invariant-skeletons:
+    description: Generate safe Foundry invariant skeletons.
+    required: false
+    default: "false"
+  fail-on-critical-readiness-gap:
+    description: Fail workflow if critical readiness gaps are detected.
+    required: false
+    default: "false"
+  fail-on-new-high:
+    description: Fail workflow if diff mode detects new high or critical readiness gaps.
+    required: false
+    default: "false"
+  fail-score-below:
+    description: Fail workflow if readiness score is below this numeric threshold.
+    required: false
+    default: ""
+  fail-on-unsuppressed-high:
+    description: Fail workflow if unsuppressed high or critical readiness gaps are present.
+    required: false
+    default: "false"
+  create-issues:
+    description: Legacy scanner flag. Use create-github-issues for the opt-in remote issue workflow.
+    required: false
+    default: "false"
+  verbose:
+    description: Print scanner details.
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Run Arkheionx pre-audit scanner
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        ARGS=(--root "${{ inputs.root }}" --protocol-type "${{ inputs.protocol-type }}" --output "${{ inputs.output }}")
+
+        if [ -n "${{ inputs.json-output }}" ]; then
+          ARGS+=(--json-output "${{ inputs.json-output }}")
+        fi
+
+        if [ -n "${{ inputs.sarif-output }}" ]; then
+          ARGS+=(--sarif-output "${{ inputs.sarif-output }}")
+        fi
+
+        if [ -n "${{ inputs.baseline-output }}" ]; then
+          ARGS+=(--baseline-output "${{ inputs.baseline-output }}")
+        fi
+
+        if [ -n "${{ inputs.compare-baseline }}" ]; then
+          ARGS+=(--compare-baseline "${{ inputs.compare-baseline }}")
+        fi
+
+        if [ -n "${{ inputs.diff-output }}" ]; then
+          ARGS+=(--diff-output "${{ inputs.diff-output }}")
+        fi
+
+        if [ -n "${{ inputs.diff-json-output }}" ]; then
+          ARGS+=(--diff-json-output "${{ inputs.diff-json-output }}")
+        fi
+
+        if [ "${{ inputs.summary }}" = "true" ] && [ -n "${{ inputs.summary-output }}" ]; then
+          ARGS+=(--summary-output "${{ inputs.summary-output }}")
+        fi
+
+        if [ "${{ inputs.pr-comment }}" = "true" ] && [ -n "${{ inputs.comment-output }}" ]; then
+          ARGS+=(--comment-output "${{ inputs.comment-output }}")
+        fi
+
+        if [ "${{ inputs.create-issue-checklist }}" = "true" ] && [ -n "${{ inputs.issue-checklist-output }}" ]; then
+          ARGS+=(--issue-checklist-output "${{ inputs.issue-checklist-output }}")
+        fi
+
+        ISSUE_PLAN_OUTPUT="${{ inputs.issue-plan-output }}"
+        if [ -z "$ISSUE_PLAN_OUTPUT" ] && [ "${{ inputs.create-github-issues }}" = "true" ]; then
+          ISSUE_PLAN_OUTPUT="ARKHEIONX_ISSUE_PLAN.json"
+        fi
+        if [ -n "$ISSUE_PLAN_OUTPUT" ]; then
+          ARGS+=(--issue-plan-output "$ISSUE_PLAN_OUTPUT")
+        fi
+
+        if [ -n "${{ inputs.launch-report-output }}" ]; then
+          ARGS+=(--launch-report-output "${{ inputs.launch-report-output }}")
+        fi
+
+        if [ -n "${{ inputs.sprint-plan-output }}" ]; then
+          ARGS+=(--sprint-plan-output "${{ inputs.sprint-plan-output }}" --sprint-days "${{ inputs.sprint-days }}")
+        fi
+
+        if [ -n "${{ inputs.contest-readiness-output }}" ]; then
+          ARGS+=(--contest-readiness-output "${{ inputs.contest-readiness-output }}")
+        fi
+
+        if [ -n "${{ inputs.executive-summary-output }}" ]; then
+          ARGS+=(--executive-summary-output "${{ inputs.executive-summary-output }}")
+        fi
+
+        if [ -n "${{ inputs.remediation-roadmap-output }}" ]; then
+          ARGS+=(--remediation-roadmap-output "${{ inputs.remediation-roadmap-output }}")
+        fi
+
+        if [ "${{ inputs.semantic-lite }}" != "true" ]; then
+          ARGS+=(--no-semantic-lite)
+        fi
+
+        if [ "${{ inputs.slither }}" = "true" ]; then
+          ARGS+=(--slither)
+        fi
+
+        if [ -n "${{ inputs.slither-json }}" ]; then
+          ARGS+=(--slither-json "${{ inputs.slither-json }}")
+        fi
+
+        if [ -n "${{ inputs.slither-output }}" ]; then
+          ARGS+=(--slither-output "${{ inputs.slither-output }}")
+        fi
+
+        if [ -n "${{ inputs.slither-timeout }}" ]; then
+          ARGS+=(--slither-timeout "${{ inputs.slither-timeout }}")
+        fi
+
+        if [ "${{ inputs.slither-strict }}" = "true" ]; then
+          ARGS+=(--slither-strict)
+        fi
+
+        if [ -n "${{ inputs.min-confidence-for-issue-plan }}" ]; then
+          ARGS+=(--min-confidence-for-issue-plan "${{ inputs.min-confidence-for-issue-plan }}")
+        fi
+
+        if [ -n "${{ inputs.config }}" ]; then
+          ARGS+=(--config "${{ inputs.config }}")
+        fi
+
+        if [ "${{ inputs.generate-invariant-skeletons }}" = "true" ]; then
+          ARGS+=(--generate-invariant-skeletons)
+        fi
+
+        if [ "${{ inputs.fail-on-critical-readiness-gap }}" = "true" ]; then
+          ARGS+=(--fail-on-critical-readiness-gap)
+        fi
+
+        if [ "${{ inputs.fail-on-new-high }}" = "true" ]; then
+          ARGS+=(--fail-on-new-high)
+        fi
+
+        if [ -n "${{ inputs.fail-score-below }}" ]; then
+          ARGS+=(--fail-score-below "${{ inputs.fail-score-below }}")
+        fi
+
+        if [ "${{ inputs.fail-on-unsuppressed-high }}" = "true" ]; then
+          ARGS+=(--fail-on-unsuppressed-high)
+        fi
+
+        if [ "${{ inputs.create-issues }}" = "true" ]; then
+          ARGS+=(--create-issues)
+        fi
+
+        if [ "${{ inputs.verbose }}" = "true" ]; then
+          ARGS+=(--verbose)
+        fi
+
+        python3 "${{ github.action_path }}/../../../scripts/pre_audit_scan.py" "${ARGS[@]}"
+
+        echo "Arkheionx report generated: ${{ inputs.output }}"
+        if [ -n "${{ inputs.json-output }}" ]; then
+          echo "Arkheionx JSON report generated: ${{ inputs.json-output }}"
+        fi
+        if [ -n "${{ inputs.sarif-output }}" ]; then
+          echo "Arkheionx SARIF report generated: ${{ inputs.sarif-output }}"
+        fi
+        if [ "${{ inputs.upload-sarif }}" = "true" ]; then
+          echo "Arkheionx SARIF upload requested. Add github/codeql-action/upload-sarif@v3 as a separate workflow step."
+        fi
+        if [ -n "${{ inputs.baseline-output }}" ]; then
+          echo "Arkheionx baseline generated: ${{ inputs.baseline-output }}"
+        fi
+        if [ -n "${{ inputs.diff-output }}" ]; then
+          echo "Arkheionx diff report generated: ${{ inputs.diff-output }}"
+        fi
+        if [ -n "${{ inputs.diff-json-output }}" ]; then
+          echo "Arkheionx diff JSON generated: ${{ inputs.diff-json-output }}"
+        fi
+        if [ "${{ inputs.summary }}" = "true" ]; then
+          echo "Arkheionx summary generated: ${{ inputs.summary-output }}"
+        fi
+        if [ "${{ inputs.create-issue-checklist }}" = "true" ]; then
+          echo "Arkheionx issue checklist generated: ${{ inputs.issue-checklist-output }}"
+        fi
+        if [ -n "$ISSUE_PLAN_OUTPUT" ]; then
+          echo "Arkheionx issue plan generated: $ISSUE_PLAN_OUTPUT"
+        fi
+        if [ -n "${{ inputs.launch-report-output }}" ]; then
+          echo "Arkheionx launch report generated: ${{ inputs.launch-report-output }}"
+        fi
+        if [ -n "${{ inputs.sprint-plan-output }}" ]; then
+          echo "Arkheionx sprint plan generated: ${{ inputs.sprint-plan-output }}"
+        fi
+        if [ -n "${{ inputs.contest-readiness-output }}" ]; then
+          echo "Arkheionx contest readiness report generated: ${{ inputs.contest-readiness-output }}"
+        fi
+        if [ -n "${{ inputs.executive-summary-output }}" ]; then
+          echo "Arkheionx executive summary generated: ${{ inputs.executive-summary-output }}"
+        fi
+        if [ -n "${{ inputs.remediation-roadmap-output }}" ]; then
+          echo "Arkheionx remediation roadmap generated: ${{ inputs.remediation-roadmap-output }}"
+        fi
+        if [ -n "${{ inputs.slither-output }}" ]; then
+          echo "Arkheionx Slither summary generated: ${{ inputs.slither-output }}"
+        fi
+        if [ "${{ inputs.pr-comment }}" = "true" ]; then
+          echo "Arkheionx PR comment body generated: ${{ inputs.comment-output }}"
+        fi
+
+        if [ "${{ inputs.summary }}" = "true" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ] && [ -f "${{ inputs.summary-output }}" ]; then
+          cat "${{ inputs.summary-output }}" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        if [ "${{ inputs.create-github-issues }}" = "true" ]; then
+          ISSUE_ARGS=(
+            --issue-plan "$ISSUE_PLAN_OUTPUT"
+            --mode "${{ inputs.issue-create-mode }}"
+            --repo "${{ github.repository }}"
+            --max-issues "${{ inputs.issue-max }}"
+            --grouping "${{ inputs.issue-grouping }}"
+            --only-priority "${{ inputs.issue-only-priority }}"
+            --labels "${{ inputs.issue-labels }}"
+            --assignees "${{ inputs.issue-assignees }}"
+            --dry-run-output "${{ inputs.issue-dry-run-output }}"
+          )
+          if [ -n "${{ inputs.github-token }}" ]; then
+            ISSUE_ARGS+=(--github-token "${{ inputs.github-token }}")
+          fi
+          python3 "${{ github.action_path }}/../../../scripts/create_github_issues.py" "${ISSUE_ARGS[@]}" || true
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ] && [ -f "${{ inputs.issue-dry-run-output }}" ]; then
+            cat "${{ inputs.issue-dry-run-output }}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+        fi
+
+    - name: Post Arkheionx pull request comment
+      if: ${{ inputs.pr-comment == 'true' && inputs.github-token != '' }}
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        set -euo pipefail
+        python3 "${{ github.action_path }}/../../../scripts/post_pr_comment.py" \
+          --comment-file "${{ inputs.comment-output }}" \
+          --mode "${{ inputs.comment-mode }}" || true

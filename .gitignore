@@ -1,0 +1,41 @@
+lib/
+node_modules/
+out/
+cache/
+.venv/
+venv/
+artifacts/arkheionx/
+.arkheionx/
+.arkheionx/out/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.eggs/
+*.egg-info/
+build/
+dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+POST_DRAFT.txt
+assets/
+!docs/assets/
+!docs/assets/**
+!README.md
+!WRITEUP.md
+
+# Local reference clones (e.g. SunWeb3Sec/DeFiHackLabs) used by
+# scripts/poc_factory.py. Never tracked.
+.reference_data/
+
+# Foundry generated artifacts
+EVM/out/
+EVM/cache/
+out/
+cache/
+broadcast/
+artifacts/

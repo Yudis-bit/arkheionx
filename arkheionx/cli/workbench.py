@@ -1,0 +1,1691 @@
+"""CLI handlers for the Foundry-style Arkheionx workbench.
+
+Commands: doctor, open, map, flow, hunt, prove. Output is compact by default;
+`--full`/`--show-all`/`--json`/`--mermaid` expand it. Exit codes:
+0 = ok (compiler/execution confirmed), 1 = heuristic-only warning, 2 = failure.
+"""
+from __future__ import annotations
+
+import json
+import platform
+import shlex
+import shutil
+import subprocess
+import sys
+import time
+from argparse import Namespace
+from pathlib import Path
+
+from arkheionx.artifacts import ArtifactWriter
+from arkheionx.cli import colors, exit_codes
+from arkheionx.core.safety import LOCAL_ONLY_DISCLAIMER
+from arkheionx.flow.mermaid import render_mermaid
+from arkheionx.flow.render import render_flow
+from arkheionx.hunt.render import render_hunt
+from arkheionx.hunt.test_suggestions import suggest_tests
+from arkheionx.evidence.builder import build_evidence
+from arkheionx.evidence import index as _evindex
+from arkheionx.evidence.status import build_status
+from arkheionx.evidence.validate import validate_artifacts
+from arkheionx.evidence.render import render_evidence, render_status, render_validate
+from arkheionx.proof.generator import generate_scaffold, harness_name
+from arkheionx.proof.payloads import build_proof_payload, build_trace_payload, target_slug
+from arkheionx.proof.render import render_trace
+from arkheionx.proof.runner import ExecResult, execute_target
+from arkheionx.reporting.builder import build_report
+from arkheionx.reporting.render import render_report
+from arkheionx.protocol import foundry as foundry_mod
+from arkheionx.protocol.detector import analyze
+from arkheionx.protocol.model import COMPILER_CONFIRMED, EXECUTION_CONFIRMED, HEURISTIC, to_dict
+from arkheionx.protocol.render import build_json, foundry_header, hidden_block, mode_header, render_map, self_disp
+from arkheionx.protocol.semantic_adapter import find_solidity_files
+from arkheionx.review_map import (
+    build_assumptions_payload,
+    build_evidence_links_payload,
+    build_proof_plan_payload,
+    build_review_map,
+    build_test_gap_map,
+    build_value_paths_payload,
+    default_out_dir,
+    render_assumptions_cli,
+    render_evidence_links_cli,
+    render_proof_plan_cli,
+    render_test_gap_map_cli,
+    render_value_paths_cli,
+    status_of,
+    write_artifacts,
+)
+from arkheionx.review_map.model import HIGH as RM_HIGH
+from arkheionx.cli_ui import TerminalUI
+from arkheionx.rules.registry import list_rule_packs
+
+SUCCESS = exit_codes.SUCCESS          # 0
+WARNING = exit_codes.RUNTIME_ERROR    # 1 (heuristic-only / usable warning)
+FAILED = exit_codes.INVALID_ARGUMENTS # 2 (cannot complete)
+
+
+def _print_report(text: str) -> None:
+    """Print a human report with restrained color (no-op when color disabled)."""
+    print(colors.colorize_report(text))
+
+
+def _resolve_root(repo: str) -> Path | None:
+    root = Path(repo).expanduser().resolve()
+    return root if root.is_dir() else None
+
+
+def _from_report(args: Namespace) -> Path | None:
+    value = getattr(args, "from_report", "")
+    return Path(value).expanduser() if value else None
+
+
+def _writer(args: Namespace) -> ArtifactWriter:
+    base = getattr(args, "artifacts_dir", "") or ""
+    return ArtifactWriter(Path(base).expanduser() if base else None)
+
+
+def _run_analysis(args: Namespace, root: Path):
+    return analyze(
+        root,
+        from_report=_from_report(args),
+        use_foundry=bool(getattr(args, "foundry", False) or getattr(args, "build", False)),
+        run_build=bool(getattr(args, "build", False)),
+        show_all=bool(getattr(args, "show_all", False)),
+        top=int(getattr(args, "top", 10) or 10),
+    )
+
+
+def _exit_for(analysis) -> int:
+    return SUCCESS if analysis.snapshot.evidence_level != HEURISTIC else WARNING
+
+
+def _emit(args: Namespace, payload: dict, writer: ArtifactWriter, json_name: str, extra: dict | None = None) -> dict[str, str]:
+    artifacts: dict[str, str] = {}
+    if getattr(args, "no_artifacts", False):
+        return artifacts
+    path = writer.write_text(json_name, json.dumps(payload, indent=2))
+    artifacts["JSON"] = str(path)
+    for label, (name, content) in (extra or {}).items():
+        artifacts[label] = str(writer.write_text(name, content))
+    return artifacts
+
+
+# --------------------------------------------------------------------------
+# open / map / flow / hunt
+# --------------------------------------------------------------------------
+def open_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    start = time.monotonic()
+    analysis = _run_analysis(args, root)
+    elapsed = time.monotonic() - start
+    if getattr(args, "json", False):
+        print(json.dumps(build_json(analysis, {}, [f"arkheionx map {args.repo}"]), indent=2))
+        return _exit_for(analysis)
+    return _open_human(args, analysis, elapsed)
+
+
+def _open_human(args: Namespace, analysis, elapsed: float) -> int:
+    """Render `open` through the TerminalUI DX layer (presentation only)."""
+    ui = TerminalUI()
+    snap = analysis.snapshot
+    flow = analysis.money_flow
+    ui.banner("ARKHEIONX OPEN", "One-command project orientation - local/static, no RPC, no keys.")
+    ui.info(f"Target: {args.repo}")
+    ui.info(f"Mode:   local/static ({mode_header(snap.evidence_level)})")
+    ui.info("")
+    ui.step_done(
+        "Analyzing project",
+        f"{snap.contracts_analyzed} contracts, {len(analysis.functions)} functions",
+        elapsed=elapsed, index=1, total=1,
+    )
+    ui.summary("Summary", [
+        ("Protocol", " + ".join(snap.protocol_types) or "generic"),
+        ("Active contracts", snap.contracts_analyzed),
+        ("Functions", len(analysis.functions)),
+        ("Hidden support", sum(analysis.hidden_counts.values())),
+        ("Review surfaces", len(analysis.hunter_targets)),
+        ("Evidence", snap.evidence_level),
+    ])
+    ui.section("Top Surfaces")
+    if analysis.hunter_targets:
+        for i, t in enumerate(analysis.hunter_targets[:3], 1):
+            reason = t.why_it_matters[0] if t.why_it_matters else ""
+            ui.info(f"  {i}. {t.target_id.split('#')[0]:<36} {t.score:>3}  {reason}")
+    else:
+        ui.info("  - No value-moving functions detected in production code.")
+    ui.section("Money Flow")
+    ui.info(f"  In:      {', '.join(self_disp(analysis, flow.entrypoints))[:90] or '-'}")
+    ui.info(f"  Stored:  {', '.join(flow.value_holders[:3]) or '-'}")
+    ui.info(f"  Out:     {', '.join(self_disp(analysis, flow.exits))[:90] or '-'}")
+    ui.info(f"  Control: {', '.join(sorted({d.split('.')[-1] for d in self_disp(analysis, flow.privileged_movers)}))[:90] or '-'}")
+    hidden = hidden_block(analysis.hidden_counts)
+    if hidden:
+        ui.section("Hidden")
+        ui.info("  " + ", ".join(hidden) + " (use --show-all)")
+    ui.section("Next")
+    ui.info(f"  Map the protocol:     arkheionx map {args.repo}")
+    ui.info(f"  Find review surfaces: arkheionx hunt {args.repo} --top 5")
+    ui.info(f"  Build a review map:   arkheionx review-map {args.repo}")
+    ui.section("Boundary")
+    ui.info("  Local/static guidance only. Not confirmed vulnerabilities. Human review required.")
+    return _exit_for(analysis)
+
+
+def map_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    analysis = _run_analysis(args, root)
+    payload = build_json(analysis, {}, [f"arkheionx hunt {args.repo} --top 5"])
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return _exit_for(analysis)
+    artifacts = _emit(args, payload, _writer(args), "map.json")
+    _print_report(render_map(analysis, args.repo, artifacts, full=bool(getattr(args, "full", False))))
+    return _exit_for(analysis)
+
+
+def flow_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    analysis = _run_analysis(args, root)
+    mermaid = render_mermaid(analysis.money_flow)
+    payload = build_json(analysis, {}, [f"arkheionx hunt {args.repo} --top 5"])
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return _exit_for(analysis)
+    if getattr(args, "mermaid", False):
+        print(mermaid)
+        return _exit_for(analysis)
+    artifacts = _emit(args, payload, _writer(args), "flow.json", {"Mermaid": ("money-flow.mmd", mermaid)})
+    _print_report(render_flow(analysis, args.repo, artifacts, full=bool(getattr(args, "full", False))))
+    return _exit_for(analysis)
+
+
+def hunt_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    analysis = _run_analysis(args, root)
+    payload = build_json(analysis, {}, [])
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return _exit_for(analysis)
+    artifacts = _emit(args, payload, _writer(args), "hunt.json")
+    _print_report(render_hunt(analysis, args.repo, int(getattr(args, "top", 10) or 10), artifacts, full=bool(getattr(args, "full", False))))
+    return _exit_for(analysis)
+
+
+# --------------------------------------------------------------------------
+# prove
+# --------------------------------------------------------------------------
+def _parse_target(target: str) -> tuple[str, str, str, str]:
+    """Return (path, contract, function, signature) components; empty if absent."""
+    path = ""
+    rest = target.strip()
+    if ":" in rest:
+        path, rest = rest.split(":", 1)
+    signature = ""
+    if "(" in rest:
+        rest, sig = rest.split("(", 1)
+        signature = "(" + sig
+    contract = ""
+    function = rest
+    if "." in rest:
+        contract, function = rest.rsplit(".", 1)
+    return path.strip(), contract.strip(), function.strip(), signature.strip()
+
+
+def _resolve_target(functions, target: str):
+    path, contract, function, signature = _parse_target(target)
+    matches = []
+    for fr in functions:
+        if function.lower() != fr.function_name.lower():
+            continue
+        if contract and contract.lower() != fr.contract_name.lower():
+            continue
+        if path and not fr.file_path.endswith(path) and fr.file_path != path:
+            continue
+        if signature and signature.replace(" ", "") not in fr.signature.replace(" ", ""):
+            continue
+        matches.append(fr)
+    return matches
+
+
+def _resolve_or_explain(args: Namespace, root: Path):
+    """Return (match, error_exit_code). On success error_exit_code is None."""
+    target = str(getattr(args, "target", "") or "").strip()
+    if not target:
+        print(f"error: --target Contract.function is required. Run `arkheionx hunt {args.repo}` to list targets.")
+        return None, FAILED
+    analysis = _run_analysis(args, root)
+    matches = _resolve_target(analysis.all_functions, target)
+    if not matches:
+        print(f"error: could not resolve target `{target}`. Run `arkheionx hunt {args.repo}` to list targets.")
+        return None, FAILED
+    if len({(m.contract_name, m.function_name) for m in matches}) > 1:
+        print("Target is ambiguous. Choose one:\n")
+        ordered = sorted(matches, key=lambda x: x.contract_name)
+        for i, m in enumerate(ordered, 1):
+            print(f"{i}. {m.display_id}")
+        print("\nThen run, for example:")
+        print(f"arkheionx prove {args.repo} --target {ordered[0].display_id}")
+        return None, FAILED
+    return matches[0], None
+
+
+def prove_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    match, err = _resolve_or_explain(args, root)
+    if err is not None:
+        return err
+
+    tests, invariants = suggest_tests(match)
+    scaffold = generate_scaffold(match.contract_name, match.function_name, tests, invariants)
+    harness = harness_name(match.contract_name, match.function_name)
+    writer = _writer(args)
+    slug = target_slug(match.display_id)
+    no_artifacts = bool(getattr(args, "no_artifacts", False))
+
+    run = bool(getattr(args, "run", False))
+    do_build = bool(getattr(args, "build", False))
+    result = ExecResult(foundry=foundry_mod.detect_foundry(root))
+    status = "scaffolded"
+    evidence = HEURISTIC
+
+    if run:
+        result = execute_target(root, match.function_name)
+        status, evidence = result.status, result.evidence_level
+    elif do_build and result.foundry.status == foundry_mod.AVAILABLE_NOT_BUILT:
+        fstat, build_out = foundry_mod.build_and_confirm(root)
+        result.foundry = fstat
+        result.build_status = fstat.status
+        result.build_output = build_out
+        if fstat.status == foundry_mod.BUILD_PASSED:
+            evidence = COMPILER_CONFIRMED
+        elif fstat.status == foundry_mod.BUILD_FAILED:
+            status = "build_failed"
+    elif result.foundry.status not in {foundry_mod.AVAILABLE_NOT_BUILT, foundry_mod.BUILD_PASSED}:
+        status = "scaffolded"  # foundry not available; scaffold only
+
+    generated_files: list[str] = []
+    raw_test_path = trace_json_path = ""
+    proof_json_path = writer.path_for(f"proof/{slug}/proof.json")
+    if not no_artifacts:
+        generated_files.append(str(writer.write_text(f"proof/{slug}/generated-test.sol", scaffold)))
+        if result.build_output:
+            writer.write_text(f"proof/{slug}/foundry-build.txt", result.build_output)
+        if result.test_output:
+            raw_test_path = str(writer.write_text(f"proof/{slug}/foundry-test.txt", result.test_output))
+            trace_payload = build_trace_payload(
+                match.qualified_id,
+                status,
+                evidence,
+                raw_test_path,
+                result.trace,
+                target_id=match.stable_id or match.display_id,
+                review_map_target=match.display_id,
+                source_proof_json=str(proof_json_path),
+            )
+            trace_json_path = str(writer.write_text(f"proof/{slug}/trace.json", json.dumps(trace_payload, indent=2)))
+    next_cmds = [f"arkheionx trace {args.repo} --target {match.display_id}"]
+    payload = build_proof_payload(
+        match.display_id, match.stable_id or match.display_id, str(root), status, evidence,
+        result, generated_files, raw_test_path, (raw_test_path, trace_json_path), next_cmds,
+        review_map_target=match.display_id,
+    )
+    if not no_artifacts:
+        generated_files.append(str(writer.write_text(f"proof/{slug}/proof.json", json.dumps(payload, indent=2))))
+        _refresh_index(args, writer)
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+    lines = [
+        "ARKHEIONX PROVE",
+        f"Target: {match.qualified_id}",
+        f"Status: {status}",
+        f"Mode: {_mode_label(evidence)}",
+        f"Foundry: {foundry_header(result.foundry)}",
+        "",
+        "Generated",
+    ]
+    lines += [f"  {f}" for f in generated_files]
+    lines += [
+        "",
+        "Proof",
+        f"  {_proof_note(status, result)}",
+        f"  Evidence level: {evidence}",
+        "",
+        "Next",
+    ]
+    if evidence == EXECUTION_CONFIRMED:
+        lines.append(f"  arkheionx trace {args.repo} --target {match.display_id}")
+    else:
+        lines.append("  Complete the scaffold TODOs, then run:")
+        lines.append(f"  forge test --match-contract {harness} -vvvv")
+        lines.append(f"  or: arkheionx prove {args.repo} --target {match.display_id} --run")
+    _print_report("\n".join(lines))
+    return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+
+_PROOF_NOTES = {
+    "no_foundry": "Foundry not available; generated scaffold only. Not proof.",
+    "build_failed": "forge build failed; not proof. See foundry-build.txt.",
+    "no_tests_matched": "No existing test matched this target; not proof.",
+    "skipped_not_proof": "Matched tests were skipped; a skipped test is not proof.",
+    "scaffolded": "Scaffold generated (contains vm.skip TODOs); not executed as proof.",
+    "tested_passed": "A relevant test executed and passed (does not prove absence of a bug).",
+    "tested_failed": "A relevant test executed and failed (does not by itself prove a vulnerability).",
+    "tested_mixed": "Relevant tests executed with mixed results.",
+}
+
+
+def _proof_note(status: str, result: ExecResult) -> str:
+    return _PROOF_NOTES.get(status, "Scaffold generated; not executed as proof.")
+
+
+def _mode_label(evidence: str) -> str:
+    return {"EXECUTION_CONFIRMED": "execution-confirmed", "COMPILER_CONFIRMED": "compiler-confirmed"}.get(evidence, "heuristic")
+
+
+def trace_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    match, err = _resolve_or_explain(args, root)
+    if err is not None:
+        return err
+    writer = _writer(args)
+    slug = target_slug(match.display_id)
+    next_no_proof = f"arkheionx prove {args.repo} --target {match.display_id} --run"
+
+    if bool(getattr(args, "run", False)):
+        result = execute_target(root, match.function_name)
+        status, evidence = result.status, result.evidence_level
+        raw_path = ""
+        proof_json_path = writer.path_for(f"proof/{slug}/proof.json")
+        source_proof_json = str(proof_json_path) if proof_json_path.exists() else ""
+        payload = build_trace_payload(
+            match.qualified_id,
+            status,
+            evidence,
+            raw_path,
+            result.trace,
+            target_id=match.stable_id or match.display_id,
+            review_map_target=match.display_id,
+            source_proof_json=source_proof_json,
+        )
+        if not getattr(args, "no_artifacts", False) and result.test_output:
+            raw_path = str(writer.write_text(f"proof/{slug}/foundry-test.txt", result.test_output))
+            payload = build_trace_payload(
+                match.qualified_id,
+                status,
+                evidence,
+                raw_path,
+                result.trace,
+                target_id=match.stable_id or match.display_id,
+                review_map_target=match.display_id,
+                source_proof_json=source_proof_json,
+            )
+            tj = str(writer.write_text(f"proof/{slug}/trace.json", json.dumps(payload, indent=2)))
+            artifacts = {"Raw": raw_path, "JSON": tj}
+            _refresh_index(args, writer)
+        else:
+            artifacts = {}
+        if getattr(args, "json", False):
+            print(json.dumps(payload, indent=2))
+            return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+        nxt = f"arkheionx evidence {args.repo} --target {match.display_id}" if evidence == EXECUTION_CONFIRMED else next_no_proof
+        _print_report(render_trace(match.qualified_id, args.repo, status, evidence, foundry_header(result.foundry), result.trace, artifacts, nxt))
+        return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+    # No --run: summarize an existing proof artifact if present.
+    trace_json = writer.path_for(f"proof/{slug}/trace.json")
+    if trace_json.exists():
+        payload = json.loads(trace_json.read_text(encoding="utf-8"))
+        evidence = payload.get("evidence_level", HEURISTIC)
+        artifacts = {"Raw": payload.get("source_raw_output", ""), "JSON": str(trace_json)}
+        if getattr(args, "json", False):
+            print(json.dumps(payload, indent=2))
+            return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+        nxt = f"arkheionx evidence {args.repo} --target {match.display_id}" if evidence == EXECUTION_CONFIRMED else next_no_proof
+        _print_report(render_trace(match.qualified_id, args.repo, payload.get("status", ""), evidence, "ready", payload, artifacts, nxt))
+        return SUCCESS if evidence == EXECUTION_CONFIRMED else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(build_trace_payload(match.qualified_id, "no_proof", HEURISTIC, "", {}), indent=2))
+        return WARNING
+    _print_report(render_trace(match.qualified_id, args.repo, "no_proof", HEURISTIC, foundry_header(foundry_mod.detect_foundry(root)), {}, {}, next_no_proof))
+    return WARNING
+
+
+# --------------------------------------------------------------------------
+# doctor
+# --------------------------------------------------------------------------
+def _git_info(root: Path) -> str:
+    if shutil.which("git") is None or not (root / ".git").exists():
+        return ""
+    try:
+        branch = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=root, capture_output=True, text=True, timeout=10)
+        dirty = subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True, text=True, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    if branch.returncode != 0:
+        return ""
+    state = "dirty" if dirty.stdout.strip() else "clean"
+    return f"{branch.stdout.strip()} ({state})"
+
+
+def _doctor_install_view(root: Path) -> int:
+    """Compact install-health view: arkheionx doctor --install."""
+    import os
+    import sys
+
+    foundry_status = foundry_mod.detect_foundry(root, with_version=True)
+    cmd_path = shutil.which("arkheionx") or "not on PATH"
+    bin_hint = str(Path.home() / ".arkheionx" / "bin")
+    on_path = any(p == bin_hint for p in os.environ.get("PATH", "").split(os.pathsep))
+
+    install_dir = Path(os.environ.get("ARKHEIONX_INSTALL_DIR", str(Path.home() / ".arkheionx")))
+    receipt = install_dir / "install.json"
+    lines = [
+        "ARKHEIONX DOCTOR",
+        "Status: ok",
+        "",
+        "Install",
+        f"  arkheionx command: {cmd_path}",
+        f"  Python executable: {sys.executable} ({platform.python_version()})",
+        "  Package import: ok",
+        f"  Package version: {__import__('arkheionx').__version__}",
+        "",
+        "Foundry (optional)",
+        f"  forge: {foundry_status.forge_version or 'missing'}",
+        f"  status: {foundry_header(foundry_status)}",
+        "",
+        "PATH",
+    ]
+    if on_path or cmd_path != "not on PATH":
+        lines.append("  arkheionx is reachable on your PATH.")
+    else:
+        lines.append(f'  Add the install dir to PATH: export PATH="{bin_hint}:$PATH"')
+    lines += ["", "Install receipt"]
+    if not receipt.is_file():
+        lines.append("  none (install state unknown; managed by install.sh / arkup)")
+    else:
+        try:
+            data = json.loads(receipt.read_text(encoding="utf-8"))
+            for key in ("source_kind", "ref", "local_path", "install_method", "installed_version", "updated_at"):
+                value = data.get(key)
+                if value:
+                    lines.append(f"  {key}: {value}")
+            lines.append(f"  path: {receipt}")
+        except Exception:
+            lines.append(f"  malformed receipt at {receipt} (reinstall to repair)")
+    lines += ["", LOCAL_ONLY_DISCLAIMER, "", "Next", "  arkheionx open ."]
+    _print_report("\n".join(lines))
+    return SUCCESS
+
+
+def doctor_command(args: Namespace) -> int:
+    repo = getattr(args, "repo", ".") or "."
+    root = _resolve_root(repo) or Path.cwd()
+    if getattr(args, "install", False):
+        return _doctor_install_view(root)
+    foundry_status = foundry_mod.detect_foundry(root, with_version=True)
+    try:
+        analysis = analyze(root, use_foundry=False, top=10)
+        sources, _tests = find_solidity_files(root)
+        active = analysis.snapshot.contracts_analyzed
+        hidden = sum(analysis.hidden_counts.values())
+        usable = True
+    except Exception as exc:  # package/parse failure
+        _print_report("ARKHEIONX DOCTOR\nStatus: failed")
+        print(f"error: {exc}")
+        return FAILED
+
+    status = "ok" if foundry_status.status in {foundry_mod.AVAILABLE_NOT_BUILT, foundry_mod.BUILD_PASSED} else "warning"
+    import os
+    git = _git_info(root)
+    lines = [
+        "ARKHEIONX DOCTOR",
+        f"Status: {status}",
+        "",
+        "Core",
+        f"  Arkheionx: ok {__import__('arkheionx').__version__}",
+        f"  Python: ok {platform.python_version()}",
+    ]
+    if git:
+        lines.append(f"  Git: {git}")
+    lines += [
+        "",
+        "Foundry",
+        f"  foundry.toml: {'present' if foundry_status.has_foundry_toml else 'missing'}",
+        f"  forge: {foundry_status.forge_version or 'missing'}",
+        f"  status: {foundry_header(foundry_status)}",
+        f"  mode: {'compiler-capable' if foundry_status.forge_available and foundry_status.has_foundry_toml else 'heuristic only'}",
+        "",
+        "Project",
+        f"  Solidity files: {len(sources)}",
+        f"  Active source contracts: {active}",
+        f"  Hidden by default: {hidden}",
+        f"  Artifacts dir writable: {'yes' if os.access(root, os.W_OK) else 'no'}",
+        "",
+        f"Rule packs: {len(list_rule_packs())}",
+        LOCAL_ONLY_DISCLAIMER,
+        "",
+        "Next",
+    ]
+    if foundry_status.has_foundry_toml and foundry_status.forge_available:
+        lines.append("  Run `arkheionx map .` then `arkheionx hunt .` to start. Use --build for compiler-confirmed results.")
+    elif not foundry_status.has_foundry_toml:
+        lines.append("  Not a Foundry project here. Run inside a Foundry project for compiler-confirmed results.")
+    else:
+        lines.append("  Install Foundry (forge) for compiler-confirmed results.")
+    _print_report("\n".join(lines))
+    return SUCCESS
+
+
+# --------------------------------------------------------------------------
+# evidence / report (v2.3.0)
+# --------------------------------------------------------------------------
+_PROVEN = {"EXECUTION_CONFIRMED", "EVIDENCE_READY"}
+
+
+def _resolve_match(args: Namespace, root: Path):
+    """Return (match, analysis, error_code). error_code is None on success."""
+    target = str(getattr(args, "target", "") or "").strip()
+    if not target:
+        print("error: --target Contract.function is required")
+        return None, None, FAILED
+    analysis = _run_analysis(args, root)
+    matches = _resolve_target(analysis.all_functions, target)
+    if not matches:
+        print(f"error: could not resolve target `{target}`. Run `arkheionx hunt {args.repo}` to list targets.")
+        return None, None, FAILED
+    if len({(m.contract_name, m.function_name) for m in matches}) > 1:
+        print("Target is ambiguous. Choose one:\n")
+        ordered = sorted(matches, key=lambda x: x.contract_name)
+        for i, m in enumerate(ordered, 1):
+            print(f"{i}. {m.display_id}")
+        print(f"\nThen run, for example:\narkheionx {args.command} {args.repo} --target {ordered[0].display_id}")
+        return None, None, FAILED
+    return matches[0], analysis, None
+
+
+def _display_from_target_id(target_id: str) -> str:
+    tail = target_id.split(":")[-1].split("#")[0]
+    return tail.split("(")[0]
+
+
+def _read_json_file(path_str: str):
+    candidate = Path(path_str).expanduser()
+    if not candidate.exists():
+        return None
+    try:
+        return json.loads(candidate.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def evidence_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    proof_override = trace_override = None
+    proof_source_path = trace_source_path = ""
+    from_proof = str(getattr(args, "from_proof", "") or "").strip()
+    if from_proof:
+        proof_path = Path(from_proof).expanduser()
+        proof_override = _read_json_file(str(proof_path))
+        if proof_override is None:
+            print(f"error: could not read proof artifact: {from_proof}")
+            return FAILED
+        proof_source_path = str(proof_path.resolve())
+        trace_path = proof_path.parent / "trace.json"
+        trace_override = _read_json_file(str(trace_path))
+        if trace_override is not None:
+            trace_source_path = str(trace_path.resolve())
+        if not getattr(args, "target", ""):
+            args.target = _display_from_target_id(str(proof_override.get("target_id", proof_override.get("target", ""))))
+
+    match, analysis, err = _resolve_match(args, root)
+    if err is not None:
+        return err
+    pkg = build_evidence(
+        match, root, writer, analysis,
+        write=not getattr(args, "no_artifacts", False),
+        proof_override=proof_override, trace_override=trace_override,
+        proof_source_path=proof_source_path, trace_source_path=trace_source_path,
+    )
+    _refresh_index(args, writer)
+    if getattr(args, "json", False):
+        print(json.dumps(pkg.payload, indent=2) if pkg.payload else json.dumps({"status": pkg.status, "next": pkg.next_command}))
+        return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
+    _print_report(render_evidence(pkg, args.repo))
+    return SUCCESS if pkg.evidence_level in _PROVEN else WARNING
+
+
+def report_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    from_evidence = str(getattr(args, "from_evidence", "") or "").strip()
+    evidence_source_path = ""
+
+    if from_evidence:
+        evidence = _read_json_file(from_evidence)
+        if evidence is None:
+            print(f"error: could not read evidence package: {from_evidence}")
+            return FAILED
+        evidence_source_path = str(Path(from_evidence).expanduser().resolve())
+    else:
+        match, analysis, err = _resolve_match(args, root)
+        if err is not None:
+            return err
+        pkg = build_evidence(match, root, writer, analysis, write=not getattr(args, "no_artifacts", False))
+        if pkg.status == "no_proof":
+            print(
+                "ARKHEIONX REPORT\n"
+                f"Project: {args.repo}\nTarget: {pkg.target}\nStatus: no-evidence\nMode: heuristic\n\n"
+                "No evidence package found.\n\nNext\n"
+                f"  arkheionx prove {args.repo} --target {match.display_id} --run\n"
+                f"  arkheionx evidence {args.repo} --target {match.display_id}"
+            )
+            return WARNING
+        evidence = pkg.payload
+        evidence_source_path = pkg.json_path
+
+    draft = build_report(
+        evidence,
+        root,
+        writer,
+        write=not getattr(args, "no_artifacts", False),
+        evidence_source_path=evidence_source_path,
+    )
+    _refresh_index(args, writer)
+    if getattr(args, "json", False):
+        print(json.dumps(draft.payload, indent=2))
+        return SUCCESS if draft.evidence_level in _PROVEN else WARNING
+    _print_report(render_report(draft, args.repo))
+    return SUCCESS if draft.evidence_level in _PROVEN else WARNING
+
+
+# --------------------------------------------------------------------------
+# evidence-status / validate-artifacts (v2.4.0)
+# --------------------------------------------------------------------------
+def _refresh_index(args: Namespace, writer) -> None:
+    if getattr(args, "no_artifacts", False):
+        return
+    try:
+        _evindex.refresh_index(args.repo, writer)
+    except Exception:  # index is a cache; never fail the command over it
+        pass
+
+
+def evidence_status_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    target = str(getattr(args, "target", "") or "").strip() or None
+    payload = build_status(args.repo, writer, target=target)
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+    else:
+        _print_report(render_status(payload, args.repo))
+    return SUCCESS if payload["status"] == "ok" else WARNING
+
+
+def validate_artifacts_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    writer = _writer(args)
+    counts, issues = validate_artifacts(writer)
+    if getattr(args, "json", False):
+        print(json.dumps({"status": "warning" if issues else "ok", "checked": counts, "issues": issues}, indent=2))
+    else:
+        _print_report(render_validate(counts, issues, args.repo))
+    return WARNING if issues else SUCCESS
+
+
+# --------------------------------------------------------------------------
+# review-map (v3.1.0)
+# --------------------------------------------------------------------------
+def _rel_display(path: str, root: Path) -> str:
+    try:
+        return Path(path).resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path
+
+
+def _review_map_artifact_roots(args: Namespace) -> list[Path]:
+    out = str(getattr(args, "out", "") or "").strip()
+    return [Path(out).expanduser()] if out else []
+
+
+def review_map_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    inspect_start = time.monotonic()
+    sources, test_files = find_solidity_files(root)
+    inspect_elapsed = time.monotonic() - inspect_start
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy amm-swap ./arkheionx-demo")
+        print("  arkheionx review-map ./arkheionx-demo")
+        return FAILED
+
+    top = getattr(args, "top", 10)
+    top = 10 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    include_low = bool(getattr(args, "include_low_confidence", False))
+
+    # Machine-readable path: pure JSON only. No banner, progress, spinner, color.
+    if getattr(args, "json", False):
+        try:
+            review_map = build_review_map(
+                root,
+                top=top,
+                target=target,
+                include_low_confidence=include_low,
+                artifact_roots=_review_map_artifact_roots(args),
+            )
+        except ValueError as exc:
+            print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+            return FAILED
+        print(json.dumps(review_map.to_payload(), indent=2))
+        return SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    return _review_map_human(args, root, sources, test_files, inspect_elapsed, top, target, include_low)
+
+
+def _review_map_human(args, root, sources, test_files, inspect_elapsed, top, target, include_low) -> int:
+    ui = TerminalUI()
+    no_write = bool(getattr(args, "no_write", False))
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else default_out_dir(root)
+
+    ui.banner(
+        "ARKHEIONX REVIEW MAP",
+        "Maps what your protocol still needs to prove - local/static, no RPC, no keys.",
+    )
+    ui.info(f"Target: {args.repo}")
+    ui.info("Mode:   local/static (heuristic; most signals start at HEURISTIC)")
+    ui.info("Writes: in-memory only (--no-write)" if no_write else f"Writes: {_rel_display(str(out_dir), root)}")
+    ui.info("")
+
+    # [1/3] Inspection already ran (it guards the no-Solidity case); report its
+    # real counts and real elapsed rather than animating finished work.
+    ui.step_done(
+        "Inspecting repository",
+        f"{len(sources)} Solidity source files, {len(test_files)} test files",
+        elapsed=inspect_elapsed, index=1, total=3,
+    )
+    try:
+        with ui.phase("Mapping value flow & review surface", 2, 3) as phase:
+            review_map = build_review_map(
+                root,
+                top=top,
+                target=target,
+                include_low_confidence=include_low,
+                artifact_roots=_review_map_artifact_roots(args),
+            )
+            s = review_map.summary
+            phase.detail = (
+                f"{s.contracts_analyzed} contracts, {s.functions_mapped} functions, "
+                f"{s.value_paths} value paths, {s.test_gaps} test gaps"
+            )
+    except ValueError as exc:
+        ui.error(f"could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return FAILED
+
+    artifacts: dict[str, str] = {}
+    if no_write:
+        ui.step_done("Review artifacts", "no-write mode: generated in memory only", index=3, total=3, kind="warn")
+    else:
+        try:
+            with ui.phase("Writing review artifacts", 3, 3) as phase:
+                written = write_artifacts(review_map, out_dir)
+                phase.detail = f"{len(written)} files -> {_rel_display(str(out_dir), root)}"
+        except OSError as exc:
+            ui.error(f"could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+
+    _review_map_priorities(ui, review_map, args.repo, top)
+    _review_map_summary(ui, review_map)
+    _review_map_artifacts(ui, artifacts)
+    _review_map_next(ui, args.repo, artifacts, no_write, target)
+    status = status_of(review_map)
+    ui.section("Boundary")
+    ui.info("  Review guidance only. Not confirmed vulnerabilities. Human review required.")
+    if status == "ok":
+        ui.info("  Status: compiler-confirmed (exit code 0).")
+    else:
+        ui.info("  Status: heuristic review guidance - exit code 1 by design, not a crash.")
+    return SUCCESS if status == "ok" else WARNING
+
+
+def _review_map_priorities(ui: TerminalUI, rm, repo: str, top: int) -> None:
+    notes = rm.reviewer_notes[: min(top, 3)]
+    if not notes:
+        return
+    ui.section("Review Priorities (review order, not confirmed findings)")
+    for i, note in enumerate(notes, 1):
+        why = note.body.split(".")[0].strip() or "value-relevant surface"
+        step = note.next_step.replace("arkheionx prove . ", f"arkheionx prove {repo} ")
+        ui.info(f"  {i}. {note.title} [{note.priority}] - {why}")
+        ui.info(f"     {step}")
+
+
+def _review_map_summary(ui: TerminalUI, rm) -> None:
+    s = rm.summary
+    value_exit = sum(1 for p in rm.value_paths if p.exit_function)
+    high_gaps = sum(1 for g in rm.test_gaps if g.confidence == RM_HIGH)
+    ui.summary("Summary", [
+        ("Contracts", s.contracts_analyzed),
+        ("Functions", s.functions_mapped),
+        ("Value paths", f"{s.value_paths} ({value_exit} value-exit)"),
+        ("Assumptions", s.assumptions),
+        ("Test gaps", f"{s.test_gaps} ({high_gaps} high-confidence)"),
+        ("Proof suggestions", s.proof_suggestions),
+        ("Evidence links", s.evidence_links),
+    ])
+
+
+def _review_map_artifacts(ui: TerminalUI, artifacts: dict[str, str]) -> None:
+    if not artifacts:
+        return
+    ui.section("Artifacts")
+    for name in ("review-map.md", "test-gap-map.md", "review-map.json", "test-gaps.json", "proof-plan.json"):
+        if name in artifacts:
+            ui.info(f"  {artifacts[name]}")
+
+
+def _review_map_next(ui: TerminalUI, repo: str, artifacts: dict[str, str], no_write: bool, target: str) -> None:
+    ui.section("Next")
+    if "review-map.md" in artifacts:
+        ui.info(f"  Open the review map:  {artifacts['review-map.md']}")
+    if "test-gaps.json" in artifacts:
+        ui.info(f"  Inspect test gaps:    {artifacts['test-gaps.json']}")
+    if "test-gap-map.md" in artifacts:
+        ui.info(f"  Prioritize tests:     {artifacts['test-gap-map.md']}")
+    tgt = target or "<Contract.function>"
+    ui.info(f"  Build a local proof:  arkheionx prove {repo} --target {tgt} --run")
+    ui.info(f"  Machine-readable:     arkheionx review-map {repo} --json")
+    if no_write:
+        ui.info(f"  Write artifacts:      arkheionx review-map {repo}")
+
+
+# --------------------------------------------------------------------------
+# test-gap-map (v3.3.0 focused review-map view)
+# --------------------------------------------------------------------------
+def _test_gap_map_artifact_path(args: Namespace, root: Path) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else default_out_dir(root)
+    return out_dir / "test-gap-map.json"
+
+
+def _valid_test_gap_map_payload(payload: object) -> bool:
+    return (
+        isinstance(payload, dict)
+        and isinstance(payload.get("summary"), dict)
+        and isinstance(payload.get("items"), list)
+    )
+
+
+def _read_test_gap_map_artifact(path: Path) -> dict | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return payload if _valid_test_gap_map_payload(payload) else None
+
+
+def _test_gap_map_exit(payload: dict) -> int:
+    return SUCCESS if payload.get("mode") == "compiler-confirmed" else WARNING
+
+
+def _build_test_gap_map_payload(args: Namespace, root: Path, top: int, target: str, include_low: bool) -> tuple[dict | None, dict[str, str] | None, int]:
+    sources, _test_files = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy amm-swap ./arkheionx-demo")
+        print("  arkheionx test-gap-map ./arkheionx-demo")
+        return None, None, FAILED
+
+    try:
+        review_map = build_review_map(root, top=top, target=target, include_low_confidence=include_low)
+    except ValueError as exc:
+        print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return None, None, FAILED
+
+    payload = build_test_gap_map(review_map)
+    artifacts: dict[str, str] = {}
+    if not bool(getattr(args, "no_write", False)):
+        out_json = _test_gap_map_artifact_path(args, root)
+        out_dir = out_json.parent
+        try:
+            written = write_artifacts(review_map, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return None, None, FAILED
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+    return payload, artifacts, _test_gap_map_exit(payload)
+
+
+def test_gap_map_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+
+    top = getattr(args, "top", 5)
+    top = 5 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    include_low = bool(getattr(args, "include_low_confidence", False))
+    artifact_path = _test_gap_map_artifact_path(args, root)
+    can_read_existing = artifact_path.is_file() and not target and not include_low
+
+    payload: dict | None
+    artifacts: dict[str, str] = {}
+    source = "built from review-map"
+    if can_read_existing:
+        payload = _read_test_gap_map_artifact(artifact_path)
+        if payload is None:
+            print(f"error: could not read Test Gap Map artifact: {artifact_path}")
+            return FAILED
+        source = f"existing artifact ({_rel_display(str(artifact_path), root)})"
+        exit_code = _test_gap_map_exit(payload)
+    else:
+        payload, built_artifacts, exit_code = _build_test_gap_map_payload(args, root, top, target, include_low)
+        if payload is None:
+            return exit_code
+        artifacts = built_artifacts or {}
+        if bool(getattr(args, "no_write", False)):
+            source = "in-memory review-map build (--no-write)"
+        elif artifacts:
+            source = f"built from review-map; wrote {_rel_display(str(_test_gap_map_artifact_path(args, root).parent), root)}"
+
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return exit_code
+
+    text = render_test_gap_map_cli(payload, args.repo, top=top, source=source)
+    if artifacts and "test-gap-map.md" in artifacts:
+        text += f"\nArtifacts\n  {artifacts['test-gap-map.md']}\n  {artifacts.get('test-gap-map.json', '')}\n"
+    _print_report(text)
+    return exit_code
+
+
+# --------------------------------------------------------------------------
+# value-paths (v3.3.0 focused review-map view)
+# --------------------------------------------------------------------------
+def _value_paths_artifact_path(args: Namespace, root: Path) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else default_out_dir(root)
+    return out_dir / "value-paths.json"
+
+
+def _valid_value_paths_payload(payload: object) -> bool:
+    if isinstance(payload, list):
+        return True
+    return isinstance(payload, dict) and isinstance(payload.get("value_paths"), list)
+
+
+def _read_value_paths_artifact(path: Path) -> object | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return payload if _valid_value_paths_payload(payload) else None
+
+
+def _read_review_map_mode(out_dir: Path) -> str:
+    try:
+        payload = json.loads((out_dir / "review-map.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    return str(payload.get("mode", "")).strip() if isinstance(payload, dict) else ""
+
+
+def _value_paths_exit(payload: object) -> int:
+    if isinstance(payload, dict) and payload.get("mode") == "compiler-confirmed":
+        return SUCCESS
+    return WARNING
+
+
+def _build_value_paths_payload(args: Namespace, root: Path, top: int, target: str, include_low: bool) -> tuple[object | None, dict[str, str] | None, int, str]:
+    sources, _test_files = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy lending-vault ./arkheionx-demo")
+        print("  arkheionx value-paths ./arkheionx-demo")
+        return None, None, FAILED, ""
+
+    try:
+        review_map = build_review_map(root, top=top, target=target, include_low_confidence=include_low)
+    except ValueError as exc:
+        print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return None, None, FAILED, ""
+
+    payload = build_value_paths_payload(review_map)
+    artifacts: dict[str, str] = {}
+    if not bool(getattr(args, "no_write", False)):
+        out_json = _value_paths_artifact_path(args, root)
+        out_dir = out_json.parent
+        try:
+            written = write_artifacts(review_map, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return None, None, FAILED, ""
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+    return payload, artifacts, SUCCESS if status_of(review_map) == "ok" else WARNING, review_map.mode
+
+
+def value_paths_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+
+    top = getattr(args, "top", 5)
+    top = 5 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    include_low = bool(getattr(args, "include_low_confidence", False))
+    artifact_path = _value_paths_artifact_path(args, root)
+    can_read_existing = artifact_path.is_file() and not target and not include_low
+
+    payload: object | None
+    artifacts: dict[str, str] = {}
+    mode = ""
+    source = "built from review-map"
+    if can_read_existing:
+        payload = _read_value_paths_artifact(artifact_path)
+        if payload is None:
+            print(f"error: could not read Value Paths artifact: {artifact_path}")
+            return FAILED
+        mode = _read_review_map_mode(artifact_path.parent)
+        source = f"existing artifact ({_rel_display(str(artifact_path), root)})"
+        exit_code = _value_paths_exit(payload)
+    else:
+        payload, built_artifacts, exit_code, mode = _build_value_paths_payload(args, root, top, target, include_low)
+        if payload is None:
+            return exit_code
+        artifacts = built_artifacts or {}
+        if bool(getattr(args, "no_write", False)):
+            source = "in-memory review-map build (--no-write)"
+        elif artifacts:
+            source = f"built from review-map; wrote {_rel_display(str(_value_paths_artifact_path(args, root).parent), root)}"
+
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return exit_code
+
+    text = render_value_paths_cli(payload, args.repo, top=top, source=source, mode=mode)
+    if artifacts and "value-paths.json" in artifacts:
+        text += f"\nArtifacts\n  {artifacts['value-paths.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+# --------------------------------------------------------------------------
+# assumptions (v3.3.0 focused review-map view)
+# --------------------------------------------------------------------------
+def _assumptions_artifact_path(args: Namespace, root: Path) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else default_out_dir(root)
+    return out_dir / "assumptions.json"
+
+
+def _valid_assumptions_payload(payload: object) -> bool:
+    if isinstance(payload, list):
+        return True
+    return isinstance(payload, dict) and isinstance(payload.get("assumptions"), list)
+
+
+def _read_assumptions_artifact(path: Path) -> object | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return payload if _valid_assumptions_payload(payload) else None
+
+
+def _assumptions_exit(payload: object) -> int:
+    if isinstance(payload, dict) and payload.get("mode") == "compiler-confirmed":
+        return SUCCESS
+    return WARNING
+
+
+def _build_assumptions_payload(args: Namespace, root: Path, top: int, target: str, include_low: bool) -> tuple[object | None, dict[str, str] | None, int, str]:
+    sources, _test_files = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy lending-vault ./arkheionx-demo")
+        print("  arkheionx assumptions ./arkheionx-demo")
+        return None, None, FAILED, ""
+
+    try:
+        review_map = build_review_map(root, top=top, target=target, include_low_confidence=include_low)
+    except ValueError as exc:
+        print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return None, None, FAILED, ""
+
+    payload = build_assumptions_payload(review_map)
+    artifacts: dict[str, str] = {}
+    if not bool(getattr(args, "no_write", False)):
+        out_json = _assumptions_artifact_path(args, root)
+        out_dir = out_json.parent
+        try:
+            written = write_artifacts(review_map, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return None, None, FAILED, ""
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+    return payload, artifacts, SUCCESS if status_of(review_map) == "ok" else WARNING, review_map.mode
+
+
+def assumptions_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+
+    top = getattr(args, "top", 5)
+    top = 5 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    include_low = bool(getattr(args, "include_low_confidence", False))
+    artifact_path = _assumptions_artifact_path(args, root)
+    can_read_existing = artifact_path.is_file() and not target and not include_low
+
+    payload: object | None
+    artifacts: dict[str, str] = {}
+    mode = ""
+    source = "built from review-map"
+    if can_read_existing:
+        payload = _read_assumptions_artifact(artifact_path)
+        if payload is None:
+            print(f"error: could not read Assumptions artifact: {artifact_path}")
+            return FAILED
+        mode = _read_review_map_mode(artifact_path.parent)
+        source = f"existing artifact ({_rel_display(str(artifact_path), root)})"
+        exit_code = _assumptions_exit(payload)
+    else:
+        payload, built_artifacts, exit_code, mode = _build_assumptions_payload(args, root, top, target, include_low)
+        if payload is None:
+            return exit_code
+        artifacts = built_artifacts or {}
+        if bool(getattr(args, "no_write", False)):
+            source = "in-memory review-map build (--no-write)"
+        elif artifacts:
+            source = f"built from review-map; wrote {_rel_display(str(_assumptions_artifact_path(args, root).parent), root)}"
+
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return exit_code
+
+    text = render_assumptions_cli(payload, args.repo, top=top, source=source, mode=mode)
+    if artifacts and "assumptions.json" in artifacts:
+        text += f"\nArtifacts\n  {artifacts['assumptions.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+# --------------------------------------------------------------------------
+# proof-plan (v3.3.0 focused review-map view)
+# --------------------------------------------------------------------------
+def _proof_plan_artifact_path(args: Namespace, root: Path) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else default_out_dir(root)
+    return out_dir / "proof-plan.json"
+
+
+def _valid_proof_plan_payload(payload: object) -> bool:
+    if isinstance(payload, list):
+        return True
+    return isinstance(payload, dict) and isinstance(payload.get("proof_suggestions"), list)
+
+
+def _read_proof_plan_artifact(path: Path) -> object | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return payload if _valid_proof_plan_payload(payload) else None
+
+
+def _proof_plan_exit(payload: object) -> int:
+    if isinstance(payload, dict) and payload.get("mode") == "compiler-confirmed":
+        return SUCCESS
+    return WARNING
+
+
+def _build_proof_plan_payload(args: Namespace, root: Path, top: int, target: str, include_low: bool) -> tuple[object | None, dict[str, str] | None, int, str]:
+    sources, _test_files = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy lending-vault ./arkheionx-demo")
+        print("  arkheionx proof-plan ./arkheionx-demo")
+        return None, None, FAILED, ""
+
+    try:
+        review_map = build_review_map(root, top=top, target=target, include_low_confidence=include_low)
+    except ValueError as exc:
+        print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return None, None, FAILED, ""
+
+    payload = build_proof_plan_payload(review_map)
+    artifacts: dict[str, str] = {}
+    if not bool(getattr(args, "no_write", False)):
+        out_json = _proof_plan_artifact_path(args, root)
+        out_dir = out_json.parent
+        try:
+            written = write_artifacts(review_map, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return None, None, FAILED, ""
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+    return payload, artifacts, SUCCESS if status_of(review_map) == "ok" else WARNING, review_map.mode
+
+
+def proof_plan_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+
+    top = getattr(args, "top", 5)
+    top = 5 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    include_low = bool(getattr(args, "include_low_confidence", False))
+    artifact_path = _proof_plan_artifact_path(args, root)
+    can_read_existing = artifact_path.is_file() and not target and not include_low
+
+    payload: object | None
+    artifacts: dict[str, str] = {}
+    mode = ""
+    source = "built from review-map"
+    if can_read_existing:
+        payload = _read_proof_plan_artifact(artifact_path)
+        if payload is None:
+            print(f"error: could not read Proof Plan artifact: {artifact_path}")
+            return FAILED
+        mode = _read_review_map_mode(artifact_path.parent)
+        source = f"existing artifact ({_rel_display(str(artifact_path), root)})"
+        exit_code = _proof_plan_exit(payload)
+    else:
+        payload, built_artifacts, exit_code, mode = _build_proof_plan_payload(args, root, top, target, include_low)
+        if payload is None:
+            return exit_code
+        artifacts = built_artifacts or {}
+        if bool(getattr(args, "no_write", False)):
+            source = "in-memory review-map build (--no-write)"
+        elif artifacts:
+            source = f"built from review-map; wrote {_rel_display(str(_proof_plan_artifact_path(args, root).parent), root)}"
+
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return exit_code
+
+    text = render_proof_plan_cli(payload, args.repo, top=top, source=source, mode=mode)
+    if artifacts and "proof-plan.json" in artifacts:
+        text += f"\nArtifacts\n  {artifacts['proof-plan.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+# --------------------------------------------------------------------------
+# evidence-links (v3.3.0 focused review-map view)
+# --------------------------------------------------------------------------
+def _evidence_links_artifact_path(args: Namespace, root: Path) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else default_out_dir(root)
+    return out_dir / "evidence-links.json"
+
+
+def _valid_evidence_links_payload(payload: object) -> bool:
+    if isinstance(payload, list):
+        return True
+    return isinstance(payload, dict) and isinstance(payload.get("evidence_links"), list)
+
+
+def _read_evidence_links_artifact(path: Path) -> object | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return payload if _valid_evidence_links_payload(payload) else None
+
+
+def _evidence_links_exit(payload: object) -> int:
+    if isinstance(payload, dict) and payload.get("mode") == "compiler-confirmed":
+        return SUCCESS
+    return WARNING
+
+
+def _build_evidence_links_payload(args: Namespace, root: Path, top: int, target: str, include_low: bool) -> tuple[object | None, dict[str, str] | None, int, str]:
+    sources, _test_files = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy lending-vault ./arkheionx-demo")
+        print("  arkheionx evidence-links ./arkheionx-demo")
+        return None, None, FAILED, ""
+
+    try:
+        review_map = build_review_map(
+            root,
+            top=top,
+            target=target,
+            include_low_confidence=include_low,
+            artifact_roots=_review_map_artifact_roots(args),
+        )
+    except ValueError as exc:
+        print(f"error: could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        return None, None, FAILED, ""
+
+    payload = build_evidence_links_payload(review_map)
+    artifacts: dict[str, str] = {}
+    if not bool(getattr(args, "no_write", False)):
+        out_json = _evidence_links_artifact_path(args, root)
+        out_dir = out_json.parent
+        try:
+            written = write_artifacts(review_map, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return None, None, FAILED, ""
+        artifacts = {name: _rel_display(path, root) for name, path in written.items()}
+    return payload, artifacts, SUCCESS if status_of(review_map) == "ok" else WARNING, review_map.mode
+
+
+def evidence_links_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+
+    top = getattr(args, "top", 5)
+    top = 5 if top is None else int(top)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+
+    target = str(getattr(args, "target", "") or "").strip()
+    include_low = bool(getattr(args, "include_low_confidence", False))
+    artifact_path = _evidence_links_artifact_path(args, root)
+    can_read_existing = artifact_path.is_file() and not target and not include_low
+
+    payload: object | None
+    artifacts: dict[str, str] = {}
+    mode = ""
+    source = "built from review-map"
+    if can_read_existing:
+        payload = _read_evidence_links_artifact(artifact_path)
+        if payload is None:
+            print(f"error: could not read Evidence Links artifact: {artifact_path}")
+            return FAILED
+        mode = _read_review_map_mode(artifact_path.parent)
+        source = f"existing artifact ({_rel_display(str(artifact_path), root)})"
+        exit_code = _evidence_links_exit(payload)
+    else:
+        payload, built_artifacts, exit_code, mode = _build_evidence_links_payload(args, root, top, target, include_low)
+        if payload is None:
+            return exit_code
+        artifacts = built_artifacts or {}
+        if bool(getattr(args, "no_write", False)):
+            source = "in-memory review-map build (--no-write)"
+        elif artifacts:
+            source = f"built from review-map; wrote {_rel_display(str(_evidence_links_artifact_path(args, root).parent), root)}"
+
+    if getattr(args, "json", False):
+        print(json.dumps(payload, indent=2))
+        return exit_code
+
+    text = render_evidence_links_cli(payload, args.repo, top=top, source=source, mode=mode)
+    if artifacts and "evidence-links.json" in artifacts:
+        text += f"\nArtifacts\n  {artifacts['evidence-links.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def review_package_command(args: Namespace) -> int:
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+
+    from arkheionx.review_package import build_review_package, build_review_package_result_dict
+
+    strict = bool(getattr(args, "strict", False))
+    result = build_review_package(
+        root,
+        output=(str(getattr(args, "output", "") or "").strip() or None),
+        no_write=bool(getattr(args, "no_write", False)),
+        strict=strict,
+        include_unknown=not bool(getattr(args, "exclude_unknown", False)),
+        copy_artifacts=not bool(getattr(args, "no_copy_artifacts", False)),
+        export_format=str(getattr(args, "export", "") or "").strip(),
+        export_output=(str(getattr(args, "export_output", "") or "").strip() or None),
+        include_protocol_model=not bool(getattr(args, "no_protocol_model", False)),
+    )
+    exit_code = WARNING if (strict and (result.validation_status == "PACKAGE_INVALID" or result.errors)) else SUCCESS
+
+    if getattr(args, "json", False):
+        print(json.dumps(build_review_package_result_dict(result), indent=2))
+        return exit_code
+
+    lines = [
+        "Review Package",
+        f"  Repo: {args.repo}",
+        f"  Validation status: {result.validation_status}",
+        f"  Artifacts: {result.artifact_count}",
+        f"  Manual review required: {result.manual_review_required}",
+        f"  Ready for submission: {result.ready_for_submission}",
+    ]
+    if result.no_write:
+        lines.append("  Dry run (--no-write): nothing written.")
+        if result.export_requested:
+            lines.append("  Export requested but skipped in --no-write mode.")
+    else:
+        lines.append(f"  Package: {result.package_root}")
+        lines.append(f"  Manifest: {result.manifest_path}")
+        lines.append(f"  Validation: {result.validation_path}")
+        lines.append(f"  README: {result.readme_path}")
+        if result.checksums_path:
+            lines.append(f"  Checksums: {result.checksums_path}")
+        if result.export_requested:
+            if result.export_written:
+                lines.append(f"  Export: {result.export_path} ({result.export_file_count} files)")
+            else:
+                lines.append(f"  Export blocked: {result.export_status or 'not created'}")
+    if result.warnings:
+        lines.append(f"  Warnings: {len(result.warnings)}")
+    if result.errors:
+        lines.append(f"  Errors: {len(result.errors)}")
+    lines.append("  Local/static review guidance only. Not an audit; human review required.")
+    if result.protocol_model_requested:
+        if result.no_write:
+            state = "built in memory" if result.protocol_model_id else "not available"
+        else:
+            state = "included" if result.protocol_model_included else "not available"
+        lines.insert(len(lines) - 1, f"  Protocol model: {state}")
+        if result.crossref_check_count:
+            lines.insert(len(lines) - 1, f"  Cross-reference warnings: {result.crossref_warning_count}")
+    _print_report("\n".join(lines))
+    return exit_code
+
+
+def _lv_error(message: str, code: int) -> int:
+    """Print a clean local-validate error to stderr (no traceback) and return code."""
+    print(f"error: {message}", file=sys.stderr)
+    return code
+
+
+def cmd_local_validate(args: Namespace) -> int:
+    """Ingest a saved Foundry output file into local validation artifacts.
+
+    Local/static only: reads a saved file, never runs ``forge``, spawns no
+    subprocess, and requires no Foundry install. Manual review is required and
+    ``ready_for_submission`` stays false.
+    """
+    from arkheionx import local_validation as lv
+
+    repo_arg = str(getattr(args, "repo", "") or "")
+    root = _resolve_root(repo_arg)
+    if root is None:
+        return _lv_error(f"not a directory: {repo_arg}", FAILED)
+
+    input_arg = str(getattr(args, "input", "") or "")
+    input_path = Path(input_arg).expanduser()
+    if not input_path.is_file():
+        return _lv_error(f"input file not found: {input_arg}", FAILED)
+    try:
+        text = input_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        return _lv_error(f"cannot read input: {exc}", FAILED)
+
+    fmt = str(getattr(args, "format", "auto") or "auto")
+    tool = str(getattr(args, "tool", "foundry") or "foundry") or "foundry"
+    no_write = bool(getattr(args, "no_write", False))
+    try:
+        if fmt == "foundry-text":
+            parsed = lv.parse_foundry_text_output(text, tool=tool)
+        elif fmt == "foundry-json":
+            parsed = lv.parse_foundry_json_payload(json.loads(text), tool=tool)
+        else:
+            parsed = lv.parse_foundry_output(text, tool=tool)
+    except json.JSONDecodeError:
+        return _lv_error("input is not valid JSON (required by --format foundry-json)", FAILED)
+    except ValueError as exc:
+        return _lv_error(f"could not parse input: {exc}", FAILED)
+
+    command_list = shlex.split(str(getattr(args, "command", "") or "")) or ["forge", "test", "--json"]
+    repo_fp = lv.repo_fingerprint(str(root))
+    try:
+        build = lv.build_local_validation_from_parsed(parsed, repo_fingerprint=repo_fp, command=command_list)
+    except ValueError as exc:
+        return _lv_error(f"could not build local validation: {exc}", WARNING)
+
+    write = None
+    output_arg = str(getattr(args, "output", "") or "").strip()
+    if not no_write:
+        output_root = None
+        if output_arg:
+            candidate = Path(output_arg).expanduser()
+            output_root = str(candidate if candidate.is_absolute() else (root / candidate))
+        try:
+            write = lv.write_local_validation_artifacts(build, repo_path=str(root), output_root=output_root)
+        except ValueError as exc:
+            return _lv_error(f"could not write artifacts: {exc}", FAILED)
+        except OSError as exc:
+            return _lv_error(f"write error: {exc}", WARNING)
+
+    try:
+        input_display = lv.safe_relative_to_repo(input_path, str(root))
+    except ValueError:
+        input_display = input_arg
+
+    summary = build.summary
+    out = {
+        "command": "local-validate",
+        "repo_path": repo_arg,
+        "input_path": input_display,
+        "input_format": parsed.source_format,
+        "tool": tool,
+        "no_write": no_write,
+        "written": write is not None,
+        "output_root": write.output_root if write else "",
+        "summary_path": write.summary_path if write else "",
+        "run_path": write.run_path if write else "",
+        "artifacts_index_path": write.artifacts_index_path if write else "",
+        "checksums_path": write.checksums_path if write else "",
+        "total_tests": summary.total_tests,
+        "passed_tests": summary.passed_tests,
+        "failed_tests": summary.failed_tests,
+        "skipped_tests": summary.skipped_tests,
+        "errored_tests": summary.errored_tests,
+        "unknown_tests": summary.unknown_tests,
+        "validation_status": summary.status,
+        "run_id": build.run.run_id,
+        "summary_id": summary.summary_id,
+        "test_result_count": len(build.test_results),
+        "trace_receipt_count": len(build.trace_receipts),
+        "artifact_count": int(write.metadata.get("artifact_count", len(write.artifact_ids))) if write else 0,
+        "written_file_count": len(write.written_files) if write else 0,
+        "manual_review_required": True,
+        "ready_for_submission": False,
+        "warnings": list(build.warnings),
+        "errors": [],
+    }
+
+    if bool(getattr(args, "json", False)):
+        print(json.dumps(out, indent=2))
+        return SUCCESS
+
+    lines = [
+        "Local validation complete.",
+        f"  Tool: {tool}",
+        f"  Input: {input_display} ({parsed.source_format})",
+        f"  Tests: {summary.total_tests} total, {summary.passed_tests} passed, "
+        f"{summary.failed_tests} failed, {summary.skipped_tests} skipped, {summary.errored_tests} errored",
+        f"  Status: {summary.status}",
+        f"  Manual review required: {summary.manual_review_required}",
+        f"  Ready for submission: {summary.ready_for_submission}",
+        f"  Written: {write is not None}",
+    ]
+    if no_write:
+        lines.append("  No-write: True (nothing written).")
+    elif write:
+        lines.append(f"  Output: {write.output_root}")
+    if build.warnings:
+        lines.append(f"  Warnings: {len(build.warnings)}")
+    lines.append("  Local/static review guidance only. Not an audit; human review required.")
+    _print_report("\n".join(lines))
+    return SUCCESS

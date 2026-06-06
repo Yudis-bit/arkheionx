@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="210" viewBox="0 0 980 210" role="img" aria-label="Arkheionx v3 stability contract: human text may improve, JSON and artifacts additive, command names stable, safety boundaries fixed">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .title { fill: #0f172a; font: 700 17px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .row { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; }
+      .rowfix { fill: #f8fafc; stroke: #2563eb; stroke-width: 1.5; }
+      .key { fill: #0f172a; font: 700 13px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .val { fill: #475569; font: 400 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .foot { fill: #64748b; font: 400 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="978" height="208" rx="14" class="panel" />
+  <text x="30" y="38" class="title">What v3.0 keeps stable</text>
+
+  <g>
+    <rect x="22" y="58" width="936" height="30" rx="6" class="row" />
+    <text x="38" y="78" class="key">Human-readable output</text>
+    <text x="320" y="78" class="val">may be polished over time — do not parse it programmatically</text>
+
+    <rect x="22" y="94" width="936" height="30" rx="6" class="row" />
+    <text x="38" y="114" class="key">JSON output and schemas</text>
+    <text x="320" y="114" class="val">additive changes preferred; always plain (no ANSI)</text>
+
+    <rect x="22" y="130" width="936" height="30" rx="6" class="rowfix" />
+    <text x="38" y="150" class="key">Public command names</text>
+    <text x="320" y="150" class="val">stable into v3.0; no removal/rename without a bridge</text>
+
+    <rect x="22" y="166" width="936" height="30" rx="6" class="rowfix" />
+    <text x="38" y="186" class="key">Safety boundaries</text>
+    <text x="320" y="186" class="val">fixed and never weakened (local-first, no RPC, no secrets)</text>
+  </g>
+</svg>

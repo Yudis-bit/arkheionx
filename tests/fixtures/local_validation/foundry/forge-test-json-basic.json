@@ -1,0 +1,19 @@
+{
+  "test/LendingVault.t.sol:LendingVaultTest": {
+    "duration": { "secs": 0, "nanos": 8120000 },
+    "test_results": {
+      "testDeposit()": {
+        "status": "Success",
+        "reason": null,
+        "kind": { "Unit": { "gas": 42111 } },
+        "duration": { "secs": 0, "nanos": 12000000 }
+      },
+      "testWithdraw()": {
+        "status": "Success",
+        "reason": null,
+        "kind": { "Unit": { "gas": 58721 } },
+        "duration": { "secs": 0, "nanos": 8000000 }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "findings": [
+    {
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "fingerprint": "acc817416129437c66600a42",
+      "id": "ARK-TST-002",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "invariant-testing",
+        "oracle"
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    },
+    {
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "fingerprint": "54cd39477c53bb7443ba5838",
+      "id": "ARK-RWD-001",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision"
+      ],
+      "title": "Reward accounting needs conservation coverage"
+    },
+    {
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "readPrice"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "fingerprint": "673e60ba1c3c272848c09a70",
+      "id": "ARK-ORC-004",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "oracle-risk",
+        "access-control-review",
+        "oracle-rule-pack"
+      ],
+      "title": "Oracle setter/admin path without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "setOracle"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "1f02c9f34064d430717a1f1f",
+      "id": "ARK-ACC-001",
+      "priority": "Medium readiness gap",
+      "severity": "Medium readiness gap",
+      "tags": [
+        "access-control-review",
+        "admin-risk",
+        "access-control-rule-pack"
+      ],
+      "title": "Privileged setters without role-boundary tests"
+    },
+    {
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "src/RealOracleConsumer.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [
+        "setOracle"
+      ],
+      "category": "access-control",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "fingerprint": "caa87340c6161447d26261eb",
+      "id": "ARK-ACC-003",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "access-control-review",
+        "documentation-readiness",
+        "access-control-rule-pack"
+      ],
+      "title": "Admin role concentration not documented"
+    },
+    {
+      "affected_files": [
+        "src/DocsOnlyPlanning.sol",
+        "test/RealOracleConsumer.t.sol"
+      ],
+      "affected_functions": [],
+      "category": "reward-accounting",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "fingerprint": "7c0443e45adb3c16c781842f",
+      "id": "ARK-RWD-002",
+      "priority": "Low readiness gap",
+      "severity": "Low readiness gap",
+      "tags": [
+        "reward-accounting",
+        "precision",
+        "staking-rule-pack"
+      ],
+      "title": "Accumulator/index logic without precision/rounding tests"
+    }
+  ],
+  "fingerprint_version": "0.6.0",
+  "generated_at": "2026-05-25T19:28:59+00:00",
+  "protocol_type": "oracle",
+  "repo_root": "examples/semantic-lite-fixture",
+  "score": 58,
+  "score_band": "Early readiness",
+  "suppressed_findings": [],
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.6.0"
+}

@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.3.0",
+  "description": "Arkheionx paid readiness offer catalog. Paid work is readiness support, not a formal audit.",
+  "offers": [
+    {
+      "offer_id": "readiness-snapshot",
+      "name": "Arkheionx Readiness Snapshot",
+      "audience": "DeFi founders and small teams that need a quick pre-audit readiness picture.",
+      "description": "Small, fast readiness engagement that runs Arkheionx on an authorized repository and turns obvious blockers into a short report and issue plan.",
+      "starting_price_usd": 500,
+      "typical_price_range_usd": "Pilot: $500-$1,000; standard: $1,000-$2,500",
+      "duration": "1-2 business days after intake and repository access are ready.",
+      "deliverables": [
+        "Pre-Audit Readiness Report",
+        "Executive Summary",
+        "GitHub-native Issue Plan",
+        "Top 5-10 readiness gaps",
+        "30-minute walkthrough"
+      ],
+      "not_included": [
+        "Formal audit",
+        "Exploit PoC development",
+        "Live-chain testing",
+        "Unlimited remediation support"
+      ],
+      "required_inputs": [
+        "Authorized repository URL or archive",
+        "Protocol type and primary concerns",
+        "Audit, contest, or launch timeline",
+        "Existing test and documentation commands"
+      ],
+      "safety_boundaries": [
+        "Local/static repository review only",
+        "No private keys, mnemonics, RPC secrets, or API tokens",
+        "No public disclosure of unpatched vulnerability details",
+        "Findings are readiness signals and review recommendations"
+      ],
+      "recommended_for": [
+        "First-pass audit preparation",
+        "Small teams that need a concise blocker list",
+        "Repositories that already build and test locally"
+      ],
+      "not_recommended_for": [
+        "Emergency incident response",
+        "Formal audit sign-off",
+        "Teams seeking exploit development or live-target testing"
+      ]
+    },
+    {
+      "offer_id": "pre-audit-sprint",
+      "name": "Arkheionx Pre-Audit Sprint",
+      "audience": "Teams preparing for a formal audit, contest, or bug bounty launch.",
+      "description": "Three-to-five day guided readiness workflow that turns scanner output into prioritized remediation, invariant/test planning, and audit handoff artifacts.",
+      "starting_price_usd": 2500,
+      "typical_price_range_usd": "Pilot: $2,500-$5,000; standard: $5,000-$12,000",
+      "duration": "3-5 business days, with optional follow-up calibration when scoped.",
+      "deliverables": [
+        "Pre-Audit Report",
+        "SARIF output",
+        "GitHub Issue Plan",
+        "Remediation Roadmap",
+        "Contest Readiness Report",
+        "Suggested invariant/test plan",
+        "60-90 minute walkthrough",
+        "Optional follow-up calibration pass"
+      ],
+      "not_included": [
+        "Formal audit sign-off",
+        "Security guarantee",
+        "Exploit development",
+        "Emergency incident response"
+      ],
+      "required_inputs": [
+        "Authorized repository access",
+        "Build and test instructions",
+        "Protocol architecture notes",
+        "Known limitations and open security questions",
+        "Audit/contest/bounty timeline"
+      ],
+      "safety_boundaries": [
+        "Authorized repository evaluation only",
+        "Local/static analysis and human-guided readiness review",
+        "No deployed-contract scanning",
+        "No exploit payload generation"
+      ],
+      "recommended_for": [
+        "Teams within 1-4 weeks of audit intake",
+        "Protocols with missing invariants or documentation gaps",
+        "Teams that want GitHub-native remediation tasks"
+      ],
+      "not_recommended_for": [
+        "Protocols requiring full audit coverage",
+        "Live incident handling",
+        "Unauthorized third-party repositories"
+      ]
+    },
+    {
+      "offer_id": "contest-readiness-pack",
+      "name": "Contest Readiness Pack",
+      "audience": "Teams preparing for an authorized audit contest, bug bounty launch, or public security review.",
+      "description": "Repository and documentation readiness package focused on scope clarity, researcher onboarding, and obvious audit blockers before external review.",
+      "starting_price_usd": 1500,
+      "typical_price_range_usd": "$1,500-$6,000",
+      "duration": "2-4 business days depending on repository and documentation size.",
+      "deliverables": [
+        "Contest Readiness Report",
+        "Scope clarity review",
+        "Documentation gap review",
+        "Issue Plan",
+        "Researcher onboarding notes",
+        "Common audit-blocker list"
+      ],
+      "not_included": [
+        "Contest strategy for exploiting systems",
+        "Bounty outcome promises",
+        "Platform endorsement",
+        "Formal audit"
+      ],
+      "required_inputs": [
+        "Authorized repository",
+        "Candidate in-scope and out-of-scope contract list",
+        "Build/test instructions",
+        "Known issues and limitations safe to document",
+        "Planned review timeline"
+      ],
+      "safety_boundaries": [
+        "No endorsement or affiliation with named contest platforms",
+        "No live-target testing",
+        "No exploit steps for active systems",
+        "Respect platform and responsible disclosure rules"
+      ],
+      "recommended_for": [
+        "Teams opening an authorized external review",
+        "Maintainers that want cleaner scope docs",
+        "Protocols with incomplete researcher onboarding"
+      ],
+      "not_recommended_for": [
+        "Bounty farming",
+        "Bypassing contest rules",
+        "Unpatched vulnerability disclosure in public channels"
+      ]
+    },
+    {
+      "offer_id": "github-action-setup",
+      "name": "GitHub Action Setup",
+      "audience": "Teams that want Arkheionx readiness checks in CI.",
+      "description": "Implementation support for adding the Arkheionx GitHub Action, artifacts, SARIF, config, and safe threshold guidance to an authorized repository.",
+      "starting_price_usd": 500,
+      "typical_price_range_usd": "$500-$2,500",
+      "duration": "1-2 business days after repository workflow access is ready.",
+      "deliverables": [
+        "GitHub Action integration",
+        "SARIF output setup",
+        "Report artifact setup",
+        "Config/suppression setup",
+        "Recommended readiness thresholds",
+        "Short handoff guide"
+      ],
+      "not_included": [
+        "GitHub organization administration",
+        "Secret management",
+        "Custom CI platform migration",
+        "Remote issue creation unless explicitly scoped"
+      ],
+      "required_inputs": [
+        "Authorized GitHub repository",
+        "Current CI workflow constraints",
+        "Preferred artifact paths",
+        "Desired readiness gates"
+      ],
+      "safety_boundaries": [
+        "No GitHub token collection by Arkheionx docs or scripts",
+        "No external API integration beyond user-controlled GitHub workflows",
+        "Issue creation remains opt-in and token-scoped",
+        "No network dependency for default scan"
+      ],
+      "recommended_for": [
+        "Teams already using GitHub Actions",
+        "Repositories that want SARIF and report artifacts",
+        "Builders who want baseline/diff tracking"
+      ],
+      "not_recommended_for": [
+        "Teams requiring non-GitHub CI automation",
+        "Repositories without authorization to install workflows"
+      ]
+    },
+    {
+      "offer_id": "ecosystem-readiness-pilot",
+      "name": "Ecosystem Readiness Pilot",
+      "audience": "Chain ecosystems, grant programs, accelerators, venture studios, and audit-prep cohorts supporting multiple authorized DeFi builders.",
+      "description": "Multi-repository readiness pilot that uses local Arkheionx reports to produce repo-by-repo summaries, anonymized common gaps, rule-family heatmaps, and ecosystem-level remediation themes.",
+      "starting_price_usd": 5000,
+      "typical_price_range_usd": "Pilot: $5,000-$15,000; expanded: $15,000-$40,000+",
+      "duration": "Scoped pilot across 3-5 repositories; expanded engagement across 5-10 authorized repositories.",
+      "deliverables": [
+        "Ecosystem Readiness Summary",
+        "Repo-by-Repo Readiness Table",
+        "Common Gap Report",
+        "Rule-Family Heatmap",
+        "Anonymized Recommendations",
+        "GitHub Action Setup Recommendations",
+        "Feedback and Calibration Notes",
+        "60-90 minute ecosystem walkthrough"
+      ],
+      "not_included": [
+        "Formal audit",
+        "Vulnerability certification",
+        "Exploit development",
+        "Live-chain testing",
+        "Emergency incident response",
+        "Public claims without permission",
+        "Reviewing unauthorized repositories"
+      ],
+      "required_inputs": [
+        "Written authorization for every repository",
+        "Scope list and repository contacts",
+        "Preferred anonymity and reporting rules",
+        "Program timeline",
+        "Local Arkheionx JSON reports or repository access method agreed privately"
+      ],
+      "safety_boundaries": [
+        "Authorized repositories only",
+        "No public naming without explicit permission",
+        "No private code or vulnerability disclosure in public artifacts",
+        "Anonymized summaries must not reveal sensitive project details",
+        "No live-chain behavior"
+      ],
+      "recommended_for": [
+        "Ecosystems exploring standardized readiness support",
+        "Grant programs that want repeatable Markdown artifacts",
+        "Accelerators with several authorized DeFi repos",
+        "Audit-prep cohorts that need shared readiness themes"
+      ],
+      "not_recommended_for": [
+        "Programs needing formal certification",
+        "Large portfolios without scoped authorization",
+        "Public marketing claims without consent",
+        "Remote scanning of repositories without authorization"
+      ]
+    }
+  ]
+}

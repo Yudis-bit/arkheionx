@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="200" viewBox="0 0 980 200" role="img" aria-label="Arkheionx v3 demo fixtures: oracle-staking staking and rewards, amm-swap AMM and reserves, lending-vault collateral and debt">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .title { fill: #0f172a; font: 700 17px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .card { fill: #f8fafc; stroke: #2563eb; stroke-width: 1.5; }
+      .name { fill: #0f172a; font: 700 15px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .tag { fill: #1d4ed8; font: 600 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .tgt { fill: #475569; font: 400 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .foot { fill: #64748b; font: 400 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="978" height="198" rx="14" class="panel" />
+  <text x="30" y="38" class="title">Bundled demo fixtures (local-only toys)</text>
+
+  <g>
+    <rect x="22" y="62" width="300" height="86" rx="10" class="card" />
+    <text x="40" y="92" class="name">oracle-staking</text>
+    <text x="40" y="114" class="tag">staking / rewards</text>
+    <text x="40" y="134" class="tgt">OracleRewardFixture.stake</text>
+
+    <rect x="340" y="62" width="300" height="86" rx="10" class="card" />
+    <text x="358" y="92" class="name">amm-swap</text>
+    <text x="358" y="114" class="tag">AMM / reserves</text>
+    <text x="358" y="134" class="tgt">AMMSwapFixture.swapAForB</text>
+
+    <rect x="658" y="62" width="300" height="86" rx="10" class="card" />
+    <text x="676" y="92" class="name">lending-vault</text>
+    <text x="676" y="114" class="tag">collateral / debt</text>
+    <text x="676" y="134" class="tgt">LendingVaultFixture.borrow</text>
+  </g>
+
+  <text x="30" y="180" class="foot">Demonstrations only — not real protocols, not vulnerability reports. Copied via demo --copy from an installed package.</text>
+</svg>

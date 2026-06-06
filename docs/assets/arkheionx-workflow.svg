@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="150" viewBox="0 0 980 150" font-family="ui-sans-serif,system-ui,Segoe UI,Helvetica,Arial,sans-serif">
+  <rect width="980" height="150" rx="10" fill="#0d1117"/>
+  <style>
+    .box { fill:#161b22; stroke:#30363d; stroke-width:1.5; }
+    .lbl { fill:#e6edf3; font-size:13px; font-weight:600; }
+    .sub { fill:#8b949e; font-size:10px; }
+    .arr { stroke:#3fb950; stroke-width:2; marker-end:url(#a); }
+  </style>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/>
+    </marker>
+  </defs>
+  <text x="24" y="30" class="lbl" font-size="15">Arkheionx workflow</text>
+  <text x="24" y="48" class="sub">Foundry proves. Arkheionx maps, ranks, guides, summarizes, and packages the evidence.</text>
+
+  <g transform="translate(0,70)">
+    <g><rect class="box" x="20"  y="0" width="104" height="44" rx="8"/><text class="lbl" x="72"  y="20" text-anchor="middle">map</text><text class="sub" x="72"  y="35" text-anchor="middle">understand</text></g>
+    <line class="arr" x1="124" y1="22" x2="148" y2="22"/>
+    <g><rect class="box" x="150" y="0" width="104" height="44" rx="8"/><text class="lbl" x="202" y="20" text-anchor="middle">hunt</text><text class="sub" x="202" y="35" text-anchor="middle">rank targets</text></g>
+    <line class="arr" x1="254" y1="22" x2="278" y2="22"/>
+    <g><rect class="box" x="280" y="0" width="104" height="44" rx="8"/><text class="lbl" x="332" y="20" text-anchor="middle">prove --run</text><text class="sub" x="332" y="35" text-anchor="middle">local Foundry</text></g>
+    <line class="arr" x1="384" y1="22" x2="408" y2="22"/>
+    <g><rect class="box" x="410" y="0" width="104" height="44" rx="8"/><text class="lbl" x="462" y="20" text-anchor="middle">trace</text><text class="sub" x="462" y="35" text-anchor="middle">summarize</text></g>
+    <line class="arr" x1="514" y1="22" x2="538" y2="22"/>
+    <g><rect class="box" x="540" y="0" width="104" height="44" rx="8"/><text class="lbl" x="592" y="20" text-anchor="middle">evidence</text><text class="sub" x="592" y="35" text-anchor="middle">package</text></g>
+    <line class="arr" x1="644" y1="22" x2="668" y2="22"/>
+    <g><rect class="box" x="670" y="0" width="104" height="44" rx="8"/><text class="lbl" x="722" y="20" text-anchor="middle">report</text><text class="sub" x="722" y="35" text-anchor="middle">draft</text></g>
+    <line class="arr" x1="774" y1="22" x2="798" y2="22"/>
+    <g><rect class="box" x="800" y="0" width="160" height="44" rx="8"/><text class="lbl" x="880" y="20" text-anchor="middle">manual review</text><text class="sub" x="880" y="35" text-anchor="middle">human decision</text></g>
+  </g>
+</svg>

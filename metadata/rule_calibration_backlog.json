@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.1.0",
+  "description": "Arkheionx rule calibration backlog. Initial entries are synthetic/internal and do not represent customer or adoption claims.",
+  "entries": [
+    {
+      "id": "CAL-001",
+      "title": "Negative-context coverage detection",
+      "rule_family": "testing",
+      "source": "synthetic_internal",
+      "status": "fixed",
+      "priority": "P0",
+      "problem": "Comments such as missing invariant tests could be misread as positive coverage.",
+      "proposed_action": "Keep negative-context evidence tests and ensure missing coverage never inflates score.",
+      "safety_notes": "No private data. Calibration improves defensive readiness scoring.",
+      "linked_tests": ["tests/test_negative_evidence.py"],
+      "target_release": "v0.9.1"
+    },
+    {
+      "id": "CAL-002",
+      "title": "Generated artifact self-ingestion guard",
+      "rule_family": "scan-source-accounting",
+      "source": "synthetic_internal",
+      "status": "fixed",
+      "priority": "P0",
+      "problem": "Previous Arkheionx outputs could be read as source evidence on repeated scans.",
+      "proposed_action": "Ignore generated artifacts by default and report scan source accounting.",
+      "safety_notes": "No live-chain behavior. Prevents misleading evidence.",
+      "linked_tests": ["tests/test_generated_artifact_ignore.py"],
+      "target_release": "v0.9.2"
+    },
+    {
+      "id": "CAL-003",
+      "title": "Report verbosity calibration",
+      "rule_family": "report-quality",
+      "source": "synthetic_internal",
+      "status": "received",
+      "priority": "P2",
+      "problem": "Some audiences may need shorter summaries while researchers need evidence detail.",
+      "proposed_action": "Collect report-quality feedback by output type and audience.",
+      "safety_notes": "Do not include private report snippets unless authorized.",
+      "linked_tests": ["tests/test_feedback_loop.py"],
+      "target_release": "v1.1.0"
+    },
+    {
+      "id": "CAL-004",
+      "title": "Score optimism risk",
+      "rule_family": "readiness-score",
+      "source": "synthetic_internal",
+      "status": "needs-reproduction",
+      "priority": "P1",
+      "problem": "Certain toy repositories may receive an improving score despite multiple unresolved readiness gaps.",
+      "proposed_action": "Collect external evaluation score examples and compare finding confidence against score bands.",
+      "safety_notes": "Use sanitized scores only. Do not publish private repo names without permission.",
+      "linked_tests": [],
+      "target_release": "v1.1.x"
+    },
+    {
+      "id": "CAL-005",
+      "title": "Multi-protocol classification calibration",
+      "rule_family": "protocol-detection",
+      "source": "synthetic_internal",
+      "status": "deferred",
+      "priority": "P2",
+      "problem": "Repositories combining vault, oracle, reward, and access-control patterns may need clearer protocol classification.",
+      "proposed_action": "Track public and toy examples before changing protocol detection.",
+      "safety_notes": "No live-chain data. Authorized repositories only.",
+      "linked_tests": [],
+      "target_release": "v1.2.0"
+    },
+    {
+      "id": "CAL-006",
+      "title": "Docs/comments false-positive risk",
+      "rule_family": "semantic-lite",
+      "source": "synthetic_internal",
+      "status": "accepted-calibration",
+      "priority": "P1",
+      "problem": "Keyword-only docs or comments can be useful context but should not create high-confidence findings alone.",
+      "proposed_action": "Continue downgrading keyword-only evidence and collect false-positive reports by evidence source.",
+      "safety_notes": "Feedback snippets must be sanitized.",
+      "linked_tests": ["tests/test_false_positive_reduction.py", "tests/test_semantic_lite.py"],
+      "target_release": "v1.1.0"
+    },
+    {
+      "id": "CAL-007",
+      "title": "AMM/lending runtime family expansion candidate",
+      "rule_family": "amm-lending",
+      "source": "synthetic_internal",
+      "status": "deferred",
+      "priority": "P4",
+      "problem": "AMM and lending findings exist as knowledge/search categories, but runtime rule-pack expansion needs separate design.",
+      "proposed_action": "Collect feedback requests and avoid implying full runtime support before implementation.",
+      "safety_notes": "Future candidate only. No live-chain or deployed-contract scanning.",
+      "linked_tests": [],
+      "target_release": "future"
+    }
+  ]
+}

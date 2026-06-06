@@ -1,0 +1,610 @@
+{
+  "disclaimer": "This is a defensive test-planning artifact, not a formal audit or formal verification.",
+  "findings": [
+    {
+      "confidence": "high",
+      "finding_id": "ARK-AMM-002",
+      "foundry_skeleton_functions": [
+        "invariant_lpSharesTrackPoolOwnership"
+      ],
+      "invariant_candidates": [
+        "LP share supply tracks pool ownership within documented rounding."
+      ],
+      "manual_review_notes": [
+        "Review minimum-liquidity and initial-share policy."
+      ],
+      "priority": "High readiness gap",
+      "required_project_bindings": [
+        "AMM pool",
+        "LP share accounting",
+        "Liquidity actors"
+      ],
+      "rule_family": "amm",
+      "safety_notes": [
+        "Use local token mocks and project-specific rounding tolerance."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "suggested_tests": [
+        "Test first liquidity provider behavior.",
+        "Test proportional minting and proportional withdrawal.",
+        "Cover rounding and dust handling during mint/burn.",
+        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional."
+      ],
+      "title": "LP share accounting without mint/burn boundary tests"
+    },
+    {
+      "confidence": "high",
+      "finding_id": "ARK-AMM-003",
+      "foundry_skeleton_functions": [
+        "invariant_reservePriceConsumersRespectBounds"
+      ],
+      "invariant_candidates": [
+        "Reserve-based price consumers respect documented bounds and delay assumptions."
+      ],
+      "manual_review_notes": [
+        "Review whether price output is advisory or used for critical accounting."
+      ],
+      "priority": "High readiness gap",
+      "required_project_bindings": [
+        "AMM price function",
+        "Price consumer"
+      ],
+      "rule_family": "amm",
+      "safety_notes": [
+        "Use local reserve changes only."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "suggested_tests": [
+        "Test reserve-price movement bounds.",
+        "Test TWAP or delay assumptions if used.",
+        "Document whether other accounting paths rely on spot reserve price.",
+        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions."
+      ],
+      "title": "Spot-price or reserve-price dependency without manipulation-resistance tests"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-REENT-001",
+      "foundry_skeleton_functions": [
+        "invariant_externalCallFlowsPreserveAccountingState"
+      ],
+      "invariant_candidates": [
+        "External-call flows cannot observe or preserve inconsistent accounting state."
+      ],
+      "manual_review_notes": [
+        "Review inherited guards and pull-payment patterns."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "External-call flow",
+        "Local receiver stub"
+      ],
+      "rule_family": "reentrancy-value-flow",
+      "safety_notes": [
+        "Use a harmless local receiver stub with TODO assertions."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.",
+      "suggested_tests": [
+        "Add a benign callback-capable receiver stub.",
+        "Assert state updates happen before external value transfer where required.",
+        "Test withdraw, claim, refund, or swap flows for accounting consistency.",
+        "Review state update order and add local malicious-receiver tests where callbacks are possible."
+      ],
+      "title": "Value flow with external calls needs reentrancy review"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-AMM-001",
+      "foundry_skeleton_functions": [
+        "invariant_ammAccountingPreservesDocumentedInvariant"
+      ],
+      "invariant_candidates": [
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+      ],
+      "manual_review_notes": [
+        "Review exact AMM curve before choosing assertion tolerance."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "AMM pool",
+        "Token0 and token1 mocks",
+        "Swap handler"
+      ],
+      "rule_family": "amm",
+      "safety_notes": [
+        "Use toy/local reserves and no production market assumptions."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "suggested_tests": [
+        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+        "Test repeated swaps across small and large reserve states.",
+        "Document expected invariant tolerance.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+      ],
+      "title": "AMM invariant assumptions not covered by tests"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-AMM-004",
+      "foundry_skeleton_functions": [
+        "invariant_poolUsesActualReceivedAmounts"
+      ],
+      "invariant_candidates": [
+        "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+      ],
+      "manual_review_notes": [
+        "Review token support policy before adding mocks."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Transfer path",
+        "Token mock with configurable received amount"
+      ],
+      "rule_family": "amm",
+      "safety_notes": [
+        "Use synthetic local token behavior only."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "suggested_tests": [
+        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+        "Simulate fee-on-transfer behavior with a local mock if supported.",
+        "Document unsupported token types if not handled.",
+        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration."
+      ],
+      "title": "Fee-on-transfer or non-standard token assumptions not documented"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-AMM-005",
+      "foundry_skeleton_functions": [
+        "invariant_swapsRespectUserOutputBounds"
+      ],
+      "invariant_candidates": [
+        "Swap execution respects user-provided output bounds and documented deadline policy."
+      ],
+      "manual_review_notes": [
+        "Review whether slippage is enforced by a router outside this repository."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Swap function",
+        "Slippage or deadline inputs"
+      ],
+      "rule_family": "amm",
+      "safety_notes": [
+        "Use local swap state and synthetic users."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "suggested_tests": [
+        "Test minOut enforcement.",
+        "Test stale quote or deadline behavior if supported.",
+        "Assert user-provided slippage bounds are respected.",
+        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+      ],
+      "title": "Slippage/min-output constraints missing or unclear"
+    },
+    {
+      "confidence": "low",
+      "finding_id": "ARK-TST-002",
+      "foundry_skeleton_functions": [
+        "invariant_coreAccountingRelationshipsHold",
+        "invariant_privilegedActionsRespectDocumentedAssumptions"
+      ],
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "manual_review_notes": [
+        "Review whether the protocol uses another property-testing framework outside Foundry."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "Target contracts",
+        "Allowed action handler",
+        "Local mocks for assets and oracle inputs"
+      ],
+      "rule_family": "testing",
+      "safety_notes": [
+        "Generated invariants are starting points and need human tailoring."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol: Keyword signal matched this readiness finding.",
+      "suggested_tests": [
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.",
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    },
+    {
+      "confidence": "low",
+      "finding_id": "ARK-ORC-002",
+      "foundry_skeleton_functions": [
+        "invariant_oracleNormalizationMatchesAccountingUnits"
+      ],
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
+      "manual_review_notes": [
+        "Review whether feed decimals are fixed at deployment."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "Oracle adapter",
+        "Accounting consumer"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use synthetic feed answers and local mocks."
+      ],
+      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "suggested_tests": [
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units.",
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+      ],
+      "title": "Oracle decimals or normalization not covered by tests"
+    },
+    {
+      "confidence": "low",
+      "finding_id": "ARK-ORC-001",
+      "foundry_skeleton_functions": [
+        "invariant_oracleFreshnessPolicyIsRespected"
+      ],
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
+      "manual_review_notes": [
+        "Check whether freshness validation is implemented in an imported adapter."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "Oracle adapter or mock feed",
+        "Consumer contract"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use local mock oracle responses only."
+      ],
+      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "suggested_tests": [
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+      ],
+      "title": "Oracle-dependent logic without stale-price tests"
+    },
+    {
+      "confidence": "low",
+      "finding_id": "ARK-ORC-003",
+      "foundry_skeleton_functions": [
+        "invariant_reservePriceDependencyIsBounded"
+      ],
+      "invariant_candidates": [
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+      ],
+      "manual_review_notes": [
+        "Review whether price source is advisory or authoritative."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "AMM or price source mock",
+        "Price consumer"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use local reserve changes and avoid production market assumptions."
+      ],
+      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "suggested_tests": [
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards.",
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds."
+      ],
+      "title": "Spot or reserve-based pricing without manipulation-resistance tests"
+    },
+    {
+      "confidence": "low",
+      "finding_id": "ARK-ORC-005",
+      "foundry_skeleton_functions": [
+        "invariant_invalidPricesDoNotDriveCriticalAccounting"
+      ],
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "manual_review_notes": [
+        "Review whether fallback behavior is intentionally unavailable."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "Oracle adapter",
+        "Consumer path"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use local invalid-value mocks."
+      ],
+      "source_report_evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "suggested_tests": [
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions.",
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+      ],
+      "title": "Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-REENT-004",
+      "foundry_skeleton_functions": [
+        "invariant_externalCallOrderingMatchesPolicy"
+      ],
+      "invariant_candidates": [
+        "External call ordering follows documented state-transition policy."
+      ],
+      "manual_review_notes": [
+        "Review code paths manually before deciding severity."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "External call path",
+        "Failure-mode stub"
+      ],
+      "rule_family": "reentrancy-value-flow",
+      "safety_notes": [
+        "Use local failure-mode stubs only."
+      ],
+      "source_report_evidence_summary": "src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.",
+      "suggested_tests": [
+        "Document checks-effects-interactions or guard assumptions.",
+        "Test state before and after external calls.",
+        "Assert failure paths preserve accounting state.",
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "title": "External call path without documented ordering assumptions"
+    }
+  ],
+  "foundry_skeleton": {
+    "contract_name": "ArkheionxPackageCLIInvariants",
+    "functions": [
+      "invariant_lpSharesTrackPoolOwnership",
+      "invariant_reservePriceConsumersRespectBounds",
+      "invariant_externalCallFlowsPreserveAccountingState",
+      "invariant_ammAccountingPreservesDocumentedInvariant",
+      "invariant_poolUsesActualReceivedAmounts",
+      "invariant_swapsRespectUserOutputBounds",
+      "invariant_coreAccountingRelationshipsHold",
+      "invariant_privilegedActionsRespectDocumentedAssumptions",
+      "invariant_oracleNormalizationMatchesAccountingUnits",
+      "invariant_oracleFreshnessPolicyIsRespected",
+      "invariant_reservePriceDependencyIsBounded",
+      "invariant_invalidPricesDoNotDriveCriticalAccounting",
+      "invariant_externalCallOrderingMatchesPolicy"
+    ],
+    "path": "examples/reports/ArkheionxPackageCLIInvariants.t.sol",
+    "required_project_bindings": [
+      "AMM pool",
+      "LP share accounting",
+      "Liquidity actors",
+      "AMM price function",
+      "Price consumer",
+      "External-call flow",
+      "Local receiver stub",
+      "Token0 and token1 mocks",
+      "Swap handler",
+      "Transfer path",
+      "Token mock with configurable received amount",
+      "Swap function",
+      "Slippage or deadline inputs",
+      "Target contracts",
+      "Allowed action handler",
+      "Local mocks for assets and oracle inputs",
+      "Oracle adapter",
+      "Accounting consumer",
+      "Oracle adapter or mock feed",
+      "Consumer contract",
+      "AMM or price source mock",
+      "Consumer path",
+      "External call path",
+      "Failure-mode stub"
+    ]
+  },
+  "generated_at": "2026-05-27T11:05:35+00:00",
+  "invariant_candidates": [
+    "LP share supply tracks pool ownership within documented rounding.",
+    "Reserve-based price consumers respect documented bounds and delay assumptions.",
+    "External-call flows cannot observe or preserve inconsistent accounting state.",
+    "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
+    "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+    "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
+    "Swap execution respects user-provided output bounds and documented deadline policy.",
+    "Core accounting relationships hold after any allowed user action.",
+    "Privileged actions cannot silently bypass documented accounting assumptions.",
+    "Normalized oracle values remain within documented unit and decimal assumptions.",
+    "Accounting decisions only use oracle data that satisfies documented freshness policy.",
+    "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.",
+    "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.",
+    "External call ordering follows documented state-transition policy."
+  ],
+  "manual_review_required": true,
+  "protocol_type": "amm",
+  "rule_families": [
+    {
+      "finding_ids": [
+        "ARK-AMM-002",
+        "ARK-AMM-003",
+        "ARK-AMM-001",
+        "ARK-AMM-004",
+        "ARK-AMM-005"
+      ],
+      "invariant_candidates": [
+        "LP share supply tracks pool ownership within documented rounding.",
+        "Reserve-based price consumers respect documented bounds and delay assumptions.",
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
+        "Swap execution respects user-provided output bounds and documented deadline policy."
+      ],
+      "rule_family": "amm",
+      "suggested_tests": [
+        "Test first liquidity provider behavior.",
+        "Test proportional minting and proportional withdrawal.",
+        "Cover rounding and dust handling during mint/burn.",
+        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+        "Test reserve-price movement bounds.",
+        "Test TWAP or delay assumptions if used.",
+        "Document whether other accounting paths rely on spot reserve price.",
+        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+        "Test repeated swaps across small and large reserve states.",
+        "Document expected invariant tolerance.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+        "Simulate fee-on-transfer behavior with a local mock if supported.",
+        "Document unsupported token types if not handled.",
+        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "Test minOut enforcement.",
+        "Test stale quote or deadline behavior if supported.",
+        "Assert user-provided slippage bounds are respected.",
+        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+      ]
+    },
+    {
+      "finding_ids": [
+        "ARK-ORC-002",
+        "ARK-ORC-001",
+        "ARK-ORC-003",
+        "ARK-ORC-005"
+      ],
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions.",
+        "Accounting decisions only use oracle data that satisfies documented freshness policy.",
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.",
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "rule_family": "oracle",
+      "suggested_tests": [
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units.",
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards.",
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions.",
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+      ]
+    },
+    {
+      "finding_ids": [
+        "ARK-REENT-001",
+        "ARK-REENT-004"
+      ],
+      "invariant_candidates": [
+        "External-call flows cannot observe or preserve inconsistent accounting state.",
+        "External call ordering follows documented state-transition policy."
+      ],
+      "rule_family": "reentrancy-value-flow",
+      "suggested_tests": [
+        "Add a benign callback-capable receiver stub.",
+        "Assert state updates happen before external value transfer where required.",
+        "Test withdraw, claim, refund, or swap flows for accounting consistency.",
+        "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+        "Document checks-effects-interactions or guard assumptions.",
+        "Test state before and after external calls.",
+        "Assert failure paths preserve accounting state.",
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ]
+    },
+    {
+      "finding_ids": [
+        "ARK-TST-002"
+      ],
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "rule_family": "testing",
+      "suggested_tests": [
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.",
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ]
+    }
+  ],
+  "safety_notes": [
+    "Generated plans are starter scaffolds for authorized local repositories; human review required.",
+    "They are not a formal audit, not formal verification, and not proof of safety.",
+    "Replace TODO placeholders with project-specific contracts, handlers, and assertions.",
+    "Use local mocks or test deployments only; do not wire production credentials or deployed systems."
+  ],
+  "schema_version": "1.0.0",
+  "source_report": "examples/amm-fixture",
+  "source_report_score": 43,
+  "source_report_score_band": "Early readiness",
+  "source_report_version": "2.0.0",
+  "suggested_tests": [
+    "Test first liquidity provider behavior.",
+    "Test proportional minting and proportional withdrawal.",
+    "Cover rounding and dust handling during mint/burn.",
+    "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+    "Test reserve-price movement bounds.",
+    "Test TWAP or delay assumptions if used.",
+    "Document whether other accounting paths rely on spot reserve price.",
+    "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+    "Add a benign callback-capable receiver stub.",
+    "Assert state updates happen before external value transfer where required.",
+    "Test withdraw, claim, refund, or swap flows for accounting consistency.",
+    "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+    "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+    "Test repeated swaps across small and large reserve states.",
+    "Document expected invariant tolerance.",
+    "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+    "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+    "Simulate fee-on-transfer behavior with a local mock if supported.",
+    "Document unsupported token types if not handled.",
+    "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+    "Test minOut enforcement.",
+    "Test stale quote or deadline behavior if supported.",
+    "Assert user-provided slippage bounds are respected.",
+    "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+    "Add a stateful invariant suite for the core protocol lifecycle.",
+    "Add handler actions for normal user flows and documented edge cases.",
+    "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.",
+    "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+    "Test decimals normalization across expected feed decimals.",
+    "Test zero, negative, or invalid oracle answers if applicable.",
+    "Assert normalized price units match accounting units.",
+    "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+    "Reject stale oracle rounds or document fallback behavior.",
+    "Test updatedAt or heartbeat boundaries.",
+    "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
+    "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+    "Test spot-price movement bounds.",
+    "Test TWAP or delay assumptions when used.",
+    "Document reserve-price dependency and expected safeguards.",
+    "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+    "Test documented price bounds.",
+    "Test invalid answer fallback behavior.",
+    "Add documentation for price shock and fallback assumptions.",
+    "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+    "Document checks-effects-interactions or guard assumptions.",
+    "Test state before and after external calls.",
+    "Assert failure paths preserve accounting state.",
+    "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+  ],
+  "tool": "Arkheionx Test Plan Generator",
+  "version": "2.0.0"
+}

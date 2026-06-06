@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Report Draft",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "generated_at", "target", "title",
+    "evidence_level", "status", "review_status", "summary", "what_is_proven",
+    "what_is_not_proven", "required_human_checks", "affected_components", "proof",
+    "trace_summary", "impact_reasoning", "assumptions", "limitations",
+    "reproduction_steps", "recommended_next_steps", "safety_notice",
+    "artifact_paths"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "target": {"type": "string"},
+    "title": {"type": "string"},
+    "evidence_level": {"type": "string", "enum": ["HEURISTIC", "COMPILER_CONFIRMED", "EXECUTION_CONFIRMED", "EVIDENCE_READY"]},
+    "status": {"type": "string"},
+    "review_status": {"type": "string"},
+    "summary": {"type": "string"},
+    "what_is_proven": {"type": "array", "items": {"type": "string"}},
+    "what_is_not_proven": {"type": "array", "items": {"type": "string"}},
+    "required_human_checks": {"type": "array", "items": {"type": "string"}},
+    "affected_components": {"type": "array", "items": {"type": "string"}},
+    "proof": {"type": "object"},
+    "trace_summary": {"type": "object"},
+    "impact_reasoning": {"type": "string"},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "reproduction_steps": {"type": "array", "items": {"type": "string"}},
+    "recommended_next_steps": {"type": "array", "items": {"type": "string"}},
+    "safety_notice": {"type": "string"},
+    "artifact_paths": {"type": "object"},
+    "evidence_context": {
+      "type": "object",
+      "properties": {
+        "evidence_package_id": {"type": "string"},
+        "evidence_level": {"type": "string"},
+        "readiness": {"type": "string"},
+        "review_status": {"type": "string"},
+        "human_review_required": {"type": "boolean"},
+        "source_artifacts": {
+          "type": "object",
+          "properties": {
+            "evidence_json": {"type": "string"},
+            "proof_json": {"type": "string"},
+            "trace_json": {"type": "string"},
+            "report_json": {"type": "string"}
+          }
+        },
+        "manifest_checks": {
+          "type": "object",
+          "properties": {
+            "proof_linked": {"type": "boolean"},
+            "trace_linked": {"type": "boolean"},
+            "trace_required_for_evidence_ready": {"type": "boolean"},
+            "source_paths_recorded": {"type": "boolean"},
+            "human_review_required": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "receipt_references": {
+      "type": "object",
+      "properties": {
+        "proof_receipt_id": {"type": "string"},
+        "trace_receipt_id": {"type": "string"},
+        "evidence_package_id": {"type": "string"},
+        "proof_source": {"type": "string"},
+        "trace_source": {"type": "string"},
+        "evidence_source": {"type": "string"}
+      }
+    },
+    "claim_references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_id": {"type": "string"},
+          "claim": {"type": "string"},
+          "supported_by": {"type": "array", "items": {"type": "string"}},
+          "status": {"type": "string"},
+          "limitations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "report_readiness": {
+      "type": "object",
+      "properties": {
+        "status": {"type": "string"},
+        "ready_for_human_review": {"type": "boolean"},
+        "ready_for_submission": {"type": "boolean"},
+        "requires_manual_review": {"type": "boolean"},
+        "evidence_ready": {"type": "boolean"},
+        "missing_items": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

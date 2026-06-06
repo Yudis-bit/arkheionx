@@ -1,0 +1,235 @@
+#!/bin/sh
+# arkup — Arkheionx install/update lifecycle helper (v2.6.0 MVP).
+#
+# A small, honest, local-first wrapper around install.sh / uninstall.sh and the
+# local install receipt. It is NOT a full version manager and does not claim
+# parity with foundryup. It uses no root, edits no shell profile, collects no
+# secrets, and performs no RPC or live-chain activity.
+#
+# Usage:
+#   sh arkup --help
+#   sh arkup --version
+#   sh arkup --check        (alias: --status)
+#   sh arkup --install      [--channel stable|main] [--ref REF] [--local PATH]
+#   sh arkup --update       [overrides]
+#   sh arkup --uninstall    [--dry-run]
+#
+# Shared modifiers: --dry-run --yes --install-dir PATH --bin-dir PATH
+set -eu
+
+ARKUP_VERSION="3.1.0"
+ARKHEIONX_STABLE_TAG="${ARKHEIONX_STABLE_TAG:-v3.1.0}"
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+INSTALL_SH="${ARKHEIONX_INSTALL_SH:-$SCRIPT_DIR/install.sh}"
+UNINSTALL_SH="${ARKHEIONX_UNINSTALL_SH:-$SCRIPT_DIR/uninstall.sh}"
+
+ACTION=""
+CHANNEL=""
+REF=""
+LOCAL=""
+DRY_RUN=0
+YES=0
+INSTALL_DIR="${ARKHEIONX_INSTALL_DIR:-$HOME/.arkheionx}"
+BIN_DIR_OVERRIDE=""
+
+log() { printf '%s\n' "$*"; }
+warn() { printf 'warning: %s\n' "$*" >&2; }
+err() { printf 'error: %s\n' "$*" >&2; }
+
+usage() {
+    cat <<'EOF'
+arkup — Arkheionx install/update lifecycle helper (MVP)
+
+Usage:
+  sh arkup --help                 Show this help.
+  sh arkup --version              Show arkup and stable-target versions.
+  sh arkup --check                Show install state (alias: --status).
+  sh arkup --install [opts]       Install Arkheionx via install.sh.
+  sh arkup --update  [opts]       Update an existing install using its receipt.
+  sh arkup --uninstall [opts]     Remove Arkheionx via uninstall.sh.
+
+Source options (install/update):
+  --channel stable|main           stable (default) or development main.
+  --ref REF                       pin an explicit tag/branch/sha.
+  --local PATH                    install from a local checkout.
+
+Shared options:
+  --dry-run                       Print actions without changing anything.
+  --yes                           Skip confirmation prompts.
+  --install-dir PATH              Base install dir (default: ~/.arkheionx).
+  --bin-dir PATH                  Wrapper dir (default: <install-dir>/bin).
+
+arkup is an MVP wrapper, not a full version manager. It is local-first:
+no root, no shell-profile edits, no secrets, no RPC. Arkheionx is not on PyPI.
+Update keeps your recorded source kind (stable/main/ref/local) unless you
+explicitly override it.
+EOF
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help|help) ACTION=help ;;
+        --version|version) ACTION=version ;;
+        --check|check|--status|status) ACTION=check ;;
+        --install|install) ACTION=install ;;
+        --update|update) ACTION=update ;;
+        --uninstall|uninstall) ACTION=uninstall ;;
+        --channel) shift; CHANNEL="${1:-}" ;;
+        --ref) shift; REF="${1:-}" ;;
+        --local) shift; LOCAL="${1:-}" ;;
+        --dry-run) DRY_RUN=1 ;;
+        --yes|-y) YES=1 ;;
+        --install-dir) shift; INSTALL_DIR="${1:-}" ;;
+        --bin-dir) shift; BIN_DIR_OVERRIDE="${1:-}" ;;
+        *) err "unknown argument: $1"; usage; exit 2 ;;
+    esac
+    shift
+done
+
+[ -n "$ACTION" ] || ACTION=help
+BIN_DIR="${BIN_DIR_OVERRIDE:-$INSTALL_DIR/bin}"
+RECEIPT="$INSTALL_DIR/install.json"
+
+arkheionx_cmd() {
+    if command -v arkheionx >/dev/null 2>&1; then
+        command -v arkheionx
+    elif [ -x "$INSTALL_DIR/bin/arkheionx" ]; then
+        printf '%s' "$INSTALL_DIR/bin/arkheionx"
+    fi
+}
+
+receipt_status() {
+    [ -f "$RECEIPT" ] || { printf 'missing'; return; }
+    command -v python3 >/dev/null 2>&1 || { printf 'nopython'; return; }
+    if python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$RECEIPT" >/dev/null 2>&1; then
+        printf 'ok'
+    else
+        printf 'malformed'
+    fi
+}
+
+rfield() {
+    python3 - "$RECEIPT" "$1" <<'PY' 2>/dev/null || true
+import json, sys
+try:
+    data = json.load(open(sys.argv[1], encoding="utf-8"))
+except Exception:
+    sys.exit(0)
+value = data.get(sys.argv[2], "")
+print(value if value is not None else "")
+PY
+}
+
+print_receipt() {
+    python3 - "$RECEIPT" <<'PY' 2>/dev/null || true
+import json, sys
+data = json.load(open(sys.argv[1], encoding="utf-8"))
+for key in ("source_kind", "ref", "local_path", "installed_version",
+            "install_method", "install_dir", "bin_dir", "command_path",
+            "repo_url", "updated_at"):
+    value = data.get(key)
+    if value:
+        print(f"  {key}: {value}")
+PY
+}
+
+do_version() {
+    log "arkup $ARKUP_VERSION"
+    log "Stable target: $ARKHEIONX_STABLE_TAG"
+    cmd="$(arkheionx_cmd || true)"
+    if [ -n "$cmd" ]; then
+        ver="$("$cmd" version 2>/dev/null | sed -n 's/^Arkheionx package version: //p' | head -1)"
+        log "Installed Arkheionx: ${ver:-unknown}"
+    else
+        log "Installed Arkheionx: not installed"
+    fi
+}
+
+do_check() {
+    log "Arkheionx install status"
+    cmd="$(arkheionx_cmd || true)"
+    if [ -n "$cmd" ]; then
+        log "  installed: yes"
+        log "  command path: $cmd"
+        ver="$("$cmd" version 2>/dev/null | sed -n 's/^Arkheionx package version: //p' | head -1)"
+        [ -n "$ver" ] && log "  running version: $ver"
+    else
+        log "  installed: no (no arkheionx command found)"
+    fi
+    case "$(receipt_status)" in
+        ok) log "  install receipt: $RECEIPT"; print_receipt ;;
+        missing) log "  install receipt: none (install state unknown)" ;;
+        malformed) warn "install receipt malformed: $RECEIPT (reinstall to repair)" ;;
+        nopython) log "  install receipt: present at $RECEIPT (python3 unavailable to parse)" ;;
+    esac
+    if [ -n "$cmd" ]; then
+        log "  next: sh arkup --update"
+    else
+        log "  next: sh arkup --install"
+    fi
+}
+
+run_installer() {
+    [ -f "$INSTALL_SH" ] || { err "install.sh not found at $INSTALL_SH"; exit 2; }
+    ARKHEIONX_YES="$YES" ARKHEIONX_INSTALL_DIR="$INSTALL_DIR" ARKHEIONX_BIN_DIR="$BIN_DIR" \
+        sh "$INSTALL_SH" "$@"
+}
+
+do_install() {
+    set --
+    if [ -n "$LOCAL" ]; then set -- "$@" --local "$LOCAL"
+    elif [ -n "$REF" ]; then set -- "$@" --ref "$REF"
+    elif [ -n "$CHANNEL" ]; then set -- "$@" --channel "$CHANNEL"
+    fi
+    [ "$DRY_RUN" = "1" ] && set -- "$@" --dry-run
+    log "arkup: installing Arkheionx"
+    run_installer "$@"
+}
+
+do_update() {
+    case "$(receipt_status)" in
+        missing) err "No install receipt at $RECEIPT. Run: sh arkup --install"; exit 1 ;;
+        malformed) err "Install receipt malformed: $RECEIPT. Reinstall: sh arkup --install"; exit 1 ;;
+        nopython) err "python3 is required to read the install receipt for update."; exit 1 ;;
+    esac
+    kind="$(rfield source_kind)"
+    rcp_ref="$(rfield ref)"
+    rcp_local="$(rfield local_path)"
+    set --
+    if [ -n "$LOCAL" ]; then set -- "$@" --local "$LOCAL"
+    elif [ -n "$REF" ]; then set -- "$@" --ref "$REF"
+    elif [ -n "$CHANNEL" ]; then set -- "$@" --channel "$CHANNEL"
+    else
+        case "$kind" in
+            stable) set -- "$@" --channel stable ;;
+            main) set -- "$@" --channel main ;;
+            ref) [ -n "$rcp_ref" ] || { err "receipt source kind 'ref' but no ref recorded"; exit 1; }
+                 set -- "$@" --ref "$rcp_ref" ;;
+            local) [ -n "$rcp_local" ] || { err "receipt source kind 'local' but no path recorded"; exit 1; }
+                   set -- "$@" --local "$rcp_local" ;;
+            *) set -- "$@" --channel stable ;;
+        esac
+    fi
+    [ "$DRY_RUN" = "1" ] && set -- "$@" --dry-run
+    log "arkup: updating Arkheionx (recorded source kind: ${kind:-unknown})"
+    log "arkup: update keeps your source kind unless you pass --channel/--ref/--local"
+    run_installer "$@"
+}
+
+do_uninstall() {
+    [ -f "$UNINSTALL_SH" ] || { err "uninstall.sh not found at $UNINSTALL_SH"; exit 2; }
+    set --
+    [ "$DRY_RUN" = "1" ] && set -- "$@" --dry-run
+    ARKHEIONX_YES="$YES" ARKHEIONX_INSTALL_DIR="$INSTALL_DIR" sh "$UNINSTALL_SH" "$@"
+}
+
+case "$ACTION" in
+    help) usage ;;
+    version) do_version ;;
+    check) do_check ;;
+    install) do_install ;;
+    update) do_update ;;
+    uninstall) do_uninstall ;;
+    *) usage; exit 2 ;;
+esac

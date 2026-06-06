@@ -1,0 +1,9 @@
+[package]
+name = "ExploitTemplate"
+version = "0.1.0"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", type = "git", rev = "mainnet", subdir = "aptos-move/framework/aptos-framework" }
+
+[addresses]
+exploit = "_"

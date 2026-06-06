@@ -1,0 +1,70 @@
+name: Report quality feedback
+description: Improve report clarity, wording, length, or next steps.
+title: "[Report quality]: "
+labels: ["report-quality", "documentation", "arkheionx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for feedback on readability and actionability. Do not include secrets,
+        private repository contents, or unpatched vulnerability details.
+  - type: input
+    id: arkheionx_version
+    attributes:
+      label: Arkheionx version
+      placeholder: "v1.1.1 or commit SHA"
+    validations:
+      required: true
+  - type: dropdown
+    id: output
+    attributes:
+      label: Which output was confusing?
+      options:
+        - Pre-Audit Report
+        - JSON Report
+        - SARIF
+        - PR comment
+        - Issue checklist
+        - Issue plan
+        - Launch Report
+        - Sprint Plan
+        - Contest Readiness
+        - Executive Summary
+        - Remediation Roadmap
+        - Documentation
+  - type: checkboxes
+    id: issue_type
+    attributes:
+      label: What felt off?
+      options:
+        - label: Too noisy
+        - label: Too vague
+        - label: Too long
+        - label: Missing next steps
+        - label: Wrong audience
+        - label: Hard to copy into GitHub workflow
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Intended audience
+      options:
+        - Builder
+        - Auditor
+        - Researcher
+        - Founder
+        - Ecosystem or grant team
+        - Other
+  - type: textarea
+    id: suggested_wording
+    attributes:
+      label: Suggested wording or structure
+      description: Keep examples sanitized.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety_confirmation
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not include secrets or private vulnerability details.
+          required: true

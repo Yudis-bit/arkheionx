@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/schemas/pre-audit-report.schema.json",
+  "title": "Arkheionx Pre-Audit Report",
+  "type": "object",
+  "required": [
+    "tool",
+    "version",
+    "schema_version",
+    "generated_at",
+    "protocol_type",
+    "score",
+    "score_band",
+    "findings",
+    "summary",
+    "generated_outputs",
+    "scan_sources",
+    "disclaimer"
+  ],
+  "properties": {
+    "tool": { "const": "Arkheionx Pre-Audit Scanner" },
+    "version": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "fingerprint_version": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "repo_root": { "type": "string" },
+    "protocol_type": { "type": "string" },
+    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "score_band": { "type": "string" },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "priority", "confidence", "fingerprint"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "priority": { "type": "string" },
+          "confidence": { "type": "string" },
+          "fingerprint": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "summary": { "type": "object" },
+    "generated_outputs": { "type": "object" },
+    "delivery_outputs": { "type": "object" },
+    "scan_sources": { "type": "object" },
+    "fix_first": { "type": "array" },
+    "report_ux": { "type": "object" },
+    "findings_by_rule_family": { "type": "object" },
+    "findings_by_confidence": { "type": "object" },
+    "suppression_summary": { "type": "object" },
+    "negative_evidence": { "type": "array" },
+    "disclaimer": { "type": "string" }
+  },
+  "additionalProperties": true
+}

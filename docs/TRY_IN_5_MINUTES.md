@@ -1,0 +1,176 @@
+# Try Arkheionx In 5 Minutes
+
+This guide runs Arkheionx against the built-in oracle/staking demo fixture and
+generates the same local/static artifacts a builder or researcher would inspect
+to map value movement, spot missing tests, and prepare advanced review outputs.
+
+The demo is local and static. It does not call RPC, inspect deployed
+contracts, submit transactions, or create GitHub issues.
+
+## Workbench Demo (Fastest Path)
+
+After installing (see [`INSTALLER.md`](INSTALLER.md) or
+[`INSTALLATION.md`](INSTALLATION.md)), copy the guided demo fixture and run the
+workbench in it. No Foundry is required for these steps:
+
+```sh
+arkheionx demo --list
+arkheionx demo --copy oracle-staking ./arkheionx-demo
+arkheionx open ./arkheionx-demo
+arkheionx hunt ./arkheionx-demo --top 5
+```
+
+Other bundled demos: `amm-swap` (swap/reserves) and `lending-vault`
+(collateral/debt). Swap the id in `demo --copy` to try a different surface.
+
+You can also run directly against the in-repo fixture:
+
+```sh
+arkheionx doctor
+arkheionx open examples/oracle-staking-fixture
+arkheionx hunt examples/oracle-staking-fixture --top 5
+arkheionx evidence-status examples/oracle-staking-fixture
+arkheionx validate-artifacts examples/oracle-staking-fixture
+```
+
+In `HEURISTIC` mode (no Foundry), `open` and `hunt` exit `1` to signal that the
+output is static-only ranking, not execution-confirmed.
+
+If Foundry (`forge`) is available inside a Foundry project, you can continue to
+the execution-backed loop:
+
+```sh
+arkheionx prove examples/oracle-staking-fixture --target OracleRewardFixture.stake --run
+arkheionx trace examples/oracle-staking-fixture --target OracleRewardFixture.stake
+arkheionx evidence examples/oracle-staking-fixture --target OracleRewardFixture.stake
+arkheionx report examples/oracle-staking-fixture --target OracleRewardFixture.stake
+```
+
+Generated artifacts are written under `.arkheionx/out/` (gitignored). A passing
+test does not prove absence of bugs; human review is required.
+
+For a guided first run, see [`ONBOARDING.md`](ONBOARDING.md). To install, check,
+and update via the lifecycle helper, see [`ARKUP.md`](ARKUP.md). For problems,
+see [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+
+## Prerequisites
+
+- Python 3.11 or newer.
+- A local clone of this repository.
+- No API key, private key, RPC URL, or GitHub token.
+
+## Run The Demo Scan
+
+Shortcut:
+
+```sh
+make demo
+```
+
+Equivalent explicit command:
+
+```sh
+python3 scripts/pre_audit_scan.py \
+  --root examples/oracle-staking-fixture \
+  --protocol-type auto \
+  --output examples/reports/demo-pre-audit-report.md \
+  --json-output examples/reports/demo-report.json \
+  --sarif-output examples/reports/demo.sarif.json \
+  --baseline-output examples/reports/demo.baseline.json \
+  --issue-plan-output examples/reports/demo-issue-plan.json \
+  --issue-checklist-output examples/reports/demo-issue-checklist.md \
+  --launch-report-output examples/reports/demo-launch-report.md \
+  --sprint-plan-output examples/reports/demo-sprint-plan.md \
+  --sprint-days 5 \
+  --contest-readiness-output examples/reports/demo-contest-readiness.md \
+  --executive-summary-output examples/reports/demo-executive-summary.md \
+  --remediation-roadmap-output examples/reports/demo-remediation-roadmap.md
+```
+
+## Optional Dry-Run Issue Workflow
+
+```sh
+python3 scripts/create_github_issues.py \
+  --issue-plan examples/reports/demo-issue-plan.json \
+  --mode dry-run \
+  --dry-run-output examples/reports/demo-issue-dry-run.md
+```
+
+Dry-run mode makes no GitHub API calls.
+
+Arkheionx ignores its own generated reports and artifacts by default. Re-running
+the demo will not treat previous `examples/reports/demo-*` outputs as source
+evidence.
+
+## Search The Security Memory Graph
+
+```sh
+python3 scripts/search_knowledge.py "oracle stale price"
+python3 scripts/search_knowledge.py "missing invariant" --json
+```
+
+These commands show related finding IDs, historical pattern categories,
+suggested defensive tests, and local docs for the demo findings. They do not
+confirm vulnerabilities.
+
+## Expected Output Files
+
+| Output | Purpose |
+|---|---|
+| `demo-pre-audit-report.md` | Technical readiness report. |
+| `demo-report.json` | Machine-readable score, findings, evidence, and outputs. |
+| `demo.sarif.json` | Code Scanning-compatible readiness output. |
+| `demo.baseline.json` | Baseline snapshot for future comparison. |
+| `demo-issue-plan.json` | Structured remediation issue plan. |
+| `demo-issue-checklist.md` | Copyable Markdown checklist. |
+| `demo-launch-report.md` | Client-facing launch readiness report. |
+| `demo-sprint-plan.md` | Five-day Pre-Audit Sprint plan. |
+| `demo-contest-readiness.md` | Scope and researcher onboarding readiness report. |
+| `demo-executive-summary.md` | Short founder/stakeholder summary. |
+| `demo-remediation-roadmap.md` | Phase-based remediation plan. |
+| `demo-issue-dry-run.md` | Dry-run summary of issues that would be created. |
+
+## How To Read The Results
+
+Start with:
+
+1. `demo-executive-summary.md` for the short stakeholder view.
+2. `demo-pre-audit-report.md` for technical findings and evidence.
+3. `demo-issue-plan.json` for owner-ready remediation tasks.
+4. `demo-launch-report.md` for a client-facing readiness artifact.
+5. `demo-contest-readiness.md` for scope and reviewer onboarding gaps.
+
+Optional v1.5 follow-up:
+
+```sh
+python3 scripts/generate_test_plan.py \
+  --report examples/reports/demo-report.json \
+  --output examples/reports/demo-test-plan.md \
+  --json-output examples/reports/demo-test-plan.json \
+  --foundry-output examples/reports/ArkheionxReadinessInvariants.t.sol
+```
+
+Generated skeletons are TODO-based starting points for local review, not
+formal verification.
+
+## Common Errors
+
+- `python3: command not found`: install Python 3 or use the Python binary name
+  available on your system.
+- `No Solidity files found`: confirm the `--root` path points at a repository
+  or fixture with `.sol` files.
+- `Invalid sprint-days`: use `3`, `5`, `7`, or `10`.
+- `GitHub token missing`: expected unless you intentionally use real issue
+  creation. The demo uses dry-run mode.
+
+## What To Do Next
+
+- Run the same command against a repository you own or are authorized to
+  review.
+- Compare the original demo fixture with
+  `examples/oracle-staking-fixture-fixed`.
+- Read the demo case studies in `docs/case-studies/`.
+- Report noisy findings through the false-positive calibration template.
+
+Arkheionx output is not a formal audit and not a security guarantee. It helps
+teams prepare for review.

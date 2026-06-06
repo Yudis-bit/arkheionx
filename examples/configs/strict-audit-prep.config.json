@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.7.0",
+  "protocol_type": "auto",
+  "rule_packs": [
+    "vault",
+    "oracle",
+    "access-control",
+    "reentrancy-value-flow",
+    "rewards",
+    "testing",
+    "docs",
+    "amm",
+    "lending"
+  ],
+  "min_confidence": "high",
+  "output_profile": "full",
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [
+      "lib/",
+      "test/mocks/"
+    ],
+    "extra_ignore_globs": [],
+    "max_file_size_kb": 750,
+    "include_tests": true,
+    "include_docs": true
+  },
+  "reports": {
+    "include_related_knowledge": true,
+    "include_evidence_snippets": true,
+    "include_suggested_tests": true,
+    "include_issue_plan": true,
+    "include_executive_summary": true,
+    "max_top_gaps": 10
+  },
+  "test_plan": {
+    "include_foundry_skeletons": true,
+    "group_by_rule_family": true,
+    "include_low_confidence": false,
+    "output_profile": "full"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.1.0",
+  "description": "Synthetic/internal Arkheionx feedback examples. These are internal examples only and are not customer, user, or adoption claims.",
+  "examples": [
+    {
+      "feedback_id": "FB-SYN-001",
+      "type": "false_positive",
+      "source_type": "synthetic_internal",
+      "public_source": "",
+      "repo_type": "toy",
+      "arkheionx_version": "v1.0.1",
+      "finding_ids": ["ARK-TST-002"],
+      "rule_packs": ["testing"],
+      "feedback_summary": "A comment saying missing invariant tests should not count as positive invariant coverage.",
+      "calibration_action": "Negative-context detection added and score calibration verified.",
+      "status": "fixed",
+      "public_permission": "not_applicable",
+      "safety_review_required": false
+    },
+    {
+      "feedback_id": "FB-SYN-002",
+      "type": "false_positive",
+      "source_type": "synthetic_internal",
+      "public_source": "",
+      "repo_type": "toy",
+      "arkheionx_version": "v1.0.1",
+      "finding_ids": ["ARK-ACC-001", "ARK-REENT-001"],
+      "rule_packs": ["access-control", "reentrancy"],
+      "feedback_summary": "Generated Arkheionx reports inside reports/ should not become source evidence on repeat scans.",
+      "calibration_action": "Generated artifact ignore defaults and scan source accounting added.",
+      "status": "fixed",
+      "public_permission": "not_applicable",
+      "safety_review_required": false
+    },
+    {
+      "feedback_id": "FB-SYN-003",
+      "type": "report_quality",
+      "source_type": "synthetic_internal",
+      "public_source": "",
+      "repo_type": "toy",
+      "arkheionx_version": "v1.0.1",
+      "finding_ids": [],
+      "rule_packs": [],
+      "feedback_summary": "Builders need clearer distinction between readiness signals, evidence, and suggested next actions.",
+      "calibration_action": "Track report-quality wording and next-step clarity in v1.1.0 feedback loop.",
+      "status": "received",
+      "public_permission": "not_applicable",
+      "safety_review_required": false
+    },
+    {
+      "feedback_id": "FB-SYN-004",
+      "type": "external_evaluation",
+      "source_type": "synthetic_internal",
+      "public_source": "",
+      "repo_type": "toy",
+      "arkheionx_version": "v1.0.1",
+      "finding_ids": ["ARK-ORC-001", "ARK-RWD-001"],
+      "rule_packs": ["oracle", "reward-accounting"],
+      "feedback_summary": "Toy oracle/staking fixture feedback remains internal demo evidence and must not be described as external adoption.",
+      "calibration_action": "Validation levels document separates internal demos from permitted external case studies.",
+      "status": "documented",
+      "public_permission": "not_applicable",
+      "safety_review_required": false
+    }
+  ]
+}

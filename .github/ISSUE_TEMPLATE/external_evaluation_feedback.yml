@@ -1,0 +1,88 @@
+name: External evaluation feedback
+description: Share sanitized results from trying Arkheionx on a toy, public, or authorized repo.
+title: "[External evaluation]: "
+labels: ["external-evaluation", "feedback", "arkheionx"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        External evaluation feedback helps calibrate Arkheionx without inventing
+        adoption claims.
+
+        Safety first:
+        - Do not disclose unpatched vulnerabilities publicly.
+        - Do not include private keys, secrets, mnemonics, or RPC credentials.
+        - Do not include private repository contents unless you are authorized.
+        - For bounty findings, follow the program's disclosure policy.
+  - type: dropdown
+    id: repo_type
+    attributes:
+      label: Repo type
+      options:
+        - Toy demo
+        - Private authorized repo
+        - Public open-source repo
+        - Contest prep
+        - Audit prep
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: repo_name_public
+    attributes:
+      label: Can the repo name be public?
+      options:
+        - "Yes"
+        - "No"
+        - "Only anonymized"
+  - type: input
+    id: arkheionx_version
+    attributes:
+      label: Arkheionx version
+      placeholder: "v1.1.1 or commit SHA"
+    validations:
+      required: true
+  - type: input
+    id: score
+    attributes:
+      label: Readiness score if safe to share
+      placeholder: "68/100"
+  - type: textarea
+    id: useful_findings
+    attributes:
+      label: Useful findings
+      description: List finding IDs or themes if safe.
+  - type: textarea
+    id: noisy_findings
+    attributes:
+      label: Noisy findings
+  - type: textarea
+    id: missing_findings
+    attributes:
+      label: Missing findings
+  - type: dropdown
+    id: actionable
+    attributes:
+      label: Was the output actionable?
+      options:
+        - "Yes"
+        - "Partially"
+        - "No"
+        - "Not sure"
+  - type: dropdown
+    id: public_permission
+    attributes:
+      label: Permission to mention anonymized feedback?
+      options:
+        - "Yes, anonymized only"
+        - "Yes, public repo/name allowed"
+        - "No"
+  - type: checkboxes
+    id: safety_confirmation
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not include secrets, private keys, or unauthorized target details.
+          required: true
+        - label: I did not publicly disclose unpatched vulnerability details.
+          required: true

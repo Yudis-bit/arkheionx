@@ -1,0 +1,454 @@
+{
+  "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+  "excluded_low_confidence_findings": [],
+  "generated_at": "2026-05-25T19:28:59+00:00",
+  "issue_grouping": "one-per-finding",
+  "issues": [
+    {
+      "affected_functions": [
+        "deposit",
+        "withdraw"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-REENT-001 -->\n\n# Arkheionx readiness gap: ARK-REENT-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-REENT-001`\n- Priority: `High readiness gap`\n- Category: `reentrancy-value-flow`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `28c32f39fe406951065b4b38`\n\n## Evidence\n\n- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");`\n- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");`\n- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.\n- `src/MiniVault.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`\n- `test/MiniVault.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`\n\n## Why It Matters\n\nExternal calls can hand control to untrusted code before accounting reaches a safe state.\n\n## Historical Pattern Similarity\n\nMaps to reentrancy and callback-driven value-flow readiness classes.\n\n## Recommended Defensive Checks\n\n- state update before external call\n- reentrant receiver mock\n- failed external call behavior\n- single-claim guarantees\n\n## Suggested Tests\n\n- Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`\n- Json Report: `examples/reports/mini-vault-pre-audit-report.json`\n- Sarif Report: `examples/reports/mini-vault.sarif.json`\n- Summary: `examples/reports/mini-vault-action-summary.md`\n- Comment: `examples/reports/mini-vault-pr-comment.md`\n- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`\n- Issue Plan: `examples/reports/mini-vault-issue-plan.json`\n- Baseline: `examples/reports/mini-vault.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/MiniVault.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        },
+        {
+          "file": "test/MiniVault.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/MiniVault.sol in `deposit`: Solidity function contains external value-flow call evidence.",
+      "finding_id": "ARK-REENT-001",
+      "fingerprint": "28c32f39fe406951065b4b38",
+      "labels": [
+        "arkheionx",
+        "high-readiness-gap",
+        "pre-audit-readiness",
+        "reentrancy-review",
+        "reentrancy-rule-pack",
+        "reentrancy-value-flow",
+        "value-flow"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-REENT-001 -->",
+      "priority": "High readiness gap",
+      "recommended_defensive_checks": [
+        "state update before external call",
+        "reentrant receiver mock",
+        "failed external call behavior",
+        "single-claim guarantees"
+      ],
+      "suggested_tests": [
+        "Use a local malicious receiver mock and assert withdraw/redeem/claim cannot be executed twice through reentry."
+      ],
+      "title": "[Arkheionx][High] ARK-REENT-001 - Value flow with external calls needs reentrancy review"
+    },
+    {
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "totalAssets",
+        "withdraw"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-VLT-001 -->\n\n# Arkheionx readiness gap: ARK-VLT-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-VLT-001`\n- Priority: `Medium readiness gap`\n- Category: `vault-accounting`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `0dccaf3c13545c7e8d43b993`\n\n## Evidence\n\n- `src/MiniVault.sol:43` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`\n- `src/MiniVault.sol:47` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`\n- `src/MiniVault.sol:54` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`\n- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");`\n- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");`\n\n## Why It Matters\n\nVault bugs often appear when shares, assets, totalSupply, totalAssets, and external balances drift from assumptions used during deposits and withdrawals.\n\n## Historical Pattern Similarity\n\nMaps to historical vault/accounting failure classes where broken share valuation or manipulated accounting state caused loss.\n\n## Recommended Defensive Checks\n\n- deposit/withdraw roundtrip\n- convertToShares/convertToAssets consistency\n- donation/inflation resistance\n- rounding direction tests\n- totalAssets external dependency tests\n\n## Suggested Tests\n\n- Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`\n- Json Report: `examples/reports/mini-vault-pre-audit-report.json`\n- Sarif Report: `examples/reports/mini-vault.sarif.json`\n- Summary: `examples/reports/mini-vault-action-summary.md`\n- Comment: `examples/reports/mini-vault-pr-comment.md`\n- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`\n- Issue Plan: `examples/reports/mini-vault-issue-plan.json`\n- Baseline: `examples/reports/mini-vault.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "totalAssets",
+          "line": 43,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToShares",
+          "line": 47,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToAssets",
+          "line": 54,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/MiniVault.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-VLT-001",
+      "fingerprint": "0dccaf3c13545c7e8d43b993",
+      "labels": [
+        "arkheionx",
+        "erc4626",
+        "invariant-testing",
+        "medium-readiness-gap",
+        "pre-audit-readiness",
+        "vault-accounting"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-VLT-001 -->",
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "deposit/withdraw roundtrip",
+        "convertToShares/convertToAssets consistency",
+        "donation/inflation resistance",
+        "rounding direction tests",
+        "totalAssets external dependency tests"
+      ],
+      "suggested_tests": [
+        "Add a Foundry invariant that checks totalAssets and share accounting conservation across deposit, withdraw, donation, and fee scenarios."
+      ],
+      "title": "[Arkheionx][Medium] ARK-VLT-001 - Vault accounting without invariant tests"
+    },
+    {
+      "affected_functions": [
+        "convertToAssets",
+        "convertToShares",
+        "deposit",
+        "totalAssets",
+        "withdraw"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-VLT-007 -->\n\n# Arkheionx readiness gap: ARK-VLT-007\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-VLT-007`\n- Priority: `Medium readiness gap`\n- Category: `vault-accounting`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `90fe322f47f8eca0090e0355`\n\n## Evidence\n\n- `src/MiniVault.sol:43` in `totalAssets`: Solidity function shape matches this readiness finding. Snippet: `totalAssets`\n- `src/MiniVault.sol:47` in `convertToShares`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0 || totalAssets() == 0) {`\n- `src/MiniVault.sol:54` in `convertToAssets`: Solidity function shape matches this readiness finding. Snippet: `if (totalSupply == 0) {`\n- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");`\n- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");`\n\n## Why It Matters\n\nFee logic changes share issuance, redemption value, and treasury balances; missing tests make audit review slower and riskier.\n\n## Historical Pattern Similarity\n\nMaps to accounting mismatch classes where protocol fees changed conservation assumptions.\n\n## Recommended Defensive Checks\n\n- fee bounds\n- recipient accounting\n- share conservation\n- rounding with fees\n\n## Suggested Tests\n\n- Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`\n- Json Report: `examples/reports/mini-vault-pre-audit-report.json`\n- Sarif Report: `examples/reports/mini-vault.sarif.json`\n- Summary: `examples/reports/mini-vault-action-summary.md`\n- Comment: `examples/reports/mini-vault-pr-comment.md`\n- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`\n- Issue Plan: `examples/reports/mini-vault-issue-plan.json`\n- Baseline: `examples/reports/mini-vault.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "vault-accounting",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "totalAssets",
+          "line": 43,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "totalAssets",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToShares",
+          "line": 47,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0 || totalAssets() == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "convertToAssets",
+          "line": 54,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (totalSupply == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/MiniVault.sol in `totalAssets`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-VLT-007",
+      "fingerprint": "90fe322f47f8eca0090e0355",
+      "labels": [
+        "arkheionx",
+        "fee-accounting",
+        "medium-readiness-gap",
+        "pre-audit-readiness",
+        "vault-accounting"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-VLT-007 -->",
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "fee bounds",
+        "recipient accounting",
+        "share conservation",
+        "rounding with fees"
+      ],
+      "suggested_tests": [
+        "Assert user shares, treasury shares/assets, and totalAssets remain consistent before and after fee-bearing operations."
+      ],
+      "title": "[Arkheionx][Medium] ARK-VLT-007 - Fee logic without fee accounting tests"
+    },
+    {
+      "affected_functions": [
+        "pause",
+        "setFee",
+        "unpause"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-ACC-003 -->\n\n# Arkheionx readiness gap: ARK-ACC-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ACC-003`\n- Priority: `Low readiness gap`\n- Category: `access-control`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Fingerprint: `7ab76a5b5fecbd04052b1270`\n\n## Evidence\n\n- `src/MiniVault.sol:95` in `setFee`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`\n- `src/MiniVault.sol:101` in `pause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`\n- `src/MiniVault.sol:106` in `unpause`: Solidity function contains access-control or lifecycle modifier evidence. Snippet: `onlyOwner`\n- `test/documentation coverage`: Matching test coverage terms detected: owner, prank.\n- `src/MiniVault.sol:1`: Keyword signal matched this readiness finding. Snippet: `onlyOwner, owner, pause, setFee, unpause`\n\n## Why It Matters\n\nRole concentration affects operational risk and audit scope even when access control code is syntactically correct.\n\n## Historical Pattern Similarity\n\nMaps to operational control readiness classes.\n\n## Recommended Defensive Checks\n\n- role matrix\n- owner powers\n- timelock assumptions\n- multisig assumptions\n\n## Suggested Tests\n\n- Add a role matrix to docs and unit tests for critical roles.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`\n- Json Report: `examples/reports/mini-vault-pre-audit-report.json`\n- Sarif Report: `examples/reports/mini-vault.sarif.json`\n- Summary: `examples/reports/mini-vault-action-summary.md`\n- Comment: `examples/reports/mini-vault-pr-comment.md`\n- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`\n- Issue Plan: `examples/reports/mini-vault-issue-plan.json`\n- Baseline: `examples/reports/mini-vault.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "access-control",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "setFee",
+          "line": 95,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "pause",
+          "line": 101,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "unpause",
+          "line": 106,
+          "reason": "Solidity function contains access-control or lifecycle modifier evidence.",
+          "snippet": "onlyOwner",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "Matching test coverage terms detected: owner, prank.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/MiniVault.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "onlyOwner, owner, pause, setFee, unpause",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/MiniVault.sol in `setFee`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "finding_id": "ARK-ACC-003",
+      "fingerprint": "7ab76a5b5fecbd04052b1270",
+      "labels": [
+        "access-control",
+        "access-control-review",
+        "access-control-rule-pack",
+        "arkheionx",
+        "documentation-readiness",
+        "low-readiness-gap",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ACC-003 -->",
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "role matrix",
+        "owner powers",
+        "timelock assumptions",
+        "multisig assumptions"
+      ],
+      "suggested_tests": [
+        "Add a role matrix to docs and unit tests for critical roles."
+      ],
+      "title": "[Arkheionx][Low] ARK-ACC-003 - Admin role concentration not documented"
+    },
+    {
+      "affected_functions": [
+        "deposit",
+        "withdraw"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-REENT-004 -->\n\n# Arkheionx readiness gap: ARK-REENT-004\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-REENT-004`\n- Priority: `Low readiness gap`\n- Category: `reentrancy-value-flow`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Fingerprint: `49e5e1d2a4d311133f75bc42`\n\n## Evidence\n\n- `src/MiniVault.sol:61` in `deposit`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");`\n- `src/MiniVault.sol:80` in `withdraw`: Solidity function contains external value-flow call evidence. Snippet: `require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");`\n- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.\n- `src/MiniVault.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`\n- `test/MiniVault.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom, withdraw`\n\n## Why It Matters\n\nReviewers need clear state-ordering assumptions to evaluate external call safety.\n\n## Historical Pattern Similarity\n\nMaps to checks-effects-interactions and callback boundary readiness classes.\n\n## Recommended Defensive Checks\n\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\n## Suggested Tests\n\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`\n- Json Report: `examples/reports/mini-vault-pre-audit-report.json`\n- Sarif Report: `examples/reports/mini-vault.sarif.json`\n- Summary: `examples/reports/mini-vault-action-summary.md`\n- Comment: `examples/reports/mini-vault-pr-comment.md`\n- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`\n- Issue Plan: `examples/reports/mini-vault-issue-plan.json`\n- Baseline: `examples/reports/mini-vault.baseline.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "reentrancy-value-flow",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "deposit",
+          "line": 61,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transferFrom(msg.sender, address(this), assets), \"TRANSFER_FROM_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "MiniVault",
+          "file": "src/MiniVault.sol",
+          "function": "withdraw",
+          "line": 80,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "require(asset.transfer(receiver, assets), \"TRANSFER_FAILED\");",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/MiniVault.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        },
+        {
+          "file": "test/MiniVault.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom, withdraw",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/MiniVault.sol in `deposit`: Solidity function contains external value-flow call evidence.",
+      "finding_id": "ARK-REENT-004",
+      "fingerprint": "49e5e1d2a4d311133f75bc42",
+      "labels": [
+        "arkheionx",
+        "documentation-readiness",
+        "low-readiness-gap",
+        "pre-audit-readiness",
+        "reentrancy-review",
+        "reentrancy-rule-pack",
+        "reentrancy-value-flow"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-REENT-004 -->",
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+      ],
+      "title": "[Arkheionx][Low] ARK-REENT-004 - External call path without documented ordering assumptions"
+    }
+  ],
+  "min_confidence": "medium",
+  "mode": "dry-run",
+  "protocol_type": "vault",
+  "repo_root": "examples/mini-vault",
+  "score": 73,
+  "score_band": "Improving",
+  "summary_issue": {
+    "body": "<!-- arkheionx-issue:summary -->\n\n# Arkheionx pre-audit readiness remediation plan\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n- Score: `73/100`\n- Score band: `Improving`\n- Protocol type: `vault`\n- Active readiness gaps: `5`\n\n## Top Readiness Gaps\n\n- [ ] `ARK-REENT-001` - Value flow with external calls needs reentrancy review (High readiness gap)\n- [ ] `ARK-VLT-001` - Vault accounting without invariant tests (Medium readiness gap)\n- [ ] `ARK-VLT-007` - Fee logic without fee accounting tests (Medium readiness gap)\n- [ ] `ARK-ACC-003` - Admin role concentration not documented (Low readiness gap)\n- [ ] `ARK-REENT-004` - External call path without documented ordering assumptions (Low readiness gap)\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/mini-vault-pre-audit-report.md`\n- Json Report: `examples/reports/mini-vault-pre-audit-report.json`\n- Sarif Report: `examples/reports/mini-vault.sarif.json`\n- Summary: `examples/reports/mini-vault-action-summary.md`\n- Comment: `examples/reports/mini-vault-pr-comment.md`\n- Issue Checklist: `examples/reports/mini-vault-issue-checklist.md`\n- Issue Plan: `examples/reports/mini-vault-issue-plan.json`\n- Baseline: `examples/reports/mini-vault.baseline.json`\n\nThis plan is a readiness tracker, not a formal audit report.\n",
+    "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+    "labels": [
+      "arkheionx",
+      "pre-audit-readiness",
+      "remediation-plan"
+    ],
+    "marker": "<!-- arkheionx-issue:summary -->",
+    "title": "[Arkheionx] Pre-audit readiness remediation plan"
+  },
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "0.6.0"
+}

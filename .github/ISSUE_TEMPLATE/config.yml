@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Defensive security research only
+    url: https://github.com/Yudis-bit/DeFi-Exploit-PoCs/blob/main/docs/ETHICS.md
+    about: Read this before opening an issue.
+  - name: Commercial work and sponsorship
+    url: https://github.com/Yudis-bit/DeFi-Exploit-PoCs/blob/main/SERVICES.md
+    about: Pre-audit readiness reports, defensive research services, and sponsor options.

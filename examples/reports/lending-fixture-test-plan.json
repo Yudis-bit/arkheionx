@@ -1,0 +1,527 @@
+{
+  "disclaimer": "This is a defensive test-planning artifact, not a formal audit or formal verification.",
+  "findings": [
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-ORC-002",
+      "foundry_skeleton_functions": [
+        "invariant_oracleNormalizationMatchesAccountingUnits"
+      ],
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
+      "manual_review_notes": [
+        "Review whether feed decimals are fixed at deployment."
+      ],
+      "priority": "High readiness gap",
+      "required_project_bindings": [
+        "Oracle adapter",
+        "Accounting consumer"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use synthetic feed answers and local mocks."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "suggested_tests": [
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units.",
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior."
+      ],
+      "title": "Oracle decimals or normalization not covered by tests"
+    },
+    {
+      "confidence": "high",
+      "finding_id": "ARK-ORC-001",
+      "foundry_skeleton_functions": [
+        "invariant_oracleFreshnessPolicyIsRespected"
+      ],
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
+      "manual_review_notes": [
+        "Check whether freshness validation is implemented in an imported adapter."
+      ],
+      "priority": "High readiness gap",
+      "required_project_bindings": [
+        "Oracle adapter or mock feed",
+        "Consumer contract"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use local mock oracle responses only."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "suggested_tests": [
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy."
+      ],
+      "title": "Oracle-dependent logic without stale-price tests"
+    },
+    {
+      "confidence": "high",
+      "finding_id": "ARK-LEND-004",
+      "foundry_skeleton_functions": [
+        "invariant_lendingOracleValidityPolicyIsRespected"
+      ],
+      "invariant_candidates": [
+        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
+      ],
+      "manual_review_notes": [
+        "Review fallback behavior and collateral-specific feed assumptions."
+      ],
+      "priority": "High readiness gap",
+      "required_project_bindings": [
+        "Lending market",
+        "Oracle mock",
+        "Health-factor logic"
+      ],
+      "rule_family": "lending",
+      "safety_notes": [
+        "Use local oracle values and synthetic price shocks."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "suggested_tests": [
+        "Test stale oracle rejection for borrow and liquidation paths.",
+        "Test decimals normalization for collateral valuation.",
+        "Test price shock boundaries around health-factor transitions.",
+        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy."
+      ],
+      "title": "Oracle-dependent borrowing/liquidation without stale-price tests"
+    },
+    {
+      "confidence": "high",
+      "finding_id": "ARK-ORC-005",
+      "foundry_skeleton_functions": [
+        "invariant_invalidPricesDoNotDriveCriticalAccounting"
+      ],
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "manual_review_notes": [
+        "Review whether fallback behavior is intentionally unavailable."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Oracle adapter",
+        "Consumer path"
+      ],
+      "rule_family": "oracle",
+      "safety_notes": [
+        "Use local invalid-value mocks."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "suggested_tests": [
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions.",
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+      ],
+      "title": "Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "confidence": "high",
+      "finding_id": "ARK-ACC-001",
+      "foundry_skeleton_functions": [
+        "invariant_unauthorizedUsersCannotChangeCriticalParams"
+      ],
+      "invariant_candidates": [
+        "Unauthorized users cannot mutate privileged configuration."
+      ],
+      "manual_review_notes": [
+        "Review role inheritance and deployment ownership transfer."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Privileged setter functions",
+        "Owner or role accounts"
+      ],
+      "rule_family": "access-control",
+      "safety_notes": [
+        "Use local role accounts only."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `setGuardian`: Solidity function contains access-control or lifecycle modifier evidence.",
+      "suggested_tests": [
+        "Test unauthorized callers cannot change critical parameters.",
+        "Test authorized role can perform expected setter actions.",
+        "Document role ownership and transfer procedure.",
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ],
+      "title": "Privileged setters without role-boundary tests"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-LEND-001",
+      "foundry_skeleton_functions": [
+        "invariant_collateralDebtSolvencyHolds"
+      ],
+      "invariant_candidates": [
+        "Collateral value and debt remain inside documented solvency constraints after allowed user actions."
+      ],
+      "manual_review_notes": [
+        "Review collateral factor and price-unit assumptions."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Lending market",
+        "Collateral token mock",
+        "Borrow token mock",
+        "Oracle mock"
+      ],
+      "rule_family": "lending",
+      "safety_notes": [
+        "Use local price and balance mocks only."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+      "suggested_tests": [
+        "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
+        "Test debt cannot exceed documented collateral constraints.",
+        "Test unsafe withdrawals are rejected or explicitly documented.",
+        "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested."
+      ],
+      "title": "Collateral/debt solvency invariant not covered by tests"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-LEND-002",
+      "foundry_skeleton_functions": [
+        "invariant_liquidationBoundaryMatchesPolicy"
+      ],
+      "invariant_candidates": [
+        "Liquidation eligibility changes only at documented threshold boundaries."
+      ],
+      "manual_review_notes": [
+        "Review rounding around exact threshold values."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Liquidation function",
+        "Health factor calculation",
+        "Price mock"
+      ],
+      "rule_family": "lending",
+      "safety_notes": [
+        "Use local threshold setup and synthetic accounts."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+      "suggested_tests": [
+        "Test just-above-threshold positions cannot be liquidated.",
+        "Test just-below-threshold positions can be liquidated according to policy.",
+        "Assert liquidation bonus and close factor stay within documented bounds.",
+        "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds."
+      ],
+      "title": "Liquidation boundary tests missing"
+    },
+    {
+      "confidence": "medium",
+      "finding_id": "ARK-LEND-003",
+      "foundry_skeleton_functions": [
+        "invariant_interestIndexesAreMonotonic"
+      ],
+      "invariant_candidates": [
+        "Interest and borrow indexes move according to documented rate policy and do not drift unexpectedly."
+      ],
+      "manual_review_notes": [
+        "Review whether index math is inherited from a shared library."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Interest accrual function",
+        "Borrow index state",
+        "Debt state"
+      ],
+      "rule_family": "lending",
+      "safety_notes": [
+        "Use local time-step helpers or explicit accrual calls."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+      "suggested_tests": [
+        "Test interest or borrow index monotonicity.",
+        "Cover small balances and repeated accrual.",
+        "Test borrow and repay before and after accrual.",
+        "Advance local time across multiple accrual steps and assert borrow indexes and balances remain monotonic and bounded by documented rounding."
+      ],
+      "title": "Interest/index accounting not covered by rounding and time-step tests"
+    },
+    {
+      "confidence": "high",
+      "finding_id": "ARK-LEND-005",
+      "foundry_skeleton_functions": [
+        "invariant_lendingCashAndDebtAccountingConsistent"
+      ],
+      "invariant_candidates": [
+        "Cash, total borrows, total reserves, and utilization remain internally consistent."
+      ],
+      "manual_review_notes": [
+        "Review reserve factor and protocol fee accounting."
+      ],
+      "priority": "Medium readiness gap",
+      "required_project_bindings": [
+        "Market cash state",
+        "Borrow/repay functions",
+        "Reserve accounting"
+      ],
+      "rule_family": "lending",
+      "safety_notes": [
+        "Use local asset mocks and synthetic liquidity."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+      "suggested_tests": [
+        "Test borrow cannot exceed available liquidity.",
+        "Test repay updates cash, debt, and reserves consistently.",
+        "Assert reserves cannot be withdrawn beyond documented constraints.",
+        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently."
+      ],
+      "title": "Reserve/cash accounting assumptions not covered"
+    },
+    {
+      "confidence": "low",
+      "finding_id": "ARK-TST-002",
+      "foundry_skeleton_functions": [
+        "invariant_coreAccountingRelationshipsHold",
+        "invariant_privilegedActionsRespectDocumentedAssumptions"
+      ],
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "manual_review_notes": [
+        "Review whether the protocol uses another property-testing framework outside Foundry."
+      ],
+      "priority": "Low readiness gap",
+      "required_project_bindings": [
+        "Target contracts",
+        "Allowed action handler",
+        "Local mocks for assets and oracle inputs"
+      ],
+      "rule_family": "testing",
+      "safety_notes": [
+        "Generated invariants are starting points and need human tailoring."
+      ],
+      "source_report_evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
+      "suggested_tests": [
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.",
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ],
+      "title": "No invariant tests detected for DeFi protocol shape"
+    }
+  ],
+  "foundry_skeleton": {
+    "contract_name": "ArkheionxLendingInvariants",
+    "functions": [
+      "invariant_oracleNormalizationMatchesAccountingUnits",
+      "invariant_oracleFreshnessPolicyIsRespected",
+      "invariant_lendingOracleValidityPolicyIsRespected",
+      "invariant_invalidPricesDoNotDriveCriticalAccounting",
+      "invariant_unauthorizedUsersCannotChangeCriticalParams",
+      "invariant_collateralDebtSolvencyHolds",
+      "invariant_liquidationBoundaryMatchesPolicy",
+      "invariant_interestIndexesAreMonotonic",
+      "invariant_lendingCashAndDebtAccountingConsistent",
+      "invariant_coreAccountingRelationshipsHold",
+      "invariant_privilegedActionsRespectDocumentedAssumptions"
+    ],
+    "path": "examples/reports/ArkheionxLendingInvariants.t.sol",
+    "required_project_bindings": [
+      "Oracle adapter",
+      "Accounting consumer",
+      "Oracle adapter or mock feed",
+      "Consumer contract",
+      "Lending market",
+      "Oracle mock",
+      "Health-factor logic",
+      "Consumer path",
+      "Privileged setter functions",
+      "Owner or role accounts",
+      "Collateral token mock",
+      "Borrow token mock",
+      "Liquidation function",
+      "Health factor calculation",
+      "Price mock",
+      "Interest accrual function",
+      "Borrow index state",
+      "Debt state",
+      "Market cash state",
+      "Borrow/repay functions",
+      "Reserve accounting",
+      "Target contracts",
+      "Allowed action handler",
+      "Local mocks for assets and oracle inputs"
+    ]
+  },
+  "generated_at": "2026-05-27T10:53:14+00:00",
+  "invariant_candidates": [
+    "Normalized oracle values remain within documented unit and decimal assumptions.",
+    "Accounting decisions only use oracle data that satisfies documented freshness policy.",
+    "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.",
+    "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.",
+    "Unauthorized users cannot mutate privileged configuration.",
+    "Collateral value and debt remain inside documented solvency constraints after allowed user actions.",
+    "Liquidation eligibility changes only at documented threshold boundaries.",
+    "Interest and borrow indexes move according to documented rate policy and do not drift unexpectedly.",
+    "Cash, total borrows, total reserves, and utilization remain internally consistent.",
+    "Core accounting relationships hold after any allowed user action.",
+    "Privileged actions cannot silently bypass documented accounting assumptions."
+  ],
+  "manual_review_required": true,
+  "protocol_type": "lending",
+  "rule_families": [
+    {
+      "finding_ids": [
+        "ARK-ACC-001"
+      ],
+      "invariant_candidates": [
+        "Unauthorized users cannot mutate privileged configuration."
+      ],
+      "rule_family": "access-control",
+      "suggested_tests": [
+        "Test unauthorized callers cannot change critical parameters.",
+        "Test authorized role can perform expected setter actions.",
+        "Document role ownership and transfer procedure.",
+        "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds."
+      ]
+    },
+    {
+      "finding_ids": [
+        "ARK-LEND-004",
+        "ARK-LEND-001",
+        "ARK-LEND-002",
+        "ARK-LEND-003",
+        "ARK-LEND-005"
+      ],
+      "invariant_candidates": [
+        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.",
+        "Collateral value and debt remain inside documented solvency constraints after allowed user actions.",
+        "Liquidation eligibility changes only at documented threshold boundaries.",
+        "Interest and borrow indexes move according to documented rate policy and do not drift unexpectedly.",
+        "Cash, total borrows, total reserves, and utilization remain internally consistent."
+      ],
+      "rule_family": "lending",
+      "suggested_tests": [
+        "Test stale oracle rejection for borrow and liquidation paths.",
+        "Test decimals normalization for collateral valuation.",
+        "Test price shock boundaries around health-factor transitions.",
+        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
+        "Test debt cannot exceed documented collateral constraints.",
+        "Test unsafe withdrawals are rejected or explicitly documented.",
+        "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+        "Test just-above-threshold positions cannot be liquidated.",
+        "Test just-below-threshold positions can be liquidated according to policy.",
+        "Assert liquidation bonus and close factor stay within documented bounds.",
+        "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+        "Test interest or borrow index monotonicity.",
+        "Cover small balances and repeated accrual.",
+        "Test borrow and repay before and after accrual.",
+        "Advance local time across multiple accrual steps and assert borrow indexes and balances remain monotonic and bounded by documented rounding.",
+        "Test borrow cannot exceed available liquidity.",
+        "Test repay updates cash, debt, and reserves consistently.",
+        "Assert reserves cannot be withdrawn beyond documented constraints.",
+        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently."
+      ]
+    },
+    {
+      "finding_ids": [
+        "ARK-ORC-002",
+        "ARK-ORC-001",
+        "ARK-ORC-005"
+      ],
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions.",
+        "Accounting decisions only use oracle data that satisfies documented freshness policy.",
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "rule_family": "oracle",
+      "suggested_tests": [
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units.",
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions.",
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+      ]
+    },
+    {
+      "finding_ids": [
+        "ARK-TST-002"
+      ],
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "rule_family": "testing",
+      "suggested_tests": [
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.",
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+      ]
+    }
+  ],
+  "safety_notes": [
+    "Generated plans are starter scaffolds for authorized local repositories; human review required.",
+    "They are not a formal audit, not formal verification, and not proof of safety.",
+    "Replace TODO placeholders with project-specific contracts, handlers, and assertions.",
+    "Use local mocks or test deployments only; do not wire production credentials or deployed systems."
+  ],
+  "schema_version": "1.0.0",
+  "source_report": "examples/lending-fixture",
+  "source_report_score": 59,
+  "source_report_score_band": "Early readiness",
+  "source_report_version": "2.0.0",
+  "suggested_tests": [
+    "Test decimals normalization across expected feed decimals.",
+    "Test zero, negative, or invalid oracle answers if applicable.",
+    "Assert normalized price units match accounting units.",
+    "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+    "Reject stale oracle rounds or document fallback behavior.",
+    "Test updatedAt or heartbeat boundaries.",
+    "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
+    "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+    "Test stale oracle rejection for borrow and liquidation paths.",
+    "Test decimals normalization for collateral valuation.",
+    "Test price shock boundaries around health-factor transitions.",
+    "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+    "Test documented price bounds.",
+    "Test invalid answer fallback behavior.",
+    "Add documentation for price shock and fallback assumptions.",
+    "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+    "Test unauthorized callers cannot change critical parameters.",
+    "Test authorized role can perform expected setter actions.",
+    "Document role ownership and transfer procedure.",
+    "For every privileged function, assert an unprivileged caller reverts and the documented role succeeds only within intended bounds.",
+    "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
+    "Test debt cannot exceed documented collateral constraints.",
+    "Test unsafe withdrawals are rejected or explicitly documented.",
+    "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
+    "Test just-above-threshold positions cannot be liquidated.",
+    "Test just-below-threshold positions can be liquidated according to policy.",
+    "Assert liquidation bonus and close factor stay within documented bounds.",
+    "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
+    "Test interest or borrow index monotonicity.",
+    "Cover small balances and repeated accrual.",
+    "Test borrow and repay before and after accrual.",
+    "Advance local time across multiple accrual steps and assert borrow indexes and balances remain monotonic and bounded by documented rounding.",
+    "Test borrow cannot exceed available liquidity.",
+    "Test repay updates cash, debt, and reserves consistently.",
+    "Assert reserves cannot be withdrawn beyond documented constraints.",
+    "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+    "Add a stateful invariant suite for the core protocol lifecycle.",
+    "Add handler actions for normal user flows and documented edge cases.",
+    "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.",
+    "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions."
+  ],
+  "tool": "Arkheionx Test Plan Generator",
+  "version": "2.0.1"
+}

@@ -1,0 +1,1542 @@
+{
+  "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+  "excluded_low_confidence_findings": [],
+  "fix_first": [
+    {
+      "confidence": "high",
+      "id": "ARK-AMM-002",
+      "priority": "High readiness gap",
+      "rank": 1,
+      "recommended_next_action": "Add or review: Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+      "rule_family": "amm",
+      "suggested_test": "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+      "title": "LP share accounting without mint/burn boundary tests",
+      "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "high",
+      "id": "ARK-AMM-003",
+      "priority": "High readiness gap",
+      "rank": 2,
+      "recommended_next_action": "Add or review: Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+      "rule_family": "amm",
+      "suggested_test": "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+      "title": "Spot-price or reserve-price dependency without manipulation-resistance tests",
+      "why_fix_first": "higher-priority readiness blocker; high-confidence local evidence; appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-AMM-001",
+      "priority": "Medium readiness gap",
+      "rank": 3,
+      "recommended_next_action": "Add or review: Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+      "rule_family": "amm",
+      "suggested_test": "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+      "title": "AMM invariant assumptions not covered by tests",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-AMM-004",
+      "priority": "Medium readiness gap",
+      "rank": 4,
+      "recommended_next_action": "Add or review: Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+      "rule_family": "amm",
+      "suggested_test": "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+      "title": "Fee-on-transfer or non-standard token assumptions not documented",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-AMM-005",
+      "priority": "Medium readiness gap",
+      "rank": 5,
+      "recommended_next_action": "Add or review: Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+      "rule_family": "amm",
+      "suggested_test": "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+      "title": "Slippage/min-output constraints missing or unclear",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-REENT-001",
+      "priority": "Medium readiness gap",
+      "rank": 6,
+      "recommended_next_action": "Add or review: Review state update order and add local malicious-receiver tests where callbacks are possible.",
+      "rule_family": "reentrancy-value-flow",
+      "suggested_test": "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+      "title": "External-call value flow needs reentrancy review",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "medium",
+      "id": "ARK-REENT-004",
+      "priority": "Low readiness gap",
+      "rank": 7,
+      "recommended_next_action": "Add or review: Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+      "rule_family": "reentrancy-value-flow",
+      "suggested_test": "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+      "title": "External call path without documented ordering assumptions",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "low",
+      "id": "ARK-ORC-001",
+      "priority": "Low readiness gap",
+      "rank": 8,
+      "recommended_next_action": "Add or review: Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+      "rule_family": "oracle",
+      "suggested_test": "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+      "title": "Oracle-dependent logic without stale-price tests",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "low",
+      "id": "ARK-ORC-002",
+      "priority": "Low readiness gap",
+      "rank": 9,
+      "recommended_next_action": "Add or review: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+      "rule_family": "oracle",
+      "suggested_test": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    },
+    {
+      "confidence": "low",
+      "id": "ARK-ORC-003",
+      "priority": "Low readiness gap",
+      "rank": 10,
+      "recommended_next_action": "Add or review: Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+      "rule_family": "oracle",
+      "suggested_test": "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+      "title": "Spot or reserve-based pricing without manipulation-resistance tests",
+      "why_fix_first": "appears across multiple files; clear defensive tests are available."
+    }
+  ],
+  "generated_at": "2026-05-27T10:53:26+00:00",
+  "issue_grouping": "one-per-finding",
+  "issues": [
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "getAmountOut",
+        "getReserves",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-AMM-002 -->\n\n# Arkheionx readiness gap: ARK-AMM-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-002`\n- Priority: `High readiness gap`\n- Category: `amm-lp-accounting`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Rule family: `amm`\n- Fix First rank: `1`\n- Fingerprint: `9a483231ae3cf546477eb4b1`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:60` in `getAmountOut`: Solidity function shape matches this readiness finding. Snippet: `getAmountOut`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n\n## Related Knowledge\n\n- Historical patterns: pattern-share-inflation-donation, pattern-amm-invariant-steering\n- Suggested defensive tests: first-liquidity-provider-test, proportional-minting-test, proportional-withdrawal-test\n- Related PoCs: poc-2021-10-indexed-finance, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/VAULT_RULE_PACK.md\n\n## Why It Matters\n\nLP share accounting controls who owns pool value; boundary mistakes can distort deposits, withdrawals, or low-liquidity behavior.\n\n## Historical Pattern Similarity\n\nMaps to share inflation and liquidity accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\n## Suggested Tests\n\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n- Cover rounding and dust handling during mint/burn.\n\n## Invariant Candidates\n\n- LP share supply tracks pool ownership within documented rounding.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "amm-lp-accounting",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getReserves",
+          "line": 24,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getReserves",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getAmountOut",
+          "line": 60,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getAmountOut",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-AMM-002",
+      "fingerprint": "9a483231ae3cf546477eb4b1",
+      "fix_first_rank": 1,
+      "invariant_candidates": [
+        "LP share supply tracks pool ownership within documented rounding."
+      ],
+      "labels": [
+        "amm-lp-accounting",
+        "amm-rule-pack",
+        "arkheionx",
+        "high-readiness-gap",
+        "pre-audit-readiness",
+        "share-accounting"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-AMM-002 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "High readiness gap",
+      "recommended_defensive_checks": [
+        "first liquidity provider behavior",
+        "proportional minting",
+        "proportional withdrawal",
+        "dust handling"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "lp-value-conservation",
+          "mint-burn-proportionality"
+        ],
+        "failed_assumptions": [
+          "lp-mint-burn-is-always-proportional",
+          "first-liquidity-state-is-safe"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/AMM_RULE_PACK.md",
+          "docs/VAULT_RULE_PACK.md"
+        ],
+        "related_patterns": [
+          "pattern-share-inflation-donation",
+          "pattern-amm-invariant-steering"
+        ],
+        "related_pocs": [
+          "poc-2021-10-indexed-finance",
+          "poc-2025-12-yeth"
+        ],
+        "root_causes": [
+          "lp-share-boundary-undertested",
+          "low-liquidity-rounding-assumption"
+        ],
+        "rule_pack": "amm",
+        "search_terms": [
+          "LP share accounting",
+          "liquidity mint burn",
+          "first liquidity provider",
+          "dust handling"
+        ],
+        "suggested_tests": [
+          "first-liquidity-provider-test",
+          "proportional-minting-test",
+          "proportional-withdrawal-test",
+          "dust-rounding-test"
+        ]
+      },
+      "rule_family": "amm",
+      "suggested_tests": [
+        "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
+        "Test first liquidity provider behavior.",
+        "Test proportional minting and proportional withdrawal.",
+        "Cover rounding and dust handling during mint/burn."
+      ],
+      "title": "[Arkheionx][High] ARK-AMM-002 - LP share accounting without mint/burn boundary tests"
+    },
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "getAmountOut",
+        "getReserves",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-AMM-003 -->\n\n# Arkheionx readiness gap: ARK-AMM-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-003`\n- Priority: `High readiness gap`\n- Category: `amm-pricing`\n- Confidence: `high`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Rule family: `amm`\n- Fix First rank: `2`\n- Fingerprint: `2eae6a7b67e516903d52f4ab`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:60` in `getAmountOut`: Solidity function shape matches this readiness finding. Snippet: `getAmountOut`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-pool-price-accounting\n- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-movement-bounds\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nSame-block reserve prices and spot quotes can be poor readiness evidence unless manipulation boundaries are tested or explicitly documented.\n\n## Historical Pattern Similarity\n\nMaps to spot-price and pool-price accounting readiness classes.\n\n## Recommended Defensive Checks\n\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\n## Suggested Tests\n\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n- Document whether other accounting paths rely on spot reserve price.\n\n## Invariant Candidates\n\n- Reserve-based price consumers respect documented bounds and delay assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "amm-pricing",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getReserves",
+          "line": 24,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getReserves",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getAmountOut",
+          "line": 60,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getAmountOut",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-AMM-003",
+      "fingerprint": "2eae6a7b67e516903d52f4ab",
+      "fix_first_rank": 2,
+      "invariant_candidates": [
+        "Reserve-based price consumers respect documented bounds and delay assumptions."
+      ],
+      "labels": [
+        "amm-pricing",
+        "amm-rule-pack",
+        "arkheionx",
+        "high-readiness-gap",
+        "oracle-risk",
+        "pre-audit-readiness",
+        "spot-price"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-AMM-003 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "High readiness gap",
+      "recommended_defensive_checks": [
+        "TWAP or delay assumption",
+        "reserve manipulation sanity test",
+        "price movement bounds"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "price-input-remains-bounded",
+          "accounting-value-is-not-single-pool-dependent"
+        ],
+        "failed_assumptions": [
+          "reserve-price-is-manipulation-resistant",
+          "spot-quote-is-stable-enough"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/AMM_RULE_PACK.md",
+          "docs/ORACLE_RULE_PACK.md"
+        ],
+        "related_patterns": [
+          "pattern-spot-price-manipulation",
+          "pattern-pool-price-accounting"
+        ],
+        "related_pocs": [
+          "poc-2020-10-harvest",
+          "poc-2021-01-saddle",
+          "poc-2025-12-yeth"
+        ],
+        "root_causes": [
+          "same-transaction-price-trust",
+          "missing-twap-or-bounds"
+        ],
+        "rule_pack": "amm",
+        "search_terms": [
+          "reserve price",
+          "spot price manipulation",
+          "TWAP",
+          "getAmountOut"
+        ],
+        "suggested_tests": [
+          "twap-vs-spot-behavior",
+          "reserve-manipulation-sanity-test",
+          "price-movement-bounds"
+        ]
+      },
+      "rule_family": "amm",
+      "suggested_tests": [
+        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
+        "Test reserve-price movement bounds.",
+        "Test TWAP or delay assumptions if used.",
+        "Document whether other accounting paths rely on spot reserve price."
+      ],
+      "title": "[Arkheionx][High] ARK-AMM-003 - Spot-price or reserve-price dependency without manipulation-resistance tests"
+    },
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "getAmountOut",
+        "getReserves",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-AMM-001 -->\n\n# Arkheionx readiness gap: ARK-AMM-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-001`\n- Priority: `Medium readiness gap`\n- Category: `amm-invariant`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Rule family: `amm`\n- Fix First rank: `3`\n- Fingerprint: `cb6a1b50135e01f31517c594`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:60` in `getAmountOut`: Solidity function shape matches this readiness finding. Snippet: `getAmountOut`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n\n## Related Knowledge\n\n- Historical patterns: pattern-amm-invariant-steering, pattern-spot-price-manipulation\n- Suggested defensive tests: swap-invariant-conservation, reserve-accounting-test, liquidity-proportionality\n- Related PoCs: poc-2021-01-saddle, poc-2021-10-indexed-finance, poc-2025-12-yeth\n- Docs: docs/AMM_RULE_PACK.md, docs/RULE_PACKS.md, docs/EXPLOIT_TAXONOMY.md\n\n## Why It Matters\n\nAMM correctness depends on reserve accounting, swap bounds, and invariant preservation staying true under fees, rounding, and repeated operations.\n\n## Historical Pattern Similarity\n\nMaps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.\n\n## Recommended Defensive Checks\n\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\n## Suggested Tests\n\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n- Document expected invariant tolerance.\n\n## Invariant Candidates\n\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "amm-invariant",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getReserves",
+          "line": 24,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getReserves",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getAmountOut",
+          "line": 60,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getAmountOut",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-AMM-001",
+      "fingerprint": "cb6a1b50135e01f31517c594",
+      "fix_first_rank": 3,
+      "invariant_candidates": [
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+      ],
+      "labels": [
+        "amm-invariant",
+        "amm-rule-pack",
+        "arkheionx",
+        "medium-readiness-gap",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-AMM-001 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "swap invariant conservation",
+        "reserve accounting",
+        "add/remove liquidity consistency",
+        "fee and rounding bounds"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "constant-product-or-stableswap-invariant",
+          "lp-value-conservation"
+        ],
+        "failed_assumptions": [
+          "pool-invariant-remains-stable-through-edge-sequences",
+          "liquidity-add-remove-is-proportional"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/AMM_RULE_PACK.md",
+          "docs/RULE_PACKS.md",
+          "docs/EXPLOIT_TAXONOMY.md"
+        ],
+        "related_patterns": [
+          "pattern-amm-invariant-steering",
+          "pattern-spot-price-manipulation"
+        ],
+        "related_pocs": [
+          "poc-2021-01-saddle",
+          "poc-2021-10-indexed-finance",
+          "poc-2025-12-yeth"
+        ],
+        "root_causes": [
+          "pool-invariant-can-be-steered",
+          "slippage-boundary-undertested"
+        ],
+        "rule_pack": "amm",
+        "search_terms": [
+          "AMM invariant",
+          "constant product",
+          "reserve accounting",
+          "liquidity invariant"
+        ],
+        "suggested_tests": [
+          "swap-invariant-conservation",
+          "reserve-accounting-test",
+          "liquidity-proportionality",
+          "fee-rounding-bound"
+        ]
+      },
+      "rule_family": "amm",
+      "suggested_tests": [
+        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+        "Test repeated swaps across small and large reserve states.",
+        "Document expected invariant tolerance."
+      ],
+      "title": "[Arkheionx][Medium] ARK-AMM-001 - AMM invariant assumptions not covered by tests"
+    },
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "getAmountOut",
+        "getReserves",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-AMM-004 -->\n\n# Arkheionx readiness gap: ARK-AMM-004\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-004`\n- Priority: `Medium readiness gap`\n- Category: `amm-token-assumptions`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Rule family: `amm`\n- Fix First rank: `4`\n- Fingerprint: `4534bbd962ed2f44c1905536`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:60` in `getAmountOut`: Solidity function shape matches this readiness finding. Snippet: `getAmountOut`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n\n## Related Knowledge\n\n- Historical patterns: pattern-pool-price-accounting, pattern-precision-rounding-loss\n- Suggested defensive tests: balance-before-after-accounting, fee-on-transfer-token-simulation, unsupported-token-documentation\n- Related PoCs: poc-2020-06-balancer-deflationary\n- Docs: docs/AMM_RULE_PACK.md, docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md\n\n## Why It Matters\n\nAMM pools that assume amountIn equals tokens received may mis-account non-standard tokens unless explicitly unsupported or handled.\n\n## Historical Pattern Similarity\n\nMaps to fee-on-transfer and token accounting assumption readiness classes.\n\n## Recommended Defensive Checks\n\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\n## Suggested Tests\n\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n- Document unsupported token types if not handled.\n\n## Invariant Candidates\n\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "amm-token-assumptions",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getReserves",
+          "line": 24,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getReserves",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getAmountOut",
+          "line": 60,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getAmountOut",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-AMM-004",
+      "fingerprint": "4534bbd962ed2f44c1905536",
+      "fix_first_rank": 4,
+      "invariant_candidates": [
+        "Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+      ],
+      "labels": [
+        "amm-rule-pack",
+        "amm-token-assumptions",
+        "arkheionx",
+        "fee-on-transfer",
+        "medium-readiness-gap",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-AMM-004 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "actual received amount accounting",
+        "fee-on-transfer simulation",
+        "unsupported token documentation"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "reserve-increase-equals-accounted-input",
+          "swap-accounting-uses-actual-balance-delta"
+        ],
+        "failed_assumptions": [
+          "amount-in-equals-received",
+          "tokens-behave-like-standard-erc20"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/AMM_RULE_PACK.md",
+          "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md"
+        ],
+        "related_patterns": [
+          "pattern-pool-price-accounting",
+          "pattern-precision-rounding-loss"
+        ],
+        "related_pocs": [
+          "poc-2020-06-balancer-deflationary"
+        ],
+        "root_causes": [
+          "actual-received-amount-assumption",
+          "unsupported-token-behavior-undocumented"
+        ],
+        "rule_pack": "amm",
+        "search_terms": [
+          "fee-on-transfer",
+          "actual received amount",
+          "non-standard token",
+          "rebasing token"
+        ],
+        "suggested_tests": [
+          "balance-before-after-accounting",
+          "fee-on-transfer-token-simulation",
+          "unsupported-token-documentation"
+        ]
+      },
+      "rule_family": "amm",
+      "suggested_tests": [
+        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
+        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
+        "Simulate fee-on-transfer behavior with a local mock if supported.",
+        "Document unsupported token types if not handled."
+      ],
+      "title": "[Arkheionx][Medium] ARK-AMM-004 - Fee-on-transfer or non-standard token assumptions not documented"
+    },
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "getAmountOut",
+        "getReserves",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-AMM-005 -->\n\n# Arkheionx readiness gap: ARK-AMM-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-AMM-005`\n- Priority: `Medium readiness gap`\n- Category: `amm-slippage`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.\n- Rule family: `amm`\n- Fix First rank: `5`\n- Fingerprint: `8047aeb2942bb0b0162b1684`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:24` in `getReserves`: Solidity function shape matches this readiness finding. Snippet: `getReserves`\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:60` in `getAmountOut`: Solidity function shape matches this readiness finding. Snippet: `getAmountOut`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: min-out-enforcement, deadline-or-stale-quote-test, slippage-boundary-test\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle\n- Docs: docs/AMM_RULE_PACK.md, docs/ORACLE_RULE_PACK.md\n\n## Why It Matters\n\nSlippage and stale quote controls help users and integrations bound expected outcomes around swaps.\n\n## Historical Pattern Similarity\n\nMaps to price boundary and quote freshness readiness classes.\n\n## Recommended Defensive Checks\n\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\n## Suggested Tests\n\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n- Assert user-provided slippage bounds are respected.\n\n## Invariant Candidates\n\n- Swap execution respects user-provided output bounds and documented deadline policy.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "amm-slippage",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getReserves",
+          "line": 24,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getReserves",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "getAmountOut",
+          "line": 60,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "getAmountOut",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `getReserves`: Solidity function shape matches this readiness finding.",
+      "finding_id": "ARK-AMM-005",
+      "fingerprint": "8047aeb2942bb0b0162b1684",
+      "fix_first_rank": 5,
+      "invariant_candidates": [
+        "Swap execution respects user-provided output bounds and documented deadline policy."
+      ],
+      "labels": [
+        "amm-rule-pack",
+        "amm-slippage",
+        "arkheionx",
+        "medium-readiness-gap",
+        "min-output",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-AMM-005 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [
+        "minOut enforcement",
+        "deadline behavior",
+        "stale quote handling"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "swap-output-respects-user-bound",
+          "quote-freshness-assumption-is-explicit"
+        ],
+        "failed_assumptions": [
+          "quote-remains-valid-through-execution",
+          "users-can-bound-price-movement-elsewhere"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/AMM_RULE_PACK.md",
+          "docs/ORACLE_RULE_PACK.md"
+        ],
+        "related_patterns": [
+          "pattern-spot-price-manipulation",
+          "pattern-assumption-not-encoded-in-tests"
+        ],
+        "related_pocs": [
+          "poc-2020-10-harvest",
+          "poc-2021-01-saddle"
+        ],
+        "root_causes": [
+          "missing-user-output-bound",
+          "stale-quote-assumption"
+        ],
+        "rule_pack": "amm",
+        "search_terms": [
+          "slippage boundary",
+          "minOut",
+          "deadline",
+          "stale quote"
+        ],
+        "suggested_tests": [
+          "min-out-enforcement",
+          "deadline-or-stale-quote-test",
+          "slippage-boundary-test"
+        ]
+      },
+      "rule_family": "amm",
+      "suggested_tests": [
+        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.",
+        "Test minOut enforcement.",
+        "Test stale quote or deadline behavior if supported.",
+        "Assert user-provided slippage bounds are respected."
+      ],
+      "title": "[Arkheionx][Medium] ARK-AMM-005 - Slippage/min-output constraints missing or unclear"
+    },
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-REENT-001 -->\n\n# Arkheionx readiness gap: ARK-REENT-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-REENT-001`\n- Priority: `Medium readiness gap`\n- Category: `reentrancy-value-flow`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Rule family: `reentrancy-value-flow`\n- Fix First rank: `6`\n- Fingerprint: `93c080a4c61fba5511c77110`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.\n\n## Related Knowledge\n\n- Historical patterns: pattern-external-call-before-state-update, pattern-callback-capable-token\n- Suggested defensive tests: reentrant-receiver-mock, state-update-before-external-call-test, double-claim-prevention\n- Related PoCs: poc-2018-10-spankchain, poc-2020-04-uniswap-imbtc, poc-2021-03-dodo-crowdpool\n- Docs: docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md, docs/RULE_PACKS.md\n\n## Why It Matters\n\nExternal call or token transfer terms were detected without guard or reentrancy-review signals.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n\n## Suggested Tests\n\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n- Test withdraw, claim, refund, or swap flows for accounting consistency.\n\n## Invariant Candidates\n\n- External-call flows cannot observe or preserve inconsistent accounting state.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.",
+      "finding_id": "ARK-REENT-001",
+      "fingerprint": "93c080a4c61fba5511c77110",
+      "fix_first_rank": 6,
+      "invariant_candidates": [
+        "External-call flows cannot observe or preserve inconsistent accounting state."
+      ],
+      "labels": [
+        "arkheionx",
+        "medium-readiness-gap",
+        "pre-audit-readiness",
+        "reentrancy-review",
+        "reentrancy-value-flow",
+        "value-flow"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-REENT-001 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommended_defensive_checks": [],
+      "related_knowledge": {
+        "broken_invariants": [
+          "single-claim-or-withdrawal",
+          "state-updated-before-external-value-flow"
+        ],
+        "failed_assumptions": [
+          "token-transfer-does-not-yield-control",
+          "claim-or-withdraw-path-cannot-repeat"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-external-call-before-state-update",
+          "pattern-callback-capable-token"
+        ],
+        "related_pocs": [
+          "poc-2018-10-spankchain",
+          "poc-2020-04-uniswap-imbtc",
+          "poc-2021-03-dodo-crowdpool"
+        ],
+        "root_causes": [
+          "external-control-before-state-finalization",
+          "callback-assumption-failure"
+        ],
+        "rule_pack": "reentrancy_value_flow",
+        "search_terms": [
+          "reentrancy value flow",
+          "callback capable token",
+          "claim refund flow"
+        ],
+        "suggested_tests": [
+          "reentrant-receiver-mock",
+          "state-update-before-external-call-test",
+          "double-claim-prevention"
+        ]
+      },
+      "rule_family": "reentrancy-value-flow",
+      "suggested_tests": [
+        "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+        "Add a benign callback-capable receiver stub.",
+        "Assert state updates happen before external value transfer where required.",
+        "Test withdraw, claim, refund, or swap flows for accounting consistency."
+      ],
+      "title": "[Arkheionx][Medium] ARK-REENT-001 - External-call value flow needs reentrancy review"
+    },
+    {
+      "affected_functions": [
+        "addLiquidity",
+        "removeLiquidity",
+        "swap"
+      ],
+      "body": "<!-- arkheionx-issue:ARK-REENT-004 -->\n\n# Arkheionx readiness gap: ARK-REENT-004\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-REENT-004`\n- Priority: `Low readiness gap`\n- Category: `reentrancy-value-flow`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Rule family: `reentrancy-value-flow`\n- Fix First rank: `7`\n- Fingerprint: `5267b7cf94570dcb176a34ce`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:28` in `addLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amount0);`\n- `src/ToyAMMPool.sol:47` in `removeLiquidity`: Solidity function contains external value-flow call evidence. Snippet: `token0.transfer(msg.sender, amount0);`\n- `src/ToyAMMPool.sol:67` in `swap`: Solidity function contains external value-flow call evidence. Snippet: `token0.transferFrom(msg.sender, address(this), amountIn);`\n- `test/documentation coverage`: No semantic-lite reentrancy test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `transfer, transferFrom`\n\n## Why It Matters\n\nReviewers need clear state-ordering assumptions to evaluate external call safety.\n\n## Historical Pattern Similarity\n\nMaps to checks-effects-interactions and callback boundary readiness classes.\n\n## Recommended Defensive Checks\n\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\n## Suggested Tests\n\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n- Assert failure paths preserve accounting state.\n\n## Invariant Candidates\n\n- External call ordering follows documented state-transition policy.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "reentrancy-value-flow",
+      "confidence": "medium",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "addLiquidity",
+          "line": 28,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "removeLiquidity",
+          "line": 47,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transfer(msg.sender, amount0);",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyAMMPool",
+          "file": "src/ToyAMMPool.sol",
+          "function": "swap",
+          "line": 67,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "token0.transferFrom(msg.sender, address(this), amountIn);",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite reentrancy test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "transfer, transferFrom",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.",
+      "finding_id": "ARK-REENT-004",
+      "fingerprint": "5267b7cf94570dcb176a34ce",
+      "fix_first_rank": 7,
+      "invariant_candidates": [
+        "External call ordering follows documented state-transition policy."
+      ],
+      "labels": [
+        "arkheionx",
+        "documentation-readiness",
+        "low-readiness-gap",
+        "pre-audit-readiness",
+        "reentrancy-review",
+        "reentrancy-rule-pack",
+        "reentrancy-value-flow"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-REENT-004 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "ordering documentation",
+        "callback assumptions",
+        "external call failure behavior"
+      ],
+      "related_knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "rule_family": "reentrancy-value-flow",
+      "suggested_tests": [
+        "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+        "Document checks-effects-interactions or guard assumptions.",
+        "Test state before and after external calls.",
+        "Assert failure paths preserve accounting state."
+      ],
+      "title": "[Arkheionx][Low] ARK-REENT-004 - External call path without documented ordering assumptions"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-001 -->\n\n# Arkheionx readiness gap: ARK-ORC-001\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-001`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `oracle`\n- Fix First rank: `8`\n- Fingerprint: `204867f6f7d3206783b6abd7`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting\n- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test\n- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai\n- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md, docs/SEARCH_GUIDE.md\n\n## Why It Matters\n\nOracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions.\n\n## Historical Pattern Similarity\n\nMaps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.\n\n## Recommended Defensive Checks\n\n- stale round rejection\n- heartbeat checks\n- updatedAt validation\n- answeredInRound handling\n\n## Suggested Tests\n\n- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.\n- Reject stale oracle rounds or document fallback behavior.\n- Test updatedAt or heartbeat boundaries.\n- Test borrow, liquidation, vault, or reward flows when oracle data is stale.\n\n## Invariant Candidates\n\n- Accounting decisions only use oracle data that satisfies documented freshness policy.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-001",
+      "fingerprint": "204867f6f7d3206783b6abd7",
+      "fix_first_rank": 8,
+      "invariant_candidates": [
+        "Accounting decisions only use oracle data that satisfies documented freshness policy."
+      ],
+      "labels": [
+        "arkheionx",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-001 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "stale round rejection",
+        "heartbeat checks",
+        "updatedAt validation",
+        "answeredInRound handling"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "accounting-value-uses-valid-price",
+          "collateral-value-is-bounded",
+          "share-price-uses-trusted-input"
+        ],
+        "failed_assumptions": [
+          "oracle-price-is-current",
+          "oracle-answer-is-normalized",
+          "pool-price-is-manipulation-resistant"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ORACLE_RULE_PACK.md",
+          "docs/RULE_PACKS.md",
+          "docs/SEARCH_GUIDE.md"
+        ],
+        "related_patterns": [
+          "pattern-oracle-stale-price",
+          "pattern-spot-price-manipulation",
+          "pattern-pool-price-accounting"
+        ],
+        "related_pocs": [
+          "poc-2025-11-moonwell",
+          "poc-2020-10-harvest",
+          "poc-2021-02-yearn-v1-dai"
+        ],
+        "root_causes": [
+          "missing-oracle-freshness-validation",
+          "implicit-price-trust",
+          "missing-price-bounds"
+        ],
+        "rule_pack": "oracle",
+        "search_terms": [
+          "oracle stale price",
+          "Chainlink updatedAt",
+          "heartbeat validation",
+          "price bounds",
+          "TWAP vs spot"
+        ],
+        "suggested_tests": [
+          "stale-round-rejection",
+          "heartbeat-bound-test",
+          "decimal-normalization-test",
+          "price-bounds-test"
+        ]
+      },
+      "rule_family": "oracle",
+      "suggested_tests": [
+        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+        "Reject stale oracle rounds or document fallback behavior.",
+        "Test updatedAt or heartbeat boundaries.",
+        "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-001 - Oracle-dependent logic without stale-price tests"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-002 -->\n\n# Arkheionx readiness gap: ARK-ORC-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-002`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `oracle`\n- Fix First rank: `9`\n- Fingerprint: `3e0db8a302dcfc0b19bcdf3e`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding.\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Why It Matters\n\nOracle and price-feed signals were detected without enough freshness or sanity-check language.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\n## Suggested Tests\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n- Assert normalized price units match accounting units.\n\n## Invariant Candidates\n\n- Normalized oracle values remain within documented unit and decimal assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-002",
+      "fingerprint": "3e0db8a302dcfc0b19bcdf3e",
+      "fix_first_rank": 9,
+      "invariant_candidates": [
+        "Normalized oracle values remain within documented unit and decimal assumptions."
+      ],
+      "labels": [
+        "arkheionx",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "pre-audit-readiness",
+        "price-assumptions"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-002 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [],
+      "related_knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "rule_family": "oracle",
+      "suggested_tests": [
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-003 -->\n\n# Arkheionx readiness gap: ARK-ORC-003\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-003`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `oracle`\n- Fix First rank: `10`\n- Fingerprint: `c7c2a014effc261606b9ab6b`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-spot-price-manipulation, pattern-amm-invariant-steering\n- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-bounds-test\n- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth\n- Docs: docs/ORACLE_RULE_PACK.md, docs/RULE_PACKS.md\n\n## Why It Matters\n\nSame-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design.\n\n## Historical Pattern Similarity\n\nMaps to historical price-manipulation readiness classes.\n\n## Recommended Defensive Checks\n\n- TWAP vs spot behavior\n- reserve movement bounds\n- price sanity checks\n- local pool mocks\n\n## Suggested Tests\n\n- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.\n- Test spot-price movement bounds.\n- Test TWAP or delay assumptions when used.\n- Document reserve-price dependency and expected safeguards.\n\n## Invariant Candidates\n\n- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-003",
+      "fingerprint": "c7c2a014effc261606b9ab6b",
+      "fix_first_rank": 10,
+      "invariant_candidates": [
+        "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+      ],
+      "labels": [
+        "arkheionx",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness",
+        "reserve-pricing",
+        "spot-price"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-003 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "TWAP vs spot behavior",
+        "reserve movement bounds",
+        "price sanity checks",
+        "local pool mocks"
+      ],
+      "related_knowledge": {
+        "broken_invariants": [
+          "price-input-remains-manipulation-resistant",
+          "accounting-value-is-not-single-pool-dependent"
+        ],
+        "failed_assumptions": [
+          "pool-reserves-reflect-fair-price",
+          "spot-price-cannot-be-moved-economically"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/ORACLE_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-spot-price-manipulation",
+          "pattern-amm-invariant-steering"
+        ],
+        "related_pocs": [
+          "poc-2020-10-harvest",
+          "poc-2021-01-saddle",
+          "poc-2025-12-yeth"
+        ],
+        "root_causes": [
+          "same-transaction-price-trust",
+          "missing-twap-or-bounds"
+        ],
+        "rule_pack": "oracle",
+        "search_terms": [
+          "spot price manipulation",
+          "getReserves",
+          "TWAP",
+          "pool price"
+        ],
+        "suggested_tests": [
+          "twap-vs-spot-behavior",
+          "reserve-manipulation-sanity-test",
+          "price-bounds-test"
+        ]
+      },
+      "rule_family": "oracle",
+      "suggested_tests": [
+        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+        "Test spot-price movement bounds.",
+        "Test TWAP or delay assumptions when used.",
+        "Document reserve-price dependency and expected safeguards."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-ORC-005 -->\n\n# Arkheionx readiness gap: ARK-ORC-005\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-005`\n- Priority: `Low readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `oracle`\n- Fix First rank: `11`\n- Fingerprint: `18c27a0df2b8711caa82c079`\n\n## Evidence\n\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Why It Matters\n\nAuditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.\n\n## Historical Pattern Similarity\n\nMaps to failed assumption classes where oracle behavior was implied but not enforced or documented.\n\n## Recommended Defensive Checks\n\n- price bounds\n- fallback policy\n- stale-price policy\n- sequencer downtime notes\n\n## Suggested Tests\n\n- Add documentation plus local tests showing fallback and out-of-bounds price behavior.\n- Test documented price bounds.\n- Test invalid answer fallback behavior.\n- Add documentation for price shock and fallback assumptions.\n\n## Invariant Candidates\n\n- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "oracle-pricing",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword",
+        "test-coverage"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "getReserves, pool, reserve0, reserve1",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": ": No semantic-lite oracle test coverage terms were detected.",
+      "finding_id": "ARK-ORC-005",
+      "fingerprint": "18c27a0df2b8711caa82c079",
+      "fix_first_rank": 11,
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "labels": [
+        "arkheionx",
+        "documentation-readiness",
+        "low-confidence",
+        "low-readiness-gap",
+        "oracle-pricing",
+        "oracle-risk",
+        "oracle-rule-pack",
+        "pre-audit-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-ORC-005 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [
+        "price bounds",
+        "fallback policy",
+        "stale-price policy",
+        "sequencer downtime notes"
+      ],
+      "related_knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "rule_family": "oracle",
+      "suggested_tests": [
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
+      ],
+      "title": "[Arkheionx][Low] ARK-ORC-005 - Missing price bounds or fallback assumptions documentation"
+    },
+    {
+      "affected_functions": [],
+      "body": "<!-- arkheionx-issue:ARK-TST-002 -->\n\n# Arkheionx readiness gap: ARK-TST-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-TST-002`\n- Priority: `Low readiness gap`\n- Category: `testing-readiness`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `testing`\n- Fix First rank: `12`\n- Fingerprint: `513273fd79a5b51907be9ccf`\n\n## Evidence\n\n- `src/ToyAMMPool.sol:1`: Keyword signal matched this readiness finding.\n- `test/ToyAMMPool.t.sol:1`: Keyword signal matched this readiness finding.\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant\n- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance\n- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol\n\n## Why It Matters\n\nProtocol-like value flows were detected, but no invariant/property testing signal was found.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\n## Suggested Tests\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.\n\n## Invariant Candidates\n\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detection_sources": [
+        "keyword"
+      ],
+      "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+      "evidence": [
+        {
+          "file": "src/ToyAMMPool.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyAMMPool.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "",
+          "type": "keyword"
+        }
+      ],
+      "evidence_summary": "src/ToyAMMPool.sol: Keyword signal matched this readiness finding.",
+      "finding_id": "ARK-TST-002",
+      "fingerprint": "513273fd79a5b51907be9ccf",
+      "fix_first_rank": 12,
+      "invariant_candidates": [
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
+      ],
+      "labels": [
+        "amm",
+        "arkheionx",
+        "invariant-testing",
+        "low-confidence",
+        "low-readiness-gap",
+        "pre-audit-readiness",
+        "testing-readiness"
+      ],
+      "marker": "<!-- arkheionx-issue:ARK-TST-002 -->",
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Low readiness gap",
+      "recommended_defensive_checks": [],
+      "related_knowledge": {
+        "broken_invariants": [
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
+        ],
+        "failed_assumptions": [
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+        ],
+        "related_patterns": [
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
+        ],
+        "related_pocs": [
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
+        ],
+        "root_causes": [
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
+        ],
+        "rule_pack": "testing",
+        "search_terms": [
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
+        ],
+        "suggested_tests": [
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
+        ]
+      },
+      "rule_family": "testing",
+      "suggested_tests": [
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
+      ],
+      "title": "[Arkheionx][Low] ARK-TST-002 - No invariant tests detected for DeFi protocol shape"
+    }
+  ],
+  "min_confidence": "low",
+  "mode": "dry-run",
+  "protocol_type": "amm",
+  "repo_root": "examples/amm-fixture",
+  "schema_version": "1.0.0",
+  "score": 43,
+  "score_band": "Early readiness",
+  "summary_issue": {
+    "body": "<!-- arkheionx-issue:summary -->\n\n# Arkheionx pre-audit readiness remediation plan\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n- Score: `43/100`\n- Score band: `Early readiness`\n- Protocol type: `amm`\n- Active readiness gaps: `12`\n\n## Fix First\n\n- [ ] `ARK-AMM-002` - LP share accounting without mint/burn boundary tests (amm; high)\n- [ ] `ARK-AMM-003` - Spot-price or reserve-price dependency without manipulation-resistance tests (amm; high)\n- [ ] `ARK-AMM-001` - AMM invariant assumptions not covered by tests (amm; medium)\n- [ ] `ARK-AMM-004` - Fee-on-transfer or non-standard token assumptions not documented (amm; medium)\n- [ ] `ARK-AMM-005` - Slippage/min-output constraints missing or unclear (amm; medium)\n- [ ] `ARK-REENT-001` - External-call value flow needs reentrancy review (reentrancy-value-flow; medium)\n- [ ] `ARK-REENT-004` - External call path without documented ordering assumptions (reentrancy-value-flow; medium)\n- [ ] `ARK-ORC-001` - Oracle-dependent logic without stale-price tests (oracle; low)\n- [ ] `ARK-ORC-002` - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage (oracle; low)\n- [ ] `ARK-ORC-003` - Spot or reserve-based pricing without manipulation-resistance tests (oracle; low)\n\n## Top Readiness Gaps\n\n- [ ] `ARK-AMM-002` - LP share accounting without mint/burn boundary tests (High readiness gap)\n- [ ] `ARK-AMM-003` - Spot-price or reserve-price dependency without manipulation-resistance tests (High readiness gap)\n- [ ] `ARK-AMM-001` - AMM invariant assumptions not covered by tests (Medium readiness gap)\n- [ ] `ARK-AMM-004` - Fee-on-transfer or non-standard token assumptions not documented (Medium readiness gap)\n- [ ] `ARK-AMM-005` - Slippage/min-output constraints missing or unclear (Medium readiness gap)\n- [ ] `ARK-REENT-001` - External-call value flow needs reentrancy review (Medium readiness gap)\n- [ ] `ARK-ORC-001` - Oracle-dependent logic without stale-price tests (Low readiness gap)\n- [ ] `ARK-ORC-002` - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage (Low readiness gap)\n- [ ] `ARK-ORC-003` - Spot or reserve-based pricing without manipulation-resistance tests (Low readiness gap)\n- [ ] `ARK-ORC-005` - Missing price bounds or fallback assumptions documentation (Low readiness gap)\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/cli-amm-report.md`\n- Json Report: `examples/reports/cli-amm-report.json`\n- Sarif Report: `examples/reports/cli-amm.sarif.json`\n- Issue Plan: `examples/reports/cli-amm-issue-plan.json`\n\nThis plan is a readiness tracker, not a formal audit report.\n",
+    "disclaimer": "This issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.",
+    "labels": [
+      "arkheionx",
+      "pre-audit-readiness",
+      "remediation-plan"
+    ],
+    "marker": "<!-- arkheionx-issue:summary -->",
+    "title": "[Arkheionx] Pre-audit readiness remediation plan"
+  },
+  "tool": "Arkheionx Pre-Audit Scanner",
+  "version": "2.0.0"
+}

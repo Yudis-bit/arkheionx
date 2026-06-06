@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.3.0",
+  "ecosystem_id": "synthetic-ecosystem-pilot-001",
+  "ecosystem_name_public": "Synthetic Ecosystem Pilot",
+  "public_permission": false,
+  "description": "Synthetic/internal example for Arkheionx Ecosystem Pack. This is not a real customer, partner, or external validation claim.",
+  "repo_count": 5,
+  "anonymization_level": "repo aliases only",
+  "aggregate_score_band": "Improving",
+  "generated_at": "2026-05-26T00:00:00Z",
+  "arkheionx_version": "1.3.0",
+  "repo_entries": [
+    {
+      "repo_alias": "Repo Alpha",
+      "repo_type": "toy/internal",
+      "protocol_type": "staking",
+      "public_repo": false,
+      "score": 62,
+      "score_band": "Improving",
+      "top_findings": ["ARK-TST-001", "ARK-ORC-001", "ARK-RWD-001"],
+      "output_artifacts": ["pre-audit report", "issue plan", "launch report"],
+      "public_summary_allowed": false,
+      "private_details_redacted": true
+    },
+    {
+      "repo_alias": "Repo Beta",
+      "repo_type": "toy/internal",
+      "protocol_type": "vault",
+      "public_repo": false,
+      "score": 58,
+      "score_band": "Needs Work",
+      "top_findings": ["ARK-VLT-001", "ARK-TST-001", "ARK-DOC-001"],
+      "output_artifacts": ["pre-audit report", "issue plan", "remediation roadmap"],
+      "public_summary_allowed": false,
+      "private_details_redacted": true
+    },
+    {
+      "repo_alias": "Repo Gamma",
+      "repo_type": "toy/internal",
+      "protocol_type": "oracle",
+      "public_repo": false,
+      "score": 69,
+      "score_band": "Improving",
+      "top_findings": ["ARK-ORC-001", "ARK-ACC-001"],
+      "output_artifacts": ["pre-audit report", "contest readiness report"],
+      "public_summary_allowed": false,
+      "private_details_redacted": true
+    },
+    {
+      "repo_alias": "Repo Delta",
+      "repo_type": "toy/internal",
+      "protocol_type": "reward",
+      "public_repo": false,
+      "score": 64,
+      "score_band": "Improving",
+      "top_findings": ["ARK-RWD-001", "ARK-REENT-001", "ARK-TST-001"],
+      "output_artifacts": ["pre-audit report", "sprint plan"],
+      "public_summary_allowed": false,
+      "private_details_redacted": true
+    },
+    {
+      "repo_alias": "Repo Epsilon",
+      "repo_type": "toy/internal",
+      "protocol_type": "mixed",
+      "public_repo": false,
+      "score": 71,
+      "score_band": "Improving",
+      "top_findings": ["ARK-DOC-001", "ARK-ACC-001"],
+      "output_artifacts": ["pre-audit report", "executive summary"],
+      "public_summary_allowed": false,
+      "private_details_redacted": true
+    }
+  ],
+  "common_gap_families": [
+    "missing invariant tests",
+    "oracle assumptions",
+    "admin boundary documentation",
+    "generated issue plan missing",
+    "weak contest readiness docs"
+  ],
+  "rule_family_counts": {
+    "testing": 3,
+    "oracle": 2,
+    "access-control": 2,
+    "reward-accounting": 2,
+    "vault": 1,
+    "reentrancy-value-flow": 1,
+    "documentation": 2
+  },
+  "recurring_findings": [
+    {
+      "finding_id": "ARK-TST-001",
+      "count": 3,
+      "theme": "Missing or thin invariant/fuzz coverage"
+    },
+    {
+      "finding_id": "ARK-ORC-001",
+      "count": 2,
+      "theme": "Oracle freshness and bounds assumptions need tests or docs"
+    },
+    {
+      "finding_id": "ARK-ACC-001",
+      "count": 2,
+      "theme": "Privileged role and admin-boundary tests need hardening"
+    }
+  ],
+  "recommended_actions": [
+    "Run a shared invariant-testing workshop for participating builders.",
+    "Create a standard oracle assumption checklist.",
+    "Require each repo to attach an Arkheionx issue plan before audit intake.",
+    "Use GitHub Action setup guidance for repositories that want ongoing readiness checks.",
+    "Keep public summaries anonymized unless written permission exists."
+  ],
+  "safety_notes": [
+    "Synthetic/internal example only.",
+    "No real customer, adoption, or partner claim is made.",
+    "No private code or unpatched vulnerability details are included.",
+    "Readiness findings are not vulnerability confirmations."
+  ],
+  "disclosure_status": "synthetic_internal_no_public_project_details"
+}

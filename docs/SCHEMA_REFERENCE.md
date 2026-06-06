@@ -1,0 +1,84 @@
+# Schema Reference
+
+Arkheionx v1.0.0 freezes the main public output shapes for stable use in CI,
+reporting, and downstream tooling.
+
+Schemas live in [`schemas/`](../schemas/) and use JSON Schema draft 2020-12.
+They validate the main shape and required fields, not every nested future
+extension.
+
+## Stable Schemas
+
+| Output | Schema |
+|---|---|
+| Pre-audit JSON report | [`schemas/pre-audit-report.schema.json`](../schemas/pre-audit-report.schema.json) |
+| Issue plan JSON | [`schemas/issue-plan.schema.json`](../schemas/issue-plan.schema.json) |
+| Baseline JSON | [`schemas/baseline.schema.json`](../schemas/baseline.schema.json) |
+| Diff JSON | [`schemas/diff.schema.json`](../schemas/diff.schema.json) |
+| Security memory graph | [`schemas/security-memory-graph.schema.json`](../schemas/security-memory-graph.schema.json) |
+| Finding knowledge map | [`schemas/finding-knowledge-map.schema.json`](../schemas/finding-knowledge-map.schema.json) |
+| Rule calibration matrix | [`schemas/rule-calibration-matrix.schema.json`](../schemas/rule-calibration-matrix.schema.json) |
+| Test plan JSON | [`schemas/test_plan.schema.json`](../schemas/test_plan.schema.json) |
+| Arkheionx config | [`schemas/arkheionx_config.schema.json`](../schemas/arkheionx_config.schema.json) |
+
+## Versioning
+
+The main scanner JSON includes:
+
+```json
+{
+  "schema_version": "1.0.0",
+  "version": "2.0.0"
+}
+```
+
+`schema_version` remains `1.0.0` while the scanner `version` can advance in
+minor releases. Baselines, diff outputs, and issue plans also include
+`schema_version`.
+
+v1.4.0 adds optional AMM and lending findings under the existing `findings`,
+`rule_packs`, SARIF, and issue-plan shapes. The schema remains `1.0.0`
+because these are additive rule-pack entries, not a top-level schema break.
+
+v1.5.0 adds optional `suggested_tests`, `invariant_candidates`, and
+`test_plan` fields to finding objects, plus a separate generated test-plan JSON
+artifact. These are additive planning fields and remain defensive readiness
+metadata.
+
+v1.6.0 is an internal engine split. It does not change the public schema
+version or add required fields.
+
+v1.7.0 adds a stable local config schema. Config validation is implemented with
+stdlib checks so users do not need a JSON Schema runtime.
+
+v1.8.0 adds optional report UX summary fields: `fix_first`, `report_ux`,
+`findings_by_rule_family`, `findings_by_confidence`, `suppression_summary`,
+`active_findings_count`, and `suppressed_findings_count`.
+
+v1.9.0 adds a pre-v2 module CLI candidate. The CLI writes the same report,
+SARIF, issue-plan, and test-plan artifact shapes as the existing scripts; it
+does not introduce a new output schema.
+
+v2.0.0 adds the installable `arkheionx` console command. The console command
+writes the same artifact shapes as the module CLI and existing scripts.
+
+## Compatibility Policy
+
+Patch and minor releases may:
+
+- add optional fields;
+- add new findings or rule-pack metadata;
+- add new generated artifacts;
+- extend `properties` objects.
+
+Patch and minor releases should not:
+
+- remove required top-level fields without a major-version note;
+- change existing field types without a migration note;
+- reinterpret readiness findings as formal audit findings.
+
+## Manual Validation Without Dependencies
+
+The test suite uses Python standard-library checks so users do not need the
+`jsonschema` package. Downstream users may use any JSON Schema validator that
+supports draft 2020-12.

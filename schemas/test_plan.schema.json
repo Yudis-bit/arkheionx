@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs/schemas/test_plan.schema.json",
+  "title": "Arkheionx Test Plan",
+  "type": "object",
+  "required": [
+    "tool",
+    "version",
+    "schema_version",
+    "source_report",
+    "rule_families",
+    "findings",
+    "suggested_tests",
+    "invariant_candidates",
+    "foundry_skeleton",
+    "safety_notes",
+    "manual_review_required"
+  ],
+  "properties": {
+    "tool": { "const": "Arkheionx Test Plan Generator" },
+    "version": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "source_report": { "type": "string" },
+    "source_report_version": { "type": "string" },
+    "protocol_type": { "type": "string" },
+    "rule_families": { "type": "array" },
+    "findings": { "type": "array" },
+    "suggested_tests": { "type": "array", "items": { "type": "string" } },
+    "invariant_candidates": { "type": "array", "items": { "type": "string" } },
+    "foundry_skeleton": { "type": "object" },
+    "safety_notes": { "type": "array", "items": { "type": "string" } },
+    "manual_review_required": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

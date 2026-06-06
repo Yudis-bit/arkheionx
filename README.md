@@ -1,0 +1,238 @@
+# ArkheionX
+
+Local-first deterministic security review workbench for Solidity / Foundry
+projects.
+
+<!-- Compatibility alias for existing public-surface tests: # Arkheionx -->
+
+**Python 3.11+** · **Local-first** · **No RPC by default** ·
+**Human review required** · **v3.9.0 public-safe branch**
+
+Latest stable release: **v3.1.0**. Current local/public-safe technical state:
+**v3.9.0**. Next milestone metadata remains **v4.0.0**, but v4.0.0 is not
+tagged here.
+
+Local-first protocol security control plane for DeFi teams. Map the protocol. Prove the path. Prepare the handoff.
+
+## What is ArkheionX?
+
+ArkheionX helps security researchers and protocol engineers create a repeatable
+local review surface for DeFi repositories. It maps protocol structure, roles,
+value paths, assumptions, test gaps, evidence context, and benchmarked fixture
+output.
+
+Foundry tells you which tests passed. ArkheionX helps organize what a human
+reviewer should inspect next: money-flow graph, review-map output, Test Gap Map,
+assumptions, evidence links, and local validation artifacts.
+
+The v3.1 line introduced the Developer-Native Review Map and Local Artifact Foundation. v3.9.0 adds the public-safe fixture benchmark harness, deterministic
+artifact fingerprints, and snapshot drift checks. The full v4 Protocol Security Control Plane remains planned direction, not a completed v3.2.0 runtime surface.
+
+## What Arkheionx Does
+
+- Creates deterministic protocol review artifacts.
+- Maps contracts, functions, value paths, assumptions, and test gaps.
+- Builds local review packages under `.arkheionx/out/`.
+- Provides a fixture benchmark harness for static/local fixtures.
+- Supports deterministic fixture source fingerprints.
+- Supports snapshot drift checks for benchmark output.
+- Runs local validation against saved output; a relevant local Foundry test executed is still review context, not a final security judgment.
+- Produces human-review-oriented evidence context.
+
+## What It Does Not Do
+
+- Does not confirm vulnerabilities automatically.
+- Does not replace auditors.
+- Does not prove protocol safety.
+- Does not assign final severity.
+- Does not submit reports or bounties.
+- Does not run live-chain operations by default.
+- Does not require RPC, private keys, seed phrases, or secrets.
+- Does not automate exploits.
+
+## Why local-first?
+
+Security review tooling should be inspectable and reproducible. ArkheionX keeps
+the default workflow on local repository files so review artifacts can be
+regenerated, diffed, and checked without hidden services or network state.
+
+Default operation is intentionally narrow:
+
+- Local repository analysis only.
+- No RPC by default.
+- No live-chain mutation.
+- No private keys or secrets.
+- No automated exploitation.
+- No auto-submit.
+- Not an audit, certification, or replacement for manual review.
+- No guaranteed vulnerability discovery.
+- No severity guarantee.
+
+Human review is required. ArkheionX provides review context, not final security
+judgments.
+
+## Current Public Branch Status
+
+This public-safe branch contains the engine, tests, public technical docs, and
+safety workflow. Internal application, submission, and process materials are
+intentionally excluded from this branch.
+
+v3.9.0 is the local/public-safe technical state. v4.0.0 is not tagged. The
+public release branch is sanitized.
+
+## Quick Start
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -e .
+arkheionx version
+arkheionx doctor
+```
+
+The local install helper is also available:
+
+```bash
+sh install.sh
+```
+
+For installer details, see [`docs/INSTALLER.md`](docs/INSTALLER.md).
+
+## Quick Start Commands
+
+Core commands:
+
+- `doctor` / `arkheionx doctor`
+- `open` / `arkheionx open`
+- `review-map` / `arkheionx review-map`
+- `map` / `arkheionx map`
+- `flow` / `arkheionx flow`
+- `hunt` / `arkheionx hunt`
+- `prove` / `arkheionx prove`
+- `trace` / `arkheionx trace`
+- `evidence` / `arkheionx evidence`
+- `report` / `arkheionx report`
+- `validate-artifacts` / `arkheionx validate-artifacts`
+- `local-validate` / `arkheionx local-validate`
+- `demo` / `arkheionx demo`
+
+Generated outputs are written under `.arkheionx/out/`; they are generated, local, gitignored, and not intended to be committed as source truth.
+
+## Validation
+
+```bash
+python3 scripts/check_docs_links.py --check
+python3 scripts/check_safety_wording.py --strict
+python3 scripts/check_version_consistency.py --check
+python3 scripts/check_release_readiness.py --check
+python3 -m unittest discover -s tests -p "test_*.py"
+make validate
+```
+
+## Fixture Benchmark Harness
+
+The fixture harness covers 9 local/static fixtures and produces deterministic
+benchmark output for public validation. It records source fingerprints, checks
+snapshot drift, and does not perform network calls, RPC calls, or Foundry
+execution in benchmark logic.
+
+The harness is for repeatable review context. It does not prove safety.
+
+## Evidence Model
+
+ArkheionX distinguishes local review signals from human conclusions. Artifact
+states such as `HUMAN_REVIEWED` are manual reviewer attestation only.
+Machine-generated context can help prioritize inspection; it does not decide
+impact, exploitability, or severity.
+
+## Architecture
+
+The current public surface is v3.x local tooling plus fixture benchmarks. The
+v3.0.0 is the public stable launch baseline; v3.9.0 is the sanitized technical
+state for this branch.
+
+![ArkheionX workflow](docs/assets/arkheionx-workflow-v27.svg)
+
+![ArkheionX output pipeline](docs/assets/arkheionx-output-pipeline.svg)
+
+![ArkheionX evidence ladder](docs/assets/arkheionx-evidence-ladder.svg)
+
+![ArkheionX v3 architecture](docs/assets/arkheionx-v3-architecture.svg)
+
+![ArkheionX v3 public surface](docs/assets/arkheionx-v3-public-surface.svg)
+
+![ArkheionX v3 demo fixtures](docs/assets/arkheionx-v3-demo-fixtures.svg)
+
+![ArkheionX v3 stability](docs/assets/arkheionx-v3-stability.svg)
+
+## What's Stable in v3.0.0
+
+The v3 public baseline stabilized the installable CLI, local review-map
+workflow, demo fixtures, safety boundaries, and documentation contracts. v3.9.0
+keeps those contracts while adding deterministic fixture benchmarks and source
+fingerprints.
+
+## Safety Boundaries
+
+Human review is required. ArkheionX provides review context, not final security
+judgments.
+
+Do not use ArkheionX on repositories you are not authorized to review. Do not
+use generated artifacts as standalone proof of exploitability, safety, or
+impact. Do not add private keys, seed phrases, RPC credentials, or production
+targets to local configs.
+
+## GitHub Action
+
+Pinned stable action example:
+
+```yaml
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v3.1.0
+```
+
+See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
+
+## Documentation
+
+Start:
+
+- [`docs/START_HERE.md`](docs/START_HERE.md)
+- [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
+- [`docs/INSTALLATION.md`](docs/INSTALLATION.md)
+
+Core workflow:
+
+- [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
+- [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md)
+- [`docs/STABILITY_CONTRACT.md`](docs/STABILITY_CONTRACT.md)
+- [`docs/V3_READINESS.md`](docs/V3_READINESS.md)
+- [`docs/VALUE_FLOW_WORKBENCH.md`](docs/VALUE_FLOW_WORKBENCH.md)
+- [`docs/PROTOCOL_MAP.md`](docs/PROTOCOL_MAP.md)
+- [`docs/SOLO_RESEARCH_WORKFLOW.md`](docs/SOLO_RESEARCH_WORKFLOW.md)
+- [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
+- [`docs/EVIDENCE_PACKAGE.md`](docs/EVIDENCE_PACKAGE.md)
+- [`docs/LOCAL_VALIDATION.md`](docs/LOCAL_VALIDATION.md)
+
+Advanced:
+
+- [`docs/FIXTURE_HARNESS.md`](docs/FIXTURE_HARNESS.md)
+- [`docs/FIXTURE_BENCHMARKS.md`](docs/FIXTURE_BENCHMARKS.md)
+- [`docs/FIXTURE_SNAPSHOT_WORKFLOW.md`](docs/FIXTURE_SNAPSHOT_WORKFLOW.md)
+- [`docs/REVIEW_MAP.md`](docs/REVIEW_MAP.md)
+- [`docs/REVIEW_PACKAGE.md`](docs/REVIEW_PACKAGE.md)
+- [`docs/ARTIFACT_VALIDATION.md`](docs/ARTIFACT_VALIDATION.md)
+- [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md)
+- [`reports/research_dashboard.md`](reports/research_dashboard.md)
+
+## License
+
+License selection is pending. See
+[`LICENSE_PENDING.md`](LICENSE_PENDING.md).
+
+## Security
+
+See [`SECURITY.md`](SECURITY.md).
+
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).

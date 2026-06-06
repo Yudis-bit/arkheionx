@@ -1,0 +1,53 @@
+name: Rule Request
+description: Suggest a new defensive readiness signal or historical pattern mapping.
+title: "[Rule]: "
+labels: ["rule-request", "security-memory"]
+body:
+  - type: dropdown
+    id: protocol_type
+    attributes:
+      label: Protocol type
+      options:
+        - vault
+        - AMM
+        - lending
+        - staking / rewards
+        - oracle
+        - bridge / cross-chain
+        - governance
+        - generic Solidity
+    validations:
+      required: true
+  - type: input
+    id: risk_pattern
+    attributes:
+      label: Risk pattern
+      placeholder: Vault accounting invariant gap
+    validations:
+      required: true
+  - type: textarea
+    id: historical_reference
+    attributes:
+      label: Historical reference if any
+      placeholder: Public post-mortem, known incident class, or Arkheionx registry entry.
+  - type: textarea
+    id: detection_signal
+    attributes:
+      label: Suggested detection signal
+      placeholder: Code terms, test terms, metadata tags, or documentation signals.
+    validations:
+      required: true
+  - type: textarea
+    id: defensive_check
+    attributes:
+      label: Suggested defensive check
+      placeholder: Invariant, fuzz test, documentation requirement, checklist item.
+    validations:
+      required: true
+  - type: textarea
+    id: why_it_matters
+    attributes:
+      label: Why it matters
+      placeholder: Explain the failed assumption and broken invariant this rule should help builders review.
+    validations:
+      required: true

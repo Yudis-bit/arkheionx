@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Test Gap Map",
+  "description": "Derived, developer-first view of review-map test gaps: which tests or local proofs to write first. Review guidance, not confirmed vulnerabilities or severity.",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "items"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total_test_gaps": {"type": "integer"},
+        "high_priority": {"type": "integer"},
+        "medium_priority": {"type": "integer"},
+        "low_priority": {"type": "integer"},
+        "with_proof_suggestions": {"type": "integer"},
+        "with_evidence": {"type": "integer"},
+        "missing_evidence": {"type": "integer"}
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "target", "priority", "confidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "index": {"type": "integer"},
+          "target": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "category": {"type": "string"},
+          "priority": {"type": "string", "enum": ["high", "medium", "low"]},
+          "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+          "evidence_status": {"type": "string", "enum": ["linked", "missing"]},
+          "why_it_matters": {"type": "string"},
+          "related_value_paths": {"type": "array", "items": {"type": "string"}},
+          "related_assumptions": {"type": "array", "items": {"type": "string"}},
+          "suggested_test": {"type": "object"},
+          "proof_suggestion": {"type": "object"},
+          "evidence": {"type": "object"},
+          "next_command": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+name: False Positive Calibration
+description: Help calibrate a noisy Arkheionx readiness finding.
+title: "[Calibration]: "
+labels: ["false-positive", "scanner-calibration", "rule-calibration"]
+body:
+  - type: input
+    id: arkheionx_version
+    attributes:
+      label: Arkheionx version
+      placeholder: "0.8.0"
+    validations:
+      required: true
+  - type: input
+    id: finding_id
+    attributes:
+      label: Finding ID
+      placeholder: ARK-ORC-001
+    validations:
+      required: true
+  - type: dropdown
+    id: rule_pack
+    attributes:
+      label: Rule pack
+      options:
+        - vault
+        - oracle
+        - access control / upgradeability
+        - reentrancy / value flow
+        - reward accounting / staking
+        - test readiness
+        - documentation
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: report_json_snippet
+    attributes:
+      label: Sanitized report JSON snippet
+      description: Include only non-sensitive finding/evidence fields.
+      placeholder: Paste sanitized finding JSON or evidence summary.
+  - type: textarea
+    id: why_false_positive
+    attributes:
+      label: Why this appears noisy or false positive
+      placeholder: Explain the local context and why priority/confidence should change.
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      placeholder: Downgrade to low confidence, improve affected function, ignore docs-only mention, etc.
+    validations:
+      required: true
+  - type: input
+    id: repository_type
+    attributes:
+      label: Repository type
+      placeholder: vault, staking, oracle, AMM, toy fixture, production repo
+  - type: dropdown
+    id: semantic_lite_evidence
+    attributes:
+      label: Did semantic-lite evidence exist?
+      options:
+        - "yes"
+        - "no"
+        - "not sure"
+  - type: dropdown
+    id: slither_evidence
+    attributes:
+      label: Did Slither evidence exist?
+      options:
+        - "yes"
+        - "no"
+        - "not used"
+        - "not sure"
+  - type: textarea
+    id: suggested_calibration
+    attributes:
+      label: Suggested calibration change
+      placeholder: Describe rule, test mapping, docs, or wording improvements.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I am sharing only authorized or sanitized information.
+          required: true
+        - label: I am not requesting live-target testing, exploit payloads, or bounty strategy.
+          required: true

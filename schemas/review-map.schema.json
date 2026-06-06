@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Protocol Review Map",
+  "description": "Local, static review guidance for a DeFi repository. Not a vulnerability claim, severity, or audit.",
+  "type": "object",
+  "required": [
+    "schema_version", "generated_at", "repo_path", "mode", "summary",
+    "contracts", "functions", "value_paths", "assumptions", "test_gaps",
+    "proof_suggestions", "evidence_links", "reviewer_notes", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string", "enum": ["static-heuristic", "compiler-confirmed"]},
+    "summary": {
+      "type": "object",
+      "required": [
+        "contracts_analyzed", "functions_mapped", "value_paths", "assumptions",
+        "test_gaps", "proof_suggestions", "evidence_links"
+      ],
+      "properties": {
+        "protocol_types": {"type": "array", "items": {"type": "string"}},
+        "contracts_analyzed": {"type": "integer"},
+        "functions_mapped": {"type": "integer"},
+        "value_paths": {"type": "integer"},
+        "assumptions": {"type": "integer"},
+        "test_gaps": {"type": "integer"},
+        "proof_suggestions": {"type": "integer"},
+        "evidence_links": {"type": "integer"},
+        "text": {"type": "string"}
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "review_priority"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "value_sensitive": {"type": "boolean"},
+          "review_priority": {"type": "string", "enum": ["high", "medium", "low"]},
+          "contract_id": {"type": "string"}
+        }
+      }
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["contract", "name", "review_priority"],
+        "properties": {
+          "contract": {"type": "string"},
+          "name": {"type": "string"},
+          "value_direction": {"type": "string", "enum": ["in", "out", "both", "none"]},
+          "review_priority": {"type": "string", "enum": ["high", "medium", "low"]},
+          "function_id": {"type": "string"}
+        }
+      }
+    },
+    "value_paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "evidence_level", "review_priority"],
+        "properties": {
+          "id": {"type": "string"},
+          "label": {"type": "string"},
+          "entry_function": {"type": "string"},
+          "movement": {"type": "array", "items": {"type": "string"}},
+          "exit_function": {"type": "string"},
+          "test_coverage_hint": {"type": "string", "enum": ["none", "partial", "referenced"]},
+          "evidence_level": {"type": "string"},
+          "review_priority": {"type": "string", "enum": ["high", "medium", "low"]},
+          "entry_function_id": {"type": "string"},
+          "exit_function_id": {"type": "string"}
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "category", "evidence_level", "status"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "category": {"type": "string"},
+          "evidence_level": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      }
+    },
+    "test_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "related_function", "confidence", "evidence_level", "status"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "related_function": {"type": "string"},
+          "suggested_test": {"type": "string"},
+          "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+          "evidence_level": {"type": "string"},
+          "status": {"type": "string"},
+          "function_id": {"type": "string"}
+        }
+      }
+    },
+    "proof_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "target", "objective"],
+        "properties": {
+          "id": {"type": "string"},
+          "target": {"type": "string"},
+          "objective": {"type": "string"},
+          "assertions": {"type": "array", "items": {"type": "string"}},
+          "foundry_hint": {"type": "string"},
+          "target_function_id": {"type": "string"}
+        }
+      }
+    },
+    "evidence_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "evidence_level"],
+        "properties": {
+          "id": {"type": "string"},
+          "source": {"type": "string", "enum": ["proof", "trace", "evidence", "report", "none"]},
+          "artifact_path": {"type": "string"},
+          "related_target": {"type": "string"},
+          "evidence_level": {"type": "string"},
+          "status": {"type": "string"},
+          "target": {"type": "string"},
+          "target_id": {"type": "string"},
+          "readiness": {"type": "string"},
+          "evidence_package_id": {"type": "string"},
+          "proof_receipt_id": {"type": "string"},
+          "trace_receipt_id": {"type": "string"},
+          "artifacts": {
+            "type": "object",
+            "properties": {
+              "proof_json": {"type": "string"},
+              "trace_json": {"type": "string"},
+              "evidence_json": {"type": "string"},
+              "report_json": {"type": "string"},
+              "report_md": {"type": "string"}
+            }
+          },
+          "artifact_kind": {"type": "string"},
+          "review_status": {"type": "string"},
+          "manual_review_required": {"type": "boolean"},
+          "report_status": {"type": "string"},
+          "report_readiness": {"type": "object"},
+          "limitations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "reviewer_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "priority"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "priority": {"type": "string", "enum": ["high", "medium", "low"]}
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "boundaries"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundaries": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

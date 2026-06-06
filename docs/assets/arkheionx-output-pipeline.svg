@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="170" viewBox="0 0 980 170" role="img" aria-label="Arkheionx output pipeline: protocol map, money flow, hunt targets, proof scaffold, trace summary, evidence package, report draft">
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .title { fill: #0f172a; font: 700 17px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .step { fill: #f8fafc; stroke: #2563eb; stroke-width: 1.5; }
+      .lbl { fill: #0f172a; font: 600 12px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="op-ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="978" height="168" rx="14" class="panel" />
+  <text x="30" y="38" class="title">From repository to reviewable evidence</text>
+
+  <!-- 7 steps: step 134, box 116x46 at y=74 -->
+  <g>
+    <rect x="22"  y="74" width="116" height="46" rx="8" class="step" />
+    <text x="80"  y="102" text-anchor="middle" class="lbl">protocol map</text>
+    <rect x="156" y="74" width="116" height="46" rx="8" class="step" />
+    <text x="214" y="102" text-anchor="middle" class="lbl">money flow</text>
+    <rect x="290" y="74" width="116" height="46" rx="8" class="step" />
+    <text x="348" y="102" text-anchor="middle" class="lbl">hunt targets</text>
+    <rect x="424" y="74" width="116" height="46" rx="8" class="step" />
+    <text x="482" y="102" text-anchor="middle" class="lbl">proof scaffold</text>
+    <rect x="558" y="74" width="116" height="46" rx="8" class="step" />
+    <text x="616" y="102" text-anchor="middle" class="lbl">trace summary</text>
+    <rect x="692" y="74" width="124" height="46" rx="8" class="step" />
+    <text x="754" y="102" text-anchor="middle" class="lbl">evidence package</text>
+    <rect x="834" y="74" width="116" height="46" rx="8" class="step" />
+    <text x="892" y="102" text-anchor="middle" class="lbl">report draft</text>
+  </g>
+
+  <g>
+    <path class="arrow" d="M140,97 L154,97" marker-end="url(#op-ah)" />
+    <path class="arrow" d="M274,97 L288,97" marker-end="url(#op-ah)" />
+    <path class="arrow" d="M408,97 L422,97" marker-end="url(#op-ah)" />
+    <path class="arrow" d="M542,97 L556,97" marker-end="url(#op-ah)" />
+    <path class="arrow" d="M676,97 L690,97" marker-end="url(#op-ah)" />
+    <path class="arrow" d="M818,97 L832,97" marker-end="url(#op-ah)" />
+  </g>
+
+  <text x="30" y="150" fill="#64748b" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="12">Every stage writes deterministic local artifacts under .arkheionx/out/ for human review.</text>
+</svg>

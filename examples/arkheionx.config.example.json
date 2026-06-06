@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.7.0",
+  "protocol_type": "auto",
+  "rule_packs": [
+    "vault",
+    "oracle",
+    "access-control",
+    "reentrancy-value-flow",
+    "rewards",
+    "testing",
+    "docs",
+    "amm",
+    "lending"
+  ],
+  "min_confidence": "low",
+  "output_profile": "standard",
+  "scan": {
+    "ignore_generated_artifacts": true,
+    "include_generated_artifacts": false,
+    "extra_ignore_paths": [
+      "lib/",
+      "test/mocks/"
+    ],
+    "extra_ignore_globs": [],
+    "max_file_size_kb": 750,
+    "include_tests": true,
+    "include_docs": true
+  },
+  "reports": {
+    "include_related_knowledge": true,
+    "include_evidence_snippets": true,
+    "include_suggested_tests": true,
+    "include_issue_plan": true,
+    "include_executive_summary": true,
+    "max_top_gaps": 5
+  },
+  "test_plan": {
+    "include_foundry_skeletons": true,
+    "group_by_rule_family": true,
+    "include_low_confidence": false,
+    "output_profile": "standard"
+  },
+  "suppressions": [
+    {
+      "id": "ARK-VLT-001",
+      "reason": "Prototype fixture intentionally omits vault invariants so config suppression behavior can be demonstrated.",
+      "expires": "2026-12-31",
+      "owner": "protocol-maintainer"
+    },
+    {
+      "id": "ARK-DOC-001",
+      "reason": "Documentation is tracked in a private planning repository during prototype phase.",
+      "expires": "2026-12-31",
+      "owner": "protocol-maintainer"
+    },
+    {
+      "id": "ARK-AMM-003",
+      "reason": "Example only: AMM spot-price assumptions are documented in a separate design note.",
+      "expires": "2026-12-31"
+    },
+    {
+      "id": "ARK-LEND-002",
+      "reason": "Example only: liquidation boundary tests are tracked in a separate remediation issue.",
+      "expires": "2026-12-31"
+    }
+  ],
+  "additional_search_tags": [
+    "indie-defi",
+    "vault-security",
+    "amm-readiness",
+    "lending-readiness"
+  ],
+  "analysis": {
+    "semantic_lite": true,
+    "slither": false,
+    "min_confidence_for_issue_plan": "low",
+    "downgrade_keyword_only": true,
+    "max_evidence_per_finding": 5
+  }
+}
