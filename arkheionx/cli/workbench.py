@@ -785,7 +785,8 @@ def _review_map_artifact_roots(args: Namespace) -> list[Path]:
 def review_map_command(args: Namespace) -> int:
     root = _resolve_root(args.repo)
     if root is None:
-        print(f"error: not a directory: {args.repo}")
+        print(f"ArkheionX error: input path not found or not a directory: {args.repo}")
+        print("Next: run this command with a local repository path you are authorized to review.")
         return FAILED
     inspect_start = time.monotonic()
     sources, test_files = find_solidity_files(root)

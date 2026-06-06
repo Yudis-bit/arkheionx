@@ -162,6 +162,16 @@ def search_command(args: Namespace) -> int:
 
 
 def test_plan_command(args: Namespace) -> int:
+    if args.report and not args.check:
+        report_path = Path(args.report).expanduser()
+        if not report_path.is_file():
+            print(f"ArkheionX error: report JSON not found: {args.report}", file=sys.stderr)
+            print(
+                "Next: generate a report first or pass an existing local "
+                "report JSON path.",
+                file=sys.stderr,
+            )
+            return exit_codes.INVALID_ARGUMENTS
     argv: list[str] = []
     _append_flag(argv, "--check", bool(args.check))
     _append_option(argv, "--report", args.report)
@@ -172,6 +182,15 @@ def test_plan_command(args: Namespace) -> int:
 
 
 def scan_command(args: Namespace) -> int:
+    root_path = Path(args.root).expanduser()
+    if not root_path.is_dir():
+        print(f"ArkheionX error: input path not found: {args.root}", file=sys.stderr)
+        print(
+            "Next: run this command with a local repository path you are "
+            "authorized to review.",
+            file=sys.stderr,
+        )
+        return exit_codes.INVALID_ARGUMENTS
     argv = ["--root", args.root]
     _append_option(argv, "--protocol-type", args.protocol_type)
 

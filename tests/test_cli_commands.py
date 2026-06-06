@@ -64,6 +64,27 @@ class CliCommandTests(unittest.TestCase):
         for marker in ("Install", "Package version", "PATH", "local/static"):
             self.assertIn(marker, out)
 
+    def _assert_clean_user_error(self, result: subprocess.CompletedProcess[str]) -> str:
+        combined = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 0, combined)  # nonzero preserved
+        self.assertNotIn("Traceback", combined)  # no raw Python traceback
+        self.assertIn("ArkheionX error:", combined)
+        self.assertIn("Next", combined)  # actionable guidance
+        return combined
+
+    def test_review_map_missing_path_is_clean_error(self) -> None:
+        result = self.run_cli("review-map", "/path/that/does/not/exist")
+        self._assert_clean_user_error(result)
+
+    def test_scan_missing_path_is_clean_error(self) -> None:
+        result = self.run_cli("scan", "/path/that/does/not/exist")
+        self._assert_clean_user_error(result)
+
+    def test_test_plan_missing_report_is_clean_error(self) -> None:
+        result = self.run_cli("test-plan", "--report", "/path/that/does/not/exist")
+        combined = self._assert_clean_user_error(result)
+        self.assertIn("report JSON not found", combined)
+
     def test_validate_config_valid_and_dangerous(self) -> None:
         valid = self.run_cli("validate-config", "--config", "examples/arkheionx.config.example.json")
         self.assertEqual(valid.returncode, 0, valid.stdout + valid.stderr)
