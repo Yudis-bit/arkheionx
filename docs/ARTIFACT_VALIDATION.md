@@ -16,7 +16,7 @@ arkheionx validate-artifacts . --json
   - `EVIDENCE_READY` evidence must reference an existing trace artifact.
 - Referenced paths (e.g. `evidence.json` → `trace.json`) exist.
 - Report drafts include a `safety_notice` and contain no disallowed phrasing
-  ("ready to submit", "guaranteed bounty/exploit") and no live-chain reproduction
+  ("ready to submit", bounty or exploit promises) and no live-chain reproduction
   steps (`--fork-url`, `rpc_url`, "deploy to mainnet").
 - Malformed JSON is reported as invalid, not silently ignored.
 
