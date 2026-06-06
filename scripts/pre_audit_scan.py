@@ -3172,6 +3172,69 @@ def infer_affected_files(gap: ReadinessGap, signals: dict[str, dict[str, object]
     return sorted(files)[:10]
 
 
+# Maps a finding category to the keyword-signal buckets that triggered it, so a
+# finding created without an explicit signal list can still name the local/static
+# terms a reviewer should inspect. Buckets are the keys of SIGNAL_TERMS.
+GAP_CATEGORY_SIGNAL_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "oracle-pricing": ("oracle",),
+    "vault-accounting": ("vault_accounting",),
+    "vault-strategy": ("vault_strategy", "vault_accounting"),
+    "vault-withdrawal": ("vault_withdrawal_liquidity", "vault_accounting"),
+    "vault-operations": ("vault_admin_ops", "vault_accounting"),
+    "reentrancy-value-flow": ("reentrancy_value_flow",),
+    "upgradeability-initialization": ("upgradeability",),
+    "access-control": ("access_control",),
+    "reward-accounting": ("staking_rewards",),
+}
+
+# Protocol-shape findings (e.g. "no invariant tests for DeFi protocol shape") fire
+# on the detected protocol type rather than a single rule family; name the signals
+# that made the repository look like that protocol.
+PROTOCOL_TYPE_SIGNAL_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "amm": ("amm",),
+    "lending": ("lending",),
+    "vault": ("vault_accounting",),
+    "staking": ("staking_rewards",),
+    "oracle": ("oracle",),
+}
+
+
+def signal_categories_for_gap(gap: ReadinessGap, protocol_type: str) -> tuple[str, ...]:
+    categories = GAP_CATEGORY_SIGNAL_CATEGORIES.get(gap.category)
+    if categories:
+        return categories
+    if "testing" in gap.category:
+        return PROTOCOL_TYPE_SIGNAL_CATEGORIES.get(protocol_type, ())
+    return ()
+
+
+def backfill_detected_signals(
+    gaps: list[ReadinessGap],
+    signals: dict[str, dict[str, object]],
+    protocol_type: str,
+) -> None:
+    """Name the matched local/static signals for findings created without an
+    explicit signal list, so reports never fall back to a generic placeholder.
+
+    This runs after affected-file inference and before evidence calibration. It
+    only fills empty signal lists, so affected-file inference (which already ran
+    against the original empty list) and the construction-time confidence (also
+    derived from the original empty list) are left untouched. Calibration and
+    scoring therefore stay identical while the named signals strengthen evidence
+    snippets, evidence summaries, and downstream test-plan matched signals.
+    """
+    for gap in gaps:
+        if gap.detected:
+            continue
+        categories = signal_categories_for_gap(gap, protocol_type)
+        if not categories:
+            continue
+        terms = detected_terms(signals, *categories)
+        if terms:
+            gap.detected = terms
+            gap.fingerprint = compute_finding_fingerprint(gap, protocol_type)
+
+
 def apply_finding_metadata(
     gaps: list[ReadinessGap],
     signals: dict[str, dict[str, object]],
@@ -5184,7 +5247,12 @@ def generate_report(
                 for term in gap.detected[:20]:
                     lines.append(f"- `{term}`")
             else:
-                lines.append("- scanner signal")
+                # No discrete code-term signal was recorded for this finding (for
+                # example a protocol-shape gap that fires on the absence of a
+                # control). Name the local/static detection basis instead of a
+                # generic placeholder so a reviewer knows what to inspect.
+                sources = ", ".join(gap.detection_sources) or "local/static heuristics"
+                lines.append(f"- No discrete code-term signal; derived from {sources} (see Evidence above).")
             if gap.affected_files:
                 lines.append("")
                 lines.append("Affected files:")
@@ -6708,6 +6776,7 @@ def main(argv: list[str] | None = None) -> int:
     apply_finding_metadata(gaps, signals, protocol_type)
     add_rule_pack_gaps(gaps, contents, classified, signals)
     apply_finding_metadata(gaps, signals, protocol_type)
+    backfill_detected_signals(gaps, signals, protocol_type)
     attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type, negative_evidence)
     gaps = filter_gaps_by_rule_packs(gaps, enabled_rule_packs)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
