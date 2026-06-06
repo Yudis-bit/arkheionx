@@ -326,7 +326,7 @@
       "invariant_coreAccountingRelationshipsHold",
       "invariant_privilegedActionsRespectDocumentedAssumptions"
     ],
-    "path": "",
+    "path": "examples/reports/ArkheionxLendingInvariants.t.sol",
     "required_project_bindings": [
       "Oracle adapter",
       "Accounting consumer",

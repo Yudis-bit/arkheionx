@@ -369,7 +369,7 @@
     }
   ],
   "foundry_skeleton": {
-    "contract_name": "ArkheionxAmmInvariants",
+    "contract_name": "ArkheionxAMMInvariants",
     "functions": [
       "invariant_lpSharesTrackPoolOwnership",
       "invariant_reservePriceConsumersRespectBounds",
@@ -385,7 +385,7 @@
       "invariant_invalidPricesDoNotDriveCriticalAccounting",
       "invariant_externalCallOrderingMatchesPolicy"
     ],
-    "path": "",
+    "path": "examples/reports/ArkheionxAMMInvariants.t.sol",
     "required_project_bindings": [
       "AMM pool",
       "LP share accounting",

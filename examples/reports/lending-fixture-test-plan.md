@@ -285,7 +285,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 
 ## Foundry Skeleton
 
-- Suggested output: `not requested`
+- Suggested output: `examples/reports/ArkheionxLendingInvariants.t.sol`
 - Contract name: `ArkheionxLendingInvariants`
 - Skeleton functions:
   - `invariant_oracleNormalizationMatchesAccountingUnits`

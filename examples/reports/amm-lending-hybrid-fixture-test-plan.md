@@ -353,8 +353,8 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 
 ## Foundry Skeleton
 
-- Suggested output: `not requested`
-- Contract name: `ArkheionxAmmInvariants`
+- Suggested output: `examples/reports/ArkheionxHybridInvariants.t.sol`
+- Contract name: `ArkheionxHybridInvariants`
 - Skeleton functions:
   - `invariant_ammAccountingPreservesDocumentedInvariant`
   - `invariant_reservePriceConsumersRespectBounds`

@@ -403,7 +403,7 @@
     }
   ],
   "foundry_skeleton": {
-    "contract_name": "ArkheionxAmmInvariants",
+    "contract_name": "ArkheionxHybridInvariants",
     "functions": [
       "invariant_ammAccountingPreservesDocumentedInvariant",
       "invariant_reservePriceConsumersRespectBounds",
@@ -420,7 +420,7 @@
       "invariant_invalidPricesDoNotDriveCriticalAccounting",
       "invariant_lendingOracleValidityPolicyIsRespected"
     ],
-    "path": "",
+    "path": "examples/reports/ArkheionxHybridInvariants.t.sol",
     "required_project_bindings": [
       "AMM pool",
       "Token0 and token1 mocks",
