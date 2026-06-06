@@ -10,6 +10,7 @@ import argparse
 import sys
 
 from arkheionx.cli import commands, exit_codes, workbench
+from arkheionx.core.safety import LOCAL_ONLY_DISCLAIMER
 
 
 PROTOCOL_TYPES = [
@@ -26,10 +27,28 @@ PROTOCOL_TYPES = [
 ]
 
 
+# First-run guidance shown at the end of `arkheionx --help`. Lists only existing
+# commands and reuses the shared safety boundary verbatim (single source of truth).
+FIRST_RUN_EPILOG = (
+    "First run:\n"
+    "  arkheionx version             Show package and release milestone metadata.\n"
+    "  arkheionx doctor              Check local environment, Foundry, and project layout.\n"
+    "  arkheionx doctor --install    Check install health, PATH, and source state.\n"
+    "  arkheionx open .              Orient inside an authorized local repository.\n"
+    "  arkheionx review-map .        Build the local protocol review map for human review.\n"
+    "\n"
+    "Run 'arkheionx <command> --help' for command-specific options.\n"
+    "\n"
+    "Safety: " + LOCAL_ONLY_DISCLAIMER + "\n"
+)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
         description="Arkheionx local/static DeFi value-flow workbench CLI.",
+        epilog=FIRST_RUN_EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command")
 

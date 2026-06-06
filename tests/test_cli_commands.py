@@ -30,6 +30,40 @@ class CliCommandTests(unittest.TestCase):
         self.assertIn("local/static", doctor.stdout)
         self.assertIn("Rule packs:", doctor.stdout)
 
+    def test_help_reads_as_guided_first_run_entrypoint(self) -> None:
+        result = self.run_cli("--help")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        out = result.stdout
+        for name in ("version", "doctor", "open", "review-map"):
+            self.assertIn(name, out)
+        # A guided first-run section + honest safety boundary, not only an option dump.
+        self.assertIn("First run", out)
+        self.assertIn("arkheionx doctor", out)
+        self.assertIn("local/static", out)
+
+    def test_version_includes_package_version_and_next_step(self) -> None:
+        result = self.run_cli("version")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("package version: 3.9.0", result.stdout)
+        self.assertIn("Next", result.stdout)
+        self.assertIn("arkheionx doctor", result.stdout)
+
+    def test_doctor_shows_status_sections_and_safety_boundary(self) -> None:
+        result = self.run_cli("doctor")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        out = result.stdout
+        for section in ("Core", "Foundry", "Project", "Next"):
+            self.assertIn(section, out)
+        self.assertIn("local/static", out)
+        self.assertIn("does not perform RPC calls", out)
+
+    def test_doctor_install_view_is_useful_and_exits_zero(self) -> None:
+        result = self.run_cli("doctor", "--install")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        out = result.stdout
+        for marker in ("Install", "Package version", "PATH", "local/static"):
+            self.assertIn(marker, out)
+
     def test_validate_config_valid_and_dangerous(self) -> None:
         valid = self.run_cli("validate-config", "--config", "examples/arkheionx.config.example.json")
         self.assertEqual(valid.returncode, 0, valid.stdout + valid.stderr)

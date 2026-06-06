@@ -102,6 +102,10 @@ def version_command(_args: Namespace) -> int:
         f"Latest stable release: {STABLE_RELEASE}",
         f"Current milestone: {CURRENT_MILESTONE}",
         f"Next milestone: {NEXT_MILESTONE}",
+        "",
+        "Next",
+        "  arkheionx doctor   Check your local environment and project layout.",
+        "  arkheionx --help   List all local review commands.",
     ]
     print(colors.colorize_report("\n".join(lines)))
     return exit_codes.SUCCESS

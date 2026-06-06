@@ -85,6 +85,15 @@ class SiteInstallerPublicTests(unittest.TestCase):
         ]:
             self.assertIn(marker, self.lower)
 
+    def test_installer_final_output_lists_clear_next_commands(self) -> None:
+        self.assertIn("Next commands:", self.text)
+        for command in [
+            "arkheionx doctor",
+            "arkheionx demo --list",
+            "arkheionx review-map",
+        ]:
+            self.assertIn(command, self.text)
+
 
 if __name__ == "__main__":
     unittest.main()
