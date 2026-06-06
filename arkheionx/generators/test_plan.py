@@ -171,7 +171,11 @@ def collect_plan(report: dict, plan_map: dict[str, dict], foundry_output: Path |
         "source_report_score": report.get("score"),
         "source_report_score_band": report.get("score_band", ""),
         "protocol_type": protocol_type,
-        "generated_at": str(report.get("generated_at") or dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()),
+        # Keep generated test-plan JSON deterministic across CI runs.
+        # Source scanner reports may be regenerated with fresh timestamps during
+        # workflow execution; inheriting that timestamp makes committed fixture
+        # test-plan JSON appear stale even when the review content is unchanged.
+        "generated_at": "1970-01-01T00:00:00+00:00",
         "rule_families": sorted(families.values(), key=lambda item: item["rule_family"]),
         "findings": planned_findings,
         "suggested_tests": dedupe(all_tests),
