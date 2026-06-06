@@ -1,0 +1,239 @@
+---
+import Layout from "../components/Layout.astro";
+---
+
+<Layout
+  title="Install ArkheionX"
+  description="Install ArkheionX from public source, inspect the installer, update, uninstall, and understand what the installer does."
+>
+  <main class="install-page">
+    <section class="install-hero">
+      <div class="install-hero__copy">
+        <p class="install-kicker">Install</p>
+        <h1>Install ArkheionX from source.</h1>
+        <p>
+          The current public distribution path is a source install from GitHub main. Binary releases
+          are not published yet. The installer creates a local checkout, Python virtual environment,
+          and command wrappers on your machine.
+        </p>
+      </div>
+
+      <aside class="install-status">
+        <div>
+          <span>Channel</span>
+          <strong>source install</strong>
+        </div>
+        <div>
+          <span>Branch</span>
+          <strong>main</strong>
+        </div>
+        <div>
+          <span>Binary release</span>
+          <strong>not published</strong>
+        </div>
+        <div>
+          <span>Review mode</span>
+          <strong>local-first</strong>
+        </div>
+      </aside>
+    </section>
+
+    <section class="install-section install-section--primary">
+      <div>
+        <p class="install-kicker">Fast path</p>
+        <h2>Install with one command.</h2>
+        <p>
+          Use this after you are comfortable with the installer behavior. For a more cautious path,
+          inspect the script first.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Recommended for first use</p>
+        <h2>Inspect first, then run.</h2>
+        <p>
+          This path downloads the installer, lets you read it locally, and only runs it after you
+          explicitly approve.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+less arkheionx-install.sh
+bash arkheionx-install.sh</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Manual path</p>
+        <h2>Install directly from GitHub.</h2>
+        <p>
+          This is the transparent source path. It is useful for local development, auditability,
+          or when you want to control every step yourself.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>git clone https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git
+cd DeFi-Exploit-PoCs
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -e .
+arkheionx version</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Requirements</p>
+        <h2>What you need.</h2>
+      </div>
+
+      <div class="install-grid">
+        <article>
+          <h3>Operating system</h3>
+          <p>Linux or macOS for the installer path.</p>
+        </article>
+        <article>
+          <h3>Python</h3>
+          <p>Python 3.11 or newer.</p>
+        </article>
+        <article>
+          <h3>Git</h3>
+          <p>Used to clone or update the public source checkout.</p>
+        </article>
+        <article>
+          <h3>Network</h3>
+          <p>Needed for GitHub clone and Python package installation.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Installer behavior</p>
+        <h2>What the installer does.</h2>
+      </div>
+
+      <div class="install-list-card">
+        <ul>
+          <li>Checks for Linux or macOS.</li>
+          <li>Checks for Git and Python 3.11 or newer.</li>
+          <li>Clones or updates the public GitHub repository.</li>
+          <li>Creates a managed virtual environment under <code>~/.arkheionx</code>.</li>
+          <li>Installs ArkheionX in editable source mode.</li>
+          <li>Creates command wrappers under <code>~/.local/bin</code>.</li>
+          <li>Runs <code>arkheionx version</code> as a basic installation check.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Safety boundary</p>
+        <h2>What the installer does not do.</h2>
+      </div>
+
+      <div class="install-list-card install-list-card--warning">
+        <ul>
+          <li>It does not ask for private keys, seed phrases, or secrets.</li>
+          <li>It does not call RPC endpoints by default.</li>
+          <li>It does not run live-chain transactions.</li>
+          <li>It does not run Foundry or exploit tests during installation.</li>
+          <li>It does not confirm vulnerabilities or produce audit conclusions.</li>
+          <li>It does not submit reports or automate bounty workflows.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Update</p>
+        <h2>Update an existing source install.</h2>
+        <p>
+          Re-running the installer should update the managed checkout and refresh the local
+          environment.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash
+arkheionx version</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section">
+      <div>
+        <p class="install-kicker">Uninstall</p>
+        <h2>Remove the local install.</h2>
+        <p>
+          This removes the managed ArkheionX directory and command wrappers created by the installer.
+        </p>
+      </div>
+
+      <div class="install-command-stack">
+        <pre><code>rm -rf "$HOME/.arkheionx"
+rm -f "$HOME/.local/bin/arkheionx" "$HOME/.local/bin/arkup"</code></pre>
+      </div>
+    </section>
+
+    <section class="install-section install-section--split">
+      <div>
+        <p class="install-kicker">Troubleshooting</p>
+        <h2>Common install issues.</h2>
+      </div>
+
+      <div class="install-troubleshooting">
+        <details>
+          <summary><span>Command not found after install</span></summary>
+          <p>
+            Add <code>$HOME/.local/bin</code> to your shell PATH, then restart your terminal.
+          </p>
+          <pre><code>export PATH="$HOME/.local/bin:$PATH"</code></pre>
+        </details>
+
+        <details>
+          <summary><span>Python version is too old</span></summary>
+          <p>
+            Install Python 3.11 or newer, then rerun the installer.
+          </p>
+        </details>
+
+        <details>
+          <summary><span>Git is missing</span></summary>
+          <p>
+            Install Git with your system package manager, then rerun the installer.
+          </p>
+        </details>
+
+        <details>
+          <summary><span>Clean reinstall</span></summary>
+          <p>
+            Remove the managed directory and wrappers, then run the installer again.
+          </p>
+          <pre><code>rm -rf "$HOME/.arkheionx"
+rm -f "$HOME/.local/bin/arkheionx" "$HOME/.local/bin/arkup"
+curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="install-boundary">
+      <p class="install-kicker">Current limitation</p>
+      <h2>Installer promotion waits on final package validation.</h2>
+      <p>
+        The website can document the install path now, but public promotion should wait until a fresh
+        source install confirms <code>arkheionx version</code>, <code>arkheionx doctor</code>, release
+        readiness, and the full validation suite.
+      </p>
+    </section>
+  </main>
+</Layout>

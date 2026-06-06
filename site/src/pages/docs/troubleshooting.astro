@@ -1,0 +1,85 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const issues = [
+  {
+    q: "arkheionx: command not found",
+    a: "The wrapper may not be on your PATH. Add $HOME/.local/bin to PATH and restart your terminal.",
+    command: "export PATH=\"$HOME/.local/bin:$PATH\""
+  },
+  {
+    q: "Python version is too old",
+    a: "Install Python 3.11 or newer, then rerun the installer.",
+    command: "python3 --version"
+  },
+  {
+    q: "Git is missing",
+    a: "Install Git with your operating system package manager, then rerun the installer.",
+    command: "git --version"
+  },
+  {
+    q: "Install script was interrupted",
+    a: "Rerun the installer. If the managed directory is inconsistent, perform a clean reinstall.",
+    command: "curl -fsSL https://arkheionx.dev/install.sh | bash"
+  },
+  {
+    q: "Editable install failed",
+    a: "Check Python, pip, network access, and the repository checkout. Then retry from a clean virtual environment.",
+    command: "python -m pip install --upgrade pip setuptools wheel"
+  },
+  {
+    q: "Clean reinstall",
+    a: "Remove the managed directory and wrappers, then run the installer again.",
+    command: "rm -rf \"$HOME/.arkheionx\"\nrm -f \"$HOME/.local/bin/arkheionx\" \"$HOME/.local/bin/arkup\"\ncurl -fsSL https://arkheionx.dev/install.sh | bash"
+  }
+];
+---
+
+<Layout
+  title="Troubleshooting — ArkheionX"
+  description="Troubleshooting source install, PATH, Python, Git, and local environment issues in ArkheionX."
+>
+  <main class="troubleshooting-page">
+    <section class="troubleshooting-hero">
+      <p class="troubleshooting-kicker">Troubleshooting</p>
+      <h1>Fix the local setup before trusting outputs.</h1>
+      <p>
+        ArkheionX is local-first. That means the local environment matters. Start with version,
+        doctor, PATH, Python, and Git checks.
+      </p>
+    </section>
+
+    <section class="troubleshooting-start">
+      <div>
+        <p class="troubleshooting-kicker">First checks</p>
+        <h2>Run these before debugging deeper.</h2>
+      </div>
+      <div>
+        <pre><code>arkheionx version
+arkheionx doctor
+python3 --version
+git --version
+echo "$PATH"</code></pre>
+      </div>
+    </section>
+
+    <section class="troubleshooting-list">
+      {issues.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+          <pre><code>{item.command}</code></pre>
+        </details>
+      ))}
+    </section>
+
+    <section class="troubleshooting-boundary">
+      <p class="troubleshooting-kicker">Still blocked?</p>
+      <h2>Do not hide install failures.</h2>
+      <p>
+        A failed install means the distribution path needs attention. Do not promote the installer
+        until fresh install validation, release readiness, and the test suite pass.
+      </p>
+    </section>
+  </main>
+</Layout>

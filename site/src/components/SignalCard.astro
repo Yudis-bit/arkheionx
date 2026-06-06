@@ -1,0 +1,15 @@
+---
+interface Props {
+  index: string;
+  title: string;
+  tone?: "amber" | "green" | "blue";
+}
+
+const { index, title, tone = "blue" } = Astro.props;
+---
+
+<article class={`signal-card tone-${tone}`}>
+  <div class="signal-index">{index}</div>
+  <h3>{title}</h3>
+  <p><slot /></p>
+</article>

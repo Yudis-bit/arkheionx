@@ -453,7 +453,7 @@
       "Health-factor logic"
     ]
   },
-  "generated_at": "2026-05-27T10:53:14+00:00",
+  "generated_at": "1970-01-01T00:00:00+00:00",
   "invariant_candidates": [
     "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
     "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
@@ -601,7 +601,7 @@
   "source_report": "examples/amm-lending-hybrid-fixture",
   "source_report_score": 38,
   "source_report_score_band": "Not audit-ready",
-  "source_report_version": "2.0.0",
+  "source_report_version": "2.0.1",
   "suggested_tests": [
     "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
     "Test repeated swaps across small and large reserve states.",

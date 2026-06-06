@@ -1,0 +1,299 @@
+---
+import Layout from "../components/Layout.astro";
+---
+
+<Layout
+  title="ArkheionX — Review maps for smart contract security"
+  description="ArkheionX turns Solidity and Foundry repositories into deterministic review maps for human security researchers."
+>
+  <main class="vc-home">
+    <section class="vc-hero">
+      <div class="vc-hero__inner">
+        <div class="vc-hero__copy">
+          <p class="vc-kicker">FOR SECURITY TEAMS REVIEWING DEFI CODE</p>
+
+          <h1>A review map for smart contracts.</h1>
+
+          <p class="vc-lede">
+            ArkheionX turns a local Solidity or Foundry repository into a structured review map:
+            who can move value, where trust assumptions live, which tests are missing, and what
+            changed between review runs.
+          </p>
+
+          <div class="vc-one-line">
+            <span>Input</span>
+            <strong>Smart contract repo</strong>
+            <span>Output</span>
+            <strong>Deterministic review context</strong>
+            <span>Decision</span>
+            <strong>Human reviewer</strong>
+          </div>
+
+          <div class="vc-install-card">
+            <div class="vc-install-card__top">
+              <span>Install from source</span>
+              <span>public main</span>
+            </div>
+            <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+          </div>
+
+          <p class="vc-note">
+            Source install is available. Binary releases are not published yet.
+            Inspect-first and manual install paths are documented on the Install page.
+          </p>
+
+          <div class="vc-actions">
+            <a class="vc-button vc-button--primary" href="/docs">Read the docs</a>
+            <a class="vc-button" href="/install">Install guide</a>
+            <a class="vc-button" href="https://github.com/Yudis-bit/DeFi-Exploit-PoCs" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
+
+        <aside class="vc-artifact" aria-label="Review map artifact preview">
+          <div class="vc-artifact__top">
+            <span>Review map</span>
+            <span>local / deterministic</span>
+          </div>
+
+          <div class="vc-artifact__body">
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Contracts</span>
+              <strong>Vault · Strategy · Oracle · Token</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Roles</span>
+              <strong>Owner · Keeper · User · Emergency admin</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Value paths</span>
+              <strong>Deposit → Allocate → Harvest → Withdraw</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Assumptions</span>
+              <strong>Oracle freshness · Access control · Accounting invariant</strong>
+            </div>
+            <div class="vc-artifact__row">
+              <span class="vc-artifact__label">Test gaps</span>
+              <strong>Paused withdraw · Oracle delay · Strategy loss</strong>
+            </div>
+          </div>
+
+          <div class="vc-artifact__mini">
+            <div>
+              <span>Source fingerprints</span>
+              <strong>tracked</strong>
+            </div>
+            <div>
+              <span>Snapshot drift</span>
+              <strong>checked</strong>
+            </div>
+            <div>
+              <span>RPC</span>
+              <strong>off by default</strong>
+            </div>
+            <div>
+              <span>Review result</span>
+              <strong>human required</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="vc-proof">
+      <span>Public-safe source</span>
+      <span>Local-first</span>
+      <span>No RPC by default</span>
+      <span>No private keys</span>
+      <span>Snapshot drift checks</span>
+      <span>Human review required</span>
+    </section>
+
+
+    <section class="vc-artifact-map">
+      <div class="vc-artifact-map__copy">
+        <p class="vc-kicker">What the review map captures</p>
+        <h2>One repository becomes a structured security review surface.</h2>
+        <p>
+          ArkheionX does not try to replace the reviewer. It organizes the context a reviewer
+          needs before making a judgment: permissions, value movement, assumptions, test gaps,
+          evidence, and drift between runs.
+        </p>
+      </div>
+
+      <div class="artifact-map-visual" aria-label="ArkheionX review artifact map">
+        <div class="artifact-map-visual__input">
+          <span>Input</span>
+          <strong>Solidity / Foundry repository</strong>
+        </div>
+
+        <div class="artifact-map-visual__engine">
+          <span>ArkheionX</span>
+          <strong>Local deterministic mapping</strong>
+        </div>
+
+        <div class="artifact-map-visual__outputs">
+          <article>
+            <span>01</span>
+            <strong>Roles</strong>
+            <p>Who can act?</p>
+          </article>
+          <article>
+            <span>02</span>
+            <strong>Value paths</strong>
+            <p>Where can funds move?</p>
+          </article>
+          <article>
+            <span>03</span>
+            <strong>Assumptions</strong>
+            <p>What must stay true?</p>
+          </article>
+          <article>
+            <span>04</span>
+            <strong>Test gaps</strong>
+            <p>What is not covered?</p>
+          </article>
+          <article>
+            <span>05</span>
+            <strong>Evidence</strong>
+            <p>What supports review?</p>
+          </article>
+          <article>
+            <span>06</span>
+            <strong>Drift</strong>
+            <p>What changed?</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="vc-section vc-section--intro">
+      <div>
+        <p class="vc-kicker">What problem does this solve?</p>
+        <h2>Security review loses context.</h2>
+      </div>
+      <div class="vc-copy">
+        <p>
+          A smart contract reviewer needs to understand permissions, value movement, dependencies,
+          assumptions, test coverage, and evidence before making a judgment. That context is often
+          rebuilt manually and inconsistently.
+        </p>
+        <p>
+          ArkheionX makes the review surface explicit and repeatable, so teams can compare what
+          changed instead of rebuilding the same mental model from scratch.
+        </p>
+      </div>
+    </section>
+
+    <section class="vc-section">
+      <div class="vc-heading">
+        <p class="vc-kicker">How it works</p>
+        <h2>From codebase to review context.</h2>
+      </div>
+
+      <div class="vc-flow">
+        <article>
+          <span>01</span>
+          <h3>Read the local repo</h3>
+          <p>Start from Solidity and Foundry source files on your machine.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Build a protocol map</h3>
+          <p>Organize contracts, roles, value paths, assumptions, and test gaps.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Record artifacts</h3>
+          <p>Produce deterministic, JSON-safe review context that can be inspected.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Compare drift</h3>
+          <p>Use fixture benchmarks, fingerprints, and snapshots to detect changes.</p>
+        </article>
+        <article>
+          <span>05</span>
+          <h3>Review manually</h3>
+          <p>Use the output as evidence context. A human still makes the security call.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="vc-section">
+      <div class="vc-heading">
+        <p class="vc-kicker">Why it matters</p>
+        <h2>Less noise. More review structure.</h2>
+      </div>
+
+      <div class="vc-cards">
+        <article>
+          <h3>For security researchers</h3>
+          <p>Keep a repeatable map of what matters before writing findings or reports.</p>
+        </article>
+        <article>
+          <h3>For audit teams</h3>
+          <p>Standardize review context across reviewers, revisions, and protocol versions.</p>
+        </article>
+        <article>
+          <h3>For protocol engineers</h3>
+          <p>Pre-review assumptions, test gaps, and value paths before external review.</p>
+        </article>
+        <article>
+          <h3>For future automation</h3>
+          <p>Build reliable review infrastructure before trusting automated conclusions.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="vc-section vc-section--split">
+      <div>
+        <p class="vc-kicker">Try it locally</p>
+        <h2>Start with simple checks.</h2>
+      </div>
+      <div class="vc-command-list">
+        <pre><code>arkheionx version</code></pre>
+        <pre><code>arkheionx doctor</code></pre>
+      </div>
+    </section>
+
+    <section class="vc-section vc-section--split">
+      <div>
+        <p class="vc-kicker">Current status</p>
+        <h2>Public source is available. Distribution is still being hardened.</h2>
+      </div>
+      <div class="vc-status-grid">
+        <article>
+          <h3>Available now</h3>
+          <ul>
+            <li>Public-safe source branch</li>
+            <li>Local source install path</li>
+            <li>Fixture benchmark harness</li>
+            <li>Source fingerprints</li>
+            <li>Snapshot drift checks</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Not yet available</h3>
+          <ul>
+            <li>Prebuilt binary releases</li>
+            <li>Hosted dashboard</li>
+            <li>Automatic vulnerability confirmation</li>
+            <li>Audit certification</li>
+            <li>Public bounty submission workflow</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="vc-boundary">
+      <p class="vc-kicker">Safety boundary</p>
+      <h2>ArkheionX is not an auditor.</h2>
+      <p>
+        ArkheionX creates review context. It does not confirm vulnerabilities, assign final
+        severity, prove protocol safety, submit reports, or stand in for human security review.
+      </p>
+      <a class="vc-button" href="/docs/safety-model">Read the safety model</a>
+    </section>
+  </main>
+</Layout>

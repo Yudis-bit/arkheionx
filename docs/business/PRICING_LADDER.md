@@ -44,7 +44,7 @@ Pricing does not buy:
 
 - formal audit coverage;
 - guaranteed security;
-- guaranteed bounty outcomes;
+- promised bounty outcomes;
 - exploit development;
 - live-chain behavior;
 - endorsement by audit firms, contest platforms, or bounty platforms.

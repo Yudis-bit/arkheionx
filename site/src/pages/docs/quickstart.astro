@@ -1,0 +1,63 @@
+---
+import Layout from "../../components/Layout.astro";
+---
+
+<Layout
+  title="Quickstart — ArkheionX"
+  description="Run the first ArkheionX commands and understand the local review workflow."
+>
+  <main class="doc-readable">
+    <section class="doc-readable__hero">
+      <p class="docs-kicker">Quickstart</p>
+      <h1>Run the smallest useful ArkheionX workflow.</h1>
+      <p>
+        Start by verifying the installed command and local environment. Keep the first workflow
+        boring, inspectable, and easy to debug.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>1. Install from source</h2>
+      <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      <p>
+        For first use, inspect the script before running it.
+      </p>
+      <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+less arkheionx-install.sh
+bash arkheionx-install.sh</code></pre>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>2. Check the installed command</h2>
+      <pre><code>arkheionx version</code></pre>
+      <p>
+        This confirms that the wrapper is available and that the installed package can start.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>3. Check the environment</h2>
+      <pre><code>arkheionx doctor</code></pre>
+      <p>
+        The doctor command should be the first place to look when something feels wrong locally.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>4. Read the safety model</h2>
+      <p>
+        ArkheionX creates review context. It does not confirm vulnerabilities, assign final
+        severity, prove protocol safety, submit reports, or stand in for human review.
+      </p>
+      <a class="doc-link-button" href="/docs/safety-model">Open safety model</a>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>5. What comes next</h2>
+      <p>
+        After the environment is working, use ArkheionX as a structured review layer around your
+        codebase. Treat outputs as review context that must be inspected by a human.
+      </p>
+    </section>
+  </main>
+</Layout>

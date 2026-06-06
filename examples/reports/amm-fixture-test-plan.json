@@ -413,7 +413,7 @@
       "Failure-mode stub"
     ]
   },
-  "generated_at": "2026-05-27T10:53:14+00:00",
+  "generated_at": "1970-01-01T00:00:00+00:00",
   "invariant_candidates": [
     "LP share supply tracks pool ownership within documented rounding.",
     "Reserve-based price consumers respect documented bounds and delay assumptions.",
@@ -554,7 +554,7 @@
   "source_report": "examples/amm-fixture",
   "source_report_score": 43,
   "source_report_score_band": "Early readiness",
-  "source_report_version": "2.0.0",
+  "source_report_version": "2.0.1",
   "suggested_tests": [
     "Test first liquidity provider behavior.",
     "Test proportional minting and proportional withdrawal.",

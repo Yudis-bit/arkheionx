@@ -1,0 +1,131 @@
+---
+import Layout from "../components/Layout.astro";
+
+const examples = [
+  {
+    title: "ERC20-like token",
+    use: "Basic token accounting, approvals, transfers, mint/burn permissions, and ownership assumptions.",
+    surfaces: ["owner-controlled supply", "approval paths", "transfer assumptions", "balance accounting"],
+    limits: "Does not prove token economics, market safety, or integration safety."
+  },
+  {
+    title: "Lending vault",
+    use: "Deposits, withdrawals, collateral movement, accounting assumptions, and privileged roles.",
+    surfaces: ["deposit/withdraw paths", "share accounting", "admin roles", "paused-state gaps"],
+    limits: "Does not prove solvency, oracle correctness, or liquidation safety."
+  },
+  {
+    title: "Staking rewards",
+    use: "Reward accrual, claim paths, emissions configuration, timing assumptions, and role changes.",
+    surfaces: ["reward math", "claim paths", "emission controls", "time-based assumptions"],
+    limits: "Does not prove economic sustainability or final reward correctness."
+  },
+  {
+    title: "AMM swap",
+    use: "Pool reserves, swap paths, fee assumptions, invariant surfaces, and liquidity flows.",
+    surfaces: ["reserve movement", "fee paths", "slippage assumptions", "LP accounting"],
+    limits: "Does not prove market behavior, MEV safety, or economic robustness."
+  },
+  {
+    title: "Oracle-dependent vault",
+    use: "Price-dependent logic, stale data assumptions, oracle roles, and failure surfaces.",
+    surfaces: ["oracle reads", "freshness assumptions", "admin fallback paths", "price-sensitive flows"],
+    limits: "Does not prove oracle correctness or guarantee external data reliability."
+  },
+  {
+    title: "Upgradeable proxy",
+    use: "Proxy admin roles, implementation changes, initialization paths, and upgrade assumptions.",
+    surfaces: ["admin authority", "implementation path", "initializer risk", "storage assumptions"],
+    limits: "Does not prove upgrade safety or storage compatibility by itself."
+  },
+  {
+    title: "Bridge message",
+    use: "Cross-domain message assumptions, replay surfaces, trusted relayers, and value release paths.",
+    surfaces: ["message validation", "relayer trust", "replay assumptions", "release conditions"],
+    limits: "Does not prove bridge security or cross-chain finality."
+  },
+  {
+    title: "Liquidation engine",
+    use: "Collateral checks, health assumptions, keeper roles, liquidation paths, and accounting edges.",
+    surfaces: ["keeper actions", "collateral flow", "health checks", "penalty accounting"],
+    limits: "Does not prove economic correctness or oracle-dependent liquidation safety."
+  },
+  {
+    title: "Governance timelock",
+    use: "Proposal execution, delay assumptions, privileged roles, emergency actions, and execution paths.",
+    surfaces: ["role authority", "delay windows", "execution paths", "emergency controls"],
+    limits: "Does not prove governance safety or decentralization."
+  }
+];
+---
+
+<Layout
+  title="Examples — ArkheionX"
+  description="Example review surfaces ArkheionX can help organize for Solidity and Foundry codebases."
+>
+  <main class="examples-page">
+    <section class="examples-hero">
+      <p class="examples-kicker">Examples</p>
+      <h1>Concrete review surfaces, not fake findings.</h1>
+      <p>
+        These examples show the kinds of protocol shapes ArkheionX is designed to organize.
+        They are not vulnerability claims, audit results, or guarantees of protocol safety.
+      </p>
+    </section>
+
+    <section class="examples-overview">
+      <div>
+        <span>Input</span>
+        <strong>Local Solidity / Foundry repository</strong>
+      </div>
+      <div>
+        <span>ArkheionX output</span>
+        <strong>Review map, assumptions, evidence, fixtures, and drift context</strong>
+      </div>
+      <div>
+        <span>Final judgment</span>
+        <strong>Human security reviewer</strong>
+      </div>
+    </section>
+
+    <section class="examples-grid" aria-label="ArkheionX example review surfaces">
+      {examples.map((example, index) => (
+        <article class="example-card">
+          <div class="example-card__top">
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <h2>{example.title}</h2>
+          </div>
+
+          <div class="example-card__section">
+            <h3>What it models</h3>
+            <p>{example.use}</p>
+          </div>
+
+          <div class="example-card__section">
+            <h3>What ArkheionX surfaces</h3>
+            <ul>
+              {example.surfaces.map((surface) => (
+                <li>{surface}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="example-card__section example-card__section--limit">
+            <h3>What it does not prove</h3>
+            <p>{example.limits}</p>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="examples-boundary">
+      <p class="examples-kicker">Safety boundary</p>
+      <h2>Examples are review context only.</h2>
+      <p>
+        ArkheionX can help organize evidence, assumptions, and drift. It does not confirm
+        vulnerabilities, assign final severity, prove protocol safety, or stand in for human review.
+      </p>
+      <a href="/docs/safety-model" class="examples-button">Read the safety model</a>
+    </section>
+  </main>
+</Layout>

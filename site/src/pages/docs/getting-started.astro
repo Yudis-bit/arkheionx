@@ -1,0 +1,69 @@
+---
+import Layout from "../../components/Layout.astro";
+---
+
+<Layout
+  title="Getting Started — ArkheionX"
+  description="Understand what ArkheionX is, what it does, and how to start using it safely."
+>
+  <main class="doc-readable">
+    <section class="doc-readable__hero">
+      <p class="docs-kicker">Getting started</p>
+      <h1>ArkheionX turns smart contract repositories into review maps.</h1>
+      <p>
+        A review map is structured context for human security review. It helps organize what a
+        reviewer needs to inspect before making a judgment.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>What ArkheionX is</h2>
+      <p>
+        ArkheionX is local-first review infrastructure for Solidity and Foundry projects. It is
+        designed to help reviewers preserve context such as contracts, roles, value paths,
+        assumptions, test gaps, evidence links, fixture benchmarks, and snapshot drift.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>Who it is for</h2>
+      <ul>
+        <li>Security researchers who want repeatable review context.</li>
+        <li>Audit teams that need consistent artifacts across reviewers and revisions.</li>
+        <li>Protocol engineers preparing a codebase for external review.</li>
+        <li>Developers who want a clearer map of roles, flows, assumptions, and gaps.</li>
+      </ul>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>What to expect</h2>
+      <p>
+        Expect local commands, source-based installation, deterministic artifacts, and safety
+        boundaries. The current public path is intentionally source-first while binary releases are
+        still pending.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>What not to expect</h2>
+      <ul>
+        <li>It does not confirm vulnerabilities automatically.</li>
+        <li>It does not assign final severity.</li>
+        <li>It does not prove protocol safety.</li>
+        <li>It does not stand in for auditors or security researchers.</li>
+        <li>It does not require private keys, seed phrases, or RPC by default.</li>
+      </ul>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>First commands</h2>
+      <pre><code>arkheionx version</code></pre>
+      <pre><code>arkheionx doctor</code></pre>
+    </section>
+
+    <section class="doc-readable__next">
+      <a href="/docs/installation">Next: Installation</a>
+      <a href="/docs/quickstart">Next: Quickstart</a>
+    </section>
+  </main>
+</Layout>

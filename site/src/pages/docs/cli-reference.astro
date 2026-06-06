@@ -1,0 +1,91 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const commands = [
+  {
+    command: "arkheionx version",
+    purpose: "Print the installed ArkheionX version and milestone metadata.",
+    use: "Run immediately after install to confirm the command wrapper works."
+  },
+  {
+    command: "arkheionx doctor",
+    purpose: "Inspect the local environment and setup assumptions.",
+    use: "Run before relying on generated review context."
+  },
+  {
+    command: "arkheionx --help",
+    purpose: "Show commands available in the installed build.",
+    use: "Use this as the source of truth for your local checkout."
+  },
+  {
+    command: "arkup",
+    purpose: "Managed update wrapper when installed by the source installer.",
+    use: "Use only if the installer created it in your local environment."
+  }
+];
+---
+
+<Layout
+  title="CLI Reference — ArkheionX"
+  description="Conservative ArkheionX CLI reference for source installs and local verification."
+>
+  <main class="cli-page">
+    <section class="cli-hero">
+      <p class="cli-kicker">CLI reference</p>
+      <h1>Small commands first. Trust comes from local verification.</h1>
+      <p>
+        This page lists conservative commands used for installation verification and local setup.
+        Your installed checkout is the source of truth; use <code>arkheionx --help</code> to inspect
+        available commands.
+      </p>
+    </section>
+
+    <section class="cli-table">
+      {commands.map((item) => (
+        <article>
+          <div>
+            <h2>{item.command}</h2>
+            <pre><code>{item.command}</code></pre>
+          </div>
+          <div>
+            <h3>Purpose</h3>
+            <p>{item.purpose}</p>
+            <h3>When to use</h3>
+            <p>{item.use}</p>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Install path</p>
+        <h2>Source install command.</h2>
+      </div>
+      <div>
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      </div>
+    </section>
+
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Inspect first</p>
+        <h2>Recommended first-use path.</h2>
+      </div>
+      <div>
+        <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
+less arkheionx-install.sh
+bash arkheionx-install.sh</code></pre>
+      </div>
+    </section>
+
+    <section class="cli-boundary">
+      <p class="cli-kicker">Safety</p>
+      <h2>Do not treat command output as a final security verdict.</h2>
+      <p>
+        CLI output is review context. Human validation is required before reporting, disclosing,
+        or making security decisions.
+      </p>
+    </section>
+  </main>
+</Layout>

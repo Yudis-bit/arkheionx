@@ -1,0 +1,71 @@
+---
+import Layout from "../components/Layout.astro";
+
+const changes = [
+  {
+    title: "Public-safe source branch",
+    body: "The public repository surface is intended to expose a clean source branch without internal founder, investor, submission, or agent logs."
+  },
+  {
+    title: "Official website source",
+    body: "The website source lives in the repository so the public surface is versioned and reviewable."
+  },
+  {
+    title: "Source installer endpoint",
+    body: "The site documents a source installer path and keeps the raw shell endpoint separate from the HTML install guide."
+  },
+  {
+    title: "Safety wording",
+    body: "Public copy emphasizes local-first review context, no automatic vulnerability confirmation, and human review boundaries."
+  },
+  {
+    title: "Documentation expansion",
+    body: "Docs now cover installation, quickstart, concepts, determinism, fixture harness, workflow, CLI, troubleshooting, FAQ, and safety model."
+  }
+];
+---
+
+<Layout
+  title="Changelog — ArkheionX"
+  description="Public ArkheionX changelog for website, documentation, installation, and release-surface changes."
+>
+  <main class="changelog-page">
+    <section class="changelog-hero">
+      <p class="changelog-kicker">Changelog</p>
+      <h1>Public-facing changes should be specific and verifiable.</h1>
+      <p>
+        This changelog summarizes public source, website, documentation, and install-surface work.
+        It does not claim a binary release or audit result.
+      </p>
+    </section>
+
+    <section class="changelog-release">
+      <div>
+        <p class="changelog-kicker">Current public state</p>
+        <h2>v3.9 public-safe source surface</h2>
+        <p>
+          Source install is documented. Binary release artifacts are not published yet.
+        </p>
+      </div>
+    </section>
+
+    <section class="changelog-list">
+      {changes.map((item, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <h2>{item.title}</h2>
+          <p>{item.body}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="changelog-boundary">
+      <p class="changelog-kicker">Boundary</p>
+      <h2>Changelog entries are not security claims.</h2>
+      <p>
+        They describe public project changes only. ArkheionX does not claim audit completion,
+        vulnerability confirmation, bounty eligibility, or protocol safety.
+      </p>
+    </section>
+  </main>
+</Layout>

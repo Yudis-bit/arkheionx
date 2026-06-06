@@ -12,7 +12,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 ## Source Summary
 
 - Source report root: `examples/amm-fixture`
-- Source report version: `2.0.0`
+- Source report version: `2.0.1`
 - Protocol type: `amm`
 - Readiness score: `43`
 - Score band: `Early readiness`

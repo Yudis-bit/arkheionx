@@ -1,0 +1,97 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const concepts = [
+  {
+    term: "Protocol surface",
+    meaning: "The reviewable shape of a protocol: contracts, actors, permissions, dependencies, value movement, assumptions, and evidence."
+  },
+  {
+    term: "Role",
+    meaning: "An actor or authority that can affect protocol behavior, such as owner, admin, keeper, user, oracle, governance, or emergency role."
+  },
+  {
+    term: "Value path",
+    meaning: "A route where assets, shares, rewards, collateral, or accounting value can move through the system."
+  },
+  {
+    term: "Assumption",
+    meaning: "A condition the protocol appears to rely on, such as oracle freshness, access control correctness, accounting invariants, or timing behavior."
+  },
+  {
+    term: "Test gap",
+    meaning: "A review-relevant behavior that appears important but is not clearly covered by tests or deterministic fixture checks."
+  },
+  {
+    term: "Evidence link",
+    meaning: "A reference that connects review context back to source files, fixtures, snapshots, or generated artifacts."
+  },
+  {
+    term: "Review package",
+    meaning: "A structured set of artifacts that helps humans inspect what was reviewed, what changed, and what still needs judgment."
+  },
+  {
+    term: "Snapshot drift",
+    meaning: "A change between expected deterministic output and newly generated output."
+  },
+  {
+    term: "Source fingerprint",
+    meaning: "A deterministic identifier that helps track the source inputs used to generate artifacts."
+  }
+];
+---
+
+<Layout
+  title="Concepts — ArkheionX"
+  description="Core ArkheionX concepts for deterministic smart contract review maps."
+>
+  <main class="concepts-page">
+    <section class="concepts-hero">
+      <p class="concepts-kicker">Concepts</p>
+      <h1>The vocabulary behind a review map.</h1>
+      <p>
+        ArkheionX is built around a simple idea: security review needs reproducible context before
+        it needs conclusions. These concepts define the context the tool is meant to preserve.
+      </p>
+    </section>
+
+    <section class="concepts-map">
+      <div>
+        <span>Input</span>
+        <strong>Local repository</strong>
+      </div>
+      <div>
+        <span>Mapping layer</span>
+        <strong>Protocol surface</strong>
+      </div>
+      <div>
+        <span>Artifacts</span>
+        <strong>Roles · paths · assumptions · gaps · evidence</strong>
+      </div>
+      <div>
+        <span>Reviewer</span>
+        <strong>Human judgment</strong>
+      </div>
+    </section>
+
+    <section class="concepts-grid">
+      {concepts.map((concept, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <h2>{concept.term}</h2>
+          <p>{concept.meaning}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="concepts-boundary">
+      <p class="concepts-kicker">Important</p>
+      <h2>Concepts are not verdicts.</h2>
+      <p>
+        A role, assumption, value path, or test gap is review context. It is not automatically a
+        vulnerability. Human validation is required before any security conclusion.
+      </p>
+      <a href="/docs/safety-model" class="concepts-button">Read safety model</a>
+    </section>
+  </main>
+</Layout>

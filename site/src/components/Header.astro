@@ -1,0 +1,105 @@
+---
+import ArkheionLogo from "./ArkheionLogo.astro"
+
+const navItems = [
+  { href: "/docs", label: "Docs" },
+  { href: "/install", label: "Install" },
+  { href: "/examples", label: "Examples" },
+  { href: "/roadmap", label: "Roadmap" },
+  { href: "/security", label: "Security" }
+]
+
+const githubHref = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs"
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <ArkheionLogo />
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      {navItems.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+
+    <a class="source-link" href={githubHref} target="_blank" rel="noreferrer">
+      <span class="source-dot" aria-hidden="true"></span>
+      <span>Source</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Open menu"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      data-menu-toggle
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+    <nav class="mobile-menu__nav" aria-label="Mobile navigation">
+      {navItems.map((item) => (
+        <a href={item.href}>
+          <span>{item.label}</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+
+      <a href={githubHref} target="_blank" rel="noreferrer">
+        <span>GitHub</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </nav>
+
+    <div class="mobile-menu__status">
+      <span>LOCAL-FIRST</span>
+      <span>NO RPC BY DEFAULT</span>
+      <span>HUMAN REVIEW REQUIRED</span>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+
+  if (toggle && menu) {
+    const closeMenu = () => {
+      menu.setAttribute("hidden", "");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open menu");
+      document.documentElement.classList.remove("menu-open");
+    };
+
+    const openMenu = () => {
+      menu.removeAttribute("hidden");
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Close menu");
+      document.documentElement.classList.add("menu-open");
+    };
+
+    toggle.addEventListener("click", () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+  }
+</script>

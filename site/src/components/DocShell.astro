@@ -1,0 +1,58 @@
+---
+const path = Astro.url.pathname;
+const sections = [
+  {
+    label: "Start",
+    links: [
+      ["/docs", "Overview"],
+      ["/docs/getting-started", "Getting started"],
+      ["/docs/installation", "Installation"],
+      ["/docs/quickstart", "Quickstart"]
+    ]
+  },
+  {
+    label: "Model",
+    links: [
+      ["/docs/concepts", "Concepts"],
+      ["/docs/safety-model", "Safety model"],
+      ["/docs/determinism", "Determinism"],
+      ["/docs/fixture-harness", "Fixture harness"]
+    ]
+  },
+  {
+    label: "Use",
+    links: [
+      ["/docs/review-workflow", "Review workflow"],
+      ["/docs/cli-reference", "CLI reference"],
+      ["/docs/faq", "FAQ"]
+    ]
+  }
+];
+---
+
+<div class="doc-layout page-shell">
+  <aside class="doc-sidebar">
+    <p class="doc-sidebar-title">Documentation</p>
+    {sections.map((section) => (
+      <div class="doc-nav-group">
+        <p>{section.label}</p>
+        <nav aria-label={`${section.label} documentation`}>
+          {section.links.map(([href, label]) => (
+            <a href={href} aria-current={path === href ? "page" : undefined}>{label}</a>
+          ))}
+        </nav>
+      </div>
+    ))}
+  </aside>
+  <article class="doc-content">
+    <slot />
+  </article>
+  <aside class="doc-rail" aria-label="Document status">
+    <p>DOCUMENT STATE</p>
+    <dl>
+      <dt>Surface</dt><dd>Public</dd>
+      <dt>Mode</dt><dd>Local/static</dd>
+      <dt>Version</dt><dd>v3.9.0</dd>
+    </dl>
+  </aside>
+</div>

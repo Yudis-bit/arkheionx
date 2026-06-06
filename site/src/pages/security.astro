@@ -1,0 +1,44 @@
+---
+import Layout from "../components/Layout.astro";
+import SafetyNotice from "../components/SafetyNotice.astro";
+---
+
+<Layout title="ArkheionX Security" description="Authorized-use requirements, disclosure guidance, and security boundaries for ArkheionX.">
+  <header class="page-intro page-shell">
+    <p class="page-kicker">Security policy</p>
+    <h1>Use only with authorization.</h1>
+    <p>ArkheionX is defensive review infrastructure. Repository access and testing scope must be explicitly authorized.</p>
+  </header>
+
+  <div class="page-shell">
+    <section class="prose-section">
+      <h2>Operating boundary</h2>
+      <ul>
+        <li>Use ArkheionX only on repositories and systems you are authorized to review.</li>
+        <li>Keep the default workflow local. Do not add production credentials or sensitive target configuration.</li>
+        <li>Do not use generated artifacts to justify unsafe interaction with deployed systems.</li>
+        <li>No exploit automation is part of the public website installer or default review workflow.</li>
+      </ul>
+    </section>
+
+    <section class="prose-section">
+      <h2>Reporting a security issue</h2>
+      <p>
+        Do not place sensitive vulnerability details in a public issue when disclosure could create risk. Prefer a
+        private GitHub Security Advisory for the repository. Include the affected commit, a minimal reproduction,
+        impact reasoning, and any temporary mitigation you have identified.
+      </p>
+      <p>General bugs and documentation defects that carry no sensitive security detail may use the public issue tracker.</p>
+    </section>
+
+    <section class="prose-section">
+      <h2>No security verdict</h2>
+      <p>
+        ArkheionX does not guarantee discovery, confirm a vulnerability, prove a protocol safe, or assign final
+        severity. A clean run is not a security conclusion. A generated signal is not a validated finding.
+      </p>
+    </section>
+
+    <SafetyNotice />
+  </div>
+</Layout>

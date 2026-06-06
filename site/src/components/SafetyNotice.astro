@@ -1,0 +1,17 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = "Human review boundary" } = Astro.props;
+---
+
+<aside class="safety-notice">
+  <div class="safety-index" aria-hidden="true">!</div>
+  <div>
+    <p class="eyebrow red">Safety boundary</p>
+    <h2>{title}</h2>
+    <p>ArkheionX creates review context. It does not confirm vulnerabilities, assign final severity, prove safety, or stand in for human review.</p>
+    <slot />
+  </div>
+</aside>

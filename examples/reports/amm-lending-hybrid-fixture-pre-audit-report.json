@@ -2115,7 +2115,7 @@
       "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-05-27T10:53:14+00:00",
+  "generated_at": "2026-06-06T12:31:33+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -7062,5 +7062,5 @@
     "test_files_considered": 1,
     "total_checks": 16
   },
-  "version": "2.0.0"
+  "version": "2.0.1"
 }

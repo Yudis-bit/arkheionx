@@ -1,0 +1,99 @@
+---
+import Layout from "../components/Layout.astro";
+
+const nearTerm = [
+  "Finalize public source package validation.",
+  "Validate the source installer on a fresh machine.",
+  "Keep the official website and docs in the public repository.",
+  "Improve CLI documentation and troubleshooting paths.",
+  "Harden fixture benchmark and snapshot drift documentation."
+];
+
+const v4 = [
+  "Stronger review workspace structure.",
+  "More explicit protocol-surface output format.",
+  "Better fixture benchmark reporting.",
+  "Cleaner install and update experience.",
+  "Preparation for future binary release pipeline."
+];
+
+const deferred = [
+  "Hosted dashboard.",
+  "Prebuilt binary release artifacts.",
+  "Package registry distribution.",
+  "Signed checksums and versioned release channels.",
+  "Optional integrations with external analysis tools."
+];
+
+const nonGoals = [
+  "Automatic vulnerability confirmation.",
+  "Replacing auditors or security researchers.",
+  "Assigning final severity.",
+  "Submitting bounty reports automatically.",
+  "Running live-chain actions by default."
+];
+---
+
+<Layout
+  title="Roadmap — ArkheionX"
+  description="Public ArkheionX roadmap for source distribution, documentation, fixture harness, and review infrastructure."
+>
+  <main class="roadmap-page">
+    <section class="roadmap-hero">
+      <p class="roadmap-kicker">Roadmap</p>
+      <h1>Public roadmap without false maturity.</h1>
+      <p>
+        ArkheionX is being built as local-first review infrastructure for smart contract security.
+        This roadmap describes direction, not guaranteed delivery dates.
+      </p>
+    </section>
+
+    <section class="roadmap-current">
+      <div>
+        <p class="roadmap-kicker">Current public state</p>
+        <h2>Source-first and public-safe.</h2>
+      </div>
+      <div class="roadmap-current__card">
+        <p>
+          The public repository is intended to expose a clean source branch, official website source,
+          documentation, and a source install path. Binary releases are not published yet.
+        </p>
+      </div>
+    </section>
+
+    <section class="roadmap-grid">
+      <article>
+        <span>Near-term</span>
+        <h2>Distribution and docs hardening</h2>
+        <ul>{nearTerm.map((item) => <li>{item}</li>)}</ul>
+      </article>
+
+      <article>
+        <span>v4 direction</span>
+        <h2>Review workspace maturity</h2>
+        <ul>{v4.map((item) => <li>{item}</li>)}</ul>
+      </article>
+
+      <article>
+        <span>Deferred</span>
+        <h2>After source install is reliable</h2>
+        <ul>{deferred.map((item) => <li>{item}</li>)}</ul>
+      </article>
+
+      <article>
+        <span>Non-goals</span>
+        <h2>What ArkheionX should not claim</h2>
+        <ul>{nonGoals.map((item) => <li>{item}</li>)}</ul>
+      </article>
+    </section>
+
+    <section class="roadmap-boundary">
+      <p class="roadmap-kicker">Boundary</p>
+      <h2>No date promises. No audit promises.</h2>
+      <p>
+        Roadmap items are directional. ArkheionX does not claim to confirm vulnerabilities, prove
+        protocol safety, or stand in for human review.
+      </p>
+    </section>
+  </main>
+</Layout>

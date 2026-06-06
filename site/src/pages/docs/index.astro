@@ -1,0 +1,103 @@
+---
+import Layout from "../../components/Layout.astro";
+---
+
+<Layout
+  title="ArkheionX Docs"
+  description="Official ArkheionX documentation for local-first smart contract security review workflows."
+>
+  <main class="docs-home">
+    <section class="docs-hero">
+      <p class="docs-kicker">Documentation</p>
+      <h1>Start with the review map.</h1>
+      <p>
+        ArkheionX helps security teams turn a Solidity or Foundry repository into structured
+        review context: contracts, roles, value paths, assumptions, test gaps, evidence, fixture
+        benchmarks, and snapshot drift.
+      </p>
+    </section>
+
+    <section class="docs-start-grid">
+      <a href="/docs/getting-started">
+        <span>01</span>
+        <h2>Getting started</h2>
+        <p>Understand what ArkheionX is, who it is for, and what to expect.</p>
+      </a>
+
+      <a href="/docs/installation">
+        <span>02</span>
+        <h2>Installation</h2>
+        <p>Install from source, inspect the installer, update, and uninstall.</p>
+      </a>
+
+      <a href="/docs/quickstart">
+        <span>03</span>
+        <h2>Quickstart</h2>
+        <p>Run the first local commands and confirm the tool is available.</p>
+      </a>
+    </section>
+
+    <section class="docs-section">
+      <div>
+        <p class="docs-kicker">Core concepts</p>
+        <h2>The vocabulary of a review map.</h2>
+      </div>
+
+      <div class="docs-concept-grid">
+        <a href="/docs/concepts">
+          <strong>Protocol surface</strong>
+          <p>The parts of a codebase that matter for review: actors, permissions, value paths, and assumptions.</p>
+        </a>
+        <a href="/docs/fixture-harness">
+          <strong>Fixture harness</strong>
+          <p>Local/static benchmark shapes for checking deterministic output and drift.</p>
+        </a>
+        <a href="/docs/determinism">
+          <strong>Determinism</strong>
+          <p>Stable IDs, JSON-safe outputs, source fingerprints, and reproducible snapshots.</p>
+        </a>
+        <a href="/docs/safety-model">
+          <strong>Safety model</strong>
+          <p>What ArkheionX does not do: no automatic vulnerability confirmation or audit replacement.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="docs-section">
+      <div>
+        <p class="docs-kicker">Workflow</p>
+        <h2>Use ArkheionX as review infrastructure.</h2>
+      </div>
+
+      <div class="docs-workflow">
+        <article>
+          <span>1</span>
+          <h3>Install locally</h3>
+          <p>Use the source installer or a manual GitHub checkout.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>Check the environment</h3>
+          <p>Run version and doctor commands before reviewing a codebase.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>Build context</h3>
+          <p>Use ArkheionX outputs to organize assumptions, evidence, and gaps.</p>
+        </article>
+        <article>
+          <span>4</span>
+          <h3>Review manually</h3>
+          <p>The tool supports human review. It does not make the final security judgment.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="docs-section docs-section--links">
+      <a href="/docs/review-workflow">Review workflow</a>
+      <a href="/docs/cli-reference">CLI reference</a>
+      <a href="/docs/troubleshooting">Troubleshooting</a>
+      <a href="/docs/faq">FAQ</a>
+    </section>
+  </main>
+</Layout>

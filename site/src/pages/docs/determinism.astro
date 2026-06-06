@@ -1,0 +1,106 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const principles = [
+  {
+    title: "Stable identifiers",
+    body: "Generated artifacts should use stable IDs so reviewers can compare the same concept across runs."
+  },
+  {
+    title: "JSON-safe output",
+    body: "Artifacts should be serializable, inspectable, and compatible with deterministic snapshot checks."
+  },
+  {
+    title: "Source fingerprints",
+    body: "Inputs should be traceable so reviewers can tell whether artifacts came from the same source state."
+  },
+  {
+    title: "Snapshot checks",
+    body: "Expected output can be compared against regenerated output to detect review-surface drift."
+  },
+  {
+    title: "Local execution",
+    body: "The default workflow should not depend on live-chain state, RPC availability, or external services."
+  },
+  {
+    title: "Human-readable artifacts",
+    body: "Deterministic output still needs to be understandable by reviewers, not only machines."
+  }
+];
+---
+
+<Layout
+  title="Determinism — ArkheionX"
+  description="How ArkheionX uses deterministic artifacts, source fingerprints, and snapshot drift checks."
+>
+  <main class="determinism-page">
+    <section class="determinism-hero">
+      <p class="determinism-kicker">Determinism</p>
+      <h1>Review context should be reproducible.</h1>
+      <p>
+        A reviewer should be able to regenerate artifacts and understand whether changes came from
+        source changes, configuration changes, or tool behavior. Determinism makes that possible.
+      </p>
+    </section>
+
+    <section class="determinism-flow">
+      <article>
+        <span>01</span>
+        <h2>Same input</h2>
+        <p>The same local source state should produce the same review context.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h2>Stable output</h2>
+        <p>Artifacts should be structured, JSON-safe, and easy to diff.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h2>Visible drift</h2>
+        <p>When output changes, reviewers should be able to inspect what changed.</p>
+      </article>
+    </section>
+
+    <section class="determinism-section">
+      <div>
+        <p class="determinism-kicker">Principles</p>
+        <h2>What deterministic review infrastructure needs.</h2>
+      </div>
+
+      <div class="determinism-grid">
+        {principles.map((item) => (
+          <article>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="determinism-section determinism-section--split">
+      <div>
+        <p class="determinism-kicker">Why it matters</p>
+        <h2>Without determinism, review context becomes memory.</h2>
+      </div>
+      <div class="determinism-copy">
+        <p>
+          Security work often happens over multiple commits, reviewers, revisions, and conversations.
+          If the review context cannot be reproduced, teams have to rely on notes and memory.
+        </p>
+        <p>
+          ArkheionX aims to make the context inspectable again: what source was reviewed, what
+          assumptions were captured, what fixture output changed, and what still requires judgment.
+        </p>
+      </div>
+    </section>
+
+    <section class="determinism-boundary">
+      <p class="determinism-kicker">Boundary</p>
+      <h2>Deterministic does not mean correct.</h2>
+      <p>
+        A deterministic artifact can still be incomplete or wrong. Determinism makes output easier
+        to inspect and compare; it does not replace human validation.
+      </p>
+    </section>
+  </main>
+</Layout>
