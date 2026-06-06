@@ -4192,6 +4192,14 @@ def attach_evidence_and_calibrate(
             gap.evidence_summary = prefix
             if first.get("reason"):
                 gap.evidence_summary += f": {first.get('reason')}"
+            # When the evidence has no file/function location (e.g. a coverage
+            # note), name the matched signals so a reviewer knows what actually
+            # triggered the finding and where to look next, rather than only that
+            # test coverage was absent. Bounded and sorted for deterministic output.
+            if not location and gap.detected:
+                matched = ", ".join(sorted(gap.detected)[:5])
+                if matched:
+                    gap.evidence_summary += f" Matched signals: {matched}."
         has_semantic = bool(semantic_evidence) or finding_has_semantic_support(gap, semantic)
         keyword_only = not has_semantic and not slither_items
         if has_semantic and not has_test_coverage:

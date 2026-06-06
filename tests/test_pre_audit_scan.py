@@ -114,10 +114,25 @@ class PreAuditScannerTests(unittest.TestCase):
         ]
         self.assertTrue(coverage_notes, "expected oracle coverage-note findings in the AMM fixture")
         for finding in coverage_notes:
+            summary = str(finding["evidence_summary"])
             self.assertTrue(
-                str(finding["evidence_summary"]).startswith("test/documentation coverage"),
-                f"{finding['id']} coverage-note summary not labelled: {finding['evidence_summary']!r}",
+                summary.startswith("test/documentation coverage"),
+                f"{finding['id']} coverage-note summary not labelled: {summary!r}",
             )
+            signals = finding.get("detected_signals") or []
+            if signals:
+                # Location-less evidence with matched signals must name them so a
+                # reviewer knows what actually triggered the finding and where to
+                # look next, not only that test coverage was absent.
+                self.assertIn(
+                    "Matched signals:",
+                    summary,
+                    f"{finding['id']} omits matched signals: {summary!r}",
+                )
+                self.assertTrue(
+                    any(signal in summary for signal in signals),
+                    f"{finding['id']} names no detected signal: {summary!r}",
+                )
 
     def test_product_outputs_do_not_include_banned_phrases(self) -> None:
         markdown, report = self.run_scanner("examples/vault-risk-fixture", "vault")
