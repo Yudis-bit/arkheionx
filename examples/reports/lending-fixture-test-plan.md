@@ -12,7 +12,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 ## Source Summary
 
 - Source report root: `examples/lending-fixture`
-- Source report version: `2.0.0`
+- Source report version: `2.0.1`
 - Protocol type: `lending`
 - Readiness score: `59`
 - Score band: `Early readiness`
@@ -285,7 +285,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 
 ## Foundry Skeleton
 
-- Suggested output: `examples/reports/ArkheionxLendingInvariants.t.sol`
+- Suggested output: `not requested`
 - Contract name: `ArkheionxLendingInvariants`
 - Skeleton functions:
   - `invariant_oracleNormalizationMatchesAccountingUnits`
