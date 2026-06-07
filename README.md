@@ -352,21 +352,23 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v4.0.0**
+**Human review required** · **v4.1.0**
 
-Latest stable release: **v3.1.0**. Current package version: **4.0.0** — the
-stable v4.0.0 review-map workflow, tagged in git with a published GitHub release.
-The source installers and the GitHub Action pin to the **v3.1.0** tag. Next
-milestone: **v4.1.0**.
+Latest stable release: **v3.1.0**. Current package version: **4.1.0** — adds the
+v4.1 research-memory workflow (agent brief, hypothesis log, case study) on top of
+the stable v4.0.0 review-map workflow. The source installers and the GitHub
+Action pin to the **v3.1.0** tag. Last published tag: **v4.0.0**. Next milestone:
+**v4.2.0**.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
 Map the protocol. Prove the path. Prepare the handoff.
-v4.0.0 stabilizes the local review-map workflow; the broader control plane
-remains planned direction.
+v4.1.0 adds the research-memory workflow on top of the stable v4.0.0 review-map
+workflow; the broader control plane remains planned direction.
 
 This public-safe branch contains the engine, tests, public technical docs, and
-safety workflow. The v4.0.0 tag and GitHub release are published. The public
-release branch is sanitized.
+safety workflow. The v4.0.0 tag and GitHub release are published; the v4.1.0
+release metadata is finalized locally and pending push, tag, and site deploy. The
+public release branch is sanitized.
 
 Official website: [https://arkheionx.dev](https://arkheionx.dev) (live).
 Installer and deployment details are documented in

@@ -182,10 +182,10 @@ class DemoDocsAndMetadataTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "4.0.0")
+        self.assertEqual(__version__, "4.1.0")
         self.assertEqual(STABLE_RELEASE, "v3.1.0")
-        self.assertEqual(CURRENT_MILESTONE, "v4.0.0")
-        self.assertEqual(NEXT_MILESTONE, "v4.1.0")
+        self.assertEqual(CURRENT_MILESTONE, "v4.1.0")
+        self.assertEqual(NEXT_MILESTONE, "v4.2.0")
 
 
 if __name__ == "__main__":

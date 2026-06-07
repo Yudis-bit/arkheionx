@@ -2,8 +2,8 @@
 import Layout from "../components/Layout.astro";
 
 const available = [
-  "v4.0.0 git tag",
-  "Published GitHub release",
+  "v4.1.0 source release (review-map + research memory)",
+  "v4.0.0 git tag and published GitHub release (last published)",
   "Source installer endpoint",
   "Manual GitHub install path",
   "Local-first review workflow documentation"
@@ -19,16 +19,17 @@ const notYet = [
 
 <Layout
   title="Releases — ArkheionX"
-  description="ArkheionX release status: v4.0.0 is the current release, installed from source. Binary and registry distribution come later."
+  description="ArkheionX release status: v4.1.0 is the current source release, installed from source; v4.0.0 is the last published GitHub tag. Binary and registry distribution come later."
 >
   <main class="releases-page">
     <section class="releases-hero">
       <p class="releases-kicker">Releases</p>
-      <h1>v4.0.0 is the current release. Install from source.</h1>
+      <h1>v4.1.0 is the current release. Install from source.</h1>
       <p>
-        v4.0.0 is tagged in git with a published GitHub release, and the site is live. The current
-        distribution model is source-first; prebuilt binaries, signed checksums, and a package
-        registry release come after further release-pipeline hardening.
+        v4.1.0 is the current package version, finalized from source and adding the research-memory
+        workflow on top of v4.0.0; the last published GitHub release and git tag is v4.0.0. The
+        current distribution model is source-first; prebuilt binaries, signed checksums, and a
+        package registry release come after further release-pipeline hardening.
       </p>
       <p><a href="/arkheionx-v4-technical-paper.pdf">Read the Arkheionx v4 technical paper</a> (PDF).</p>
     </section>

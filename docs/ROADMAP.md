@@ -14,11 +14,11 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v4.0.0.
-Next milestone: v4.1.0.
+Current milestone: v4.1.0.
+Next milestone: v4.2.0.
 Latest stable: v3.1.0 — Protocol Review Map.
 
-## v4.1 — Research memory (in progress)
+## v4.1 — Research memory (finalized locally)
 
 v4.1 extends the stable v4.0 review-map workflow into an AI-assisted **research
 memory** layer, built on real bug bounty / competition workflow feedback. The
@@ -26,8 +26,10 @@ lesson: ArkheionX is most useful as a workflow layer, not a bug finder —
 ArkheionX gives the map, an agent grinds the tests, the research memory keeps the
 evidence, and the human makes the final call.
 
-Active v4.1 branch work (local/static, additive, version stays `4.0.0` until a
-maintainer cuts `v4.1.0`):
+Finalized v4.1 branch work (local/static, additive). The package version is now
+`4.1.0`; the `v4.1.0` tag, GitHub Release, and site deploy are founder actions
+(the last published tag remains `v4.0.0`, the installer-pinned stable remains
+`v3.1.0`):
 
 - `arkheionx agent-brief` — an AI-agent-ready review brief.
 - `arkheionx hypothesis-log` — a structured hypothesis log and rejected-finding

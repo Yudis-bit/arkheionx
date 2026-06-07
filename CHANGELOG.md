@@ -3,13 +3,15 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## Unreleased
+## v4.1.0 - 2026-06-07
 
-v4.1 research memory (AI-assisted review). Local/static and additive; the
-package version stays `4.0.0` until a maintainer cuts `v4.1.0`. No RPC,
-live-chain, exploit automation, severity, or vulnerability claims;
-`manual_review_required` stays true and hypotheses are review prompts, not
-findings.
+v4.1 research memory (AI-assisted review). **Release metadata finalized locally;
+pending founder push/tag/GitHub release/site deploy.** The package version is
+`4.1.0`; the last published tag remains `v4.0.0`, and the last actually-tagged
+stable release the source installers and the GitHub Action pin to remains
+`v3.1.0`. Local/static and additive: no RPC, live-chain, exploit automation,
+severity, or vulnerability claims; `manual_review_required` stays true and
+hypotheses are review prompts, not findings.
 
 ### Added
 
