@@ -28,6 +28,26 @@ const issues = [
     command: "python -m pip install --upgrade pip setuptools wheel"
   },
   {
+    q: "review-map exited with code 1",
+    a: "This is intentional. Exit code 1 means review guidance is present (there is something to inspect), not a crash. Exit 0 means nothing was surfaced; exit 2 is a usage or input error.",
+    command: "arkheionx review-map .; echo \"exit=$?\""
+  },
+  {
+    q: "scan / test-plan / search says it is not bundled",
+    a: "Those are advanced source-tree commands and are not included in a non-editable install. Run them from a repository checkout, or use the stable workflow instead.",
+    command: "arkheionx review-map ."
+  },
+  {
+    q: "doctor shows WARN (no Foundry project)",
+    a: "WARN is informational. review-map still maps the Solidity sources it can parse; Foundry is recommended for the test-coverage and proof steps.",
+    command: "arkheionx doctor"
+  },
+  {
+    q: "Demo path not found",
+    a: "Run the demo from the repository root so the examples/ directory is present, or point review-map at your own authorized repo.",
+    command: "arkheionx review-map examples/vault-strategy-oracle-fixture"
+  },
+  {
     q: "Clean reinstall",
     a: "Remove the managed directory and wrappers, then run the installer again.",
     command: "rm -rf \"$HOME/.arkheionx\"\nrm -f \"$HOME/.local/bin/arkheionx\" \"$HOME/.local/bin/arkup\"\ncurl -fsSL https://arkheionx.dev/install.sh | bash"
