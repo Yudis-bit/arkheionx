@@ -1,0 +1,94 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const helps = [
+  ["Where is value moving?", "Value paths show where value enters, moves, and exits."],
+  ["Which paths are least tested?", "Test gaps mark value-sensitive functions with no matching local test."],
+  ["Which assumptions matter?", "Each path lists the trust it depends on — your manual review angle."],
+  ["What should I review first?", "The ranked \"inspect first\" list is review order, not severity."],
+  ["What proof should I try?", "Proof suggestions outline a local Foundry test you fill in by hand."]
+];
+---
+
+<Layout
+  title="Bug bounty workflow — ArkheionX"
+  description="Use ArkheionX as a safe triage and hypothesis workbench for bug bounty work. Local and static only; human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Bug bounty</p>
+      <h1>A triage and hypothesis workbench, not an exploit finder.</h1>
+      <p>
+        ArkheionX helps a bounty hunter decide where to look first and what to test by hand. It
+        does not confirm vulnerabilities, assign final severity, run exploits, or submit reports.
+        A HIGH review priority is a prompt for human attention, never a finding.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Safe command flow</p>
+        <h2>Run locally on an in-scope repo.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx review-map .
+arkheionx value-paths .
+arkheionx assumptions .
+arkheionx test-gap-map .
+arkheionx proof-plan .</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {helps.map((item) => (
+        <article>
+          <span>?</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Gap → hypothesis → test</p>
+        <h2>Turn a test gap into a manual proof idea.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>Test gap   Vault.withdraw   Source  src/Vault.sol:63
+
+Hypothesis  Can value leave beyond the caller's entitlement?
+Local test  Deposit, then attempt an oversized or repeated exit;
+            assert the accounting invariant still holds.</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>!</span>
+        <h2>Authorized targets only</h2>
+        <p>Run only on code you own or are authorized to review under a published scope. ArkheionX never touches live systems, but staying in scope is your responsibility.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Validate before you submit</h2>
+        <p>Independently confirm impact. Do not submit ArkheionX output as a vulnerability by itself — a test gap is not evidence of a bug.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>No live attacks</h2>
+        <p>Local and static only: no RPC, no live-chain calls, no exploit automation. The security judgment stays yours.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>ArkheionX organizes context; it does not decide.</h2>
+      <p>
+        It does not confirm vulnerabilities, assign final severity, or prove impact. Read the full
+        guide in the repository's <code>docs/BUG_BOUNTY_WORKFLOW.md</code>.
+      </p>
+      <a href="/docs/safety-model" class="workflow-button">Read the safety model</a>
+    </section>
+  </main>
+</Layout>

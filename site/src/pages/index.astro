@@ -250,12 +250,24 @@ import Layout from "../components/Layout.astro";
       <div>
         <p class="vc-kicker">Try it locally</p>
         <h2>Start with the review map.</h2>
+        <p>
+          Real output from the bundled demo — not hardcoded, and locked by tests. Each test gap
+          carries a <code>Source: &lt;file&gt;:&lt;line&gt;</code> so you can open the exact function.
+        </p>
       </div>
       <div class="vc-command-list">
         <pre><code>arkheionx version</code></pre>
         <pre><code>arkheionx doctor</code></pre>
         <pre><code>arkheionx review-map .</code></pre>
         <pre><code>arkheionx review-map examples/vault-strategy-oracle-fixture</code></pre>
+        <pre><code>OK    Map review surface  3 contracts, 14 functions, 3 value paths, 5 test gaps
+
+Inspect first
+1  HIGH   Strategy.divest            Signals  external-call, value-out
+2  HIGH   Vault.emergencyWithdraw    Signals  external-call, privileged, value-out
+3  HIGH   Vault.withdraw             Signals  external-call, value-out
+
+Test gap   Vault.withdraw   Source  src/Vault.sol:63   Proof  proof-vault-withdraw</code></pre>
       </div>
     </section>
 

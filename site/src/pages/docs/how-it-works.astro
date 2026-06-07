@@ -1,0 +1,114 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const pipeline = [
+  {
+    title: "Read the local repo",
+    body: "ArkheionX starts from Solidity and Foundry source files on your machine. No RPC, no network, no deployed-contract access."
+  },
+  {
+    title: "Extract contracts and functions",
+    body: "It identifies contracts, functions, visibility, and the roles that can act on the system."
+  },
+  {
+    title: "Map value movement",
+    body: "Using function names and token-transfer calls, it marks where value enters, moves, and exits — the value paths."
+  },
+  {
+    title: "Identify assumptions",
+    body: "Each value path carries the trust it depends on: oracle freshness, access control, share proportionality, no reentrancy, standard ERC20 behavior."
+  },
+  {
+    title: "Compare against tests",
+    body: "It looks for local test references for each value-sensitive function. A function with no matching test becomes a test gap."
+  },
+  {
+    title: "Suggest proof direction",
+    body: "For each gap it suggests a local Foundry proof scaffold direction — an objective, setup, action, and assertions you fill in."
+  }
+];
+---
+
+<Layout
+  title="How it works — ArkheionX"
+  description="The ArkheionX review-map pipeline: from a local Solidity/Foundry repo to value paths, assumptions, test gaps, and proof directions."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">How it works</p>
+      <h1>From a local repository to a structured review map.</h1>
+      <p>
+        ArkheionX reads your repository statically and organizes it into a review map. Everything
+        it produces is review guidance for a human — it does not execute your contracts, call any
+        chain, or confirm that a bug exists.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Input → output</p>
+        <h2>One command builds the map.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx review-map .</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {pipeline.map((step, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <h2>{step.title}</h2>
+          <p>{step.body}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">What you get</p>
+        <h2>Real output, locked by tests.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>OK    Map review surface  3 contracts, 14 functions, 3 value paths, 5 test gaps
+
+Inspect first
+1  HIGH   Strategy.divest            Signals  external-call, value-out
+2  HIGH   Vault.emergencyWithdraw    Signals  external-call, privileged, value-out
+3  HIGH   Vault.withdraw             Signals  external-call, value-out
+
+Test gap   Vault.withdraw   Source  src/Vault.sol:63   Proof  proof-vault-withdraw</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>JSON</span>
+        <h2>Machine readable</h2>
+        <p>Add <code>--json</code> for a structured payload: contracts, value paths, assumptions, test gaps, and proof suggestions.</p>
+      </article>
+      <article>
+        <span>MD</span>
+        <h2>Human readable</h2>
+        <p>Artifacts are written under <code>.arkheionx/out/review-map/</code> (gitignored), including a Markdown review map and a Test Gap Map.</p>
+      </article>
+      <article>
+        <span>SRC</span>
+        <h2>Source evidence</h2>
+        <p>Each test gap prints a <code>Source: &lt;file&gt;:&lt;line&gt;</code> reference taken from the parsed source, so you can open the exact function.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Limitations</p>
+      <h2>Static heuristics, not execution.</h2>
+      <p>
+        Value paths are derived from names and token-transfer calls, not a proven runtime trace.
+        Cross-contract flow is surfaced as per-contract paths; connecting them end to end is
+        roadmap work. ArkheionX does not confirm vulnerabilities, assign final severity, or run any
+        exploit. You validate manually, and human review owns the conclusion.
+      </p>
+      <a href="/docs/quickstart" class="workflow-button">Try the quickstart</a>
+    </section>
+  </main>
+</Layout>

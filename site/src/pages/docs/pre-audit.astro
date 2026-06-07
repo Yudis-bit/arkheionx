@@ -1,0 +1,96 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const steps = [
+  {
+    title: "Map before review",
+    body: "Run review-map on the repository to make the value paths, assumptions, and test gaps explicit before a reviewer arrives."
+  },
+  {
+    title: "Inspect money-moving paths",
+    body: "Start with the ranked high-priority value exits and privileged setters. Confirm each path's assumptions are enforced in code."
+  },
+  {
+    title: "Close the test gaps",
+    body: "For each gap, open its Source: file:line and write a targeted Foundry test that exercises the path under adversarial inputs."
+  },
+  {
+    title: "Document assumptions",
+    body: "Capture the trust conditions as explicit notes: oracle freshness, access control, accounting invariants."
+  },
+  {
+    title: "Prepare the handoff",
+    body: "Share the review map, the new tests, and your notes so the reviewer starts from context instead of rebuilding it."
+  }
+];
+---
+
+<Layout
+  title="Pre-audit workflow — ArkheionX"
+  description="Use ArkheionX to prepare a DeFi repository before an audit: map value paths, close test gaps, and hand a reviewer a clearer surface."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Pre-audit</p>
+      <h1>Prepare a clearer surface before review.</h1>
+      <p>
+        For protocol engineers getting ready for an audit, and reviewers onboarding to an
+        unfamiliar codebase. ArkheionX makes the review surface explicit so the audit time is
+        spent where value moves. It does not replace the audit or prove the protocol is safe.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Builder flow</p>
+        <h2>One workflow, run locally.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx review-map .
+arkheionx value-paths .
+arkheionx assumptions .
+arkheionx test-gap-map .
+arkheionx proof-plan .</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {steps.map((step, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <h2>{step.title}</h2>
+          <p>{step.body}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>→</span>
+        <h2>What the reviewer gets</h2>
+        <p>A consistent map of contracts, roles, value paths, and assumptions, plus previously untested value-sensitive functions now covered by tests.</p>
+      </article>
+      <article>
+        <span>→</span>
+        <h2>What it does not give</h2>
+        <p>A clean review map does not mean the protocol is safe, and passing the tests you added does not prove the absence of bugs.</p>
+      </article>
+      <article>
+        <span>→</span>
+        <h2>Still required</h2>
+        <p>A formal audit and human review. ArkheionX assigns no severity and confirms no vulnerability.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>Preparation, not a verdict.</h2>
+      <p>
+        ArkheionX does not confirm vulnerabilities, assign final severity, prove safety, or stand
+        in for a human auditor. Read the full guide in the repository's
+        <code>docs/PRE_AUDIT_WORKFLOW.md</code>.
+      </p>
+      <a href="/docs/review-workflow" class="workflow-button">See the review workflow</a>
+    </section>
+  </main>
+</Layout>
