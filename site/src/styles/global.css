@@ -2200,11 +2200,11 @@ svg {
 }
 
 .vc-flow {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
 }
 
 .vc-cards {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
 }
 
 .vc-status-grid {
@@ -3896,7 +3896,7 @@ svg {
 
 .workflow-steps {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
   gap: 0.75rem;
   padding: clamp(2.2rem, 5vw, 4rem) 0;
   border-bottom: 1px solid rgba(37, 48, 68, 0.58);
