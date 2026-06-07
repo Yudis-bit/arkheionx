@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Research Pack Manifest",
+  "description": "Machine-readable index of a local/static, vendor-agnostic research pack. The pack prioritizes high-impact surfaces with weak review evidence and packages counterfactual research prompts. It makes no vulnerability or severity claims; human review is required.",
+  "type": "object",
+  "required": ["schema_version", "kind", "repo_path", "package_version", "commands_represented", "artifacts", "counts", "safety"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["research-pack-manifest"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "package_version": {"type": "string"},
+    "commands_represented": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"type": "string"}},
+    "counts": {
+      "type": "object",
+      "required": ["blind_spot_candidates", "criticality_surfaces", "counterfactuals"],
+      "properties": {
+        "blind_spot_candidates": {"type": "integer"},
+        "unknown_surfaces": {"type": "integer"},
+        "criticality_surfaces": {"type": "integer"},
+        "counterfactuals": {"type": "integer"},
+        "hypotheses": {"type": "integer"}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["local_static_only", "no_rpc", "no_live_chain", "no_exploit_automation", "no_severity", "no_vulnerability_claims", "vendor_agnostic", "human_review_required"],
+      "properties": {
+        "local_static_only": {"type": "boolean"},
+        "no_rpc": {"type": "boolean"},
+        "no_live_chain": {"type": "boolean"},
+        "no_secrets": {"type": "boolean"},
+        "no_exploit_automation": {"type": "boolean"},
+        "no_auto_submit": {"type": "boolean"},
+        "no_severity": {"type": "boolean"},
+        "no_vulnerability_claims": {"type": "boolean"},
+        "vendor_agnostic": {"type": "boolean"},
+        "human_review_required": {"type": "boolean"},
+        "disclaimer": {"type": "string"}
+      }
+    }
+  }
+}

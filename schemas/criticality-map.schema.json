@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Criticality Potential Map",
+  "description": "Local/static heuristic map of criticality potential (blast radius if a bug existed) across protocol surfaces. Criticality potential is not severity and no vulnerability is claimed; human review is required.",
+  "type": "object",
+  "required": ["schema_version", "kind", "repository", "dimensions", "surfaces", "highest_blast_radius", "criticality_vs_review_density", "safety"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["criticality-map"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "repository": {
+      "type": "object",
+      "required": ["repo_path", "mode", "contracts", "functions"],
+      "properties": {
+        "repo_path": {"type": "string"},
+        "mode": {"type": "string"},
+        "contracts": {"type": "integer"},
+        "functions": {"type": "integer"}
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "points"],
+        "properties": {
+          "dimension": {"type": "string"},
+          "points": {"type": "integer"}
+        }
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "criticality_potential", "impact_score", "primary_dimension", "review_density", "manual_review_required"],
+        "properties": {
+          "target": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "source": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "impact_score": {"type": "integer"},
+          "primary_dimension": {"type": "string"},
+          "secondary_dimensions": {"type": "array", "items": {"type": "string"}},
+          "dimensions": {"type": "array", "items": {"type": "object"}},
+          "review_density": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "why_it_could_matter": {"type": "string"},
+          "human_review_prompt": {"type": "string"},
+          "manual_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "highest_blast_radius": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "criticality_potential"],
+        "properties": {
+          "target": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "primary_dimension": {"type": "string"}
+        }
+      }
+    },
+    "criticality_vs_review_density": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "criticality_potential", "review_density"],
+        "properties": {
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "review_density": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "blind_spot_priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]}
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "boundary", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean"}
+      }
+    }
+  }
+}

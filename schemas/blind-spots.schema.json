@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Blind Spot Map",
+  "description": "Local/static heuristic blind-spot map: high-impact surfaces with weak review evidence, ranked by a transparent additive score. Blind spot candidates are not vulnerabilities; criticality potential is not severity; human review is required.",
+  "type": "object",
+  "required": ["schema_version", "kind", "repository", "candidates", "scoring", "unknown_surfaces", "notable_non_blind_spots", "safety"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["blind-spots"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "repository": {
+      "type": "object",
+      "required": ["repo_path", "mode", "contracts", "functions"],
+      "properties": {
+        "repo_path": {"type": "string"},
+        "mode": {"type": "string"},
+        "protocol_types": {"type": "array", "items": {"type": "string"}},
+        "contracts": {"type": "integer"},
+        "functions": {"type": "integer"},
+        "source_files": {"type": "integer"},
+        "test_files": {"type": "integer"},
+        "value_paths": {"type": "integer"},
+        "assumptions": {"type": "integer"},
+        "test_gaps": {"type": "integer"},
+        "authorization_surfaces": {"type": "integer"},
+        "periphery_surfaces": {"type": "integer"},
+        "behavior_mismatch_surfaces": {"type": "integer"}
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "target", "criticality_potential", "review_density", "blind_spot_score", "score_components", "blind_spot_priority", "status", "manual_review_required"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^BSP-[0-9]{3}$"},
+          "surface": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "review_density": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "coverage_signal": {"type": "string"},
+          "blind_spot_score": {"type": "integer"},
+          "score_components": {
+            "type": "object",
+            "required": ["impact", "review_gap", "complexity", "assumption"],
+            "properties": {
+              "impact": {"type": "integer"},
+              "review_gap": {"type": "integer"},
+              "complexity": {"type": "integer"},
+              "assumption": {"type": "integer"}
+            }
+          },
+          "blind_spot_priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]},
+          "risk_signals": {"type": "array", "items": {"type": "string"}},
+          "review_density_signals": {"type": "array", "items": {"type": "string"}},
+          "primary_dimension": {"type": "string"},
+          "secondary_dimensions": {"type": "array", "items": {"type": "string"}},
+          "score_reasons": {"type": "array", "items": {"type": "string"}},
+          "why_it_may_be_skipped": {"type": "string"},
+          "why_it_may_matter": {"type": "string"},
+          "suggested_counterfactual": {"type": "string"},
+          "suggested_counterfactual_id": {"type": "string"},
+          "suggested_local_test": {"type": "string"},
+          "evidence_needed": {"type": "string"},
+          "do_not_claim": {"type": "string"},
+          "status": {"type": "string", "enum": ["open", "testing", "rejected", "confirmed", "needs-human-review"]},
+          "manual_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "required": ["formula", "note"],
+      "properties": {
+        "formula": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "unknown_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "why_unknown", "criticality_potential"],
+        "properties": {
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "why_unknown": {"type": "string"},
+          "missing_evidence": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "suggested_local_test": {"type": "string"},
+          "priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]}
+        }
+      }
+    },
+    "notable_non_blind_spots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "criticality_potential", "review_density"],
+        "properties": {
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "review_density": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "counterfactuals": {"type": "array", "items": {"type": "object"}},
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "boundary", "do_not_claim", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean"}
+      }
+    }
+  }
+}
