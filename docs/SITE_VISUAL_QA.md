@@ -34,6 +34,22 @@ preview with `npm run preview` and check each viewport.
 - [ ] Cards stack to a single column on mobile and never squeeze on tablet.
 - [ ] Body text line-height is comfortable; no text wraps one word per line.
 
+## 404 and route aliases
+
+- [ ] `site/dist/404.html` exists after build and is on-brand (not a raw error page).
+- [ ] An unknown route (e.g. `/this-does-not-exist`) serves the on-brand 404, not
+      the default Nginx page (requires `error_page 404 /404.html;`).
+- [ ] Common typo routes resolve to the canonical page:
+      `/docs/bugbounty` → `/docs/bug-bounty`, `/docs/howitworks` → `/docs/how-it-works`,
+      `/docs/cli` and `/docs/commands` → `/docs/cli-reference`,
+      `/docs/quick-start` → `/docs/quickstart`, `/docs/get-started` → `/docs/getting-started`,
+      `/docs/safety` → `/docs/safety-model`, `/docs/v4-release` → `/docs/v4`.
+- [ ] Trailing-slash routes (e.g. `/docs/bug-bounty/`) normalize to the no-slash route.
+
+Aliases are defined once in `site/astro.config.mjs` (static meta-refresh pages)
+and, preferably, as instant 301s in Nginx. See
+[`SITE_NGINX_NOTES.md`](SITE_NGINX_NOTES.md).
+
 ## Known responsive rules
 
 - Card/step grids: `repeat(auto-fit, minmax(min(100%, 200–260px), 1fr))`.
