@@ -6,8 +6,9 @@ audit. V4 is the milestone where the review-map path â€” and its focused views â
 are treated as the stable, supported public surface.
 
 Status: prepared locally. The package version reads `3.9.0` until a maintainer
-tags `v4.0.0`; the full release package lives under `docs/releases/`
-(`V4_RELEASE_NOTES.md` and `V4_RELEASE_CHECKLIST.md`).
+tags `v4.0.0`; the full release package is
+[`releases/V4_RELEASE_NOTES.md`](releases/V4_RELEASE_NOTES.md) and
+[`releases/V4_RELEASE_CHECKLIST.md`](releases/V4_RELEASE_CHECKLIST.md).
 
 ## Stable in V4
 

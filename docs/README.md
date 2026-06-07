@@ -39,7 +39,7 @@ vulnerabilities, assign severity, or replace an audit.
 - [`V4_STABLE_SCOPE.md`](V4_STABLE_SCOPE.md) — what V4 stabilizes (and what stays experimental).
 - [`V4_INFORMATION_ARCHITECTURE.md`](V4_INFORMATION_ARCHITECTURE.md) — how the public surface is organized.
 - [`PACKAGING.md`](PACKAGING.md) — installed vs source-tree commands.
-- Release package: see `releases/V4_RELEASE_NOTES.md` and `releases/V4_RELEASE_CHECKLIST.md`.
+- Release package: [`releases/V4_RELEASE_NOTES.md`](releases/V4_RELEASE_NOTES.md) and [`releases/V4_RELEASE_CHECKLIST.md`](releases/V4_RELEASE_CHECKLIST.md).
 
 ## Advanced / project
 

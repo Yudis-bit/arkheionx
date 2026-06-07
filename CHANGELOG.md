@@ -3,6 +3,37 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v4.0.0 - Prepared (pending founder push/tag/release)
+
+Stable local review-map workflow. **Prepared locally — not pushed, not tagged,
+no GitHub Release.** The package version remains `3.9.0` until a maintainer cuts
+the `v4.0.0` tag; this entry records the prepared product-surface release. There
+is no PyPI publication, no safety guarantee, and no vulnerability confirmation;
+`manual_review_required` stays true. See `docs/releases/V4_RELEASE_NOTES.md` and
+`docs/V4_STABLE_SCOPE.md`.
+
+### Added
+
+- V4 product surface: a coherent story across README, `docs/`, the website,
+  CLI, demo, and release notes, all anchored on the review-map workflow.
+- `docs/V4_STABLE_SCOPE.md`, `docs/V4_INFORMATION_ARCHITECTURE.md`, and
+  `docs/releases/` (V4 release notes and checklist).
+- `docs/PRE_AUDIT_WORKFLOW.md`; website pages for how-it-works, bug-bounty,
+  pre-audit, and the V4 release, with navigation.
+- Honest `Source: <file>:<line>` evidence surfaced in the Test Gap Map.
+
+### Stable
+
+- The review-map workflow and focused views (`review-map`, `value-paths`,
+  `assumptions`, `test-gap-map`, `proof-plan`, plus `version` and `doctor`) are
+  the supported public surface.
+
+### Unchanged
+
+- No RPC, live-chain, exploit-automation, or private-key behavior. No new
+  top-level commands. Source-tree commands (`scan`, `test-plan`, `search`)
+  remain advanced and fail gracefully in a non-editable install.
+
 ## v3.9.0 - 2026-06-05
 
 Core Machine Hardening (Fixture Benchmark Harness). Finalized locally — not
