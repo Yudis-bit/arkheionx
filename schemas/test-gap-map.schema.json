@@ -32,6 +32,14 @@
           "target": {"type": "string"},
           "contract": {"type": "string"},
           "function": {"type": "string"},
+          "source": {
+            "type": "object",
+            "description": "Honest source location from the function surface (no invented line numbers; line 0 means unknown).",
+            "properties": {
+              "path": {"type": "string"},
+              "line": {"type": "integer"}
+            }
+          },
           "category": {"type": "string"},
           "priority": {"type": "string", "enum": ["high", "medium", "low"]},
           "confidence": {"type": "string", "enum": ["low", "medium", "high"]},

@@ -185,11 +185,23 @@ class TestGapMapTests(unittest.TestCase):
         for section in ("# Test Gap Map", "## Summary", "## Review First", "## Test Gap Details", "## Boundary"):
             self.assertIn(section, md)
         self.assertIn("Human review required", md)
+        self.assertIn("- Source:", md)
         self.assertTrue(md.endswith("\n"))
         lowered = md.lower()
         for forbidden in ("severity", "exploitability", "confirmed vulnerability",
                           "bounty", "guaranteed", "critical vulnerability"):
             self.assertNotIn(forbidden, lowered)
+
+    def test_items_carry_source_location(self) -> None:
+        rm, data = self._map("lending-vault")
+        fs_by_id = {fs.display_id: fs for fs in rm.functions}
+        for it in data["items"]:
+            source = it.get("source")
+            self.assertIsInstance(source, dict)
+            fs = fs_by_id[it["target"]]
+            self.assertEqual(source.get("path"), fs.path)
+            self.assertEqual(source.get("line"), fs.line)
+            self.assertFalse(Path(source["path"]).is_absolute(), source["path"])
 
 
 if __name__ == "__main__":

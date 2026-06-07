@@ -16,6 +16,25 @@ from .model import ReviewMap, priority_rank
 from .tests import _scenario_kind
 
 
+def _source_ref(source: object) -> str:
+    """Render an honest 'path:line' reference, or just 'path', or '' if unknown.
+
+    Uses only data already present on the function surface (no new analysis,
+    no invented line numbers). Line 0 means the line is unknown, so only the
+    file path is shown.
+    """
+    if not isinstance(source, dict):
+        return ""
+    path = str(source.get("path") or "").strip()
+    if not path:
+        return ""
+    try:
+        line_no = int(source.get("line") or 0)
+    except (TypeError, ValueError):
+        line_no = 0
+    return f"{path}:{line_no}" if line_no > 0 else path
+
+
 def _why_it_matters(fs, gap) -> str:
     if fs and fs.value_direction in ("out", "both"):
         lead = "Value can leave the system through this path. "
@@ -62,6 +81,7 @@ def _item(gap, rm: ReviewMap, fs_by_id: dict, proofs_by_gap: dict) -> dict:
         "target": gap.related_function,
         "contract": contract,
         "function": function,
+        "source": {"path": fs.path, "line": fs.line} if fs else {"path": "", "line": 0},
         "category": _scenario_kind(fs) or "" if fs else "",
         "priority": priority,
         "confidence": gap.confidence,
@@ -148,6 +168,7 @@ def render_test_gap_map_md(data: dict) -> str:
             out += [
                 f"### {it['index']}. `{it['target']}` ({it['priority']} · {it['confidence']} confidence)",
                 f"- Category: {it['category'] or '—'}",
+                f"- Source: {_source_ref(it.get('source')) or '—'}",
                 f"- Why it matters: {it['why_it_matters'] or '—'}",
                 f"- Suggested test: {scenarios}",
                 f"- Related value path: {rvp}",
@@ -215,6 +236,9 @@ def render_test_gap_map_cli(data: dict, repo: str, *, top: int = 5, source: str 
             proof_id = proof.get("id") or "none"
             proof_status = f"yes ({proof_id})" if proof.get("available") else "not linked"
             lines.append(f"  {item.get('index', '-')}. {target} [{priority}; {confidence}; {category}]")
+            source_ref = _source_ref(item.get("source"))
+            if source_ref:
+                lines.append(f"     Source: {source_ref}")
             lines.append(f"     Proof suggestion: {proof_status}")
             if next_command:
                 lines.append(f"     Next: {next_command}")

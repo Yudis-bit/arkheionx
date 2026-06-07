@@ -68,6 +68,21 @@ class VaultStrategyOracleDemoTests(unittest.TestCase):
         self.assertEqual([p.id for p in self.rm.value_paths], [p.id for p in rm2.value_paths])
         self.assertEqual([g.id for g in self.rm.test_gaps], [g.id for g in rm2.test_gaps])
 
+    def test_test_gaps_carry_real_source_locations(self) -> None:
+        # Each surfaced gap must point at a real source location in the fixture
+        # (honest evidence, not invented line numbers). This proves the
+        # "where do I look?" reference tracks the actual file rather than a
+        # hardcoded string.
+        from arkheionx.review_map import build_test_gap_map
+
+        data = build_test_gap_map(self.rm)
+        self.assertTrue(data["items"])
+        for item in data["items"]:
+            source = item["source"]
+            self.assertTrue(source["path"].endswith(".sol"), item["target"])
+            self.assertTrue((FIXTURE / source["path"]).is_file(), source["path"])
+            self.assertGreater(source["line"], 0, item["target"])
+
 
 if __name__ == "__main__":
     unittest.main()

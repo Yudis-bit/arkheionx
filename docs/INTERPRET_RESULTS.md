@@ -29,7 +29,9 @@ exists.
 - **Test gaps.** A value-sensitive function with no matching local test
   reference, or only an incidental one. A gap means *observed test coverage
   looks missing or weak*. It does **not** mean the function is exploitable, and
-  the absence of a gap does not mean the function is safe.
+  the absence of a gap does not mean the function is safe. Each gap prints a
+  `Source: <file>:<line>` reference so you can open the exact function; the line
+  comes from the parsed source, not an invented number.
 
 - **Proof suggestions / proof plans.** Local Foundry test *scaffolds* you can
   fill in. A scaffold is a starting point with `TODO`s and `vm.skip`; it is not

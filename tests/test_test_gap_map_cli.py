@@ -59,6 +59,7 @@ class TestGapMapCommandTests(unittest.TestCase):
         self.assertIn("Priority buckets", result.stdout)
         self.assertIn("Evidence-linked", result.stdout)
         self.assertIn("Proof suggestion", result.stdout)
+        self.assertIn("Source:", result.stdout)
         self.assertIn("arkheionx review-map", result.stdout)
         self.assertIn("arkheionx prove", result.stdout)
         self.assertNotIn("Traceback", result.stderr)

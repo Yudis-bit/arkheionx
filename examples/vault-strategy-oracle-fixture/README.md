@@ -74,5 +74,7 @@ gap-priceoracle-setprice  (admin)  proof: proof-priceoracle-setprice
 
 Every value path links to the assumptions that guard it (oracle freshness,
 share proportionality, no-reentrancy, standard ERC20) and to a proof suggestion
-you can scaffold with `arkheionx prove`. Output is review guidance, not confirmed
-vulnerabilities. Human review is required.
+you can scaffold with `arkheionx prove`. Each test gap also prints a
+`Source: <file>:<line>` reference (for example `src/Vault.sol:63` for
+`withdraw`) so you can open the exact function to review. Output is review
+guidance, not confirmed vulnerabilities. Human review is required.
