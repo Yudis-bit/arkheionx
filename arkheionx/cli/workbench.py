@@ -56,6 +56,18 @@ from arkheionx.review_map import (
     write_artifacts,
 )
 from arkheionx.review_map.model import HIGH as RM_HIGH
+from arkheionx.research import (
+    build_agent_brief_from_review_map,
+    build_case_study_from_review_map,
+    build_hypothesis_log_from_review_map,
+    default_research_dir,
+    render_agent_brief_cli,
+    render_case_study_cli,
+    render_hypothesis_log_cli,
+    write_agent_brief,
+    write_case_study,
+    write_hypothesis_log,
+)
 from arkheionx.cli_ui import TerminalUI
 from arkheionx.rules.registry import list_rule_packs
 
@@ -1714,3 +1726,170 @@ def cmd_local_validate(args: Namespace) -> int:
     lines.append("  Local/static review guidance only. Not an audit; human review required.")
     _print_report("\n".join(lines))
     return SUCCESS
+
+
+# --------------------------------------------------------------------------
+# research memory (v4.1): agent-brief, hypothesis-log, case-study
+# --------------------------------------------------------------------------
+def _research_top(args: Namespace) -> int:
+    top = getattr(args, "top", 10)
+    return 10 if top is None else int(top)
+
+
+def _research_out_dir(args: Namespace, root: Path) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    return Path(out).expanduser() if out else default_research_dir(root)
+
+
+def _research_review_map(args: Namespace, root: Path, top: int):
+    """Build a review map for a research command, or print an error and return None."""
+    sources, test_files = find_solidity_files(root)
+    if not sources:
+        print(f"Error: no Solidity files found in {args.repo}.")
+        print("Next: run inside a Solidity/Foundry repository or try a bundled demo:")
+        print("  arkheionx demo --copy lending-vault ./arkheionx-demo")
+        print(f"  arkheionx {getattr(args, 'command', 'agent-brief')} ./arkheionx-demo")
+        return None, 0, 0
+    include_low = bool(getattr(args, "include_low_confidence", False))
+    try:
+        review_map = build_review_map(root, top=top, include_low_confidence=include_low)
+    except ValueError as exc:
+        print(f"error: could not resolve `{exc}`. Run `arkheionx review-map {args.repo}` first.")
+        return None, 0, 0
+    return review_map, len(sources), len(test_files)
+
+
+def agent_brief_command(args: Namespace) -> int:
+    """Generate an AI-agent-ready review brief from the review map (v4.1)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_agent_brief_from_review_map(review_map, root, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_agent_brief_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _research_out_dir(args, root)
+        try:
+            written = write_agent_brief(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['agent-brief.md']}\n  {rel['agent-brief.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def hypothesis_log_command(args: Namespace) -> int:
+    """Generate a structured hypothesis log / rejected-finding memory (v4.1)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, _n_sources, _n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_hypothesis_log_from_review_map(review_map, root)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_hypothesis_log_cli(data, args.repo, top=top)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _research_out_dir(args, root)
+        try:
+            written = write_hypothesis_log(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['hypotheses.md']}\n  {rel['hypotheses.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def _load_existing_hypotheses(from_dir: Path) -> list[dict] | None:
+    """Load hypotheses (with human-recorded statuses) from a hypotheses.json log."""
+    path = from_dir / "hypotheses.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if isinstance(payload, dict) and isinstance(payload.get("hypotheses"), list):
+        return payload["hypotheses"]
+    return None
+
+
+def case_study_command(args: Namespace) -> int:
+    """Generate a sanitized case-study / research-session report (v4.1)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, _n_sources, _n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    existing: list[dict] | None = None
+    from_dir = str(getattr(args, "from_dir", "") or "").strip()
+    if from_dir:
+        existing = _load_existing_hypotheses(Path(from_dir).expanduser())
+        if existing is None:
+            print(f"error: could not read hypotheses.json under: {from_dir}")
+            print("Next: run `arkheionx hypothesis-log` to create it, or omit --from.")
+            return FAILED
+
+    data = build_case_study_from_review_map(review_map, root, existing_hypotheses=existing)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    from arkheionx.research import render_case_study_md
+
+    text = render_case_study_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out = str(getattr(args, "out", "") or "").strip()
+        try:
+            if out and out.lower().endswith(".md"):
+                # Write a single Markdown case study to the chosen file path.
+                md_path = Path(out).expanduser()
+                md_path.parent.mkdir(parents=True, exist_ok=True)
+                md_path.write_text(render_case_study_md(data), encoding="utf-8")
+                text += f"\nArtifacts\n  {_rel_display(str(md_path), root)}\n"
+            else:
+                out_dir = _research_out_dir(args, root)
+                written = write_case_study(data, out_dir)
+                rel = {name: _rel_display(path, root) for name, path in written.items()}
+                text += f"\nArtifacts\n  {rel['case-study.md']}\n  {rel['case-study.json']}\n"
+        except OSError as exc:
+            print(f"error: could not write case study: {exc}")
+            return FAILED
+    _print_report(text)
+    return exit_code

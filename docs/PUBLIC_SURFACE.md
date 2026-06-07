@@ -68,6 +68,22 @@ false. v3.8.0 is active branch work, not a finalized or published release. See
 | `arkheionx review-package` | Assemble a local reviewer-ready review package (manifest, validation, README, limitations, copied artifacts, checksums, and a protocol-model.json sidecar when buildable) from existing local artifacts; runs exact-match cross-reference validation (unresolved references are warnings, never invented links); `--no-write` dry run; `--export zip` writes a deterministic local archive under `review-package/exports/` (no publication); review guidance only | human + `--json` | `review-package/*` | stable-additive |
 | `arkheionx local-validate` | Ingest a saved Foundry test output file (JSON or text) into local validation artifacts; parses, builds deterministic run/test-result/summary records with exact-match protocol links, and (unless `--no-write`) writes `local-validation/*`; never runs `forge`, requires no Foundry install, no live forge runner, no review-package/evidence integration yet; review guidance only | human + `--json` | `local-validation/*` | stable-additive |
 
+## Research memory commands (v4.1)
+
+In active v4.1 branch work, the public surface gains three additive,
+local/static research-memory commands built on top of the review map. They emit
+human Markdown and `--json`, write artifacts under `.arkheionx/research/` (unless
+`--no-write`), and never run RPC, live-chain, or exploit automation.
+`manual_review_required` stays true: hypotheses are review prompts, not findings.
+See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+[`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx agent-brief` | AI-agent-ready review brief: repository summary, coverage weakness ranking, value movement, test gaps, authorization surfaces, periphery/core surfaces, behavior-mismatch surfaces, open hypotheses, and a do-not-claim boundary | human + `--json` | `research/agent-brief.{md,json}` | stable-additive |
+| `arkheionx hypothesis-log` | Structured hypothesis log and rejected-finding memory: open hypotheses with surface, source, bug class, suggested local test, and empty fields for test command, result, rejection reason, confirmation notes, and human decision | human + `--json` | `research/hypotheses.{md,json}` | stable-additive |
+| `arkheionx case-study` | Sanitized case-study / research-session report from review-map and research surfaces; optional `--from` incorporates a hypothesis log's statuses; makes no vulnerability claim unless independently confirmed | human + `--json` | `research/case-study.{md,json}` | stable-additive |
+
 ## Setup and lifecycle commands
 
 | Command | Purpose | Stability |

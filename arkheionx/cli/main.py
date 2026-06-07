@@ -230,6 +230,43 @@ def build_parser() -> argparse.ArgumentParser:
     local_validate.add_argument("--command", default="forge test --json", help="Command string recorded for provenance only; never executed.")
     local_validate.set_defaults(func=workbench.cmd_local_validate)
 
+    agent_brief = subparsers.add_parser(
+        "agent-brief",
+        help="Build an AI-agent-ready review brief (value paths, surfaces, hypotheses) from the review map.",
+    )
+    agent_brief.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    agent_brief.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/research/).")
+    agent_brief.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    agent_brief.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    agent_brief.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    agent_brief.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    agent_brief.set_defaults(func=workbench.agent_brief_command)
+
+    hypothesis_log = subparsers.add_parser(
+        "hypothesis-log",
+        help="Generate a structured hypothesis log and rejected-finding memory from review-map surfaces.",
+    )
+    hypothesis_log.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    hypothesis_log.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/research/).")
+    hypothesis_log.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    hypothesis_log.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    hypothesis_log.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    hypothesis_log.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    hypothesis_log.set_defaults(func=workbench.hypothesis_log_command)
+
+    case_study = subparsers.add_parser(
+        "case-study",
+        help="Generate a sanitized case-study / research-session report template from artifacts.",
+    )
+    case_study.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    case_study.add_argument("--out", default="", help="Output directory, or a .md file path for the Markdown case study.")
+    case_study.add_argument("--from", dest="from_dir", default="", help="Directory holding a hypotheses.json log to incorporate statuses from.")
+    case_study.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    case_study.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    case_study.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    case_study.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    case_study.set_defaults(func=workbench.case_study_command)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser

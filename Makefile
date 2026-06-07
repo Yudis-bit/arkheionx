@@ -62,6 +62,14 @@ validate:
 		arkheionx/cli/commands.py \
 		arkheionx/cli/colors.py \
 		arkheionx/cli/exit_codes.py \
+		arkheionx/research/__init__.py \
+		arkheionx/research/signals.py \
+		arkheionx/research/surfaces.py \
+		arkheionx/research/hypotheses.py \
+		arkheionx/research/agent_brief.py \
+		arkheionx/research/hypothesis_log.py \
+		arkheionx/research/case_study.py \
+		arkheionx/research/artifacts.py \
 		arkheionx/demo/__init__.py \
 		arkheionx/demo/fixtures/__init__.py \
 		arkheionx/demo/model.py \
