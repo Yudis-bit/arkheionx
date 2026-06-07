@@ -336,12 +336,11 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v4.0.0 release candidate**
+**Human review required** · **v4.0.0**
 
 Latest stable release: **v3.1.0**. Current package version: **4.0.0** — the
-v4.0.0 release candidate, prepared locally and pending founder push/tag/GitHub
-release/site deploy. The last tagged stable release remains **v3.1.0**, which the
-source installers and the GitHub Action pin to until the v4.0.0 tag is cut. Next
+stable v4.0.0 review-map workflow, tagged in git with a published GitHub release.
+The source installers and the GitHub Action pin to the **v3.1.0** tag. Next
 milestone: **v4.1.0**.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
@@ -350,11 +349,12 @@ v4.0.0 stabilizes the local review-map workflow; the broader control plane
 remains planned direction.
 
 This public-safe branch contains the engine, tests, public technical docs, and
-safety workflow. v4.0.0 is not tagged. The public release branch is sanitized.
+safety workflow. The v4.0.0 tag and GitHub release are published. The public
+release branch is sanitized.
 
-Official website: [https://arkheionx.dev](https://arkheionx.dev) *(deployment pending)*.
-The website source installer should be used only after the deployment
-verification documented in [`docs/WEBSITE_DEPLOYMENT.md`](docs/WEBSITE_DEPLOYMENT.md).
+Official website: [https://arkheionx.dev](https://arkheionx.dev) (live).
+Installer and deployment details are documented in
+[`docs/WEBSITE_DEPLOYMENT.md`](docs/WEBSITE_DEPLOYMENT.md).
 
 Reproducible research context: [`reports/research_dashboard.md`](reports/research_dashboard.md).
 

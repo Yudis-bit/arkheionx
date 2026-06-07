@@ -15,6 +15,30 @@ const faqs = [
     a: "It is for security researchers, audit teams, protocol engineers, and developers preparing a smart contract system for review."
   },
   {
+    q: "What command should I run first?",
+    a: "Run arkheionx review-map . on a repository you are authorized to review. Run version and doctor first to confirm your install and environment."
+  },
+  {
+    q: "Why does review-map exit with code 1?",
+    a: "Exit code 1 means review guidance is present — there is something to inspect. It is intentional, not a crash. Exit 0 means nothing was surfaced; exit 2 is a usage or input error."
+  },
+  {
+    q: "What does the Source: file:line reference mean?",
+    a: "Each test gap prints the exact file and line of the function it refers to, taken from the parsed source so you can open it directly. It is not an invented number."
+  },
+  {
+    q: "Can I use ArkheionX for bug bounty?",
+    a: "Yes, as a triage and hypothesis workbench on authorized targets only. It does not confirm vulnerabilities or submit reports, so validate manually before any submission."
+  },
+  {
+    q: "What if my repo is not a Foundry project?",
+    a: "review-map still maps the Solidity sources it can parse; doctor will note that no Foundry project was detected. Foundry is recommended for the test-coverage and proof steps."
+  },
+  {
+    q: "What is stable in V4?",
+    a: "V4 stabilizes the local review-map workflow: version, doctor, review-map, value-paths, assumptions, test-gap-map, and proof-plan. Source-tree commands like scan, test-plan, and search are advanced."
+  },
+  {
     q: "Is ArkheionX an auditor?",
     a: "No. ArkheionX supports review work, but it is not an auditor and does not stand in for human security review."
   },
@@ -156,7 +180,7 @@ const faqs = [
   },
   {
     q: "Is ArkheionX open source?",
-    a: "The public-safe source branch is available on GitHub. License status should be checked in the repository."
+    a: "Yes. ArkheionX is licensed under Apache-2.0 (see the LICENSE file in the repository). The v4.0.0 source is on GitHub."
   },
   {
     q: "What should I read next?",

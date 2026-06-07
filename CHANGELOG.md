@@ -3,16 +3,14 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
-## v4.0.0 - Release candidate (pending founder push/tag/GitHub release/site deploy)
+## v4.0.0 - 2026-06-07
 
-Stable local review-map workflow. **v4.0.0 release candidate prepared locally;
-pending founder push/tag/GitHub release/site deploy.** The package version is
-finalized at `4.0.0`; the `v4.0.0` git tag and GitHub Release are founder
-actions, and the last tagged stable release remains `v3.1.0` until that tag is
-cut (the source installers and the GitHub Action pin to it). There is no PyPI
-publication, no safety guarantee, and no vulnerability confirmation;
-`manual_review_required` stays true. See `docs/releases/V4_RELEASE_NOTES.md` and
-`docs/V4_STABLE_SCOPE.md`.
+Stable local review-map workflow. **Released as v4.0.0 — tagged in git, GitHub
+release published, site live.** The package version is `4.0.0`; the last tagged
+stable release the source installers and the GitHub Action pin to remains
+`v3.1.0`. There is no PyPI publication, no safety guarantee, and no vulnerability
+confirmation; `manual_review_required` stays true. See
+`docs/releases/V4_RELEASE_NOTES.md` and `docs/V4_STABLE_SCOPE.md`.
 
 ### Added
 

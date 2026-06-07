@@ -1,8 +1,8 @@
 # Arkheionx v4.0.0 — Release checklist
 
-Run from the repository root. Every box must be green before the founder tags
-and pushes. This release is **prepared locally**; tagging and pushing are
-founder actions.
+Run from the repository root. These are the gates that must stay green for the
+v4.0.0 release. v4.0.0 is published (tagged in git, GitHub release live); re-run
+this checklist before any follow-up tag or site redeploy.
 
 ## Validation gates
 

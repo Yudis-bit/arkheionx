@@ -1,11 +1,10 @@
 # Arkheionx v4.0.0 — Stable local review-map workflow
 
-**Status: v4.0.0 release candidate prepared locally; pending founder
-push/tag/GitHub release/site deploy.** This document describes the v4.0.0
-release of the review-map workflow. The package version is finalized at `4.0.0`;
-the `v4.0.0` git tag and GitHub Release are founder actions, and the last tagged
-stable release remains `v3.1.0` until that tag is cut. Nothing here is published
-to PyPI.
+**Status: released as v4.0.0 — tagged in git, GitHub release published, site
+live.** This document describes the v4.0.0 release of the review-map workflow.
+The package version is `4.0.0`; the last tagged stable release the source
+installers and the GitHub Action pin to remains `v3.1.0`. Nothing here is
+published to PyPI.
 
 ## 1. What V4 stabilizes
 

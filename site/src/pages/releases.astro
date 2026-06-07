@@ -2,34 +2,33 @@
 import Layout from "../components/Layout.astro";
 
 const available = [
-  "Public source branch",
+  "v4.0.0 git tag",
+  "Published GitHub release",
   "Source installer endpoint",
   "Manual GitHub install path",
-  "Static documentation site source",
   "Local-first review workflow documentation"
 ];
 
 const notYet = [
   "Prebuilt binaries",
   "Signed checksums",
-  "GitHub release artifacts",
-  "Package registry release",
+  "Package registry (PyPI) release",
   "Versioned installer channels"
 ];
 ---
 
 <Layout
   title="Releases — ArkheionX"
-  description="ArkheionX release status, source install path, and future binary release direction."
+  description="ArkheionX release status: v4.0.0 is the current release, installed from source. Binary and registry distribution come later."
 >
   <main class="releases-page">
     <section class="releases-hero">
       <p class="releases-kicker">Releases</p>
-      <h1>Source install is available. Binary releases are not published yet.</h1>
+      <h1>v4.0.0 is the current release. Install from source.</h1>
       <p>
-        The current public distribution model is intentionally source-first. Binary distribution,
-        checksums, and versioned release channels should come after fresh install validation and
-        release pipeline hardening.
+        v4.0.0 is tagged in git with a published GitHub release, and the site is live. The current
+        distribution model is source-first; prebuilt binaries, signed checksums, and a package
+        registry release come after further release-pipeline hardening.
       </p>
     </section>
 

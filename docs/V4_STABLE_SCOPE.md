@@ -5,10 +5,9 @@ Arkheionx guarantees protocol safety, confirms vulnerabilities, or replaces an
 audit. V4 is the milestone where the review-map path — and its focused views —
 are treated as the stable, supported public surface.
 
-Status: v4.0.0 release candidate prepared locally; pending founder
-push/tag/GitHub release/site deploy. The package version is `4.0.0`; the
-`v4.0.0` tag is a founder action, and the last tagged stable remains `v3.1.0`.
-The full release package is
+Status: released as v4.0.0. The package version is `4.0.0`, tagged in git with a
+published GitHub release and a live site. The last tagged stable the source
+installers and the GitHub Action pin to is `v3.1.0`. The full release package is
 [`releases/V4_RELEASE_NOTES.md`](releases/V4_RELEASE_NOTES.md) and
 [`releases/V4_RELEASE_CHECKLIST.md`](releases/V4_RELEASE_CHECKLIST.md).
 
