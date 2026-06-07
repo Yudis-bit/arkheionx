@@ -1150,6 +1150,26 @@ def top_findings(gaps: list[ReadinessGap], limit: int = 5) -> list[ReadinessGap]
     return sorted(gaps, key=lambda gap: (gap_priority_rank(gap), gap.id, gap.title))[:limit]
 
 
+def gap_confidence_rank(gap: ReadinessGap) -> int:
+    return {"high": 0, "medium": 1, "low": 2}.get((gap.confidence or "").strip().lower(), 3)
+
+
+def sort_gaps_for_review(gaps: list[ReadinessGap]) -> list[ReadinessGap]:
+    """Order findings strongest-first so the report, JSON, SARIF, and issue plan
+    lead with high-priority, high-confidence, well-evidenced gaps instead of
+    burying them under low-confidence keyword-only noise.
+
+    Deterministic: priority, then confidence, then evidence strength, then id and
+    title. Only the ordering changes; scores, priorities, confidences, and
+    fingerprints are untouched.
+    """
+    def key(gap: ReadinessGap) -> tuple[int, int, int, str, str]:
+        strength = -min(5, len(gap.evidence or []) + len(gap.affected_files or []))
+        return (gap_priority_rank(gap), gap_confidence_rank(gap), strength, gap.id, gap.title)
+
+    return sorted(gaps, key=key)
+
+
 def finding_counts(gaps: list[ReadinessGap], suppressed: list[ReadinessGap]) -> dict[str, int]:
     counts = {
         "total_readiness_gaps": len(gaps),
@@ -6815,6 +6835,7 @@ def main(argv: list[str] | None = None) -> int:
     attach_evidence_and_calibrate(gaps, semantic, slither, analysis_config, protocol_type, negative_evidence)
     gaps = filter_gaps_by_rule_packs(gaps, enabled_rule_packs)
     gaps, suppressed_gaps = apply_suppressions(gaps, config)
+    gaps = sort_gaps_for_review(gaps)
     rule_packs = build_rule_packs(signals, gaps, suppressed_gaps)
     invariants = suggest_invariants(protocol_type, signals)
     skeleton_path = generate_invariant_skeleton(root) if args.generate_invariant_skeletons else None
