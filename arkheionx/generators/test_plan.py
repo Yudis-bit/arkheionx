@@ -71,6 +71,35 @@ def dedupe(items: list[str]) -> list[str]:
     return output
 
 
+# Soft qualifier words that do not change the meaning of a defensive test idea.
+# Collapsing them lets near-duplicate phrasings (e.g. "within fee and rounding
+# bounds" vs "within expected fee and rounding bounds") fold into one line.
+_SOFT_FILLER = frozenset({"the", "a", "an", "expected"})
+
+# Rule-family overview caps: a concise digest, not the full per-finding set.
+RULE_FAMILY_TEST_CAP = 6
+RULE_FAMILY_INVARIANT_CAP = 5
+
+
+def _semantic_signature(text: str) -> str:
+    words = re.sub(r"[^a-z0-9\s]", " ", str(text).lower()).split()
+    return " ".join(word for word in words if word not in _SOFT_FILLER)
+
+
+def dedupe_semantic(items: list[str]) -> list[str]:
+    """Deterministic near-duplicate dedup for suggested tests / invariant
+    candidates: collapses lines that differ only by punctuation, casing, or soft
+    qualifier words, keeping the first occurrence so ordering stays stable."""
+    seen: set[str] = set()
+    output: list[str] = []
+    for item in items:
+        signature = _semantic_signature(item)
+        if signature and signature not in seen:
+            seen.add(signature)
+            output.append(str(item).strip())
+    return output
+
+
 # Invariant candidates should read as properties (declarative statements about
 # what must always hold), not as suggested-test instructions. Sentences that open
 # with an imperative testing verb are suggested tests, so they are filtered out of
@@ -158,12 +187,12 @@ def collect_plan(report: dict, plan_map: dict[str, dict], foundry_output: Path |
     for finding in sorted(findings, key=finding_priority_rank):
         finding_id = str(finding.get("id", ""))
         mapping = plan_map.get(finding_id, {})
-        suggested_tests = dedupe(
+        suggested_tests = dedupe_semantic(
             [str(item) for item in mapping.get("suggested_tests", [])]
             + [str(item) for item in finding.get("suggested_tests", [])]
         )
         invariant_candidates = property_candidates(
-            dedupe(
+            dedupe_semantic(
                 [str(item) for item in mapping.get("invariant_candidates", [])]
                 + [str(item) for item in finding.get("invariant_candidates", [])]
             )
@@ -204,10 +233,12 @@ def collect_plan(report: dict, plan_map: dict[str, dict], foundry_output: Path |
         families[family]["suggested_tests"].extend(suggested_tests)
         families[family]["invariant_candidates"].extend(invariant_candidates)
 
+    # Rule-family overview is a curated digest, not a dump: dedup near-duplicates
+    # and cap the lists. Per-finding detail below keeps the full set.
     for family in families.values():
         family["finding_ids"] = dedupe(family["finding_ids"])
-        family["suggested_tests"] = dedupe(family["suggested_tests"])
-        family["invariant_candidates"] = dedupe(family["invariant_candidates"])
+        family["suggested_tests"] = dedupe_semantic(family["suggested_tests"])[:RULE_FAMILY_TEST_CAP]
+        family["invariant_candidates"] = dedupe_semantic(family["invariant_candidates"])[:RULE_FAMILY_INVARIANT_CAP]
 
     protocol_type = str(report.get("protocol_type", "auto"))
     return {
@@ -226,8 +257,8 @@ def collect_plan(report: dict, plan_map: dict[str, dict], foundry_output: Path |
         "generated_at": "1970-01-01T00:00:00+00:00",
         "rule_families": sorted(families.values(), key=lambda item: item["rule_family"]),
         "findings": planned_findings,
-        "suggested_tests": dedupe(all_tests),
-        "invariant_candidates": dedupe(all_invariants),
+        "suggested_tests": dedupe_semantic(all_tests),
+        "invariant_candidates": dedupe_semantic(all_invariants),
         "foundry_skeleton": {
             "path": display_path(foundry_output, ROOT),
             "contract_name": class_name_from_path(foundry_output, protocol_type),

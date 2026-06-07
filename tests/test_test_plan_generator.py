@@ -184,5 +184,50 @@ class InvariantCandidatePropertyTests(unittest.TestCase):
                 )
 
 
+class SuggestedTestCurationTests(unittest.TestCase):
+    """Suggested tests / invariant candidates must be curated, not dumped."""
+
+    TEST_PLANS = [
+        "examples/reports/amm-fixture-test-plan.json",
+        "examples/reports/lending-fixture-test-plan.json",
+        "examples/reports/amm-lending-hybrid-fixture-test-plan.json",
+    ]
+
+    def test_dedupe_semantic_collapses_soft_qualifier_near_duplicates(self) -> None:
+        items = [
+            "Assert swaps preserve the documented invariant within fee and rounding bounds.",
+            "Assert swaps preserve the documented invariant within expected fee and rounding bounds.",
+        ]
+        self.assertEqual(tp_gen.dedupe_semantic(items), [items[0]])
+
+    def test_dedupe_semantic_keeps_distinct_tests_and_order(self) -> None:
+        items = [
+            "Test borrow cannot exceed available liquidity.",
+            "Test debt cannot exceed documented collateral constraints.",
+            "Test borrow cannot exceed available liquidity.",
+        ]
+        self.assertEqual(tp_gen.dedupe_semantic(items), items[:2])
+
+    def test_rule_family_plans_are_capped_and_deduped(self) -> None:
+        for path in self.TEST_PLANS:
+            data = load_json(path)
+            for family in data["rule_families"]:
+                tests = family["suggested_tests"]
+                self.assertLessEqual(len(tests), tp_gen.RULE_FAMILY_TEST_CAP, path)
+                self.assertEqual(tests, tp_gen.dedupe_semantic(tests), f"{path}: family tests not deduped")
+                inv = family["invariant_candidates"]
+                self.assertLessEqual(len(inv), tp_gen.RULE_FAMILY_INVARIANT_CAP, path)
+
+    def test_no_within_finding_duplicate_suggested_tests(self) -> None:
+        for path in self.TEST_PLANS:
+            data = load_json(path)
+            for finding in data["findings"]:
+                tests = finding.get("suggested_tests", [])
+                self.assertEqual(
+                    tests, tp_gen.dedupe_semantic(tests),
+                    f"{path}:{finding['finding_id']} has near-duplicate suggested tests",
+                )
+
+
 if __name__ == "__main__":
     unittest.main()

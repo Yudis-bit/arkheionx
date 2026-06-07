@@ -468,21 +468,7 @@
         "Test price shock boundaries around health-factor transitions.",
         "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
         "Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.",
-        "Test debt cannot exceed documented collateral constraints.",
-        "Test unsafe withdrawals are rejected or explicitly documented.",
-        "Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.",
-        "Test just-above-threshold positions cannot be liquidated.",
-        "Test just-below-threshold positions can be liquidated according to policy.",
-        "Assert liquidation bonus and close factor stay within documented bounds.",
-        "Test a position just above threshold cannot be liquidated and a position just below threshold can be liquidated within documented bonus bounds.",
-        "Test interest or borrow index monotonicity.",
-        "Cover small balances and repeated accrual.",
-        "Test borrow and repay before and after accrual.",
-        "Advance local time across multiple accrual steps and assert borrow indexes and balances remain monotonic and bounded by documented rounding.",
-        "Test borrow cannot exceed available liquidity.",
-        "Test repay updates cash, debt, and reserves consistently.",
-        "Assert reserves cannot be withdrawn beyond documented constraints.",
-        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently."
+        "Test debt cannot exceed documented collateral constraints."
       ]
     },
     {
@@ -503,13 +489,7 @@
         "Assert normalized price units match accounting units.",
         "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
         "Reject stale oracle rounds or document fallback behavior.",
-        "Test updatedAt or heartbeat boundaries.",
-        "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
-        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
-        "Test documented price bounds.",
-        "Test invalid answer fallback behavior.",
-        "Add documentation for price shock and fallback assumptions.",
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+        "Test updatedAt or heartbeat boundaries."
       ]
     },
     {

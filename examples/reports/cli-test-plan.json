@@ -143,8 +143,7 @@
       "suggested_tests": [
         "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
         "Test repeated swaps across small and large reserve states.",
-        "Document expected invariant tolerance.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds."
+        "Document expected invariant tolerance."
       ],
       "title": "AMM invariant assumptions not covered by tests"
     },
@@ -518,21 +517,7 @@
         "Cover rounding and dust handling during mint/burn.",
         "Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.",
         "Test reserve-price movement bounds.",
-        "Test TWAP or delay assumptions if used.",
-        "Document whether other accounting paths rely on spot reserve price.",
-        "Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
-        "Test repeated swaps across small and large reserve states.",
-        "Document expected invariant tolerance.",
-        "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
-        "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
-        "Simulate fee-on-transfer behavior with a local mock if supported.",
-        "Document unsupported token types if not handled.",
-        "Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.",
-        "Test minOut enforcement.",
-        "Test stale quote or deadline behavior if supported.",
-        "Assert user-provided slippage bounds are respected.",
-        "Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale."
+        "Test TWAP or delay assumptions if used."
       ]
     },
     {
@@ -555,17 +540,7 @@
         "Assert normalized price units match accounting units.",
         "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
         "Reject stale oracle rounds or document fallback behavior.",
-        "Test updatedAt or heartbeat boundaries.",
-        "Test borrow, liquidation, vault, or reward flows when oracle data is stale.",
-        "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
-        "Test spot-price movement bounds.",
-        "Test TWAP or delay assumptions when used.",
-        "Document reserve-price dependency and expected safeguards.",
-        "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
-        "Test documented price bounds.",
-        "Test invalid answer fallback behavior.",
-        "Add documentation for price shock and fallback assumptions.",
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior."
+        "Test updatedAt or heartbeat boundaries."
       ]
     },
     {
@@ -584,9 +559,7 @@
         "Test withdraw, claim, refund, or swap flows for accounting consistency.",
         "Review state update order and add local malicious-receiver tests where callbacks are possible.",
         "Document checks-effects-interactions or guard assumptions.",
-        "Test state before and after external calls.",
-        "Assert failure paths preserve accounting state.",
-        "Pair ordering documentation with a local receiver test that exercises the documented boundary."
+        "Test state before and after external calls."
       ]
     },
     {
@@ -633,7 +606,6 @@
     "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
     "Test repeated swaps across small and large reserve states.",
     "Document expected invariant tolerance.",
-    "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
     "Test actual received amount accounting with balanceBefore/balanceAfter pattern.",
     "Simulate fee-on-transfer behavior with a local mock if supported.",
     "Document unsupported token types if not handled.",

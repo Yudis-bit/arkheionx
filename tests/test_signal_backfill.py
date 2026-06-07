@@ -243,5 +243,55 @@ class RenderedSignalQualityTests(unittest.TestCase):
         self.assertEqual(a, b)
 
 
+class SecondaryProtocolTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.module = load_scanner_module()
+
+    def test_strong_secondary_named_when_scores_are_close(self) -> None:
+        scores = {"amm": 102, "lending": 94, "oracle": 0, "staking": 0, "vault": 0}
+        self.assertEqual(self.module.strong_secondary_protocols(scores, "amm"), ["lending"])
+
+    def test_no_secondary_when_primary_dominates(self) -> None:
+        scores = {"amm": 163, "lending": 0, "oracle": 0}
+        self.assertEqual(self.module.strong_secondary_protocols(scores, "amm"), [])
+
+    def test_secondary_sorted_by_score_then_name(self) -> None:
+        scores = {"amm": 100, "lending": 90, "vault": 90}
+        self.assertEqual(self.module.strong_secondary_protocols(scores, "amm"), ["lending", "vault"])
+
+    def test_hybrid_report_names_strong_lending_secondary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp) / "r.md"
+            json_path = Path(tmp) / "r.json"
+            subprocess.run(
+                [
+                    "python3", str(SCANNER),
+                    "--root", str(REPO_ROOT / "examples/amm-lending-hybrid-fixture"),
+                    "--protocol-type", "auto",
+                    "--output", str(md), "--json-output", str(json_path),
+                ],
+                cwd=REPO_ROOT, check=True, text=True, capture_output=True,
+            )
+            text = md.read_text(encoding="utf-8")
+        self.assertIn("strong secondary signals", text)
+        self.assertIn("lending", text)
+
+    def test_amm_report_has_no_secondary_line(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp) / "r.md"
+            json_path = Path(tmp) / "r.json"
+            subprocess.run(
+                [
+                    "python3", str(SCANNER),
+                    "--root", str(REPO_ROOT / "examples/amm-fixture"),
+                    "--protocol-type", "amm",
+                    "--output", str(md), "--json-output", str(json_path),
+                ],
+                cwd=REPO_ROOT, check=True, text=True, capture_output=True,
+            )
+            text = md.read_text(encoding="utf-8")
+        self.assertNotIn("strong secondary signals", text)
+
+
 if __name__ == "__main__":
     unittest.main()

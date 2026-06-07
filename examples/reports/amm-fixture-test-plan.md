@@ -30,10 +30,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.
   - Test reserve-price movement bounds.
   - Test TWAP or delay assumptions if used.
-  - Document whether other accounting paths rely on spot reserve price.
-  - Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.
-  - Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.
-  - Test repeated swaps across small and large reserve states.
 - Invariant candidates:
   - LP share supply tracks pool ownership within documented rounding.
   - Reserve-based price consumers respect documented bounds and delay assumptions.
@@ -51,10 +47,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - Reject stale oracle rounds or document fallback behavior.
   - Test updatedAt or heartbeat boundaries.
-  - Test borrow, liquidation, vault, or reward flows when oracle data is stale.
-  - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
-  - Test spot-price movement bounds.
-  - Test TWAP or delay assumptions when used.
 - Invariant candidates:
   - Normalized oracle values remain within documented unit and decimal assumptions.
   - Accounting decisions only use oracle data that satisfies documented freshness policy.
@@ -71,8 +63,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - Review state update order and add local malicious-receiver tests where callbacks are possible.
   - Document checks-effects-interactions or guard assumptions.
   - Test state before and after external calls.
-  - Assert failure paths preserve accounting state.
-  - Pair ordering documentation with a local receiver test that exercises the documented boundary.
 - Invariant candidates:
   - External-call flows cannot observe or preserve inconsistent accounting state.
   - External call ordering follows documented state-transition policy.
@@ -162,7 +152,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.
   - Test repeated swaps across small and large reserve states.
   - Document expected invariant tolerance.
-  - Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.
 - Invariant candidates:
   - Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.
 - Project bindings to fill in:

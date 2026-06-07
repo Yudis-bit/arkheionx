@@ -917,6 +917,29 @@ def confidence_from_terms(terms: list[str]) -> str:
     return "low"
 
 
+def strong_secondary_protocols(
+    protocol_scores: dict[str, int], protocol_type: str, ratio: float = 0.6
+) -> list[str]:
+    """Name non-primary protocol families whose detection score is close to the
+    primary (>= ``ratio`` of it), so a hybrid repository is not presented as a
+    single-shape protocol. Deterministic: sorted by score descending then name.
+    """
+    try:
+        scores = {str(key): int(value) for key, value in (protocol_scores or {}).items()}
+    except (TypeError, ValueError):
+        return []
+    primary = scores.get(protocol_type) or max(scores.values(), default=0)
+    if primary <= 0:
+        return []
+    threshold = primary * ratio
+    secondary = [
+        name
+        for name, score in scores.items()
+        if name != protocol_type and score > 0 and score >= threshold
+    ]
+    return sorted(secondary, key=lambda name: (-scores[name], name))
+
+
 def normalize_for_fingerprint(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip().lower())
 
@@ -5084,6 +5107,12 @@ def generate_report(
         lines.append("")
         lines.append(f"- Detected protocol type: `{protocol_type}`")
         lines.append(f"- Confidence: `{protocol_confidence}`")
+        secondary = strong_secondary_protocols(protocol_scores, protocol_type)
+        if secondary:
+            lines.append(
+                f"- Protocol shape: `{protocol_type}` with strong secondary signals: "
+                f"`{', '.join(secondary)}`"
+            )
         lines.append(f"- Protocol score signals: `{json.dumps(protocol_scores, sort_keys=True)}`")
         lines.append(f"- Arkheionx memory metadata loaded: `{registry_metadata.get('entry_count', 0)}` entries")
         lines.append("")
