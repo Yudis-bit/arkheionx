@@ -3,6 +3,35 @@
 Local-first deterministic security review workbench for Solidity / Foundry
 projects.
 
+> **Foundry tells you whether the tests you wrote pass. ArkheionX helps show
+> the value paths you may have forgotten to test.**
+
+ArkheionX turns a local Solidity / Foundry repository into a deterministic
+**review map**: where value enters, moves, and exits; the trust assumptions that
+guard each path; which paths have no tests; and a ranked list of what a human
+reviewer should inspect first.
+
+```bash
+python3 -m pip install -e .
+arkheionx doctor
+arkheionx review-map .                                        # your repo
+arkheionx review-map examples/vault-strategy-oracle-fixture   # bundled demo
+```
+
+```text
+OK    Map review surface  3 contracts, 14 functions, 3 value paths, 5 test gaps
+
+Inspect first
+1  HIGH   Strategy.divest            Signals  external-call, value-out
+2  HIGH   Vault.emergencyWithdraw    Signals  external-call, privileged, value-out
+3  HIGH   Vault.withdraw             Signals  external-call, value-out
+```
+
+Local only. Static only. No RPC. No live-chain calls. No exploit automation.
+Not an audit replacement. New here? See
+[`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and the bundled
+[multi-contract demo](examples/vault-strategy-oracle-fixture/README.md).
+
 Official website: [https://arkheionx.dev](https://arkheionx.dev) *(deployment pending)*.
 The website source installer is coming soon and should be used only after the
 deployment verification documented in [`docs/WEBSITE_DEPLOYMENT.md`](docs/WEBSITE_DEPLOYMENT.md).
