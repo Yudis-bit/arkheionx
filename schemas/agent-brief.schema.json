@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Agent Brief",
+  "description": "An AI-agent-ready, local/static review brief derived from the review map: repository summary, coverage weakness ranking, value movement, test gaps, authorization/periphery/behavior-mismatch surfaces, and open hypotheses. Review guidance only; hypotheses are not vulnerabilities and human review is required.",
+  "type": "object",
+  "required": ["schema_version", "kind", "generated_at", "repository", "review_priority", "value_movement", "hypotheses", "do_not_claim", "safety"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["agent-brief"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "repository": {
+      "type": "object",
+      "required": ["repo_path", "mode", "contracts", "functions"],
+      "properties": {
+        "repo_path": {"type": "string"},
+        "mode": {"type": "string"},
+        "protocol_types": {"type": "array", "items": {"type": "string"}},
+        "contracts": {"type": "integer"},
+        "functions": {"type": "integer"},
+        "source_files": {"type": "integer"},
+        "test_files": {"type": "integer"},
+        "value_paths": {"type": "integer"},
+        "assumptions": {"type": "integer"},
+        "test_gaps": {"type": "integer"}
+      }
+    },
+    "review_priority": {
+      "type": "object",
+      "required": ["top_inspect_first", "high_value_weak_coverage", "high_value_strong_coverage", "unresolved_assumptions"],
+      "properties": {
+        "top_inspect_first": {"type": "array", "items": {"type": "object"}},
+        "high_value_weak_coverage": {"type": "array", "items": {"type": "string"}},
+        "high_value_strong_coverage": {"type": "array", "items": {"type": "string"}},
+        "unresolved_assumptions": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "value_movement": {
+      "type": "object",
+      "required": ["entry_points", "exit_points", "accounting_mutations", "external_call_interactions"],
+      "properties": {
+        "entry_points": {"type": "array", "items": {"type": "object"}},
+        "exit_points": {"type": "array", "items": {"type": "object"}},
+        "accounting_mutations": {"type": "array", "items": {"type": "object"}},
+        "external_call_interactions": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "test_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "function"],
+        "properties": {
+          "id": {"type": "string"},
+          "function": {"type": "string"},
+          "source": {"type": "string"},
+          "why_it_matters": {"type": "string"},
+          "suggested_local_test": {"type": "string"}
+        }
+      }
+    },
+    "authorization_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "signal", "kind", "why_it_matters"],
+        "properties": {
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "signal": {"type": "string"},
+          "kind": {"type": "string"},
+          "why_it_matters": {"type": "string"},
+          "suggested_local_tests": {"type": "array", "items": {"type": "string"}},
+          "evidence_level": {"type": "string"},
+          "manual_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "periphery_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "interaction_type", "why_it_matters"],
+        "properties": {
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "target": {"type": "string"},
+          "core_targets": {"type": "array", "items": {"type": "string"}},
+          "source": {"type": "string"},
+          "interaction_type": {"type": "array", "items": {"type": "string"}},
+          "why_it_matters": {"type": "string"},
+          "suggested_local_tests": {"type": "array", "items": {"type": "string"}},
+          "evidence_level": {"type": "string"},
+          "manual_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "behavior_mismatch_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "target", "signal", "why_it_may_matter"],
+        "properties": {
+          "label": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "signal": {"type": "string"},
+          "kind": {"type": "string"},
+          "why_it_may_matter": {"type": "string"},
+          "suggested_local_test": {"type": "array", "items": {"type": "string"}},
+          "evidence_level": {"type": "string"},
+          "manual_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "coverage_ranking": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["surface", "risk_signals", "coverage_signal", "weakness_priority", "reason"],
+        "properties": {
+          "surface": {"type": "string"},
+          "source": {"type": "string"},
+          "risk_signals": {"type": "array", "items": {"type": "string"}},
+          "coverage_signal": {"type": "string", "enum": ["tested", "partially tested", "no direct test observed", "unknown"]},
+          "review_priority": {"type": "string", "enum": ["high", "medium", "low"]},
+          "weakness_priority": {"type": "string", "enum": ["inspect-first", "important-lower-priority", "maybe-later", "monitor"]},
+          "reason": {"type": "string"},
+          "basis": {"type": "string"}
+        }
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "surface", "bug_class", "status", "manual_review_required"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^HYP-[0-9]{3}$"},
+          "surface": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "target": {"type": "string"},
+          "source": {"type": "string"},
+          "value_path": {"type": "string"},
+          "bug_class": {"type": "string"},
+          "why_it_matters": {"type": "string"},
+          "current_evidence": {"type": "string"},
+          "test_gap": {"type": "string"},
+          "suggested_local_test": {"type": "string"},
+          "evidence_required": {"type": "string"},
+          "status": {"type": "string", "enum": ["open", "testing", "rejected", "confirmed", "needs-human-review"]},
+          "manual_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "do_not_claim": {"type": "array", "items": {"type": "string"}},
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "human_review_required": {"type": "boolean"}
+      }
+    }
+  }
+}

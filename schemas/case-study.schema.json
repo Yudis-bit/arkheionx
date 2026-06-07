@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Case Study",
+  "description": "A sanitized case-study / research-session report from review-map and research surfaces. It is not an audit report and does not claim protocol safety. No finding is claimed unless independently confirmed locally and signed off by a human.",
+  "type": "object",
+  "required": ["schema_version", "kind", "generated_at", "target", "scope_note", "commands_run", "review_map_summary", "hypotheses_tested", "rejected_hypotheses", "confirmed_findings", "unresolved", "safety_note"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["case-study"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "target": {"type": "string"},
+    "scope_note": {"type": "string"},
+    "commands_run": {"type": "array", "items": {"type": "string"}},
+    "review_map_summary": {
+      "type": "object",
+      "properties": {
+        "contracts": {"type": "integer"},
+        "functions": {"type": "integer"},
+        "value_paths": {"type": "integer"},
+        "assumptions": {"type": "integer"},
+        "test_gaps": {"type": "integer"}
+      }
+    },
+    "top_value_paths": {"type": "array", "items": {"type": "object"}},
+    "top_assumptions": {"type": "array", "items": {"type": "object"}},
+    "top_test_gaps": {"type": "array", "items": {"type": "object"}},
+    "authorization_surfaces": {"type": "array", "items": {"type": "object"}},
+    "periphery_surfaces": {"type": "array", "items": {"type": "object"}},
+    "hypotheses_tested": {"type": "array", "items": {"type": "object"}},
+    "rejected_hypotheses": {"type": "array", "items": {"type": "object"}},
+    "confirmed_findings": {"type": "array", "items": {"type": "object"}},
+    "open_hypotheses": {"type": "array", "items": {"type": "object"}},
+    "needs_human_review": {"type": "array", "items": {"type": "object"}},
+    "what_held": {"type": "array", "items": {"type": "object"}},
+    "what_was_noisy": {"type": "array", "items": {"type": "string"}},
+    "unresolved": {
+      "type": "object",
+      "required": ["open_hypotheses", "needs_human_review", "unresolved_assumptions"],
+      "properties": {
+        "open_hypotheses": {"type": "array", "items": {"type": "string"}},
+        "needs_human_review": {"type": "array", "items": {"type": "string"}},
+        "unresolved_assumptions": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "next_review_areas": {"type": "array", "items": {"type": "string"}},
+    "safety_note": {"type": "string"}
+  }
+}
