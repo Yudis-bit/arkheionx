@@ -68,8 +68,25 @@ from arkheionx.research import (
     write_case_study,
     write_hypothesis_log,
 )
+from arkheionx.blind_spots import (
+    build_blind_spot_map_from_review_map,
+    build_counterfactual_plan_from_review_map,
+    build_criticality_map_from_review_map,
+    build_research_pack,
+    default_blind_spots_dir,
+    default_counterfactuals_dir,
+    default_criticality_dir,
+    default_research_pack_dir,
+    render_blind_spots_cli,
+    render_counterfactuals_cli,
+    render_criticality_map_cli,
+    write_blind_spots,
+    write_counterfactuals,
+    write_criticality_map,
+)
 from arkheionx.cli_ui import TerminalUI
 from arkheionx.rules.registry import list_rule_packs
+from arkheionx.version import PACKAGE_VERSION
 
 SUCCESS = exit_codes.SUCCESS          # 0
 WARNING = exit_codes.RUNTIME_ERROR    # 1 (heuristic-only / usable warning)
@@ -1893,3 +1910,211 @@ def case_study_command(args: Namespace) -> int:
             return FAILED
     _print_report(text)
     return exit_code
+
+
+# --------------------------------------------------------------------------
+# blind spot intelligence (v5): blind-spots, criticality-map, counterfactuals,
+# research-pack
+# --------------------------------------------------------------------------
+def _blind_spot_out_dir(args: Namespace, root: Path, default_fn) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    return Path(out).expanduser() if out else default_fn(root)
+
+
+def blind_spots_command(args: Namespace) -> int:
+    """Identify likely blind-spot candidates (v5): high impact, weak review evidence."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    limit = getattr(args, "limit", None)
+    limit = 12 if limit is None else int(limit)
+    if limit <= 0:
+        print("error: --limit must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_blind_spot_map_from_review_map(
+        review_map, root, source_files=n_sources, test_files=n_tests, limit=limit)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_blind_spots_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _blind_spot_out_dir(args, root, default_blind_spots_dir)
+        try:
+            written = write_blind_spots(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['blind-spots.md']}\n  {rel['blind-spots.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def criticality_map_command(args: Namespace) -> int:
+    """Map criticality potential (blast radius) across surfaces (v5). Not severity."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_criticality_map_from_review_map(review_map, root, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_criticality_map_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _blind_spot_out_dir(args, root, default_criticality_dir)
+        try:
+            written = write_criticality_map(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['criticality-map.md']}\n  {rel['criticality-map.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def counterfactuals_command(args: Namespace) -> int:
+    """Generate counterfactual research prompts by negating assumptions (v5)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_counterfactual_plan_from_review_map(review_map, root, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_counterfactuals_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _blind_spot_out_dir(args, root, default_counterfactuals_dir)
+        try:
+            written = write_counterfactuals(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['counterfactuals.md']}\n  {rel['counterfactuals.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def research_pack_command(args: Namespace) -> int:
+    """Generate a complete local AI/human-ready research pack (v5, headline)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    out_dir = _blind_spot_out_dir(args, root, default_research_pack_dir)
+
+    # research-pack is a "pack" command: it writes by default unless --no-write.
+    if bool(getattr(args, "no_write", False)):
+        # Build the pack and manifest in memory only; write nothing to disk.
+        result = build_research_pack(review_map, root, out_dir, package_version=PACKAGE_VERSION,
+                                     source_files=n_sources, test_files=n_tests, write=False)
+        if getattr(args, "json", False):
+            print(json.dumps(result["manifest"], indent=2))
+        else:
+            _print_report(_render_research_pack_cli(result, args.repo, wrote=False))
+        return exit_code
+
+    try:
+        result = build_research_pack(review_map, root, out_dir, package_version=PACKAGE_VERSION,
+                                     source_files=n_sources, test_files=n_tests)
+    except OSError as exc:
+        print(f"error: could not write research pack to {out_dir}: {exc}")
+        return FAILED
+
+    if getattr(args, "json", False):
+        print(json.dumps(result["manifest"], indent=2))
+        return exit_code
+
+    _print_report(_render_research_pack_cli(result, args.repo, wrote=True, root=root))
+    return exit_code
+
+
+def _render_research_pack_cli(result: dict, repo: str, *, wrote: bool, root: Path | None = None) -> str:
+    manifest = result["manifest"]
+    counts = manifest["counts"]
+    lines = [
+        "ARKHEIONX RESEARCH PACK",
+        "View: Research Pack (v5, headline)",
+        "Local/static heuristic research pack. Vendor-agnostic.",
+        "Nothing here is a vulnerability, a severity, or a confirmed finding.",
+        "Human review required.",
+        "",
+        "Scope",
+        f"  Repo: {repo}",
+        f"  Mode: {manifest['mode']}",
+        f"  Package: ArkheionX v{manifest['package_version']}",
+        "",
+        "Pack contents",
+        f"  Blind spot candidates: {counts['blind_spot_candidates']}",
+        f"  Unknown surfaces:      {counts['unknown_surfaces']}",
+        f"  Criticality surfaces:  {counts['criticality_surfaces']}",
+        f"  Counterfactuals:       {counts['counterfactuals']}",
+        f"  Hypotheses:            {counts['hypotheses']}",
+        "",
+    ]
+    if wrote:
+        out_dir = result["out_dir"]
+        rel = _rel_display(out_dir, root) if root is not None else out_dir
+        lines.append(f"Wrote {len(manifest['artifacts'])} files to {rel}")
+        for name in manifest["artifacts"]:
+            lines.append(f"  {name}")
+    else:
+        lines.append("No-write: built the pack manifest in memory only (nothing written).")
+    lines += [
+        "",
+        "Next",
+        "  Give 05-agent-brief.md + 04-counterfactuals.md to a review agent or reviewer.",
+        "  Write local tests, then record results in 07-evidence-log.md.",
+        f"  Machine-readable manifest: arkheionx research-pack {repo} --json",
+        "",
+        "Boundary",
+        "  Local/static only. No RPC, no exploit automation, no severity, no bug claims.",
+        "  Blind spot candidates and criticality potential are heuristics. Human review required.",
+    ]
+    return "\n".join(lines) + "\n"

@@ -267,6 +267,55 @@ def build_parser() -> argparse.ArgumentParser:
     case_study.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
     case_study.set_defaults(func=workbench.case_study_command)
 
+    blind_spots = subparsers.add_parser(
+        "blind-spots",
+        help="Rank likely blind-spot candidates: high-impact surfaces with weak review evidence (v5).",
+    )
+    blind_spots.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    blind_spots.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/blind-spots/).")
+    blind_spots.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    blind_spots.add_argument("--limit", type=int, default=12, help="Maximum number of blind-spot candidates to surface.")
+    blind_spots.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    blind_spots.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    blind_spots.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    blind_spots.set_defaults(func=workbench.blind_spots_command)
+
+    criticality_map = subparsers.add_parser(
+        "criticality-map",
+        help="Map criticality potential (heuristic blast radius, not severity) across protocol surfaces (v5).",
+    )
+    criticality_map.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    criticality_map.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/criticality-map/).")
+    criticality_map.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    criticality_map.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    criticality_map.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    criticality_map.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    criticality_map.set_defaults(func=workbench.criticality_map_command)
+
+    counterfactuals = subparsers.add_parser(
+        "counterfactuals",
+        help="Generate counterfactual research prompts by negating guarding assumptions (v5).",
+    )
+    counterfactuals.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    counterfactuals.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/counterfactuals/).")
+    counterfactuals.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    counterfactuals.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    counterfactuals.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    counterfactuals.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    counterfactuals.set_defaults(func=workbench.counterfactuals_command)
+
+    research_pack = subparsers.add_parser(
+        "research-pack",
+        help="Generate a complete local AI/human-ready bug bounty research pack (v5, headline). Writes by default.",
+    )
+    research_pack.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    research_pack.add_argument("--out", default="", help="Pack output directory (default: <repo>/.arkheionx/research-pack/).")
+    research_pack.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    research_pack.add_argument("--json", action="store_true", help="Print the machine-readable manifest JSON to stdout only (no human text).")
+    research_pack.add_argument("--no-write", action="store_true", help="Build the pack in memory only; do not write files.")
+    research_pack.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    research_pack.set_defaults(func=workbench.research_pack_command)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser
