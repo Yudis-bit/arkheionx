@@ -100,7 +100,7 @@ class TerminalUI:
     def banner(self, title: str, subtitle: str | None = None) -> None:
         if not self.enabled:
             return
-        self._print(self._paint(title, "bold"))
+        self._print(self._paint(title, "cyan", "bold"))
         if subtitle:
             self._print(self._paint(subtitle, "dim"))
         self._print()

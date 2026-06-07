@@ -5,13 +5,15 @@ stdout is not a TTY (so captured output, pipes, CI logs, and the test suite get
 plain text), and it is never applied to JSON or to content written to artifact
 files. Standard library only.
 
-Control:
-- ARKHEIONX_COLOR=always  force color on
-- ARKHEIONX_COLOR=never   force color off
-- ARKHEIONX_COLOR=auto    (default) color only when stdout is a TTY
-- NO_COLOR (any value)    disables color (unless ARKHEIONX_COLOR=always)
-- CI (any value)          disables color (unless ARKHEIONX_COLOR=always)
-- TERM=dumb               disables color (unless ARKHEIONX_COLOR=always)
+Control (first match wins):
+- NO_COLOR (any value)         disables color (authoritative, no-color.org)
+- ARKHEIONX_NO_COLOR (any)     disables color (authoritative)
+- ARKHEIONX_COLOR=never|0|off  disables color (also false/no)
+- ARKHEIONX_COLOR=always|force|1|on  forces color on, even for a non-TTY or CI
+  (also true/yes) so redirected smoke tests and `| cat` still show color
+- ARKHEIONX_COLOR=auto (default, or any unknown value) colors only a TTY
+- CI (any value)               disables auto color (force still wins)
+- TERM=dumb                    disables auto color (force still wins)
 """
 from __future__ import annotations
 
@@ -30,6 +32,11 @@ _CODES = {
     "cyan": "\033[36m",
 }
 _ANSI_RE = re.compile(r"\033\[[0-9;]*m")
+
+# ARKHEIONX_COLOR values that force color on (even for a non-TTY or under CI) and
+# values that force it off. Anything else (including "auto") is TTY-driven.
+_COLOR_FORCE = {"always", "force", "1", "true", "yes", "on"}
+_COLOR_OFF = {"never", "0", "false", "no", "off"}
 
 # Evidence/review level -> style.
 _EVIDENCE_STYLE = {
@@ -90,15 +97,25 @@ _KV_RE = re.compile(r"^(\s+[\w .()/+-]+:\s+)([A-Za-z][\w-]*)(.*)$")
 
 
 def enabled(stream=None) -> bool:
-    """Whether color should be emitted for the given stream (default stdout)."""
-    mode = os.environ.get("ARKHEIONX_COLOR", "auto").strip().lower()
-    if mode == "always":
-        return True
-    if mode == "never":
-        return False
-    # Any other value (including invalid) falls back to auto.
+    """Whether color should be emitted for the given stream (default stdout).
+
+    Precedence: an explicit opt-out (NO_COLOR / ARKHEIONX_NO_COLOR) always wins;
+    then ARKHEIONX_COLOR off/force values; otherwise auto, which colors only a
+    real TTY and stays off under CI or TERM=dumb. A force value (1/always/force/
+    on/true/yes) deliberately overrides CI and non-TTY so that redirected smoke
+    tests and piped output still show color.
+    """
+    # Authoritative opt-out: respected even over an explicit force request.
     if os.environ.get("NO_COLOR") is not None:
         return False
+    if os.environ.get("ARKHEIONX_NO_COLOR") is not None:
+        return False
+    mode = os.environ.get("ARKHEIONX_COLOR", "auto").strip().lower()
+    if mode in _COLOR_OFF:
+        return False
+    if mode in _COLOR_FORCE:
+        return True
+    # auto (default, or any unrecognized value): TTY-driven, off in CI/dumb term.
     if os.environ.get("CI") is not None:
         return False
     if os.environ.get("TERM", "") == "dumb":
