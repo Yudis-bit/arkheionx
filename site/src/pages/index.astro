@@ -48,8 +48,9 @@ import Layout from "../components/Layout.astro";
           </p>
 
           <div class="vc-actions">
-            <a class="vc-button vc-button--primary" href="/docs">Read the docs</a>
-            <a class="vc-button" href="/install">Install guide</a>
+            <a class="vc-button vc-button--primary" href="/examples">Try the V4 demo</a>
+            <a class="vc-button" href="/docs/quickstart">Read the quickstart</a>
+            <a class="vc-button" href="/docs/cli-reference">Command reference</a>
             <a class="vc-button" href="https://github.com/Yudis-bit/DeFi-Exploit-PoCs" target="_blank" rel="noreferrer">GitHub</a>
           </div>
         </div>
@@ -106,11 +107,11 @@ import Layout from "../components/Layout.astro";
     </section>
 
     <section class="vc-proof">
-      <span>Public-safe source</span>
+      <span>V4.0.0</span>
       <span>Local-first</span>
+      <span>Static only</span>
       <span>No RPC by default</span>
       <span>No private keys</span>
-      <span>Snapshot drift checks</span>
       <span>Human review required</span>
     </section>
 
@@ -273,6 +274,39 @@ Inspect first
 3  HIGH   Vault.withdraw             Signals  external-call, value-out
 
 Test gap   Vault.withdraw   Source  src/Vault.sol:63   Proof  proof-vault-withdraw</code></pre>
+      </div>
+    </section>
+
+    <section class="vc-section">
+      <div class="vc-heading">
+        <p class="vc-kicker">Output anatomy</p>
+        <h2>How to read the review map.</h2>
+      </div>
+      <div class="definition-grid">
+        <div>
+          <dt>Inspect first</dt>
+          <dd>A ranked review order — where to look first. It is review order, not severity, and never a confirmed finding.</dd>
+        </div>
+        <div>
+          <dt>Value path</dt>
+          <dd>How value enters, moves, and exits a contract (for example <code>deposit → withdraw</code>).</dd>
+        </div>
+        <div>
+          <dt>Test gap</dt>
+          <dd>A value-sensitive function with no matching local test. A gap is a prompt to write a test, not proof of a bug.</dd>
+        </div>
+        <div>
+          <dt>Source: file:line</dt>
+          <dd>The exact location to open, taken from the parsed source — not an invented number.</dd>
+        </div>
+        <div>
+          <dt>Proof direction</dt>
+          <dd>A local Foundry scaffold to try by hand. ArkheionX never executes it for you.</dd>
+        </div>
+        <div>
+          <dt>Human review</dt>
+          <dd>You make the security call. The map is context, not a verdict.</dd>
+        </div>
       </div>
     </section>
 
