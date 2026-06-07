@@ -27,6 +27,20 @@ vulnerabilities, assign severity, or replace an audit.
 - [`TRACE_ENGINE.md`](TRACE_ENGINE.md) · [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md) · [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — proof and evidence steps.
 - [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md) · [`STABILITY_CONTRACT.md`](STABILITY_CONTRACT.md) — the supported, stable surface.
 
+## Use cases
+
+- [`PRE_AUDIT_WORKFLOW.md`](PRE_AUDIT_WORKFLOW.md) — prepare a repo before an audit.
+- [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — safe triage and hypothesis generation.
+- [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md) — reviewer onboarding and solo research.
+- [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — collect local evidence around a finding.
+
+## V4 release
+
+- [`V4_STABLE_SCOPE.md`](V4_STABLE_SCOPE.md) — what V4 stabilizes (and what stays experimental).
+- [`V4_INFORMATION_ARCHITECTURE.md`](V4_INFORMATION_ARCHITECTURE.md) — how the public surface is organized.
+- [`PACKAGING.md`](PACKAGING.md) — installed vs source-tree commands.
+- Release package: see `releases/V4_RELEASE_NOTES.md` and `releases/V4_RELEASE_CHECKLIST.md`.
+
 ## Advanced / project
 
 - [`PACKAGING.md`](PACKAGING.md) — installed vs source-tree commands.
