@@ -44,7 +44,18 @@ bash arkheionx-install.sh</code></pre>
     </section>
 
     <section class="doc-readable__section">
-      <h2>4. Read the safety model</h2>
+      <h2>4. Build the review map</h2>
+      <pre><code>arkheionx review-map .</code></pre>
+      <p>
+        This is the core command. It maps value paths, trust assumptions, and missing tests, and
+        writes artifacts under <code>.arkheionx/out/review-map/</code>. Try the bundled
+        multi-contract demo first:
+      </p>
+      <pre><code>arkheionx review-map examples/vault-strategy-oracle-fixture</code></pre>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>5. Read the safety model</h2>
       <p>
         ArkheionX creates review context. It does not confirm vulnerabilities, assign final
         severity, prove protocol safety, submit reports, or stand in for human review.
@@ -53,7 +64,7 @@ bash arkheionx-install.sh</code></pre>
     </section>
 
     <section class="doc-readable__section">
-      <h2>5. What comes next</h2>
+      <h2>6. What comes next</h2>
       <p>
         After the environment is working, use ArkheionX as a structured review layer around your
         codebase. Treat outputs as review context that must be inspected by a human.

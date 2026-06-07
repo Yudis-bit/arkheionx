@@ -66,7 +66,7 @@ import Layout from "../components/Layout.astro";
             </div>
             <div class="vc-artifact__row">
               <span class="vc-artifact__label">Value paths</span>
-              <strong>Deposit → Allocate → Harvest → Withdraw</strong>
+              <strong>deposit → invest → divest → withdraw</strong>
             </div>
             <div class="vc-artifact__row">
               <span class="vc-artifact__label">Assumptions</span>
@@ -74,7 +74,7 @@ import Layout from "../components/Layout.astro";
             </div>
             <div class="vc-artifact__row">
               <span class="vc-artifact__label">Test gaps</span>
-              <strong>Paused withdraw · Oracle delay · Strategy loss</strong>
+              <strong>withdraw · emergencyWithdraw · setOracle</strong>
             </div>
           </div>
 
@@ -249,11 +249,13 @@ import Layout from "../components/Layout.astro";
     <section class="vc-section vc-section--split">
       <div>
         <p class="vc-kicker">Try it locally</p>
-        <h2>Start with simple checks.</h2>
+        <h2>Start with the review map.</h2>
       </div>
       <div class="vc-command-list">
         <pre><code>arkheionx version</code></pre>
         <pre><code>arkheionx doctor</code></pre>
+        <pre><code>arkheionx review-map .</code></pre>
+        <pre><code>arkheionx review-map examples/vault-strategy-oracle-fixture</code></pre>
       </div>
     </section>
 
