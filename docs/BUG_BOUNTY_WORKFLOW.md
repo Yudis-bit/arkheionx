@@ -84,6 +84,44 @@ For each gap, ask the questions the category implies, then write the test:
 
 These are **hypotheses to test**, not confirmed issues.
 
+## AI-assisted review with research memory (v4.1)
+
+Do not hand an AI agent a vague prompt like "find bugs in this repo" — that
+creates noise. Use ArkheionX to produce a structured handoff first.
+
+> ArkheionX gives the map. The agent grinds the tests. The research memory keeps
+> the evidence. The human makes the final call.
+
+```sh
+arkheionx review-map .
+arkheionx agent-brief .       # focused brief for the agent
+arkheionx hypothesis-log .    # track what you test and reject
+arkheionx case-study .        # write the research-session memory
+```
+
+1. **Generate the agent brief.** `agent-brief` focuses the agent on value paths,
+   accounting mutations, authorization surfaces (signature/Merkle/role/gate),
+   periphery/core flows, weakly-covered surfaces, and a set of `open`
+   hypotheses. Hand the agent the brief and ask it to write *local Foundry
+   tests* for the top hypotheses.
+2. **Track hypotheses.** `hypothesis-log` writes a log where every hypothesis
+   starts `open`. As you test, set the status to `testing`, then `rejected`,
+   `confirmed`, or `needs-human-review`, and fill in the test command, result,
+   and rejection/confirmation notes.
+3. **Rejected hypotheses are evidence.** A rejected hypothesis means the tested
+   invariant or behavior held under the attempted conditions. That is research
+   memory, not wasted work — it records what was checked so later reviewers do
+   not duplicate effort.
+4. **Write the case study.** `case-study --from .arkheionx/research` summarizes
+   what was tested, what was rejected (with evidence), what held, what was noisy,
+   and what remains unresolved. It makes no vulnerability claim unless a finding
+   is independently confirmed.
+
+`confirmed` is never set by ArkheionX. Only a human sets it, and only with
+independent local proof. See
+[`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+[`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
+
 ## What good ArkheionX bounty output looks like
 
 This is **demo/heuristic** output from the bundled
@@ -118,6 +156,8 @@ deliberately **not** listed — the map tracks observed coverage, not guesses.
 
 ## Related
 
+- [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) — AI-assisted research memory workflow.
+- [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md) — the research memory object model.
 - [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md) — what each output section means.
 - [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) — the boundaries.
 - [`SECURITY.md`](../SECURITY.md) — reporting issues in ArkheionX itself.

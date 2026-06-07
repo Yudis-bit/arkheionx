@@ -23,6 +23,29 @@ or non-editable), are local/static, and need no RPC, private keys, or secrets:
 `version`, `doctor`, `review-map`, `value-paths`, `assumptions`, `test-gap-map`,
 `proof-plan`.
 
+## Research memory commands (v4.1)
+
+Three additive, local/static commands extend the workflow for AI-assisted
+review. They build on the review map, emit human Markdown and `--json`, and
+write artifacts under `.arkheionx/research/` (unless `--no-write`). Hypotheses
+are review prompts, not findings; `manual_review_required` stays true.
+
+- `arkheionx agent-brief <path>` — an AI-agent-ready brief: repository summary,
+  coverage weakness ranking, value movement, test gaps, authorization surfaces,
+  periphery/core surfaces, behavior-mismatch surfaces, open hypotheses, and a
+  do-not-claim boundary. `--out <dir>`, `--json`, `--no-write`, `--top`.
+- `arkheionx hypothesis-log <path>` — a structured hypothesis log and
+  rejected-finding memory. Every hypothesis starts at `open` with empty fields
+  for test command, result, rejection reason, confirmation notes, and human
+  decision. `--out <dir>`, `--json`, `--no-write`.
+- `arkheionx case-study <path>` — a sanitized case-study / research-session
+  report. `--from <dir>` incorporates a hypothesis log's statuses; `--out` may
+  be a directory or a `.md` file path. Makes no vulnerability claim unless a
+  finding is independently confirmed.
+
+See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+[`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
+
 ## Exit codes
 
 - `0` — success; for review commands, no review guidance was surfaced.
@@ -97,6 +120,9 @@ work, not a finalized or published release.
 - `arkheionx report`
 - `arkheionx evidence-status`
 - `arkheionx validate-artifacts`
+- `arkheionx agent-brief`
+- `arkheionx hypothesis-log`
+- `arkheionx case-study`
 - `arkheionx review-map`
 - `arkheionx test-gap-map`
 - `arkheionx value-paths`

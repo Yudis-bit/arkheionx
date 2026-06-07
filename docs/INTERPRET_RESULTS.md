@@ -51,6 +51,33 @@ exists.
 4. Optionally scaffold a local proof with `arkheionx prove . --target <T> --run`
    and review the result yourself.
 
+## Research memory outputs (v4.1)
+
+Three commands build on the review map for AI-assisted review. They are review
+guidance, not findings:
+
+- **Agent brief (`agent-brief`).** A focused, safe brief for an AI/security
+  agent: repository summary, coverage weakness ranking, value movement,
+  authorization surfaces, periphery/core surfaces, behavior-mismatch surfaces,
+  and a set of `open` hypotheses. It replaces a vague "find bugs" prompt; it does
+  not claim any bug.
+- **Hypothesis log (`hypothesis-log`).** A tracker where every hypothesis starts
+  `open`. A human (or an agent under human review) records the test command,
+  result, and a `rejected` / `confirmed` / `needs-human-review` status after a
+  local test. A **rejected** hypothesis is useful evidence: it means a tested
+  invariant or behavior held.
+- **Case study (`case-study`).** A sanitized research-session summary: what was
+  tested, what was rejected, what held, what was noisy, and what remains
+  unresolved. It is not an audit report and makes no vulnerability claim unless a
+  finding is independently confirmed.
+
+Authorization, periphery/core, and behavior-mismatch surfaces are **heuristic
+review prompts** detected statically from names, signatures, and code patterns.
+"Potential behavior-mismatch review surface" means *look here*, never *bug here*.
+
+See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+[`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
+
 ## What it does not tell you
 
 ArkheionX does not assign final severity, does not confirm or rule out

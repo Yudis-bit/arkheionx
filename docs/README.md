@@ -31,6 +31,8 @@ vulnerabilities, assign severity, or replace an audit.
 
 - [`PRE_AUDIT_WORKFLOW.md`](PRE_AUDIT_WORKFLOW.md) — prepare a repo before an audit.
 - [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — safe triage and hypothesis generation.
+- [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) — AI-assisted review with research memory (agent brief, hypothesis log, case study).
+- [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md) — the research memory object model and schema plan.
 - [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md) — reviewer onboarding and solo research.
 - [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — collect local evidence around a finding.
 

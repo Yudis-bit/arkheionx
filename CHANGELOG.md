@@ -3,6 +3,30 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## Unreleased
+
+v4.1 research memory (AI-assisted review). Local/static and additive; the
+package version stays `4.0.0` until a maintainer cuts `v4.1.0`. No RPC,
+live-chain, exploit automation, severity, or vulnerability claims;
+`manual_review_required` stays true and hypotheses are review prompts, not
+findings.
+
+### Added
+
+- `arkheionx agent-brief` — an AI-agent-ready review brief (repository summary,
+  coverage weakness ranking, value movement, test gaps, authorization/periphery/
+  behavior-mismatch surfaces, open hypotheses, and a do-not-claim boundary).
+- `arkheionx hypothesis-log` — a structured hypothesis log and rejected-finding
+  memory; every hypothesis starts `open` with empty test/result/rejection fields.
+- `arkheionx case-study` — a sanitized research-session report; `--from`
+  incorporates a hypothesis log's statuses.
+- Research surface engine (`arkheionx/research/`): coverage weakness ranking,
+  authorization-surface detection (signature/Merkle/role/gate/domain/nonce/
+  deadline), periphery-to-core flow mapping, and behavior-mismatch heuristics.
+- `docs/RESEARCH_MEMORY_MODEL.md`, `docs/V4_1_RESEARCH_WORKFLOW.md`, JSON schemas
+  for the three artifacts, the `examples/periphery-auth-fixture` demo, and
+  end-to-end research-memory tests.
+
 ## v4.0.0 - 2026-06-07
 
 Stable local review-map workflow. **Released as v4.0.0 — tagged in git, GitHub

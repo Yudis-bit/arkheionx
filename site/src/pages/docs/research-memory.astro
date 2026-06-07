@@ -1,0 +1,93 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const commands = [
+  ["agent-brief", "A focused, safe brief for an AI/security agent: value paths, coverage weakness ranking, authorization surfaces, periphery/core flows, behavior-mismatch surfaces, and open hypotheses."],
+  ["hypothesis-log", "A structured hypothesis tracker. Every hypothesis starts open; a human records the test command, result, and a rejected / confirmed / needs-human-review status."],
+  ["case-study", "A sanitized research-session report: what was tested, what was rejected, what held, what was noisy, and what remains unresolved."]
+];
+---
+
+<Layout
+  title="Research memory (v4.1) — ArkheionX"
+  description="ArkheionX v4.1 research memory: an agent brief, a hypothesis log, and a case-study generator for AI-assisted review. Local and static only; human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Research memory (v4.1)</p>
+      <h1>Map the protocol. Track the hypotheses. Keep the evidence.</h1>
+      <p>
+        ArkheionX gives the map. The agent grinds the tests. The research memory keeps the
+        evidence. The human makes the final call. v4.1 turns a review map into an AI-agent-ready
+        brief and preserves what was tested and rejected. It does not confirm vulnerabilities,
+        assign severity, or run anything against a live chain.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Workflow</p>
+        <h2>Build the handoff before asking an agent to review.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx review-map .
+arkheionx agent-brief .
+arkheionx hypothesis-log .
+arkheionx case-study .</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {commands.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>arkheionx {item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Rejected findings are evidence</p>
+        <h2>A held invariant is research memory, not wasted work.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>HYP-004  [rejected]  withdrawal/redeem accounting drift -> Vault.withdraw
+  Test command   forge test --match-test test_withdraw_conserves_accounting
+  Result         pass
+  Rejection      share<->asset accounting held for first, last, and dust exits
+  Human decision not a finding; recorded so later reviewers do not retest</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>!</span>
+        <h2>Hypotheses, not findings</h2>
+        <p>Every generated hypothesis starts open and is a review prompt. ArkheionX never sets confirmed; only a human does, and only with independent local proof.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Local and static</h2>
+        <p>No RPC, no live-chain action, no exploit automation, no auto-submit. Artifacts are written locally under <code>.arkheionx/research/</code>.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Human review required</h2>
+        <p>The case study is not an audit report and makes no safety claim. The security judgment stays yours.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>ArkheionX organizes research memory; it does not decide.</h2>
+      <p>
+        It does not confirm vulnerabilities, assign final severity, or prove impact. Read the full
+        guide in the repository's <code>docs/V4_1_RESEARCH_WORKFLOW.md</code> and
+        <code>docs/RESEARCH_MEMORY_MODEL.md</code>.
+      </p>
+      <a href="/docs/safety-model" class="workflow-button">Read the safety model</a>
+    </section>
+  </main>
+</Layout>

@@ -42,6 +42,17 @@ Then work the output by hand:
 5. **Prepare the handoff.** Share the review map, the new tests, and your notes
    so the reviewer starts from context instead of rebuilding it.
 
+For an AI-assisted pass (v4.1), generate an agent brief and track hypotheses so
+the review surface — and the rejected ideas — are preserved as research memory:
+
+```sh
+arkheionx agent-brief .
+arkheionx hypothesis-log .
+arkheionx case-study .
+```
+
+See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md).
+
 ## What this gives the reviewer
 
 - A consistent map of contracts, roles, value paths, and assumptions.

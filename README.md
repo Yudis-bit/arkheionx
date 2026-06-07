@@ -189,6 +189,12 @@ Additional workbench commands:
 - `local-validate` / `arkheionx local-validate`
 - `demo` / `arkheionx demo`
 
+Research memory (v4.1, AI-assisted review):
+
+- `agent-brief` / `arkheionx agent-brief`
+- `hypothesis-log` / `arkheionx hypothesis-log`
+- `case-study` / `arkheionx case-study`
+
 Generated outputs are written under `.arkheionx/out/`; they are generated, local, gitignored, and not intended to be committed as source truth.
 
 ## Bug bounty and pre-audit usage
@@ -201,6 +207,12 @@ ArkheionX is a triage and preparation aid, used by a human:
 - **Pre-audit readiness** — map value paths, write missing tests, and hand a
   reviewer a clearer surface. See
   [`docs/PRE_AUDIT_WORKFLOW.md`](docs/PRE_AUDIT_WORKFLOW.md).
+- **AI-assisted review (v4.1)** — generate an agent brief, track hypotheses, and
+  keep rejected findings as research memory:
+  `arkheionx gives the map, the agent grinds the tests, the research memory keeps
+  the evidence, the human makes the final call`. See
+  [`docs/V4_1_RESEARCH_WORKFLOW.md`](docs/V4_1_RESEARCH_WORKFLOW.md) and
+  [`docs/RESEARCH_MEMORY_MODEL.md`](docs/RESEARCH_MEMORY_MODEL.md).
 
 Do not submit ArkheionX output as a vulnerability by itself, validate manually,
 and only run it on repositories you are authorized to review.

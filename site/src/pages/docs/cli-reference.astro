@@ -57,6 +57,12 @@ const advanced = [
   ["evidence-status / validate-artifacts / evidence-links", "Inspect and validate generated artifacts and their links."],
   ["validate-config / demo", "Validate a local config; list, show, and copy bundled demo fixtures."]
 ];
+
+const research = [
+  ["agent-brief", "An AI-agent-ready review brief: coverage weakness ranking, value movement, authorization surfaces, periphery/core flows, behavior-mismatch surfaces, and open hypotheses."],
+  ["hypothesis-log", "A structured hypothesis log and rejected-finding memory. Every hypothesis starts open; a human records the test, result, and rejection/confirmation."],
+  ["case-study", "A sanitized research-session report; --from incorporates a hypothesis log's statuses. No vulnerability claim unless independently confirmed."]
+];
 ---
 
 <Layout
@@ -125,6 +131,26 @@ arkheionx proof-plan .     # a proof direction to try by hand</code></pre>
         <ul>
           {advanced.map((row) => (
             <li><strong>{row[0]}</strong> — {row[1]}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Research memory (v4.1)</p>
+        <h2>AI-assisted review handoff.</h2>
+        <p>
+          These additive, local/static commands build on the review map: a focused agent brief, a
+          hypothesis log (rejected findings are evidence), and a case-study generator. They write
+          to <code>.arkheionx/research/</code>; hypotheses are review prompts, not findings. See
+          <a href="/docs/research-memory">research memory</a>.
+        </p>
+      </div>
+      <div class="install-list-card">
+        <ul>
+          {research.map((row) => (
+            <li><strong>arkheionx {row[0]}</strong> — {row[1]}</li>
           ))}
         </ul>
       </div>
