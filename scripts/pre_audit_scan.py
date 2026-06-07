@@ -3088,6 +3088,15 @@ def compute_readiness_score(
             "The scanner did not find Solidity test files. A DeFi repository without tests is not ready for formal audit intake.",
             "Add Foundry or Hardhat tests for core user flows before requesting a formal audit.",
             ["testing", "audit-blocker"],
+            why_it_matters=(
+                "Without tests there is no executable evidence that core accounting and access "
+                "assumptions hold, so a reviewer cannot tell intended behavior from a latent bug."
+            ),
+            defensive_checks=[
+                "unit tests for core user flows",
+                "assertions on accounting and access boundaries",
+                "a Foundry or Hardhat harness a reviewer can run",
+            ],
         )
     if protocol_type != "generic" and not test_readiness["invariant_tests"]:
         add_gap(
@@ -3097,6 +3106,15 @@ def compute_readiness_score(
             "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
             "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
             ["invariant-testing", protocol_type],
+            why_it_matters=(
+                "Protocol-like value flows without invariant or property tests leave core accounting "
+                "assumptions unverified under fees, rounding, and unexpected action sequences."
+            ),
+            defensive_checks=[
+                "stateful invariant suite for the core lifecycle",
+                "handler actions for normal and edge-case user flows",
+                "conservation properties for value-bearing state",
+            ],
         )
     if has_meaningful_oracle_signal(signals) and not oracle_documented:
         add_gap(
@@ -3106,6 +3124,15 @@ def compute_readiness_score(
             "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
             "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
             ["oracle-risk", "price-assumptions"],
+            why_it_matters=(
+                "Price-dependent accounting can be wrong when oracle data is stale, out of bounds, or "
+                "mis-normalized and no freshness or sanity check is visible to a reviewer."
+            ),
+            defensive_checks=[
+                "stale-round and heartbeat handling",
+                "decimals normalization to accounting units",
+                "documented price bounds, TWAP, or fallback policy",
+            ],
         )
     if has_any(signals, "vault_accounting") and not accounting_documented:
         add_gap(
@@ -3115,6 +3142,15 @@ def compute_readiness_score(
             "Vault/share/accounting terms were detected without enough explicit conservation or roundtrip testing language.",
             "Add deposit/withdraw roundtrip tests and totalAssets/share accounting invariants.",
             ["vault-accounting", "share-accounting"],
+            why_it_matters=(
+                "Share and asset accounting can drift if conservation and roundtrip behavior is not "
+                "tested across deposits, withdrawals, fees, and rounding."
+            ),
+            defensive_checks=[
+                "deposit then withdraw conserves value within rounding",
+                "totalAssets and share-price consistency",
+                "fee, donation, and zero-supply edge cases",
+            ],
         )
     if has_any(signals, "reentrancy_value_flow") and not value_flow_covered:
         add_gap(
@@ -3124,6 +3160,15 @@ def compute_readiness_score(
             "External call or token transfer terms were detected without guard or reentrancy-review signals.",
             "Review state update order and add local malicious-receiver tests where callbacks are possible.",
             ["reentrancy-review", "value-flow"],
+            why_it_matters=(
+                "External calls around value flow can expose state-ordering assumptions if internal "
+                "accounting is not finalized before control leaves the contract."
+            ),
+            defensive_checks=[
+                "checks-effects-interactions ordering",
+                "local malicious-receiver callback test",
+                "double-withdraw or double-claim prevention",
+            ],
         )
     if has_any(signals, "upgradeability") and not has_positive_term(lower_all_text, "initializer"):
         add_gap(
@@ -3133,6 +3178,15 @@ def compute_readiness_score(
             "Proxy or implementation terms were detected without a strong initializer signal.",
             "Add initializer, reinitializer, authorization, and storage layout tests/docs.",
             ["upgradeability", "initialization"],
+            why_it_matters=(
+                "Upgradeable contracts can mishandle initialization or storage layout if upgrade "
+                "authorization and re-initialization paths are not tested."
+            ),
+            defensive_checks=[
+                "initializer and reinitializer guards",
+                "upgrade authorization boundaries",
+                "storage layout stability across upgrades",
+            ],
         )
     if has_any(signals, "access_control") and not role_covered:
         add_gap(
@@ -3142,6 +3196,15 @@ def compute_readiness_score(
             "Privileged role/setter terms were detected without enough unauthorized-call coverage.",
             "Add tests that unauthorized users cannot call privileged setters or emergency controls.",
             ["access-control-review", "admin-risk"],
+            why_it_matters=(
+                "Privileged setters can change protocol behavior; without unauthorized-call tests, "
+                "role boundaries and emergency controls are unverified."
+            ),
+            defensive_checks=[
+                "unauthorized caller reverts on each privileged setter",
+                "documented role succeeds only within intended bounds",
+                "emergency control authorization",
+            ],
         )
     if has_any(signals, "staking_rewards", ["stake", "unstake", "reward", "rewards", "claim", "rewardPerToken", "accumulator", "emission", "earned", "pendingReward"]) and not test_readiness["invariant_tests"]:
         add_gap(
@@ -3151,6 +3214,15 @@ def compute_readiness_score(
             "Reward/index/claim signals were detected without invariant testing.",
             "Add reward conservation and no-overclaim tests across multiple users and timing boundaries.",
             ["reward-accounting", "precision"],
+            why_it_matters=(
+                "Reward index and accumulator math can over- or under-pay when stake or supply "
+                "changes across epochs without conservation tests."
+            ),
+            defensive_checks=[
+                "total claimed never exceeds funded rewards",
+                "stake/unstake around reward updates",
+                "precision and rounding around small balances",
+            ],
         )
     apply_negative_evidence_score_penalty(
         score,
