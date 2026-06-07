@@ -227,6 +227,8 @@ See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
 
 ## Documentation
 
+Full index: [`docs/README.md`](docs/README.md).
+
 Start:
 
 - [`docs/START_HERE.md`](docs/START_HERE.md)
