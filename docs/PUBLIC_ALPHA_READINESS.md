@@ -1,9 +1,17 @@
 # Public alpha readiness
 
-**Status: `PUBLIC_ALPHA_READY_EXCEPT_REPO_IDENTITY`**
+**Limited-alpha status: `PUBLIC_ALPHA_READY_EXCEPT_REPO_IDENTITY`**
+**Broad-public status: `BROAD_PUBLIC_READY_REQUIRES_REPO_IDENTITY_MIGRATION`**
 
 This note records exactly what is ready for a limited public alpha and what is
 intentionally deferred. It is descriptive, not a guarantee.
+
+The two statuses are deliberately distinct. The repository is ready for a
+**limited** public alpha (technically green, safe, documented). It is **not yet
+ready for a broad public launch**, because the repository identity still
+misrepresents the tool — see
+[`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md) for the exact founder
+action plan that lifts the broad-public blocker.
 
 ## Ready
 
@@ -31,8 +39,12 @@ intentionally deferred. It is descriptive, not a guarantee.
 ## Deferred (not done; not claimed as done)
 
 - **Repository identity** — the repo is still named `DeFi-Exploit-PoCs` and keeps
-  its legacy `EVM/`, `MoveVM/`, and `SVM/` material. This is **intentionally
-  deferred by founder decision** and is *not* solved here. Do not treat it as
+  its legacy `EVM/`, `MoveVM/`, and `SVM/` material. This was acceptable for a
+  *limited* alpha, but it is the **blocker for broad public readiness**: the name
+  and root contents misrepresent a local/static review tool. The exact migration
+  plan (preferred rename/split, every reference to update, and the gates/tests
+  that assert the old identity) is in
+  [`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md). Do not treat it as
   resolved.
 - **Real-protocol case studies** — depth is demonstrated on fixtures only; there
   is no real-world protocol case study yet.
@@ -56,4 +68,4 @@ intentionally deferred. It is descriptive, not a guarantee.
 - [x] `make validate` passes
 - [x] Site build passes
 - [x] Non-editable install smoke passes (`version`, `doctor`, `review-map`)
-- [ ] Repository identity (deferred by founder decision)
+- [ ] Repository identity (broad-public blocker; see `REPO_IDENTITY_MIGRATION.md`)
