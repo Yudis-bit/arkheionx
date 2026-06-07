@@ -479,4 +479,6 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Arkheionx JSON test plan generated: {json_output}")
     if foundry_output:
         print(f"Arkheionx Foundry invariant skeleton generated: {foundry_output}")
+    print("Next: replace the TODO bindings with local contracts and mocks, then run the suite locally.")
+    print("Defensive test-planning artifact only; not a formal audit or proof of safety. Human review required.")
     return 0

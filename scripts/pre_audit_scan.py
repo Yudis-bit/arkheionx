@@ -7117,6 +7117,9 @@ def main(argv: list[str] | None = None) -> int:
     if fix_first_ids:
         print(f"Fix First: {', '.join(fix_first_ids)}")
     print("Full readiness details are in the Markdown/JSON artifacts.")
+    if json_output:
+        print("Next: turn this report into a defensive test plan:")
+        print(f"  arkheionx test-plan --report {json_output}")
 
     if args.fail_on_critical_readiness_gap and critical_gaps:
         print("critical readiness gaps detected; failing because --fail-on-critical-readiness-gap was set", file=sys.stderr)
