@@ -1,9 +1,10 @@
 # Packaging
 
-Arkheionx v2.0.1 keeps package metadata for local editable installation:
+Arkheionx ships package metadata for local installation:
 
 ```sh
-python3 -m pip install -e .
+python3 -m pip install -e .   # source / development
+python3 -m pip install .      # non-editable
 ```
 
 The package name is `arkheionx`, and the console entrypoint is:
@@ -15,19 +16,26 @@ arkheionx = "arkheionx.cli.main:main"
 
 ## Scope
 
-v2.0.1 is a packaging and product repositioning hotfix. It does not publish to
-PyPI, upload artifacts, add publishing workflows, or require tokens. The
-package surface remains the current foundation for local/static value-flow
-review through `scan`, `test-plan`, `search`, `validate-config`, `doctor`, and
-`version`.
+This is local/static review tooling. It does not publish to PyPI, upload
+artifacts, add publishing workflows, or require tokens. The canonical local
+review workflow is `arkheionx review-map .`; `doctor` and `version` are the
+first orientation commands.
 
 ## Versioning
 
-The CLI prints `2.0.1-dev` during release preparation. `pyproject.toml` uses
-the PEP 440 package metadata form `2.0.1.dev0`.
+The installed package version is `3.9.0` (the current local/public-safe
+technical state); `pyproject.toml` declares `version = "3.9.0"`. The latest
+tagged stable release is `v3.1.0`, and `v4.0.0` is the next milestone (planned
+direction, not tagged here). `arkheionx version` prints all of these.
 
-Planned future `arkheionx flow` commands are roadmap items and are not part of
-the v2.0.1 package surface.
+These package milestones are deliberately separate from the legacy pre-audit
+scanner's frozen output version (`SCANNER_VERSION`), which stays pinned so the
+committed example reports under `examples/reports/` remain byte-stable across
+package milestones. A scanner report showing an older output version is
+expected, not stale package metadata.
+
+Planned future `arkheionx flow` sub-commands are roadmap items and are not part
+of the current package surface.
 
 ## Build Artifacts
 
