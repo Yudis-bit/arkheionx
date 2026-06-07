@@ -79,8 +79,8 @@ class ScreenBuilderTests(unittest.TestCase):
 
     def test_kv_rows_align_on_label(self) -> None:
         os.environ["NO_COLOR"] = "1"
-        rows = screen.kv_rows([("Status", "WARN"), ("Version", "3.9.0")])
-        self.assertEqual(rows[0].index("WARN"), rows[1].index("3.9.0"))
+        rows = screen.kv_rows([("Status", "WARN"), ("Version", "4.0.0")])
+        self.assertEqual(rows[0].index("WARN"), rows[1].index("4.0.0"))
 
     def test_chip_rows_align_and_strip_lossless(self) -> None:
         os.environ["ARKHEIONX_COLOR"] = "force"

@@ -14,8 +14,8 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v3.9.0.
-Next milestone: v4.0.0.
+Current milestone: v4.0.0.
+Next milestone: v4.1.0.
 Latest stable: v3.1.0 — Protocol Review Map.
 Foundation shipped: v3.1.0 — Protocol Review Map; v3.0.0 — Public Stable Launch; v2.10.0 — Pre-v3 Public Readiness & Stability Hardening; v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening; v2.8.0 — Package Data & Distribution Hardening; v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench. v3.0.0 shipped as the public stable

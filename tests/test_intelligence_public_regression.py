@@ -30,10 +30,10 @@ def _commands() -> list[str]:
 
 class MetadataUnchangedTests(unittest.TestCase):
     def test_version_metadata_is_frozen(self) -> None:
-        self.assertEqual(version.PACKAGE_VERSION, "3.9.0")
+        self.assertEqual(version.PACKAGE_VERSION, "4.0.0")
         self.assertEqual(version.STABLE_RELEASE, "v3.1.0")
-        self.assertEqual(version.CURRENT_MILESTONE, "v3.9.0")
-        self.assertEqual(version.NEXT_MILESTONE, "v4.0.0")
+        self.assertEqual(version.CURRENT_MILESTONE, "v4.0.0")
+        self.assertEqual(version.NEXT_MILESTONE, "v4.1.0")
 
 
 class NoNewCommandTests(unittest.TestCase):

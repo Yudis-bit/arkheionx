@@ -13,9 +13,9 @@ def read(rel: str) -> str:
 
 class ReleaseReadinessTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
-        self.assertEqual(__version__, "3.9.0")
-        self.assertEqual(CURRENT_MILESTONE, "v3.9.0")
-        self.assertEqual(NEXT_MILESTONE, "v4.0.0")
+        self.assertEqual(__version__, "4.0.0")
+        self.assertEqual(CURRENT_MILESTONE, "v4.0.0")
+        self.assertEqual(NEXT_MILESTONE, "v4.1.0")
 
     def test_release_artifacts_exist(self) -> None:
         for path in [

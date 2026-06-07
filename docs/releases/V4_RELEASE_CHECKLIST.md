@@ -45,9 +45,9 @@ founder actions.
 
 ## Release (founder only)
 
-- [ ] Decide whether to bump the package version to `4.0.0` (updates
-      `arkheionx/version.py`, `pyproject.toml`, and the version-locked tests
-      together) or keep `3.9.0` and tag the milestone only.
+- [ ] Confirm the package version is finalized at `4.0.0`
+      (`arkheionx/version.py`, `pyproject.toml`, and the version-locked tests),
+      while the last tagged stable stays `v3.1.0` for the installer/action pin.
 - [ ] `git push origin main`
 - [ ] `git tag -a v4.0.0 -m "Arkheionx v4.0.0 — stable local review-map workflow"`
 - [ ] `git push origin v4.0.0`

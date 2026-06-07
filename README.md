@@ -236,7 +236,7 @@ is still review context, not a final security judgment.
 ## Architecture
 
 The current public surface is v3.x local tooling plus fixture benchmarks. The
-v3.0.0 is the public stable launch baseline; v3.9.0 is the sanitized technical
+v3.0.0 is the public stable launch baseline; v4.0.0 is the current technical
 state for this branch.
 
 ![ArkheionX workflow](docs/assets/arkheionx-workflow-v27.svg)
@@ -336,11 +336,13 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v3.9.0 public-safe branch**
+**Human review required** · **v4.0.0 release candidate**
 
-Latest stable release: **v3.1.0**. Current local/public-safe technical state:
-**v3.9.0**. Next milestone metadata remains **v4.0.0** (the prepared stable
-review-map release), but v4.0.0 is not tagged here — a maintainer cuts the tag.
+Latest stable release: **v3.1.0**. Current package version: **4.0.0** — the
+v4.0.0 release candidate, prepared locally and pending founder push/tag/GitHub
+release/site deploy. The last tagged stable release remains **v3.1.0**, which the
+source installers and the GitHub Action pin to until the v4.0.0 tag is cut. Next
+milestone: **v4.1.0**.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
 Map the protocol. Prove the path. Prepare the handoff.

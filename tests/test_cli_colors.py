@@ -136,7 +136,7 @@ class ColorUtilityTests(unittest.TestCase):
                 "ARKHEIONX DOCTOR\n"
                 "Status: warning\n"
                 "Core\n"
-                "  Arkheionx: ok 3.9.0\n"
+                "  Arkheionx: ok 4.0.0\n"
                 "  foundry.toml: missing\n"
                 "  mode: heuristic only\n"
                 "  Artifacts dir writable: yes\n"

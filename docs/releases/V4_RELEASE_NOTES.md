@@ -1,9 +1,11 @@
 # Arkheionx v4.0.0 — Stable local review-map workflow
 
-**Status: prepared locally — pending founder push/tag/release.** This document
-describes the v4.0.0 release of the review-map workflow. The package version
-reads `3.9.0` until a maintainer cuts the `v4.0.0` tag. Nothing here is published
-to PyPI, and no GitHub Release is created by this preparation.
+**Status: v4.0.0 release candidate prepared locally; pending founder
+push/tag/GitHub release/site deploy.** This document describes the v4.0.0
+release of the review-map workflow. The package version is finalized at `4.0.0`;
+the `v4.0.0` git tag and GitHub Release are founder actions, and the last tagged
+stable release remains `v3.1.0` until that tag is cut. Nothing here is published
+to PyPI.
 
 ## 1. What V4 stabilizes
 
@@ -106,17 +108,17 @@ artifacts. Existing `review-map` users need no migration.
 
 ## 15. Founder release commands
 
-This preparation does not bump the package version or tag anything. To release:
+The package version is already finalized at `4.0.0` in this tree. To release:
 
 ```sh
 git status --short --branch
 git log --oneline --decorate -25
-# Optional version bump: update arkheionx/version.py + pyproject.toml to 4.0.0
-# and the version-locked tests together, then re-run: make validate
+make validate
 git push origin main
 git tag -a v4.0.0 -m "Arkheionx v4.0.0 — stable local review-map workflow"
 git push origin v4.0.0
 ```
 
-If you keep the package metadata at `3.9.0`, the `v4.0.0` tag still marks the
-stable review-map workflow milestone; the version bump can follow separately.
+The package metadata is already finalized at `4.0.0`; the `v4.0.0` tag marks the
+stable review-map workflow milestone, and the last tagged stable release stays
+`v3.1.0` (the installer/action pin) until the tag is cut.
