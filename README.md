@@ -231,6 +231,8 @@ Start:
 
 - [`docs/START_HERE.md`](docs/START_HERE.md)
 - [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
+- [`docs/INTERPRET_RESULTS.md`](docs/INTERPRET_RESULTS.md)
+- [`docs/WHAT_ARKHEIONX_IS_NOT.md`](docs/WHAT_ARKHEIONX_IS_NOT.md)
 - [`docs/INSTALLATION.md`](docs/INSTALLATION.md)
 
 Core workflow:
