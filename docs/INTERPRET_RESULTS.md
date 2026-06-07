@@ -78,6 +78,28 @@ review prompts** detected statically from names, signatures, and code patterns.
 See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
 [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
 
+## Blind spot intelligence outputs (v5)
+
+V5 adds three outputs that prioritize *where to look*, plus a packaged pack:
+
+- **Blind spot candidate** (`blind-spots`) — a high-impact surface with weak
+  review evidence. Read the **blind spot score** as a heuristic review priority
+  (impact + review-gap + complexity + assumption), never a probability or
+  severity. Each candidate lists the reasons behind its score.
+- **Criticality potential** (`criticality-map`) — a heuristic estimate of blast
+  radius *if* a bug existed. It is **not** severity and claims no bug. Use the
+  criticality-vs-review-density view to find high-impact, weakly-reviewed surfaces.
+- **Counterfactual** (`counterfactuals`) — a testable "what if this assumption is
+  false?" question. It is a research prompt, not a finding. Each has a local test
+  direction and a stop condition (when to mark the hypothesis rejected).
+- **Research pack** (`research-pack`) — bundles all of the above with an agent
+  brief, hypotheses, an evidence log, and a do-not-claim file. Hand it to a
+  reviewer or an AI agent; record results in the evidence log.
+
+An **unknown surface** means review attention is not yet supported by evidence —
+it does **not** mean vulnerable. See
+[`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md).
+
 ## What it does not tell you
 
 ArkheionX does not assign final severity, does not confirm or rule out

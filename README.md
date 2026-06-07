@@ -195,6 +195,13 @@ Research memory (v4.1, AI-assisted review):
 - `hypothesis-log` / `arkheionx hypothesis-log`
 - `case-study` / `arkheionx case-study`
 
+Blind Spot Intelligence (v5, attention allocation):
+
+- `blind-spots` / `arkheionx blind-spots`
+- `criticality-map` / `arkheionx criticality-map`
+- `counterfactuals` / `arkheionx counterfactuals`
+- `research-pack` / `arkheionx research-pack`
+
 Generated outputs are written under `.arkheionx/out/`; they are generated, local, gitignored, and not intended to be committed as source truth.
 
 ## Bug bounty and pre-audit usage
@@ -352,21 +359,22 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v4.1.0**
+**Human review required** · **v5.0.0**
 
-Latest stable release: **v3.1.0**. Current package version: **4.1.0** — adds the
-v4.1 research-memory workflow (agent brief, hypothesis log, case study) on top of
-the stable v4.0.0 review-map workflow. The source installers and the GitHub
-Action pin to the **v3.1.0** tag. Last published tag: **v4.0.0**. Next milestone:
-**v4.2.0**.
+Latest stable release: **v3.1.0**. Current package version: **5.0.0** — adds the
+v5 Blind Spot Intelligence layer (blind-spots, criticality-map, counterfactuals,
+research-pack) on top of the stable v4.0.0 review-map workflow and the v4.1
+research-memory workflow. The source installers and the GitHub Action pin to the
+**v3.1.0** tag. Last published tag: **v4.0.0**. Next milestone: **v5.1.0**.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
 Map the protocol. Prove the path. Prepare the handoff.
-v4.1.0 adds the research-memory workflow on top of the stable v4.0.0 review-map
-workflow; the broader control plane remains planned direction.
+v5.0.0 adds Blind Spot Intelligence — a local/static way to prioritize
+high-impact surfaces with weak review evidence — on top of the stable v4.0.0
+review-map workflow; the broader control plane remains planned direction.
 
 This public-safe branch contains the engine, tests, public technical docs, and
-safety workflow. The v4.0.0 tag and GitHub release are published; the v4.1.0
+safety workflow. The v4.0.0 tag and GitHub release are published; the v5.0.0
 release metadata is finalized locally and pending push, tag, and site deploy. The
 public release branch is sanitized.
 

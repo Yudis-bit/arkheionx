@@ -122,6 +122,28 @@ independent local proof. See
 [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
 [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
 
+## Prioritize with Blind Spot Intelligence (v5)
+
+V4.1 gives you the map and the hypotheses. V5 tells you **where to spend time
+first** — high-impact surfaces with weak review evidence:
+
+```bash
+arkheionx blind-spots .            # likely blind-spot candidates, ranked
+arkheionx criticality-map .        # criticality potential (blast radius), not severity
+arkheionx counterfactuals .        # "what if this assumption is false?" prompts to test
+arkheionx research-pack . --out .arkheionx/research-pack   # bundle everything
+```
+
+A bounty-efficient flow: run `blind-spots` to pick the top few surfaces, run
+`counterfactuals` to turn the guarding assumptions on those surfaces into local
+tests, then record results in `hypothesis-log`. Hand `research-pack`'s
+`05-agent-brief.md` and `04-counterfactuals.md` to an AI agent or a teammate.
+
+Blind spot candidates are not vulnerabilities and criticality potential is not
+severity. They allocate attention; a human still makes every call. See
+[`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
+[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+
 ## What good ArkheionX bounty output looks like
 
 This is **demo/heuristic** output from the bundled

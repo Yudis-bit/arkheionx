@@ -33,8 +33,16 @@ vulnerabilities, assign severity, or replace an audit.
 - [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — safe triage and hypothesis generation.
 - [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) — AI-assisted review with research memory (agent brief, hypothesis log, case study).
 - [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md) — the research memory object model and schema plan.
+- [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the v5 blind-spot model: review density, criticality potential, counterfactuals, unknown surfaces.
+- [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the v5 attention-allocation workflow (blind-spots → criticality-map → counterfactuals → research-pack).
 - [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md) — reviewer onboarding and solo research.
 - [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — collect local evidence around a finding.
+
+## V5 release
+
+- [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the Blind Spot Intelligence model and safety boundary.
+- [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the end-to-end v5 workflow.
+- Release package: [`releases/V5_RELEASE_NOTES.md`](releases/V5_RELEASE_NOTES.md) and [`../release-notes/v5.0.0.md`](../release-notes/v5.0.0.md).
 
 ## V4 release
 

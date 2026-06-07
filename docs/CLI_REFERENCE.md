@@ -46,6 +46,37 @@ are review prompts, not findings; `manual_review_required` stays true.
 See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
 [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
 
+## Blind spot intelligence commands (v5)
+
+Four additive, local/static commands add the Blind Spot Intelligence layer. They
+build on the review map and the v4.1 research surfaces, emit human Markdown and
+`--json`, and write artifacts under `.arkheionx/` (unless `--no-write`). Blind
+spot candidates are not vulnerabilities, criticality potential is not severity,
+and counterfactuals are research prompts, not findings; `manual_review_required`
+stays true.
+
+- `arkheionx blind-spots <path>` — rank likely blind-spot candidates (high-impact
+  surfaces with weak review evidence) with a transparent additive score
+  (impact + review-gap + complexity + assumption), per-candidate reasons, a
+  suggested counterfactual, a local test direction, the evidence needed, unknown
+  surfaces, and notable non-blind-spots. `--out <dir>`, `--json`, `--no-write`,
+  `--limit <n>`, `--top`.
+- `arkheionx criticality-map <path>` — map criticality potential (heuristic blast
+  radius, never severity) across surfaces by dimension, with highest-blast-radius
+  and criticality-vs-review-density views. `--out <dir>`, `--json`, `--no-write`.
+- `arkheionx counterfactuals <path>` — negate guarding assumptions into testable
+  "what if this assumption is false?" research prompts, each with a local test
+  direction, the evidence required, and a stop condition, plus a counterfactual
+  matrix. `--out <dir>`, `--json`, `--no-write`.
+- `arkheionx research-pack <path>` — generate a complete local, vendor-agnostic
+  research pack (README, review-map summary, blind spots, criticality map,
+  counterfactuals, agent brief, hypotheses, evidence log, do-not-claim,
+  case-study template, and a JSON manifest). Writes by default. `--out <dir>`,
+  `--json` (manifest), `--no-write`.
+
+See [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
+[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+
 ## Exit codes
 
 - `0` — success; for review commands, no review guidance was surfaced.
@@ -123,6 +154,10 @@ work, not a finalized or published release.
 - `arkheionx agent-brief`
 - `arkheionx hypothesis-log`
 - `arkheionx case-study`
+- `arkheionx blind-spots`
+- `arkheionx criticality-map`
+- `arkheionx counterfactuals`
+- `arkheionx research-pack`
 - `arkheionx review-map`
 - `arkheionx test-gap-map`
 - `arkheionx value-paths`

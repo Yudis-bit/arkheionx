@@ -84,6 +84,25 @@ See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
 | `arkheionx hypothesis-log` | Structured hypothesis log and rejected-finding memory: open hypotheses with surface, source, bug class, suggested local test, and empty fields for test command, result, rejection reason, confirmation notes, and human decision | human + `--json` | `research/hypotheses.{md,json}` | stable-additive |
 | `arkheionx case-study` | Sanitized case-study / research-session report from review-map and research surfaces; optional `--from` incorporates a hypothesis log's statuses; makes no vulnerability claim unless independently confirmed | human + `--json` | `research/case-study.{md,json}` | stable-additive |
 
+## Blind spot intelligence commands (v5)
+
+In finalized v5.0 branch work, the public surface gains four additive,
+local/static Blind Spot Intelligence commands built on top of the review map and
+the v4.1 research surfaces. They emit human Markdown and `--json`, write
+artifacts under `.arkheionx/` (unless `--no-write`), and never run RPC,
+live-chain, or exploit automation. `manual_review_required` stays true: blind
+spot candidates are not vulnerabilities, criticality potential is not severity,
+and counterfactuals are research prompts, not findings. See
+[`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
+[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx blind-spots` | Rank likely blind-spot candidates (high-impact surfaces with weak review evidence) with a transparent additive score (impact + review-gap + complexity + assumption), per-candidate reasons, a suggested counterfactual, a local test direction, evidence needed, unknown surfaces, and notable non-blind-spots | human + `--json` | `blind-spots/blind-spots.{md,json}` | stable-additive |
+| `arkheionx criticality-map` | Map criticality potential (heuristic blast radius, never severity) across surfaces by dimension, with highest-blast-radius and criticality-vs-review-density views | human + `--json` | `criticality-map/criticality-map.{md,json}` | stable-additive |
+| `arkheionx counterfactuals` | Negate guarding assumptions into testable "what if this assumption is false?" research prompts with a local test direction, evidence required, and a stop condition, plus a counterfactual matrix | human + `--json` | `counterfactuals/counterfactuals.{md,json}` | stable-additive |
+| `arkheionx research-pack` | Generate a complete local, vendor-agnostic bug bounty research pack (README, review-map summary, blind spots, criticality map, counterfactuals, agent brief, hypotheses, evidence log, do-not-claim, case-study template, JSON manifest). Writes by default | human + `--json` (manifest) | `research-pack/*` | stable-additive |
+
 ## Setup and lifecycle commands
 
 | Command | Purpose | Stability |

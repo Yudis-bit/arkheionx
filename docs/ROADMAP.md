@@ -14,9 +14,40 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v4.1.0.
-Next milestone: v4.2.0.
+Current milestone: v5.0.0.
+Next milestone: v5.1.0.
 Latest stable: v3.1.0 — Protocol Review Map.
+
+## v5.0 — Blind Spot Intelligence (finalized locally)
+
+v5.0 is the first **major** step beyond mapping. v4 maps the protocol; **v5 maps
+where research attention is weakest relative to how much could go wrong.** It adds
+a Blind Spot Intelligence layer on top of the stable review-map and v4.1
+research-memory workflow:
+
+- `arkheionx blind-spots` — rank likely blind-spot candidates (high-impact
+  surfaces with weak review evidence) with a transparent additive score.
+- `arkheionx criticality-map` — map criticality potential (heuristic blast
+  radius, not severity) across every surface.
+- `arkheionx counterfactuals` — negate guarding assumptions into testable
+  research prompts ("what if this assumption is false?").
+- `arkheionx research-pack` — bundle the above with an agent brief, hypotheses,
+  an evidence log, and a do-not-claim file into one local, vendor-agnostic pack.
+
+It adds no RPC, no live-chain action, no exploit automation, and no severity or
+vulnerability claims. Blind spot candidates are review prompts; criticality
+potential is not severity; human review is required. The package version is now
+`5.0.0`; the `v5.0.0` tag, GitHub Release, and site deploy are founder actions
+(the last published tag remains `v4.0.0`, the installer-pinned stable remains
+`v3.1.0`). See [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
+[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+
+## v5.1 — Blind spot precision (planned)
+
+v5.1 is planned direction: tighten the blind-spot scoring with real-protocol
+calibration, deepen authorization and periphery/behavior-mismatch detection, and
+reduce false-priority surfaces. No dates; no commitment until committed artifacts
+support it.
 
 ## v4.1 — Research memory (finalized locally)
 
