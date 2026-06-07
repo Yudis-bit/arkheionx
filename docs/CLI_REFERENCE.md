@@ -1,7 +1,48 @@
 # Arkheionx CLI Reference
 
-Arkheionx supports the installable console command, the module CLI, and the
-stable script surface for local protocol review:
+## Start here: the command ladder
+
+The canonical first run is `arkheionx review-map .`. Work down the ladder:
+
+```sh
+arkheionx version          # confirm the install
+arkheionx doctor           # check environment + project layout
+arkheionx review-map .     # build the local review map (start here)
+arkheionx value-paths .    # where value enters, moves, exits
+arkheionx assumptions .    # the trust each path depends on
+arkheionx test-gap-map .   # value-sensitive functions with missing tests
+arkheionx proof-plan .     # a local proof direction to try by hand
+```
+
+Try the bundled demo: `arkheionx review-map examples/vault-strategy-oracle-fixture`.
+
+## Stable V4 commands
+
+V4 stabilizes the local review-map workflow. These run on any install (editable
+or non-editable), are local/static, and need no RPC, private keys, or secrets:
+`version`, `doctor`, `review-map`, `value-paths`, `assumptions`, `test-gap-map`,
+`proof-plan`.
+
+## Exit codes
+
+- `0` — success; for review commands, no review guidance was surfaced.
+- `1` — review guidance is present. For `review-map` and the focused views this
+  is **intentional** (there is something to inspect), not a crash.
+- `2` — usage or input error (bad path, bad flags, or a source-tree-only helper
+  that is not available in the installed wheel).
+
+## Output formats
+
+- **Human** — default terminal output (ranked "inspect first" list + next steps).
+- **`--json`** — structured payload for tooling.
+- **Artifacts** — written under `.arkheionx/out/review-map/` (gitignored): a
+  Markdown review map, a Test Gap Map, and JSON views. Each test gap carries a
+  `Source: <file>:<line>` reference from the parsed source.
+
+## Advanced / source-tree commands
+
+The legacy scanner surface remains available but is **not** the canonical first
+run. Run it from a repository checkout:
 
 ```sh
 arkheionx scan .

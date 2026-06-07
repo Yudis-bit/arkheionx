@@ -1,47 +1,98 @@
 ---
 import Layout from "../../components/Layout.astro";
 
-const commands = [
+const stable = [
   {
     command: "arkheionx version",
-    purpose: "Print the installed ArkheionX version and milestone metadata.",
-    use: "Run immediately after install to confirm the command wrapper works."
+    purpose: "Print the installed version and milestone metadata.",
+    use: "Run right after install to confirm the wrapper works.",
+    exit: "0"
   },
   {
     command: "arkheionx doctor",
-    purpose: "Inspect the local environment and setup assumptions.",
-    use: "Run before relying on generated review context."
+    purpose: "Check the local environment, Python, Git, and project layout.",
+    use: "Run before relying on any generated review context.",
+    exit: "0"
   },
   {
-    command: "arkheionx --help",
-    purpose: "Show commands available in the installed build.",
-    use: "Use this as the source of truth for your local checkout."
+    command: "arkheionx review-map .",
+    purpose: "Build the local review map: contracts, value paths, assumptions, test gaps, proof directions, and source evidence.",
+    use: "The canonical first command on a repo you are authorized to review.",
+    exit: "1 when review guidance is present (intentional), 0 when clean"
   },
   {
-    command: "arkup",
-    purpose: "Managed update wrapper when installed by the source installer.",
-    use: "Use only if the installer created it in your local environment."
+    command: "arkheionx value-paths .",
+    purpose: "Focused view: where value enters, moves, and exits.",
+    use: "After review-map, to study the money-moving paths.",
+    exit: "1 with guidance, 0 clean"
+  },
+  {
+    command: "arkheionx assumptions .",
+    purpose: "Focused view: the trust conditions each value path depends on.",
+    use: "To decide which assumptions to confirm in code.",
+    exit: "1 with guidance, 0 clean"
+  },
+  {
+    command: "arkheionx test-gap-map .",
+    purpose: "Focused view: value-sensitive functions with missing tests, each with a Source: file:line.",
+    use: "To turn gaps into targeted local tests.",
+    exit: "1 with guidance, 0 clean"
+  },
+  {
+    command: "arkheionx proof-plan .",
+    purpose: "Focused view: local Foundry proof-scaffold directions (planning only, never executed).",
+    use: "To outline a manual proof for a value-sensitive path.",
+    exit: "1 with guidance, 0 clean"
   }
+];
+
+const advanced = [
+  ["scan", "Legacy pre-audit readiness scanner (source-tree checkout only)."],
+  ["test-plan", "Generate defensive test plans from scanner JSON (source-tree only)."],
+  ["search", "Search the local security-memory metadata (source-tree only)."],
+  ["open / map / flow / hunt", "Orient, draw the protocol, build the money-flow graph, rank review surfaces."],
+  ["prove / trace", "Scaffold or summarize a local Foundry proof for a target (you run Foundry)."],
+  ["evidence / report", "Assemble a local evidence package and a responsible report draft."],
+  ["review-package / local-validate", "Bundle reviewer-ready artifacts; ingest saved Foundry output (never runs forge)."],
+  ["evidence-status / validate-artifacts / evidence-links", "Inspect and validate generated artifacts and their links."],
+  ["validate-config / demo", "Validate a local config; list, show, and copy bundled demo fixtures."]
 ];
 ---
 
 <Layout
-  title="CLI Reference — ArkheionX"
-  description="Conservative ArkheionX CLI reference for source installs and local verification."
+  title="CLI reference — ArkheionX"
+  description="The complete ArkheionX command reference: stable review-map commands, focused views, advanced source-tree commands, exit codes, and output formats."
 >
   <main class="cli-page">
     <section class="cli-hero">
       <p class="cli-kicker">CLI reference</p>
-      <h1>Small commands first. Trust comes from local verification.</h1>
+      <h1>Every ArkheionX command, grouped by how you use it.</h1>
       <p>
-        This page lists conservative commands used for installation verification and local setup.
-        Your installed checkout is the source of truth; use <code>arkheionx --help</code> to inspect
-        available commands.
+        Start at the top of the ladder and work down. Your installed checkout is the source of
+        truth — run <code>arkheionx --help</code> to confirm what is available locally. All
+        commands are local and static: no RPC, no live-chain calls, no exploit automation.
       </p>
     </section>
 
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Command ladder</p>
+        <h2>The path from install to review.</h2>
+        <p>Run these in order. <code>review-map</code> is the canonical first command.</p>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx version          # confirm the install
+arkheionx doctor           # check environment + project
+arkheionx review-map .     # build the review map
+arkheionx value-paths .    # where value moves
+arkheionx assumptions .    # what must stay true
+arkheionx test-gap-map .   # what is untested (Source: file:line)
+arkheionx proof-plan .     # a proof direction to try by hand</code></pre>
+      </div>
+    </section>
+
     <section class="cli-table">
-      {commands.map((item) => (
+      {stable.map((item) => (
         <article>
           <div>
             <h2>{item.command}</h2>
@@ -52,6 +103,8 @@ const commands = [
             <p>{item.purpose}</p>
             <h3>When to use</h3>
             <p>{item.use}</p>
+            <h3>Exit code</h3>
+            <p>{item.exit}</p>
           </div>
         </article>
       ))}
@@ -59,32 +112,100 @@ const commands = [
 
     <section class="cli-section cli-section--split">
       <div>
-        <p class="cli-kicker">Install path</p>
-        <h2>Source install command.</h2>
+        <p class="cli-kicker">Advanced / source-tree</p>
+        <h2>Beyond the stable workflow.</h2>
+        <p>
+          These commands exist in the CLI but are not the canonical first run. The legacy
+          scanner commands (<code>scan</code>, <code>test-plan</code>, <code>search</code>) run
+          from a repository checkout and fail gracefully in a non-editable install, pointing you
+          back to <code>arkheionx review-map</code>.
+        </p>
       </div>
-      <div>
-        <pre><code>curl -fsSL https://arkheionx.dev/install.sh | bash</code></pre>
+      <div class="install-list-card">
+        <ul>
+          {advanced.map((row) => (
+            <li><strong>{row[0]}</strong> — {row[1]}</li>
+          ))}
+        </ul>
       </div>
     </section>
 
     <section class="cli-section cli-section--split">
       <div>
-        <p class="cli-kicker">Inspect first</p>
-        <h2>Recommended first-use path.</h2>
+        <p class="cli-kicker">Exit codes</p>
+        <h2>What the exit status means.</h2>
       </div>
+      <div class="definition-grid">
+        <div>
+          <dt>0</dt>
+          <dd>Success. For review commands, no review guidance was surfaced.</dd>
+        </div>
+        <div>
+          <dt>1</dt>
+          <dd>Review guidance is present. For <code>review-map</code> and the focused views this is intentional, not a crash — it means there is something to inspect.</dd>
+        </div>
+        <div>
+          <dt>2</dt>
+          <dd>Usage or input error (bad path, bad flags, missing source-tree helper).</dd>
+        </div>
+        <div>
+          <dt>—</dt>
+          <dd>No traceback is expected on the canonical path; source-tree-only commands print clear guidance when unavailable.</dd>
+        </div>
+      </div>
+    </section>
+
+    <section class="cli-section cli-section--split">
       <div>
-        <pre><code>curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
-less arkheionx-install.sh
-bash arkheionx-install.sh</code></pre>
+        <p class="cli-kicker">Output formats</p>
+        <h2>Human, JSON, and artifacts.</h2>
+      </div>
+      <div class="definition-grid">
+        <div>
+          <dt>Human</dt>
+          <dd>Default terminal output: ranked "inspect first" list, summary, and next commands.</dd>
+        </div>
+        <div>
+          <dt>--json</dt>
+          <dd>Structured payload for tooling: contracts, value paths, assumptions, test gaps, proof suggestions.</dd>
+        </div>
+        <div>
+          <dt>Artifacts</dt>
+          <dd>Written under <code>.arkheionx/out/review-map/</code> (gitignored): Markdown review map, Test Gap Map, JSON views.</dd>
+        </div>
+        <div>
+          <dt>Source evidence</dt>
+          <dd>Each test gap prints a <code>Source: &lt;file&gt;:&lt;line&gt;</code> from the parsed source.</dd>
+        </div>
+      </div>
+    </section>
+
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Which command should I run?</p>
+        <h2>A short decision guide.</h2>
+      </div>
+      <div class="install-list-card">
+        <ul>
+          <li><strong>Just installed?</strong> <code>arkheionx version</code> then <code>arkheionx doctor</code>.</li>
+          <li><strong>New repo to review?</strong> <code>arkheionx review-map .</code>.</li>
+          <li><strong>Want to study money flow?</strong> <code>arkheionx value-paths .</code>.</li>
+          <li><strong>Deciding what to test?</strong> <code>arkheionx test-gap-map .</code>.</li>
+          <li><strong>Planning a manual proof?</strong> <code>arkheionx proof-plan .</code>.</li>
+          <li><strong>Trying the bundled demo?</strong> <code>arkheionx review-map examples/vault-strategy-oracle-fixture</code>.</li>
+        </ul>
       </div>
     </section>
 
     <section class="cli-boundary">
       <p class="cli-kicker">Safety</p>
-      <h2>Do not treat command output as a final security verdict.</h2>
+      <h2>Command output is review context, not a verdict.</h2>
       <p>
-        CLI output is review context. Human validation is required before reporting, disclosing,
-        or making security decisions.
+        ArkheionX does not confirm vulnerabilities, assign final severity, or run exploits.
+        Human review is required before reporting, disclosing, or making a security decision, and
+        only on repositories you are authorized to review. Next:
+        <a href="/docs/how-it-works">how it works</a> ·
+        <a href="/docs/quickstart">quickstart</a>.
       </p>
     </section>
   </main>
