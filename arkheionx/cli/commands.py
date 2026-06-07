@@ -24,7 +24,25 @@ if str(REPO_ROOT) not in sys.path:
 
 
 def _module_main(module_name: str, argv: list[str]) -> int:
-    module = importlib.import_module(module_name)
+    try:
+        module = importlib.import_module(module_name)
+    except ModuleNotFoundError as exc:
+        # The legacy scanner/utilities under scripts/ ship with the source
+        # checkout, not inside the installed wheel. In a non-editable install
+        # they are unavailable; fail with clear guidance instead of a traceback.
+        if (exc.name or "").split(".")[0] == "scripts":
+            print(
+                "ArkheionX error: this command uses the source-tree readiness "
+                "scanner, which is not bundled in the installed package.",
+                file=sys.stderr,
+            )
+            print(
+                "Run it from a clone of the repository, or use the packaged "
+                "workbench instead: arkheionx review-map <repo>",
+                file=sys.stderr,
+            )
+            return exit_codes.RUNTIME_ERROR
+        raise
     main = getattr(module, "main", None)
     if main is None:
         print(f"error: module {module_name} does not expose main()", file=sys.stderr)
