@@ -22,6 +22,11 @@ ANSI = re.compile(r"\x1b\[")
 
 def run_cli(*args: str, color: str = "never", env_extra: dict | None = None) -> subprocess.CompletedProcess[str]:
     env = dict(os.environ)
+    # Isolate the color decision from the host environment: a developer or CI
+    # shell that exports NO_COLOR (or CI) must not turn the forced-color
+    # assertions into flaky failures, since NO_COLOR is authoritative over force.
+    for key in ("NO_COLOR", "ARKHEIONX_NO_COLOR", "CI"):
+        env.pop(key, None)
     env["ARKHEIONX_COLOR"] = color
     if env_extra:
         env.update(env_extra)

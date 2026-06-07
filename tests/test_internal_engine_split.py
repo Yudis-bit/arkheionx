@@ -25,6 +25,10 @@ class InternalEngineSplitTests(unittest.TestCase):
             ["python3", "scripts/generate_ecosystem_report.py", "--check"],
             ["python3", "scripts/generate_paid_offer_index.py", "--check"],
             ["python3", "scripts/generate_feedback_dashboard.py", "--check"],
+            # Search index drift is part of `make validate`; lock it into the
+            # unittest suite so CI (which runs unit tests, not `make validate`)
+            # also catches a stale reports/search_index.md.
+            ["python3", "scripts/generate_search_index.py", "--check"],
             ["python3", "scripts/validate_config.py", "--config", "examples/arkheionx.config.example.json"],
             ["python3", "scripts/check_docs_links.py", "--check"],
             ["python3", "scripts/check_version_consistency.py", "--check"],
