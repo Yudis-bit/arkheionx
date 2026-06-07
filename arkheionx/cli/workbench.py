@@ -17,7 +17,7 @@ from argparse import Namespace
 from pathlib import Path
 
 from arkheionx.artifacts import ArtifactWriter
-from arkheionx.cli import colors, exit_codes
+from arkheionx.cli import colors, exit_codes, screen
 from arkheionx.core.safety import LOCAL_ONLY_DISCLAIMER
 from arkheionx.flow.mermaid import render_mermaid
 from arkheionx.flow.render import render_flow
@@ -489,7 +489,7 @@ def _git_info(root: Path) -> str:
 
 
 def _doctor_install_view(root: Path) -> int:
-    """Compact install-health view: arkheionx doctor --install."""
+    """Compact install-health command-center: arkheionx doctor --install."""
     import os
     import sys
 
@@ -497,44 +497,42 @@ def _doctor_install_view(root: Path) -> int:
     cmd_path = shutil.which("arkheionx") or "not on PATH"
     bin_hint = str(Path.home() / ".arkheionx" / "bin")
     on_path = any(p == bin_hint for p in os.environ.get("PATH", "").split(os.pathsep))
+    reachable = on_path or cmd_path != "not on PATH"
 
     install_dir = Path(os.environ.get("ARKHEIONX_INSTALL_DIR", str(Path.home() / ".arkheionx")))
     receipt = install_dir / "install.json"
-    lines = [
-        "ARKHEIONX DOCTOR",
-        "Status: ok",
-        "",
-        "Install",
-        f"  arkheionx command: {cmd_path}",
-        f"  Python executable: {sys.executable} ({platform.python_version()})",
-        "  Package import: ok",
-        f"  Package version: {__import__('arkheionx').__version__}",
-        "",
-        "Foundry (optional)",
-        f"  forge: {foundry_status.forge_version or 'missing'}",
-        f"  status: {foundry_header(foundry_status)}",
-        "",
-        "PATH",
-    ]
-    if on_path or cmd_path != "not on PATH":
-        lines.append("  arkheionx is reachable on your PATH.")
+
+    lines = screen.header("ArkheionX Doctor", "LOCAL / STATIC / INSTALL HEALTH")
+    lines += screen.kv_rows([("Status", screen.chip("OK"))])
+    lines += screen.section("Install")
+    lines += screen.chip_rows([
+        ("OK" if reachable else "REVIEW", "ArkheionX command", cmd_path),
+        ("OK", "Python runtime", f"{sys.executable} ({platform.python_version()})"),
+        ("OK", "Package import", "ok"),
+        ("OK", "Package version", __import__("arkheionx").__version__),
+    ])
+    lines += screen.section("Foundry")
+    lines += screen.chip_rows([
+        ("OK" if foundry_status.forge_available else "REVIEW", "forge", foundry_status.forge_version or "missing"),
+        ("LOCAL", "mode", foundry_header(foundry_status)),
+    ])
+    lines += screen.section("PATH")
+    if reachable:
+        lines.append("ArkheionX is reachable on your PATH.")
     else:
-        lines.append(f'  Add the install dir to PATH: export PATH="{bin_hint}:$PATH"')
-    lines += ["", "Install receipt"]
-    if not receipt.is_file():
-        lines.append("  none (install state unknown; managed by install.sh / arkup)")
-    else:
+        lines.append(f'export PATH="{bin_hint}:$PATH"')
+    if receipt.is_file():
         try:
             data = json.loads(receipt.read_text(encoding="utf-8"))
-            for key in ("source_kind", "ref", "local_path", "install_method", "installed_version", "updated_at"):
-                value = data.get(key)
-                if value:
-                    lines.append(f"  {key}: {value}")
-            lines.append(f"  path: {receipt}")
+            version = data.get("installed_version") or data.get("ref")
+            method = data.get("install_method") or data.get("source_kind")
+            if version or method:
+                lines.append(f"Receipt: {' '.join(str(v) for v in (method, version) if v)}")
         except Exception:
-            lines.append(f"  malformed receipt at {receipt} (reinstall to repair)")
-    lines += ["", LOCAL_ONLY_DISCLAIMER, "", "Next", "  arkheionx open ."]
-    _print_report("\n".join(lines))
+            lines.append("Receipt: malformed (reinstall to repair)")
+    lines += screen.section("Next")
+    lines.append(f"arkheionx open {_rel_display(str(root), root) or '.'}")
+    print("\n".join(lines))
     return SUCCESS
 
 
@@ -543,57 +541,67 @@ def doctor_command(args: Namespace) -> int:
     root = _resolve_root(repo) or Path.cwd()
     if getattr(args, "install", False):
         return _doctor_install_view(root)
+    import os
+
     foundry_status = foundry_mod.detect_foundry(root, with_version=True)
     try:
         analysis = analyze(root, use_foundry=False, top=10)
         sources, _tests = find_solidity_files(root)
         active = analysis.snapshot.contracts_analyzed
-        hidden = sum(analysis.hidden_counts.values())
-        usable = True
     except Exception as exc:  # package/parse failure
-        _print_report("ARKHEIONX DOCTOR\nStatus: failed")
-        print(f"error: {exc}")
+        out = screen.header("ArkheionX Doctor", "LOCAL / STATIC / HUMAN REVIEW REQUIRED")
+        out += screen.kv_rows([("Status", screen.chip("FAIL"))])
+        out += ["", f"Error: {exc}"]
+        print("\n".join(out))
         return FAILED
 
-    status = "ok" if foundry_status.status in {foundry_mod.AVAILABLE_NOT_BUILT, foundry_mod.BUILD_PASSED} else "warning"
-    import os
+    compiler_ready = foundry_status.has_foundry_toml and foundry_status.forge_available
+    status_chip = "OK" if foundry_status.status in {foundry_mod.AVAILABLE_NOT_BUILT, foundry_mod.BUILD_PASSED} else "WARN"
+    version = __import__("arkheionx").__version__
+    pyver = platform.python_version()
     git = _git_info(root)
-    lines = [
-        "ARKHEIONX DOCTOR",
-        f"Status: {status}",
-        "",
-        "Core",
-        f"  Arkheionx: ok {__import__('arkheionx').__version__}",
-        f"  Python: ok {platform.python_version()}",
-    ]
-    if git:
-        lines.append(f"  Git: {git}")
-    lines += [
-        "",
-        "Foundry",
-        f"  foundry.toml: {'present' if foundry_status.has_foundry_toml else 'missing'}",
-        f"  forge: {foundry_status.forge_version or 'missing'}",
-        f"  status: {foundry_header(foundry_status)}",
-        f"  mode: {'compiler-capable' if foundry_status.forge_available and foundry_status.has_foundry_toml else 'heuristic only'}",
-        "",
-        "Project",
-        f"  Solidity files: {len(sources)}",
-        f"  Active source contracts: {active}",
-        f"  Hidden by default: {hidden}",
-        f"  Artifacts dir writable: {'yes' if os.access(root, os.W_OK) else 'no'}",
-        "",
-        f"Rule packs: {len(list_rule_packs())}",
-        LOCAL_ONLY_DISCLAIMER,
-        "",
-        "Next",
-    ]
-    if foundry_status.has_foundry_toml and foundry_status.forge_available:
-        lines.append("  Run `arkheionx map .` then `arkheionx hunt .` to start. Use --build for compiler-confirmed results.")
+    git_disp = git.replace("(", "").replace(")", "").strip() if git else ""
+    writable = os.access(root, os.W_OK)
+
+    lines = screen.header("ArkheionX Doctor", "LOCAL / STATIC / HUMAN REVIEW REQUIRED")
+    top_rows = [("Status", screen.chip(status_chip)), ("Version", version), ("Python", pyver)]
+    if git_disp:
+        top_rows.append(("Git", git_disp))
+    lines += screen.kv_rows(top_rows)
+
+    lines += screen.section("Environment")
+    env_rows = [("OK", "ArkheionX package", version), ("OK", "Python runtime", pyver)]
+    if git_disp:
+        env_rows.append(("OK", "Git checkout", git_disp))
+    lines += screen.chip_rows(env_rows)
+
+    lines += screen.section("Project")
+    lines += screen.chip_rows([
+        ("OK" if foundry_status.has_foundry_toml else "REVIEW", "Foundry project",
+         "detected" if foundry_status.has_foundry_toml else "not detected"),
+        ("OK", "Solidity files", str(len(sources))),
+        ("OK", "Active contracts", str(active)),
+        ("OK", "Rule packs", str(len(list_rule_packs()))),
+        ("OK" if writable else "REVIEW", "Artifacts directory", "writable" if writable else "read-only"),
+    ])
+
+    lines += screen.section("Safety")
+    lines += screen.chip_rows([
+        ("LOCAL", "RPC calls", "disabled by default"),
+        ("LOCAL", "Live-chain actions", "disabled"),
+        ("LOCAL", "Private keys", "not requested"),
+        ("LOCAL", "Analysis", "authorized local/static only"),
+    ])
+
+    lines += screen.section("Next")
+    if compiler_ready:
+        lines.append("Run `arkheionx map .` then `arkheionx hunt .` (use --build for compiler-confirmed results).")
     elif not foundry_status.has_foundry_toml:
-        lines.append("  Not a Foundry project here. Run inside a Foundry project for compiler-confirmed results.")
+        lines.append("Run inside a Foundry repository for compiler-confirmed results.")
     else:
-        lines.append("  Install Foundry (forge) for compiler-confirmed results.")
-    _print_report("\n".join(lines))
+        lines.append("Install Foundry (forge) for compiler-confirmed results.")
+    lines.append(f"arkheionx review-map {_rel_display(str(root), root) or '.'}")
+    print("\n".join(lines))
     return SUCCESS
 
 
@@ -827,29 +835,35 @@ def review_map_command(args: Namespace) -> int:
 
 
 def _review_map_human(args, root, sources, test_files, inspect_elapsed, top, target, include_low) -> int:
-    ui = TerminalUI()
+    import sys
+
     no_write = bool(getattr(args, "no_write", False))
     out = str(getattr(args, "out", "") or "").strip()
     out_dir = Path(out).expanduser() if out else default_out_dir(root)
+    repo = args.repo
+    stream = sys.stdout
 
-    ui.banner(
-        "ARKHEIONX REVIEW MAP",
-        "Maps what your protocol still needs to prove - local/static, no RPC, no keys.",
+    head = screen.header(
+        "ArkheionX Review Map",
+        "LOCAL / STATIC / NO RPC / HUMAN REVIEW REQUIRED",
+        stream=stream,
     )
-    ui.info(f"Target: {args.repo}")
-    ui.info("Mode:   local/static (heuristic; most signals start at HEURISTIC)")
-    ui.info("Writes: in-memory only (--no-write)" if no_write else f"Writes: {_rel_display(str(out_dir), root)}")
-    ui.info("")
+    head += screen.kv_rows([
+        ("Target", repo),
+        ("Mode", "heuristic review guidance"),
+        ("Writes", "in-memory only (--no-write)" if no_write else _rel_display(str(out_dir), root)),
+    ], stream=stream)
+    print("\n".join(head))
 
-    # [1/3] Inspection already ran (it guards the no-Solidity case); report its
-    # real counts and real elapsed rather than animating finished work.
-    ui.step_done(
-        "Inspecting repository",
-        f"{len(sources)} Solidity source files, {len(test_files)} test files",
-        elapsed=inspect_elapsed, index=1, total=3,
+    # Progress: real multi-step work with a TTY-only spinner; static rows in CI.
+    print("\n".join(screen.section("Progress", stream=stream)))
+    reporter = screen.StepReporter(
+        ["Inspect repository", "Map review surface", "Write artifacts"], stream=stream,
     )
+    with reporter.step("Inspect repository") as detail:
+        detail.detail = f"{len(sources)} source files, {len(test_files)} test files"
     try:
-        with ui.phase("Mapping value flow & review surface", 2, 3) as phase:
+        with reporter.step("Map review surface") as detail:
             review_map = build_review_map(
                 root,
                 top=top,
@@ -858,90 +872,100 @@ def _review_map_human(args, root, sources, test_files, inspect_elapsed, top, tar
                 artifact_roots=_review_map_artifact_roots(args),
             )
             s = review_map.summary
-            phase.detail = (
+            detail.detail = (
                 f"{s.contracts_analyzed} contracts, {s.functions_mapped} functions, "
                 f"{s.value_paths} value paths, {s.test_gaps} test gaps"
             )
     except ValueError as exc:
-        ui.error(f"could not resolve target `{exc}`. Run `arkheionx review-map {args.repo}` to list review targets.")
+        print(f"ArkheionX error: could not resolve target `{exc}`.")
+        print(f"Next: run `arkheionx review-map {repo}` to list review targets.")
         return FAILED
 
     artifacts: dict[str, str] = {}
     if no_write:
-        ui.step_done("Review artifacts", "no-write mode: generated in memory only", index=3, total=3, kind="warn")
+        with reporter.step("Write artifacts") as detail:
+            detail.detail = "in-memory only (--no-write)"
     else:
         try:
-            with ui.phase("Writing review artifacts", 3, 3) as phase:
+            with reporter.step("Write artifacts") as detail:
                 written = write_artifacts(review_map, out_dir)
-                phase.detail = f"{len(written)} files -> {_rel_display(str(out_dir), root)}"
+                detail.detail = f"{len(written)} files"
         except OSError as exc:
-            ui.error(f"could not write artifacts to {out_dir}: {exc}")
+            print(f"ArkheionX error: could not write artifacts to {out_dir}: {exc}")
+            print("Next: choose a writable --out directory or pass --no-write.")
             return FAILED
         artifacts = {name: _rel_display(path, root) for name, path in written.items()}
 
-    _review_map_priorities(ui, review_map, args.repo, top)
-    _review_map_summary(ui, review_map)
-    _review_map_artifacts(ui, artifacts)
-    _review_map_next(ui, args.repo, artifacts, no_write, target)
+    body: list[str] = []
+    body += _review_map_inspect_first(review_map, repo, top, stream)
+    body += _review_map_summary(review_map, stream)
+    body += _review_map_artifacts(artifacts, stream)
+    body += _review_map_next(repo, artifacts, stream)
     status = status_of(review_map)
-    ui.section("Boundary")
-    ui.info("  Review guidance only. Not confirmed vulnerabilities. Human review required.")
-    if status == "ok":
-        ui.info("  Status: compiler-confirmed (exit code 0).")
-    else:
-        ui.info("  Status: heuristic review guidance - exit code 1 by design, not a crash.")
+    body += screen.section("Boundary", stream=stream)
+    body.append("Review guidance only. Not confirmed vulnerabilities. Human review required.")
+    body.append(
+        "Compiler-confirmed (exit code 0)."
+        if status == "ok"
+        else "Heuristic review guidance; exit code 1 is intentional, not a crash."
+    )
+    print("\n".join(body))
     return SUCCESS if status == "ok" else WARNING
 
 
-def _review_map_priorities(ui: TerminalUI, rm, repo: str, top: int) -> None:
+def _review_map_inspect_first(rm, repo: str, top: int, stream=None) -> list[str]:
     notes = rm.reviewer_notes[: min(top, 3)]
     if not notes:
-        return
-    ui.section("Review Priorities (review order, not confirmed findings)")
+        return []
+    out = screen.section("Inspect first", stream=stream)
+    chip_width = max(len(note.priority) for note in notes)
+    label_width = len("Signals")
     for i, note in enumerate(notes, 1):
         why = note.body.split(".")[0].strip() or "value-relevant surface"
         step = note.next_step.replace("arkheionx prove . ", f"arkheionx prove {repo} ")
-        ui.info(f"  {i}. {note.title} {colors.priority_tag(note.priority)} - {why}")
-        ui.info(f"     Inspect, then prove locally: {step}")
+        priority = screen.chip(note.priority, chip_width, stream=stream)
+        out.append(f"{i}  {priority}   {note.title}")
+        out.append(f"{'Signals'.ljust(label_width)}  {why}")
+        out.append(f"{'Next'.ljust(label_width)}  {step}")
+        out.append("")
+    if out and out[-1] == "":
+        out.pop()
+    return out
 
 
-def _review_map_summary(ui: TerminalUI, rm) -> None:
+def _review_map_summary(rm, stream=None) -> list[str]:
     s = rm.summary
-    value_exit = sum(1 for p in rm.value_paths if p.exit_function)
-    high_gaps = sum(1 for g in rm.test_gaps if g.confidence == RM_HIGH)
-    ui.summary("Summary", [
+    out = screen.section("Summary", stream=stream)
+    out += screen.kv_rows([
         ("Contracts", s.contracts_analyzed),
         ("Functions", s.functions_mapped),
-        ("Value paths", f"{s.value_paths} ({value_exit} value-exit)"),
+        ("Value paths", s.value_paths),
         ("Assumptions", s.assumptions),
-        ("Test gaps", f"{s.test_gaps} ({high_gaps} high-confidence)"),
+        ("Test gaps", s.test_gaps),
         ("Proof suggestions", s.proof_suggestions),
-        ("Evidence links", s.evidence_links),
-    ])
+    ], stream=stream)
+    return out
 
 
-def _review_map_artifacts(ui: TerminalUI, artifacts: dict[str, str]) -> None:
+def _review_map_artifacts(artifacts: dict[str, str], stream=None) -> list[str]:
     if not artifacts:
-        return
-    ui.section("Artifacts")
-    for name in ("review-map.md", "test-gap-map.md", "review-map.json", "test-gaps.json", "proof-plan.json"):
-        if name in artifacts:
-            ui.info(f"  {artifacts[name]}")
+        return []
+    # Terminal shows only the three primary artifacts; the full set stays on disk.
+    primary = (("Review map", "review-map.md"), ("Test gaps", "test-gaps.json"), ("Proof plan", "proof-plan.json"))
+    rows = [(label, screen.dim(artifacts[name], stream=stream)) for label, name in primary if name in artifacts]
+    if not rows:
+        return []
+    return screen.section("Artifacts", stream=stream) + screen.kv_rows(rows, stream=stream)
 
 
-def _review_map_next(ui: TerminalUI, repo: str, artifacts: dict[str, str], no_write: bool, target: str) -> None:
-    ui.section("Next")
+def _review_map_next(repo: str, artifacts: dict[str, str], stream=None) -> list[str]:
+    rows: list[tuple[str, str]] = []
     if "review-map.md" in artifacts:
-        ui.info(f"  Open the review map:  {artifacts['review-map.md']}")
+        rows.append(("Open review map", screen.dim(artifacts["review-map.md"], stream=stream)))
     if "test-gaps.json" in artifacts:
-        ui.info(f"  Inspect test gaps:    {artifacts['test-gaps.json']}")
-    if "test-gap-map.md" in artifacts:
-        ui.info(f"  Prioritize tests:     {artifacts['test-gap-map.md']}")
-    tgt = target or "<Contract.function>"
-    ui.info(f"  Build a local proof:  arkheionx prove {repo} --target {tgt} --run")
-    ui.info(f"  Machine-readable:     arkheionx review-map {repo} --json")
-    if no_write:
-        ui.info(f"  Write artifacts:      arkheionx review-map {repo}")
+        rows.append(("Inspect gaps", screen.dim(artifacts["test-gaps.json"], stream=stream)))
+    rows.append(("Machine readable", f"arkheionx review-map {repo} --json"))
+    return screen.section("Next", stream=stream) + screen.kv_rows(rows[:3], stream=stream)
 
 
 # --------------------------------------------------------------------------

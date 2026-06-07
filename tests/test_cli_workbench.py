@@ -68,10 +68,10 @@ class CliWorkbenchTests(unittest.TestCase):
     def test_doctor_is_usable_and_exit_zero(self) -> None:
         result = self.run_cli("doctor")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("ARKHEIONX DOCTOR", result.stdout)
-        self.assertIn("Foundry", result.stdout)
-        self.assertIn("Rule packs:", result.stdout)
-        self.assertIn("local/static", result.stdout)
+        self.assertIn("ArkheionX Doctor", result.stdout)
+        self.assertIn("Project", result.stdout)
+        self.assertIn("Safety", result.stdout)
+        self.assertIn("LOCAL / STATIC", result.stdout)
 
     # --- open / map / flow / hunt: compact + heuristic exit 1 ----------
     def test_open_compact(self) -> None:

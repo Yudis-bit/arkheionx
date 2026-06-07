@@ -192,7 +192,7 @@ class CliColorBehaviorTests(unittest.TestCase):
     def test_never_is_plain(self) -> None:
         result = run_cli("doctor", env_extra={"ARKHEIONX_COLOR": "never"})
         self.assertNotIn(ESC, result.stdout)
-        self.assertIn("ARKHEIONX DOCTOR", colors.strip(result.stdout))
+        self.assertIn("ArkheionX Doctor", colors.strip(result.stdout))
 
     def test_always_emits_ansi(self) -> None:
         for args in (("version",), ("demo", "--list"), ("demo", "--show", "amm-swap")):
@@ -232,8 +232,9 @@ class CliColorBehaviorTests(unittest.TestCase):
             result = run_cli("doctor", env_extra=env)
             self.assertNotIn(ESC, result.stdout)
             stripped = result.stdout
-            self.assertIn("ARKHEIONX DOCTOR", stripped)
-            self.assertIn("local/static repository analysis only", stripped)
+            self.assertIn("ArkheionX Doctor", stripped)
+            self.assertIn("LOCAL / STATIC", stripped)
+            self.assertIn("RPC calls", stripped)
             self.assertIn("Next", stripped)
 
     def test_review_map_color_modes_preserve_text_and_boundary(self) -> None:
@@ -241,13 +242,13 @@ class CliColorBehaviorTests(unittest.TestCase):
         plain = run_cli("review-map", hybrid, env_extra={"NO_COLOR": "1"})
         self.assertIn(plain.returncode, (0, 1), plain.stderr)
         self.assertNotIn(ESC, plain.stdout)
-        for text in ("ARKHEIONX REVIEW MAP", "Review Priorities", "Boundary", "Human review required"):
+        for text in ("ArkheionX Review Map", "Inspect first", "Boundary", "Human review required"):
             self.assertIn(text, plain.stdout)
         colored = run_cli("review-map", hybrid, env_extra={"ARKHEIONX_COLOR": "always"})
         self.assertIn(ESC, colored.stdout)
         # Safety boundary and structure remain intact once color is stripped.
         stripped = colors.strip(colored.stdout)
-        for text in ("ARKHEIONX REVIEW MAP", "Boundary", "Human review required"):
+        for text in ("ArkheionX Review Map", "Boundary", "Human review required"):
             self.assertIn(text, stripped)
 
     def test_color_1_forces_ansi_in_captured_output(self) -> None:
@@ -255,10 +256,10 @@ class CliColorBehaviorTests(unittest.TestCase):
         # captured/non-TTY, for both primary surfaces.
         doctor = run_cli("doctor", env_extra={"ARKHEIONX_COLOR": "1"})
         self.assertIn(ESC, doctor.stdout, "ARKHEIONX_COLOR=1 must color doctor")
-        self.assertIn("ARKHEIONX DOCTOR", colors.strip(doctor.stdout))
+        self.assertIn("ArkheionX Doctor", colors.strip(doctor.stdout))
         rm = run_cli("review-map", "examples/amm-lending-hybrid-fixture", env_extra={"ARKHEIONX_COLOR": "1"})
         self.assertIn(ESC, rm.stdout, "ARKHEIONX_COLOR=1 must color review-map")
-        self.assertIn("ARKHEIONX REVIEW MAP", colors.strip(rm.stdout))
+        self.assertIn("ArkheionX Review Map", colors.strip(rm.stdout))
 
     def test_no_color_overrides_force_in_cli(self) -> None:
         for extra in (
@@ -267,7 +268,7 @@ class CliColorBehaviorTests(unittest.TestCase):
         ):
             result = run_cli("doctor", env_extra=extra)
             self.assertNotIn(ESC, result.stdout, f"no-color must win for {extra}")
-            self.assertIn("ARKHEIONX DOCTOR", result.stdout)
+            self.assertIn("ArkheionX Doctor", result.stdout)
 
 
 if __name__ == "__main__":

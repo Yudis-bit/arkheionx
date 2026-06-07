@@ -27,8 +27,8 @@ class CliCommandTests(unittest.TestCase):
         self.assertIn("Current milestone: v3.9.0", version.stdout)
         self.assertIn("Next milestone: v4.0.0", version.stdout)
         doctor = self.run_cli("doctor")
-        self.assertIn("local/static", doctor.stdout)
-        self.assertIn("Rule packs:", doctor.stdout)
+        self.assertIn("LOCAL / STATIC", doctor.stdout)
+        self.assertIn("Safety", doctor.stdout)
 
     def test_help_reads_as_guided_first_run_entrypoint(self) -> None:
         result = self.run_cli("--help")
@@ -52,16 +52,19 @@ class CliCommandTests(unittest.TestCase):
         result = self.run_cli("doctor")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         out = result.stdout
-        for section in ("Core", "Foundry", "Project", "Next"):
+        self.assertIn("ArkheionX Doctor", out)
+        for section in ("Environment", "Project", "Safety", "Next"):
             self.assertIn(section, out)
-        self.assertIn("local/static", out)
-        self.assertIn("does not perform RPC calls", out)
+        # Safety is structured rows, not a paragraph, and stays local-only.
+        self.assertIn("LOCAL / STATIC", out)
+        for row in ("RPC calls", "Live-chain actions", "Private keys"):
+            self.assertIn(row, out)
 
     def test_doctor_install_view_is_useful_and_exits_zero(self) -> None:
         result = self.run_cli("doctor", "--install")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         out = result.stdout
-        for marker in ("Install", "Package version", "PATH", "local/static"):
+        for marker in ("Install", "Package version", "PATH", "LOCAL / STATIC"):
             self.assertIn(marker, out)
 
     def _assert_clean_user_error(self, result: subprocess.CompletedProcess[str]) -> str:

@@ -66,7 +66,7 @@ class ReviewMapCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             result = run_cli("review-map", str(FIXTURE), "--out", tmp)
             self.assertIn(result.returncode, (0, 1), result.stderr)
-            self.assertIn("ARKHEIONX REVIEW MAP", result.stdout)
+            self.assertIn("ArkheionX Review Map", result.stdout)
             self.assertTrue((Path(tmp) / "review-map.json").is_file())
             self.assertTrue((Path(tmp) / "review-map.md").is_file())
 
@@ -115,7 +115,7 @@ class ReviewMapEdgeCaseTests(unittest.TestCase):
             repo = self._src_repo(Path(tmp), "")
             result = run_cli("review-map", str(repo), "--no-write")
             self.assertIn(result.returncode, (0, 1))
-            self.assertIn("ARKHEIONX REVIEW MAP", result.stdout)
+            self.assertIn("ArkheionX Review Map", result.stdout)
             self.assertNotIn("Traceback", result.stderr)
 
     def test_contract_without_functions_no_traceback(self) -> None:
@@ -175,7 +175,7 @@ class ReviewMapUxTests(unittest.TestCase):
 
     def test_banner_and_boundary_present(self) -> None:
         result = run_cli("review-map", str(FIXTURE), "--no-write")
-        self.assertIn("ARKHEIONX REVIEW MAP", result.stdout)
+        self.assertIn("ArkheionX Review Map", result.stdout)
         self.assertIn("Boundary", result.stdout)
         self.assertIn("Human review required", result.stdout)
         self.assertNotIn("Traceback", result.stderr)
@@ -184,10 +184,9 @@ class ReviewMapUxTests(unittest.TestCase):
         result = run_cli("review-map", str(FIXTURE), "--no-write")
         self.assertIn(result.returncode, (0, 1), result.stderr)
         out = result.stdout
-        self.assertIn("Review Priorities", out)
-        # Each priority must offer actionable inspection guidance, not a bare command.
-        self.assertIn("Inspect, then prove locally:", out)
-        self.assertRegex(out, r"Inspect, then prove locally: arkheionx prove \S+ --target \S+ --run")
+        self.assertIn("Inspect first", out)
+        # Each priority must offer an actionable local proof command.
+        self.assertRegex(out, r"Next\s+arkheionx prove \S+ --target \S+ --run")
         # Conservative framing preserved; no confirmed-vulnerability claims.
         self.assertIn("Not confirmed vulnerabilities", out)
         for forbidden in (
@@ -203,7 +202,7 @@ class ReviewMapUxTests(unittest.TestCase):
         result = run_cli("review-map", str(FIXTURE), "--no-write", env_extra={"CI": "true"})
         self.assertIn(result.returncode, (0, 1), result.stderr)
         self.assertNotIn("\r", result.stdout)
-        self.assertIn("ARKHEIONX REVIEW MAP", result.stdout)
+        self.assertIn("ArkheionX Review Map", result.stdout)
 
     def test_no_animation_env_no_cr_artifacts(self) -> None:
         result = run_cli("review-map", str(FIXTURE), "--no-write", env_extra={"ARKHEIONX_NO_ANIMATION": "1"})
@@ -221,15 +220,14 @@ class ReviewMapUxTests(unittest.TestCase):
 
     def test_no_write_claims_memory_only_and_no_write_claim(self) -> None:
         result = run_cli("review-map", str(FIXTURE), "--no-write")
-        self.assertIn("in-memory only", result.stdout)
-        self.assertIn("no-write mode", result.stdout)
+        self.assertIn("in-memory only (--no-write)", result.stdout)
         # Must not claim files were written.
         self.assertNotIn("files ->", result.stdout)
         self.assertNotIn("review-map.md", result.stdout)
 
     def test_json_has_no_human_chrome(self) -> None:
         result = run_cli("review-map", str(FIXTURE), "--json", "--no-write", color="always")
-        for chrome in ("ARKHEIONX REVIEW MAP", "[1/3]", "[2/3]", "Boundary", "Review Priorities"):
+        for chrome in ("ArkheionX Review Map", "Progress", "Inspect first", "Boundary", "Summary"):
             self.assertNotIn(chrome, result.stdout)
         self.assertNotRegex(result.stdout, ANSI)
         json.loads(result.stdout)
@@ -258,7 +256,7 @@ class ReviewMapRegressionTests(unittest.TestCase):
         # Static fixture -> heuristic -> exit 1 by design, and the human output
         # must say so (so a developer does not read it as a crash).
         self.assertEqual(result.returncode, 1, result.stderr)
-        self.assertIn("exit code 1 by design", result.stdout)
+        self.assertIn("exit code 1 is intentional", result.stdout)
         self.assertNotIn("Traceback", result.stderr)
 
     def test_human_output_has_all_sections(self) -> None:
@@ -266,13 +264,14 @@ class ReviewMapRegressionTests(unittest.TestCase):
             result = run_cli("review-map", str(FIXTURE), "--out", tmp)
         self.assertIn(result.returncode, (0, 1), result.stderr)
         for section in (
-            "ARKHEIONX REVIEW MAP", "local/static", "Review Priorities",
+            "ArkheionX Review Map", "LOCAL / STATIC", "Progress", "Inspect first",
             "Summary", "Artifacts", "Next", "Boundary",
         ):
             self.assertIn(section, result.stdout, section)
 
     def test_writes_test_gap_map_artifacts(self) -> None:
-        # review-map writes the two additive Test Gap Map artifacts and points to them.
+        # review-map writes the two additive Test Gap Map artifacts to disk even
+        # though the terminal lists only the three primary artifacts.
         with tempfile.TemporaryDirectory() as tmp:
             result = run_cli("review-map", str(FIXTURE), "--out", tmp)
             self.assertIn(result.returncode, (0, 1), result.stderr)
@@ -283,7 +282,6 @@ class ReviewMapRegressionTests(unittest.TestCase):
             self.assertIn("summary", payload)
             self.assertIn("items", payload)
             self.assertNotRegex((out / "test-gap-map.md").read_text(encoding="utf-8"), ANSI)
-        self.assertIn("test-gap-map.md", result.stdout)
 
 
 if __name__ == "__main__":

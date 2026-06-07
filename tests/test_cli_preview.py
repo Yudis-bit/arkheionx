@@ -26,10 +26,10 @@ class CliPreviewTests(unittest.TestCase):
     def test_doctor_command(self) -> None:
         result = self.run_cli("doctor")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("ARKHEIONX DOCTOR", result.stdout)
-        self.assertIn("Foundry", result.stdout)
-        self.assertIn("Rule packs:", result.stdout)
-        self.assertIn("local/static", result.stdout)
+        self.assertIn("ArkheionX Doctor", result.stdout)
+        self.assertIn("Project", result.stdout)
+        self.assertIn("Safety", result.stdout)
+        self.assertIn("LOCAL / STATIC", result.stdout)
 
 
 if __name__ == "__main__":
