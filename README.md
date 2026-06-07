@@ -284,6 +284,10 @@ See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
 
 Full index: [`docs/README.md`](docs/README.md).
 
+Technical paper: [Read the Arkheionx v4 technical paper](docs/papers/arkheionx-v4-technical-paper.md)
+([PDF](docs/papers/arkheionx-v4-technical-paper.pdf)) — a standalone overview of
+the local review-map workflow. See [`docs/papers/README.md`](docs/papers/README.md).
+
 Start:
 
 - [`docs/START_HERE.md`](docs/START_HERE.md)

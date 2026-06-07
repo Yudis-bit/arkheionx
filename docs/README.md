@@ -40,6 +40,7 @@ vulnerabilities, assign severity, or replace an audit.
 - [`V4_INFORMATION_ARCHITECTURE.md`](V4_INFORMATION_ARCHITECTURE.md) — how the public surface is organized.
 - [`PACKAGING.md`](PACKAGING.md) — installed vs source-tree commands.
 - Release package: [`releases/V4_RELEASE_NOTES.md`](releases/V4_RELEASE_NOTES.md) and [`releases/V4_RELEASE_CHECKLIST.md`](releases/V4_RELEASE_CHECKLIST.md).
+- Technical paper: [Read the Arkheionx v4 technical paper](papers/arkheionx-v4-technical-paper.md) ([PDF](papers/arkheionx-v4-technical-paper.pdf)) — see [`papers/README.md`](papers/README.md).
 
 ## Advanced / project
 
