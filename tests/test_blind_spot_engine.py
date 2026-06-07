@@ -192,6 +192,35 @@ class CounterfactualTests(unittest.TestCase):
         self.assertIn("oracle-fresh", topics, topics)
 
 
+class BlindSpotFixtureTests(unittest.TestCase):
+    """The dedicated blind-spot-fixture should exercise every detector category."""
+
+    FIXTURE = REPO_ROOT / "examples" / "blind-spot-fixture"
+
+    def test_fixture_exists(self) -> None:
+        self.assertTrue(self.FIXTURE.is_dir(), "examples/blind-spot-fixture must exist")
+
+    def test_exercises_all_counterfactual_families(self) -> None:
+        rm = build_review_map(self.FIXTURE)
+        surfaces = build_research_surfaces(rm, self.FIXTURE)
+        topics = {cf["topic"] for cf in build_counterfactual_plan(rm, surfaces)["counterfactuals"]}
+        # oracle, authorization (signature + Merkle), periphery, and liquidation
+        # families should all be present in one repository.
+        self.assertIn("oracle-fresh", topics, topics)
+        self.assertIn("signature-binds", topics, topics)
+        self.assertIn("merkle-binds", topics, topics)
+        self.assertIn("periphery-equivalence", topics, topics)
+        self.assertIn("liquidation-bounded", topics, topics)
+
+    def test_has_blind_spot_candidates_and_unknown_surfaces(self) -> None:
+        rm = build_review_map(self.FIXTURE)
+        surfaces = build_research_surfaces(rm, self.FIXTURE)
+        data = build_blind_spot_map(rm, surfaces)
+        self.assertTrue(data["candidates"])
+        self.assertTrue(data["unknown_surfaces"])
+        self.assertTrue(any(c["criticality_potential"] == m.CRIT_VERY_HIGH for c in data["candidates"]))
+
+
 class DeterminismAndSafetyTests(unittest.TestCase):
     def test_deterministic_ignoring_timestamp(self) -> None:
         for fixture in FIXTURES:
