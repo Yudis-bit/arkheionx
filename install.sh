@@ -289,7 +289,7 @@ main() {
     log "  ${PATH_HINT:-export PATH=\"$ARKHEIONX_BIN_DIR:\$PATH\"}"
     log "  arkheionx version"
     log "  arkheionx doctor --install"
-    log "  arkheionx open ."
+    log "  arkheionx review-map ."
     log ""
     log "Done. This installer made no system-wide or root changes."
 }
