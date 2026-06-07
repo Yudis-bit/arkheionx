@@ -64,10 +64,29 @@ bash arkheionx-install.sh</code></pre>
     </section>
 
     <section class="doc-readable__section">
-      <h2>6. What comes next</h2>
+      <h2>6. Read the focused views</h2>
       <p>
-        After the environment is working, use ArkheionX as a structured review layer around your
-        codebase. Treat outputs as review context that must be inspected by a human.
+        Each view is a focused slice of the same review map. They read the artifacts
+        <code>review-map</code> wrote, or derive them in memory.
+      </p>
+      <pre><code>arkheionx value-paths .
+arkheionx assumptions .
+arkheionx test-gap-map .
+arkheionx proof-plan .</code></pre>
+      <p>
+        <code>test-gap-map</code> prints a <code>Source: &lt;file&gt;:&lt;line&gt;</code> for each gap so
+        you can open the exact function. See
+        <a href="/docs/how-it-works">how it works</a> for the full pipeline.
+      </p>
+    </section>
+
+    <section class="doc-readable__section">
+      <h2>7. What comes next</h2>
+      <p>
+        Use ArkheionX as a structured review layer around your codebase. Treat outputs as review
+        context that must be inspected by a human. Next: the
+        <a href="/docs/bug-bounty">bug bounty</a> and
+        <a href="/docs/pre-audit">pre-audit</a> workflows.
       </p>
     </section>
   </main>

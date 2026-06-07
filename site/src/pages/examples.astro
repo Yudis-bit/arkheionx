@@ -73,6 +73,31 @@ const examples = [
       </p>
     </section>
 
+    <section class="workflow-command">
+      <div>
+        <p class="examples-kicker">Bundled V4 demo</p>
+        <h2>Vault · Strategy · PriceOracle · MockToken</h2>
+        <p>
+          A small multi-contract protocol shipped in the repository. Its test covers
+          <code>deposit</code>, and deliberately leaves the value exits (<code>withdraw</code>,
+          <code>emergencyWithdraw</code>, <code>divest</code>) and the admin setters
+          (<code>setOracle</code>, <code>setPrice</code>) untested — so ArkheionX surfaces them as
+          value paths and test gaps. The output below is real engine output, locked by tests.
+        </p>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx review-map examples/vault-strategy-oracle-fixture</code></pre>
+        <pre><code>OK    Map review surface  3 contracts, 14 functions, 3 value paths, 5 test gaps
+
+Inspect first
+1  HIGH   Strategy.divest            Signals  external-call, value-out
+2  HIGH   Vault.emergencyWithdraw    Signals  external-call, privileged, value-out
+3  HIGH   Vault.withdraw             Signals  external-call, value-out
+
+Test gap   Vault.withdraw   Source  src/Vault.sol:63   Proof  proof-vault-withdraw</code></pre>
+      </div>
+    </section>
+
     <section class="examples-overview">
       <div>
         <span>Input</span>
