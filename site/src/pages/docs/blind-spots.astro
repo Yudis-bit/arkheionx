@@ -1,0 +1,75 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const components = [
+  ["impact", "Value exit, accounting, authorization, liquidation, oracle, external call, periphery/core boundary, admin, cross-contract — each adds heuristic impact points."],
+  ["review gap", "No direct test observed adds the most; unknown and partial coverage add less; a tested surface adds nothing."],
+  ["complexity", "External calls, loops, try/catch, signature/Merkle/domain logic, cross-contract calls, and periphery routes each add points."],
+  ["assumption", "Unverified guarding assumptions add points, with a bonus when several stack on one surface."]
+];
+---
+
+<Layout
+  title="Blind spots — ArkheionX"
+  description="ArkheionX blind-spots ranks likely blind-spot candidates: high-impact surfaces with weak review evidence. The score is transparent and additive; it is a review priority, never a severity or a probability. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Blind spots (v5)</p>
+      <h1>High impact. Weak review evidence. Inspect first.</h1>
+      <p>
+        A likely blind spot is a high-impact or complex surface with weak local review evidence.
+        It is not a vulnerability. <code>arkheionx blind-spots</code> ranks these candidates with a
+        transparent, additive score and explains every point it assigns.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">The score</p>
+        <h2>Nothing is hidden.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>blind_spot_score = impact + review_gap + complexity + assumption
+
+85+      very-high
+65-84    high
+40-64    medium
+below 40 monitor</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {components.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Pick where to spend review time.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx blind-spots .
+arkheionx blind-spots . --json
+arkheionx blind-spots . --out .arkheionx/blind-spots --limit 15</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>A review priority, not a severity.</h2>
+      <p>
+        The blind spot score is a heuristic review priority. It is never a probability, a severity,
+        or an exploitability estimate. ArkheionX does not confirm vulnerabilities. Human review is
+        required. See <code>docs/BLIND_SPOT_INTELLIGENCE.md</code>.
+      </p>
+      <a href="/docs/research-pack" class="workflow-button">Build a research pack</a>
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,78 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const files = [
+  ["00-README.md", "What the pack is, how to use it, which file to give an AI agent, and the safety boundary."],
+  ["02-blind-spots.md", "Likely blind-spot candidates, ranked by the transparent score."],
+  ["03-criticality-map.md", "Criticality potential (blast radius) across surfaces. Not severity."],
+  ["04-counterfactuals.md", "Testable \"what if this assumption is false?\" prompts."],
+  ["05-agent-brief.md", "A scoped brief to hand to a review agent or reviewer."],
+  ["07-evidence-log.md", "Record tests, results, rejections, and human decisions here."],
+  ["08-do-not-claim.md", "The boundary: what must never be claimed."],
+  ["manifest.json", "Machine-readable index of the pack."]
+];
+---
+
+<Layout
+  title="Research pack — ArkheionX"
+  description="ArkheionX research-pack generates a complete local, vendor-agnostic bug bounty research pack: blind spots, criticality map, counterfactuals, an agent brief, a hypotheses template, an evidence log, and a do-not-claim file. No bug claims, no severity, human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Research pack (v5, headline)</p>
+      <h1>One folder that tells a human or an agent where to spend time.</h1>
+      <p>
+        <code>arkheionx research-pack</code> builds a complete local research pack for a single
+        repository. It is model-agnostic and vendor-agnostic: hand it to a human reviewer or an AI
+        agent. It makes no vulnerability claims and assigns no severity.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Generate it</p>
+        <h2>Writes by default to .arkheionx/research-pack.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx research-pack .
+arkheionx research-pack . --out .arkheionx/research-pack
+arkheionx research-pack . --json</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {files.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Suggested handoff</p>
+        <h2>Give the agent the brief and the counterfactuals.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>1. Read 01-review-map-summary.md (how value moves)
+2. Read 02-blind-spots.md + 03-criticality-map.md (where to look first)
+3. Give 05-agent-brief.md + 04-counterfactuals.md to a review agent
+4. Write local tests; record results in 07-evidence-log.md
+5. A finding is only ever confirmed by a human with local proof</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>A research pack, not a verdict.</h2>
+      <p>
+        Local and static only. No RPC, no exploit automation, no auto-submit, no severity. Blind
+        spot candidates and criticality potential are heuristics. Human review is required. See
+        <code>docs/V5_WORKFLOW.md</code>.
+      </p>
+      <a href="/docs/bug-bounty" class="workflow-button">Bug bounty workflow</a>
+    </section>
+  </main>
+</Layout>
