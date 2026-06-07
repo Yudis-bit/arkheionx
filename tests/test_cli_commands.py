@@ -22,10 +22,10 @@ class CliCommandTests(unittest.TestCase):
             result = self.run_cli(*args)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         version = self.run_cli("version")
-        self.assertIn("package version: 4.1.0", version.stdout)
+        self.assertIn("package version: 5.0.0", version.stdout)
         self.assertIn("Latest stable release: v3.1.0", version.stdout)
-        self.assertIn("Current milestone: v4.1.0", version.stdout)
-        self.assertIn("Next milestone: v4.2.0", version.stdout)
+        self.assertIn("Current milestone: v5.0.0", version.stdout)
+        self.assertIn("Next milestone: v5.1.0", version.stdout)
         doctor = self.run_cli("doctor")
         self.assertIn("LOCAL / STATIC", doctor.stdout)
         self.assertIn("Safety", doctor.stdout)
@@ -44,7 +44,7 @@ class CliCommandTests(unittest.TestCase):
     def test_version_includes_package_version_and_next_step(self) -> None:
         result = self.run_cli("version")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("package version: 4.1.0", result.stdout)
+        self.assertIn("package version: 5.0.0", result.stdout)
         self.assertIn("Next", result.stdout)
         self.assertIn("arkheionx doctor", result.stdout)
 

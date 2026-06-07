@@ -70,6 +70,15 @@ validate:
 		arkheionx/research/hypothesis_log.py \
 		arkheionx/research/case_study.py \
 		arkheionx/research/artifacts.py \
+		arkheionx/blind_spots/__init__.py \
+		arkheionx/blind_spots/models.py \
+		arkheionx/blind_spots/scoring.py \
+		arkheionx/blind_spots/signals.py \
+		arkheionx/blind_spots/counterfactuals.py \
+		arkheionx/blind_spots/engine.py \
+		arkheionx/blind_spots/render.py \
+		arkheionx/blind_spots/json_output.py \
+		arkheionx/blind_spots/pack.py \
 		arkheionx/demo/__init__.py \
 		arkheionx/demo/fixtures/__init__.py \
 		arkheionx/demo/model.py \

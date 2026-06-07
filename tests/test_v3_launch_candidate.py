@@ -27,11 +27,11 @@ class V3VersionTests(unittest.TestCase):
             __version__,
         )
 
-        self.assertEqual(__version__, "4.1.0")
-        self.assertEqual(PACKAGE_VERSION, "4.1.0")
+        self.assertEqual(__version__, "5.0.0")
+        self.assertEqual(PACKAGE_VERSION, "5.0.0")
         self.assertEqual(STABLE_RELEASE, "v3.1.0")
-        self.assertEqual(CURRENT_MILESTONE, "v4.1.0")
-        self.assertEqual(NEXT_MILESTONE, "v4.2.0")
+        self.assertEqual(CURRENT_MILESTONE, "v5.0.0")
+        self.assertEqual(NEXT_MILESTONE, "v5.1.0")
 
 
 class V3ReadmeTests(unittest.TestCase):
@@ -68,8 +68,8 @@ class V3DocsTests(unittest.TestCase):
 
     def test_roadmap_marks_v3_current_and_v2_10_shipped(self) -> None:
         roadmap = read("docs/ROADMAP.md")
-        self.assertIn("Current milestone: v4.1.0", roadmap)
-        self.assertIn("Next milestone: v4.2.0", roadmap)
+        self.assertIn("Current milestone: v5.0.0", roadmap)
+        self.assertIn("Next milestone: v5.1.0", roadmap)
         self.assertIn("Latest stable: v3.1.0", roadmap)
         self.assertIn("v3.1.0 — Protocol Review Map", roadmap)
 

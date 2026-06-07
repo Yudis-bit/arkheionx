@@ -3,6 +3,43 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v5.0.0 - 2026-06-07
+
+v5.0 Blind Spot Intelligence — the first major step beyond mapping. **Release
+metadata finalized locally; pending founder push/tag/GitHub release/site
+deploy.** The package version is `5.0.0`; the last published tag remains
+`v4.0.0`, and the last actually-tagged stable release the source installers and
+the GitHub Action pin to remains `v3.1.0`. Local/static, heuristic, and
+additive: no RPC, live-chain, exploit automation, severity, or vulnerability
+claims; `manual_review_required` stays true. Blind spot candidates are not
+vulnerabilities, criticality potential is not severity, and counterfactuals are
+research prompts, not findings.
+
+### Added
+
+- `arkheionx blind-spots` — rank likely blind-spot candidates (high-impact
+  surfaces with weak review evidence) with a transparent additive score
+  (impact + review-gap + complexity + assumption), per-candidate reasons, a
+  suggested counterfactual, a local test direction, and a do-not-claim note.
+- `arkheionx criticality-map` — map criticality potential (heuristic blast
+  radius, never severity) across surfaces, plus a criticality-vs-review-density
+  view.
+- `arkheionx counterfactuals` — generate testable "what if this assumption is
+  false?" research prompts from the review map's guarding assumptions, each with
+  a local test direction, the evidence required, and a stop condition.
+- `arkheionx research-pack` — generate a complete local, vendor-agnostic bug
+  bounty research pack (README, review-map summary, blind spots, criticality
+  map, counterfactuals, agent brief, hypotheses, evidence log, do-not-claim,
+  case-study template, and a JSON manifest). Writes by default.
+- Blind spot engine (`arkheionx/blind_spots/`): a transparent scoring model,
+  surface-signal aggregation reused from the v4.1 research surfaces, a
+  counterfactual generator, renderers, and the research-pack builder.
+- JSON schemas for the four artifacts, a dedicated `examples/blind-spot-fixture`
+  demo exercising every detector category, `docs/BLIND_SPOT_INTELLIGENCE.md`,
+  `docs/V5_WORKFLOW.md`, `release-notes/v5.0.0.md`, and focused tests.
+- Compatibility: `review-map`, `agent-brief`, `hypothesis-log`, and `case-study`
+  are unchanged; the v5 commands build on them.
+
 ## v4.1.0 - 2026-06-07
 
 v4.1 research memory (AI-assisted review). **Release metadata finalized locally;
