@@ -76,6 +76,16 @@ class ReleaseReadinessTests(unittest.TestCase):
     def test_generated_output_is_gitignored(self) -> None:
         self.assertIn(".arkheionx/", read(".gitignore"))
 
+    def test_license_is_resolved(self) -> None:
+        # Public-alpha license blocker: a real Apache-2.0 LICENSE must exist and
+        # the README must reference it instead of advertising a pending license.
+        license_text = read("LICENSE")
+        self.assertIn("Apache License", license_text)
+        self.assertIn("Version 2.0", license_text)
+        readme = read("README.md")
+        self.assertIn("](LICENSE)", readme)
+        self.assertNotIn("License selection is pending", readme)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -103,6 +103,15 @@ def check() -> list[str]:
 
     readme = read("README.md")
 
+    # License must be resolved for public alpha: a real LICENSE file must exist
+    # and the README must point to it (not advertise a pending license).
+    if not (ROOT / "LICENSE").is_file():
+        failures.append("missing LICENSE file (public-alpha blocker)")
+    if "](LICENSE)" not in readme:
+        failures.append("README.md does not link the canonical LICENSE file")
+    if "License selection is pending" in readme:
+        failures.append("README.md still advertises a pending license")
+
     # Readiness docs.
     for doc in READINESS_DOCS:
         if not (ROOT / doc).is_file():

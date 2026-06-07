@@ -230,8 +230,9 @@ Advanced:
 
 ## License
 
-License selection is pending. See
-[`LICENSE_PENDING.md`](LICENSE_PENDING.md).
+ArkheionX is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE).
+The earlier license-pending note is kept at
+[`LICENSE_PENDING.md`](LICENSE_PENDING.md) for historical context only.
 
 ## Security
 

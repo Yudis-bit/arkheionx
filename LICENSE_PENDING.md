@@ -1,5 +1,8 @@
-# License Pending
+# License Pending (Resolved)
 
-The project is source-available in this repository while the final license is
-pending maintainer decision. Do not assume MIT, Apache, GPL, commercial, or
-other reuse rights until a `LICENSE` file is added.
+This note previously tracked the pending-license state. That blocker is now
+**resolved**: the canonical project license is the Apache License 2.0, recorded
+in the top-level [`LICENSE`](LICENSE) file.
+
+This file is kept only so existing links and references resolve. For all reuse,
+distribution, and contribution terms, see [`LICENSE`](LICENSE).
