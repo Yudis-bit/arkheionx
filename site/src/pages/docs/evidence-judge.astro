@@ -1,0 +1,63 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const labels = [
+  ["strong / medium", "The test sets up, acts, asserts, checks pre/post state, and exercises a negative or boundary path."],
+  ["weak / insufficient", "The test acts and asserts but is shallow, or barely exercises the target — it cannot support a conclusion."],
+  ["invalid-test", "The test does not call the target, has no assertion, or only shows the call did not revert. Rewrite it."],
+  ["candidate-with-evidence", "A human should review the candidate. This is not a confirmed vulnerability."],
+  ["rejected-with-evidence", "The guard appears to hold. This is not proof the protocol has no bugs."],
+  ["likely-known / accepted / trusted-role / out-of-scope / low-only", "Filtered by the scope rules before it reaches a human."]
+];
+---
+
+<Layout
+  title="Evidence judge — ArkheionX"
+  description="Arkheionx evidence-judge grades whether local tests prove the intended task on a transparent rubric. It does not confirm vulnerabilities. Evidence quality is not vulnerability validity. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Evidence judge (v7)</p>
+      <h1>Did the test actually prove the task?</h1>
+      <p>
+        <code>arkheionx evidence-judge</code> reads local Foundry tests and evidence and grades each
+        on a transparent rubric: does it call the target, set up, act, assert, check pre/post state,
+        exercise the negative or boundary path, avoid mocking away the risk, and avoid relying on a
+        trusted-role mistake or a known issue. It does not confirm vulnerabilities.
+      </p>
+    </section>
+
+    <section class="workflow-steps">
+      {labels.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Scope-aware, local, and static.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx evidence-judge . --scope-file scope.md
+arkheionx evidence-judge . --scope-file scope.md --json
+arkheionx evidence-judge . --tasks-file .arkheionx/scope-pack/scope-tasks.json</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>Evidence quality, not vulnerability validity.</h2>
+      <p>
+        Evidence quality is a heuristic. Candidate-with-evidence is not a confirmed vulnerability;
+        rejected-with-evidence is not proof the protocol has no bugs. ArkheionX does not confirm
+        vulnerabilities. Human review is required. See <code>docs/EVIDENCE_JUDGE.md</code>.
+      </p>
+      <a href="/docs/report-filter" class="workflow-button">See the report filter</a>
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,83 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const commands = [
+  ["scope-map", "Parse a contest/audit/program scope note into structured review rules: trusted assumptions, known and accepted issues, invariants, focus areas, and do-not-waste-time filters."],
+  ["scope-lanes", "Generate scope-aware review lanes from repository surfaces plus scope rules. Lane priority is review order, not severity."],
+  ["scope-tasks", "Turn lanes into precise, bounded, evidence-oriented tasks. A task is a research instruction, not an exploit instruction."],
+  ["scope-pack", "Bundle a complete local scope-aware research pack: scope map, lanes, tasks, evidence template and rubric, report-filter checklist, and model-agnostic agent input."],
+  ["evidence-judge", "Grade whether local tests prove the intended task on a transparent rubric. Candidate-with-evidence is not a confirmed vulnerability."],
+  ["report-filter", "Classify report candidates against the scope before submission, with a human pre-submission checklist. Not final triage."]
+];
+---
+
+<Layout
+  title="V7 — Scope-Aware Orchestration + Evidence Judge — ArkheionX"
+  description="Arkheionx v7 turns audit scope into review lanes, evidence requirements, and report filters for local, AI-assisted security research. No severity, no bug claims, human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">V7 — Scope-Aware Orchestration + Evidence Judge</p>
+      <h1>Start from scope and evidence, not a vague prompt.</h1>
+      <p>
+        V7 turns audit scope into review lanes, evidence requirements, and report filters for local,
+        AI-assisted security research. Instead of "find bugs in this repo," you start from the
+        scoped surfaces, the assumptions, the known and invalid paths, the exact counterfactuals,
+        the local evidence required, and a way to judge whether a test actually proves anything. It
+        does not predict bugs, assign severity, or run anything against a live chain.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Workflow</p>
+        <h2>Map the scope, generate tasks, judge evidence, filter candidates.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx scope-map . --scope-file scope.md
+arkheionx scope-pack . --scope-file scope.md --out .arkheionx/scope-pack
+arkheionx evidence-judge . --scope-file scope.md
+arkheionx report-filter . --scope-file scope.md</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {commands.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>arkheionx {item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>!</span>
+        <h2>Planning, not verdicts</h2>
+        <p>A scope map, review lane, or scope task is a planning artifact, not a finding. Evidence quality is not vulnerability validity. Candidate-with-evidence is not a confirmed vulnerability.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Private scope stays local</h2>
+        <p>Private scope notes live only in local, gitignored files under <code>.arkheionx/private/</code>. A built-in leak guard keeps target names out of public files.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Human review required</h2>
+        <p>No RPC, no live-chain action, no exploit automation, no auto-submit. A human, with independent local proof, makes every security call.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>V7 prioritizes scoped, evidence-backed research.</h2>
+      <p>
+        It does not predict bugs, assign final severity, or replace an audit. A report candidate is
+        not final triage. Read the full guide in the repository's
+        <code>docs/V7_WORKFLOW.md</code> and <code>docs/SCOPE_ORCHESTRATION.md</code>.
+      </p>
+      <a href="/docs/scope-orchestration" class="workflow-button">See scope orchestration</a>
+    </section>
+  </main>
+</Layout>

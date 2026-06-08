@@ -1,0 +1,65 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const classes = [
+  ["potentially-reportable", "A local test gives candidate-with-evidence support. Still requires human review; still not final triage."],
+  ["needs-more-evidence", "No strong local evidence yet. Write the local test before considering a report."],
+  ["duplicate-prone", "A common bug class many researchers test. Differentiate the impact path before submitting."],
+  ["likely-known-issue / accepted-risk", "Matches a known issue or accepted risk in the scope."],
+  ["likely-trusted-role-assumption", "Depends on a trusted role the scope marks valid. Only report a path that does not rely on trusted-role misbehaviour."],
+  ["likely-out-of-scope / low-only", "Out of scope, or below the scope's Medium/High impact bar."]
+];
+---
+
+<Layout
+  title="Report filter — ArkheionX"
+  description="Arkheionx report-filter classifies report candidates against scope rules before submission, with a human pre-submission checklist. It is not final triage. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Report filter (v7)</p>
+      <h1>Filter candidates against scope before you submit.</h1>
+      <p>
+        <code>arkheionx report-filter</code> classifies each report candidate against the scope
+        rules — known issues, accepted risks, trusted-role assumptions, out-of-scope areas,
+        low-only patterns, and duplicate-prone classes — and surfaces a human pre-submission
+        checklist. It stops a researcher from spending a submission on an invalid or duplicate
+        report. It is not final triage.
+      </p>
+    </section>
+
+    <section class="workflow-steps">
+      {classes.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Scope-aware classification, locally.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx report-filter . --scope-file scope.md
+arkheionx report-filter . --scope-file scope.md --json
+arkheionx report-filter . --scope-file scope.md --out .arkheionx/report-filter</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>A pre-submission aid, not final triage.</h2>
+      <p>
+        The report filter does not decide what is valid; it helps a human avoid wasted or invalid
+        submissions. Every candidate still requires human review and an independent local
+        proof-of-concept. ArkheionX does not confirm vulnerabilities or assign severity. See
+        <code>docs/REPORT_FILTER.md</code>.
+      </p>
+      <a href="/docs/v7" class="workflow-button">Back to the V7 overview</a>
+    </section>
+  </main>
+</Layout>

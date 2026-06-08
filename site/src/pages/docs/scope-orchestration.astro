@@ -1,0 +1,63 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const capabilities = [
+  ["Scope Map", "Parse a scope note into structured review rules: in/out of scope, severity conditions, trusted and dependency assumptions, known and accepted issues, invariants, focus areas, and do-not-waste-time filters."],
+  ["Scope-Aware Review Lanes", "Select generic review lanes only when a repository surface or the scope makes them relevant, each with priority, targets, hypotheses, required evidence, and a stop condition."],
+  ["Scope-Aware Tasks", "Turn lanes into precise, bounded, testable tasks with a hypothesis, counterfactual, setup, action, required assertions, and a report-candidate threshold."],
+  ["Evidence Judge", "Grade whether a local test actually proves the intended task on a transparent rubric, with an evidence quality and a judgment."],
+  ["Report Filter / Scope Pack", "Classify candidates against the scope before submission, and bundle everything into a complete local pack."]
+];
+---
+
+<Layout
+  title="Scope-aware orchestration — ArkheionX"
+  description="Arkheionx v7 scope-aware orchestration turns an audit/contest/program scope into review lanes, scope tasks, evidence requirements, and report filters. Local/static, no severity, no bug claims, human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Scope-aware orchestration (v7)</p>
+      <h1>Audit scope becomes lanes, tasks, evidence, and filters.</h1>
+      <p>
+        V4 maps value flow, V5 prioritizes likely blind spots, V6 classifies evidence and
+        unresolved interactions, and V7 turns audit scope into review lanes, task packs, evidence
+        requirements, and report filters so AI-assisted security review starts from rules and
+        evidence instead of vague prompts.
+      </p>
+    </section>
+
+    <section class="workflow-steps">
+      {capabilities.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>One pack, ready for a reviewer or an AI agent.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx scope-pack examples/scope-fixture \
+  --scope-file examples/scope-fixture/scope-note.md \
+  --out .arkheionx/scope-pack</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>Planning artifacts, not findings.</h2>
+      <p>
+        A scope map, review lane, or scope task is a planning artifact, not a finding. Evidence
+        quality is not vulnerability validity. Candidate-with-evidence is not a confirmed
+        vulnerability. A report candidate is not final triage. ArkheionX does not confirm
+        vulnerabilities or replace an audit. See <code>docs/SCOPE_ORCHESTRATION.md</code>.
+      </p>
+      <a href="/docs/scope-pack" class="workflow-button">See the scope pack</a>
+    </section>
+  </main>
+</Layout>

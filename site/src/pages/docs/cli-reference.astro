@@ -70,6 +70,15 @@ const evidence = [
   ["unresolved-map", "Everything important that local evidence does not yet close: high-impact unresolved surfaces and interactions. Unresolved does not mean vulnerable."],
   ["complete-review", "Assemble the whole V6 review into one local, vendor-agnostic package for a human reviewer or an AI agent. Writes by default."]
 ];
+
+const scope = [
+  ["scope-map", "Parse a contest/audit/program scope note into structured review rules: trusted assumptions, known and accepted issues, invariants, focus areas, and do-not-waste-time filters."],
+  ["scope-lanes", "Generate scope-aware review lanes from repository surfaces plus scope rules. Lane priority is review order, not severity."],
+  ["scope-tasks", "Turn lanes into precise, bounded, evidence-oriented tasks. A task is a research instruction, not an exploit instruction."],
+  ["scope-pack", "Bundle a complete local scope-aware research pack: scope map, lanes, tasks, evidence template and rubric, report-filter checklist, and agent input. Writes by default."],
+  ["evidence-judge", "Grade whether local tests prove the intended task on a transparent rubric. Candidate-with-evidence is not a confirmed vulnerability."],
+  ["report-filter", "Classify report candidates against scope rules before submission, with a human pre-submission checklist. Not final triage."]
+];
 ---
 
 <Layout
@@ -177,6 +186,27 @@ arkheionx proof-plan .     # a proof direction to try by hand</code></pre>
       <div class="install-list-card">
         <ul>
           {evidence.map((row) => (
+            <li><strong>arkheionx {row[0]}</strong> — {row[1]}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Scope-aware orchestration (v7)</p>
+        <h2>Scope becomes lanes, tasks, evidence, and filters.</h2>
+        <p>
+          These additive, local/static commands accept an optional <code>--scope-file</code> and
+          turn audit scope into review lanes, scope tasks, evidence requirements, and report
+          filters. A scope task is a planning artifact, not a finding; evidence quality is not
+          vulnerability validity; a report candidate is not final triage. See
+          <a href="/docs/v7">the V7 overview</a>.
+        </p>
+      </div>
+      <div class="install-list-card">
+        <ul>
+          {scope.map((row) => (
             <li><strong>arkheionx {row[0]}</strong> — {row[1]}</li>
           ))}
         </ul>

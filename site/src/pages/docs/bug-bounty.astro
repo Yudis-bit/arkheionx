@@ -81,12 +81,26 @@ Local test  Deposit, then attempt an oversized or repeated exit;
       </article>
     </section>
 
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Scope-aware contest triage (v7)</p>
+        <h2>Start from the written scope, not a vague prompt.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx scope-pack . --scope-file scope.md --out .arkheionx/scope-pack
+arkheionx evidence-judge . --scope-file scope.md
+arkheionx report-filter . --scope-file scope.md</code></pre>
+      </div>
+    </section>
+
     <section class="workflow-boundary">
       <p class="workflow-kicker">Boundary</p>
       <h2>ArkheionX organizes context; it does not decide.</h2>
       <p>
-        It does not confirm vulnerabilities, assign final severity, or prove impact. Read the full
-        guide in the repository's <code>docs/BUG_BOUNTY_WORKFLOW.md</code>.
+        It does not confirm vulnerabilities, assign final severity, or prove impact. A scope task is
+        a planning artifact and a report candidate is not final triage. Keep private scope notes in
+        local, gitignored files only. Read the full guide in the repository's
+        <code>docs/BUG_BOUNTY_WORKFLOW.md</code> and <code>docs/V7_WORKFLOW.md</code>.
       </p>
       <a href="/docs/safety-model" class="workflow-button">Read the safety model</a>
     </section>

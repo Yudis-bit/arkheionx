@@ -1,0 +1,64 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const files = [
+  ["00-README + 09-agent-input", "How to use the pack, and model-agnostic instructions for an AI agent or reviewer."],
+  ["01-scope-map + 02-review-lanes", "The scope turned into structured rules and the relevant review lanes."],
+  ["03-scope-tasks + 04-do-not-waste-time", "Precise testable tasks, plus known/accepted/trusted/out-of-scope/low-only filters."],
+  ["05-evidence-template + 06-evidence-judge-rubric", "How to record local test evidence and how it is graded."],
+  ["07-report-filter-checklist + 08-human-review-checklist", "How candidates are classified, and the human gate before any report."],
+  ["10-case-study-template + manifest.json", "A sanitized research-session template and a machine-readable manifest with JSON sidecars."]
+];
+---
+
+<Layout
+  title="Scope pack — ArkheionX"
+  description="Arkheionx scope-pack bundles a complete local scope-aware research pack: scope map, review lanes, scope tasks, evidence template and rubric, report-filter checklist, and agent input. Local/static, human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Scope pack (v7)</p>
+      <h1>One local pack for the whole scoped review.</h1>
+      <p>
+        <code>arkheionx scope-pack</code> bundles the scope map, review lanes, scope tasks, a
+        do-not-waste-time filter, an evidence template and rubric, a report-filter checklist, a
+        human review checklist, model-agnostic agent input, a case-study template, and a JSON
+        manifest with sidecars. Hand it to a reviewer or an AI agent and start from rules and
+        evidence.
+      </p>
+    </section>
+
+    <section class="workflow-steps">
+      {files.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Writes locally under <code>.arkheionx/</code> by default.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx scope-pack . --scope-file scope.md --out .arkheionx/scope-pack
+arkheionx scope-pack . --scope-file scope.md --json
+arkheionx scope-pack . --scope-file scope.md --no-write</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>A planning pack, not a report.</h2>
+      <p>
+        A scope pack is planning context: it is not a finding, not a severity, and not a confirmed
+        vulnerability. Private scope notes stay in local, gitignored files only and are never
+        committed. Human review is required. See <code>docs/V7_WORKFLOW.md</code>.
+      </p>
+      <a href="/docs/report-filter" class="workflow-button">See the report filter</a>
+    </section>
+  </main>
+</Layout>
