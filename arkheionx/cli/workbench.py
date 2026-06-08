@@ -84,6 +84,23 @@ from arkheionx.blind_spots import (
     write_counterfactuals,
     write_criticality_map,
 )
+from arkheionx.evidence_graph import (
+    build_complete_review,
+    build_evidence_graph_from_review_map,
+    build_interaction_matrix_from_review_map,
+    build_unresolved_map_from_review_map,
+    default_complete_review_dir,
+    default_evidence_graph_dir,
+    default_interaction_matrix_dir,
+    default_unresolved_map_dir,
+    load_research_memory,
+    render_evidence_graph_cli,
+    render_interaction_matrix_cli,
+    render_unresolved_map_cli,
+    write_evidence_graph,
+    write_interaction_matrix,
+    write_unresolved_map,
+)
 from arkheionx.cli_ui import TerminalUI
 from arkheionx.rules.registry import list_rule_packs
 from arkheionx.version import PACKAGE_VERSION
@@ -2116,5 +2133,222 @@ def _render_research_pack_cli(result: dict, repo: str, *, wrote: bool, root: Pat
         "Boundary",
         "  Local/static only. No RPC, no exploit automation, no severity, no bug claims.",
         "  Blind spot candidates and criticality potential are heuristics. Human review required.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+# --------------------------------------------------------------------------
+# evidence graph (v6): evidence-graph, interaction-matrix, unresolved-map,
+# complete-review
+# --------------------------------------------------------------------------
+_OPEN_STATES = ("unresolved", "insufficient-evidence", "unclassified", "needs-human-review")
+
+
+def _v6_memory(root: Path) -> dict:
+    """Load explicit local research memory (hypotheses.json) if present.
+
+    Only explicit, human-recorded statuses upgrade a surface to
+    rejected-with-evidence / confirmed-candidate. Absent by default (static run).
+    """
+    path = root / ".arkheionx" / "research" / "hypotheses.json"
+    if path.is_file():
+        return load_research_memory(path)
+    return {}
+
+
+def evidence_graph_command(args: Namespace) -> int:
+    """Classify every important surface into an evidence state (v6)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_evidence_graph_from_review_map(
+        review_map, root, source_files=n_sources, test_files=n_tests,
+        memory=_v6_memory(root), package_version=PACKAGE_VERSION)
+    if bool(getattr(args, "only_unresolved", False)):
+        data["nodes"] = [n for n in data["nodes"] if n["evidence_state"] in _OPEN_STATES]
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_evidence_graph_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _blind_spot_out_dir(args, root, default_evidence_graph_dir)
+        try:
+            written = write_evidence_graph(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['evidence-graph.md']}\n  {rel['evidence-graph.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def interaction_matrix_command(args: Namespace) -> int:
+    """Detect meaningful combinations of surfaces that may hide bugs (v6)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_interaction_matrix_from_review_map(
+        review_map, root, source_files=n_sources, test_files=n_tests,
+        memory=_v6_memory(root), package_version=PACKAGE_VERSION)
+    if bool(getattr(args, "only_unresolved", False)):
+        data["interactions"] = list(data["unresolved_interactions"])
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_interaction_matrix_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _blind_spot_out_dir(args, root, default_interaction_matrix_dir)
+        try:
+            written = write_interaction_matrix(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['interaction-matrix.md']}\n  {rel['interaction-matrix.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def unresolved_map_command(args: Namespace) -> int:
+    """Show everything important that local evidence does not yet close (v6)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    data = build_unresolved_map_from_review_map(
+        review_map, root, source_files=n_sources, test_files=n_tests,
+        memory=_v6_memory(root), package_version=PACKAGE_VERSION)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+
+    text = render_unresolved_map_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _blind_spot_out_dir(args, root, default_unresolved_map_dir)
+        try:
+            written = write_unresolved_map(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['unresolved-map.md']}\n  {rel['unresolved-map.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def complete_review_command(args: Namespace) -> int:
+    """Generate the complete V6 local review package (headline). Writes by default."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    if top <= 0:
+        print("error: --top must be a positive integer.")
+        return FAILED
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    out_dir = _blind_spot_out_dir(args, root, default_complete_review_dir)
+    memory = _v6_memory(root)
+
+    # complete-review is a "pack" command: it writes by default unless --no-write.
+    write = not bool(getattr(args, "no_write", False))
+    try:
+        result = build_complete_review(
+            review_map, root, out_dir, package_version=PACKAGE_VERSION,
+            source_files=n_sources, test_files=n_tests, memory=memory, write=write)
+    except OSError as exc:
+        print(f"error: could not write complete review package to {out_dir}: {exc}")
+        return FAILED
+
+    if getattr(args, "json", False):
+        print(json.dumps(result["manifest"], indent=2))
+        return exit_code
+
+    _print_report(_render_complete_review_cli(result, args.repo, wrote=write, root=root))
+    return exit_code
+
+
+def _render_complete_review_cli(result: dict, repo: str, *, wrote: bool, root: Path | None = None) -> str:
+    manifest = result["manifest"]
+    lines = [
+        "ARKHEIONX COMPLETE REVIEW PACKAGE",
+        "View: Complete Review (v6, headline)",
+        "Local/static review package. Vendor-agnostic.",
+        "Evidence state is not a vulnerability claim. Interaction priority is not severity.",
+        "Human review required.",
+        "",
+        "Scope",
+        f"  Repo: {repo}",
+        f"  Mode: {manifest['mode']}",
+        f"  Package: ArkheionX v{manifest['package_version']}",
+        "",
+        "Package contents",
+        f"  Evidence nodes:          {manifest['evidence_node_count']}",
+        f"  Interactions:            {manifest['interaction_count']}",
+        f"  Unresolved surfaces:     {manifest['unresolved_surface_count']}",
+        f"  Unresolved interactions: {manifest['unresolved_interaction_count']}",
+        "",
+        "Evidence state summary",
+    ]
+    for state, count in manifest["evidence_state_summary"].items():
+        lines.append(f"  {state}: {count}")
+    lines.append("")
+    if wrote:
+        out_dir = result["out_dir"]
+        rel = _rel_display(out_dir, root) if root is not None else out_dir
+        lines.append(f"Wrote {len(manifest['artifact_list'])} files to {rel}")
+        for name in manifest["artifact_list"]:
+            lines.append(f"  {name}")
+    else:
+        lines.append("No-write: built the package manifest in memory only (nothing written).")
+    lines += [
+        "",
+        "Next",
+        "  Give 08-agent-input.md to a review agent or reviewer.",
+        "  A human completes 09-human-review-checklist.md before ending the review.",
+        f"  Machine-readable manifest: arkheionx complete-review {repo} --json",
+        "",
+        "Boundary",
+        "  Local/static only. No RPC, no exploit automation, no severity, no bug claims.",
+        "  Evidence state is not a vulnerability claim. Human review required.",
     ]
     return "\n".join(lines) + "\n"

@@ -316,6 +316,56 @@ def build_parser() -> argparse.ArgumentParser:
     research_pack.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
     research_pack.set_defaults(func=workbench.research_pack_command)
 
+    evidence_graph = subparsers.add_parser(
+        "evidence-graph",
+        help="Classify every important review surface into an evidence state (v6): tested, unresolved, needs-human-review, insufficient-evidence, unclassified.",
+    )
+    evidence_graph.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    evidence_graph.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/evidence-graph/).")
+    evidence_graph.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    evidence_graph.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    evidence_graph.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    evidence_graph.add_argument("--only-unresolved", action="store_true", help="Show only surfaces in an open evidence state (unresolved/insufficient/needs-human-review/unclassified).")
+    evidence_graph.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    evidence_graph.set_defaults(func=workbench.evidence_graph_command)
+
+    interaction_matrix = subparsers.add_parser(
+        "interaction-matrix",
+        help="Detect meaningful combinations of surfaces that may hide bugs when tested together (v6). Interaction priority is not severity.",
+    )
+    interaction_matrix.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    interaction_matrix.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/interaction-matrix/).")
+    interaction_matrix.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    interaction_matrix.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    interaction_matrix.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    interaction_matrix.add_argument("--only-unresolved", action="store_true", help="Show only high-impact interactions with weak or no evidence.")
+    interaction_matrix.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    interaction_matrix.set_defaults(func=workbench.interaction_matrix_command)
+
+    unresolved_map = subparsers.add_parser(
+        "unresolved-map",
+        help="Show everything important that local evidence does not yet close (v6): high-impact unresolved surfaces and interactions. Unresolved does not mean vulnerable.",
+    )
+    unresolved_map.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    unresolved_map.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/unresolved-map/).")
+    unresolved_map.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    unresolved_map.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    unresolved_map.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    unresolved_map.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    unresolved_map.set_defaults(func=workbench.unresolved_map_command)
+
+    complete_review = subparsers.add_parser(
+        "complete-review",
+        help="Generate a complete local V6 review package (review map, blind spots, criticality, counterfactuals, evidence graph, interaction matrix, unresolved map, agent input, human checklist, case-study template, manifest) (v6, headline). Writes by default.",
+    )
+    complete_review.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    complete_review.add_argument("--out", default="", help="Package output directory (default: <repo>/.arkheionx/complete-review/).")
+    complete_review.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    complete_review.add_argument("--json", action="store_true", help="Print the machine-readable manifest JSON to stdout only (no human text).")
+    complete_review.add_argument("--no-write", action="store_true", help="Build the package in memory only; do not write files.")
+    complete_review.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    complete_review.set_defaults(func=workbench.complete_review_command)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser
