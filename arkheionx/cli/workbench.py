@@ -101,6 +101,30 @@ from arkheionx.evidence_graph import (
     write_interaction_matrix,
     write_unresolved_map,
 )
+from arkheionx.scope_orchestration import (
+    build_scope_lanes,
+    build_scope_map,
+    build_scope_pack,
+    build_scope_tasks,
+    default_evidence_judge_dir,
+    default_report_filter_dir,
+    default_scope_lanes_dir,
+    default_scope_map_dir,
+    default_scope_pack_dir,
+    default_scope_tasks_dir,
+    filter_report_candidates,
+    judge_evidence,
+    render_evidence_judge_cli,
+    render_report_filter_cli,
+    render_scope_lanes_cli,
+    render_scope_map_cli,
+    render_scope_tasks_cli,
+    write_evidence_judge,
+    write_report_filter,
+    write_scope_lanes,
+    write_scope_map,
+    write_scope_tasks,
+)
 from arkheionx.cli_ui import TerminalUI
 from arkheionx.rules.registry import list_rule_packs
 from arkheionx.version import PACKAGE_VERSION
@@ -2352,3 +2376,225 @@ def _render_complete_review_cli(result: dict, repo: str, *, wrote: bool, root: P
         "  Evidence state is not a vulnerability claim. Human review required.",
     ]
     return "\n".join(lines) + "\n"
+
+
+# --------------------------------------------------------------------------
+# scope orchestration (v7): scope-map, scope-lanes, scope-tasks, scope-pack,
+# evidence-judge, report-filter
+# --------------------------------------------------------------------------
+def _scope_file_arg(args: Namespace) -> str | None:
+    val = str(getattr(args, "scope_file", "") or "").strip()
+    return val or None
+
+
+def _scope_out_dir(args: Namespace, root: Path, default_fn) -> Path:
+    out = str(getattr(args, "out", "") or "").strip()
+    return Path(out).expanduser() if out else default_fn(root)
+
+
+def scope_map_command(args: Namespace) -> int:
+    """Parse a scope note into a structured scope map (v7)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    data = build_scope_map(review_map, root, scope_file, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = render_scope_map_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, default_scope_map_dir)
+        try:
+            written = write_scope_map(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['scope-map.md']}\n  {rel['scope-map.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def scope_lanes_command(args: Namespace) -> int:
+    """Generate scope-aware review lanes (v7)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    data = build_scope_lanes(review_map, root, scope_file, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = render_scope_lanes_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, default_scope_lanes_dir)
+        try:
+            written = write_scope_lanes(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['scope-lanes.md']}\n  {rel['scope-lanes.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def scope_tasks_command(args: Namespace) -> int:
+    """Generate scope-aware tasks from lanes (v7)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    data = build_scope_tasks(review_map, root, scope_file, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = render_scope_tasks_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, default_scope_tasks_dir)
+        try:
+            written = write_scope_tasks(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['scope-tasks.md']}\n  {rel['scope-tasks.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def scope_pack_command(args: Namespace) -> int:
+    """Generate a complete local scope-aware research pack (v7). Writes by default."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    out_dir = _scope_out_dir(args, root, default_scope_pack_dir)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    write = not bool(getattr(args, "no_write", False))
+    try:
+        result = build_scope_pack(review_map, root, scope_file, out_dir,
+                                  source_files=n_sources, test_files=n_tests, write=write)
+    except OSError as exc:
+        print(f"error: could not write scope pack to {out_dir}: {exc}")
+        return FAILED
+    if getattr(args, "json", False):
+        print(json.dumps(result["manifest"], indent=2))
+        return exit_code
+    manifest = result["manifest"]
+    counts = manifest["counts"]
+    lines = [
+        "ARKHEIONX SCOPE PACK",
+        "Local/static scope-aware research pack. Not a finding, not severity. Human review required.",
+        "",
+        f"Repo   {args.repo}",
+        f"Scope  {'provided' if manifest['scope_file_used'] else 'none (generic pack)'}",
+        f"Lanes  {counts['lanes']}   Tasks {counts['tasks']}   Candidates {counts['report_candidates']}",
+        "",
+    ]
+    if write:
+        rel = _rel_display(Path(result["out_dir"]), root)
+        lines.append(f"Wrote {len(manifest['artifact_list'])} files to {rel}")
+        for name in manifest["artifact_list"]:
+            lines.append(f"  {name}")
+    else:
+        lines.append("No-write: built the pack manifest in memory only (nothing written).")
+    lines += [
+        "",
+        "Next",
+        "  Give 09-agent-input.md + 03-scope-tasks.md to a review agent or reviewer.",
+        "  Write local tests, then: arkheionx evidence-judge <repo> --scope-file <scope>",
+        "",
+        "Boundary",
+        "  Local/static only. Not a finding, not severity. Human review required.",
+    ]
+    _print_report("\n".join(lines) + "\n")
+    return exit_code
+
+
+def evidence_judge_command(args: Namespace) -> int:
+    """Judge whether local tests/evidence prove the intended task (v7)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    tasks_file = str(getattr(args, "tasks_file", "") or "").strip() or None
+    evidence_dir = str(getattr(args, "evidence_dir", "") or "").strip() or None
+    data = judge_evidence(review_map, root, scope_file, tasks_file=tasks_file,
+                          evidence_dir=evidence_dir, source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = render_evidence_judge_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, default_evidence_judge_dir)
+        try:
+            written = write_evidence_judge(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['evidence-judge.md']}\n  {rel['evidence-judge.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def report_filter_command(args: Namespace) -> int:
+    """Filter and classify report candidates against the scope before submission (v7)."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return FAILED
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    data = filter_report_candidates(review_map, root, scope_file,
+                                    source_files=n_sources, test_files=n_tests)
+    exit_code = SUCCESS if status_of(review_map) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = render_report_filter_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, default_report_filter_dir)
+        try:
+            written = write_report_filter(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['report-filter.md']}\n  {rel['report-filter.json']}\n"
+    _print_report(text)
+    return exit_code

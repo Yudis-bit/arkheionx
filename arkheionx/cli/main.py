@@ -366,6 +366,86 @@ def build_parser() -> argparse.ArgumentParser:
     complete_review.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
     complete_review.set_defaults(func=workbench.complete_review_command)
 
+    scope_map = subparsers.add_parser(
+        "scope-map",
+        help="Parse a contest/audit scope note into a structured scope map: trusted assumptions, known/accepted risks, invariants, focus areas, and do-not-waste-time filters (v7).",
+    )
+    scope_map.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    scope_map.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional; generic map inferred if omitted).")
+    scope_map.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/scope-map/).")
+    scope_map.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    scope_map.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    scope_map.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    scope_map.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    scope_map.set_defaults(func=workbench.scope_map_command)
+
+    scope_lanes = subparsers.add_parser(
+        "scope-lanes",
+        help="Generate scope-aware review lanes from repository surfaces plus scope rules (v7). Lanes are planning artifacts, not findings.",
+    )
+    scope_lanes.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    scope_lanes.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+    scope_lanes.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/scope-lanes/).")
+    scope_lanes.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    scope_lanes.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    scope_lanes.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    scope_lanes.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    scope_lanes.set_defaults(func=workbench.scope_lanes_command)
+
+    scope_tasks = subparsers.add_parser(
+        "scope-tasks",
+        help="Turn scope-aware lanes into precise, bounded, evidence-oriented tasks for a human reviewer or AI agent (v7). Tasks are not exploit instructions.",
+    )
+    scope_tasks.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    scope_tasks.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+    scope_tasks.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/scope-tasks/).")
+    scope_tasks.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    scope_tasks.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    scope_tasks.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    scope_tasks.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    scope_tasks.set_defaults(func=workbench.scope_tasks_command)
+
+    scope_pack = subparsers.add_parser(
+        "scope-pack",
+        help="Generate a complete local scope-aware research pack: scope map, lanes, tasks, do-not-waste-time, evidence template/rubric, report-filter checklist, agent input, and manifest (v7). Writes by default.",
+    )
+    scope_pack.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    scope_pack.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+    scope_pack.add_argument("--out", default="", help="Pack output directory (default: <repo>/.arkheionx/scope-pack/).")
+    scope_pack.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    scope_pack.add_argument("--json", action="store_true", help="Print the machine-readable manifest JSON to stdout only (no human text).")
+    scope_pack.add_argument("--no-write", action="store_true", help="Build the pack manifest in memory only; do not write files.")
+    scope_pack.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    scope_pack.set_defaults(func=workbench.scope_pack_command)
+
+    evidence_judge = subparsers.add_parser(
+        "evidence-judge",
+        help="Judge whether local tests/evidence actually prove the intended task (v7). Does not confirm vulnerabilities; candidate-with-evidence is not a confirmed vulnerability.",
+    )
+    evidence_judge.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    evidence_judge.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+    evidence_judge.add_argument("--tasks-file", default="", help="Optional scope-tasks.json to align judged evidence with tasks.")
+    evidence_judge.add_argument("--evidence-dir", default="", help="Optional evidence directory (default: scans .arkheionx/scope-pack, .arkheionx/evidence, .arkheionx/private, test, tests).")
+    evidence_judge.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/evidence-judge/).")
+    evidence_judge.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    evidence_judge.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    evidence_judge.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    evidence_judge.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    evidence_judge.set_defaults(func=workbench.evidence_judge_command)
+
+    report_filter = subparsers.add_parser(
+        "report-filter",
+        help="Classify report candidates against the scope before submission (v7): potentially-reportable, needs-more-evidence, likely-known/accepted/trusted/out-of-scope/low-only, duplicate-prone, needs-human-review. Not final triage.",
+    )
+    report_filter.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    report_filter.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+    report_filter.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/report-filter/).")
+    report_filter.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+    report_filter.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+    report_filter.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+    report_filter.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+    report_filter.set_defaults(func=workbench.report_filter_command)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser
