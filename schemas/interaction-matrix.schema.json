@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Interaction Matrix",
+  "description": "Local/static heuristic interaction matrix: meaningful combinations of review surfaces that may hide bugs when tested together, scored by a transparent additive priority. An interaction candidate is not a vulnerability; interaction priority is not severity; human review is required.",
+  "type": "object",
+  "required": ["schema_version", "package_version", "command", "kind", "matrix_summary", "interactions", "unresolved_interactions", "scoring", "safety", "human_review_required"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "package_version": {"type": "string"},
+    "command": {"type": "string", "enum": ["interaction-matrix"]},
+    "kind": {"type": "string", "enum": ["interaction-matrix"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "matrix_summary": {
+      "type": "object",
+      "required": ["total_interactions", "high_impact_interactions", "unresolved_interactions", "tested_interactions", "weak_evidence_interactions", "interaction_classes"],
+      "properties": {
+        "total_interactions": {"type": "integer"},
+        "high_impact_interactions": {"type": "integer"},
+        "unresolved_interactions": {"type": "integer"},
+        "tested_interactions": {"type": "integer"},
+        "weak_evidence_interactions": {"type": "integer"},
+        "interaction_classes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["interaction_id", "interaction_class", "surfaces", "criticality_potential", "evidence_state", "evidence_strength", "interaction_priority", "human_review_required"],
+        "properties": {
+          "interaction_id": {"type": "string", "pattern": "^IX-[0-9]{3}$"},
+          "interaction_class": {"type": "string"},
+          "surfaces": {"type": "array", "items": {"type": "string"}},
+          "contracts": {"type": "array", "items": {"type": "string"}},
+          "functions": {"type": "array", "items": {"type": "string"}},
+          "source_refs": {"type": "array", "items": {"type": "string"}},
+          "why_combination_matters": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "review_density": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "evidence_state": {"type": "string", "enum": ["unclassified", "unresolved", "tested", "rejected-with-evidence", "confirmed-candidate", "needs-human-review", "out-of-scope", "insufficient-evidence"]},
+          "evidence_strength": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "tests_detected": {"type": "integer"},
+          "impact_score": {"type": "integer"},
+          "review_gap_score": {"type": "integer"},
+          "interaction_complexity_score": {"type": "integer"},
+          "interaction_priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]},
+          "score_reasons": {"type": "array", "items": {"type": "string"}},
+          "missing_test_direction": {"type": "string"},
+          "suggested_invariant": {"type": "string"},
+          "suggested_counterfactual": {"type": "string"},
+          "stop_condition": {"type": "string"},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "unresolved_interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["interaction_id", "interaction_class", "interaction_priority", "evidence_strength", "human_review_required"],
+        "properties": {
+          "interaction_id": {"type": "string", "pattern": "^IX-[0-9]{3}$"},
+          "interaction_class": {"type": "string"},
+          "surfaces": {"type": "array", "items": {"type": "string"}},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "evidence_state": {"type": "string", "enum": ["unclassified", "unresolved", "tested", "rejected-with-evidence", "confirmed-candidate", "needs-human-review", "out-of-scope", "insufficient-evidence"]},
+          "evidence_strength": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "interaction_priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "required": ["formula", "note"],
+      "properties": {
+        "formula": {"type": "string"},
+        "note": {"type": "string"},
+        "thresholds": {"type": "object"}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "boundary", "do_not_claim", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean"}
+      }
+    },
+    "human_review_required": {"type": "boolean"}
+  }
+}

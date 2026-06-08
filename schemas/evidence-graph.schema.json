@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Evidence Graph",
+  "description": "Local/static heuristic evidence graph: every important review surface classified into an evidence state with an evidence strength. An evidence state is not a vulnerability claim; confirmed-candidate is not a confirmed vulnerability; unresolved does not mean vulnerable; human review is required.",
+  "type": "object",
+  "required": ["schema_version", "package_version", "command", "kind", "repo_summary", "evidence_state_summary", "nodes", "unresolved_surfaces", "evidence_gaps", "safety", "human_review_required"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "package_version": {"type": "string"},
+    "command": {"type": "string", "enum": ["evidence-graph"]},
+    "kind": {"type": "string", "enum": ["evidence-graph"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "repo_summary": {
+      "type": "object",
+      "required": ["repo_path", "mode", "contracts", "functions", "evidence_nodes", "high_impact_surfaces", "unresolved_surfaces"],
+      "properties": {
+        "repo_path": {"type": "string"},
+        "mode": {"type": "string"},
+        "contracts": {"type": "integer"},
+        "functions": {"type": "integer"},
+        "source_files": {"type": "integer"},
+        "test_files": {"type": "integer"},
+        "value_paths": {"type": "integer"},
+        "assumptions": {"type": "integer"},
+        "test_gaps": {"type": "integer"},
+        "counterfactuals": {"type": "integer"},
+        "evidence_nodes": {"type": "integer"},
+        "high_impact_surfaces": {"type": "integer"},
+        "unresolved_surfaces": {"type": "integer"}
+      }
+    },
+    "evidence_state_summary": {
+      "type": "object",
+      "required": ["tested", "rejected-with-evidence", "confirmed-candidate", "unresolved", "insufficient-evidence", "needs-human-review", "unclassified", "out-of-scope"],
+      "properties": {
+        "tested": {"type": "integer"},
+        "rejected-with-evidence": {"type": "integer"},
+        "confirmed-candidate": {"type": "integer"},
+        "unresolved": {"type": "integer"},
+        "insufficient-evidence": {"type": "integer"},
+        "needs-human-review": {"type": "integer"},
+        "unclassified": {"type": "integer"},
+        "out-of-scope": {"type": "integer"}
+      }
+    },
+    "evidence_strength_legend": {"type": "object"},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "surface_id", "surface_type", "criticality_potential", "review_density", "evidence_state", "evidence_strength", "confidence", "human_review_required"],
+        "properties": {
+          "node_id": {"type": "string", "pattern": "^EV-[0-9]{3}$"},
+          "surface_id": {"type": "string"},
+          "surface_name": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "source_file": {"type": "string"},
+          "source_line": {"type": "integer"},
+          "surface_type": {"type": "string", "enum": ["value-entry", "value-exit", "accounting", "authorization", "oracle", "liquidation", "periphery", "callback-external", "admin-emergency", "lifecycle", "share-math", "blocklist", "fee", "connector", "review-surface"]},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "review_density": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "blind_spot_priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "counterfactuals": {"type": "array", "items": {"type": "string"}},
+          "tests_detected": {"type": "integer"},
+          "invariants_detected": {"type": "boolean"},
+          "fuzz_detected": {"type": "boolean"},
+          "proof_plan_links": {"type": "array", "items": {"type": "string"}},
+          "hypothesis_links": {"type": "array", "items": {"type": "string"}},
+          "evidence_state": {"type": "string", "enum": ["unclassified", "unresolved", "tested", "rejected-with-evidence", "confirmed-candidate", "needs-human-review", "out-of-scope", "insufficient-evidence"]},
+          "evidence_strength": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "confidence": {"type": "string", "enum": ["high", "medium", "low"]},
+          "why_state": {"type": "string"},
+          "unresolved_reason": {"type": "string"},
+          "missing_evidence": {"type": "array", "items": {"type": "string"}},
+          "next_test_direction": {"type": "string"},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "unresolved_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "surface_id", "criticality_potential", "evidence_state", "human_review_required"],
+        "properties": {
+          "node_id": {"type": "string", "pattern": "^EV-[0-9]{3}$"},
+          "surface_id": {"type": "string"},
+          "source": {"type": "string"},
+          "surface_type": {"type": "string"},
+          "criticality_potential": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "evidence_state": {"type": "string", "enum": ["unclassified", "unresolved", "tested", "rejected-with-evidence", "confirmed-candidate", "needs-human-review", "out-of-scope", "insufficient-evidence"]},
+          "evidence_strength": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "unresolved_reason": {"type": "string"},
+          "missing_evidence": {"type": "array", "items": {"type": "string"}},
+          "next_test_direction": {"type": "string"},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "evidence_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gap", "count"],
+        "properties": {
+          "gap": {"type": "string"},
+          "count": {"type": "integer"},
+          "example_surfaces": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "human_review_checklist": {"type": "array", "items": {"type": "string"}},
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "boundary", "do_not_claim", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean"}
+      }
+    },
+    "human_review_required": {"type": "boolean"}
+  }
+}

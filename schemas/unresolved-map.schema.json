@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Unresolved Map",
+  "description": "Local/static heuristic unresolved map: high-impact surfaces and interactions that local evidence does not yet close, plus surfaces left unclassified. Unresolved does not mean vulnerable; it means local evidence is insufficient. Human review is required.",
+  "type": "object",
+  "required": ["schema_version", "package_version", "command", "kind", "unresolved_surfaces", "unresolved_interactions", "unclassified_surfaces", "final_checklist", "safety", "human_review_required"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "package_version": {"type": "string"},
+    "command": {"type": "string", "enum": ["unresolved-map"]},
+    "kind": {"type": "string", "enum": ["unresolved-map"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "repo_summary": {"type": "object"},
+    "summary": {
+      "type": "object",
+      "required": ["unresolved_surfaces", "unresolved_interactions", "unclassified_surfaces"],
+      "properties": {
+        "unresolved_surfaces": {"type": "integer"},
+        "unresolved_interactions": {"type": "integer"},
+        "unclassified_surfaces": {"type": "integer"},
+        "high_impact_surfaces": {"type": "integer"},
+        "evidence_nodes": {"type": "integer"},
+        "total_interactions": {"type": "integer"}
+      }
+    },
+    "unresolved_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "surface", "evidence_state", "priority", "human_review_required"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^EV-[0-9]{3}$"},
+          "surface": {"type": "string"},
+          "source": {"type": "string"},
+          "why_important": {"type": "string"},
+          "evidence_state": {"type": "string", "enum": ["unclassified", "unresolved", "tested", "rejected-with-evidence", "confirmed-candidate", "needs-human-review", "out-of-scope", "insufficient-evidence"]},
+          "evidence_strength": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "missing_evidence": {"type": "array", "items": {"type": "string"}},
+          "suggested_test": {"type": "string"},
+          "priority": {"type": "string", "enum": ["very-high", "high", "medium", "low", "unknown"]},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "unresolved_interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "interaction", "priority", "human_review_required"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^IX-[0-9]{3}$"},
+          "interaction": {"type": "string"},
+          "surfaces": {"type": "array", "items": {"type": "string"}},
+          "why_important": {"type": "string"},
+          "evidence_state": {"type": "string", "enum": ["unclassified", "unresolved", "tested", "rejected-with-evidence", "confirmed-candidate", "needs-human-review", "out-of-scope", "insufficient-evidence"]},
+          "evidence_strength": {"type": "string", "enum": ["strong", "medium", "weak", "none", "unknown"]},
+          "missing_evidence": {"type": "string"},
+          "suggested_test": {"type": "string"},
+          "priority": {"type": "string", "enum": ["very-high", "high", "medium", "monitor"]},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "unclassified_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "surface", "human_review_required"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^EV-[0-9]{3}$"},
+          "surface": {"type": "string"},
+          "source": {"type": "string"},
+          "surface_type": {"type": "string"},
+          "why_unclassified": {"type": "string"},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "final_checklist": {"type": "array", "items": {"type": "string"}},
+    "safety": {
+      "type": "object",
+      "required": ["disclaimer", "boundary", "do_not_claim", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean"}
+      }
+    },
+    "human_review_required": {"type": "boolean"}
+  }
+}

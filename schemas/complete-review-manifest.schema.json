@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Complete Review Manifest",
+  "description": "Local/static heuristic complete-review package manifest: the machine-readable index of a V6 review package (review map, blind spots, criticality, counterfactuals, evidence graph, interaction matrix, unresolved map, agent input, human checklist, case-study template). It makes no vulnerability claims; human review is required.",
+  "type": "object",
+  "required": ["schema_version", "kind", "command", "package_version", "artifact_list", "evidence_node_count", "interaction_count", "unresolved_surface_count", "unresolved_interaction_count", "evidence_state_summary", "safety_flags", "human_review_required"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["complete-review-manifest"]},
+    "command": {"type": "string", "enum": ["complete-review"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "mode": {"type": "string"},
+    "package_version": {"type": "string"},
+    "commands_represented": {"type": "array", "items": {"type": "string"}},
+    "artifact_list": {"type": "array", "items": {"type": "string"}},
+    "evidence_node_count": {"type": "integer"},
+    "interaction_count": {"type": "integer"},
+    "unresolved_surface_count": {"type": "integer"},
+    "unresolved_interaction_count": {"type": "integer"},
+    "evidence_state_summary": {
+      "type": "object",
+      "required": ["tested", "unresolved", "needs-human-review", "unclassified"],
+      "properties": {
+        "tested": {"type": "integer"},
+        "rejected-with-evidence": {"type": "integer"},
+        "confirmed-candidate": {"type": "integer"},
+        "unresolved": {"type": "integer"},
+        "insufficient-evidence": {"type": "integer"},
+        "needs-human-review": {"type": "integer"},
+        "unclassified": {"type": "integer"},
+        "out-of-scope": {"type": "integer"}
+      }
+    },
+    "safety_flags": {
+      "type": "object",
+      "required": ["local_static_only", "no_rpc", "no_live_chain", "no_exploit_automation", "no_severity", "no_vulnerability_claims", "human_review_required"],
+      "properties": {
+        "local_static_only": {"type": "boolean"},
+        "no_rpc": {"type": "boolean"},
+        "no_live_chain": {"type": "boolean"},
+        "no_secrets": {"type": "boolean"},
+        "no_exploit_automation": {"type": "boolean"},
+        "no_auto_submit": {"type": "boolean"},
+        "no_severity": {"type": "boolean"},
+        "no_vulnerability_claims": {"type": "boolean"},
+        "vendor_agnostic": {"type": "boolean"},
+        "human_review_required": {"type": "boolean"},
+        "disclaimer": {"type": "string"}
+      }
+    },
+    "human_review_required": {"type": "boolean"}
+  }
+}
