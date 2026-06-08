@@ -16,7 +16,7 @@ maps.
 
 Current milestone: v5.0.0.
 Next milestone: v5.1.0.
-Latest stable: v3.1.0 — Protocol Review Map.
+Latest stable: v5.0.0 — Blind Spot Intelligence.
 
 ## v5.0 — Blind Spot Intelligence (finalized locally)
 
@@ -77,8 +77,9 @@ See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
 
 Foundation shipped: v3.1.0 — Protocol Review Map; v3.0.0 — Public Stable Launch; v2.10.0 — Pre-v3 Public Readiness & Stability Hardening; v2.9.0 — Multi-Fixture Demo Expansion & Public Workflow Hardening; v2.8.0 — Package Data & Distribution Hardening; v2.7.0 — Guided Demo Fixtures & First Real Workflow; v2.6.0 — arkup & Version-Manager MVP; v2.5.0 — Installer & Onboarding; v2.4.0 — Evidence Workflow Hardening; v2.3.0 — Evidence & Report Package; v2.2.0 — Execution Proof & Trace Workbench; v2.1.0 — Value Flow Map MVP.
 v3.0.0 target: DeFi Value Flow Workbench. v3.0.0 shipped as the public stable
-launch and v3.1.0 — Protocol Review Map shipped as the current latest stable
-release (a structured, developer-native review surface built on the workbench).
+launch and v3.1.0 — Protocol Review Map shipped as the v3 stable review surface
+(a structured, developer-native review surface built on the workbench). The
+latest stable release is now v5.0.0 — Blind Spot Intelligence.
 v3.2.0 is finalized locally as the Developer-Native Review Map and Local Artifact
 Foundation. v3.3.0 is finalized locally as Focused Review Commands:
 `test-gap-map`, `value-paths`, `assumptions`, `proof-plan`, and

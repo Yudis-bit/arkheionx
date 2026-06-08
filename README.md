@@ -294,7 +294,7 @@ targets to local configs.
 Pinned stable action example:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v3.1.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v5.0.0
 ```
 
 See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
@@ -361,11 +361,12 @@ The earlier license-pending note is kept at
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
 **Human review required** · **v5.0.0**
 
-Latest stable release: **v3.1.0**. Current package version: **5.0.0** — adds the
+Latest stable release: **v5.0.0**. Current package version: **5.0.0** — adds the
 v5 Blind Spot Intelligence layer (blind-spots, criticality-map, counterfactuals,
 research-pack) on top of the stable v4.0.0 review-map workflow and the v4.1
 research-memory workflow. The source installers and the GitHub Action pin to the
-**v3.1.0** tag. Last published tag: **v4.0.0**. Next milestone: **v5.1.0**.
+**v5.0.0** tag. Last published tag: **v4.0.0** (the **v5.0.0** tag is cut by the
+founder at release). Next milestone: **v5.1.0**.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
 Map the protocol. Prove the path. Prepare the handoff.

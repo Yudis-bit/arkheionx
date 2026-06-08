@@ -91,7 +91,7 @@ class SchemaAndMetadataContractTests(unittest.TestCase):
     def test_version_metadata_unchanged(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
         self.assertEqual(__version__, "5.0.0")
-        self.assertEqual(STABLE_RELEASE, "v3.1.0")
+        self.assertEqual(STABLE_RELEASE, "v5.0.0")
         self.assertEqual(CURRENT_MILESTONE, "v5.0.0")
         self.assertEqual(NEXT_MILESTONE, "v5.1.0")
 
