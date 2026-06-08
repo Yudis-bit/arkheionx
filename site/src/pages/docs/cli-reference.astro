@@ -63,6 +63,13 @@ const research = [
   ["hypothesis-log", "A structured hypothesis log and rejected-finding memory. Every hypothesis starts open; a human records the test, result, and rejection/confirmation."],
   ["case-study", "A sanitized research-session report; --from incorporates a hypothesis log's statuses. No vulnerability claim unless independently confirmed."]
 ];
+
+const evidence = [
+  ["evidence-graph", "Classify every important surface into an evidence state (tested, unresolved, needs-human-review, insufficient-evidence, ...) with an evidence strength and the missing-evidence gaps. An evidence state is not a vulnerability claim."],
+  ["interaction-matrix", "Detect meaningful combinations of surfaces that may hide bugs when tested together, scored by a transparent interaction priority. Interaction priority is not severity."],
+  ["unresolved-map", "Everything important that local evidence does not yet close: high-impact unresolved surfaces and interactions. Unresolved does not mean vulnerable."],
+  ["complete-review", "Assemble the whole V6 review into one local, vendor-agnostic package for a human reviewer or an AI agent. Writes by default."]
+];
 ---
 
 <Layout
@@ -150,6 +157,26 @@ arkheionx proof-plan .     # a proof direction to try by hand</code></pre>
       <div class="install-list-card">
         <ul>
           {research.map((row) => (
+            <li><strong>arkheionx {row[0]}</strong> — {row[1]}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="cli-section cli-section--split">
+      <div>
+        <p class="cli-kicker">Evidence graph (v6)</p>
+        <h2>Classify the evidence; map the interactions.</h2>
+        <p>
+          These additive, local/static commands classify every important surface into an evidence
+          state and map the dangerous interactions that still lack tests. An evidence state is not
+          a vulnerability claim, interaction priority is not severity, and unresolved does not mean
+          vulnerable. See <a href="/docs/v6">the V6 overview</a>.
+        </p>
+      </div>
+      <div class="install-list-card">
+        <ul>
+          {evidence.map((row) => (
             <li><strong>arkheionx {row[0]}</strong> — {row[1]}</li>
           ))}
         </ul>

@@ -1,0 +1,97 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const commands = [
+  ["evidence-graph", "Classify every important review surface into an evidence state: tested, rejected-with-evidence, confirmed-candidate, unresolved, insufficient-evidence, needs-human-review, unclassified, or out-of-scope."],
+  ["interaction-matrix", "Detect meaningful combinations of surfaces that may hide bugs when tested together, scored by a transparent interaction priority. Interaction priority is not severity."],
+  ["unresolved-map", "Show everything important that local evidence does not yet close: high-impact unresolved surfaces and interactions. Unresolved does not mean vulnerable."],
+  ["complete-review", "Bundle the whole V6 review into one local, vendor-agnostic package for a human reviewer or an AI agent."]
+];
+---
+
+<Layout
+  title="V6 — Evidence Graph + Interaction Matrix — ArkheionX"
+  description="Arkheionx v6 adds an Evidence Graph and an Interaction Matrix: a local/static way to classify the evidence on every high-impact review surface and map the dangerous interactions that still lack tests. No severity, no bug claims, human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">V6 — Evidence Graph + Interaction Matrix</p>
+      <h1>V5 shows where to look. V6 shows what is proven and what is unresolved.</h1>
+      <p>
+        Arkheionx v6 classifies the evidence on every high-impact surface and maps the dangerous
+        interactions that still lack tests. V5 shows where research attention is weakest; V6 shows
+        what evidence exists and what remains unresolved. The thesis is simple: no high-impact
+        surface should remain unclassified. It does not predict bugs, assign severity, or run
+        anything against a live chain.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Workflow</p>
+        <h2>Classify the evidence, then close the unknowns.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx evidence-graph .
+arkheionx interaction-matrix .
+arkheionx unresolved-map .
+arkheionx complete-review . --out .arkheionx/complete-review</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {commands.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>arkheionx {item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">What it surfaces</p>
+        <h2>An evidence state, not a verdict.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>EV-013  CreditVault.withdraw   value-exit   criticality very-high
+  Evidence state    needs-human-review
+  Why               a test references this surface, but coverage is shallow
+                    (file-level) on a high-impact surface
+  Missing evidence  no-pre-post-balance-check, no-rounding-edge-test
+  Do not claim      an evidence state is not a vulnerability claim</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>!</span>
+        <h2>Not vulnerabilities</h2>
+        <p>An evidence state is not a vulnerability claim. A confirmed-candidate is a review candidate, not a confirmed vulnerability. Interaction priority is not severity.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Local and static</h2>
+        <p>No RPC, no live-chain action, no exploit automation, no auto-submit. Artifacts are written locally under <code>.arkheionx/</code>.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Human review required</h2>
+        <p>V6 makes the unknowns visible. A human, with independent local proof, makes every security call. ArkheionX does not confirm vulnerabilities.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>V6 classifies evidence; it does not decide.</h2>
+      <p>
+        It does not predict bugs, assign final severity, or replace an audit. Unresolved does not
+        mean vulnerable. Read the full guide in the repository's
+        <code>docs/V6_WORKFLOW.md</code>, <code>docs/EVIDENCE_GRAPH.md</code>, and
+        <code>docs/INTERACTION_MATRIX.md</code>.
+      </p>
+      <a href="/docs/evidence-graph" class="workflow-button">See the evidence graph</a>
+    </section>
+  </main>
+</Layout>

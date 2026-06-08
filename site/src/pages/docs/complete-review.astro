@@ -1,0 +1,64 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const files = [
+  ["05-evidence-graph.md", "Every important surface classified into an evidence state."],
+  ["06-interaction-matrix.md", "Combinations of surfaces that may hide bugs when tested together."],
+  ["07-unresolved-surfaces.md", "Everything important that local evidence does not close."],
+  ["08-agent-input.md", "A scoped, model-agnostic task for a review agent — write local tests, do not claim findings."],
+  ["09-human-review-checklist.md", "The checklist a human completes before ending the review."],
+  ["manifest.json", "A machine-readable index of the whole package."]
+];
+---
+
+<Layout
+  title="Complete review — ArkheionX"
+  description="ArkheionX complete-review generates a complete local, vendor-agnostic V6 review package: review map, blind spots, criticality, counterfactuals, evidence graph, interaction matrix, unresolved surfaces, a model-agnostic agent input, and a human review checklist. No vulnerability claims. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Complete review (v6, headline)</p>
+      <h1>The whole review, in one local package.</h1>
+      <p>
+        <code>arkheionx complete-review</code> assembles the V4 review map, the V5 blind-spot layer,
+        and the V6 evidence graph, interaction matrix, and unresolved map into one folder a human
+        reviewer or an AI agent can work from. It writes by default and makes no vulnerability
+        claims.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>One command, the full package.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx complete-review . --out .arkheionx/complete-review
+arkheionx complete-review . --json
+arkheionx complete-review . --no-write</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {files.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>A review package, not a report of findings.</h2>
+      <p>
+        The package is local, static, and vendor-agnostic. It makes no vulnerability claims and
+        assigns no severity. Give <code>08-agent-input.md</code> to a review agent; a human
+        completes <code>09-human-review-checklist.md</code>. ArkheionX does not confirm
+        vulnerabilities. Human review is required. See <code>docs/COMPLETE_REVIEW.md</code>.
+      </p>
+      <a href="/docs/v6" class="workflow-button">Back to the V6 overview</a>
+    </section>
+  </main>
+</Layout>

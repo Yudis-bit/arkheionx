@@ -1,0 +1,78 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const parts = [
+  ["impact", "The dimensions the interaction defines — value exit, accounting, authorization, liquidation, oracle, external call, periphery, connector, share/fee, lifecycle, cross-contract — each add points."],
+  ["review gap", "The weakest constituent evidence drives the gap: no evidence adds the most, strong evidence adds nothing."],
+  ["complexity", "Cross-contract, external call, periphery, lifecycle, signature/Merkle, oracle/accounting, and loop/batch each add points."]
+];
+---
+
+<Layout
+  title="Interaction matrix — ArkheionX"
+  description="ArkheionX interaction-matrix detects meaningful combinations of surfaces that may hide bugs when tested together, scored by a transparent additive interaction priority. Interaction priority is not severity. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Interaction matrix (v6)</p>
+      <h1>The bugs that live between two functions.</h1>
+      <p>
+        A single function can be fully tested and still combine dangerously with another: a
+        value-exit that also makes an external call, a liquidation that depends on an oracle, a
+        signed claim that relies on a nonce. <code>arkheionx interaction-matrix</code> surfaces
+        these combinations and scores how much review attention each deserves. An interaction
+        candidate is not a vulnerability.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">The score</p>
+        <h2>Nothing is hidden.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>interaction_priority = impact + review_gap + complexity
+
+85+      very-high
+65-84    high
+40-64    medium
+below 40 monitor</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {parts.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Find the combinations that lack tests.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx interaction-matrix .
+arkheionx interaction-matrix . --json
+arkheionx interaction-matrix . --out .arkheionx/interaction-matrix
+arkheionx interaction-matrix . --only-unresolved</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>A review order, not a severity.</h2>
+      <p>
+        Interaction priority is a heuristic review order. It is never a severity or an
+        exploitability estimate. An interaction candidate is a review prompt, not a finding.
+        ArkheionX does not confirm vulnerabilities. Human review is required. See
+        <code>docs/INTERACTION_MATRIX.md</code>.
+      </p>
+      <a href="/docs/unresolved-map" class="workflow-button">See the unresolved map</a>
+    </section>
+  </main>
+</Layout>

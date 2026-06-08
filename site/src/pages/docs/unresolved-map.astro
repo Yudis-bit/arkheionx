@@ -1,0 +1,60 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const sections = [
+  ["High-impact unresolved surfaces", "Surfaces with high or very-high criticality potential and an open evidence state, each with the missing evidence and a suggested local test."],
+  ["High-impact unresolved interactions", "Interactions with high or very-high priority and weak or no evidence."],
+  ["Unclassified surfaces", "Important surfaces detected but not classifiable from local signals — a prompt to look closer, not a verdict."],
+  ["Final review checklist", "What must be checked, what to hand to an AI agent, what needs manual reading or Foundry tests, and what must never be claimed."]
+];
+---
+
+<Layout
+  title="Unresolved map — ArkheionX"
+  description="ArkheionX unresolved-map composes the evidence graph and interaction matrix into everything important that local evidence does not yet close. Unresolved does not mean vulnerable. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Unresolved map (v6)</p>
+      <h1>What is left before review can end.</h1>
+      <p>
+        <code>arkheionx unresolved-map</code> composes the evidence graph and the interaction
+        matrix into a single view of everything important that local evidence does not yet close.
+        It makes the unknowns visible so a human can close them deliberately. Unresolved does not
+        mean vulnerable — it means local evidence is insufficient.
+      </p>
+    </section>
+
+    <section class="workflow-steps">
+      {sections.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>See what is still open.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx unresolved-map .
+arkheionx unresolved-map . --json
+arkheionx unresolved-map . --out .arkheionx/unresolved-map</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>Unresolved is an open question, not a finding.</h2>
+      <p>
+        Unresolved does not mean vulnerable. ArkheionX does not confirm vulnerabilities or assign
+        final severity. Human review is required. See <code>docs/UNRESOLVED_MAP.md</code>.
+      </p>
+      <a href="/docs/complete-review" class="workflow-button">Build a complete review</a>
+    </section>
+  </main>
+</Layout>
