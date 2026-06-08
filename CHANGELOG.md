@@ -3,6 +3,52 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v7.0.0 - 2026-06-08
+
+v7.0 Scope-Aware Orchestration + Evidence Judge — the next major step beyond
+evidence classification. **Release metadata finalized locally; pending founder
+push/tag/GitHub release/site deploy.** The package version is `7.0.0`; the last
+published tag remains `v4.0.0`. Local/static, heuristic, and additive: no RPC,
+live-chain, transaction execution, private keys, exploit automation, external AI
+API calls, severity, or vulnerability claims, and no removal of the v4 review-map
+workflow or the v5/v6 commands.
+
+V5 shows where to look. V6 shows what is proven, what is unresolved, and which
+interactions still lack evidence. V7 turns audit scope into review lanes, task
+packs, evidence requirements, and report filters so AI-assisted security review
+starts from rules and evidence instead of vague prompts.
+
+- Added `arkheionx scope-map`: parse a contest/audit/program scope note into
+  structured review rules (in/out of scope, severity conditions, trusted and
+  dependency assumptions, known/accepted issues, prior-audit notes, design choices,
+  invariants, focus areas, do-not-waste-time filters, report-candidate
+  requirements). A scope map is a planning artifact, not a finding.
+- Added `arkheionx scope-lanes`: generate scope-aware review lanes from repository
+  surfaces plus scope rules. Lane priority is review order, never severity.
+- Added `arkheionx scope-tasks`: turn lanes into precise, bounded,
+  evidence-oriented tasks (hypothesis, counterfactual, setup, action, required
+  assertions, validity and known-issue filters, stop condition, report-candidate
+  threshold). Tasks are research instructions, not exploit instructions.
+- Added `arkheionx scope-pack`: generate a complete local scope-aware research pack
+  (scope map, review lanes, scope tasks, do-not-waste-time, evidence
+  template/rubric, report-filter checklist, human review checklist, model-agnostic
+  agent input, case-study template, JSON manifest + sidecars).
+- Added `arkheionx evidence-judge`: judge whether local tests/evidence prove the
+  intended task on a transparent rubric, with evidence quality and a judgment.
+  Evidence quality is not vulnerability validity; candidate-with-evidence is not a
+  confirmed vulnerability; it does not confirm vulnerabilities.
+- Added `arkheionx report-filter`: classify report candidates against scope rules
+  before submission (potentially-reportable, needs-more-evidence,
+  likely-known/accepted/trusted-role/out-of-scope/low-only, duplicate-prone,
+  not-a-finding, needs-human-review) with a human pre-submission checklist. The
+  report filter is not final triage.
+- Added the `arkheionx.scope_orchestration` engine, six JSON schemas under
+  `schemas/`, a private-scope leak guard, a synthetic `examples/scope-fixture`, and
+  V7 docs (`SCOPE_ORCHESTRATION`, `SCOPE_MAP`, `SCOPE_TASKS`, `EVIDENCE_JUDGE`,
+  `REPORT_FILTER`, `V7_WORKFLOW`).
+- Private contest scope stays in local, gitignored files under `.arkheionx/private/`
+  and is never committed. Human review is required for every conclusion.
+
 ## v6.0.0 - 2026-06-08
 
 v6.0 Evidence Graph + Interaction Matrix — the next major step beyond

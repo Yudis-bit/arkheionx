@@ -18,10 +18,10 @@ class CliPreviewTests(unittest.TestCase):
     def test_version_command(self) -> None:
         result = self.run_cli("version")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("package version: 6.0.0", result.stdout)
-        self.assertIn("Latest stable release: v6.0.0", result.stdout)
-        self.assertIn("Current milestone: v6.0.0", result.stdout)
-        self.assertIn("Next milestone: v6.1.0", result.stdout)
+        self.assertIn("package version: 7.0.0", result.stdout)
+        self.assertIn("Latest stable release: v7.0.0", result.stdout)
+        self.assertIn("Current milestone: v7.0.0", result.stdout)
+        self.assertIn("Next milestone: v7.1.0", result.stdout)
 
     def test_doctor_command(self) -> None:
         result = self.run_cli("doctor")

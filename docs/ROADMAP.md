@@ -14,9 +14,25 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v6.0.0.
-Next milestone: v6.1.0.
-Latest stable: v6.0.0 — Evidence Graph + Interaction Matrix.
+Current milestone: v7.0.0.
+Next milestone: v7.1.0.
+Latest stable: v7.0.0 — Scope-Aware Orchestration + Evidence Judge.
+
+## v7.0 — Scope-Aware Orchestration + Evidence Judge (finalized locally)
+
+v7.0 is the next **major** step beyond evidence classification. v4 maps value
+flow; v5 prioritizes likely blind spots; v6 classifies evidence and unresolved
+interactions; **v7 turns audit scope into review lanes, task packs, evidence
+requirements, and report filters so AI-assisted security review starts from rules
+and evidence instead of vague prompts.** A scope map, review lane, or scope task is
+a planning artifact, not a finding; evidence quality is not vulnerability validity;
+candidate-with-evidence is not a confirmed vulnerability; task priority is not
+severity; and a report candidate is not final triage. Private scope notes stay in
+local, gitignored files only. The package version is now `7.0.0`; the `v7.0.0` tag,
+GitHub Release, and site deploy are founder actions (the last published tag remains
+`v4.0.0`). Next milestone v7.1.0 continues toward the workspace/export/CI layer.
+See [`V7_WORKFLOW.md`](V7_WORKFLOW.md), [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md),
+and [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md).
 
 ## v6.0 — Evidence Graph + Interaction Matrix (finalized locally)
 
@@ -115,7 +131,7 @@ Foundation shipped: v3.1.0 — Protocol Review Map; v3.0.0 — Public Stable Lau
 v3.0.0 target: DeFi Value Flow Workbench. v3.0.0 shipped as the public stable
 launch and v3.1.0 — Protocol Review Map shipped as the v3 stable review surface
 (a structured, developer-native review surface built on the workbench). The
-latest stable release is now v6.0.0 — Evidence Graph + Interaction Matrix.
+latest stable release is now v7.0.0 — Scope-Aware Orchestration + Evidence Judge.
 v3.2.0 is finalized locally as the Developer-Native Review Map and Local Artifact
 Foundation. v3.3.0 is finalized locally as Focused Review Commands:
 `test-gap-map`, `value-paths`, `assumptions`, `proof-plan`, and
