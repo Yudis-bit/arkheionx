@@ -166,3 +166,22 @@ replacement for an audit.
 Blind spot detection is a heuristic and is not perfect. It can miss surfaces and
 it can rank a well-reviewed surface highly. Use it to allocate attention, then
 let a human make every security call.
+
+
+## What comes next: V6 evidence classification
+
+Blind Spot Intelligence (v5) answers *where should I look first?*. The v6
+[Evidence Graph](EVIDENCE_GRAPH.md) and [Interaction Matrix](INTERACTION_MATRIX.md)
+answer the next question: *what evidence exists, what remains unresolved, and
+which interactions still lack proof?*
+
+> V5 shows where to look. V6 shows what is proven, what is unresolved, and which
+> interactions still lack evidence.
+
+V6 takes the same surfaces and classifies each into an evidence state (tested,
+rejected-with-evidence, confirmed-candidate, unresolved, insufficient-evidence,
+needs-human-review, unclassified, out-of-scope), detects meaningful interactions
+between surfaces, and maps everything still unresolved. See
+[`V6_WORKFLOW.md`](V6_WORKFLOW.md). The same boundaries hold: an evidence state is
+not a vulnerability claim, interaction priority is not severity, and human review
+is required.

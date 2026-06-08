@@ -184,3 +184,23 @@ deliberately **not** listed — the map tracks observed coverage, not guesses.
 - [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) — the boundaries.
 - [`SECURITY.md`](../SECURITY.md) — reporting issues in ArkheionX itself.
 - [`ETHICS.md`](ETHICS.md) — authorized-use expectations.
+
+
+## V6 in triage: classify evidence, then close the unknowns
+
+After ranking blind spots, use the v6 layer to make the unknowns explicit before
+you submit anything:
+
+```bash
+arkheionx evidence-graph .       # which surfaces are tested, unresolved, or just look tested?
+arkheionx interaction-matrix .   # which dangerous combinations lack tests?
+arkheionx unresolved-map .       # what must be checked before ending review?
+arkheionx complete-review . --out .arkheionx/complete-review
+```
+
+Then hand `08-agent-input.md` from the package to a review agent, write local
+tests for the unresolved surfaces and interactions, and record the outcome. A
+`confirmed-candidate` is **not** a confirmed vulnerability and an interaction
+priority is **not** a severity — do not submit either as a finding. Validate
+manually, keep it local, and only review repositories you are authorized to
+review. See [`V6_WORKFLOW.md`](V6_WORKFLOW.md).

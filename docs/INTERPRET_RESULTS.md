@@ -109,3 +109,27 @@ judgment is always yours.
 
 See also: [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) and
 [`REVIEW_MAP.md`](REVIEW_MAP.md).
+
+
+## Interpreting V6 evidence states and interaction priority
+
+The v6 [`evidence-graph`](EVIDENCE_GRAPH.md) assigns each surface an **evidence
+state**. Read them like this — none is a verdict:
+
+- `tested` — a direct local test exists on a simple surface. Still confirm it
+  covers the relevant edge.
+- `needs-human-review` — a test references the surface but coverage is shallow
+  (often just the file). This is the "looks tested" trap: confirm the edge is
+  actually exercised.
+- `unresolved` — a high-impact surface with no usable local evidence. Not
+  vulnerable — just unproven.
+- `insufficient-evidence` — tests exist but do not prove the relevant assumption.
+- `unclassified` — detected, but not enough signal to say more.
+- `confirmed-candidate` / `rejected-with-evidence` — only appear when a local
+  hypothesis log records them. `confirmed-candidate` is **not** a confirmed
+  vulnerability.
+
+The [`interaction-matrix`](INTERACTION_MATRIX.md) assigns an **interaction
+priority** (very-high / high / medium / monitor). It is a heuristic review order,
+**not a severity**. A high priority means "test this combination first", not
+"this is a high-severity bug". See [`V6_WORKFLOW.md`](V6_WORKFLOW.md).

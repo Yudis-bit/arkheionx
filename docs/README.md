@@ -35,8 +35,20 @@ vulnerabilities, assign severity, or replace an audit.
 - [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md) — the research memory object model and schema plan.
 - [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the v5 blind-spot model: review density, criticality potential, counterfactuals, unknown surfaces.
 - [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the v5 attention-allocation workflow (blind-spots → criticality-map → counterfactuals → research-pack).
+- [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the v6 evidence workflow (evidence-graph → interaction-matrix → unresolved-map → complete-review).
+- [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md) — classify every important surface into an evidence state.
+- [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md) — meaningful combinations of surfaces that may hide bugs.
 - [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md) — reviewer onboarding and solo research.
 - [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — collect local evidence around a finding.
+
+## V6 release
+
+- [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the end-to-end Evidence Graph + Interaction Matrix workflow.
+- [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md) — evidence nodes, evidence states, and evidence strength.
+- [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md) — interaction classes and the transparent priority score.
+- [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md) — high-impact unresolved surfaces and interactions.
+- [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md) — the headline complete-review package.
+- Release package: [`releases/V6_RELEASE_NOTES.md`](releases/V6_RELEASE_NOTES.md) and [`../release-notes/v6.0.0.md`](../release-notes/v6.0.0.md).
 
 ## V5 release
 

@@ -77,6 +77,45 @@ stays true.
 See [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
 [`V5_WORKFLOW.md`](V5_WORKFLOW.md).
 
+## Evidence graph commands (v6)
+
+Four additive, local/static commands add the Evidence Graph + Interaction Matrix
+layer. They build on the review map, the v4.1 research surfaces, and the v5
+blind-spot layer, emit human Markdown and `--json`, and write artifacts under
+`.arkheionx/` (unless `--no-write`). An evidence state is not a vulnerability
+claim, confirmed-candidate is not a confirmed vulnerability, interaction priority
+is not severity, and unresolved does not mean vulnerable; `human_review_required`
+stays true.
+
+- `arkheionx evidence-graph <path>` — classify every important review surface
+  into an evidence state (tested, rejected-with-evidence, confirmed-candidate,
+  unresolved, insufficient-evidence, needs-human-review, unclassified,
+  out-of-scope) with an evidence strength, criticality potential, the
+  missing-evidence gaps, and a next local test direction. `--out <dir>`,
+  `--json`, `--no-write`, `--top`, `--only-unresolved`.
+- `arkheionx interaction-matrix <path>` — detect meaningful combinations of
+  surfaces that may hide bugs when tested together, scored by a transparent
+  additive interaction priority (impact + review-gap + complexity), with an
+  interaction test plan. `--out <dir>`, `--json`, `--no-write`, `--top`,
+  `--only-unresolved`.
+- `arkheionx unresolved-map <path>` — compose the evidence graph and interaction
+  matrix into the high-impact unresolved surfaces, high-impact unresolved
+  interactions, unclassified surfaces, and a final review checklist. `--out
+  <dir>`, `--json`, `--no-write`, `--top`.
+- `arkheionx complete-review <path>` — generate a complete local, vendor-agnostic
+  V6 review package (review-map summary, blind spots, criticality,
+  counterfactuals, evidence graph, interaction matrix, unresolved surfaces, a
+  model-agnostic agent input, a human review checklist, a case-study template,
+  and a JSON manifest). Writes by default. `--out <dir>`, `--json` (manifest),
+  `--no-write`, `--top`.
+
+See [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md),
+[`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md),
+[`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md),
+[`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md), and
+[`V6_WORKFLOW.md`](V6_WORKFLOW.md). The supported surface is tracked in
+[`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md).
+
 ## Exit codes
 
 - `0` — success; for review commands, no review guidance was surfaced.
@@ -158,6 +197,10 @@ work, not a finalized or published release.
 - `arkheionx criticality-map`
 - `arkheionx counterfactuals`
 - `arkheionx research-pack`
+- `arkheionx evidence-graph`
+- `arkheionx interaction-matrix`
+- `arkheionx unresolved-map`
+- `arkheionx complete-review`
 - `arkheionx review-map`
 - `arkheionx test-gap-map`
 - `arkheionx value-paths`

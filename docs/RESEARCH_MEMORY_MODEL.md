@@ -210,3 +210,19 @@ by a human or by an agent acting under human review, after a local test.
 - [`PRE_AUDIT_WORKFLOW.md`](PRE_AUDIT_WORKFLOW.md) — pre-audit readiness
 - [`REVIEW_MAP.md`](REVIEW_MAP.md) — the v4.0 review-map surface
 - [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md) — how to read ArkheionX output
+
+
+## How research memory feeds the V6 evidence graph
+
+The v6 [Evidence Graph](EVIDENCE_GRAPH.md) reads local research memory to assign
+its two strongest states. A surface is only marked `rejected-with-evidence` or
+`confirmed-candidate` when a local `hypotheses.json` (under
+`.arkheionx/research/`) records that status alongside a recorded local test —
+never from scoring alone. In a default static run those states are absent, which
+is the honest result.
+
+This closes the loop: `hypothesis-log` captures what you tested and rejected, and
+`evidence-graph` reflects it back so the unresolved surfaces shrink as your
+research memory grows. A `confirmed-candidate` is still **not** a confirmed
+vulnerability — a human makes the final call with independent local proof. See
+[`V6_WORKFLOW.md`](V6_WORKFLOW.md).

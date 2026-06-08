@@ -103,6 +103,27 @@ and counterfactuals are research prompts, not findings. See
 | `arkheionx counterfactuals` | Negate guarding assumptions into testable "what if this assumption is false?" research prompts with a local test direction, evidence required, and a stop condition, plus a counterfactual matrix | human + `--json` | `counterfactuals/counterfactuals.{md,json}` | stable-additive |
 | `arkheionx research-pack` | Generate a complete local, vendor-agnostic bug bounty research pack (README, review-map summary, blind spots, criticality map, counterfactuals, agent brief, hypotheses, evidence log, do-not-claim, case-study template, JSON manifest). Writes by default | human + `--json` (manifest) | `research-pack/*` | stable-additive |
 
+## Evidence graph commands (v6)
+
+In finalized v6.0 branch work, the public surface gains four additive,
+local/static Evidence Graph + Interaction Matrix commands built on top of the
+review map, the v4.1 research surfaces, and the v5 blind-spot layer. They emit
+human Markdown and `--json`, write artifacts under `.arkheionx/` (unless
+`--no-write`), and never run RPC, live-chain, or exploit automation.
+`human_review_required` stays true: an evidence state is not a vulnerability
+claim, confirmed-candidate is not a confirmed vulnerability, interaction priority
+is not severity, and unresolved does not mean vulnerable. See
+[`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md),
+[`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md), [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md),
+and [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx evidence-graph` | Classify every important review surface into an evidence state (tested, rejected-with-evidence, confirmed-candidate, unresolved, insufficient-evidence, needs-human-review, unclassified, out-of-scope) with an evidence strength, criticality potential, missing-evidence gaps, and a next local test direction | human + `--json` | `evidence-graph/evidence-graph.{md,json}` | stable-additive |
+| `arkheionx interaction-matrix` | Detect meaningful combinations of surfaces that may hide bugs when tested together, scored by a transparent additive interaction priority (impact + review-gap + complexity), with an interaction test plan; interaction priority is not severity | human + `--json` | `interaction-matrix/interaction-matrix.{md,json}` | stable-additive |
+| `arkheionx unresolved-map` | Compose the evidence graph and interaction matrix into the high-impact unresolved surfaces, high-impact unresolved interactions, unclassified surfaces, and a final review checklist; unresolved does not mean vulnerable | human + `--json` | `unresolved-map/unresolved-map.{md,json}` | stable-additive |
+| `arkheionx complete-review` | Generate a complete local, vendor-agnostic V6 review package (review-map summary, blind spots, criticality, counterfactuals, evidence graph, interaction matrix, unresolved surfaces, model-agnostic agent input, human review checklist, case-study template, JSON manifest). Writes by default | human + `--json` (manifest) | `complete-review/*` | stable-additive |
+
 ## Setup and lifecycle commands
 
 | Command | Purpose | Stability |
