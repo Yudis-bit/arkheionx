@@ -3,6 +3,52 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v6.0.0 - 2026-06-08
+
+v6.0 Evidence Graph + Interaction Matrix — the next major step beyond
+prioritization. **Release metadata finalized locally; pending founder
+push/tag/GitHub release/site deploy.** The package version is `6.0.0`; the last
+published tag remains `v4.0.0`. Local/static, heuristic, and additive: no RPC,
+live-chain, exploit automation, severity, or vulnerability claims, and no removal
+of the v4 review-map workflow or the v5 blind-spot commands.
+
+V5 shows where to look. V6 shows what is proven, what is unresolved, and which
+interactions still lack evidence. The final thesis is that no high-impact surface
+should remain unclassified.
+
+- Added `arkheionx evidence-graph`: classify every important review surface into
+  an evidence state (tested, rejected-with-evidence, confirmed-candidate,
+  unresolved, insufficient-evidence, needs-human-review, unclassified,
+  out-of-scope) with an evidence strength, criticality potential, missing-evidence
+  gaps, and a next local test direction. An evidence state is not a vulnerability
+  claim; confirmed-candidate is not a confirmed vulnerability.
+- Added `arkheionx interaction-matrix`: detect meaningful combinations of surfaces
+  that may hide bugs when tested together, scored by a transparent additive
+  interaction priority (impact + review-gap + complexity). Interaction priority is
+  not severity.
+- Added `arkheionx unresolved-map`: compose the evidence graph and interaction
+  matrix into the high-impact unresolved surfaces, unresolved interactions,
+  unclassified surfaces, and a final review checklist. Unresolved does not mean
+  vulnerable.
+- Added `arkheionx complete-review` (headline): a complete local, vendor-agnostic
+  V6 review package built on top of `review-map`, the v5 blind-spot layer, and the
+  v6 evidence layer — a model-agnostic agent input, a human review checklist, and
+  a JSON manifest. Writes by default.
+- Added the `arkheionx/evidence_graph/` engine (models, classifier, builder,
+  interactions, unresolved, complete_review, render, json_output), the
+  `schemas/evidence-graph.schema.json`, `schemas/interaction-matrix.schema.json`,
+  `schemas/unresolved-map.schema.json`, and
+  `schemas/complete-review-manifest.schema.json` schemas, V6 tests, the
+  `docs/EVIDENCE_GRAPH.md`, `docs/INTERACTION_MATRIX.md`, `docs/UNRESOLVED_MAP.md`,
+  `docs/COMPLETE_REVIEW.md`, and `docs/V6_WORKFLOW.md` docs,
+  `release-notes/v6.0.0.md`, and the V6 site surface.
+- Extended `examples/blind-spot-fixture` with a generic ERC4626-style connector
+  vault (`YieldVault`) to exercise share-math/preview, fee, blocklist, and
+  connector detection. No planted vulnerabilities.
+- Bumped the package version to `6.0.0`, set the latest stable release to
+  `v6.0.0`, the current milestone to `v6.0.0`, and the next milestone to `v6.1.0`;
+  the source installers and the GitHub Action pin to `v6.0.0`.
+
 ## v5.0.0 - 2026-06-07
 
 v5.0 Blind Spot Intelligence — the first major step beyond mapping. **Release

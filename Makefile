@@ -79,6 +79,15 @@ validate:
 		arkheionx/blind_spots/render.py \
 		arkheionx/blind_spots/json_output.py \
 		arkheionx/blind_spots/pack.py \
+		arkheionx/evidence_graph/__init__.py \
+		arkheionx/evidence_graph/models.py \
+		arkheionx/evidence_graph/classifier.py \
+		arkheionx/evidence_graph/builder.py \
+		arkheionx/evidence_graph/interactions.py \
+		arkheionx/evidence_graph/unresolved.py \
+		arkheionx/evidence_graph/complete_review.py \
+		arkheionx/evidence_graph/render.py \
+		arkheionx/evidence_graph/json_output.py \
 		arkheionx/demo/__init__.py \
 		arkheionx/demo/fixtures/__init__.py \
 		arkheionx/demo/model.py \

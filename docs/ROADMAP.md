@@ -14,9 +14,45 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v5.0.0.
-Next milestone: v5.1.0.
-Latest stable: v5.0.0 — Blind Spot Intelligence.
+Current milestone: v6.0.0.
+Next milestone: v6.1.0.
+Latest stable: v6.0.0 — Evidence Graph + Interaction Matrix.
+
+## v6.0 — Evidence Graph + Interaction Matrix (finalized locally)
+
+v6.0 is the next **major** step beyond prioritization. v5 maps where research
+attention is weakest; **v6 classifies the evidence on every high-impact surface
+and maps the dangerous interactions that still lack tests.** The final thesis is
+that no high-impact surface should remain unclassified.
+
+> V5 shows where to look. V6 shows what is proven, what is unresolved, and which
+> interactions still lack evidence.
+
+- `arkheionx evidence-graph` — classify every important surface into an evidence
+  state (tested, rejected-with-evidence, confirmed-candidate, unresolved,
+  insufficient-evidence, needs-human-review, unclassified, out-of-scope).
+- `arkheionx interaction-matrix` — detect meaningful combinations of surfaces
+  that may hide bugs when tested together, scored by a transparent interaction
+  priority (not severity).
+- `arkheionx unresolved-map` — everything important that local evidence does not
+  yet close.
+- `arkheionx complete-review` — the headline local, vendor-agnostic V6 review
+  package.
+
+It adds no RPC, no live-chain action, no exploit automation, and no severity or
+vulnerability claims. An evidence state is not a vulnerability claim,
+confirmed-candidate is not a confirmed vulnerability, interaction priority is not
+severity, and unresolved does not mean vulnerable; human review is required. The
+package version is now `6.0.0`; the `v6.0.0` tag, GitHub Release, and site deploy
+are founder actions (the last published tag remains `v4.0.0`). See
+[`V6_WORKFLOW.md`](V6_WORKFLOW.md), [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), and
+[`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md).
+
+## v6.1 — Agent orchestration + test evidence judge (planned)
+
+v6.1 is planned direction: an agent-orchestration layer and a test-evidence judge
+that reads local test output to strengthen the evidence graph automatically. No
+dates; no commitment until committed artifacts support it.
 
 ## v5.0 — Blind Spot Intelligence (finalized locally)
 
@@ -79,7 +115,7 @@ Foundation shipped: v3.1.0 — Protocol Review Map; v3.0.0 — Public Stable Lau
 v3.0.0 target: DeFi Value Flow Workbench. v3.0.0 shipped as the public stable
 launch and v3.1.0 — Protocol Review Map shipped as the v3 stable review surface
 (a structured, developer-native review surface built on the workbench). The
-latest stable release is now v5.0.0 — Blind Spot Intelligence.
+latest stable release is now v6.0.0 — Evidence Graph + Interaction Matrix.
 v3.2.0 is finalized locally as the Developer-Native Review Map and Local Artifact
 Foundation. v3.3.0 is finalized locally as Focused Review Commands:
 `test-gap-map`, `value-paths`, `assumptions`, `proof-plan`, and
