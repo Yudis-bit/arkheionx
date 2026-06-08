@@ -18,6 +18,10 @@ exercises detection, it does not pretend to hide a real bug.
   nonce/deadline replay protection and a Merkle allowlist gate.
 - `BundleRouter` — a periphery router that loops over operations with a
   documented skip-on-revert handler and exposes a settlement callback.
+- `YieldVault` — a generic ERC4626-style share vault with preview/convert share
+  math, a performance fee on exit (fee surface), a transfer blocklist
+  (blocklist surface), and an external yield-strategy connector (connector
+  surface).
 - `MockToken` — a minimal ERC20-like token.
 
 The bundled test (`test/CreditVault.t.sol`) covers **only** `deposit`. Everything
