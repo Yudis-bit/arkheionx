@@ -209,8 +209,21 @@ Evidence Graph + Interaction Matrix (v6, evidence classification):
 - `unresolved-map` / `arkheionx unresolved-map`
 - `complete-review` / `arkheionx complete-review`
 
+Scope-Aware Orchestration + Evidence Judge (v7, scope-aware review):
+
+- `scope-map` / `arkheionx scope-map`
+- `scope-lanes` / `arkheionx scope-lanes`
+- `scope-tasks` / `arkheionx scope-tasks`
+- `scope-pack` / `arkheionx scope-pack`
+- `evidence-judge` / `arkheionx evidence-judge`
+- `report-filter` / `arkheionx report-filter`
+
 V5 shows where to look. V6 shows what is proven, what is unresolved, and which
-interactions still lack evidence. See [`docs/V6_WORKFLOW.md`](docs/V6_WORKFLOW.md).
+interactions still lack evidence. V7 turns audit scope into review lanes, task
+packs, evidence requirements, and report filters so AI-assisted security review
+starts from rules and evidence instead of vague prompts. See
+[`docs/V6_WORKFLOW.md`](docs/V6_WORKFLOW.md) and
+[`docs/V7_WORKFLOW.md`](docs/V7_WORKFLOW.md).
 
 Generated outputs are written under `.arkheionx/out/`; they are generated, local, gitignored, and not intended to be committed as source truth.
 
@@ -304,7 +317,7 @@ targets to local configs.
 Pinned stable action example:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v6.0.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v7.0.0
 ```
 
 See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
@@ -369,21 +382,24 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v6.0.0**
+**Human review required** · **v7.0.0**
 
-Latest stable release: **v6.0.0**. Current package version: **6.0.0** — adds the
-v6 Evidence Graph + Interaction Matrix layer (evidence-graph, interaction-matrix,
-unresolved-map, complete-review) on top of the v5 Blind Spot Intelligence layer,
-the stable v4.0.0 review-map workflow, and the v4.1 research-memory workflow. The
-source installers and the GitHub Action pin to the **v6.0.0** tag. Last published
-tag: **v4.0.0** (the **v6.0.0** tag is cut by the founder at release). Next
-milestone: **v6.1.0**.
+Latest stable release: **v7.0.0**. Current package version: **7.0.0** — adds the
+v7 Scope-Aware Orchestration + Evidence Judge layer (scope-map, scope-lanes,
+scope-tasks, scope-pack, evidence-judge, report-filter) on top of the v6 Evidence
+Graph + Interaction Matrix layer, the v5 Blind Spot Intelligence layer, the stable
+v4.0.0 review-map workflow, and the v4.1 research-memory workflow. The source
+installers and the GitHub Action pin to the **v7.0.0** tag. Last published tag:
+**v4.0.0** (the **v7.0.0** tag is cut by the founder at release). Next milestone:
+**v7.1.0**.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
 Map the protocol. Prove the path. Prepare the handoff.
 V5 shows where to look. V6 shows what is proven, what is unresolved, and which
-interactions still lack evidence — a local/static way to classify the evidence on
-every high-impact surface; the broader control plane remains planned direction.
+interactions still lack evidence. V7 turns audit scope into review lanes, task
+packs, evidence requirements, and report filters so AI-assisted security review
+starts from rules and evidence instead of vague prompts; the broader control plane
+remains planned direction.
 
 This public-safe branch contains the engine, tests, public technical docs, and
 safety workflow. The v4.0.0 tag and GitHub release are published; the v6.0.0

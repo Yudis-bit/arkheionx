@@ -37,9 +37,21 @@ vulnerabilities, assign severity, or replace an audit.
 - [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the v5 attention-allocation workflow (blind-spots → criticality-map → counterfactuals → research-pack).
 - [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the v6 evidence workflow (evidence-graph → interaction-matrix → unresolved-map → complete-review).
 - [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md) — classify every important surface into an evidence state.
+- [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) — the v7 scope-aware orchestration model (scope-map → scope-lanes → scope-tasks → scope-pack → evidence-judge → report-filter).
+- [`V7_WORKFLOW.md`](V7_WORKFLOW.md) — the v7 scope-aware workflow, including using V7 on a private scope.
 - [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md) — meaningful combinations of surfaces that may hide bugs.
 - [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md) — reviewer onboarding and solo research.
 - [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — collect local evidence around a finding.
+
+## V7 release
+
+- [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) — the v7 scope-aware orchestration model and safety boundary.
+- [`V7_WORKFLOW.md`](V7_WORKFLOW.md) — the end-to-end v7 workflow and the private-scope workflow.
+- [`SCOPE_MAP.md`](SCOPE_MAP.md) — parse a scope note into structured review rules.
+- [`SCOPE_TASKS.md`](SCOPE_TASKS.md) — review lanes and precise, testable scope tasks.
+- [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md) — grade whether local tests prove the intended task.
+- [`REPORT_FILTER.md`](REPORT_FILTER.md) — classify candidates against scope before submission.
+- Release package: [`releases/V7_RELEASE_NOTES.md`](releases/V7_RELEASE_NOTES.md) and [`../release-notes/v7.0.0.md`](../release-notes/v7.0.0.md).
 
 ## V6 release
 

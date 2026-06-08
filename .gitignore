@@ -5,6 +5,10 @@ cache/
 .venv/
 venv/
 artifacts/arkheionx/
+
+# Arkheionx local/private artifacts
+# Private contest scope, private terms, and all generated output live under
+# .arkheionx/ (including .arkheionx/private/). Never commit anything here.
 .arkheionx/
 .arkheionx/out/
 __pycache__/

@@ -124,6 +124,30 @@ and [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
 | `arkheionx unresolved-map` | Compose the evidence graph and interaction matrix into the high-impact unresolved surfaces, high-impact unresolved interactions, unclassified surfaces, and a final review checklist; unresolved does not mean vulnerable | human + `--json` | `unresolved-map/unresolved-map.{md,json}` | stable-additive |
 | `arkheionx complete-review` | Generate a complete local, vendor-agnostic V6 review package (review-map summary, blind spots, criticality, counterfactuals, evidence graph, interaction matrix, unresolved surfaces, model-agnostic agent input, human review checklist, case-study template, JSON manifest). Writes by default | human + `--json` (manifest) | `complete-review/*` | stable-additive |
 
+## Scope-aware orchestration commands (v7)
+
+The v7 layer turns an audit/contest/program scope note into review lanes, scope
+tasks, evidence requirements, and report filters. Commands accept an optional
+`--scope-file <markdown>`, emit human Markdown and `--json`, write artifacts under
+`.arkheionx/` (unless `--no-write`), and never run RPC, live-chain, or exploit
+automation. `human_review_required` stays true: a scope map, review lane, or scope
+task is a planning artifact, not a finding; evidence quality is not vulnerability
+validity; candidate-with-evidence is not a confirmed vulnerability; and a report
+candidate is not final triage. Private scope notes are read only from local,
+gitignored files and are never committed. See
+[`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md), [`SCOPE_MAP.md`](SCOPE_MAP.md),
+[`SCOPE_TASKS.md`](SCOPE_TASKS.md), [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md),
+[`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx scope-map` | Parse a scope note into structured review rules (in/out of scope, severity conditions, trusted assumptions, dependency assumptions, known/accepted issues, prior-audit notes, design choices, invariants, focus areas, do-not-waste-time filters, report-candidate requirements) | human + `--json` | `scope-map/scope-map.{md,json}` | stable-additive |
+| `arkheionx scope-lanes` | Generate scope-aware review lanes from repository surfaces plus scope rules, each with priority, targets, hypotheses, required evidence, known/accepted filters, and a stop condition; lanes are planning artifacts, not findings | human + `--json` | `scope-lanes/scope-lanes.{md,json}` | stable-additive |
+| `arkheionx scope-tasks` | Turn lanes into precise, bounded, evidence-oriented tasks (hypothesis, counterfactual, setup, action, required assertions, validity and known-issue filters, stop condition, report-candidate threshold); tasks are research instructions, not exploit instructions | human + `--json` | `scope-tasks/scope-tasks.{md,json}` | stable-additive |
+| `arkheionx scope-pack` | Generate a complete local scope-aware research pack (scope map, review lanes, scope tasks, do-not-waste-time, evidence template/rubric, report-filter checklist, human review checklist, model-agnostic agent input, case-study template, JSON manifest + sidecars). Writes by default | human + `--json` (manifest) | `scope-pack/*` | stable-additive |
+| `arkheionx evidence-judge` | Judge whether local tests/evidence prove the intended task on a transparent rubric, with an evidence quality (strong/medium/weak/invalid/insufficient/unknown) and a judgment (rejected-with-evidence / candidate-with-evidence / insufficient / invalid / scope-filtered / needs-human-review); does not confirm vulnerabilities | human + `--json` | `evidence-judge/evidence-judge.{md,json}` | stable-additive |
+| `arkheionx report-filter` | Classify report candidates against scope rules before submission (potentially-reportable, needs-more-evidence, likely-known/accepted/trusted-role/out-of-scope/low-only, duplicate-prone, not-a-finding, needs-human-review) with a human pre-submission checklist; not final triage | human + `--json` | `report-filter/report-filter.{md,json}` | stable-additive |
+
 ## Setup and lifecycle commands
 
 | Command | Purpose | Stability |

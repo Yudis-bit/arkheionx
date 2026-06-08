@@ -133,3 +133,23 @@ The [`interaction-matrix`](INTERACTION_MATRIX.md) assigns an **interaction
 priority** (very-high / high / medium / monitor). It is a heuristic review order,
 **not a severity**. A high priority means "test this combination first", not
 "this is a high-severity bug". See [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+
+## Interpreting V7 scope-aware output
+
+V7 turns audit scope into review lanes, task packs, evidence requirements, and
+report filters. Read its output as planning context, never as a verdict:
+
+- **Lane priority** is review order, not severity.
+- **A scope task** is a research instruction (write a local test), not a finding
+  and not an exploit instruction.
+- **Evidence quality** (`strong`/`medium`/`weak`/`invalid`/`insufficient`) measures
+  whether a test proves its task — it is not vulnerability validity.
+- **`candidate-with-evidence`** means a human should review the candidate; it is
+  not a confirmed vulnerability. **`rejected-with-evidence`** is not proof the
+  protocol has no bugs.
+- **Report-filter classifications** (e.g. `likely-known-issue`,
+  `likely-trusted-role-assumption`, `likely-low-only`, `duplicate-prone`,
+  `potentially-reportable`) are a pre-submission triage aid, not final triage.
+
+A human makes the security call. See [`V7_WORKFLOW.md`](V7_WORKFLOW.md) and
+[`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md).

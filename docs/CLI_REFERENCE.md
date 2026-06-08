@@ -116,6 +116,42 @@ See [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md),
 [`V6_WORKFLOW.md`](V6_WORKFLOW.md). The supported surface is tracked in
 [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md).
 
+## Scope-aware orchestration commands (v7)
+
+Six additive, local/static commands turn an audit/contest/program scope note into
+review lanes, scope tasks, evidence requirements, and report filters. They accept
+an optional `--scope-file <markdown>`, emit human Markdown and `--json`, and write
+artifacts under `.arkheionx/` (unless `--no-write`). A scope map, review lane, or
+scope task is a planning artifact, not a finding; evidence quality is not
+vulnerability validity; candidate-with-evidence is not a confirmed vulnerability;
+and a report candidate is not final triage. `human_review_required` stays true.
+
+- `arkheionx scope-map <path> --scope-file <md>` — parse a scope note into
+  structured review rules (in/out of scope, severity conditions, trusted and
+  dependency assumptions, known/accepted issues, prior-audit notes, design
+  choices, invariants, focus areas, do-not-waste-time filters, report-candidate
+  requirements). `--out <dir>`, `--json`, `--no-write`, `--top`.
+- `arkheionx scope-lanes <path> --scope-file <md>` — generate scope-aware review
+  lanes (priority, targets, hypotheses, required evidence, known/accepted filters,
+  stop condition). `--out <dir>`, `--json`, `--no-write`, `--top`.
+- `arkheionx scope-tasks <path> --scope-file <md>` — turn lanes into precise,
+  bounded, evidence-oriented tasks. `--out <dir>`, `--json`, `--no-write`, `--top`.
+- `arkheionx scope-pack <path> --scope-file <md>` — bundle a complete local
+  scope-aware research pack (scope map, lanes, tasks, do-not-waste-time, evidence
+  template/rubric, report-filter checklist, human review checklist, agent input,
+  case-study template, JSON manifest + sidecars). Writes by default. `--out <dir>`,
+  `--json` (manifest), `--no-write`, `--top`.
+- `arkheionx evidence-judge <path>` — grade whether local tests/evidence prove the
+  intended task on a transparent rubric. `--scope-file <md>`, `--tasks-file <json>`,
+  `--evidence-dir <dir>`, `--out <dir>`, `--json`, `--no-write`, `--top`.
+- `arkheionx report-filter <path> --scope-file <md>` — classify report candidates
+  against the scope before submission, with a human pre-submission checklist.
+  `--out <dir>`, `--json`, `--no-write`, `--top`.
+
+See [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md), [`SCOPE_MAP.md`](SCOPE_MAP.md),
+[`SCOPE_TASKS.md`](SCOPE_TASKS.md), [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md),
+[`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+
 ## Exit codes
 
 - `0` — success; for review commands, no review guidance was surfaced.
@@ -201,6 +237,12 @@ work, not a finalized or published release.
 - `arkheionx interaction-matrix`
 - `arkheionx unresolved-map`
 - `arkheionx complete-review`
+- `arkheionx scope-map`
+- `arkheionx scope-lanes`
+- `arkheionx scope-tasks`
+- `arkheionx scope-pack`
+- `arkheionx evidence-judge`
+- `arkheionx report-filter`
 - `arkheionx review-map`
 - `arkheionx test-gap-map`
 - `arkheionx value-paths`

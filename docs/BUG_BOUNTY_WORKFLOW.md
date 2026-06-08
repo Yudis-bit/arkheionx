@@ -204,3 +204,31 @@ tests for the unresolved surfaces and interactions, and record the outcome. A
 priority is **not** a severity — do not submit either as a finding. Validate
 manually, keep it local, and only review repositories you are authorized to
 review. See [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+
+## Scope-aware contest triage (v7)
+
+For an authorized audit contest or bug bounty with a written scope, start from the
+scope instead of a vague "find bugs" prompt:
+
+```bash
+arkheionx scope-pack <repo> --scope-file <scope.md> --out .arkheionx/scope-pack
+```
+
+This produces a scope map, review lanes, precise scope tasks, a do-not-waste-time
+filter (known issues, accepted risks, trusted roles, out-of-scope and low-only
+patterns), an evidence template and rubric, a report-filter checklist, and
+model-agnostic agent input. Write local tests per task, then grade and filter:
+
+```bash
+arkheionx evidence-judge <repo> --scope-file <scope.md>
+arkheionx report-filter  <repo> --scope-file <scope.md>
+```
+
+`evidence-judge` grades whether a local test actually proves the task (it does not
+confirm vulnerabilities; candidate-with-evidence is not a confirmed vulnerability).
+`report-filter` classifies each candidate against the scope before you spend a
+submission, and is not final triage. Keep private scope notes in local, gitignored
+files under `.arkheionx/private/`; a built-in leak guard keeps target names out of
+public files. See [`V7_WORKFLOW.md`](V7_WORKFLOW.md) and
+[`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md). A human always makes the final
+call.
