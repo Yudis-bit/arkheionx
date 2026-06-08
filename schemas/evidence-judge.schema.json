@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Evidence Judge",
+  "description": "Local/static heuristic grading of local tests/evidence against the intended task. Does not confirm vulnerabilities. Evidence quality is not vulnerability validity. Candidate-with-evidence is not a confirmed vulnerability. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "kind", "judged_evidence",
+    "summary", "human_review_required", "safety_boundary", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["evidence-judge"]},
+    "command": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "judged_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "source", "quality", "judgment", "human_review_required"],
+        "properties": {
+          "evidence_id": {"type": "string", "pattern": "^EV-[0-9]{3}$"},
+          "source": {"type": "string"},
+          "evidence_type": {"type": "string"},
+          "linked_task": {"type": "string"},
+          "quality": {"type": "string", "enum": ["strong", "medium", "weak", "invalid", "insufficient", "unknown"]},
+          "judgment": {
+            "type": "string",
+            "enum": [
+              "rejected-with-strong-evidence", "rejected-with-medium-evidence",
+              "candidate-with-evidence", "insufficient-evidence", "invalid-test",
+              "likely-known-issue", "likely-accepted-risk", "likely-trusted-role-assumption",
+              "likely-out-of-scope", "likely-low-only", "needs-human-review"
+            ]
+          },
+          "checks_passed": {"type": "array", "items": {"type": "string"}},
+          "missing": {"type": "array", "items": {"type": "string"}},
+          "reasoning": {"type": "string"},
+          "human_review_required": {"type": "boolean", "enum": [true]}
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["evidence_items", "quality_counts", "judgment_counts"],
+      "properties": {
+        "evidence_dirs_scanned": {"type": "array", "items": {"type": "string"}},
+        "evidence_items": {"type": "integer"},
+        "quality_counts": {"type": "object"},
+        "judgment_counts": {"type": "object"},
+        "candidates_with_evidence": {"type": "integer"},
+        "weak_or_invalid": {"type": "integer"},
+        "note": {"type": "string"}
+      }
+    },
+    "rubric": {"type": "array", "items": {"type": "object"}},
+    "filters": {"type": "object"},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "safety": {"type": "object", "required": ["boundary", "human_review_required"]}
+  }
+}

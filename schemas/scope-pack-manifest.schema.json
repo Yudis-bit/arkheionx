@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Scope Pack Manifest",
+  "description": "Manifest for a local/static scope-aware research pack. Contains no private scope contents. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "kind", "command", "generated_artifacts",
+    "artifact_list", "scope_file_used", "safety_flags", "human_review_required", "safety_boundary"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["scope-pack-manifest"]},
+    "command": {"type": "string", "enum": ["scope-pack"]},
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "generated_artifacts": {"type": "array", "items": {"type": "string"}},
+    "artifact_list": {"type": "array", "items": {"type": "string"}},
+    "json_sidecars": {"type": "array", "items": {"type": "string"}},
+    "counts": {
+      "type": "object",
+      "properties": {
+        "lanes": {"type": "integer"},
+        "tasks": {"type": "integer"},
+        "report_candidates": {"type": "integer"},
+        "evidence_items": {"type": "integer"}
+      }
+    },
+    "safety_flags": {
+      "type": "object",
+      "required": ["no_vulnerability_claims", "no_severity_claims", "human_review_required"],
+      "properties": {
+        "local_static_only": {"type": "boolean"},
+        "no_rpc": {"type": "boolean"},
+        "no_live_chain": {"type": "boolean"},
+        "no_exploit_automation": {"type": "boolean"},
+        "no_private_keys": {"type": "boolean"},
+        "no_ai_api_calls": {"type": "boolean"},
+        "no_vulnerability_claims": {"type": "boolean", "enum": [true]},
+        "no_severity_claims": {"type": "boolean", "enum": [true]},
+        "human_review_required": {"type": "boolean", "enum": [true]}
+      }
+    },
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"}
+  }
+}

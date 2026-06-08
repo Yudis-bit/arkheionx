@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Report Filter",
+  "description": "Local/static classification of report candidates against scope rules before submission. Not final triage. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "kind", "candidates", "classifications",
+    "filters", "checklist", "human_review_required", "safety_boundary", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["report-filter"]},
+    "command": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "repo_summary": {"type": "object"},
+    "candidate_count": {"type": "integer"},
+    "requires_medium_high": {"type": "boolean"},
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["candidate_id", "hypothesis", "lane", "classification", "human_review_required"],
+        "properties": {
+          "candidate_id": {"type": "string", "pattern": "^CAND-[0-9]{3}$"},
+          "source_task": {"type": "string"},
+          "hypothesis": {"type": "string"},
+          "lane": {"type": "string"},
+          "lane_id": {"type": "string"},
+          "category": {"type": "string"},
+          "target": {"type": "string"},
+          "classification": {
+            "type": "string",
+            "enum": [
+              "potentially-reportable", "needs-more-evidence", "likely-known-issue",
+              "likely-accepted-risk", "likely-trusted-role-assumption", "likely-out-of-scope",
+              "likely-low-only", "duplicate-prone", "not-a-finding", "needs-human-review"
+            ]
+          },
+          "evidence": {"type": "string"},
+          "impact_path": {"type": "string"},
+          "why": {"type": "string"},
+          "remaining_questions": {"type": "array", "items": {"type": "string"}},
+          "submission_risk": {"type": "string"},
+          "human_review_required": {"type": "boolean", "enum": [true]}
+        }
+      }
+    },
+    "classifications": {"type": "object"},
+    "filters": {"type": "object"},
+    "checklist": {"type": "array", "items": {"type": "string"}},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "safety": {"type": "object", "required": ["boundary", "human_review_required"]}
+  }
+}

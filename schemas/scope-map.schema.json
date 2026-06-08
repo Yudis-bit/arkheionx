@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Scope Map",
+  "description": "Local/static structured scope map parsed from a contest/audit scope note. Not a finding, not severity, not a confirmed vulnerability. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "kind", "scope_file_used", "repo_summary",
+    "trusted_assumptions", "dependency_assumptions", "known_issues", "accepted_risks",
+    "invariants", "focus_areas", "do_not_waste_time", "report_candidate_requirements",
+    "human_review_required", "safety_boundary", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["scope-map"]},
+    "command": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "scope_summary": {"type": "string"},
+    "requires_medium_high": {"type": "boolean"},
+    "repo_summary": {"type": "object"},
+    "in_scope_surface_classes": {"type": "array", "items": {"type": "string"}},
+    "in_scope": {"type": "array", "items": {"type": "string"}},
+    "out_of_scope": {"type": "array", "items": {"type": "string"}},
+    "severity_conditions": {"type": "array", "items": {"type": "string"}},
+    "trusted_assumptions": {"type": "array", "items": {"type": "string"}},
+    "dependency_assumptions": {"type": "array", "items": {"type": "string"}},
+    "known_issues": {"type": "array", "items": {"type": "string"}},
+    "accepted_risks": {"type": "array", "items": {"type": "string"}},
+    "prior_audit_notes": {"type": "array", "items": {"type": "string"}},
+    "design_choices": {"type": "array", "items": {"type": "string"}},
+    "invariants": {"type": "array", "items": {"type": "string"}},
+    "focus_areas": {"type": "array", "items": {"type": "string"}},
+    "do_not_waste_time": {"type": "array", "items": {"type": "string"}},
+    "report_candidate_requirements": {"type": "array", "items": {"type": "string"}},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "safety": {
+      "type": "object",
+      "required": ["boundary", "do_not_claim", "human_review_required"],
+      "properties": {
+        "disclaimer": {"type": "string"},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean", "enum": [true]}
+      }
+    }
+  }
+}
