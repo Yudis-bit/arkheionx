@@ -1,0 +1,84 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const commands = [
+  ["lens-list", "List the implemented (and planned) protocol lenses. The first implemented lens is Morpho Midnight."],
+  ["lens-map", "Build a protocol-aware map: the extracted protocol model, the scope map, behavior promises, and economic invariants."],
+  ["lens-lanes", "Generate protocol-aware review lanes from the lens plus repository surfaces and scope. Lane priority is review order, not severity."],
+  ["lens-tasks", "Turn lens review lanes into precise, bounded, evidence-oriented tasks. A task is a research instruction, not an exploit instruction."],
+  ["lens-pack", "Bundle a complete local lens pack: run context, scope map, protocol model, value-flow map, behavior promises, economic invariants, temporal windows, periphery bundle map, evidence map, review lanes, scope tasks, blind-spot ranking, evidence rubric, report filter, and agent input."],
+  ["lens-evidence", "Classify each economic invariant's local-test coverage into one of nine evidence statuses. Evidence quality is not vulnerability validity."],
+  ["lens-report-filter", "Classify report candidates against the scope before submission, with a pre-submission checklist. Not final triage; it never says 'submit now'."]
+];
+---
+
+<Layout
+  title="V7.5 — Protocol Lens Packs — ArkheionX"
+  description="Arkheionx v7.5 Protocol Lens Packs turn a general Solidity review into a protocol-aware research workflow. The first lens is Morpho Midnight. Planning, not verdicts; human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">V7.5 — Protocol Lens Packs</p>
+      <h1>Protocol-aware deep dives, not generic review.</h1>
+      <p>
+        Protocol Lens Packs turn a general Solidity repo review into a protocol-aware research
+        workflow. The Morpho Midnight lens models fixed maturity, credit/debt units, offer
+        settlement, group exposure, collateral safety, bad debt, gates, fees, and periphery bundles
+        as review lanes and evidence requirements. A lens is a model of a protocol, not a finding,
+        and it never runs against a live chain.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Workflow</p>
+        <h2>Pick a lens, map the protocol, generate tasks, judge evidence, filter candidates.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx lens-map . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-pack . --lens morpho-midnight --scope-file scope.md --out .arkheionx/lens-pack
+arkheionx lens-evidence . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-report-filter . --lens morpho-midnight --scope-file scope.md</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {commands.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>arkheionx {item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-steps">
+      <article>
+        <span>!</span>
+        <h2>First lens: Morpho Midnight</h2>
+        <p>The Morpho Midnight lens ships 14 behavior promises, 12 economic invariants, 10 review lanes, and four temporal windows. It encodes no line numbers and no specific known bug — it is a model of expected behavior.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Planning, not verdicts</h2>
+        <p>Evidence quality is not vulnerability validity. Human review required.</p>
+      </article>
+      <article>
+        <span>!</span>
+        <h2>Private scope stays local</h2>
+        <p>Private scope notes live only in local, gitignored files under <code>.arkheionx/private/</code>. A leak guard keeps target names out of public files, and writing a pack to a public path warns you.</p>
+      </article>
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">Boundary</p>
+      <h2>Arkheionx protocol lenses help structure research.</h2>
+      <p>
+        They do not confirm vulnerabilities. They do not replace audits. They do not run on live
+        chains. They do not auto-submit reports. Read the full guide in the repository's
+        <code>docs/V7_5_PROTOCOL_LENS.md</code> and <code>docs/MORPHO_MIDNIGHT_LENS.md</code>.
+      </p>
+      <a href="/docs/v7" class="workflow-button">See scope-aware orchestration</a>
+    </section>
+  </main>
+</Layout>

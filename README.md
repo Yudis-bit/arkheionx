@@ -218,12 +218,25 @@ Scope-Aware Orchestration + Evidence Judge (v7, scope-aware review):
 - `evidence-judge` / `arkheionx evidence-judge`
 - `report-filter` / `arkheionx report-filter`
 
+Protocol Lens Packs (v7.5, protocol-aware deep dives):
+
+- `lens-list` / `arkheionx lens-list`
+- `lens-map` / `arkheionx lens-map`
+- `lens-lanes` / `arkheionx lens-lanes`
+- `lens-tasks` / `arkheionx lens-tasks`
+- `lens-pack` / `arkheionx lens-pack`
+- `lens-evidence` / `arkheionx lens-evidence`
+- `lens-report-filter` / `arkheionx lens-report-filter`
+
 V5 shows where to look. V6 shows what is proven, what is unresolved, and which
 interactions still lack evidence. V7 turns audit scope into review lanes, task
 packs, evidence requirements, and report filters so AI-assisted security review
-starts from rules and evidence instead of vague prompts. See
-[`docs/V6_WORKFLOW.md`](docs/V6_WORKFLOW.md) and
-[`docs/V7_WORKFLOW.md`](docs/V7_WORKFLOW.md).
+starts from rules and evidence instead of vague prompts. V7.5 adds protocol
+lenses, which model a specific protocol family (the first is Morpho Midnight) so
+the lanes, tasks, and evidence requirements are protocol-aware. See
+[`docs/V6_WORKFLOW.md`](docs/V6_WORKFLOW.md),
+[`docs/V7_WORKFLOW.md`](docs/V7_WORKFLOW.md), and
+[`docs/V7_5_PROTOCOL_LENS.md`](docs/V7_5_PROTOCOL_LENS.md).
 
 Generated outputs are written under `.arkheionx/out/`; they are generated, local, gitignored, and not intended to be committed as source truth.
 
@@ -317,7 +330,7 @@ targets to local configs.
 Pinned stable action example:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v7.0.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v7.5.0
 ```
 
 See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
@@ -382,29 +395,38 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v7.0.0**
+**Human review required** · **v7.5.0**
 
-Latest stable release: **v7.0.0**. Current package version: **7.0.0** — adds the
-v7 Scope-Aware Orchestration + Evidence Judge layer (scope-map, scope-lanes,
-scope-tasks, scope-pack, evidence-judge, report-filter) on top of the v6 Evidence
-Graph + Interaction Matrix layer, the v5 Blind Spot Intelligence layer, the stable
-v4.0.0 review-map workflow, and the v4.1 research-memory workflow. The source
-installers and the GitHub Action pin to the **v7.0.0** tag. Last published tag:
-**v4.0.0** (the **v7.0.0** tag is cut by the founder at release). Next milestone:
-**v7.1.0**.
+Latest stable release: **v7.5.0**. Current package version: **7.5.0** — adds the
+v7.5 Protocol Lens Packs layer (lens-list, lens-map, lens-lanes, lens-tasks,
+lens-pack, lens-evidence, lens-report-filter) on top of the v7 Scope-Aware
+Orchestration + Evidence Judge layer, the v6 Evidence Graph + Interaction Matrix
+layer, the v5 Blind Spot Intelligence layer, the stable v4.0.0 review-map workflow,
+and the v4.1 research-memory workflow. The source installers and the GitHub Action
+pin to the **v7.5.0** tag. The v7.5.0 git tag, GitHub Release, and site deploy are
+cut by the founder at release time.
+
+Arkheionx is a local-first Ethereum security research workflow for Solidity and
+DeFi repositories. It starts from scope, maps value flow and contract
+interactions, generates review lanes and evidence-oriented tasks, and filters
+candidates before report writing. V7.5 adds Protocol Lens Packs: protocol-aware
+research models that turn a repo and scope note into behavior promises, economic
+invariants, review lanes, scope tasks, evidence rubrics, and report filters. The
+first shipped protocol lens is Morpho Midnight. Protocol lenses are planning
+artifacts, not vulnerability verdicts.
 
 Positioning: Local-first protocol security control plane for DeFi teams.
 Map the protocol. Prove the path. Prepare the handoff.
 V5 shows where to look. V6 shows what is proven, what is unresolved, and which
 interactions still lack evidence. V7 turns audit scope into review lanes, task
 packs, evidence requirements, and report filters so AI-assisted security review
-starts from rules and evidence instead of vague prompts; the broader control plane
-remains planned direction.
+starts from rules and evidence instead of vague prompts. V7.5 makes those lanes,
+tasks, and evidence requirements protocol-aware through protocol lenses; the
+broader control plane remains planned direction.
 
 This public-safe branch contains the engine, tests, public technical docs, and
-safety workflow. The v4.0.0 tag and GitHub release are published; the v6.0.0
-release metadata is finalized locally and pending push, tag, and site deploy. The
-public release branch is sanitized.
+safety workflow. Release tags and the GitHub release are cut by the founder at
+release time; the public release branch is sanitized.
 
 Official website: [https://arkheionx.dev](https://arkheionx.dev) (live).
 Installer and deployment details are documented in

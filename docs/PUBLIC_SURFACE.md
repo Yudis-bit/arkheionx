@@ -148,6 +148,33 @@ gitignored files and are never committed. See
 | `arkheionx evidence-judge` | Judge whether local tests/evidence prove the intended task on a transparent rubric, with an evidence quality (strong/medium/weak/invalid/insufficient/unknown) and a judgment (rejected-with-evidence / candidate-with-evidence / insufficient / invalid / scope-filtered / needs-human-review); does not confirm vulnerabilities | human + `--json` | `evidence-judge/evidence-judge.{md,json}` | stable-additive |
 | `arkheionx report-filter` | Classify report candidates against scope rules before submission (potentially-reportable, needs-more-evidence, likely-known/accepted/trusted-role/out-of-scope/low-only, duplicate-prone, not-a-finding, needs-human-review) with a human pre-submission checklist; not final triage | human + `--json` | `report-filter/report-filter.{md,json}` | stable-additive |
 
+## Protocol lens commands (v7.5)
+
+Protocol Lens Packs model a specific protocol family so review lanes, tasks, and
+evidence requirements are protocol-aware. The first lens is Morpho Midnight
+(`morpho-midnight`). A lens is a model, not a finding; a review lane is not a
+vulnerability; an evidence score is not vulnerability validity; a candidate with
+evidence is not confirmed. The lens layer ships in the v7.5.0 package and
+carries its own schema version. See
+[`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) and
+[`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
+
+Exit behavior: `lens-list` exits `0`; the analysis commands (`lens-map`,
+`lens-lanes`, `lens-tasks`, `lens-pack`, `lens-evidence`, `lens-report-filter`) exit
+`1` as a heuristic, human-review-required warning (not a crash) and `2` only on
+invalid usage or a runtime error. In CI, read the `--json` decision fields rather
+than gating on the analysis exit code.
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx lens-list` | List implemented (and planned) protocol lenses | human + `--json` | none | stable-additive |
+| `arkheionx lens-map` | Build a protocol-aware map: extracted protocol model, scope map, behavior promises, and economic invariants for the chosen lens | human + `--json` | `lens-map/lens-map.{md,json}` | stable-additive |
+| `arkheionx lens-lanes` | Generate protocol-aware review lanes from the lens plus repository surfaces and scope; lane priority is review order, not severity | human + `--json` | `lens-lanes/lens-lanes.{md,json}` | stable-additive |
+| `arkheionx lens-tasks` | Turn lens review lanes into precise, bounded, evidence-oriented tasks; tasks are research instructions, not exploit instructions | human + `--json` | `lens-tasks/lens-tasks.{md,json}` | stable-additive |
+| `arkheionx lens-pack` | Generate a complete local lens pack (run context, scope map, protocol model, value-flow map, behavior promises, economic invariants, temporal windows, periphery bundle map, evidence map, review lanes, scope tasks, blind-spot ranking, evidence rubric, report filter, agent input, JSON). Writes by default | human + `--json` (manifest) | `lens-pack/<lens>/*` | stable-additive |
+| `arkheionx lens-evidence` | Classify each economic invariant's local-test coverage into one of nine evidence statuses; evidence quality is not vulnerability validity | human + `--json` | `lens-evidence/lens-evidence.{md,json}` | stable-additive |
+| `arkheionx lens-report-filter` | Classify lens report candidates against scope before submission with a pre-submission checklist; not final triage and never says "submit now" | human + `--json` | `lens-report-filter/lens-report-filter.{md,json}` | stable-additive |
+
 ## Setup and lifecycle commands
 
 | Command | Purpose | Stability |

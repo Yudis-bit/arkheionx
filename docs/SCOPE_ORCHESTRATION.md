@@ -83,3 +83,13 @@ See [`V7_WORKFLOW.md`](V7_WORKFLOW.md) for the end-to-end private workflow.
 - It does not submit reports or run live-chain operations.
 
 Human review is required for every conclusion.
+
+## V7.5: protocol lenses build on this
+
+[V7.5 Protocol Lens Packs](V7_5_PROTOCOL_LENS.md) reuse this scope model verbatim:
+the same markdown scope parser, the same `.arkheionx/private/` leak guard, and the
+same surface records. A protocol lens adds protocol-aware behavior promises,
+economic invariants, temporal windows, and review lanes on top, so the lanes and
+tasks are shaped by a specific protocol family. The first lens is
+[Morpho Midnight](MORPHO_MIDNIGHT_LENS.md). See
+[`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md).

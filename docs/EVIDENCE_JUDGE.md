@@ -52,3 +52,16 @@ arkheionx evidence-judge examples/scope-fixture --scope-file examples/scope-fixt
 The bundled fixture ships a deliberately strong, weak, and invalid test so the
 grades are visible. See [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) and
 [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+
+## V7.5: protocol-lens evidence
+
+The [V7.5 protocol lens](V7_5_PROTOCOL_LENS.md) layer adds two protocol-aware
+evidence surfaces: `arkheionx lens-evidence` classifies each economic invariant's
+local-test coverage into one of nine statuses
+(`DIRECTLY_TESTED_STRONG`, `DIRECTLY_TESTED_WEAK`, `INDIRECTLY_TESTED`,
+`HAPPY_PATH_ONLY`, `FUZZED_BUT_NOT_TARGETED`, `FORMALLY_PROVEN`, `COMMENT_ONLY`,
+`UNTESTED`, `UNKNOWN`), and the lens evidence rubric grades discovered tests A-F
+with decisions `VALIDATED_CANDIDATE`, `NEEDS_HUMAN_REVIEW`, `REJECTED_WITH_TEST`,
+`INSUFFICIENT_EVIDENCE`, `OUT_OF_SCOPE`, `DUPLICATE_RISK_HIGH`. Only grade A may
+become `VALIDATED_CANDIDATE`, and the static judge never auto-assigns it. See
+[`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).

@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Protocol Lens Scope Tasks",
+  "description": "Precise, bounded, evidence-oriented scope tasks for a lens (v7.5). A task is a research instruction, not an exploit instruction, and task priority is not severity. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "lens_layer", "arkheionx_version", "kind", "command",
+    "lens", "generated_at", "scope_file_used", "scope_status",
+    "task_count", "tasks", "human_review_required", "safety_boundary", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "lens_layer": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["lens-tasks"]},
+    "command": {"type": "string", "enum": ["lens-tasks"]},
+    "lens": {
+      "type": "object",
+      "required": ["lens_id", "display_name"],
+      "properties": {
+        "lens_id": {"type": "string"},
+        "display_name": {"type": "string"}
+      }
+    },
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "scope_status": {"type": "string"},
+    "task_count": {"type": "integer"},
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "lane_id", "hypothesis"],
+        "properties": {
+          "id": {"type": "string"},
+          "lane_id": {"type": "string"},
+          "hypothesis": {"type": "string"},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "filters": {"type": "object"},
+    "format_note": {"type": "string"},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "safety": {"type": "object"}
+  }
+}

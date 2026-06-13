@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Protocol Lens Report Filter",
+  "description": "Report-candidate classification for a lens (v7.5) before submission. Not final triage; it never says 'submit now'. A candidate with evidence is not confirmed. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "lens_layer", "arkheionx_version", "kind", "command",
+    "lens", "generated_at", "scope_file_used", "scope_status",
+    "checklist", "outcomes_vocabulary", "candidate_count", "decisions",
+    "human_review_required", "safety_boundary", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "lens_layer": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["lens-report-filter"]},
+    "command": {"type": "string", "enum": ["lens-report-filter"]},
+    "lens": {
+      "type": "object",
+      "required": ["lens_id", "display_name"],
+      "properties": {
+        "lens_id": {"type": "string"},
+        "display_name": {"type": "string"}
+      }
+    },
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "scope_status": {"type": "string"},
+    "checklist": {"type": "array"},
+    "outcomes_vocabulary": {"type": "array", "items": {"type": "string"}},
+    "candidate_count": {"type": "integer"},
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["candidate_id", "outcome"],
+        "properties": {
+          "candidate_id": {"type": "string"},
+          "outcome": {"type": "string"},
+          "human_review_required": {"type": "boolean"}
+        }
+      }
+    },
+    "outcome_counts": {"type": "object"},
+    "requires_medium_high": {"type": "boolean"},
+    "note": {"type": "string"},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "safety": {"type": "object"}
+  }
+}

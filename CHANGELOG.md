@@ -3,6 +3,44 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v7.5.0 - 2026-06-10
+
+v7.5 Protocol Lens Packs — the protocol-lens layer. The package version is now
+`7.5.0`; the protocol-lens layer additionally carries its own lens schema version
+for its JSON artifacts. Local/static, heuristic, and additive: no RPC, live-chain, transaction
+execution, private keys, exploit automation, external AI API calls, severity, or
+vulnerability claims, and no removal of the v4 review-map workflow or the v5/v6/v7
+commands.
+
+A protocol lens models a specific protocol family — its value flows, behavior
+promises, economic invariants, temporal windows, and periphery composition — so the
+review lanes, tasks, evidence requirements, and blind-spot ranking become
+protocol-aware.
+
+- Added a reusable protocol-lens architecture (`arkheionx/protocol_lens/`): typed
+  models, a `ProtocolLens` base class, a registry, an extractor, builders, renderers,
+  and a pack writer. The architecture supports future lenses; only Morpho Midnight
+  is implemented.
+- Added the first lens, **Morpho Midnight** (`morpho-midnight`): a fixed-maturity
+  credit market with 14 behavior promises, 12 economic invariants, 10 review lanes,
+  four temporal windows, and five extraction groups. It encodes no line numbers and
+  no specific known bug.
+- Added `arkheionx lens-list`, `lens-map`, `lens-lanes`, `lens-tasks`, `lens-pack`,
+  `lens-evidence`, and `lens-report-filter` (each accepts `--lens`, `--scope-file`,
+  `--out`, `--top`, `--json`, `--no-write`).
+- `lens-pack` generates a 16-file local pack (00-run-context .. 13-report-filter,
+  `agent-input.md`, and a machine-readable `lens-pack.json`) under
+  `.arkheionx/lens-pack/<lens>/`.
+- Added nine evidence statuses, an A-F evidence rubric with six decisions, a
+  transparent blind-spot score, and a 15-point report-filter checklist with six
+  outcomes. Only grade A may become `VALIDATED_CANDIDATE`, and the static judge never
+  auto-assigns it; the report filter never says "submit now".
+- Added a synthetic toy fixture `tests/fixtures/morpho_midnight_toy/` (invented
+  contracts, not Morpho source), new tests, docs
+  (`docs/V7_5_PROTOCOL_LENS.md`, `docs/MORPHO_MIDNIGHT_LENS.md`), and a website page.
+- Reused the v7 scope parser and `.arkheionx/private/` leak guard verbatim, and
+  added a warning when a lens pack would be written to a public path.
+
 ## v7.0.0 - 2026-06-08
 
 v7.0 Scope-Aware Orchestration + Evidence Judge — the next major step beyond

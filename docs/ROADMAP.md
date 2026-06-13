@@ -14,9 +14,24 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v7.0.0.
-Next milestone: v7.1.0.
-Latest stable: v7.0.0 — Scope-Aware Orchestration + Evidence Judge.
+Current milestone: v7.5.0.
+Next milestone: v7.6.0.
+Latest stable: v7.5.0 — Protocol Lens Packs.
+
+## v7.5 — Protocol Lens Packs (released)
+
+v7.5 adds **protocol lenses**: a reusable, local/static protocol-lens architecture
+(`arkheionx/protocol_lens/`) plus the first lens, **Morpho Midnight**
+(`morpho-midnight`). A lens models a specific protocol family — value flows,
+behavior promises, economic invariants, temporal windows, and periphery
+composition — so the review lanes, scope tasks, evidence requirements, and
+blind-spot ranking become protocol-aware. New commands: `lens-list`, `lens-map`,
+`lens-lanes`, `lens-tasks`, `lens-pack`, `lens-evidence`, and `lens-report-filter`.
+A lens is a planning model, not a finding; it does not confirm vulnerabilities,
+assign severity, or replace an audit. The architecture is generic; only Morpho
+Midnight is implemented, and other lenses remain planned direction. See
+[`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) and
+[`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
 
 ## v7.0 — Scope-Aware Orchestration + Evidence Judge (finalized locally)
 
@@ -28,9 +43,10 @@ and evidence instead of vague prompts.** A scope map, review lane, or scope task
 a planning artifact, not a finding; evidence quality is not vulnerability validity;
 candidate-with-evidence is not a confirmed vulnerability; task priority is not
 severity; and a report candidate is not final triage. Private scope notes stay in
-local, gitignored files only. The package version is now `7.0.0`; the `v7.0.0` tag,
-GitHub Release, and site deploy are founder actions (the last published tag remains
-`v4.0.0`). Next milestone v7.1.0 continues toward the workspace/export/CI layer.
+local, gitignored files only. v7.0.0 finalized the scope-aware layer; v7.5.0
+(Protocol Lens Packs) is the current release. The git tag, GitHub Release, and site
+deploy are founder actions performed at release time. The next milestone, v7.6.0,
+continues toward the workspace/export/CI layer and additional protocol lenses.
 See [`V7_WORKFLOW.md`](V7_WORKFLOW.md), [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md),
 and [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md).
 

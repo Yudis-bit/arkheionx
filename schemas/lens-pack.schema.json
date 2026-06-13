@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Protocol Lens Pack Manifest",
+  "description": "Manifest for a local/static protocol-lens pack (v7.5). A local/static heuristic planning artifact: not a finding, not severity, not a confirmed vulnerability. Contains no private scope contents. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "lens_layer", "arkheionx_version", "kind", "command",
+    "lens", "generated_at", "scope_file_used", "scope_status",
+    "generated_artifacts", "counts", "data",
+    "safety_flags", "safety", "human_review_required", "safety_boundary"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "lens_layer": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["lens-pack-manifest"]},
+    "command": {"type": "string", "enum": ["lens-pack"]},
+    "lens": {
+      "type": "object",
+      "required": ["lens_id", "display_name", "protocol_family", "families"],
+      "properties": {
+        "lens_id": {"type": "string"},
+        "display_name": {"type": "string"},
+        "protocol_family": {"type": "string"},
+        "families": {"type": "array", "items": {"type": "string"}},
+        "supported_languages": {"type": "array", "items": {"type": "string"}},
+        "supported_frameworks": {"type": "array", "items": {"type": "string"}},
+        "known_surfaces": {"type": "array", "items": {"type": "string"}},
+        "boundary_notice": {"type": "string"}
+      }
+    },
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "scope_status": {"type": "string"},
+    "generated_artifacts": {"type": "array", "items": {"type": "string"}},
+    "counts": {
+      "type": "object",
+      "required": ["behavior_promises", "economic_invariants", "review_lanes", "scope_tasks"],
+      "properties": {
+        "behavior_promises": {"type": "integer"},
+        "economic_invariants": {"type": "integer"},
+        "review_lanes": {"type": "integer"},
+        "scope_tasks": {"type": "integer"},
+        "blind_spots": {"type": "integer"},
+        "evidence_items": {"type": "integer"},
+        "report_candidates": {"type": "integer"},
+        "terms_discovered": {"type": "integer"},
+        "terms_unknown": {"type": "integer"}
+      }
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "lens_map", "review_lanes", "scope_tasks", "evidence_map",
+        "blind_spots", "evidence_judge", "report_filter"
+      ],
+      "properties": {
+        "lens_map": {
+          "type": "object",
+          "required": [
+            "schema_version", "lens", "protocol_model", "scope_map",
+            "value_flow_paths", "behavior_promises", "economic_invariants", "temporal_windows"
+          ],
+          "properties": {
+            "schema_version": {"type": "string"},
+            "lens": {"type": "object"},
+            "protocol_model": {
+              "type": "object",
+              "required": ["lens_id", "families"],
+              "properties": {
+                "lens_id": {"type": "string"},
+                "families": {"type": "array", "items": {"type": "string"}},
+                "discovered_terms": {"type": "array", "items": {"type": "string"}},
+                "unknown_terms": {"type": "array", "items": {"type": "string"}},
+                "periphery_functions": {"type": "array"},
+                "value_flow_paths": {"type": "array"},
+                "source_files": {"type": "array", "items": {"type": "string"}}
+              }
+            },
+            "scope_map": {"type": "object"},
+            "value_flow_paths": {"type": "array", "items": {"type": "object"}},
+            "behavior_promises": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "text"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "text": {"type": "string"},
+                  "relevant_files": {"type": "array", "items": {"type": "string"}},
+                  "relevant_functions": {"type": "array", "items": {"type": "string"}},
+                  "violation_condition": {"type": "string"},
+                  "possible_impact": {"type": "string"}
+                }
+              }
+            },
+            "economic_invariants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "statement"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "statement": {"type": "string"},
+                  "mathematical_form": {"type": "string"},
+                  "impact_if_broken": {"type": "string"}
+                }
+              }
+            },
+            "temporal_windows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "name": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "review_lanes": {
+          "type": "object",
+          "required": ["lane_count", "lanes"],
+          "properties": {
+            "lane_count": {"type": "integer"},
+            "lanes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "title", "priority"],
+                "properties": {
+                  "id": {"type": "string"},
+                  "title": {"type": "string"},
+                  "priority": {"type": "string"},
+                  "human_review_required": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        },
+        "scope_tasks": {
+          "type": "object",
+          "required": ["task_count", "tasks"],
+          "properties": {
+            "task_count": {"type": "integer"},
+            "tasks": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "evidence_map": {
+          "type": "object",
+          "required": ["items", "summary"],
+          "properties": {
+            "items": {"type": "array"},
+            "summary": {"type": "object"}
+          }
+        },
+        "blind_spots": {
+          "type": "object",
+          "required": ["candidate_count", "blind_spots"],
+          "properties": {
+            "candidate_count": {"type": "integer"},
+            "blind_spots": {"type": "array"}
+          }
+        },
+        "evidence_judge": {
+          "type": "object",
+          "required": ["rubric", "grades"],
+          "properties": {
+            "rubric": {"type": "array"},
+            "grades": {"type": "array"}
+          }
+        },
+        "report_filter": {
+          "type": "object",
+          "required": ["candidate_count", "checklist", "decisions"],
+          "properties": {
+            "candidate_count": {"type": "integer"},
+            "checklist": {"type": "array"},
+            "decisions": {"type": "array"}
+          }
+        }
+      }
+    },
+    "safety_flags": {
+      "type": "object",
+      "required": [
+        "no_vulnerability_claims", "no_severity_claims",
+        "no_protocol_source_modification", "human_review_required"
+      ],
+      "properties": {
+        "local_static_only": {"type": "boolean"},
+        "no_rpc": {"type": "boolean"},
+        "no_live_chain": {"type": "boolean"},
+        "no_exploit_automation": {"type": "boolean"},
+        "no_private_keys": {"type": "boolean"},
+        "no_ai_api_calls": {"type": "boolean"},
+        "no_protocol_source_modification": {"type": "boolean", "enum": [true]},
+        "no_vulnerability_claims": {"type": "boolean", "enum": [true]},
+        "no_severity_claims": {"type": "boolean", "enum": [true]},
+        "human_review_required": {"type": "boolean", "enum": [true]}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["planning_notice", "boundary", "human_review_required"],
+      "properties": {
+        "planning_notice": {"type": "array", "items": {"type": "string"}},
+        "boundary": {"type": "array", "items": {"type": "string"}},
+        "do_not_claim": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean", "enum": [true]}
+      }
+    },
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"}
+  }
+}

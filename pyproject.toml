@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arkheionx"
-version = "7.0.0"
+version = "7.5.0"
 description = "Foundry-style local security workbench for DeFi protocol mapping, money-flow analysis, hunter ranking, and execution-aware proof artifacts."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -47,3 +47,10 @@ include = ["arkheionx*"]
 
 [tool.setuptools.package-data]
 "arkheionx.demo.fixtures" = ["**/*.md", "**/*.toml", "**/*.sol"]
+
+# Ship the JSON schemas (including the v7.5 lens schemas) inside the built
+# distribution so the installed artifact carries its own schema definitions.
+# They install under <prefix>/share/arkheionx/schemas/ and appear in the wheel
+# under the ".data/data/share/arkheionx/schemas/" path.
+[tool.setuptools.data-files]
+"share/arkheionx/schemas" = ["schemas/*.json"]

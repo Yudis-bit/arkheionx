@@ -90,10 +90,10 @@ class SchemaAndMetadataContractTests(unittest.TestCase):
 
     def test_version_metadata_unchanged(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
-        self.assertEqual(__version__, "7.0.0")
-        self.assertEqual(STABLE_RELEASE, "v7.0.0")
-        self.assertEqual(CURRENT_MILESTONE, "v7.0.0")
-        self.assertEqual(NEXT_MILESTONE, "v7.1.0")
+        self.assertEqual(__version__, "7.5.0")
+        self.assertEqual(STABLE_RELEASE, "v7.5.0")
+        self.assertEqual(CURRENT_MILESTONE, "v7.5.0")
+        self.assertEqual(NEXT_MILESTONE, "v7.6.0")
 
     def test_fixture_harness_is_internal_only(self) -> None:
         # The harness package exposes no `main`/`cli`/`build_parser` entry point.

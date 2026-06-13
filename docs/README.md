@@ -53,6 +53,12 @@ vulnerabilities, assign severity, or replace an audit.
 - [`REPORT_FILTER.md`](REPORT_FILTER.md) — classify candidates against scope before submission.
 - Release package: [`releases/V7_RELEASE_NOTES.md`](releases/V7_RELEASE_NOTES.md) and [`../release-notes/v7.0.0.md`](../release-notes/v7.0.0.md).
 
+## V7.5 release (protocol lens packs)
+
+- [`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) — what protocol lenses are, the commands, and the generated pack.
+- [`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md) — the first lens: families, behavior promises, economic invariants, review lanes, temporal windows.
+- Release notes: [`../release-notes/v7.5.0.md`](../release-notes/v7.5.0.md).
+
 ## V6 release
 
 - [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the end-to-end Evidence Graph + Interaction Matrix workflow.

@@ -11,6 +11,9 @@ artifacts/arkheionx/
 # .arkheionx/ (including .arkheionx/private/). Never commit anything here.
 .arkheionx/
 .arkheionx/out/
+.arkheionx/private/
+.arkheionx/runs/
+.arkheionx/lens-pack/
 __pycache__/
 **/__pycache__/
 *.pyc

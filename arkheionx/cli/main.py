@@ -446,6 +446,8 @@ def build_parser() -> argparse.ArgumentParser:
     report_filter.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
     report_filter.set_defaults(func=workbench.report_filter_command)
 
+    _add_lens_commands(subparsers)
+
     help_command = subparsers.add_parser("help", help="Print CLI help.")
     help_command.set_defaults(func=lambda _args: _print_help(parser))
     return parser
@@ -526,6 +528,69 @@ def _add_workbench_commands(subparsers) -> None:
     validate.add_argument("--artifacts-dir", default="", help="Base directory for .arkheionx/out (default: cwd).")
     validate.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout.")
     validate.set_defaults(func=workbench.validate_artifacts_command)
+
+
+def _add_lens_commands(subparsers) -> None:
+    """Register the v7.5 protocol-lens commands (lens-list/map/lanes/tasks/pack/evidence/report-filter)."""
+
+    def _common(sub, *, with_out_default: str = "") -> None:
+        sub.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+        sub.add_argument("--lens", default="morpho-midnight", help="Protocol lens id (default: morpho-midnight).")
+        sub.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+        sub.add_argument("--out", default="", help=f"Artifact output directory{with_out_default}.")
+        sub.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")
+        sub.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only (no human text).")
+        sub.add_argument("--no-write", action="store_true", help="Build in memory only; do not write artifact files.")
+        sub.add_argument("--include-low-confidence", action="store_true", help="Include low-confidence review-map signals when building.")
+
+    lens_list = subparsers.add_parser(
+        "lens-list",
+        help="List implemented (and planned) protocol lenses (v7.5).",
+    )
+    lens_list.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout only.")
+    lens_list.set_defaults(func=workbench.lens_list_command)
+
+    lens_map = subparsers.add_parser(
+        "lens-map",
+        help="Build a protocol-aware lens map (protocol model + scope + behavior promises + economic invariants) (v7.5). Planning artifact, not a finding.",
+    )
+    _common(lens_map, with_out_default=" (default: <repo>/.arkheionx/lens-map/)")
+    lens_map.set_defaults(func=workbench.lens_map_command)
+
+    lens_lanes = subparsers.add_parser(
+        "lens-lanes",
+        help="Generate protocol-aware review lanes from the lens plus repository surfaces and scope (v7.5). Lane priority is review order, not severity.",
+    )
+    _common(lens_lanes, with_out_default=" (default: <repo>/.arkheionx/lens-lanes/)")
+    lens_lanes.set_defaults(func=workbench.lens_lanes_command)
+
+    lens_tasks = subparsers.add_parser(
+        "lens-tasks",
+        help="Turn lens review lanes into precise, bounded, evidence-oriented scope tasks (v7.5). Tasks are research instructions, not exploit instructions.",
+    )
+    _common(lens_tasks, with_out_default=" (default: <repo>/.arkheionx/lens-tasks/)")
+    lens_tasks.set_defaults(func=workbench.lens_tasks_command)
+
+    lens_pack = subparsers.add_parser(
+        "lens-pack",
+        help="Generate a complete local lens pack: run context, scope map, protocol model, value-flow map, behavior promises, economic invariants, temporal windows, periphery bundle map, evidence map, review lanes, scope tasks, blind-spot ranking, evidence rubric, report filter, agent input, and lens-pack.json (v7.5). Writes by default.",
+    )
+    _common(lens_pack, with_out_default=" (default: <repo>/.arkheionx/lens-pack/)")
+    lens_pack.set_defaults(func=workbench.lens_pack_command)
+
+    lens_evidence = subparsers.add_parser(
+        "lens-evidence",
+        help="Classify local-test evidence for each lens economic invariant (v7.5). Evidence quality is not vulnerability validity.",
+    )
+    _common(lens_evidence, with_out_default=" (default: <repo>/.arkheionx/lens-evidence/)")
+    lens_evidence.set_defaults(func=workbench.lens_evidence_command)
+
+    lens_report_filter = subparsers.add_parser(
+        "lens-report-filter",
+        help="Classify lens report candidates against the scope before submission (v7.5). Not final triage; human decision required.",
+    )
+    _common(lens_report_filter, with_out_default=" (default: <repo>/.arkheionx/lens-report-filter/)")
+    lens_report_filter.set_defaults(func=workbench.lens_report_filter_command)
 
 
 def main(argv: list[str] | None = None) -> int:

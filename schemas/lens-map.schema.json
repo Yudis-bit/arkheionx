@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Protocol Lens Map",
+  "description": "Protocol-aware map for a lens (v7.5): extracted protocol model, scope map, value-flow paths, behavior promises, and economic invariants. Local/static heuristic planning artifact, not a finding. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "lens_layer", "arkheionx_version", "kind", "command",
+    "lens", "generated_at", "scope_file_used", "scope_status",
+    "protocol_model", "scope_map", "value_flow_paths",
+    "behavior_promises", "economic_invariants", "temporal_windows",
+    "human_review_required", "safety_boundary", "safety"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "lens_layer": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "kind": {"type": "string", "enum": ["lens-map"]},
+    "command": {"type": "string", "enum": ["lens-map"]},
+    "lens": {
+      "type": "object",
+      "required": ["lens_id", "display_name", "protocol_family", "families"],
+      "properties": {
+        "lens_id": {"type": "string"},
+        "display_name": {"type": "string"},
+        "protocol_family": {"type": "string"},
+        "families": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "generated_at": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "scope_status": {"type": "string"},
+    "protocol_model": {
+      "type": "object",
+      "required": ["lens_id", "families"],
+      "properties": {
+        "lens_id": {"type": "string"},
+        "families": {"type": "array", "items": {"type": "string"}},
+        "discovered_terms": {"type": "array", "items": {"type": "string"}},
+        "unknown_terms": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "scope_map": {"type": "object"},
+    "value_flow_paths": {"type": "array", "items": {"type": "object"}},
+    "behavior_promises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text"],
+        "properties": {
+          "id": {"type": "string"},
+          "text": {"type": "string"}
+        }
+      }
+    },
+    "economic_invariants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement"],
+        "properties": {
+          "id": {"type": "string"},
+          "statement": {"type": "string"}
+        }
+      }
+    },
+    "temporal_windows": {"type": "array", "items": {"type": "object"}},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "safety": {"type": "object"}
+  }
+}

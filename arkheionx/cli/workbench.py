@@ -125,6 +125,8 @@ from arkheionx.scope_orchestration import (
     write_scope_map,
     write_scope_tasks,
 )
+from arkheionx import protocol_lens as lenspkg
+from arkheionx.protocol_lens import render as lens_render
 from arkheionx.cli_ui import TerminalUI
 from arkheionx.rules.registry import list_rule_packs
 from arkheionx.version import PACKAGE_VERSION
@@ -2597,4 +2599,240 @@ def report_filter_command(args: Namespace) -> int:
         rel = {name: _rel_display(path, root) for name, path in written.items()}
         text += f"\nArtifacts\n  {rel['report-filter.md']}\n  {rel['report-filter.json']}\n"
     _print_report(text)
+    return exit_code
+
+
+# ---------------------------------------------------------------------------
+# v7.5 Protocol Lens commands (lens-list / lens-map / lens-lanes / lens-tasks /
+# lens-pack / lens-evidence / lens-report-filter).
+# ---------------------------------------------------------------------------
+def _lens_id_arg(args: Namespace) -> str:
+    return (str(getattr(args, "lens", "") or "morpho-midnight")).strip()
+
+
+def _resolve_lens(args: Namespace):
+    """Return (lens, None) or (None, error_message)."""
+    try:
+        return lenspkg.get_lens(_lens_id_arg(args)), None
+    except KeyError as exc:
+        return None, str(exc)
+
+
+def _lens_prepare(args: Namespace):
+    """Resolve root + lens + review map. Returns (root, lens, rm, n_sources, n_tests) or Nones."""
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"error: not a directory: {args.repo}")
+        return None, None, None, 0, 0
+    lens, err = _resolve_lens(args)
+    if lens is None:
+        print(f"error: {err}")
+        return None, None, None, 0, 0
+    top = _research_top(args)
+    review_map, n_sources, n_tests = _research_review_map(args, root, top)
+    if review_map is None:
+        return None, None, None, 0, 0
+    return root, lens, review_map, n_sources, n_tests
+
+
+def lens_list_command(args: Namespace) -> int:
+    """List implemented (and planned) protocol lenses (v7.5)."""
+    lenses = lenspkg.available_lenses()
+    data = {
+        "kind": "lens-list",
+        "schema_version": lenspkg.SCHEMA_VERSION,
+        "implemented": [lo.meta().to_dict() for lo in lenses],
+        "planned": [list(p) for p in lenspkg.PLANNED_LENSES],
+        "human_review_required": True,
+    }
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return SUCCESS
+    _print_report(lens_render.render_lens_list_cli(data))
+    return SUCCESS
+
+
+def lens_map_command(args: Namespace) -> int:
+    """Build the protocol-aware lens map: protocol model + scope + promises + invariants (v7.5)."""
+    root, lens, rm, n_sources, n_tests = _lens_prepare(args)
+    if root is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    ctx = lenspkg.build_lens_context(lens, rm, root, scope_file, source_files=n_sources, test_files=n_tests)
+    data = lenspkg.build_lens_map(ctx)
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = lens_render.render_lens_map_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, lenspkg.default_lens_map_dir)
+        try:
+            written = lenspkg.write_lens_map(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['lens-map.md']}\n  {rel['lens-map.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def lens_lanes_command(args: Namespace) -> int:
+    """Generate lens review lanes (v7.5). Lane priority is review order, not severity."""
+    root, lens, rm, n_sources, n_tests = _lens_prepare(args)
+    if root is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    ctx = lenspkg.build_lens_context(lens, rm, root, scope_file, source_files=n_sources, test_files=n_tests)
+    data = lenspkg.build_review_lanes(ctx)
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = lens_render.render_lens_lanes_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, lenspkg.default_lens_lanes_dir)
+        try:
+            written = lenspkg.write_lens_lanes(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['lens-lanes.md']}\n  {rel['lens-lanes.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def lens_tasks_command(args: Namespace) -> int:
+    """Turn lens lanes into precise, bounded, evidence-oriented scope tasks (v7.5)."""
+    root, lens, rm, n_sources, n_tests = _lens_prepare(args)
+    if root is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    ctx = lenspkg.build_lens_context(lens, rm, root, scope_file, source_files=n_sources, test_files=n_tests)
+    data = lenspkg.build_scope_tasks(ctx)
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = lens_render.render_lens_tasks_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, lenspkg.default_lens_tasks_dir)
+        try:
+            written = lenspkg.write_lens_tasks(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['lens-tasks.md']}\n  {rel['lens-tasks.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def lens_evidence_command(args: Namespace) -> int:
+    """Classify local-test evidence per lens economic invariant (v7.5)."""
+    root, lens, rm, n_sources, n_tests = _lens_prepare(args)
+    if root is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    ctx = lenspkg.build_lens_context(lens, rm, root, scope_file, source_files=n_sources, test_files=n_tests)
+    data = lenspkg.build_evidence_map(ctx, root)
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = lens_render.render_lens_evidence_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, lenspkg.default_lens_evidence_dir)
+        try:
+            written = lenspkg.write_lens_evidence(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['lens-evidence.md']}\n  {rel['lens-evidence.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def lens_report_filter_command(args: Namespace) -> int:
+    """Classify lens report candidates against scope before submission (v7.5). Not final triage."""
+    root, lens, rm, n_sources, n_tests = _lens_prepare(args)
+    if root is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    ctx = lenspkg.build_lens_context(lens, rm, root, scope_file, source_files=n_sources, test_files=n_tests)
+    data = lenspkg.build_report_filter(ctx, root)
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    if getattr(args, "json", False):
+        print(json.dumps(data, indent=2))
+        return exit_code
+    text = lens_render.render_lens_report_filter_cli(data, args.repo)
+    if not bool(getattr(args, "no_write", False)):
+        out_dir = _scope_out_dir(args, root, lenspkg.default_lens_report_filter_dir)
+        try:
+            written = lenspkg.write_lens_report_filter(data, out_dir)
+        except OSError as exc:
+            print(f"error: could not write artifacts to {out_dir}: {exc}")
+            return FAILED
+        rel = {name: _rel_display(path, root) for name, path in written.items()}
+        text += f"\nArtifacts\n  {rel['lens-report-filter.md']}\n  {rel['lens-report-filter.json']}\n"
+    _print_report(text)
+    return exit_code
+
+
+def lens_pack_command(args: Namespace) -> int:
+    """Generate a complete local lens pack (v7.5). Writes by default."""
+    root, lens, rm, n_sources, n_tests = _lens_prepare(args)
+    if root is None:
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else lenspkg.default_lens_pack_dir(root)
+    write = not bool(getattr(args, "no_write", False))
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    try:
+        result = lenspkg.build_lens_pack(lens, rm, root, scope_file, out_dir,
+                                         source_files=n_sources, test_files=n_tests, write=write)
+    except OSError as exc:
+        print(f"error: could not write lens pack to {out_dir}: {exc}")
+        return FAILED
+    if getattr(args, "json", False):
+        print(json.dumps(result["manifest"], indent=2))
+        return exit_code
+    manifest = result["manifest"]
+    counts = manifest["counts"]
+    lines = [
+        "ARKHEIONX LENS PACK",
+        "Local/static protocol-lens research pack. Not a finding, not severity. Human review required.",
+        "",
+        f"Repo   {args.repo}",
+        f"Lens   {manifest['lens']['display_name']} ({manifest['lens']['lens_id']})",
+        f"Scope  {'provided' if manifest['scope_file_used'] else manifest['scope_status']}",
+        f"Lanes  {counts['review_lanes']}   Tasks {counts['scope_tasks']}   "
+        f"Blind spots {counts['blind_spots']}   Candidates {counts['report_candidates']}",
+        f"Terms  {counts['terms_discovered']} found / {counts['terms_unknown']} unknown locally",
+        "",
+    ]
+    if result.get("leak_warning"):
+        lines += [result["leak_warning"], ""]
+    if write:
+        rel = _rel_display(Path(result["out_dir"]), root)
+        lines.append(f"Wrote {len(manifest['generated_artifacts'])} files to {rel}")
+        for name in manifest["generated_artifacts"]:
+            lines.append(f"  {name}")
+    else:
+        lines.append("No-write: built the pack in memory only (nothing written).")
+    lines += [
+        "",
+        "Next",
+        "  Give agent-input.md + 10-scope-tasks.md to a review agent or reviewer.",
+        "  Write local Foundry tests, then: arkheionx lens-evidence <repo> --lens "
+        + str(manifest["lens"]["lens_id"]) + " --scope-file <scope>",
+        "",
+        "Boundary",
+        "  Local/static only. Not a finding, not severity. Human review required.",
+    ]
+    _print_report("\n".join(lines) + "\n")
     return exit_code

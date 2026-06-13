@@ -31,7 +31,7 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("## Evidence Model", readme)
         self.assertIn("## Safety Boundaries", readme)
         self.assertIn("## Documentation", readme)
-        self.assertIn("Latest stable release: **v7.0.0", readme)
+        self.assertIn("Latest stable release: **v7.5.0", readme)
         # Workbench command suite is the front-page focus.
         for command in ["arkheionx open", "arkheionx review-map", "arkheionx hunt",
                         "arkheionx prove", "arkheionx trace", "arkheionx evidence",

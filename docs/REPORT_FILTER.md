@@ -51,3 +51,13 @@ arkheionx report-filter examples/scope-fixture --scope-file examples/scope-fixtu
 
 See [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) and
 [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+
+## V7.5: protocol-lens report filter
+
+The [V7.5 protocol lens](V7_5_PROTOCOL_LENS.md) layer adds
+`arkheionx lens-report-filter`, which runs a 15-point pre-submission checklist over
+lens evidence candidates and assigns one of six outcomes: `READY_FOR_HUMAN_REVIEW`,
+`NEEDS_MORE_EVIDENCE`, `DO_NOT_SUBMIT_DUPLICATE_RISK`, `DO_NOT_SUBMIT_OUT_OF_SCOPE`,
+`DO_NOT_SUBMIT_WEAK_IMPACT`, `DO_NOT_SUBMIT_INVALID_SETUP`. It never says "submit
+now"; the most positive outcome is `READY_FOR_HUMAN_REVIEW`, and a human still
+decides. See [`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
