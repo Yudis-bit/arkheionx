@@ -22,7 +22,8 @@
     "generated_at": {"type": "string"},
     "artifact_count": {"type": "integer"},
     "artifact_paths": {"type": "array", "items": {"type": "string"}},
-    "rpc_mode": {"type": "string", "enum": ["not_provided", "provided_not_run", "disabled"]},
+    "rpc_mode": {"type": "string", "enum": ["not_provided", "provided_not_run", "read_only", "disabled"]},
+    "rpc_endpoint_masked": {"type": "string"},
     "safety_flags": {
       "type": "object",
       "required": [

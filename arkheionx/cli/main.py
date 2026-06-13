@@ -103,8 +103,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--rpc-url",
         dest="rpc",
         default="",
-        help="Optional read-only RPC endpoint (advanced). Disabled by default; no live-chain calls are made and the chain is never mutated. The endpoint is masked in output.",
+        help="Optional read-only RPC endpoint (advanced). Disabled by default; only read-only methods are issued, no live-chain mutation occurs, and the endpoint is masked in output.",
     )
+    triage.add_argument("--deployment-calls", default="", help="Optional read-only eth_call spec JSON (requires --rpc-url).")
+    triage.add_argument("--strict-context", action="store_true", help="Apply fail-closed decision caps more aggressively when context is missing.")
+    triage.add_argument("--max-leads", type=int, default=12, help="Maximum raw leads to score (default 12).")
+    triage.add_argument("--top", type=int, default=3, help="Top leads to surface in JSON (default 3, max 5). Markdown top stays at 3.")
     triage.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/triage/).")
     triage.add_argument("--json", action="store_true", help="Print machine-readable triage JSON to stdout only (no human text).")
     triage.add_argument("--no-write", action="store_true", help="Build the triage pack in memory only; do not write artifact files.")

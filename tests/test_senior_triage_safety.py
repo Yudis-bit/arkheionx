@@ -25,6 +25,18 @@ SECRET = "KEYabc123SUPERSECRET"
 ENDPOINT = f"https://node.example.com/v3/{SECRET}"
 
 
+def _mock_transport(endpoint, payload):
+    """Local mock JSON-RPC transport (no network). Read-only responses only."""
+    method = payload.get("method")
+    responses = {
+        "eth_chainId": "0x1",
+        "eth_getCode": "0x60016000",
+        "eth_getStorageAt": "0x" + "0" * 64,
+        "eth_call": "0x" + "0" * 64,
+    }
+    return {"jsonrpc": "2.0", "id": payload.get("id", 1), "result": responses.get(method, "0x")}
+
+
 def build(**kw):
     defaults = dict(
         scope_file=str(FIXTURE / "scope.md"),
@@ -84,17 +96,17 @@ class SafetyTests(unittest.TestCase):
         self.assertTrue(self.result["manifest"]["no_remote_write"])
 
     def test_rpc_url_is_masked_and_secret_not_leaked(self) -> None:
-        result = build(rpc_endpoint=ENDPOINT)
+        result = build(rpc_endpoint=ENDPOINT, rpc_transport=_mock_transport)
         blob = all_text(result)
         self.assertNotIn(SECRET, blob)
         self.assertNotIn(ENDPOINT, blob)
         self.assertIn("***masked***", result["triage"]["rpc_endpoint_masked"])
-        self.assertEqual(result["triage"]["rpc_mode"], "provided_not_run")
+        self.assertEqual(result["triage"]["rpc_mode"], "read_only")
         self.assertFalse(result["triage"]["rpc_enabled"])
-        # An endpoint was supplied but no live read was performed.
-        self.assertEqual(
-            result["triage"]["deployment_reality"]["status"], M.DEPLOY_NOT_IMPLEMENTED
-        )
+        # Read-only verification ran via the mock; no mutation method appears anywhere.
+        self.assertEqual(result["triage"]["deployment_reality"]["status"], M.DEPLOY_RPC_READ_ONLY_CHECKED)
+        for forbidden in ("eth_sendTransaction", "eth_sendRawTransaction", "sendtransaction"):
+            self.assertNotIn(forbidden.lower(), blob.lower())
 
     def test_no_live_source_match_claimed_without_rpc(self) -> None:
         # Without a live read, triage never claims the deployed source matches.

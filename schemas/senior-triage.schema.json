@@ -6,10 +6,10 @@
   "required": [
     "schema_version", "artifact_type", "arkheionx_version", "generated_at", "command",
     "repo_path", "scope_file", "known_path", "audits_path", "addresses_file",
-    "rpc_mode", "target_decision", "target_reason", "eligibility", "known_issue_map",
-    "freshness_diff", "deployment_reality", "lead_scoreboard", "top_3_leads",
-    "do_not_touch", "missing_context", "safety_flags", "safety_boundaries",
-    "human_review_required"
+    "rpc_mode", "target_decision", "target_reason", "eligibility", "corpus_documents",
+    "known_issue_map", "freshness_diff", "deployment_reality", "deployment_mismatches",
+    "lead_scoreboard", "top_3_leads", "top_leads", "do_not_touch", "missing_context",
+    "safety_flags", "safety_boundaries", "human_review_required"
   ],
   "properties": {
     "schema_version": {"type": "string", "enum": ["senior-triage-v1"]},
@@ -22,7 +22,7 @@
     "known_path": {"type": "string"},
     "audits_path": {"type": "string"},
     "addresses_file": {"type": "string"},
-    "rpc_mode": {"type": "string", "enum": ["not_provided", "provided_not_run", "disabled"]},
+    "rpc_mode": {"type": "string", "enum": ["not_provided", "provided_not_run", "read_only", "disabled"]},
     "rpc_enabled": {"type": "boolean", "enum": [false]},
     "rpc_endpoint_masked": {"type": "string"},
     "target_decision": {"type": "string", "enum": ["TOUCH", "SKIP", "NEEDS_MORE_CONTEXT"]},
@@ -41,6 +41,20 @@
         "missing_context": {"type": "array", "items": {"type": "string"}}
       }
     },
+    "corpus_documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source_path": {"type": "string"},
+          "kind": {"type": "string"},
+          "detected_entities": {"type": "array", "items": {"type": "string"}},
+          "detected_behaviors": {"type": "array", "items": {"type": "string"}},
+          "risk_tags": {"type": "array", "items": {"type": "string"}},
+          "note": {"type": "string"}
+        }
+      }
+    },
     "known_issue_map": {
       "type": "array",
       "items": {
@@ -57,7 +71,10 @@
             ]
           },
           "duplicate_risk_score": {"type": "integer"},
-          "public_test_covered": {"type": "boolean"}
+          "similarity_score": {"type": "integer"},
+          "confidence": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]},
+          "public_test_covered": {"type": "boolean"},
+          "evidence": {"type": "array", "items": {"type": "object"}}
         }
       }
     },
@@ -72,10 +89,12 @@
             "type": "string",
             "enum": [
               "FRESH", "STALE", "UNKNOWN_FRESHNESS", "POST_AUDIT_CHANGE", "LIVE_MISMATCH",
-              "NEW_ADAPTER", "NEW_REGISTRY_ENTRY", "NEW_IMPLEMENTATION", "NEW_MIGRATION_PATH"
+              "NEW_ADAPTER", "NEW_REGISTRY_ENTRY", "NEW_IMPLEMENTATION", "NEW_MIGRATION_PATH",
+              "NEW_ORACLE_PATH", "NEW_VALUE_OUT_PATH"
             ]
           },
-          "score": {"type": "integer"}
+          "score": {"type": "integer"},
+          "evidence": {"type": "array", "items": {"type": "object"}}
         }
       }
     },
@@ -85,11 +104,15 @@
       "properties": {
         "status": {"type": "string"},
         "rpc_mode": {"type": "string"},
+        "chain_id": {"type": "integer"},
         "addresses_provided": {"type": "boolean"},
+        "results": {"type": "array", "items": {"type": "object"}},
+        "mismatches": {"type": "array", "items": {"type": "object"}},
         "recommended_checks": {"type": "array", "items": {"type": "string"}},
         "safe_commands": {"type": "array", "items": {"type": "string"}}
       }
     },
+    "deployment_mismatches": {"type": "array", "items": {"type": "object"}},
     "lead_scoreboard": {
       "type": "array",
       "items": {
@@ -114,7 +137,16 @@
           },
           "research_priority_score": {"type": "integer"},
           "kill_condition": {"type": "string"},
-          "next_command": {"type": "string"}
+          "next_command": {"type": "string"},
+          "dedup_confidence": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]},
+          "dedup_similarity_score": {"type": "integer"},
+          "known_issue_confidence": {"type": "integer"},
+          "deployment_status": {"type": "string"},
+          "deployment_effect": {"type": "integer"},
+          "score_breakdown": {"type": "object"},
+          "priority_boosts": {"type": "array", "items": {"type": "string"}},
+          "decision_caps": {"type": "array", "items": {"type": "string"}},
+          "dedup_evidence": {"type": "array", "items": {"type": "object"}}
         }
       }
     },
@@ -125,6 +157,20 @@
         "required": [
           "id", "title", "decision", "research_priority_score", "kill_condition"
         ],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "decision": {"type": "string", "enum": ["PURSUE", "PARK", "KILL"]},
+          "research_priority_score": {"type": "integer"},
+          "kill_condition": {"type": "string"}
+        }
+      }
+    },
+    "top_leads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "decision", "research_priority_score", "kill_condition"],
         "properties": {
           "id": {"type": "string"},
           "title": {"type": "string"},

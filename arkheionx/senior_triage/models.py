@@ -61,14 +61,17 @@ NEW_ADAPTER = "NEW_ADAPTER"
 NEW_REGISTRY_ENTRY = "NEW_REGISTRY_ENTRY"
 NEW_IMPLEMENTATION = "NEW_IMPLEMENTATION"
 NEW_MIGRATION_PATH = "NEW_MIGRATION_PATH"
+NEW_ORACLE_PATH = "NEW_ORACLE_PATH"
+NEW_VALUE_OUT_PATH = "NEW_VALUE_OUT_PATH"
 FRESHNESS_STATUSES = (
     FRESH, STALE, UNKNOWN_FRESHNESS, POST_AUDIT_CHANGE, LIVE_MISMATCH,
     NEW_ADAPTER, NEW_REGISTRY_ENTRY, NEW_IMPLEMENTATION, NEW_MIGRATION_PATH,
+    NEW_ORACLE_PATH, NEW_VALUE_OUT_PATH,
 )
 # Freshness statuses that meaningfully lift research priority.
 FRESHNESS_PRIORITY = (
     POST_AUDIT_CHANGE, NEW_ADAPTER, NEW_IMPLEMENTATION, LIVE_MISMATCH,
-    NEW_REGISTRY_ENTRY, NEW_MIGRATION_PATH,
+    NEW_REGISTRY_ENTRY, NEW_MIGRATION_PATH, NEW_ORACLE_PATH, NEW_VALUE_OUT_PATH,
 )
 
 # --- Deployment-reality status vocabulary --------------------------------------------
@@ -84,6 +87,8 @@ DEPLOY_REGISTRY_CHANGED = "REGISTRY_CHANGED"
 DEPLOY_ORACLE_CHANGED = "ORACLE_CHANGED"
 DEPLOY_ROLE_CHANGED = "ROLE_CHANGED"
 DEPLOY_PAUSED_OR_DISABLED = "PAUSED_OR_DISABLED"
+DEPLOY_ADDRESS_NO_CODE = "ADDRESS_NO_CODE"
+DEPLOY_RPC_CHECK_FAILED = "RPC_CHECK_FAILED"
 
 # --- Submit-readiness vocabulary -----------------------------------------------------
 NOT_READY = "NOT_READY"
@@ -180,15 +185,34 @@ class EligibilitySignal:
 
 
 @dataclass
+class EvidenceSnippet:
+    """A located piece of supporting evidence (source path + line range + excerpt)."""
+
+    source_path: str = ""
+    line_start: int = 0
+    line_end: int = 0
+    excerpt: str = ""
+    kind: str = ""  # known | audit | test | src | doc
+    reason: str = ""
+
+    def to_dict(self) -> dict:
+        return _to_dict(self)
+
+
+@dataclass
 class KnownIssueSignal:
     """Dedup verdict for a single lead against known issues / audits / tests."""
 
     lead_id: str = ""
     status: str = KNOWN_UNKNOWN
     duplicate_risk_score: int = 0  # 0-100 (higher = more likely already known)
+    similarity_score: int = 0  # 0-100 semantic-ish overlap with the best match
+    confidence: str = CONF_LOW  # LOW | MEDIUM | HIGH
     public_test_covered: bool = False
     matched_terms: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
+    evidence: list[dict] = field(default_factory=list)  # EvidenceSnippet dicts
+    reasons: list[str] = field(default_factory=list)
     note: str = ""
 
     def to_dict(self) -> dict:
@@ -205,6 +229,7 @@ class FreshnessSignal:
     baseline: str = "none"
     signals: list[str] = field(default_factory=list)
     changed_paths: list[str] = field(default_factory=list)
+    evidence: list[dict] = field(default_factory=list)  # EvidenceSnippet dicts
     note: str = ""
 
     def to_dict(self) -> dict:
@@ -217,8 +242,11 @@ class DeploymentRealitySignal:
 
     status: str = DEPLOY_NOT_RUN
     rpc_mode: str = "not_provided"
+    chain_id: int = 0
     addresses_provided: bool = False
     addresses: list[dict] = field(default_factory=list)
+    results: list[dict] = field(default_factory=list)  # per-address live read-only results
+    mismatches: list[dict] = field(default_factory=list)  # source-vs-deployed mismatches
     recommended_checks: list[str] = field(default_factory=list)
     safe_commands: list[str] = field(default_factory=list)
     rpc_endpoint_masked: str = ""
@@ -236,6 +264,7 @@ class LeadScore:
     total: int = 0
     components: dict = field(default_factory=dict)
     caps_applied: list[str] = field(default_factory=list)
+    boosts: list[str] = field(default_factory=list)
     reasons: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
@@ -272,6 +301,17 @@ class LeadCandidate:
     next_command: str = ""
     score_reasons: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    # v2 additive fields.
+    dedup_similarity_score: int = 0
+    dedup_confidence: str = CONF_LOW
+    dedup_evidence: list[dict] = field(default_factory=list)
+    known_issue_confidence: int = 0  # 0-100, higher = more likely already known
+    deployment_status: str = ""
+    deployment_effect: int = 50  # 0-100 deployment-reality sub-score (50 = neutral)
+    deployment_notes: list[str] = field(default_factory=list)
+    score_breakdown: dict = field(default_factory=dict)
+    priority_boosts: list[str] = field(default_factory=list)
+    decision_caps: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return _to_dict(self)
@@ -306,11 +346,11 @@ class SeniorTriagePack:
     missing_context: list[str] = field(default_factory=list)
     counts: dict = field(default_factory=dict)
 
-    def top_leads(self) -> list[LeadCandidate]:
+    def top_leads(self, limit: int = TOP_LEAD_LIMIT) -> list[LeadCandidate]:
         pursue = [lead for lead in self.leads if lead.decision == LEAD_PURSUE]
         park = [lead for lead in self.leads if lead.decision == LEAD_PARK]
         ordered = pursue + park
-        return ordered[:TOP_LEAD_LIMIT]
+        return ordered[: max(0, limit)]
 
     def to_dict(self) -> dict:
         return _to_dict(self)

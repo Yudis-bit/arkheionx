@@ -43,8 +43,24 @@ def triage_command(args: Namespace) -> int:
     out = str(getattr(args, "out", "") or "").strip()
     out_dir = Path(out).expanduser() if out else pack_mod.default_triage_dir(root)
     write = not bool(getattr(args, "no_write", False))
-    # dest='rpc'; the endpoint is masked and never called live in this pass.
+    # dest='rpc'; the endpoint is masked and only read-only methods are ever issued.
     rpc_endpoint = str(getattr(args, "rpc", "") or "")
+    strict_context = bool(getattr(args, "strict_context", False))
+    max_leads = int(getattr(args, "max_leads", 12) or 12)
+    top = int(getattr(args, "top", 3) or 3)
+
+    deployment_calls = None
+    calls_path = str(getattr(args, "deployment_calls", "") or "").strip()
+    if calls_path:
+        if not rpc_endpoint:
+            print("ArkheionX error: --deployment-calls requires --rpc-url (read-only).")
+            print("Next: re-run with an explicit read-only --rpc-url, or omit --deployment-calls.")
+            return FAILED
+        try:
+            deployment_calls = json.loads(Path(calls_path).expanduser().read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            print(f"ArkheionX error: could not read --deployment-calls JSON: {type(exc).__name__}")
+            return FAILED
 
     try:
         result = pack_mod.build_senior_triage_pack(
@@ -56,9 +72,13 @@ def triage_command(args: Namespace) -> int:
             baseline_ref=str(getattr(args, "baseline_ref", "") or ""),
             since_date=str(getattr(args, "since_date", "") or ""),
             rpc_endpoint=rpc_endpoint,
+            deployment_calls=deployment_calls,
             out_dir=out_dir,
             command="triage",
             write=write,
+            strict_context=strict_context,
+            top=top,
+            max_leads=max_leads,
         )
     except OSError as exc:
         print(f"ArkheionX error: could not build triage pack: {exc}")
@@ -85,7 +105,7 @@ def triage_command(args: Namespace) -> int:
         f"Target  {target} ({triage['target_confidence']})",
         f"Why     {triage['target_reason']}",
         f"Leads   {counts['leads']} total | pursue {counts['pursue']} | park {counts['park']} | kill {counts['kill']}",
-        f"RPC     {triage['rpc_mode']} (no live-chain calls; endpoint masked)",
+        f"RPC     {triage['rpc_mode']} (read-only only; no mutation; endpoint masked)",
         "",
         "Top leads",
     ]

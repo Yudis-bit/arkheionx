@@ -170,10 +170,90 @@ Human review required.
 The endpoint passed to `--rpc-url` is masked in every artifact and is never printed
 verbatim. No private keys, seed phrases, or secrets are read.
 
+## Real-world power v2
+
+v2 makes the engine harder to fool when deployment, audit history, and known-issue
+evidence disagree with source-only reading. New principle:
+
+```text
+Do not trust source-only analysis when deployment, audit history, and known-issue evidence disagree.
+```
+
+### Known corpus engine
+
+`corpus_v2.py` builds line-indexed `CorpusDocument` records from `--known`,
+`--audits`, repo docs/tests/source comments, README, CHANGELOG, and release notes.
+Each document carries detected entities (contracts, functions, roles, assets,
+oracles, adapters, registries, proxies), behavior tags, and known-status tags, plus
+character-to-line mapping so evidence can cite `path:Lstart-Lend`. PDF text is
+extracted only if a lightweight library is already importable; otherwise the file is
+marked `UNPARSED_PDF_TEXT_EXTRACTION_UNAVAILABLE` (no OCR, never fails).
+
+### Semantic dedup v2
+
+`dedup_v2.py` combines token-shingle Jaccard similarity, contract-anchored behavior
+overlap, and audit-status / public-test proximity into an explainable verdict with a
+`similarity_score`, a `LOW/MEDIUM/HIGH` confidence ladder, located evidence, and
+reasons. It is conservative: a duplicate verdict needs an explicit duplicate or
+acknowledged signal near the surface, a neutral mention ("reviewed", "added after
+audit") is not a duplicate, and broad-only behavior overlap is `SIMILAR_KNOWN`, never
+`LIKELY_DUPLICATE`. `PUBLIC_TEST_COVERED`, high-confidence `LIKELY_DUPLICATE`,
+`DOCUMENTED_BEHAVIOR`, and `OUT_OF_SCOPE` are hard kills.
+
+### Audit baseline freshness
+
+`freshness_v2.py` reads an audit-corpus baseline (and an audit date when parseable),
+or an explicit `--baseline-ref` / `--since-date` git baseline. It adds
+`NEW_ORACLE_PATH` and `NEW_VALUE_OUT_PATH`, attaches evidence (changed paths, audited
+snippets), and downranks stale audited surfaces.
+
+### Read-only deployment reality
+
+`deployment_rpc.py` is a strictly read-only JSON-RPC client. It only issues an
+allowlisted set of methods (`eth_chainId`, `eth_getCode`, `eth_getStorageAt`,
+`eth_call`); any other method raises before a request is built. It never sends a
+transaction, never signs, never needs a key, and makes no call unless `--rpc-url` is
+explicitly provided. A transport can be injected so tests never touch the network.
+
+### Proxy implementation checks
+
+With `--addresses`, deployment reality reads the EIP-1967 implementation slot for
+proxy entries and compares the live implementation to `expected_implementation`. A
+difference is reported as `IMPLEMENTATION_CHANGED` / `LIVE_SOURCE_MISMATCH` and lifts
+the lead's priority; an address with no code is `ADDRESS_NO_CODE` and kills a lead
+that depends on it. A mismatch is a priority signal, not a confirmed bug.
+
+### Fail-closed scoring
+
+`scoring.py` v2 adds a `deployment_reality` dimension and a
+`known_issue_confidence` dimension, hard boosts (verified mismatch on a value-bearing
+contract, new value-out surface after baseline), and fail-closed caps: no scope means
+no PURSUE; no known/audit material caps weak-dedup leads to PARK; addresses without
+read-only RPC parks live-wiring-dependent leads; unknown freshness without a baseline
+caps to PARK. `--strict-context` applies these caps more aggressively. A verified live
+deployment mismatch is a clear-enough signal to bypass the soft caps.
+
+### Mock RPC tests
+
+`tests/test_senior_triage_deployment_rpc.py` and
+`tests/test_senior_triage_realworld_power.py` use an injected mock transport. No test
+touches the network. They assert the allowlist blocks state-changing methods, the
+endpoint/API key is masked, EIP-1967 decoding works, a mismatch is detected, a no-code
+address is flagged, an RPC failure does not crash triage, and no mutation method ever
+appears in output.
+
 ## Limitations
 
 - Dedup, freshness, and eligibility are heuristic, not exhaustive.
-- Semantic duplicate detection is intentionally simple; confirm root behavior by hand.
-- A high score is a research-priority hint, not proof of a bug and not a payout.
+- Semantic duplicate detection is intentionally simple (shingles + anchored overlap,
+  no LLM); confirm the root behavior by hand.
+- Read-only deployment reality covers code existence, EIP-1967 implementation, and
+  user-specified `eth_call` reads; it does not enumerate storage layouts or roles
+  beyond what is asked, and `code_hash` is a local sha256 digest, not the on-chain
+  keccak code hash.
+- Freshness uses git only when a baseline is explicitly provided; otherwise it infers
+  from the audit corpus and local signals and marks `UNKNOWN_FRESHNESS` when weak.
+- A high score is a research-priority hint, not proof of a bug and not a payout. A
+  deployment mismatch is a priority signal, not a vulnerability.
 - A real bug can still be bounty-dead; senior triage tries to surface that early, but
   the human always makes the final call.
