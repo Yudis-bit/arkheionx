@@ -1,6 +1,6 @@
 # Toy Credit Market — Scope Note (synthetic)
 
-Fully synthetic scope note for the `tests/fixtures/morpho_midnight_toy` demo. It
+Fully synthetic scope note for the `tests/fixtures/fixed_credit_market_toy` demo. It
 uses invented contract names (`CreditMarket`, `OfferBook`, `PeripheryBundler`,
 `MarketGate`) and generic fixed-maturity credit-market patterns only. It does not
 describe any real protocol, sponsor, or contest.

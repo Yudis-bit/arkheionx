@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Synthetic offer book for Arkheionx fixture tests. Not Morpho source. Models
+// Synthetic offer book for Arkheionx fixture tests. Not real-protocol source. Models
 // settlement-time liquidity: makers post signed offer intent with a group budget;
 // no maker capital is locked until settlement. Illustrative only.
 

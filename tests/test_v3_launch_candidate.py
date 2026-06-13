@@ -27,11 +27,11 @@ class V3VersionTests(unittest.TestCase):
             __version__,
         )
 
-        self.assertEqual(__version__, "7.5.0")
-        self.assertEqual(PACKAGE_VERSION, "7.5.0")
-        self.assertEqual(STABLE_RELEASE, "v7.5.0")
-        self.assertEqual(CURRENT_MILESTONE, "v7.5.0")
-        self.assertEqual(NEXT_MILESTONE, "v7.6.0")
+        self.assertEqual(__version__, "8.0.0")
+        self.assertEqual(PACKAGE_VERSION, "8.0.0")
+        self.assertEqual(STABLE_RELEASE, "v8.0.0")
+        self.assertEqual(CURRENT_MILESTONE, "v8.0.0")
+        self.assertEqual(NEXT_MILESTONE, "v8.1.0")
 
 
 class V3ReadmeTests(unittest.TestCase):
@@ -68,9 +68,9 @@ class V3DocsTests(unittest.TestCase):
 
     def test_roadmap_marks_v3_current_and_v2_10_shipped(self) -> None:
         roadmap = read("docs/ROADMAP.md")
-        self.assertIn("Current milestone: v7.5.0", roadmap)
-        self.assertIn("Next milestone: v7.6.0", roadmap)
-        self.assertIn("Latest stable: v7.5.0", roadmap)
+        self.assertIn("Current milestone: v8.0.0", roadmap)
+        self.assertIn("Next milestone: v8.1.0", roadmap)
+        self.assertIn("Latest stable: v8.0.0", roadmap)
         self.assertIn("v3.1.0 — Protocol Review Map", roadmap)
 
     def test_release_notes_exist_with_required_sections(self) -> None:
@@ -94,8 +94,8 @@ class V3DocsTests(unittest.TestCase):
 class V3StableTagTests(unittest.TestCase):
     def test_install_and_arkup_track_v3_stable(self) -> None:
         for script in ("install.sh", "arkup"):
-            self.assertIn("ARKHEIONX_STABLE_TAG:-v7.5.0", read(script))
-        self.assertIn("pre-audit@v7.5.0", read("README.md"))
+            self.assertIn("ARKHEIONX_STABLE_TAG:-v8.0.0", read(script))
+        self.assertIn("pre-audit@v8.0.0", read("README.md"))
 
 
 if __name__ == "__main__":

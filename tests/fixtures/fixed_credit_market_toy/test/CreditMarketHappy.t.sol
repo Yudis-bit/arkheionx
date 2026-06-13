@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 // Illustrative fixture test (happy path only). It exists so Arkheionx's static
 // evidence classifier has a positive-path test to classify. It is not run by the
-// Python test suite, asserts no protocol safety, and proves nothing about Morpho.
+// Python test suite, asserts no protocol safety, and proves nothing about any real protocol.
 
 import "../src/CreditMarket.sol";
 import "../src/MockLoanToken.sol";

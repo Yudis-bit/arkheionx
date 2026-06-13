@@ -1,4 +1,4 @@
-"""Tests for the Morpho Midnight lens model content and label vocabularies."""
+"""Tests for the Fixed Credit Market lens model content and label vocabularies."""
 import json
 import unittest
 
@@ -6,16 +6,16 @@ import arkheionx.protocol_lens as pl
 from arkheionx.protocol_lens import models as m
 
 
-class MorphoMidnightLensModelTests(unittest.TestCase):
+class FixedCreditMarketLensModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.lens = pl.get_lens("morpho-midnight")
+        cls.lens = pl.get_lens("fixed-credit-market")
 
     def test_fourteen_behavior_promises(self) -> None:
         promises = self.lens.behavior_promises()
         self.assertEqual(len(promises), 14)
         ids = [p.id for p in promises]
-        self.assertEqual(ids, [f"PROMISE-MM-{i:02d}" for i in range(1, 15)])
+        self.assertEqual(ids, [f"PROMISE-FCM-{i:02d}" for i in range(1, 15)])
         for p in promises:
             self.assertTrue(p.text)
             self.assertTrue(p.violation_condition)
@@ -25,7 +25,7 @@ class MorphoMidnightLensModelTests(unittest.TestCase):
         invs = self.lens.economic_invariants()
         self.assertEqual(len(invs), 12)
         ids = [i.id for i in invs]
-        self.assertEqual(ids, [f"INV-MM-{i:02d}" for i in range(1, 13)])
+        self.assertEqual(ids, [f"INV-FCM-{i:02d}" for i in range(1, 13)])
         for inv in invs:
             self.assertTrue(inv.statement)
             self.assertTrue(inv.impact_if_broken)
@@ -58,8 +58,8 @@ class MorphoMidnightLensModelTests(unittest.TestCase):
     def test_model_dict_is_json_serializable(self) -> None:
         d = self.lens.to_model_dict()
         s = json.dumps(d)  # must not raise
-        self.assertIn("morpho-midnight", s)
-        self.assertEqual(d["lens"]["lens_id"], "morpho-midnight")
+        self.assertIn("fixed-credit-market", s)
+        self.assertEqual(d["lens"]["lens_id"], "fixed-credit-market")
         self.assertEqual(len(d["behavior_promises"]), 14)
         self.assertEqual(len(d["economic_invariants"]), 12)
         self.assertEqual(len(d["review_lanes"]), 10)

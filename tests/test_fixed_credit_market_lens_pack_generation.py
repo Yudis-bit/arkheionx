@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = REPO_ROOT / "tests" / "fixtures" / "morpho_midnight_toy"
+FIXTURE = REPO_ROOT / "tests" / "fixtures" / "fixed_credit_market_toy"
 SCOPE = FIXTURE / "scope.md"
 
 REQUIRED_FILES = [
@@ -33,11 +33,11 @@ class LensPackCliTests(unittest.TestCase):
     def test_writes_all_files_namespaced_by_lens(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "lens-pack"
-            result = run_cli("lens-pack", str(FIXTURE), "--lens", "morpho-midnight",
+            result = run_cli("lens-pack", str(FIXTURE), "--lens", "fixed-credit-market",
                              "--scope-file", str(SCOPE), "--out", str(out))
             self.assertIn(result.returncode, (0, 1), result.stderr)
             self.assertNotIn("Traceback", result.stderr)
-            pack = out / "morpho-midnight"
+            pack = out / "fixed-credit-market"
             for name in REQUIRED_FILES:
                 self.assertTrue((pack / name).is_file(), name)
 
@@ -45,9 +45,9 @@ class LensPackCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "lens-pack"
             run_cli("lens-pack", str(FIXTURE), "--scope-file", str(SCOPE), "--out", str(out))
-            manifest = json.loads((out / "morpho-midnight" / "lens-pack.json").read_text())
+            manifest = json.loads((out / "fixed-credit-market" / "lens-pack.json").read_text())
             self.assertEqual(manifest["kind"], "lens-pack-manifest")
-            self.assertEqual(manifest["lens"]["lens_id"], "morpho-midnight")
+            self.assertEqual(manifest["lens"]["lens_id"], "fixed-credit-market")
             self.assertTrue(manifest["human_review_required"])
             self.assertTrue(manifest["safety_flags"]["no_vulnerability_claims"])
             self.assertTrue(manifest["safety_flags"]["no_severity_claims"])
@@ -63,7 +63,7 @@ class LensPackCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "lens-pack"
             run_cli("lens-pack", str(FIXTURE), "--scope-file", str(SCOPE), "--out", str(out))
-            pack = out / "morpho-midnight"
+            pack = out / "fixed-credit-market"
             blob = "\n".join(p.read_text(encoding="utf-8", errors="ignore")
                              for p in pack.iterdir() if p.suffix == ".md").lower()
         self.assertIn("planning artifact, not a finding", blob)

@@ -2,7 +2,7 @@
 
 Uses the same recursive draft-07 subset validator as tests/test_v7_scope_schemas.py
 and tests/test_v6_schemas.py (no jsonschema dependency). Validates the real
-lens-pack manifest produced for the synthetic Morpho Midnight toy fixture, plus the
+lens-pack manifest produced for the synthetic Fixed Credit Market toy fixture, plus the
 five standalone command artifacts embedded in the pack, against committed schemas.
 """
 import json
@@ -15,7 +15,7 @@ from arkheionx.protocol_lens import SCHEMA_VERSION, build_lens_pack, get_lens
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = REPO_ROOT / "schemas"
-FIXTURE = REPO_ROOT / "tests" / "fixtures" / "morpho_midnight_toy"
+FIXTURE = REPO_ROOT / "tests" / "fixtures" / "fixed_credit_market_toy"
 SCOPE = str(FIXTURE / "scope.md")
 
 
@@ -77,7 +77,7 @@ class LensSchemaValidationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         rm = build_review_map(FIXTURE)
-        lens = get_lens("morpho-midnight")
+        lens = get_lens("fixed-credit-market")
         cls.manifest = build_lens_pack(lens, rm, FIXTURE, scope_file=SCOPE, write=False)["manifest"]
 
     def test_lens_pack_manifest_validates(self) -> None:
@@ -87,8 +87,8 @@ class LensSchemaValidationTests(unittest.TestCase):
         self.assertTrue(self.manifest["schema_version"])
         self.assertEqual(self.manifest["schema_version"], SCHEMA_VERSION)
 
-    def test_lens_id_is_morpho_midnight(self) -> None:
-        self.assertEqual(self.manifest["lens"]["lens_id"], "morpho-midnight")
+    def test_lens_id_is_fixed_credit_market(self) -> None:
+        self.assertEqual(self.manifest["lens"]["lens_id"], "fixed-credit-market")
 
     def test_behavior_promises_non_empty(self) -> None:
         promises = self.manifest["data"]["lens_map"]["behavior_promises"]

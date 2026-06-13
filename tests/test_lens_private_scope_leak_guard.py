@@ -8,7 +8,7 @@ from pathlib import Path
 from arkheionx.protocol_lens import leak_check
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = REPO_ROOT / "tests" / "fixtures" / "morpho_midnight_toy"
+FIXTURE = REPO_ROOT / "tests" / "fixtures" / "fixed_credit_market_toy"
 SCOPE = FIXTURE / "scope.md"
 
 

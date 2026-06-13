@@ -3,6 +3,32 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v8.0.0 - 2026-06-13
+
+Arkheionx v8.0.0 — "Final Engine". Consolidates the product into one clean,
+local-first Ethereum security research workflow and cleans the public surface so it
+is not target-specific. Local/static, heuristic, and additive: no RPC, live-chain,
+transaction execution, private keys, exploit automation, external AI API calls,
+severity, or vulnerability claims, and no removal of the v4 review-map workflow or
+the v5/v6/v7/v7.5 commands.
+
+- Added the primary `arkheionx review` command: one local review pack (run context,
+  scope map, value-flow map, interaction map, assumptions, review lanes, evidence
+  tasks with kill conditions, evidence rubric, report filter, agent input,
+  `review.json`, and `manifest.json`), with optional protocol-aware artifacts when
+  `--lens` is given.
+- Presented Protocol Lens Packs as generic protocol-family models. The first lens is
+  the generic **Fixed Credit Market** family (`fixed-credit-market`), renamed from the
+  earlier target-specific identifier; no target-specific lens name remains on the
+  public surface.
+- Added `schemas/manifest.schema.json` and `schemas/review-pack.schema.json`, and
+  schema-backed review artifacts (`schema_version`, `arkheionx_version`,
+  `artifact_type`, `generated_at`).
+- Added kill conditions to evidence tasks so weak hypotheses can be dropped quickly.
+- Strengthened the model-agnostic agent input.
+- Cleaned README, docs, and the site; documented the heuristic exit-code-1 contract.
+- Bumped the package version to `8.0.0`.
+
 ## v7.5.0 - 2026-06-10
 
 v7.5 Protocol Lens Packs — the protocol-lens layer. The package version is now

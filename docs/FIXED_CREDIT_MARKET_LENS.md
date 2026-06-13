@@ -1,7 +1,7 @@
-# Morpho Midnight Protocol Lens
+# Fixed Credit Market Protocol Lens
 
-`morpho-midnight` is the first Arkheionx [protocol lens](V7_5_PROTOCOL_LENS.md). It
-models Morpho Midnight as a protocol-specific economic system rather than generic
+`fixed-credit-market` is the first Arkheionx [protocol lens](V7_5_PROTOCOL_LENS.md). It
+models Fixed Credit Market as a protocol-specific economic system rather than generic
 DeFi, so the review lanes, tasks, evidence requirements, and blind-spot ranking are
 shaped by how the protocol actually moves value.
 
@@ -107,13 +107,13 @@ loss-factor realization window.
 
 ## Try it on the synthetic fixture
 
-A fully synthetic toy fixture lives at `tests/fixtures/morpho_midnight_toy/`
-(invented contracts, not Morpho source). Run:
+A fully synthetic toy fixture lives at `tests/fixtures/fixed_credit_market_toy/`
+(invented contracts, not real-protocol source). Run:
 
 ```bash
-arkheionx lens-pack tests/fixtures/morpho_midnight_toy \
-  --lens morpho-midnight \
-  --scope-file tests/fixtures/morpho_midnight_toy/scope.md \
+arkheionx lens-pack tests/fixtures/fixed_credit_market_toy \
+  --lens fixed-credit-market \
+  --scope-file tests/fixtures/fixed_credit_market_toy/scope.md \
   --out .arkheionx/lens-pack
 ```
 

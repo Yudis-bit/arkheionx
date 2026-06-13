@@ -60,4 +60,4 @@ lens evidence candidates and assigns one of six outcomes: `READY_FOR_HUMAN_REVIE
 `NEEDS_MORE_EVIDENCE`, `DO_NOT_SUBMIT_DUPLICATE_RISK`, `DO_NOT_SUBMIT_OUT_OF_SCOPE`,
 `DO_NOT_SUBMIT_WEAK_IMPACT`, `DO_NOT_SUBMIT_INVALID_SETUP`. It never says "submit
 now"; the most positive outcome is `READY_FOR_HUMAN_REVIEW`, and a human still
-decides. See [`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
+decides. See [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md).

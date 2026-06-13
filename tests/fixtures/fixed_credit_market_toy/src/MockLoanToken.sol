@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Minimal mock loan token for Arkheionx fixture tests. Not Morpho source.
+// Minimal mock loan token for Arkheionx fixture tests. Not real-protocol source.
 
 contract MockLoanToken {
     mapping(address => uint256) public balanceOf;

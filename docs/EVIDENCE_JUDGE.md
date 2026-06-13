@@ -64,4 +64,4 @@ local-test coverage into one of nine statuses
 with decisions `VALIDATED_CANDIDATE`, `NEEDS_HUMAN_REVIEW`, `REJECTED_WITH_TEST`,
 `INSUFFICIENT_EVIDENCE`, `OUT_OF_SCOPE`, `DUPLICATE_RISK_HIGH`. Only grade A may
 become `VALIDATED_CANDIDATE`, and the static judge never auto-assigns it. See
-[`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
+[`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md).

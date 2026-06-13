@@ -4,10 +4,11 @@ A *protocol lens* models a specific protocol family (its value flows, behavior
 promises, economic invariants, temporal windows, and periphery composition) so
 Arkheionx can turn a generic local review into a protocol-aware research workflow.
 
-This layer ships in the v7.5.0 package: v4 maps value flow, v5 prioritizes blind
-spots, v6 classifies evidence, v7 turns scope into lanes/tasks, and v7.5 adds
-protocol-aware lenses. The package version is ``7.5.0``; the lens layer carries its
-own :data:`SCHEMA_VERSION` for its JSON artifacts.
+This layer ships in the v8.0.0 package: v4 maps value flow, v5 prioritizes blind
+spots, v6 classifies evidence, v7 turns scope into lanes/tasks, v7.5 added
+protocol-aware lenses, and v8 makes them generic protocol-family models behind the
+primary `arkheionx review` command. The package version is ``8.0.0``; the lens layer
+carries its own :data:`SCHEMA_VERSION` for its JSON artifacts.
 
 Everything here is heuristic and local/static. A lens is not a finding. A review
 lane is not a vulnerability. An evidence score is not vulnerability validity. A
@@ -19,9 +20,9 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 
-# The lens layer's own schema version (distinct from the package version, 7.5.0).
+# The lens layer's own schema version (distinct from the package version, 8.0.0).
 SCHEMA_VERSION = "1.0.0"
-LENS_LAYER = "v7.5"
+LENS_LAYER = "v8.0"
 
 # --- Artifact kinds -------------------------------------------------------
 KIND_LENS_LIST = "lens-list"
@@ -338,6 +339,7 @@ class ScopeTask:
     suggested_test_name: str = ""
     duplicate_risk: str = ""
     decision_rule: str = ""
+    kill_condition: str = ""
     human_review_required: bool = True
 
     def to_dict(self) -> dict:

@@ -22,7 +22,7 @@
         "type": "object",
         "required": ["task_id", "lane_id", "title", "target", "hypothesis", "counterfactual",
                      "validity_filter", "known_issue_filter", "required_assertions",
-                     "required_evidence", "stop_condition", "report_candidate_threshold",
+                     "required_evidence", "stop_condition", "kill_condition", "report_candidate_threshold",
                      "human_review_required"],
         "properties": {
           "task_id": {"type": "string", "pattern": "^TASK-[0-9]{3}$"},
@@ -47,6 +47,7 @@
           "required_evidence": {"type": "array", "items": {"type": "string"}},
           "likely_invalid_conditions": {"type": "array", "items": {"type": "string"}},
           "stop_condition": {"type": "string"},
+          "kill_condition": {"type": "string"},
           "report_candidate_threshold": {"type": "string"},
           "human_review_required": {"type": "boolean", "enum": [true]}
         }

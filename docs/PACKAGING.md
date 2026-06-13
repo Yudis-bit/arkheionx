@@ -23,10 +23,10 @@ first orientation commands.
 
 ## Versioning
 
-The installed package version is `4.0.0` (the stable v4.0.0 release);
-`pyproject.toml` declares `version = "4.0.0"`. The latest tagged stable release
-is `v3.1.0`, and `v4.1.0` is the next milestone. The source installers and the
-GitHub Action pin to `v3.1.0`. `arkheionx version` prints all of these.
+The installed package version is `8.0.0` (the v8.0.0 "Final Engine" release);
+`pyproject.toml` declares `version = "8.0.0"`. The latest tagged stable release
+is `v8.0.0`, and `v8.1.0` is the next milestone. The source installers and the
+GitHub Action pin to `v8.0.0`. `arkheionx version` prints all of these.
 
 These package milestones are deliberately separate from the legacy pre-audit
 scanner's frozen output version (`SCANNER_VERSION`), which stays pinned so the

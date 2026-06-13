@@ -14,24 +14,36 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v7.5.0.
-Next milestone: v7.6.0.
-Latest stable: v7.5.0 — Protocol Lens Packs.
+Current milestone: v8.0.0.
+Next milestone: v8.1.0.
+Latest stable: v8.0.0 — Final Engine.
+
+## v8.0.0 — Final Engine (released)
+
+v8.0.0 consolidates the product into one clean, local-first Ethereum security
+research workflow. It adds the primary `arkheionx review` command, presents Protocol
+Lens Packs as generic protocol-family models (the first is the generic Fixed Credit
+Market family, `fixed-credit-market`), adds `manifest`/`review-pack` schemas and
+kill-condition evidence tasks, and cleans the README, docs, and site so the public
+surface is not target-specific. Local/static and additive; the v4–v7.5 commands keep
+working.
+
+Next: v8.1.0 — additional generic protocol-family lenses and review-pack ergonomics.
 
 ## v7.5 — Protocol Lens Packs (released)
 
 v7.5 adds **protocol lenses**: a reusable, local/static protocol-lens architecture
-(`arkheionx/protocol_lens/`) plus the first lens, **Morpho Midnight**
-(`morpho-midnight`). A lens models a specific protocol family — value flows,
+(`arkheionx/protocol_lens/`) plus the first lens, **Fixed Credit Market**
+(`fixed-credit-market`). A lens models a specific protocol family — value flows,
 behavior promises, economic invariants, temporal windows, and periphery
 composition — so the review lanes, scope tasks, evidence requirements, and
 blind-spot ranking become protocol-aware. New commands: `lens-list`, `lens-map`,
 `lens-lanes`, `lens-tasks`, `lens-pack`, `lens-evidence`, and `lens-report-filter`.
 A lens is a planning model, not a finding; it does not confirm vulnerabilities,
-assign severity, or replace an audit. The architecture is generic; only Morpho
-Midnight is implemented, and other lenses remain planned direction. See
+assign severity, or replace an audit. The architecture is generic; only the Fixed
+Credit Market lens is implemented, and other lenses remain planned direction. See
 [`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) and
-[`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
+[`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md).
 
 ## v7.0 — Scope-Aware Orchestration + Evidence Judge (finalized locally)
 

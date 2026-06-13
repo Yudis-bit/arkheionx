@@ -9,6 +9,15 @@ core workflow is:
 Everything ArkheionX produces is review guidance for a human. It does not confirm
 vulnerabilities, assign severity, or replace an audit.
 
+## v8 — one-command review (start here)
+
+- [`CORE_WORKFLOW.md`](CORE_WORKFLOW.md) — `arkheionx review`, the review pack, and the pipeline.
+- [`PROTOCOL_LENS_PACKS.md`](PROTOCOL_LENS_PACKS.md) — generic protocol-family lenses.
+- [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md) — the first generic lens.
+- [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md) · [`REPORT_FILTER.md`](REPORT_FILTER.md) — grade evidence, filter candidates.
+- [`SCHEMAS.md`](SCHEMAS.md) — the machine-readable artifacts and how to validate them.
+- [`SAFETY_BOUNDARIES.md`](SAFETY_BOUNDARIES.md) — the boundaries and the exit-code contract.
+
 ## Start here
 
 1. [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md) — run the canonical workflow on the bundled demo.
@@ -56,7 +65,7 @@ vulnerabilities, assign severity, or replace an audit.
 ## V7.5 release (protocol lens packs)
 
 - [`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) — what protocol lenses are, the commands, and the generated pack.
-- [`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md) — the first lens: families, behavior promises, economic invariants, review lanes, temporal windows.
+- [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md) — the first lens: families, behavior promises, economic invariants, review lanes, temporal windows.
 - Release notes: [`../release-notes/v7.5.0.md`](../release-notes/v7.5.0.md).
 
 ## V6 release

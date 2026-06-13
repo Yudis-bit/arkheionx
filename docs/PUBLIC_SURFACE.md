@@ -139,6 +139,18 @@ gitignored files and are never committed. See
 [`SCOPE_TASKS.md`](SCOPE_TASKS.md), [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md),
 [`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
 
+## One-command review (v8)
+
+`arkheionx review` is the primary, "start here" command. It builds one review pack
+from a repo, an optional scope note, and an optional generic protocol-family lens,
+orchestrating the review-map, scope-aware, and protocol-lens layers. Exit behavior:
+`0` clean, `1` heuristic / human-review-required warning (not a crash), `2` only on
+invalid usage or a runtime error. See [`CORE_WORKFLOW.md`](CORE_WORKFLOW.md).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx review` | One-command local review pack: run context, scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks (with kill conditions), evidence rubric, report filter, agent input, `review.json`, and `manifest.json`; add `--lens` for protocol-aware artifacts. Writes by default | human + `--json` (manifest) | `review/*` | stable-additive |
+
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
 | `arkheionx scope-map` | Parse a scope note into structured review rules (in/out of scope, severity conditions, trusted assumptions, dependency assumptions, known/accepted issues, prior-audit notes, design choices, invariants, focus areas, do-not-waste-time filters, report-candidate requirements) | human + `--json` | `scope-map/scope-map.{md,json}` | stable-additive |
@@ -151,13 +163,13 @@ gitignored files and are never committed. See
 ## Protocol lens commands (v7.5)
 
 Protocol Lens Packs model a specific protocol family so review lanes, tasks, and
-evidence requirements are protocol-aware. The first lens is Morpho Midnight
-(`morpho-midnight`). A lens is a model, not a finding; a review lane is not a
+evidence requirements are protocol-aware. The first lens is Fixed Credit Market
+(`fixed-credit-market`). A lens is a model, not a finding; a review lane is not a
 vulnerability; an evidence score is not vulnerability validity; a candidate with
 evidence is not confirmed. The lens layer ships in the v7.5.0 package and
 carries its own schema version. See
 [`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) and
-[`MORPHO_MIDNIGHT_LENS.md`](MORPHO_MIDNIGHT_LENS.md).
+[`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md).
 
 Exit behavior: `lens-list` exits `0`; the analysis commands (`lens-map`,
 `lens-lanes`, `lens-tasks`, `lens-pack`, `lens-evidence`, `lens-report-filter`) exit

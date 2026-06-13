@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Synthetic access gate for Arkheionx fixture tests. Not Morpho source. A gate
+// Synthetic access gate for Arkheionx fixture tests. Not real-protocol source. A gate
 // restricts who may enter a market; it must not trap safe exits. Illustrative.
 
 contract MarketGate {

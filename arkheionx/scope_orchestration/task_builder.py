@@ -419,6 +419,11 @@ def build_scope_tasks(rm: ReviewMap, root: Path | str, scope_file: str | None = 
                     "The test reproduces a known or accepted issue.",
                 ],
                 "stop_condition": _fill(cdef["stop"], target, contract, function),
+                "kill_condition": (
+                    _fill(cdef["stop"], target, contract, function)
+                    + " Abandon the hypothesis if that holds, or if it only reproduces under trusted-role"
+                    " misbehavior the scope marks invalid, on out-of-scope/known/accepted surface, or"
+                    " without material (loss/lock/incorrect-accounting/unauthorized-action) impact."),
                 "report_candidate_threshold": (
                     "Promote to a report candidate only with a passing local PoC that shows the impact path, "
                     "is confirmed in-scope, is not a known/accepted issue, and "

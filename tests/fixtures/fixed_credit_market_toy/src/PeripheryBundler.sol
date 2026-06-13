@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Synthetic periphery bundler for Arkheionx fixture tests. Not Morpho source.
+// Synthetic periphery bundler for Arkheionx fixture tests. Not real-protocol source.
 // Models target-based bundle composition over a credit market: repay, collateral
 // moves, and settlement to a target in assets or units, with caps and a referral
 // fee. Illustrative only; cap/target dimensions are deliberately simple.

@@ -1,9 +1,9 @@
-# morpho_midnight_toy (synthetic fixture)
+# fixed_credit_market_toy (synthetic fixture)
 
 A small, fully synthetic fixed-maturity credit market used to exercise the
-Arkheionx v7.5 **Morpho Midnight protocol lens** in tests.
+Arkheionx v7.5 **Fixed Credit Market protocol lens** in tests.
 
-**This is not Morpho source.** Every contract is invented (`CreditMarket`,
+**This is not real-protocol source.** Every contract is invented (`CreditMarket`,
 `OfferBook`, `PeripheryBundler`, `MarketGate`, `MockLoanToken`) and uses generic
 credit-market vocabulary (maturity, credit/debt units, loss factor, offers, group
 budgets, target/cap periphery, gates, fees) only so the lens extractor and the
@@ -16,9 +16,9 @@ real protocol, and prove no safety. `scope.md` is a synthetic scope note.
 Run the lens against it locally:
 
 ```bash
-arkheionx lens-pack tests/fixtures/morpho_midnight_toy \
-  --lens morpho-midnight \
-  --scope-file tests/fixtures/morpho_midnight_toy/scope.md \
+arkheionx lens-pack tests/fixtures/fixed_credit_market_toy \
+  --lens fixed-credit-market \
+  --scope-file tests/fixtures/fixed_credit_market_toy/scope.md \
   --out .arkheionx/lens-pack
 ```
 

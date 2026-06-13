@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // Synthetic, illustrative credit-market contract for Arkheionx fixture tests.
-// It is NOT Morpho source. Names echo a fixed-maturity credit market so the
+// It is NOT real-protocol source. Names echo a fixed-maturity credit market so the
 // protocol lens extractor has realistic domain vocabulary to find. No real
 // protocol logic, no audited code, and nothing here is exploit tooling.
 

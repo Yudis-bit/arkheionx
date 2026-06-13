@@ -65,6 +65,18 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.add_argument("--install", action="store_true", help="Focus on install health: command path, Python, package import, PATH hint.")
     doctor.set_defaults(func=workbench.doctor_command)
 
+    review = subparsers.add_parser(
+        "review",
+        help="One-command local review pack (start here): run context, scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks (with kill conditions), evidence rubric, report filter, agent input, review.json, and manifest.json. Add --lens for protocol-aware artifacts. Planning artifact, not a finding; human review required.",
+    )
+    review.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    review.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
+    review.add_argument("--lens", default="", help="Optional protocol lens id (e.g. fixed-credit-market). Omit for a generic review.")
+    review.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/review/).")
+    review.add_argument("--json", action="store_true", help="Print machine-readable manifest JSON to stdout only (no human text).")
+    review.add_argument("--no-write", action="store_true", help="Build the pack in memory only; do not write artifact files.")
+    review.set_defaults(func=workbench.review_command)
+
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
     scan.add_argument("--protocol-type", default="auto", choices=PROTOCOL_TYPES, help="Protocol type hint.")
@@ -535,7 +547,7 @@ def _add_lens_commands(subparsers) -> None:
 
     def _common(sub, *, with_out_default: str = "") -> None:
         sub.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
-        sub.add_argument("--lens", default="morpho-midnight", help="Protocol lens id (default: morpho-midnight).")
+        sub.add_argument("--lens", default="fixed-credit-market", help="Protocol lens id (default: fixed-credit-market).")
         sub.add_argument("--scope-file", default="", help="Path to a markdown scope note (optional).")
         sub.add_argument("--out", default="", help=f"Artifact output directory{with_out_default}.")
         sub.add_argument("--top", type=int, default=10, help="Number of top review targets to consider.")

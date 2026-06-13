@@ -3,13 +3,13 @@
 Two layers of protection:
 
 * ``PackagingConfigTests`` always runs and guards the static packaging config and
-  source tree: the ``protocol_lens`` package (and its Morpho Midnight lens) is
+  source tree: the ``protocol_lens`` package (and its Fixed Credit Market lens) is
   discoverable, the dead ``orchestration`` package is gone, the lens schema is
   present, and ``version.py`` agrees with ``pyproject.toml``.
 * ``WheelContentTests`` builds a wheel into a temp dir (no build isolation, fully
   offline) and asserts the built artifact ships ``arkheionx/protocol_lens`` and the
   lens schema, excludes ``arkheionx/orchestration``, exposes the ``arkheionx``
-  console script, and reports the v7.5.0 metadata version. If the local build
+  console script, and reports the v8.0.0 metadata version. If the local build
   toolchain is unavailable it skips with the captured reason rather than failing.
 """
 import shutil
@@ -42,8 +42,8 @@ class PackagingConfigTests(unittest.TestCase):
         self.assertNotIn("arkheionx.orchestration", pkgs)
         self.assertFalse((REPO_ROOT / "arkheionx" / "orchestration").exists())
 
-    def test_morpho_midnight_lens_source_present(self) -> None:
-        self.assertTrue((REPO_ROOT / "arkheionx" / "protocol_lens" / "lenses" / "morpho_midnight.py").is_file())
+    def test_fixed_credit_market_lens_source_present(self) -> None:
+        self.assertTrue((REPO_ROOT / "arkheionx" / "protocol_lens" / "lenses" / "fixed_credit_market.py").is_file())
 
     def test_lens_schema_present(self) -> None:
         self.assertTrue((REPO_ROOT / "schemas" / "lens-pack.schema.json").is_file())
@@ -51,7 +51,7 @@ class PackagingConfigTests(unittest.TestCase):
     def test_version_consistent_between_version_py_and_pyproject(self) -> None:
         data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
         self.assertEqual(data["project"]["version"], PACKAGE_VERSION)
-        self.assertEqual(PACKAGE_VERSION, "7.5.0")
+        self.assertEqual(PACKAGE_VERSION, "8.0.0")
 
     def test_pyproject_ships_schemas(self) -> None:
         data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
@@ -106,8 +106,8 @@ class WheelContentTests(unittest.TestCase):
         names = self._names()
         self.assertTrue(any(n.startswith("arkheionx/protocol_lens/") for n in names))
 
-    def test_includes_morpho_midnight_lens(self) -> None:
-        self.assertIn("arkheionx/protocol_lens/lenses/morpho_midnight.py", self._names())
+    def test_includes_fixed_credit_market_lens(self) -> None:
+        self.assertIn("arkheionx/protocol_lens/lenses/fixed_credit_market.py", self._names())
 
     def test_excludes_dead_orchestration(self) -> None:
         names = self._names()
@@ -135,7 +135,7 @@ class WheelContentTests(unittest.TestCase):
         with zipfile.ZipFile(self.wheel) as z:
             text = z.read(meta).decode("utf-8")
         self.assertIn(f"Version: {PACKAGE_VERSION}", text)
-        self.assertIn("Version: 7.5.0", text)
+        self.assertIn("Version: 8.0.0", text)
 
 
 if __name__ == "__main__":

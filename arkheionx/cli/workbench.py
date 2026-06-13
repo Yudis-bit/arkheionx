@@ -2607,7 +2607,7 @@ def report_filter_command(args: Namespace) -> int:
 # lens-pack / lens-evidence / lens-report-filter).
 # ---------------------------------------------------------------------------
 def _lens_id_arg(args: Namespace) -> str:
-    return (str(getattr(args, "lens", "") or "morpho-midnight")).strip()
+    return (str(getattr(args, "lens", "") or "fixed-credit-market")).strip()
 
 
 def _resolve_lens(args: Namespace):
@@ -2633,6 +2633,72 @@ def _lens_prepare(args: Namespace):
     if review_map is None:
         return None, None, None, 0, 0
     return root, lens, review_map, n_sources, n_tests
+
+
+def review_command(args: Namespace) -> int:
+    """Build the v8 one-command review pack (`arkheionx review`). Writes by default."""
+    from arkheionx import review_pack
+
+    root = _resolve_root(args.repo)
+    if root is None:
+        print(f"ArkheionX error: input path not found or not a directory: {args.repo}")
+        print("Next: run `arkheionx review <repo>` with a local repository path you are authorized to review.")
+        return FAILED
+    scope_file = _scope_file_arg(args)
+    lens_id = str(getattr(args, "lens", "") or "").strip() or None
+    out = str(getattr(args, "out", "") or "").strip()
+    out_dir = Path(out).expanduser() if out else review_pack.default_review_dir(root)
+    write = not bool(getattr(args, "no_write", False))
+
+    rm = build_review_map(root)
+    exit_code = SUCCESS if status_of(rm) == "ok" else WARNING
+    try:
+        result = review_pack.build_review_pack(root, scope_file, lens_id, out_dir, rm=rm, write=write)
+    except KeyError as exc:
+        print(f"error: {exc}")
+        print("Next: run `arkheionx lens-list` to see available protocol lenses.")
+        return FAILED
+    except OSError as exc:
+        print(f"error: could not write review pack to {out_dir}: {exc}")
+        return FAILED
+
+    if getattr(args, "json", False):
+        print(json.dumps(result["manifest"], indent=2))
+        return exit_code
+
+    manifest = result["manifest"]
+    counts = result["counts"]
+    lines = [
+        "ARKHEIONX REVIEW",
+        "Local/static one-command review pack. Not a finding, not severity. Human review required.",
+        "",
+        f"Repo   {args.repo}",
+        f"Scope  {'provided' if manifest['scope_file'] else 'none (generic pack inferred from repo structure)'}",
+        f"Lens   {manifest['lens'] or 'none (generic review)'}",
+        f"Map    {counts['contracts']} contracts, {counts['functions']} functions, "
+        f"{counts['value_paths']} value paths, {counts['assumptions']} assumptions",
+        f"Plan   {counts['review_lanes']} lanes, {counts['evidence_tasks']} tasks, "
+        f"{counts['report_candidates']} candidates",
+        "",
+    ]
+    if write:
+        rel = _rel_display(result["out_dir"], root)
+        lines.append(f"Wrote {manifest['artifact_count']} files to {rel}")
+        for name in manifest["artifact_paths"]:
+            lines.append(f"  {name}")
+    else:
+        lines.append("No-write: built the pack in memory only (nothing written).")
+    lines += [
+        "",
+        "Next",
+        "  Read 00-run-context.md, then give 09-agent-input.md + 06-evidence-tasks.md to a reviewer or agent.",
+        "  Write local Foundry tests, grade with 07-evidence-rubric.md, filter with 08-report-filter.md.",
+        "",
+        "Boundary",
+        "  Local/static only. No RPC, no live-chain, no auto-submit. Not a finding, not severity. Human review required.",
+    ]
+    _print_report("\n".join(lines) + "\n")
+    return exit_code
 
 
 def lens_list_command(args: Namespace) -> int:

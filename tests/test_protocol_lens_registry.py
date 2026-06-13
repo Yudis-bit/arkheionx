@@ -18,13 +18,13 @@ def run_cli(*args: str):
 
 
 class ProtocolLensRegistryTests(unittest.TestCase):
-    def test_registry_finds_morpho_midnight(self) -> None:
-        self.assertTrue(pl.is_registered("morpho-midnight"))
-        self.assertIn("morpho-midnight", pl.lens_ids())
-        lens = pl.get_lens("morpho-midnight")
+    def test_registry_finds_fixed_credit_market(self) -> None:
+        self.assertTrue(pl.is_registered("fixed-credit-market"))
+        self.assertIn("fixed-credit-market", pl.lens_ids())
+        lens = pl.get_lens("fixed-credit-market")
         self.assertIsInstance(lens, ProtocolLens)
-        self.assertEqual(lens.lens_id, "morpho-midnight")
-        self.assertEqual(lens.display_name, "Morpho Midnight Protocol Lens")
+        self.assertEqual(lens.lens_id, "fixed-credit-market")
+        self.assertEqual(lens.display_name, "Fixed Credit Market Protocol Lens")
 
     def test_unknown_lens_raises_keyerror(self) -> None:
         with self.assertRaises(KeyError):
@@ -32,18 +32,18 @@ class ProtocolLensRegistryTests(unittest.TestCase):
 
     def test_available_lenses_and_planned(self) -> None:
         lenses = pl.available_lenses()
-        self.assertTrue(any(l.lens_id == "morpho-midnight" for l in lenses))
+        self.assertTrue(any(l.lens_id == "fixed-credit-market" for l in lenses))
         planned_ids = {pid for pid, _ in pl.PLANNED_LENSES}
         # Planned lenses are advertised but must NOT be registered/implemented.
         for pid in planned_ids:
             self.assertFalse(pl.is_registered(pid), pid)
-        for expected in ("kiln-omnivault", "silo-v2", "veda", "generic-erc4626", "generic-lending"):
+        for expected in ("generic-erc4626", "generic-lending", "generic-amm", "generic-staking"):
             self.assertIn(expected, planned_ids)
 
-    def test_lens_list_cli_lists_morpho(self) -> None:
+    def test_lens_list_cli_lists_fixed_credit_market(self) -> None:
         result = run_cli("lens-list")
         self.assertIn(result.returncode, (0, 1), result.stderr)
-        self.assertIn("morpho-midnight", result.stdout)
+        self.assertIn("fixed-credit-market", result.stdout)
         self.assertIn("lens-list", run_cli("--help").stdout)
 
 

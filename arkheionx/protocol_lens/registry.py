@@ -2,7 +2,7 @@
 
 The architecture is general; the registry is how a CLI command resolves a
 ``--lens <id>`` flag to a concrete :class:`~arkheionx.protocol_lens.base.ProtocolLens`.
-Today exactly one lens is implemented (``morpho-midnight``). The registry also
+Today exactly one lens is implemented (``fixed-credit-market``). The registry also
 advertises *planned* lens ids so the surface is discoverable without pretending
 they exist yet.
 """
@@ -13,11 +13,10 @@ from .base import ProtocolLens
 # Lens ids that are designed-for but intentionally not implemented yet. Listing
 # them documents the roadmap without faking capability.
 PLANNED_LENSES: tuple[tuple[str, str], ...] = (
-    ("kiln-omnivault", "Kiln OmniVault (planned)"),
-    ("silo-v2", "Silo v2 (planned)"),
-    ("veda", "Veda (planned)"),
     ("generic-erc4626", "Generic ERC-4626 vault (planned)"),
     ("generic-lending", "Generic lending market (planned)"),
+    ("generic-amm", "Generic AMM / DEX pool (planned)"),
+    ("generic-staking", "Generic staking / reward vault (planned)"),
 )
 
 _REGISTRY: dict[str, ProtocolLens] = {}
@@ -33,9 +32,9 @@ def _ensure_loaded() -> None:
     if _REGISTRY:
         return
     # Import here so the package can be imported without eagerly building lenses.
-    from .lenses.morpho_midnight import MorphoMidnightLens
+    from .lenses.fixed_credit_market import FixedCreditMarketLens
 
-    register_lens(MorphoMidnightLens())
+    register_lens(FixedCreditMarketLens())
 
 
 def is_registered(lens_id: str) -> bool:

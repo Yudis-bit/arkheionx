@@ -2,21 +2,31 @@
 
 <!-- Compatibility alias for existing public-surface tests: # Arkheionx -->
 
-**A local review map for DeFi smart-contract repos.**
+**Local-first security research workflow for Solidity and DeFi repositories.**
 
 > **Foundry tells you whether the tests you wrote pass. ArkheionX helps show
 > the value paths you may have forgotten to test.**
 
-ArkheionX turns a local Solidity / Foundry repository into a deterministic
-**review map**: where value enters, moves, and exits; the trust assumptions that
-guard each path; which paths have no tests; and a ranked list of what a human
-reviewer should inspect first.
+ArkheionX turns scope, value flow, protocol behavior, invariants, and local
+evidence into focused review lanes before report writing. It maps where value
+enters, moves, and exits; the trust assumptions that guard each path; which paths
+have no tests; and a ranked list of what a human reviewer should inspect first.
+
+**No RPC. No live-chain scanning. No auto-submit. Human review required.**
 
 ```bash
 python3 -m pip install -e .
 arkheionx doctor
-arkheionx review-map .                                        # your repo
-arkheionx review-map examples/vault-strategy-oracle-fixture   # bundled demo
+
+# One-command review pack (start here):
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+
+# Optional protocol-aware deep dive (generic protocol-family lens):
+arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review
+
+# Quick review map of your repo or the bundled demo:
+arkheionx review-map .
+arkheionx review-map examples/vault-strategy-oracle-fixture
 ```
 
 ```text
@@ -232,7 +242,7 @@ V5 shows where to look. V6 shows what is proven, what is unresolved, and which
 interactions still lack evidence. V7 turns audit scope into review lanes, task
 packs, evidence requirements, and report filters so AI-assisted security review
 starts from rules and evidence instead of vague prompts. V7.5 adds protocol
-lenses, which model a specific protocol family (the first is Morpho Midnight) so
+lenses, which model a specific protocol family (the first is Fixed Credit Market) so
 the lanes, tasks, and evidence requirements are protocol-aware. See
 [`docs/V6_WORKFLOW.md`](docs/V6_WORKFLOW.md),
 [`docs/V7_WORKFLOW.md`](docs/V7_WORKFLOW.md), and
@@ -330,7 +340,7 @@ targets to local configs.
 Pinned stable action example:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v7.5.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v8.0.0
 ```
 
 See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
@@ -356,6 +366,11 @@ Start:
 
 Core workflow:
 
+- [`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md) — `arkheionx review` and the review pack
+- [`docs/PROTOCOL_LENS_PACKS.md`](docs/PROTOCOL_LENS_PACKS.md) — generic protocol-family lenses
+- [`docs/FIXED_CREDIT_MARKET_LENS.md`](docs/FIXED_CREDIT_MARKET_LENS.md) — the first generic lens
+- [`docs/SCHEMAS.md`](docs/SCHEMAS.md) — machine-readable artifacts
+- [`docs/SAFETY_BOUNDARIES.md`](docs/SAFETY_BOUNDARIES.md) — boundaries and the exit-code contract
 - [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
 - [`docs/V4_STABLE_SCOPE.md`](docs/V4_STABLE_SCOPE.md)
 - [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md)
@@ -395,16 +410,18 @@ The earlier license-pending note is kept at
 ## Version and release status
 
 **Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v7.5.0**
+**Human review required** · **v8.0.0**
 
-Latest stable release: **v7.5.0**. Current package version: **7.5.0** — adds the
-v7.5 Protocol Lens Packs layer (lens-list, lens-map, lens-lanes, lens-tasks,
-lens-pack, lens-evidence, lens-report-filter) on top of the v7 Scope-Aware
-Orchestration + Evidence Judge layer, the v6 Evidence Graph + Interaction Matrix
-layer, the v5 Blind Spot Intelligence layer, the stable v4.0.0 review-map workflow,
-and the v4.1 research-memory workflow. The source installers and the GitHub Action
-pin to the **v7.5.0** tag. The v7.5.0 git tag, GitHub Release, and site deploy are
-cut by the founder at release time.
+Latest stable release: **v8.0.0**. Current package version: **8.0.0** — the v8.0.0
+"Final Engine" release adds the primary `arkheionx review` command, presents Protocol
+Lens Packs as generic protocol-family models, and cleans the public surface so it is
+not target-specific. It builds on the v7.5 Protocol Lens layer (lens-list, lens-map,
+lens-lanes, lens-tasks, lens-pack, lens-evidence, lens-report-filter), the v7
+Scope-Aware Orchestration + Evidence Judge layer, the v6 Evidence Graph + Interaction
+Matrix layer, the v5 Blind Spot Intelligence layer, the stable v4.0.0 review-map
+workflow, and the v4.1 research-memory workflow. The source installers and the GitHub
+Action pin to the **v8.0.0** tag. The v8.0.0 git tag, GitHub Release, and site deploy
+are cut by the founder at release time.
 
 Arkheionx is a local-first Ethereum security research workflow for Solidity and
 DeFi repositories. It starts from scope, maps value flow and contract
@@ -412,7 +429,7 @@ interactions, generates review lanes and evidence-oriented tasks, and filters
 candidates before report writing. V7.5 adds Protocol Lens Packs: protocol-aware
 research models that turn a repo and scope note into behavior promises, economic
 invariants, review lanes, scope tasks, evidence rubrics, and report filters. The
-first shipped protocol lens is Morpho Midnight. Protocol lenses are planning
+first shipped protocol lens is Fixed Credit Market. Protocol lenses are planning
 artifacts, not vulnerability verdicts.
 
 Positioning: Local-first protocol security control plane for DeFi teams.

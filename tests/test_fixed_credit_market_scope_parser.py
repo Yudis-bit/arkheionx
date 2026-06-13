@@ -1,4 +1,4 @@
-"""Tests for lens scope parsing on the toy Morpho fixture."""
+"""Tests for lens scope parsing on the toy fixed-credit-market fixture."""
 import unittest
 from pathlib import Path
 
@@ -7,11 +7,11 @@ from arkheionx.protocol_lens import scope_parser
 from arkheionx.protocol_lens.common import scope_status
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = REPO_ROOT / "tests" / "fixtures" / "morpho_midnight_toy"
+FIXTURE = REPO_ROOT / "tests" / "fixtures" / "fixed_credit_market_toy"
 SCOPE = FIXTURE / "scope.md"
 
 
-class MorphoScopeParserTests(unittest.TestCase):
+class FixedCreditMarketScopeParserTests(unittest.TestCase):
     def test_parses_known_accepted_and_out_of_scope(self) -> None:
         scope = scope_parser.parse_scope_file(str(SCOPE))
         self.assertTrue(scope.scope_file_used)

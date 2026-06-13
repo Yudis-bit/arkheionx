@@ -12,7 +12,7 @@ import Layout from "../components/Layout.astro";
         <div class="vc-hero__copy">
           <p class="vc-kicker">FOR SECURITY TEAMS REVIEWING DEFI CODE</p>
 
-          <h1>A review map for smart contracts.</h1>
+          <h1>Local-first security research workflow for Solidity and DeFi repos.</h1>
 
           <p class="vc-lede">
             <strong>Foundry tells you whether the tests you wrote pass. ArkheionX helps show the
@@ -20,33 +20,34 @@ import Layout from "../components/Layout.astro";
           </p>
 
           <p class="vc-lede">
-            ArkheionX turns a local Solidity or Foundry repository into a structured review map:
-            who can move value, where trust assumptions live, which tests are missing, and what
-            changed between review runs.
+            Arkheionx turns scope, value flow, protocol behavior, invariants, and local evidence
+            into focused review lanes before report writing.
+          </p>
+
+          <p class="vc-lede vc-boundary-line">
+            <strong>No RPC. No live-chain scanning. No auto-submit. Human review required.</strong>
           </p>
 
           <p class="vc-lede">
-            <strong>V5 shows where research attention is weakest. V6 shows what evidence exists and
-            what remains unresolved.</strong>
-            Arkheionx v6 adds an Evidence Graph and an Interaction Matrix: a local/static way to
-            classify the evidence on every high-impact surface and map the dangerous interactions
-            that still lack tests. It does not predict bugs or assign severity.
+            One command builds the review pack — a scope map, value-flow map, interaction map,
+            assumptions, review lanes, evidence tasks with kill conditions, an evidence rubric, a
+            report filter, and a model-agnostic agent input, plus machine-readable
+            <code>review.json</code> and <code>manifest.json</code>.
           </p>
 
-          <p class="vc-lede">
-            <strong>V7 turns audit scope into review lanes, evidence requirements, and report
-            filters for local, AI-assisted security research.</strong>
-            Instead of "find bugs in this repo," you start from the scoped surfaces, the
-            assumptions, the known and invalid paths, the local evidence required, and a way to
-            judge whether a test actually proves anything. No severity, no bug claims.
-          </p>
+          <div class="vc-install-card">
+            <div class="vc-install-card__top">
+              <span>One-command review</span>
+              <span>local / deterministic</span>
+            </div>
+            <pre><code>arkheionx review . --scope-file scope.md --out .arkheionx/review</code></pre>
+          </div>
 
           <p class="vc-lede">
-            <strong>V7.5 adds Protocol Lens Packs: protocol-aware research models on top of the
-            generic engine.</strong>
-            The first lens, Morpho Midnight, turns a repo and scope note into behavior promises,
-            economic invariants, review lanes, scope tasks, evidence rubrics, and report filters.
-            A lens is a model of a protocol, not a finding, and it never runs against a live chain.
+            Add <code>--lens fixed-credit-market</code> for a protocol-aware deep dive. Protocol
+            Lens Packs model a protocol family without making the engine target-specific. A lens is
+            a model, not a finding, and it never runs against a live chain. It builds on the v5–v7.5
+            layers (blind spots, evidence graph, scope orchestration, protocol lenses).
           </p>
 
           <div class="vc-one-line">
@@ -72,8 +73,8 @@ import Layout from "../components/Layout.astro";
           </p>
 
           <div class="vc-actions">
-            <a class="vc-button vc-button--primary" href="/examples">Try the V4 demo</a>
-            <a class="vc-button" href="/docs/v7-5">Protocol Lens Packs (v7.5)</a>
+            <a class="vc-button vc-button--primary" href="/examples">Try the demo</a>
+            <a class="vc-button" href="/docs/v7-5">Protocol Lens Packs</a>
             <a class="vc-button" href="/docs/v7">Scope-Aware Orchestration (v7)</a>
             <a class="vc-button" href="/docs/v6">Evidence Graph + Interaction Matrix (v6)</a>
             <a class="vc-button" href="/docs/v5">Blind Spot Intelligence (v5)</a>
@@ -136,7 +137,7 @@ import Layout from "../components/Layout.astro";
     </section>
 
     <section class="vc-proof">
-      <span>v7.5.0</span>
+      <span>v8.0.0</span>
       <span>Local-first</span>
       <span>Static only</span>
       <span>No RPC by default</span>
@@ -293,6 +294,7 @@ import Layout from "../components/Layout.astro";
       <div class="vc-command-list">
         <pre><code>arkheionx version</code></pre>
         <pre><code>arkheionx doctor</code></pre>
+        <pre><code>arkheionx review . --scope-file scope.md --out .arkheionx/review</code></pre>
         <pre><code>arkheionx review-map .</code></pre>
         <pre><code>arkheionx review-map examples/vault-strategy-oracle-fixture</code></pre>
         <pre><code>OK    Map review surface  3 contracts, 14 functions, 3 value paths, 5 test gaps
@@ -342,13 +344,13 @@ Test gap   Vault.withdraw   Source  src/Vault.sol:63   Proof  proof-vault-withdr
     <section class="vc-section vc-section--split">
       <div>
         <p class="vc-kicker">Current status</p>
-        <h2>v7.5.0 is the current source release. Install from source today; binary releases come later.</h2>
+        <h2>v8.0.0 is the current source release. Install from source today; binary releases come later.</h2>
       </div>
       <div class="vc-status-grid">
         <article>
           <h3>Available now</h3>
           <ul>
-            <li>v7.5.0 source (Protocol Lens Packs, scope orchestration, review-map)</li>
+            <li>v8.0.0 source (Protocol Lens Packs, scope orchestration, review-map)</li>
             <li>Local source install path</li>
             <li>Fixture benchmark harness</li>
             <li>Source fingerprints</li>

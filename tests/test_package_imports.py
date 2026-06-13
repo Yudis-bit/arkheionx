@@ -6,11 +6,11 @@ class PackageImportTests(unittest.TestCase):
         import arkheionx
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(arkheionx.__version__, "7.5.0")
-        self.assertEqual(__version__, "7.5.0")
-        self.assertEqual(STABLE_RELEASE, "v7.5.0")
-        self.assertEqual(CURRENT_MILESTONE, "v7.5.0")
-        self.assertEqual(NEXT_MILESTONE, "v7.6.0")
+        self.assertEqual(arkheionx.__version__, "8.0.0")
+        self.assertEqual(__version__, "8.0.0")
+        self.assertEqual(STABLE_RELEASE, "v8.0.0")
+        self.assertEqual(CURRENT_MILESTONE, "v8.0.0")
+        self.assertEqual(NEXT_MILESTONE, "v8.1.0")
 
     def test_rule_registry_exposes_amm_and_lending(self) -> None:
         from arkheionx.rules.registry import RULE_PACKS

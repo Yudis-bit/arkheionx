@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Review Pack",
+  "description": "Machine-readable review.json produced by `arkheionx review` (v8). It embeds the structured scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks, evidence judge, and report filter for an AI-assisted or human reviewer. Planning artifact, not a finding; evidence quality is not vulnerability validity; human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "artifact_type", "command", "generated_at",
+    "repo_path", "scope_file", "lens", "counts", "safety_flags", "exit_code_semantics",
+    "human_review_required", "safety_boundary", "data"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "artifact_type": {"type": "string", "enum": ["review-pack"]},
+    "command": {"type": "string", "enum": ["review"]},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "scope_file": {"type": "string"},
+    "scope_file_used": {"type": "boolean"},
+    "lens": {"type": "string"},
+    "counts": {"type": "object"},
+    "safety_flags": {"type": "object"},
+    "exit_code_semantics": {"type": "object"},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"},
+    "data": {
+      "type": "object",
+      "required": [
+        "scope_map", "value_flow", "interactions", "assumptions",
+        "review_lanes", "evidence_tasks", "evidence_judge", "report_filter"
+      ],
+      "properties": {
+        "scope_map": {"type": "object"},
+        "value_flow": {"type": "object", "required": ["value_paths"], "properties": {"value_paths": {"type": "array"}}},
+        "interactions": {
+          "type": "object",
+          "required": ["contracts", "cross_contract_paths"],
+          "properties": {
+            "contracts": {"type": "array"},
+            "cross_contract_paths": {"type": "array"}
+          }
+        },
+        "assumptions": {"type": "object"},
+        "review_lanes": {"type": "object", "required": ["lane_count"], "properties": {"lane_count": {"type": "integer"}}},
+        "evidence_tasks": {"type": "object", "required": ["task_count", "tasks"], "properties": {"task_count": {"type": "integer"}, "tasks": {"type": "array"}}},
+        "evidence_judge": {"type": "object"},
+        "report_filter": {"type": "object"}
+      }
+    }
+  }
+}

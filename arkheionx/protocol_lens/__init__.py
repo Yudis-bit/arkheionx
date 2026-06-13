@@ -6,7 +6,7 @@ v7 turns scope into lanes/tasks, and v7.5 adds protocol lenses. v7.5 is the pack
 version; the lens layer additionally carries its own
 :data:`~arkheionx.protocol_lens.models.SCHEMA_VERSION` for its JSON artifacts.
 
-The first implemented lens is Morpho Midnight (``morpho-midnight``), which models a
+The first implemented lens is Fixed Credit Market (``fixed-credit-market``), which models a
 fixed-maturity credit market with credit/debt units, settlement-time liquidity,
 maker group exposure, multi-collateral solvency, bad-debt/loss-factor accounting,
 gates, fees, and periphery bundles.

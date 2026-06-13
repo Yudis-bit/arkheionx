@@ -30,7 +30,7 @@ A protocol lens is declarative, local/static protocol knowledge:
 
 A lens encodes no line numbers and no specific known bug. It is a model, not a
 finding. The first implemented lens is
-[Morpho Midnight](MORPHO_MIDNIGHT_LENS.md) (`morpho-midnight`). The architecture
+[Fixed Credit Market](FIXED_CREDIT_MARKET_LENS.md) (`fixed-credit-market`). The architecture
 supports future lenses (kiln-omnivault, silo-v2, veda, generic-erc4626,
 generic-lending); none of those are implemented yet.
 
@@ -44,30 +44,30 @@ never run `forge`.
 arkheionx lens-list
 
 # Protocol-aware map: protocol model + scope + behavior promises + invariants
-arkheionx lens-map . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-map . --lens fixed-credit-market --scope-file scope.md
 
 # Review lanes (review order, never severity)
-arkheionx lens-lanes . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-lanes . --lens fixed-credit-market --scope-file scope.md
 
 # Precise, bounded, evidence-oriented scope tasks
-arkheionx lens-tasks . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-tasks . --lens fixed-credit-market --scope-file scope.md
 
 # A complete local lens pack (writes by default)
-arkheionx lens-pack . --lens morpho-midnight --scope-file scope.md --out .arkheionx/lens-pack
+arkheionx lens-pack . --lens fixed-credit-market --scope-file scope.md --out .arkheionx/lens-pack
 
 # Classify local-test evidence per economic invariant
-arkheionx lens-evidence . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-evidence . --lens fixed-credit-market --scope-file scope.md
 
 # Classify report candidates before submission (not final triage)
-arkheionx lens-report-filter . --lens morpho-midnight --scope-file scope.md
+arkheionx lens-report-filter . --lens fixed-credit-market --scope-file scope.md
 ```
 
-Every command accepts `--lens` (default `morpho-midnight`), `--scope-file`,
+Every command accepts `--lens` (default `fixed-credit-market`), `--scope-file`,
 `--out`, `--top`, `--json`, and `--no-write`.
 
 ## What `lens-pack` generates
 
-`lens-pack` writes a per-lens directory (e.g. `.arkheionx/lens-pack/morpho-midnight/`)
+`lens-pack` writes a per-lens directory (e.g. `.arkheionx/lens-pack/fixed-credit-market/`)
 containing human-readable Markdown and one machine-readable JSON:
 
 ```text
@@ -139,7 +139,7 @@ leak-guard model.
 
 ## Related
 
-- [Morpho Midnight lens](MORPHO_MIDNIGHT_LENS.md)
+- [Fixed Credit Market lens](FIXED_CREDIT_MARKET_LENS.md)
 - [Scope-aware orchestration (v7)](SCOPE_ORCHESTRATION.md)
 - [Evidence judge](EVIDENCE_JUDGE.md)
 - [Report filter](REPORT_FILTER.md)

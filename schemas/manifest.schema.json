@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Review Pack Manifest",
+  "description": "Manifest for a local review pack produced by `arkheionx review` (v8). A review pack is a planning artifact, not a finding, and review priority is not severity. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "arkheionx_version", "artifact_type", "command", "repo_path",
+    "scope_file", "lens", "generated_at", "artifact_count", "artifact_paths",
+    "counts", "safety_flags", "exit_code_semantics", "human_review_required", "safety_boundary"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "arkheionx_version": {"type": "string"},
+    "artifact_type": {"type": "string", "enum": ["review-pack-manifest"]},
+    "command": {"type": "string", "enum": ["review"]},
+    "repo_path": {"type": "string"},
+    "scope_file": {"type": "string"},
+    "lens": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "artifact_count": {"type": "integer"},
+    "artifact_paths": {"type": "array", "items": {"type": "string"}},
+    "counts": {
+      "type": "object",
+      "required": ["contracts", "functions", "value_paths", "assumptions", "review_lanes", "evidence_tasks", "report_candidates"],
+      "properties": {
+        "contracts": {"type": "integer"},
+        "functions": {"type": "integer"},
+        "value_paths": {"type": "integer"},
+        "assumptions": {"type": "integer"},
+        "review_lanes": {"type": "integer"},
+        "evidence_tasks": {"type": "integer"},
+        "report_candidates": {"type": "integer"}
+      }
+    },
+    "safety_flags": {
+      "type": "object",
+      "required": ["no_rpc", "no_live_chain", "no_exploit_automation", "no_auto_submit", "no_vulnerability_claims", "no_severity_claims", "human_review_required"],
+      "properties": {
+        "no_rpc": {"type": "boolean", "enum": [true]},
+        "no_live_chain": {"type": "boolean", "enum": [true]},
+        "no_exploit_automation": {"type": "boolean", "enum": [true]},
+        "no_auto_submit": {"type": "boolean", "enum": [true]},
+        "no_vulnerability_claims": {"type": "boolean", "enum": [true]},
+        "no_severity_claims": {"type": "boolean", "enum": [true]},
+        "human_review_required": {"type": "boolean", "enum": [true]}
+      }
+    },
+    "exit_code_semantics": {"type": "object"},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "safety_boundary": {"type": "string"}
+  }
+}

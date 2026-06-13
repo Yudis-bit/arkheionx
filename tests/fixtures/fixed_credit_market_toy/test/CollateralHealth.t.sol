@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 // Illustrative fixture test exercising the collateral-withdrawal health guard with
 // a negative path. It exists so Arkheionx's static evidence classifier has a test
 // that references withdrawCollateral, collateral, and debt with an expectRevert.
-// It is not run by the Python test suite and asserts nothing about Morpho.
+// It is not run by the Python test suite and asserts nothing about any real protocol.
 
 import "../src/CreditMarket.sol";
 import "../src/MockLoanToken.sol";

@@ -12,7 +12,7 @@ import arkheionx.protocol_lens as pl
 from arkheionx.review_map import build_review_map
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = REPO_ROOT / "tests" / "fixtures" / "morpho_midnight_toy"
+FIXTURE = REPO_ROOT / "tests" / "fixtures" / "fixed_credit_market_toy"
 SCOPE = str(FIXTURE / "scope.md")
 PACKAGE_DIR = REPO_ROOT / "arkheionx" / "protocol_lens"
 
@@ -24,7 +24,7 @@ VENDOR_NAMES = ["claude", "openai", "gpt-4", "gemini", "anthropic", "codex", "co
 
 
 def _all_pack_text() -> str:
-    lens = pl.get_lens("morpho-midnight")
+    lens = pl.get_lens("fixed-credit-market")
     rm = build_review_map(FIXTURE)
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "pack"

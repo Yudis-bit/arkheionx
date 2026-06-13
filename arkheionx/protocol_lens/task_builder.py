@@ -75,6 +75,10 @@ def _tasks_for_lane(ctx: dict, lane_def: m.LensLaneDef) -> list[dict]:
                 "If the failure condition reproduces with realistic actors and in-scope contracts and the impact is "
                 "material (loss/lock/incorrect-accounting/unauthorized-action/invariant-break), escalate as a candidate "
                 "for human review — not a confirmed vulnerability. Otherwise record it as rejected-with-test."),
+            kill_condition=(
+                f"Abandon this hypothesis if the in-scope local test shows the invariant holds ({inv_id or 'the lane invariant'}: {safe}) "
+                "for realistic actors, or if the only way to break it relies on a trusted role the scope marks valid, "
+                "on out-of-scope/known/accepted surface, or without material impact. A held invariant is a rejection, not a finding."),
         )
         tasks.append(task.to_dict())
     return tasks

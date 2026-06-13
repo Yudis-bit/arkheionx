@@ -30,11 +30,12 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "lane_id", "hypothesis"],
+        "required": ["id", "lane_id", "hypothesis", "kill_condition"],
         "properties": {
           "id": {"type": "string"},
           "lane_id": {"type": "string"},
           "hypothesis": {"type": "string"},
+          "kill_condition": {"type": "string"},
           "human_review_required": {"type": "boolean"}
         }
       }

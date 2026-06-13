@@ -91,5 +91,5 @@ the same markdown scope parser, the same `.arkheionx/private/` leak guard, and t
 same surface records. A protocol lens adds protocol-aware behavior promises,
 economic invariants, temporal windows, and review lanes on top, so the lanes and
 tasks are shaped by a specific protocol family. The first lens is
-[Morpho Midnight](MORPHO_MIDNIGHT_LENS.md). See
+[Fixed Credit Market](FIXED_CREDIT_MARKET_LENS.md). See
 [`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md).

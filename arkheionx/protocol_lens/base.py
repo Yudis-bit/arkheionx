@@ -8,7 +8,7 @@ the builders in this package combine it with the repository's review map and an
 optional scope note to produce lanes, tasks, evidence maps, and report filters.
 
 A lens encodes no line numbers and no specific known bug. It is a model, not a
-finding. Concrete lenses (e.g. :mod:`arkheionx.protocol_lens.lenses.morpho_midnight`)
+finding. Concrete lenses (e.g. :mod:`arkheionx.protocol_lens.lenses.fixed_credit_market`)
 subclass this and fill in the data.
 """
 from __future__ import annotations

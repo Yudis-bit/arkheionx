@@ -252,6 +252,7 @@ def render_scope_tasks_md(data: dict) -> str:
         out.append(f"- Suggested test name: `{t.get('suggested_test_name', '')}`")
         out.append(f"- Duplicate risk: {t.get('duplicate_risk', '')}")
         out.append(f"- Decision rule: {t.get('decision_rule', '')}")
+        out.append(f"- Kill condition: {t.get('kill_condition', '')}")
         out.append("")
     return "\n".join(out) + "\n"
 

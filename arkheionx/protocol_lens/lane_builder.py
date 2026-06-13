@@ -1,7 +1,7 @@
 """Build lens review lanes and the combined protocol-aware lens map.
 
 Review lanes are the lens's canonical research tracks (LANE-01 .. LANE-10 for
-Morpho Midnight), bound to discovered repository surfaces, enriched with the
+Fixed Credit Market), bound to discovered repository surfaces, enriched with the
 scope's focus and filters. Lanes are planning artifacts, never findings; lane
 priority is review order, never severity. Human review is required.
 """

@@ -16,6 +16,37 @@ arkheionx proof-plan .     # a local proof direction to try by hand
 
 Try the bundled demo: `arkheionx review-map examples/vault-strategy-oracle-fixture`.
 
+## One-command review (`arkheionx review`)
+
+`arkheionx review` is the primary, "start here" command. It builds a single review
+pack from a repo, an optional scope note, and an optional generic protocol-family
+lens:
+
+```sh
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review
+```
+
+Flags: `--scope-file <md>`, `--lens <id>` (omit for a generic review), `--out <dir>`
+(default `<repo>/.arkheionx/review/`), `--json` (print the manifest only), and
+`--no-write` (build in memory only). It writes `00-run-context.md` …
+`09-agent-input.md` plus `review.json` and `manifest.json`, and adds
+`10-protocol-model.md` … `15-lens-evidence-tasks.md` when a lens is selected. See
+[`CORE_WORKFLOW.md`](CORE_WORKFLOW.md).
+
+## Exit codes
+
+Analysis commands use exit codes as review signals, not just crash codes:
+
+- `0` — completed; no heuristic warning needs attention.
+- `1` — completed, but the output is heuristic and needs human review. This is a
+  warning-style exit code, **not** a runtime crash.
+- `2` — usage or runtime error (for example, a repo or scope path was not found).
+
+In CI, run with `--json` and inspect the decision fields in the JSON instead of
+treating every non-zero analysis exit as fatal. See
+[`SAFETY_BOUNDARIES.md`](SAFETY_BOUNDARIES.md#exit-codes).
+
 ## Stable V4 commands
 
 V4 stabilizes the local review-map workflow. These run on any install (editable

@@ -224,6 +224,7 @@ def render_scope_tasks_md(data: dict) -> str:
             _bullets(t.get("likely_invalid_conditions", [])),
             "",
             f"- **Stop condition**: {t['stop_condition']}",
+            f"- **Kill condition**: {t.get('kill_condition', '')}",
             f"- **Report candidate threshold**: {t['report_candidate_threshold']}",
             "- **Human review required**: yes",
             "",
