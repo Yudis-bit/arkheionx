@@ -53,10 +53,23 @@ def _triage_command(args: argparse.Namespace) -> int:
 
     Imported on demand so the shared command parser stays import-safe (and every
     other command keeps working) even while this experimental mode evolves.
+    ``--hunter`` routes to the V9 universal hunter engine for compatibility.
     """
+    if getattr(args, "hunter", False):
+        from arkheionx.hunter.command import hunter_command
+
+        return hunter_command(args)
+
     from arkheionx.senior_triage.command import triage_command
 
     return triage_command(args)
+
+
+def _hunter_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the V9 Universal Senior Exploit Hunter mode."""
+    from arkheionx.hunter.command import hunter_command
+
+    return hunter_command(args)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -112,7 +125,47 @@ def build_parser() -> argparse.ArgumentParser:
     triage.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/triage/).")
     triage.add_argument("--json", action="store_true", help="Print machine-readable triage JSON to stdout only (no human text).")
     triage.add_argument("--no-write", action="store_true", help="Build the triage pack in memory only; do not write artifact files.")
+    # V9 hunter-compatibility flags: `arkheionx triage --hunter` runs the universal hunter engine.
+    triage.add_argument("--hunter", action="store_true", help="Run the V9 Universal Senior Exploit Hunter engine instead of classic triage (compatibility alias for `arkheionx hunter`).")
+    triage.add_argument("--source-dir", default="", help="Optional local source directory for source recovery (hunter mode).")
+    triage.add_argument("--source-recovery", default="auto", choices=["auto", "sourcify", "etherscan", "none"], help="Source recovery mode (hunter mode).")
+    triage.add_argument("--no-source-recovery", action="store_true", help="Disable network source recovery (hunter mode).")
+    triage.add_argument("--registry-calls", default="", help="Optional read-only registry eth_call spec JSON (requires --rpc-url; hunter mode).")
+    triage.add_argument("--audit-date", default="", help="Optional YYYY-MM-DD audit date freshness baseline (hunter mode).")
+    triage.add_argument("--fresh-allowlist", default="", help="Optional comma-separated surfaces (or a file) marked fresh (hunter mode).")
     triage.set_defaults(func=_triage_command)
+
+    hunter = subparsers.add_parser(
+        "hunter",
+        help="V9 Universal Senior Exploit Hunter mode (experimental, local-first). Chooses the highest-EV bounty surface — fresh, in-scope, payable, non-duplicate, attacker-reachable — and avoids known/OOS/dead leads before PoC. Read-only RPC only (masked), no mutation, no auto-submit; human review required.",
+    )
+    hunter.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    hunter.add_argument("--scope-file", default="", help="Path to a markdown scope / program-rules note.")
+    hunter.add_argument("--known", default="", help="Optional folder of known issues / prior findings / public reports.")
+    hunter.add_argument("--audits", default="", help="Optional folder of prior audit reports.")
+    hunter.add_argument("--addresses", default="", help="Optional addresses JSON (parser v2: flat/contracts/program/env/chains/list).")
+    hunter.add_argument("--source-dir", default="", help="Optional local source directory for source recovery.")
+    hunter.add_argument("--source-recovery", default="auto", choices=["auto", "sourcify", "etherscan", "none"], help="Source recovery mode (default auto; network recovery is opt-in).")
+    hunter.add_argument("--no-source-recovery", action="store_true", help="Disable network source recovery.")
+    hunter.add_argument("--baseline-ref", default="", help="Optional git ref to diff against for freshness.")
+    hunter.add_argument("--since-date", default="", help="Optional YYYY-MM-DD freshness baseline date.")
+    hunter.add_argument("--audit-date", default="", help="Optional YYYY-MM-DD audit date freshness baseline.")
+    hunter.add_argument("--fresh-allowlist", default="", help="Optional comma-separated surfaces (or a file) explicitly marked fresh.")
+    hunter.add_argument(
+        "--rpc-url",
+        dest="rpc",
+        default="",
+        help="Optional read-only RPC endpoint. Disabled by default; only read-only methods are issued, no live-chain mutation occurs, and the endpoint is masked in output.",
+    )
+    hunter.add_argument("--deployment-calls", default="", help="Optional read-only eth_call spec JSON (requires --rpc-url).")
+    hunter.add_argument("--registry-calls", default="", help="Optional read-only registry eth_call spec JSON (requires --rpc-url).")
+    hunter.add_argument("--strict-context", action="store_true", help="Apply fail-closed decision caps more aggressively when context is missing.")
+    hunter.add_argument("--top", type=int, default=5, help="Top leads to surface (default 5, max 5).")
+    hunter.add_argument("--max-leads", type=int, default=25, help="Maximum raw leads to score (default 25).")
+    hunter.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/hunter/).")
+    hunter.add_argument("--json", action="store_true", help="Print machine-readable hunter JSON to stdout only (no human text).")
+    hunter.add_argument("--no-write", action="store_true", help="Build the hunter pack in memory only; do not write artifact files.")
+    hunter.set_defaults(func=_hunter_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")

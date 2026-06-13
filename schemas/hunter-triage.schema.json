@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx V9 Universal Hunter Triage",
+  "description": "Machine-readable triage.json produced by the V9 `arkheionx hunter` mode. It records a senior research decision: program identity and scope status, source provenance, dedup corpus quality, freshness, deployment reality, live-registry diff, value-flow and state-machine maps, ranked leads with a decision (PURSUE_NOW/NEEDS_POC/PARK_*/KILL_*), PoC plans, submission-risk, a report filter (default Submit: NO), and an honest engine evaluation. It is not a finding, not a severity, and not a confirmed vulnerability. Read-only RPC only when explicitly provided; no live-chain mutation; no auto-submit; human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "artifact_type", "arkheionx_version", "generated_at", "command",
+    "repo_path", "rpc_mode", "rpc_enabled", "rpc_endpoint_masked", "program_identity",
+    "scope_status", "scope_warnings", "address_parse", "source_status", "dedup_status",
+    "freshness_status", "deployment_status", "deployment_reality", "registry_diff",
+    "value_paths", "state_machines", "call_edges", "leads", "top_3_leads", "top_leads",
+    "poc_plans", "submission_risks", "report_filter", "hard_kills", "decision_caps",
+    "engine_warnings", "engine_evaluation", "safety_flags", "safety_boundaries",
+    "human_review_required"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["v9-universal-hunter"]},
+    "artifact_type": {"type": "string", "enum": ["hunter_triage"]},
+    "arkheionx_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "command": {"type": "string", "enum": ["hunter"]},
+    "repo_path": {"type": "string"},
+    "scope_file": {"type": "string"},
+    "known_path": {"type": "string"},
+    "audits_path": {"type": "string"},
+    "addresses_file": {"type": "string"},
+    "source_dir": {"type": "string"},
+    "rpc_mode": {"type": "string", "enum": ["RPC_NOT_PROVIDED", "READ_ONLY_RPC_ENABLED", "RPC_CHECK_FAILED"]},
+    "rpc_enabled": {"type": "boolean", "enum": [false]},
+    "rpc_endpoint_masked": {"type": "string"},
+    "program_identity": {
+      "type": "object",
+      "required": ["scope_status", "scope_confidence", "scope_warnings"],
+      "properties": {
+        "program_name": {"type": "string"},
+        "company": {"type": "string"},
+        "platform": {"type": "string"},
+        "bounty_url": {"type": "string"},
+        "repo_urls": {"type": "array", "items": {"type": "string"}},
+        "contract_families": {"type": "array", "items": {"type": "string"}},
+        "addresses": {"type": "array", "items": {"type": "string"}},
+        "chain_ids": {"type": "array", "items": {"type": "string"}},
+        "in_scope_keywords": {"type": "array", "items": {"type": "string"}},
+        "out_of_scope_keywords": {"type": "array", "items": {"type": "string"}},
+        "trusted_roles": {"type": "array", "items": {"type": "string"}},
+        "reward_severities": {"type": "array", "items": {"type": "string"}},
+        "poc_required": {"type": "boolean"},
+        "scope_status": {"type": "string", "enum": ["SCOPE_OK", "SCOPE_PARTIAL", "SCOPE_MISSING", "SCOPE_COLLISION"]},
+        "scope_confidence": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]},
+        "scope_warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "scope_status": {"type": "string", "enum": ["SCOPE_OK", "SCOPE_PARTIAL", "SCOPE_MISSING", "SCOPE_COLLISION"]},
+    "scope_warnings": {"type": "array", "items": {"type": "string"}},
+    "address_parse": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["ADDRESS_OK", "ADDRESS_PARSE_ERROR", "ADDRESS_FILE_EMPTY", "ADDRESS_FILE_MISSING",
+                   "ADDRESS_NONE_PROVIDED", "ADDRESS_EMPTY_CONTRACTS"]
+        },
+        "detected_format": {"type": "string"},
+        "addresses": {"type": "array", "items": {"type": "object"}},
+        "chain_ids": {"type": "array", "items": {"type": "string"}},
+        "errors": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "source_status": {
+      "type": "string",
+      "enum": ["SOURCE_LOCAL", "SOURCE_ARTIFACT", "SOURCE_PROVIDED", "SOURCE_SOURCIFY_EXACT",
+               "SOURCE_SOURCIFY_PARTIAL", "SOURCE_ETHERSCAN_VERIFIED", "SOURCE_ABI_ONLY",
+               "SOURCE_MISSING", "SOURCE_RECOVERY_FAILED"]
+    },
+    "source_provenance": {"type": "object"},
+    "dedup_status": {"type": "string", "enum": ["DEDUP_BLIND", "DEDUP_PARTIAL", "DEDUP_USABLE", "DEDUP_STRONG"]},
+    "dedup_quality": {"type": "object"},
+    "freshness_status": {
+      "type": "string",
+      "enum": ["FRESHNESS_UNKNOWN", "BASELINE_UNKNOWN", "AUDIT_COVERED", "POST_AUDIT_CHANGE",
+               "NEW_DEPLOYED_IMPLEMENTATION", "IMPLEMENTATION_CHANGED", "NEW_LIVE_REGISTRY_ENTRY",
+               "NEW_VALUE_OUT_SURFACE", "NEW_STATE_MACHINE_VALUE_FLOW", "SOURCE_RECOVERED_NO_BASELINE"]
+    },
+    "deployment_status": {"type": "string"},
+    "deployment_reality": {
+      "type": "object",
+      "required": ["status", "rpc_mode"],
+      "properties": {
+        "status": {"type": "string"},
+        "rpc_mode": {"type": "string"},
+        "chain_id": {"type": "integer"},
+        "results": {"type": "array", "items": {"type": "object"}},
+        "mismatches": {"type": "array", "items": {"type": "object"}},
+        "rpc_endpoint_masked": {"type": "string"}
+      }
+    },
+    "registry_diff": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["LIVE_AND_LISTED", "LIVE_NOT_LISTED", "LISTED_NOT_LIVE",
+                   "REGISTRY_DIFF_UNKNOWN", "REGISTRY_CALL_FAILED", "REGISTRY_NOT_RUN"]
+        }
+      }
+    },
+    "value_paths": {"type": "array", "items": {"type": "object"}},
+    "state_machines": {"type": "array", "items": {"type": "object"}},
+    "call_edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caller": {"type": "string"},
+          "callee": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["DIRECT_CALL", "INTERFACE_CALL", "LOW_LEVEL_CALL", "DELEGATECALL",
+                     "STATICCALL", "POSSIBLE_REFERENCE", "NO_CALL_EDGE"]
+          }
+        }
+      }
+    },
+    "known_matches": {"type": "array", "items": {"type": "object"}},
+    "freshness_verdicts": {"type": "array", "items": {"type": "object"}},
+    "leads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lead_id", "title", "lead_type", "decision", "kill_conditions"],
+        "properties": {
+          "lead_id": {"type": "string"},
+          "title": {"type": "string"},
+          "lead_type": {"type": "string"},
+          "contract": {"type": "string"},
+          "function": {"type": "string"},
+          "decision": {
+            "type": "string",
+            "enum": ["PURSUE_NOW", "NEEDS_POC", "PARK_SCOPE", "PARK_DEDUP", "PARK_DEPLOYMENT",
+                     "PARK_SOURCE", "PARK_BASELINE", "KILL_DUPLICATE", "KILL_OOS",
+                     "KILL_TRUSTED_ROLE", "KILL_PUBLIC_TEST_COVERED", "KILL_DOCUMENTED_BEHAVIOR",
+                     "KILL_LOW_ONLY", "KILL_NO_MATERIAL_IMPACT", "KILL_NOT_ATTACKER_REACHABLE"]
+          },
+          "scope_confidence": {"type": "string"},
+          "freshness_status": {"type": "string"},
+          "dedup_status": {"type": "string"},
+          "known_match_status": {"type": "string"},
+          "deployment_status": {"type": "string"},
+          "attacker_reachability": {"type": "string"},
+          "trusted_role_risk": {"type": "string"},
+          "materiality": {"type": "string"},
+          "proof_difficulty": {"type": "string"},
+          "expected_severity_ceiling": {"type": "string"},
+          "expected_payout_ev": {"type": "integer"},
+          "decision_reasons": {"type": "array", "items": {"type": "string"}},
+          "kill_conditions": {"type": "array", "items": {"type": "string"}},
+          "poc_plan_id": {"type": "string"},
+          "score": {"type": "integer"}
+        }
+      }
+    },
+    "top_3_leads": {"type": "array", "items": {"type": "object"}},
+    "top_leads": {"type": "array", "items": {"type": "object"}},
+    "poc_plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["poc_plan_id", "lead_id", "status", "report_condition"],
+        "properties": {
+          "poc_plan_id": {"type": "string"},
+          "lead_id": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["POC_READY", "POC_NEEDS_SOURCE", "POC_NEEDS_DEPLOYMENT_STATE", "POC_NEEDS_BASELINE",
+                     "POC_BLOCKED_OOS", "POC_BLOCKED_DUPLICATE", "POC_BLOCKED_TRUSTED_ROLE",
+                     "POC_BLOCKED_NO_MATERIAL_IMPACT"]
+          },
+          "expected_assertion": {"type": "string"},
+          "report_condition": {"type": "string"}
+        }
+      }
+    },
+    "submission_risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lead_id", "status", "expected_severity_ceiling"],
+        "properties": {
+          "lead_id": {"type": "string"},
+          "status": {"type": "string"},
+          "expected_severity_ceiling": {
+            "type": "string",
+            "enum": ["CRITICAL_POSSIBLE", "HIGH_POSSIBLE", "MEDIUM_POSSIBLE", "LOW_ONLY", "INFO_ONLY", "NOT_ELIGIBLE"]
+          },
+          "duplicate_rejection_risk": {"type": "string"},
+          "reviewer_pushback": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "report_filter": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lead_id", "submit", "human_rewrite_required"],
+        "properties": {
+          "lead_id": {"type": "string"},
+          "submit": {"type": "string", "enum": ["NO", "AFTER_POC_ASSERTION_PASSES"]},
+          "human_rewrite_required": {"type": "boolean", "enum": [true]},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "hard_kills": {"type": "array", "items": {"type": "object"}},
+    "decision_caps": {"type": "array", "items": {"type": "string"}},
+    "engine_warnings": {"type": "array", "items": {"type": "string"}},
+    "engine_evaluation": {
+      "type": "object",
+      "required": ["scores"],
+      "properties": {"scores": {"type": "object"}}
+    },
+    "missing_context": {"type": "array", "items": {"type": "string"}},
+    "counts": {"type": "object"},
+    "safety_flags": {"type": "object"},
+    "safety_boundaries": {"type": "array", "items": {"type": "string"}},
+    "human_review_required": {"type": "boolean", "enum": [true]}
+  }
+}

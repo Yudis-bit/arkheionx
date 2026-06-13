@@ -165,6 +165,20 @@ required. Internal note: `docs/internal/SENIOR_TRIAGE_MODE.md` (local only).
 | --- | --- | --- | --- | --- |
 | `arkheionx triage` | Senior research triage before review: target decision, bounty-eligibility read, known-issue / dedup map, freshness diff, optional deployment-reality plan, research-priority scoreboard, top-3 leads, do-not-touch list, agent brief, `triage.json`, and `manifest.json`. No RPC by default; no auto-submit; no vulnerability claims. Writes by default | human + `--json` | `triage/*` | experimental (local-only) |
 
+`arkheionx hunter` is a **private, experimental, local-only** V9 universal senior
+exploit-hunter mode (also reachable as `arkheionx triage --hunter`). It chooses the
+highest-EV bounty surface — fresh, in-scope, payable, non-duplicate, attacker-reachable
+— and avoids known / out-of-scope / dead leads before any PoC. It is intentionally
+**not** part of the stable command contract, is not wired into any release, site, or
+remote surface, makes read-only RPC calls only when an endpoint is explicitly provided
+(the endpoint is masked), performs no live-chain mutation, and never auto-submits.
+Output is a local planning pack — not a finding, not severity; human review is
+required. Internal notes live under `docs/private/` (local only).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx hunter` | V9 universal senior exploit-hunter: program identity / scope map, source provenance, dedup corpus quality, freshness map, deployment reality, live-registry diff, value-flow and state-machine maps, ranked leads with a decision (PURSUE_NOW / NEEDS_POC / PARK_* / KILL_*), PoC plans, submission-risk, a report filter (default Submit: NO), engine evaluation, `triage.json`, and `manifest.json`. Read-only RPC only when provided (masked); no mutation; no auto-submit. Writes by default | human + `--json` | `hunter/*` | experimental (local-only) |
+
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
 | `arkheionx scope-map` | Parse a scope note into structured review rules (in/out of scope, severity conditions, trusted assumptions, dependency assumptions, known/accepted issues, prior-audit notes, design choices, invariants, focus areas, do-not-waste-time filters, report-candidate requirements) | human + `--json` | `scope-map/scope-map.{md,json}` | stable-additive |

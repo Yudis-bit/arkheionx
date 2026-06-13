@@ -1,0 +1,16 @@
+{
+  "registry_calls": [
+    {
+      "name": "getPools",
+      "target": "Registry",
+      "selector": "0x673a2a1f",
+      "decode": "address[]"
+    },
+    {
+      "name": "poolCount",
+      "target": "Registry",
+      "selector": "0x371c987a",
+      "decode": "uint256"
+    }
+  ]
+}
