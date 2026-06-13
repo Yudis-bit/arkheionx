@@ -4,10 +4,10 @@ A *protocol lens* models a specific protocol family (its value flows, behavior
 promises, economic invariants, temporal windows, and periphery composition) so
 Arkheionx can turn a generic local review into a protocol-aware research workflow.
 
-This layer ships in the v8.0.0 package: v4 maps value flow, v5 prioritizes blind
+This layer ships in the v8.0.1 package: v4 maps value flow, v5 prioritizes blind
 spots, v6 classifies evidence, v7 turns scope into lanes/tasks, v7.5 added
 protocol-aware lenses, and v8 makes them generic protocol-family models behind the
-primary `arkheionx review` command. The package version is ``8.0.0``; the lens layer
+primary `arkheionx review` command. The package version is ``8.0.1``; the lens layer
 carries its own :data:`SCHEMA_VERSION` for its JSON artifacts.
 
 Everything here is heuristic and local/static. A lens is not a finding. A review
@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 
-# The lens layer's own schema version (distinct from the package version, 8.0.0).
+# The lens layer's own schema version (distinct from the package version, 8.0.1).
 SCHEMA_VERSION = "1.0.0"
 LENS_LAYER = "v8.0"
 

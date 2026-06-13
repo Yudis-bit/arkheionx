@@ -1,128 +1,111 @@
-# ArkheionX
+# Arkheionx
 
-<!-- Compatibility alias for existing public-surface tests: # Arkheionx -->
+Local-first Ethereum security research workflow for Solidity and DeFi repositories.
 
-**Local-first security research workflow for Solidity and DeFi repositories.**
-
-> **Foundry tells you whether the tests you wrote pass. ArkheionX helps show
-> the value paths you may have forgotten to test.**
-
-ArkheionX turns scope, value flow, protocol behavior, invariants, and local
-evidence into focused review lanes before report writing. It maps where value
-enters, moves, and exits; the trust assumptions that guard each path; which paths
-have no tests; and a ranked list of what a human reviewer should inspect first.
+Arkheionx turns scope, value flow, protocol behavior, invariants, and local evidence
+into focused review lanes before report writing.
 
 **No RPC. No live-chain scanning. No auto-submit. Human review required.**
 
 ```bash
 python3 -m pip install -e .
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+```
+
+## What it does
+
+Arkheionx reads a Solidity or DeFi repository and a scope note and writes a single
+local review pack — Markdown for humans and JSON for tools. It maps where value
+moves, the assumptions that guard each path, which paths have no tests, and a ranked
+order of what a human should inspect first.
+
+- Maps contracts, functions, value paths, assumptions, and review lanes.
+- Surfaces a prioritized "inspect first" order (review order, not severity).
+- Turns hypotheses into local evidence tasks, each with a kill condition.
+- Grades whether local proof actually supports a candidate.
+- Filters weak, out-of-scope, or under-proven candidates before report writing.
+- Runs `arkheionx review-map` for a quick read of any repo or the bundled demo.
+
+## Why it exists
+
+Reviewing a DeFi protocol is not just checking whether your tests pass. A reviewer
+needs to know where value enters, moves, and exits, which assumptions protect each
+path, and which paths have no tests at all. Arkheionx makes that surface explicit and
+repeatable before manual review, so review time goes where value moves.
+
+## Quickstart
+
+```bash
+# Install from source (editable), or run the source installer:
+python3 -m pip install -e .   # or: sh install.sh
+arkheionx version
 arkheionx doctor
 
-# One-command review pack (start here):
+# Explore the bundled demos:
+arkheionx demo --list
+
+# Build a local review pack:
 arkheionx review . --scope-file scope.md --out .arkheionx/review
 
-# Optional protocol-aware deep dive (generic protocol-family lens):
-arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review
-
-# Quick review map of your repo or the bundled demo:
-arkheionx review-map .
+# Quick review map of a repo or the bundled demo:
 arkheionx review-map examples/vault-strategy-oracle-fixture
 ```
 
-```text
-OK    Map review surface  3 contracts, 14 functions, 3 value paths, 5 test gaps
-
-Inspect first
-1  HIGH   Strategy.divest            Signals  external-call, value-out
-2  HIGH   Vault.emergencyWithdraw    Signals  external-call, privileged, value-out
-3  HIGH   Vault.withdraw             Signals  external-call, value-out
-
-Test gap   Vault.withdraw   Source  src/Vault.sol:63   Proof  proof-vault-withdraw
-```
-
-Local only. Static only. No RPC. No live-chain calls. No exploit automation.
-Not an audit replacement. New here? See
-[`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md) and the bundled
-[multi-contract demo](examples/vault-strategy-oracle-fixture/README.md).
+No API key, private key, RPC URL, or token is required. See
+[`docs/INSTALLER.md`](docs/INSTALLER.md) and [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md).
 
 ## Core workflow
 
-ArkheionX supports one workflow end to end:
+Arkheionx supports one workflow end to end:
 
 ```text
-repo → review-map → value paths → assumptions → test gaps → proof direction → human review
+Scope → Value flow → Protocol behavior → Review lanes → Evidence tasks → Evidence judge → Report filter
 ```
 
-Everything below serves that workflow. A human always makes the security call.
+- **Scope** — start from the actual review rules.
+- **Value flow** — map where assets enter, move, and exit.
+- **Protocol behavior** — capture the promises the system appears to rely on.
+- **Review lanes** — prioritize where a human should inspect first.
+- **Evidence tasks** — turn hypotheses into local tests with kill conditions.
+- **Evidence judge** — check whether local proof actually supports the claim.
+- **Report filter** — block weak, out-of-scope, or under-proven candidates.
 
-## Why ArkheionX exists
+A human always makes the security call. See
+[`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md).
 
-Reviewing a DeFi protocol is not just checking whether the tests you wrote pass.
-A reviewer needs to know where value enters, moves, and exits, which assumptions
-protect each path, and which value paths have no tests at all. That context is
-usually rebuilt by hand, inconsistently, every time. ArkheionX makes the review
-surface explicit and repeatable **before** manual review, so you spend review
-time where value moves.
+## Protocol Lens Packs
 
-## What is ArkheionX?
+A protocol lens models a protocol family — value flows, behavior promises, economic
+invariants, and temporal windows — so the review lanes, tasks, and evidence
+requirements become protocol-aware. The engine stays generic; a lens adds context,
+not target-specific knowledge.
 
-ArkheionX helps security researchers and protocol engineers create a repeatable
-local review surface for DeFi repositories. It maps protocol structure, roles,
-value paths, assumptions, test gaps, evidence context, and benchmarked fixture
-output.
+```bash
+arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review
+```
 
-Foundry tells you which tests passed. ArkheionX helps organize what a human
-reviewer should inspect next: money-flow graph, review-map output, Test Gap Map,
-assumptions, evidence links, and local validation artifacts.
+The first lens is the generic **Fixed Credit Market** family. A lens is a planning
+model, not a finding: it encodes no line numbers and no known bug, and it never runs
+against a live chain. See
+[`docs/PROTOCOL_LENS_PACKS.md`](docs/PROTOCOL_LENS_PACKS.md) and
+[`docs/FIXED_CREDIT_MARKET_LENS.md`](docs/FIXED_CREDIT_MARKET_LENS.md).
 
-The v3.1 line introduced the Developer-Native Review Map and Local Artifact Foundation.
-v3.9.0 adds the public-safe fixture benchmark harness, deterministic artifact
-fingerprints, and snapshot drift checks.
-The full v4 Protocol Security Control Plane remains planned direction,
-not a completed v3.2.0 runtime surface.
+## Outputs
 
-## What Arkheionx Does
+The review pack is written under `.arkheionx/` — generated, local, gitignored, and
+not intended to be committed as source truth:
 
-- Maps contracts, functions, value paths, assumptions, and test gaps.
-- Surfaces a ranked "inspect first" list (review order, not severity).
-- Shows source evidence (`Source: <file>:<line>`) for each test gap where available.
-- Suggests local proof directions you can scaffold with Foundry.
-- Builds local review packages under `.arkheionx/out/`.
-- Provides a fixture benchmark harness for static/local fixtures.
-- Supports deterministic fixture source fingerprints and snapshot drift checks.
-- Produces human-review-oriented evidence context.
+- Scope map, value-flow map, and interaction map.
+- Review lanes and evidence tasks with kill conditions.
+- Protocol model, economic invariants, and an evidence rubric.
+- A report filter and a model-agnostic agent input.
+- Machine-readable `review.json` and `manifest.json`. See
+  [`docs/SCHEMAS.md`](docs/SCHEMAS.md).
 
-## What It Does Not Do
+## Safety boundaries
 
-- Does not confirm vulnerabilities automatically.
-- Does not replace auditors.
-- Does not prove protocol safety.
-- Does not assign final severity.
-- Does not submit reports or bounties.
-- Does not run live-chain operations by default.
-- Does not require RPC, private keys, seed phrases, or secrets.
-- Does not automate exploits.
-
-## V4 stable scope
-
-**Arkheionx v4.0.0 stabilizes the local review-map workflow.** It does not mean
-Arkheionx guarantees protocol safety.
-
-Stable commands (work on any install): `arkheionx version`, `arkheionx doctor`,
-`arkheionx review-map`, `arkheionx value-paths`, `arkheionx assumptions`,
-`arkheionx test-gap-map`, `arkheionx proof-plan`.
-
-Experimental / advanced (source-tree only): `scan`, `test-plan`, and `search`
-delegate to repository helpers and are not the canonical first run. Deeper
-cross-contract tracing is limited, and real-protocol case studies are pending.
-
-Full detail: [`docs/V4_STABLE_SCOPE.md`](docs/V4_STABLE_SCOPE.md).
-
-## Why local-first?
-
-Security review tooling should be inspectable and reproducible. ArkheionX keeps
-the default workflow on local repository files so review artifacts can be
-regenerated, diffed, and checked without hidden services or network state.
+Arkheionx provides review context, not final security judgments. Human review is
+required.
 
 Default operation is intentionally narrow:
 
@@ -132,325 +115,46 @@ Default operation is intentionally narrow:
 - No private keys or secrets.
 - No automated exploitation.
 - No auto-submit.
-- Not an audit, certification, or replacement for manual review.
 - No guaranteed vulnerability discovery.
 - No severity guarantee.
+- Not an audit, certification, or replacement for manual review.
 
-Human review is required. ArkheionX provides review context, not final security
-judgments.
+Machine-generated context helps prioritize inspection; it does not decide impact or
+severity. Even a relevant local Foundry test executed is still review context, not a
+final security judgment. Run Arkheionx only on repositories you are authorized to
+review. See [`docs/SAFETY_BOUNDARIES.md`](docs/SAFETY_BOUNDARIES.md).
 
-## Quick Start
+## Documentation
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install -e .
-arkheionx version
-arkheionx doctor
-arkheionx review-map .
-```
+Full index: [`docs/README.md`](docs/README.md).
 
-The source-mode equivalent of any command is
-`python3 -m arkheionx.cli.main <command>`. The local install helper is also
-available:
-
-```bash
-sh install.sh
-```
-
-For installer details, see [`docs/INSTALLER.md`](docs/INSTALLER.md). No API key,
-private key, RPC URL, or token is required.
-
-## Try the V4 demo
-
-```bash
-arkheionx review-map examples/vault-strategy-oracle-fixture
-```
-
-The bundled fixture is a small multi-contract protocol — `Vault`, `Strategy`,
-`PriceOracle`, and `MockToken`. Its test covers `deposit`, and deliberately
-leaves the value exits (`withdraw`, `emergencyWithdraw`, `divest`) and the admin
-setters (`setOracle`, `setPrice`) untested. ArkheionX surfaces those as value
-paths and test gaps. The output is real engine output, not hardcoded, and is
-locked by tests so it cannot silently degrade.
-
-## Quick Start Commands
-
-Stable review workflow (start here):
-
-- `doctor` / `arkheionx doctor`
-- `review-map` / `arkheionx review-map`
-- `value-paths` / `arkheionx value-paths`
-- `assumptions` / `arkheionx assumptions`
-- `test-gap-map` / `arkheionx test-gap-map`
-- `proof-plan` / `arkheionx proof-plan`
-
-Additional workbench commands:
-
-- `open` / `arkheionx open`
-- `map` / `arkheionx map`
-- `flow` / `arkheionx flow`
-- `hunt` / `arkheionx hunt`
-- `prove` / `arkheionx prove`
-- `trace` / `arkheionx trace`
-- `evidence` / `arkheionx evidence`
-- `report` / `arkheionx report`
-- `validate-artifacts` / `arkheionx validate-artifacts`
-- `local-validate` / `arkheionx local-validate`
-- `demo` / `arkheionx demo`
-
-Research memory (v4.1, AI-assisted review):
-
-- `agent-brief` / `arkheionx agent-brief`
-- `hypothesis-log` / `arkheionx hypothesis-log`
-- `case-study` / `arkheionx case-study`
-
-Blind Spot Intelligence (v5, attention allocation):
-
-- `blind-spots` / `arkheionx blind-spots`
-- `criticality-map` / `arkheionx criticality-map`
-- `counterfactuals` / `arkheionx counterfactuals`
-- `research-pack` / `arkheionx research-pack`
-
-Evidence Graph + Interaction Matrix (v6, evidence classification):
-
-- `evidence-graph` / `arkheionx evidence-graph`
-- `interaction-matrix` / `arkheionx interaction-matrix`
-- `unresolved-map` / `arkheionx unresolved-map`
-- `complete-review` / `arkheionx complete-review`
-
-Scope-Aware Orchestration + Evidence Judge (v7, scope-aware review):
-
-- `scope-map` / `arkheionx scope-map`
-- `scope-lanes` / `arkheionx scope-lanes`
-- `scope-tasks` / `arkheionx scope-tasks`
-- `scope-pack` / `arkheionx scope-pack`
-- `evidence-judge` / `arkheionx evidence-judge`
-- `report-filter` / `arkheionx report-filter`
-
-Protocol Lens Packs (v7.5, protocol-aware deep dives):
-
-- `lens-list` / `arkheionx lens-list`
-- `lens-map` / `arkheionx lens-map`
-- `lens-lanes` / `arkheionx lens-lanes`
-- `lens-tasks` / `arkheionx lens-tasks`
-- `lens-pack` / `arkheionx lens-pack`
-- `lens-evidence` / `arkheionx lens-evidence`
-- `lens-report-filter` / `arkheionx lens-report-filter`
-
-V5 shows where to look. V6 shows what is proven, what is unresolved, and which
-interactions still lack evidence. V7 turns audit scope into review lanes, task
-packs, evidence requirements, and report filters so AI-assisted security review
-starts from rules and evidence instead of vague prompts. V7.5 adds protocol
-lenses, which model a specific protocol family (the first is Fixed Credit Market) so
-the lanes, tasks, and evidence requirements are protocol-aware. See
-[`docs/V6_WORKFLOW.md`](docs/V6_WORKFLOW.md),
-[`docs/V7_WORKFLOW.md`](docs/V7_WORKFLOW.md), and
-[`docs/V7_5_PROTOCOL_LENS.md`](docs/V7_5_PROTOCOL_LENS.md).
-
-Generated outputs are written under `.arkheionx/out/`; they are generated, local, gitignored, and not intended to be committed as source truth.
-
-## Bug bounty and pre-audit usage
-
-ArkheionX is a triage and preparation aid, used by a human:
-
-- **Bug bounty triage** — find where value moves, which paths are untested, and
-  what to review first; turn test gaps into manual hypotheses. See
-  [`docs/BUG_BOUNTY_WORKFLOW.md`](docs/BUG_BOUNTY_WORKFLOW.md).
-- **Pre-audit readiness** — map value paths, write missing tests, and hand a
-  reviewer a clearer surface. See
-  [`docs/PRE_AUDIT_WORKFLOW.md`](docs/PRE_AUDIT_WORKFLOW.md).
-- **AI-assisted review (v4.1)** — generate an agent brief, track hypotheses, and
-  keep rejected findings as research memory:
-  `arkheionx gives the map, the agent grinds the tests, the research memory keeps
-  the evidence, the human makes the final call`. See
-  [`docs/V4_1_RESEARCH_WORKFLOW.md`](docs/V4_1_RESEARCH_WORKFLOW.md) and
-  [`docs/RESEARCH_MEMORY_MODEL.md`](docs/RESEARCH_MEMORY_MODEL.md).
-
-Do not submit ArkheionX output as a vulnerability by itself, validate manually,
-and only run it on repositories you are authorized to review.
-
-## Validation
-
-```bash
-python3 scripts/check_docs_links.py --check
-python3 scripts/check_safety_wording.py --strict
-python3 scripts/check_version_consistency.py --check
-python3 scripts/check_release_readiness.py --check
-python3 -m unittest discover -s tests -p "test_*.py"
-make validate
-```
-
-## Fixture Benchmark Harness
-
-The fixture harness covers 9 local/static fixtures and produces deterministic
-benchmark output for public validation. It records source fingerprints, checks
-snapshot drift, and does not perform network calls, RPC calls, or Foundry
-execution in benchmark logic.
-
-The harness is for repeatable review context. It does not prove safety.
-
-## Evidence Model
-
-ArkheionX distinguishes local review signals from human conclusions. Artifact
-states such as `HUMAN_REVIEWED` are manual reviewer attestation only.
-Machine-generated context can help prioritize inspection; it does not decide
-impact, exploitability, or severity. Even a relevant local Foundry test executed
-is still review context, not a final security judgment.
-
-## Architecture
-
-The current public surface is v3.x local tooling plus fixture benchmarks. The
-v3.0.0 is the public stable launch baseline; v4.0.0 is the current technical
-state for this branch.
-
-![ArkheionX workflow](docs/assets/arkheionx-workflow-v27.svg)
-
-![ArkheionX output pipeline](docs/assets/arkheionx-output-pipeline.svg)
-
-![ArkheionX evidence ladder](docs/assets/arkheionx-evidence-ladder.svg)
-
-![ArkheionX v3 architecture](docs/assets/arkheionx-v3-architecture.svg)
-
-![ArkheionX v3 public surface](docs/assets/arkheionx-v3-public-surface.svg)
-
-![ArkheionX v3 demo fixtures](docs/assets/arkheionx-v3-demo-fixtures.svg)
-
-![ArkheionX v3 stability](docs/assets/arkheionx-v3-stability.svg)
-
-## What's Stable in v3.0.0
-
-The v3 public baseline stabilized the installable CLI, the local review-map
-workflow, demo fixtures, safety boundaries, and documentation contracts. v3.9.0
-keeps those contracts while adding deterministic fixture benchmarks and source
-fingerprints, and v4.0.0 makes the review-map workflow the stable public surface.
-
-## Safety Boundaries
-
-Human review is required. ArkheionX provides review context, not final security
-judgments.
-
-Do not use ArkheionX on repositories you are not authorized to review. Do not
-use generated artifacts as standalone proof of exploitability, safety, or
-impact. Do not add private keys, seed phrases, RPC credentials, or production
-targets to local configs.
+- [`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md) — `arkheionx review` and the review pack
+- [`docs/PROTOCOL_LENS_PACKS.md`](docs/PROTOCOL_LENS_PACKS.md) — protocol-aware lenses
+- [`docs/FIXED_CREDIT_MARKET_LENS.md`](docs/FIXED_CREDIT_MARKET_LENS.md) — the first generic lens
+- [`docs/SCHEMAS.md`](docs/SCHEMAS.md) — machine-readable artifacts
+- [`docs/SAFETY_BOUNDARIES.md`](docs/SAFETY_BOUNDARIES.md) — boundaries and the exit-code contract
+- [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) — every command and flag
+- [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md) — the stable command surface
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — direction
 
 ## GitHub Action
 
 Pinned stable action example:
 
 ```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v8.0.0
+uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v8.0.1
 ```
 
 See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
 
-## Documentation
+## Release status
 
-Full index: [`docs/README.md`](docs/README.md).
-
-Technical paper: [Read the Arkheionx v4 technical paper](docs/papers/arkheionx-v4-technical-paper.md)
-([PDF](docs/papers/arkheionx-v4-technical-paper.pdf)) — a standalone overview of
-the local review-map workflow. See [`docs/papers/README.md`](docs/papers/README.md).
-
-Start:
-
-- [`docs/START_HERE.md`](docs/START_HERE.md)
-- [`docs/TRY_IN_5_MINUTES.md`](docs/TRY_IN_5_MINUTES.md)
-- [`docs/INTERPRET_RESULTS.md`](docs/INTERPRET_RESULTS.md)
-- [`docs/WHAT_ARKHEIONX_IS_NOT.md`](docs/WHAT_ARKHEIONX_IS_NOT.md)
-- [`docs/BUG_BOUNTY_WORKFLOW.md`](docs/BUG_BOUNTY_WORKFLOW.md)
-- [`docs/PRE_AUDIT_WORKFLOW.md`](docs/PRE_AUDIT_WORKFLOW.md)
-- [`docs/PUBLIC_ALPHA_READINESS.md`](docs/PUBLIC_ALPHA_READINESS.md)
-- [`docs/INSTALLATION.md`](docs/INSTALLATION.md)
-
-Core workflow:
-
-- [`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md) — `arkheionx review` and the review pack
-- [`docs/PROTOCOL_LENS_PACKS.md`](docs/PROTOCOL_LENS_PACKS.md) — generic protocol-family lenses
-- [`docs/FIXED_CREDIT_MARKET_LENS.md`](docs/FIXED_CREDIT_MARKET_LENS.md) — the first generic lens
-- [`docs/SCHEMAS.md`](docs/SCHEMAS.md) — machine-readable artifacts
-- [`docs/SAFETY_BOUNDARIES.md`](docs/SAFETY_BOUNDARIES.md) — boundaries and the exit-code contract
-- [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md)
-- [`docs/V4_STABLE_SCOPE.md`](docs/V4_STABLE_SCOPE.md)
-- [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md)
-- [`docs/STABILITY_CONTRACT.md`](docs/STABILITY_CONTRACT.md)
-- [`docs/V3_READINESS.md`](docs/V3_READINESS.md)
-- [`docs/VALUE_FLOW_WORKBENCH.md`](docs/VALUE_FLOW_WORKBENCH.md)
-- [`docs/PROTOCOL_MAP.md`](docs/PROTOCOL_MAP.md)
-- [`docs/SOLO_RESEARCH_WORKFLOW.md`](docs/SOLO_RESEARCH_WORKFLOW.md)
-- [`docs/TRACE_ENGINE.md`](docs/TRACE_ENGINE.md)
-- [`docs/EVIDENCE_PACKAGE.md`](docs/EVIDENCE_PACKAGE.md)
-- [`docs/LOCAL_VALIDATION.md`](docs/LOCAL_VALIDATION.md)
-
-Advanced:
-
-- [`docs/FIXTURE_HARNESS.md`](docs/FIXTURE_HARNESS.md)
-- [`docs/FIXTURE_BENCHMARKS.md`](docs/FIXTURE_BENCHMARKS.md)
-- [`docs/FIXTURE_SNAPSHOT_WORKFLOW.md`](docs/FIXTURE_SNAPSHOT_WORKFLOW.md)
-- [`docs/REVIEW_MAP.md`](docs/REVIEW_MAP.md)
-- [`docs/REVIEW_PACKAGE.md`](docs/REVIEW_PACKAGE.md)
-- [`docs/ARTIFACT_VALIDATION.md`](docs/ARTIFACT_VALIDATION.md)
-- [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md)
-- [`reports/research_dashboard.md`](reports/research_dashboard.md)
-
-## Contributing and feedback
-
-Issues and feedback use the templates under
-[`.github/ISSUE_TEMPLATE`](.github/ISSUE_TEMPLATE) (general feedback and a
-review-map noise/quality report). See [`CONTRIBUTING.md`](CONTRIBUTING.md) and
-the security policy in [`SECURITY.md`](SECURITY.md).
+Latest stable release: **v8.0.1** — Clean Product Surface. Current package version:
+**8.0.1**. This is a product-surface patch on top of v8.0.0: it cleans the README and
+website and changes no engine behavior, CLI command, or analysis. Release tags, the
+GitHub Release, and the site deploy are cut at release time.
 
 ## License
 
-ArkheionX is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE).
-The earlier license-pending note is kept at
-[`LICENSE_PENDING.md`](LICENSE_PENDING.md) for historical context only.
-
-## Version and release status
-
-**Python 3.11+** · **Local-first** · **No RPC by default** ·
-**Human review required** · **v8.0.0**
-
-Latest stable release: **v8.0.0**. Current package version: **8.0.0** — the v8.0.0
-"Final Engine" release adds the primary `arkheionx review` command, presents Protocol
-Lens Packs as generic protocol-family models, and cleans the public surface so it is
-not target-specific. It builds on the v7.5 Protocol Lens layer (lens-list, lens-map,
-lens-lanes, lens-tasks, lens-pack, lens-evidence, lens-report-filter), the v7
-Scope-Aware Orchestration + Evidence Judge layer, the v6 Evidence Graph + Interaction
-Matrix layer, the v5 Blind Spot Intelligence layer, the stable v4.0.0 review-map
-workflow, and the v4.1 research-memory workflow. The source installers and the GitHub
-Action pin to the **v8.0.0** tag. The v8.0.0 git tag, GitHub Release, and site deploy
-are cut by the founder at release time.
-
-Arkheionx is a local-first Ethereum security research workflow for Solidity and
-DeFi repositories. It starts from scope, maps value flow and contract
-interactions, generates review lanes and evidence-oriented tasks, and filters
-candidates before report writing. V7.5 adds Protocol Lens Packs: protocol-aware
-research models that turn a repo and scope note into behavior promises, economic
-invariants, review lanes, scope tasks, evidence rubrics, and report filters. The
-first shipped protocol lens is Fixed Credit Market. Protocol lenses are planning
-artifacts, not vulnerability verdicts.
-
-Positioning: Local-first protocol security control plane for DeFi teams.
-Map the protocol. Prove the path. Prepare the handoff.
-V5 shows where to look. V6 shows what is proven, what is unresolved, and which
-interactions still lack evidence. V7 turns audit scope into review lanes, task
-packs, evidence requirements, and report filters so AI-assisted security review
-starts from rules and evidence instead of vague prompts. V7.5 makes those lanes,
-tasks, and evidence requirements protocol-aware through protocol lenses; the
-broader control plane remains planned direction.
-
-This public-safe branch contains the engine, tests, public technical docs, and
-safety workflow. Release tags and the GitHub release are cut by the founder at
-release time; the public release branch is sanitized.
-
-Official website: [https://arkheionx.dev](https://arkheionx.dev) (live).
-Installer and deployment details are documented in
-[`docs/WEBSITE_DEPLOYMENT.md`](docs/WEBSITE_DEPLOYMENT.md).
-
-Reproducible research context: [`reports/research_dashboard.md`](reports/research_dashboard.md).
-
-## Security
-
-See [`SECURITY.md`](SECURITY.md).
+Arkheionx is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE).
+Security policy: [`SECURITY.md`](SECURITY.md).

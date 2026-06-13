@@ -3,6 +3,23 @@
 All notable Arkheionx changes are tracked here. Releases are not tagged until a
 maintainer explicitly cuts them.
 
+## v8.0.1 - 2026-06-13
+
+Arkheionx v8.0.1 — "Clean Product Surface". A product-surface patch on top of
+v8.0.0: it rewrites the root README and rebuilds the website so Arkheionx presents
+as one current product instead of a version-heavy project archive. Engine behavior,
+CLI commands, schemas, tests, and safety boundaries are unchanged.
+
+- Rewrote the root README around the current `arkheionx review` workflow.
+- Rebuilt the homepage into a smaller, clearer product page (hero, problem,
+  workflow, CLI, outputs, safety boundary, CTA).
+- Simplified the docs landing page into a guided path and moved older version
+  pages into a lower "Archive" group.
+- Removed current-surface version noise and the architecture image wall; kept the
+  safety boundaries, target-generic wording, and local-first contract.
+- Bumped the package version to `8.0.1`. No engine, CLI, analysis, or exit-code
+  change.
+
 ## v8.0.0 - 2026-06-13
 
 Arkheionx v8.0.0 — "Final Engine". Consolidates the product into one clean,

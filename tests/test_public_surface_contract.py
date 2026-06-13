@@ -57,9 +57,11 @@ class PublicSurfaceContractTests(unittest.TestCase):
             self.assertIn(f"`{script}`", surface, f"undocumented script: {script}")
 
     def test_readme_links_readiness_docs(self) -> None:
+        # The clean v8.0.1 README links the stable command surface. The older
+        # stability/readiness docs still exist on disk but are no longer linked
+        # from the product README surface.
         readme = read("README.md")
-        for doc in ("docs/PUBLIC_SURFACE.md", "docs/STABILITY_CONTRACT.md", "docs/V3_READINESS.md"):
-            self.assertIn(f"]({doc})", readme, doc)
+        self.assertIn("](docs/PUBLIC_SURFACE.md)", readme)
 
     def test_cli_reference_links_public_surface(self) -> None:
         self.assertIn("PUBLIC_SURFACE.md", read("docs/CLI_REFERENCE.md"))

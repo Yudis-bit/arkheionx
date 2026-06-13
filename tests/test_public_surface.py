@@ -18,30 +18,40 @@ class PublicSurfaceTests(unittest.TestCase):
     def test_readme_front_page_positioning(self) -> None:
         readme = self.read("README.md")
         self.assertIn("# Arkheionx", readme)
-        self.assertIn("Local-first protocol security control plane for DeFi teams.", readme)
-        self.assertIn("Map the protocol. Prove the path. Prepare the handoff.", readme)
-        self.assertIn("Developer-Native Review Map and Local Artifact Foundation", readme)
-        self.assertIn("Foundry tells you which tests passed.", readme)
-        self.assertIn("The full v4 Protocol", readme)
-        self.assertIn("Security Control Plane remains planned direction", readme)
-        self.assertRegex(readme, r"not a completed v3\.2\.0 runtime\s+surface")
-        self.assertIn("## What Arkheionx Does", readme)
-        self.assertIn("## What It Does Not Do", readme)
-        self.assertIn("## Quick Start", readme)
-        self.assertIn("## Evidence Model", readme)
-        self.assertIn("## Safety Boundaries", readme)
-        self.assertIn("## Documentation", readme)
-        self.assertIn("Latest stable release: **v8.0.0", readme)
-        # Workbench command suite is the front-page focus.
-        for command in ["arkheionx open", "arkheionx review-map", "arkheionx hunt",
-                        "arkheionx prove", "arkheionx trace", "arkheionx evidence",
-                        "arkheionx report"]:
-            self.assertIn(command, readme)
-        self.assertIn(".arkheionx/out/", readme)
-        self.assertIn("generated, local, gitignored, and not intended to", readme)
-        self.assertIn("HUMAN_REVIEWED", readme)
-        self.assertIn("manual reviewer attestation only", readme)
-        # No stale v2.3.0-as-latest-stable wording.
+        self.assertIn(
+            "Local-first Ethereum security research workflow for Solidity and DeFi repositories.",
+            readme,
+        )
+        self.assertIn(
+            "No RPC. No live-chain scanning. No auto-submit. Human review required.",
+            readme,
+        )
+        # Clean product README structure (the v8.0.1 surface).
+        for heading in [
+            "## What it does",
+            "## Why it exists",
+            "## Quickstart",
+            "## Core workflow",
+            "## Protocol Lens Packs",
+            "## Outputs",
+            "## Safety boundaries",
+            "## Documentation",
+            "## Release status",
+            "## License",
+        ]:
+            self.assertIn(heading, readme)
+        self.assertIn("arkheionx review", readme)
+        self.assertIn("review-map", readme)
+        self.assertIn("Latest stable release: **v8.0.1", readme)
+        # Version soup and old slogans must be gone from the current product surface.
+        for legacy in [
+            "control plane",
+            "Developer-Native Review Map and Local Artifact Foundation",
+            "What's Stable in v3",
+            "Try the V4 demo",
+            "Map the protocol. Prove the path. Prepare the handoff.",
+        ]:
+            self.assertNotIn(legacy, readme)
         self.assertNotIn("Latest stable release: **v2.3.0", readme)
 
     def test_github_repo_surface_doc_exists(self) -> None:
@@ -70,8 +80,6 @@ class PublicSurfaceTests(unittest.TestCase):
     def test_readme_documentation_links_exist(self) -> None:
         readme = self.read("README.md")
         self.assertIn("## Documentation", readme)
-        for section in ["Start:", "Core workflow:", "Advanced:"]:
-            self.assertIn(section, readme)
         for path in re.findall(r"(?<!!)\]\(([^)]+)\)", readme):
             if path.startswith(("http://", "https://", "mailto:")) or path.startswith("#"):
                 continue

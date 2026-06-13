@@ -1,0 +1,63 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const contents = [
+  ["Scope map", "What is in and out of scope, read from your scope note."],
+  ["Value-flow map", "Where assets enter, move, and exit the system."],
+  ["Interaction map", "How contracts and roles touch each other."],
+  ["Review lanes", "A prioritized order for a human to inspect."],
+  ["Evidence tasks", "Local test ideas, each with a kill condition."],
+  ["Evidence rubric", "How to grade whether a test proves its task."],
+  ["Report filter", "A gate for weak or out-of-scope candidates."],
+  ["review.json / manifest.json", "The same review pack as machine-readable artifacts."]
+];
+---
+
+<Layout
+  title="Core workflow — Arkheionx"
+  description="The arkheionx review command writes a local review pack: scope, value flow, review lanes, evidence tasks, an evidence rubric, and a report filter. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Core workflow</p>
+      <h1>One command builds a local review pack.</h1>
+      <p>
+        <code>arkheionx review</code> reads a repository and a scope note and writes a single
+        local review pack — Markdown for humans and JSON for tools — before anyone writes a
+        finding.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Local and deterministic.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx review . --scope-file scope.md --out .arkheionx/review</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {contents.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">What it means</p>
+      <h2>A review pack is structure, not a verdict.</h2>
+      <p>
+        The review pack shows where to look and what evidence is still missing. It does not
+        confirm vulnerabilities, assign final severity, or replace an audit. No RPC, no
+        live-chain scanning, no auto-submit. Human review is required. See
+        <code>docs/CORE_WORKFLOW.md</code>.
+      </p>
+      <a href="/docs/cli-reference" class="workflow-button">See the CLI reference</a>
+    </section>
+  </main>
+</Layout>

@@ -2,7 +2,7 @@
 const path = Astro.url.pathname;
 const sections = [
   {
-    label: "Start",
+    label: "Start here",
     links: [
       ["/docs", "Overview"],
       ["/docs/getting-started", "Getting started"],
@@ -11,50 +11,40 @@ const sections = [
     ]
   },
   {
-    label: "Model",
+    label: "Review workflow",
     links: [
-      ["/docs/concepts", "Concepts"],
-      ["/docs/safety-model", "Safety model"],
-      ["/docs/determinism", "Determinism"],
-      ["/docs/fixture-harness", "Fixture harness"]
+      ["/docs/core-workflow", "Core workflow"],
+      ["/docs/review-workflow", "Review pack"],
+      ["/docs/evidence-judge", "Evidence judge"],
+      ["/docs/report-filter", "Report filter"],
+      ["/docs/cli-reference", "CLI reference"]
     ]
   },
   {
-    label: "Use",
+    label: "Protocol-aware review",
     links: [
-      ["/docs/how-it-works", "How it works"],
-      ["/docs/review-workflow", "Review workflow"],
-      ["/docs/bug-bounty", "Bug bounty"],
-      ["/docs/pre-audit", "Pre-audit"],
-      ["/docs/cli-reference", "CLI reference"],
+      ["/docs/protocol-lens-packs", "Protocol Lens Packs"],
+      ["/docs/fixed-credit-market", "Fixed Credit Market lens"]
+    ]
+  },
+  {
+    label: "Reference",
+    links: [
+      ["/docs/concepts", "Concepts"],
+      ["/docs/schemas", "Schemas"],
+      ["/docs/safety-model", "Safety boundaries"],
+      ["/docs/determinism", "Determinism"],
       ["/docs/faq", "FAQ"]
     ]
   },
   {
-    label: "Blind spots (v5)",
+    label: "Archive",
     links: [
-      ["/docs/v5", "V5 overview"],
-      ["/docs/blind-spots", "Blind spots"],
-      ["/docs/research-pack", "Research pack"],
-      ["/docs/research-memory", "Research memory"]
-    ]
-  },
-  {
-    label: "Scope orchestration (v7)",
-    links: [
-      ["/docs/v7", "V7 overview"],
-      ["/docs/scope-orchestration", "Scope orchestration"],
-      ["/docs/scope-pack", "Scope pack"],
-      ["/docs/evidence-judge", "Evidence judge"],
-      ["/docs/report-filter", "Report filter"]
-    ]
-  },
-  {
-    label: "Release",
-    links: [
-      ["/docs/v7", "V7 release"],
-      ["/docs/v5", "V5 release"],
-      ["/docs/v4", "V4 release"]
+      ["/docs/v7-5", "v7.5 Protocol Lens"],
+      ["/docs/v7", "v7 Scope orchestration"],
+      ["/docs/v6", "v6 Evidence graph"],
+      ["/docs/v5", "v5 Blind spots"],
+      ["/docs/v4", "v4 Review map"]
     ]
   }
 ];
@@ -82,7 +72,7 @@ const sections = [
     <dl>
       <dt>Surface</dt><dd>Public</dd>
       <dt>Mode</dt><dd>Local/static</dd>
-      <dt>Version</dt><dd>v8.0.0</dd>
+      <dt>Version</dt><dd>v8.0.1</dd>
     </dl>
   </aside>
 </div>

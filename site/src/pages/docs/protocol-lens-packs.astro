@@ -1,0 +1,62 @@
+---
+import Layout from "../../components/Layout.astro";
+
+const adds = [
+  ["Protocol model", "Behavior promises the protocol family appears to rely on."],
+  ["Economic invariants", "Conditions that should hold for the family to stay solvent."],
+  ["Temporal windows", "Time-based behavior such as maturity or settlement."],
+  ["Lens review lanes", "Review lanes tuned to the protocol family."],
+  ["Lens evidence tasks", "Evidence tasks tuned to the protocol family."]
+];
+---
+
+<Layout
+  title="Protocol Lens Packs — Arkheionx"
+  description="Protocol Lens Packs make an Arkheionx review protocol-aware by modeling a protocol family. A lens is a planning model, not a finding. Human review required."
+>
+  <main class="workflow-page">
+    <section class="workflow-hero">
+      <p class="workflow-kicker">Protocol-aware review</p>
+      <h1>Make the review protocol-aware.</h1>
+      <p>
+        A protocol lens models a protocol family — its value flows, behavior promises, economic
+        invariants, and temporal windows — so the review lanes, tasks, and evidence requirements
+        become protocol-aware. The engine stays generic; a lens adds context, not target-specific
+        knowledge.
+      </p>
+    </section>
+
+    <section class="workflow-command">
+      <div>
+        <p class="workflow-kicker">Run it</p>
+        <h2>Add a lens to the review.</h2>
+      </div>
+      <div class="workflow-command__stack">
+        <pre><code>arkheionx lens-list
+arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review</code></pre>
+      </div>
+    </section>
+
+    <section class="workflow-steps">
+      {adds.map((item) => (
+        <article>
+          <span>+</span>
+          <h2>{item[0]}</h2>
+          <p>{item[1]}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="workflow-boundary">
+      <p class="workflow-kicker">What it does not mean</p>
+      <h2>A lens is a model, not a finding.</h2>
+      <p>
+        A lens encodes no line numbers and no specific known bug. It does not confirm
+        vulnerabilities, assign final severity, or replace an audit, and it never runs against a
+        live chain. The first lens is the generic Fixed Credit Market family. Human review is
+        required. See <code>docs/PROTOCOL_LENS_PACKS.md</code>.
+      </p>
+      <a href="/docs/fixed-credit-market" class="workflow-button">See the Fixed Credit Market lens</a>
+    </section>
+  </main>
+</Layout>

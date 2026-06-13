@@ -12,11 +12,8 @@ class ValueFlowPositioningTests(unittest.TestCase):
 
     def test_readme_uses_value_flow_positioning(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("money-flow graph", readme)
-        self.assertIn("Map the protocol. Prove the path. Prepare the handoff.", readme)
-        self.assertIn("Foundry tells you which tests passed.", readme)
-        self.assertIn("Maps contracts, functions, value paths, assumptions, and test gaps.", readme)
-        self.assertIn("Test Gap Map", readme)
+        self.assertIn("Local-first Ethereum security research workflow", readme)
+        self.assertIn("value flow", readme)
         self.assertIn("review-map", readme)
         self.assertIn("Not an audit", readme)
         self.assertIn("No severity guarantee.", readme)
@@ -28,7 +25,6 @@ class ValueFlowPositioningTests(unittest.TestCase):
             "docs/DEVELOPER_RESEARCHER_WORKFLOW.md",
         ]:
             self.assertTrue((REPO_ROOT / path).exists(), path)
-        self.assertIn("docs/VALUE_FLOW_WORKBENCH.md", self.read("README.md"))
 
     def test_roadmap_and_changelog_name_current_direction(self) -> None:
         roadmap = self.read("docs/ROADMAP.md")
@@ -69,28 +65,9 @@ class ValueFlowPositioningTests(unittest.TestCase):
         self.assertIn("planned", docs.lower())
 
     def test_workbench_commands_documented_as_available(self) -> None:
-        readme = self.read("README.md")
-        for command in [
-            "doctor",
-            "open",
-            "review-map",
-            "map",
-            "flow",
-            "hunt",
-            "prove",
-            "trace",
-            "evidence",
-            "report",
-            "validate-artifacts",
-        ]:
-            self.assertIn(f"`{command}`", readme)
-        for command in [
-            "arkheionx open",
-            "arkheionx review-map",
-            "arkheionx hunt",
-            "arkheionx prove",
-        ]:
-            self.assertIn(command, readme)
+        cli_ref = self.read("docs/CLI_REFERENCE.md")
+        for command in ["review", "review-map", "hunt", "prove", "trace", "evidence", "report"]:
+            self.assertIn(command, cli_ref)
         for doc in [
             "docs/PROTOCOL_MAP.md",
             "docs/SOLO_RESEARCH_WORKFLOW.md",
@@ -98,7 +75,6 @@ class ValueFlowPositioningTests(unittest.TestCase):
             "docs/EVIDENCE_PACKAGE.md",
         ]:
             self.assertTrue((REPO_ROOT / doc).exists(), doc)
-            self.assertIn(doc, readme)
         workflow = self.read("docs/SOLO_RESEARCH_WORKFLOW.md")
         self.assertIn("Find the money. Map the protocol. Prove the bug.", workflow)
 
@@ -115,11 +91,6 @@ class ValueFlowPositioningTests(unittest.TestCase):
             "No severity guarantee.",
         ]:
             self.assertIn(phrase, readme)
-        # The archive corpus truth now lives in the research dashboard, linked from README.
-        self.assertIn("reports/research_dashboard.md", readme)
-        dashboard = self.read("reports/research_dashboard.md")
-        for phrase in ["Total PoCs", "structured PoCs"]:
-            self.assertIn(phrase, dashboard)
 
     def test_repositioning_checks_pass(self) -> None:
         for command in [

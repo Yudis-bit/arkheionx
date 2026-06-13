@@ -27,15 +27,10 @@ if str(ROOT) not in sys.path:
 
 from arkheionx.version import CURRENT_MILESTONE, STABLE_RELEASE, __version__  # noqa: E402
 
-REQUIRED_VISUALS = [
-    "docs/assets/arkheionx-workflow-v27.svg",
-    "docs/assets/arkheionx-output-pipeline.svg",
-    "docs/assets/arkheionx-evidence-ladder.svg",
-    "docs/assets/arkheionx-v3-architecture.svg",
-    "docs/assets/arkheionx-v3-public-surface.svg",
-    "docs/assets/arkheionx-v3-demo-fixtures.svg",
-    "docs/assets/arkheionx-v3-stability.svg",
-]
+# The clean v8.0.1 product README no longer embeds the architecture image wall.
+# Visual assets still live under docs/assets/ for the docs site, but the README is
+# intentionally text-first, so no visuals are required on the README surface.
+REQUIRED_VISUALS: list[str] = []
 READINESS_DOCS = [
     "docs/PUBLIC_SURFACE.md",
     "docs/STABILITY_CONTRACT.md",

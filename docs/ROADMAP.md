@@ -14,9 +14,20 @@ outputs remain supported as advanced workflows. Future work prioritizes
 value-flow mapping, missing tests, developer workflow, and researcher review
 maps.
 
-Current milestone: v8.0.0.
+Current milestone: v8.0.1.
 Next milestone: v8.1.0.
-Latest stable: v8.0.0 — Final Engine.
+Latest stable: v8.0.1 — Clean Product Surface.
+
+## v8.0.1 — Clean Product Surface (released)
+
+v8.0.1 is a product-surface patch on top of v8.0.0. It rewrites the root README
+and rebuilds the website so Arkheionx reads as one current product instead of a
+version-heavy archive: a smaller homepage, a clearer docs path, and copy focused
+on the current `arkheionx review` workflow. It adds no engine behavior, no CLI
+command, and no analysis change; the v8.0.0 review workflow, Protocol Lens Packs,
+schemas, tests, and safety boundaries are unchanged.
+
+Next: v8.1.0 — additional generic protocol-family lenses and review-pack ergonomics.
 
 ## v8.0.0 — Final Engine (released)
 

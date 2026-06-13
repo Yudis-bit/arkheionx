@@ -1,170 +1,190 @@
 ---
 import Layout from "../../components/Layout.astro";
+
+const groups = [
+  {
+    label: "Start here",
+    links: [
+      ["/docs/getting-started", "Getting started", "What Arkheionx is, who it is for, and what to expect."],
+      ["/docs/core-workflow", "Core workflow", "The arkheionx review command and the local review pack."],
+      ["/docs/cli-reference", "CLI reference", "Every command, flag, and exit code."]
+    ]
+  },
+  {
+    label: "Review workflow",
+    links: [
+      ["/docs/review-workflow", "Review pack", "How a repo becomes scope, value flow, lanes, and tasks."],
+      ["/docs/evidence-judge", "Evidence judge", "Grade whether a local test proves its task."],
+      ["/docs/report-filter", "Report filter", "Block weak, out-of-scope, or under-proven candidates."]
+    ]
+  },
+  {
+    label: "Protocol-aware review",
+    links: [
+      ["/docs/protocol-lens-packs", "Protocol Lens Packs", "Model a protocol family without making the engine target-specific."],
+      ["/docs/fixed-credit-market", "Fixed Credit Market lens", "The first generic protocol-family lens."]
+    ]
+  },
+  {
+    label: "Reference",
+    links: [
+      ["/docs/schemas", "Schemas", "Machine-readable review and manifest artifacts."],
+      ["/docs/safety-model", "Safety boundaries", "What Arkheionx does, and what it does not do."],
+      ["/releases", "Release notes", "What changed in the current release."]
+    ]
+  }
+];
+
+const archive = [
+  ["/docs/concepts", "Concepts"],
+  ["/docs/installation", "Installation"],
+  ["/docs/quickstart", "Quickstart"],
+  ["/docs/determinism", "Determinism"],
+  ["/docs/fixture-harness", "Fixture harness"],
+  ["/docs/faq", "FAQ"],
+  ["/docs/v7-5", "v7.5 Protocol Lens"],
+  ["/docs/v7", "v7 Scope orchestration"],
+  ["/docs/v6", "v6 Evidence graph"],
+  ["/docs/v5", "v5 Blind spots"],
+  ["/docs/v4", "v4 Review map"]
+];
 ---
 
 <Layout
-  title="ArkheionX Docs"
-  description="Official ArkheionX documentation for local-first smart contract security review workflows."
+  title="Docs — Arkheionx"
+  description="Documentation for Arkheionx: the local-first review pack, protocol-aware lenses, schemas, and safety boundaries."
 >
-  <main class="docs-home">
-    <section class="docs-hero">
-      <p class="docs-kicker">Documentation</p>
-      <h1>Start with the review map.</h1>
+  <main class="docs-index">
+    <header class="docs-top">
+      <p class="kicker">Documentation</p>
+      <h1>Start with one local review pack.</h1>
       <p>
-        ArkheionX helps security teams turn a Solidity or Foundry repository into structured
-        review context: contracts, roles, value paths, assumptions, test gaps, evidence, fixture
-        benchmarks, and snapshot drift.
+        Arkheionx turns a Solidity or DeFi repository into a local review pack: scope, value
+        flow, protocol behavior, review lanes, evidence tasks, and a report filter. Human review
+        is required.
       </p>
-    </section>
+    </header>
 
-    <section class="docs-start-grid">
-      <a href="/docs/getting-started">
-        <span>01</span>
-        <h2>Getting started</h2>
-        <p>Understand what ArkheionX is, who it is for, and what to expect.</p>
-      </a>
+    {groups.map((group) => (
+      <section class="docs-group">
+        <p class="group-label">{group.label}</p>
+        <div class="cards">
+          {group.links.map(([href, title, body]) => (
+            <a class="card" href={href}>
+              <h2>{title}</h2>
+              <p>{body}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
 
-      <a href="/docs/installation">
-        <span>02</span>
-        <h2>Installation</h2>
-        <p>Install from source, inspect the installer, update, and uninstall.</p>
-      </a>
-
-      <a href="/docs/quickstart">
-        <span>03</span>
-        <h2>Quickstart</h2>
-        <p>Run the first local commands and confirm the tool is available.</p>
-      </a>
-    </section>
-
-    <section class="docs-section">
-      <div>
-        <p class="docs-kicker">Core concepts</p>
-        <h2>The vocabulary of a review map.</h2>
-      </div>
-
-      <div class="docs-concept-grid">
-        <a href="/docs/concepts">
-          <strong>Protocol surface</strong>
-          <p>The parts of a codebase that matter for review: actors, permissions, value paths, and assumptions.</p>
-        </a>
-        <a href="/docs/fixture-harness">
-          <strong>Fixture harness</strong>
-          <p>Local/static benchmark shapes for checking deterministic output and drift.</p>
-        </a>
-        <a href="/docs/determinism">
-          <strong>Determinism</strong>
-          <p>Stable IDs, JSON-safe outputs, source fingerprints, and reproducible snapshots.</p>
-        </a>
-        <a href="/docs/safety-model">
-          <strong>Safety model</strong>
-          <p>What ArkheionX does not do: no automatic vulnerability confirmation or audit replacement.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="docs-section">
-      <div>
-        <p class="docs-kicker">Workflow</p>
-        <h2>Use ArkheionX as review infrastructure.</h2>
-      </div>
-
-      <div class="docs-workflow">
-        <article>
-          <span>1</span>
-          <h3>Install locally</h3>
-          <p>Use the source installer or a manual GitHub checkout.</p>
-        </article>
-        <article>
-          <span>2</span>
-          <h3>Check the environment</h3>
-          <p>Run version and doctor commands before reviewing a codebase.</p>
-        </article>
-        <article>
-          <span>3</span>
-          <h3>Build context</h3>
-          <p>Use ArkheionX outputs to organize assumptions, evidence, and gaps.</p>
-        </article>
-        <article>
-          <span>4</span>
-          <h3>Review manually</h3>
-          <p>The tool supports human review. It does not make the final security judgment.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="docs-section">
-      <div>
-        <p class="docs-kicker">Workflows &amp; release</p>
-        <h2>How it works, and how teams use it.</h2>
-      </div>
-
-      <div class="docs-concept-grid">
-        <a href="/docs/how-it-works">
-          <strong>How it works</strong>
-          <p>The review-map pipeline: from a local repo to value paths, assumptions, test gaps, and proof directions.</p>
-        </a>
-        <a href="/docs/bug-bounty">
-          <strong>Bug bounty</strong>
-          <p>A safe triage and hypothesis workbench. No exploits, no submission, human review required.</p>
-        </a>
-        <a href="/docs/pre-audit">
-          <strong>Pre-audit</strong>
-          <p>Map value paths, close test gaps, and hand a reviewer a clearer surface before an audit.</p>
-        </a>
-        <a href="/docs/v4">
-          <strong>V4 release</strong>
-          <p>What V4 stabilizes, what stays experimental, and the known limitations.</p>
-        </a>
-        <a href="/docs/research-memory">
-          <strong>Research memory (v4.1)</strong>
-          <p>AI-assisted review: an agent brief, a hypothesis log, and a case-study generator. Hypotheses are prompts, not findings.</p>
-        </a>
-        <a href="/docs/v5">
-          <strong>Blind Spot Intelligence (v5)</strong>
-          <p>Prioritize high-impact surfaces with weak review evidence: blind-spots, criticality-map, counterfactuals. Not severity, not bug claims.</p>
-        </a>
-        <a href="/docs/research-pack">
-          <strong>Research pack (v5)</strong>
-          <p>Bundle blind spots, criticality, counterfactuals, an agent brief, and an evidence log into one local, vendor-agnostic pack.</p>
-        </a>
-        <a href="/docs/v6">
-          <strong>Evidence Graph + Interaction Matrix (v6)</strong>
-          <p>Classify the evidence on every high-impact surface and map the dangerous interactions that still lack tests. Not severity, not bug claims.</p>
-        </a>
-        <a href="/docs/complete-review">
-          <strong>Complete review (v6)</strong>
-          <p>Assemble the review map, blind spots, evidence graph, interaction matrix, and unresolved map into one local package for a human or an AI agent.</p>
-        </a>
-        <a href="/docs/v7">
-          <strong>Scope-Aware Orchestration (v7)</strong>
-          <p>Turn audit scope into review lanes, evidence requirements, and report filters for local, AI-assisted security research. Not severity, not bug claims.</p>
-        </a>
-        <a href="/docs/scope-pack">
-          <strong>Scope pack (v7)</strong>
-          <p>Bundle the scope map, review lanes, scope tasks, evidence template and rubric, report-filter checklist, and agent input into one local pack.</p>
-        </a>
-        <a href="/docs/evidence-judge">
-          <strong>Evidence judge (v7)</strong>
-          <p>Grade whether a local test actually proves the intended task. Candidate-with-evidence is not a confirmed vulnerability.</p>
-        </a>
-        <a href="/docs/report-filter">
-          <strong>Report filter (v7)</strong>
-          <p>Classify report candidates against scope rules before submission, with a human pre-submission checklist. Not final triage.</p>
-        </a>
-        <a href="/docs/v7-5">
-          <strong>Protocol Lens Packs</strong>
-          <p>Turn a general Solidity review into a protocol-aware workflow. The Fixed Credit Market lens models fixed maturity, credit/debt units, settlement, group exposure, bad debt, gates, fees, and periphery bundles. Planning, not verdicts.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="docs-section docs-section--links">
-      <a href="/docs/review-workflow">Review workflow</a>
-      <a href="/docs/cli-reference">CLI reference</a>
-      <a href="/docs/troubleshooting">Troubleshooting</a>
-      <a href="/docs/faq">FAQ</a>
-      <a href="/arkheionx-v4-technical-paper.pdf">Technical paper</a>
+    <section class="docs-archive">
+      <p class="group-label">Archive</p>
+      <nav aria-label="Archived documentation">
+        {archive.map(([href, label]) => (
+          <a href={href}>{label}</a>
+        ))}
+      </nav>
     </section>
   </main>
 </Layout>
+
+<style>
+  .docs-index {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  .kicker,
+  .group-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 0 0 14px;
+  }
+
+  .docs-top {
+    padding: 88px 0 24px;
+    max-width: 720px;
+  }
+
+  .docs-top h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    font-weight: 600;
+  }
+
+  .docs-top p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .docs-group {
+    padding: 36px 0 8px;
+    border-top: 1px solid var(--line);
+    margin-top: 28px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    display: block;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .card:hover {
+    border-color: var(--amber);
+    color: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .docs-archive {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .docs-archive nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+  }
+
+  .docs-archive a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: var(--mono);
+  }
+
+  .docs-archive a:hover {
+    color: var(--text);
+  }
+</style>

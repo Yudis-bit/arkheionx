@@ -38,7 +38,8 @@ NEGATION_MARKERS = ("no ", "not ", "never", "n't", "without", "does not", "do no
 
 def _scanned_files() -> list[Path]:
     files: list[Path] = [REPO_ROOT / "README.md", REPO_ROOT / "pyproject.toml",
-                         REPO_ROOT / "release-notes" / "v8.0.0.md"]
+                         REPO_ROOT / "release-notes" / "v8.0.0.md",
+                         REPO_ROOT / "release-notes" / "v8.0.1.md"]
     files += sorted((REPO_ROOT / "docs").rglob("*.md"))
     files += sorted((REPO_ROOT / "site" / "src").rglob("*.astro"))
     files += sorted((REPO_ROOT / "site" / "src").rglob("*.ts"))
@@ -73,6 +74,7 @@ class PublicSurfaceIsGenericTests(unittest.TestCase):
         self.assertIn("README.md", names)
         self.assertIn("pyproject.toml", names)
         self.assertIn("v8.0.0.md", names)
+        self.assertIn("v8.0.1.md", names)
         self.assertIn("fixed_credit_market.py", names)
 
     def test_no_target_specific_names(self) -> None:

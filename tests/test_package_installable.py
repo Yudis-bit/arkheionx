@@ -27,7 +27,7 @@ class PackageInstallableTests(unittest.TestCase):
         data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
         self.assertEqual(data["project"]["name"], "arkheionx")
         self.assertEqual(data["project"]["scripts"]["arkheionx"], "arkheionx.cli.main:main")
-        self.assertEqual(data["project"]["version"], "8.0.0")
+        self.assertEqual(data["project"]["version"], "8.0.1")
         self.assertEqual(data["project"]["dependencies"], [])
 
     def test_editable_install_and_console_version(self) -> None:
@@ -65,9 +65,9 @@ class PackageInstallableTests(unittest.TestCase):
                 capture_output=True,
             )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("package version: 8.0.0", result.stdout)
-        self.assertIn("Latest stable release: v8.0.0", result.stdout)
-        self.assertIn("Current milestone: v8.0.0", result.stdout)
+        self.assertIn("package version: 8.0.1", result.stdout)
+        self.assertIn("Latest stable release: v8.0.1", result.stdout)
+        self.assertIn("Current milestone: v8.0.1", result.stdout)
         self.assertIn("Next milestone: v8.1.0", result.stdout)
 
     def test_no_publish_workflow_keywords(self) -> None:
