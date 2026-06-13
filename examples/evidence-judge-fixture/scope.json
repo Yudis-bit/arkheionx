@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "scope_notes": "Repo HEAD may differ from the deployed bug bounty snapshot. Vault and AdminConfig are deployed and in scope; ExperimentalVault is a HEAD-only experiment and is out of scope.",
+  "in_scope_paths": ["src/Vault.sol", "src/AdminConfig.sol", "src/MockToken.sol"],
+  "out_of_scope_paths": ["src/ExperimentalVault.sol"],
+  "in_scope_contracts": ["Vault", "AdminConfig", "MockToken"],
+  "out_of_scope_contracts": ["ExperimentalVault"],
+  "deployed_snapshot_notes": ["Use the audited commit for the deployed Vault target; ExperimentalVault is not deployed."],
+  "manual_notes": ["ExperimentalVault is out of scope: do not generate a finding from it."]
+}
