@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Senior Triage Pack",
+  "description": "Machine-readable triage.json produced by the private `arkheionx triage` mode. It records a senior research-triage decision: whether a target is worth touching, which leads to pursue or kill, dedup and freshness verdicts, an optional deployment-reality plan, and a research-priority scoreboard. A research-priority score orders attention; it is not a severity and not a confirmed vulnerability. No RPC by default, no live-chain calls, no auto-submit. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "artifact_type", "arkheionx_version", "generated_at", "command",
+    "repo_path", "scope_file", "known_path", "audits_path", "addresses_file",
+    "rpc_mode", "target_decision", "target_reason", "eligibility", "known_issue_map",
+    "freshness_diff", "deployment_reality", "lead_scoreboard", "top_3_leads",
+    "do_not_touch", "missing_context", "safety_flags", "safety_boundaries",
+    "human_review_required"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["senior-triage-v1"]},
+    "artifact_type": {"type": "string", "enum": ["senior_triage"]},
+    "arkheionx_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "command": {"type": "string", "enum": ["triage"]},
+    "repo_path": {"type": "string"},
+    "scope_file": {"type": "string"},
+    "known_path": {"type": "string"},
+    "audits_path": {"type": "string"},
+    "addresses_file": {"type": "string"},
+    "rpc_mode": {"type": "string", "enum": ["not_provided", "provided_not_run", "disabled"]},
+    "rpc_enabled": {"type": "boolean", "enum": [false]},
+    "rpc_endpoint_masked": {"type": "string"},
+    "target_decision": {"type": "string", "enum": ["TOUCH", "SKIP", "NEEDS_MORE_CONTEXT"]},
+    "target_confidence": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]},
+    "target_reason": {"type": "string"},
+    "eligibility": {
+      "type": "object",
+      "required": ["scope_provided", "scope_confidence", "target_decision", "severity_ceiling"],
+      "properties": {
+        "scope_provided": {"type": "boolean"},
+        "scope_confidence": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]},
+        "target_decision": {"type": "string", "enum": ["TOUCH", "SKIP", "NEEDS_MORE_CONTEXT"]},
+        "severity_ceiling": {"type": "string", "enum": ["UNKNOWN", "LOW", "MEDIUM", "HIGH", "CRITICAL"]},
+        "oos_traps": {"type": "array", "items": {"type": "string"}},
+        "trusted_role_traps": {"type": "array", "items": {"type": "string"}},
+        "missing_context": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "known_issue_map": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lead_id", "status", "duplicate_risk_score"],
+        "properties": {
+          "lead_id": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": [
+              "UNKNOWN", "NO_MATCH_FOUND", "SIMILAR_KNOWN", "LIKELY_DUPLICATE",
+              "DOCUMENTED_BEHAVIOR", "ACKNOWLEDGED_RISK", "OUT_OF_SCOPE",
+              "TRUSTED_ROLE_ONLY", "PUBLIC_TEST_COVERED"
+            ]
+          },
+          "duplicate_risk_score": {"type": "integer"},
+          "public_test_covered": {"type": "boolean"}
+        }
+      }
+    },
+    "freshness_diff": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lead_id", "status", "score"],
+        "properties": {
+          "lead_id": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": [
+              "FRESH", "STALE", "UNKNOWN_FRESHNESS", "POST_AUDIT_CHANGE", "LIVE_MISMATCH",
+              "NEW_ADAPTER", "NEW_REGISTRY_ENTRY", "NEW_IMPLEMENTATION", "NEW_MIGRATION_PATH"
+            ]
+          },
+          "score": {"type": "integer"}
+        }
+      }
+    },
+    "deployment_reality": {
+      "type": "object",
+      "required": ["status", "rpc_mode"],
+      "properties": {
+        "status": {"type": "string"},
+        "rpc_mode": {"type": "string"},
+        "addresses_provided": {"type": "boolean"},
+        "recommended_checks": {"type": "array", "items": {"type": "string"}},
+        "safe_commands": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "lead_scoreboard": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "title", "surface", "decision", "dedup_status", "freshness_status",
+          "submit_readiness", "research_priority_score", "kill_condition"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "surface": {"type": "string"},
+          "decision": {"type": "string", "enum": ["PURSUE", "PARK", "KILL"]},
+          "dedup_status": {"type": "string"},
+          "freshness_status": {"type": "string"},
+          "submit_readiness": {
+            "type": "string",
+            "enum": [
+              "NOT_READY", "NEEDS_LOCAL_PROOF", "NEEDS_DEDUP", "NEEDS_SCOPE_CONFIRMATION",
+              "READY_FOR_REVIEW", "DO_NOT_SUBMIT"
+            ]
+          },
+          "research_priority_score": {"type": "integer"},
+          "kill_condition": {"type": "string"},
+          "next_command": {"type": "string"}
+        }
+      }
+    },
+    "top_3_leads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "title", "decision", "research_priority_score", "kill_condition"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "decision": {"type": "string", "enum": ["PURSUE", "PARK", "KILL"]},
+          "research_priority_score": {"type": "integer"},
+          "kill_condition": {"type": "string"}
+        }
+      }
+    },
+    "do_not_touch": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "reason", "blocking_factor", "what_would_change"],
+        "properties": {
+          "title": {"type": "string"},
+          "reason": {"type": "string"},
+          "blocking_factor": {"type": "string"},
+          "what_would_change": {"type": "string"}
+        }
+      }
+    },
+    "missing_context": {"type": "array", "items": {"type": "string"}},
+    "counts": {"type": "object"},
+    "safety_flags": {"type": "object"},
+    "safety_boundaries": {"type": "array", "items": {"type": "string"}},
+    "human_review_required": {"type": "boolean", "enum": [true]}
+  }
+}

@@ -151,6 +151,20 @@ invalid usage or a runtime error. See [`CORE_WORKFLOW.md`](CORE_WORKFLOW.md).
 | --- | --- | --- | --- | --- |
 | `arkheionx review` | One-command local review pack: run context, scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks (with kill conditions), evidence rubric, report filter, agent input, `review.json`, and `manifest.json`; add `--lens` for protocol-aware artifacts. Writes by default | human + `--json` (manifest) | `review/*` | stable-additive |
 
+## Private / experimental commands (local-only)
+
+`arkheionx triage` is a **private, experimental, local-only** senior research-triage
+mode. It runs *before* `arkheionx review` and decides what is worth reviewing and
+what to kill early, so review time is not spent proving what should never be pursued.
+It is intentionally **not** part of the stable command contract, is not wired into any
+release, site, or remote surface, and makes no RPC or live-chain calls by default.
+Output is a local planning pack — not a finding, not severity; human review is
+required. Internal note: `docs/internal/SENIOR_TRIAGE_MODE.md` (local only).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx triage` | Senior research triage before review: target decision, bounty-eligibility read, known-issue / dedup map, freshness diff, optional deployment-reality plan, research-priority scoreboard, top-3 leads, do-not-touch list, agent brief, `triage.json`, and `manifest.json`. No RPC by default; no auto-submit; no vulnerability claims. Writes by default | human + `--json` | `triage/*` | experimental (local-only) |
+
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
 | `arkheionx scope-map` | Parse a scope note into structured review rules (in/out of scope, severity conditions, trusted assumptions, dependency assumptions, known/accepted issues, prior-audit notes, design choices, invariants, focus areas, do-not-waste-time filters, report-candidate requirements) | human + `--json` | `scope-map/scope-map.{md,json}` | stable-additive |

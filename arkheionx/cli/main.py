@@ -48,6 +48,17 @@ FIRST_RUN_EPILOG = (
 )
 
 
+def _triage_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the private senior-triage mode.
+
+    Imported on demand so the shared command parser stays import-safe (and every
+    other command keeps working) even while this experimental mode evolves.
+    """
+    from arkheionx.senior_triage.command import triage_command
+
+    return triage_command(args)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
@@ -76,6 +87,28 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--json", action="store_true", help="Print machine-readable manifest JSON to stdout only (no human text).")
     review.add_argument("--no-write", action="store_true", help="Build the pack in memory only; do not write artifact files.")
     review.set_defaults(func=workbench.review_command)
+
+    triage = subparsers.add_parser(
+        "triage",
+        help="Run senior research triage before review (experimental, local-only). Produces a local triage pack that prioritizes what is worth reviewing and what should be killed early. Planning artifact, not a finding; human review required.",
+    )
+    triage.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    triage.add_argument("--scope-file", default="", help="Path to a markdown scope / program-rules note (optional).")
+    triage.add_argument("--known", default="", help="Optional folder of known issues / prior findings / public reports.")
+    triage.add_argument("--audits", default="", help="Optional folder of prior audit reports.")
+    triage.add_argument("--addresses", default="", help="Optional addresses JSON for a static deployment-reality plan.")
+    triage.add_argument("--baseline-ref", default="", help="Optional git ref to diff against for freshness.")
+    triage.add_argument("--since-date", default="", help="Optional YYYY-MM-DD freshness baseline date.")
+    triage.add_argument(
+        "--rpc-url",
+        dest="rpc",
+        default="",
+        help="Optional read-only RPC endpoint (advanced). Disabled by default; no live-chain calls are made and the chain is never mutated. The endpoint is masked in output.",
+    )
+    triage.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/triage/).")
+    triage.add_argument("--json", action="store_true", help="Print machine-readable triage JSON to stdout only (no human text).")
+    triage.add_argument("--no-write", action="store_true", help="Build the triage pack in memory only; do not write artifact files.")
+    triage.set_defaults(func=_triage_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
