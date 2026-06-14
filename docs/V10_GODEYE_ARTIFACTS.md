@@ -11,8 +11,10 @@ are local; nothing is pushed or submitted; no report is generated.
 | `02-semantic-map.md` | Markdown | semantic | Human summary + notable data-flow hints |
 | `03-call-graph.json` | JSON | semantic | Typed call edges (internal/interface/external/low-level) |
 | `04-storage-access-map.json` | JSON | semantic | Per-function storage reads/writes/deletes with lines |
+| `15-dataflow-taint.json` / `.md` | JSON+MD | semantic | Named taint findings (calldata/oracle/credit/message-id -> value sinks) |
 | `05-defi-entities.json` / `.md` | JSON+MD | defi | Detected economic entities with direction, confidence, evidence |
 | `06-state-transitions.json` / `.md` | JSON+MD | state | Before/action/after transitions, flags, invariant hints |
+| `16-state-contradictions.json` / `.md` | JSON+MD | state | Broken-lifecycle contradictions (transition, likely invariant, PoC family) |
 | `07-invariants.md` | Markdown | invariants | Candidate invariants; suspicious-here ones first, with reasons |
 | `08-invariants.json` | JSON | invariants | Machine-readable invariant set + classification |
 | `09-attack-graph.json` / `.md` | JSON+MD | attack | Attack candidates and their capability->impact chains |
@@ -23,8 +25,19 @@ are local; nothing is pushed or submitted; no report is generated.
 | `13-economic-severity.md` | Markdown | severity | Per-candidate severity verdict and reasoning |
 | `economic-severity.json` | JSON | severity | Machine-readable severity verdicts |
 | `14-dedup-scope-risk.md` | Markdown | memory | Root-cause hash, duplicate risk, scope risk per candidate |
+| `quality-gates.json` / `.md` | JSON+MD | warrun | Pre-output verification gates (pass/warn/fail + affected) |
 | `triage.json` | JSON | warrun | Full machine-readable run (artifact_type `godeye_war_run`) |
-| `manifest.json` | JSON | warrun | Artifact list, version/milestone metadata, safety flags |
+| `manifest.json` | JSON | warrun | Per-artifact list (type/path/generated/warnings), version/safety metadata |
+
+## Standard artifact header
+
+Every JSON artifact carries a standard machine-readable header so the set is stable
+and tool-ingestible: `schema_version`, `engine_version` (the V10 milestone),
+`generated_at` (UTC), `target_label` (basename only — never an absolute path),
+`target_hash` (a short sha256 of the target path), `semantic_mode`, `confidence`,
+`warnings` (always a list), and `artifact_type`. The manifest's `artifacts` list
+enumerates every artifact with its `path`, `artifact_type`, `generated` flag, and
+`warnings` count.
 
 ## Most important outputs
 
@@ -36,7 +49,8 @@ are local; nothing is pushed or submitted; no report is generated.
 - `artifact_type`: `godeye_war_run`; `milestone`: `v10.0.0-dev`; `report_generated`: `false`.
 - `semantic`: mode/confidence/counts.
 - `entities`, `transitions`, `invariants`, `attack_candidates`, `economic_severity`,
-  `fork_requirements`, `counts`.
+  `fork_requirements`, `dataflow_taint`, `state_contradictions`, `quality_gates`,
+  `counts` (incl. `taint_findings`, `contradictions`, `quality_gate_status`).
 - `safety_flags`: local_only, no_rpc_by_default, no_broadcast, no_signing_keys,
   no_auto_submit, no_report_generated, fork_is_plan_only, human_review_required.
 
