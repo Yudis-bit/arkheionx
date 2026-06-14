@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 
 from . import actors, assertions, setup_builder
-from .models import PoCSkeleton, REQUIRES_MANUAL_FILL
+from .models import PoCSkeleton, REQUIRES_MANUAL_FILL, TEMPLATE_ONLY, NEAR_COMPILE
 
 
 def _contract_of(qn: str) -> str:
@@ -32,6 +32,14 @@ def build_skeleton(candidate, smap=None) -> PoCSkeleton:
     file_name = f"Candidate_{candidate.id}_{_safe(family)[:28]}.t.sol"
     test_contract = f"PoC_{candidate.id.replace('-', '')}_{_safe(family)[:24]}"
 
+    # Honest compile-readiness: a structured family (dedicated actions+assertions and
+    # named actors) is NEAR_COMPILE (needs only the target import / constructor / TODO
+    # values); otherwise TEMPLATE_ONLY. Never COMPILE_LIKELY/FIXTURE_TESTED_COMPILE —
+    # we never claim a skeleton compiles or passes without an executed test.
+    readiness = NEAR_COMPILE if (assertions.has_specific_assertions(family)
+                                 and actor_names) else TEMPLATE_ONLY
+    severity_line = candidate.economic_severity or candidate.severity_hint or "see economic gate"
+
     fork_env = []
     header = [
         "// SPDX-License-Identifier: MIT",
@@ -44,7 +52,11 @@ def build_skeleton(candidate, smap=None) -> PoCSkeleton:
         f"// Attacker: {candidate.attacker_capability} | Victim: {candidate.victim} | "
         f"Asset: {candidate.asset}",
         f"// Entry: {candidate.entry_function} | Proof: {candidate.proof_strategy}",
-        "// SKELETON ONLY — will not compile unmodified. Fill the target import,",
+        f"// Economic severity (pre-proof gate): {severity_line}",
+        f"// Compile-readiness: {readiness} (SKELETON, not a passing PoC).",
+        "// EXPECTED: with the bug present the invariant assertion below should FAIL",
+        "//   (that failure is the proof); against a fixed target it should PASS.",
+        "// SKELETON ONLY — will not compile unmodified. MANUAL FILL: the target import,",
         "// constructor args, and TODO markers. Local simulation only: no broadcast,",
         "// no private keys, no live network.",
     ]
@@ -53,6 +65,7 @@ def build_skeleton(candidate, smap=None) -> PoCSkeleton:
         header += [
             "// FORK REQUIRED: set the fork RPC via an env var (name only). Use",
             "//   vm.createSelectFork(vm.envString(\"FORK_RPC_URL\")); in setUp().",
+            "// SECRET REDACTION: never commit the RPC URL, key, or mnemonic — env name only.",
         ]
 
     body = [f"contract {test_contract} is Test {{", ""]
@@ -75,9 +88,14 @@ def build_skeleton(candidate, smap=None) -> PoCSkeleton:
         action_sequence=action, assertions=assert_lines,
         required_mocks=["target contract import + constructor", "mock ERC20(s) as noted"],
         required_fork_env=fork_env,
-        comments=[f"Severity context: {candidate.severity_hint or 'see economic gate'}"],
+        comments=[
+            f"Severity context: {severity_line}",
+            f"Compile-readiness: {readiness} (skeleton, not a passing PoC).",
+            "Expected: the invariant assertion fails on the vulnerable target.",
+        ],
         source=source, confidence=candidate.confidence,
         compile_ready_level=REQUIRES_MANUAL_FILL,
+        compile_readiness=readiness,
     )
 
 

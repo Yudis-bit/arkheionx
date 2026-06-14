@@ -22,13 +22,16 @@ def severity_md(verdicts) -> str:
     for v in verdicts:
         lines += [
             f"## {v.candidate_id} — {v.label}",
-            f"- Impact: {v.impact}",
+            f"- Impact: {v.impact}" + (f" [{v.impact_type}]" if v.impact_type else ""),
             f"- Likelihood: {v.likelihood}",
-            f"- Cap: {v.cap}",
+            f"- Cap: {v.cap}" + (f" [{v.cap_type}]" if v.cap_type else ""),
+            f"- Proof quality: {v.proof_quality or 'n/a'}",
             f"- Repeatability: {v.repeatability}",
             f"- Gas/profit: {v.gas}",
             f"- Realism: {v.realism}",
         ]
+        if v.score and v.score.get("explanation"):
+            lines.append(f"- Score: {v.score['explanation']}")
         if v.reasons:
             lines.append("- Reasoning:")
             lines += [f"  - {r}" for r in v.reasons]

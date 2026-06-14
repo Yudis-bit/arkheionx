@@ -137,3 +137,9 @@ def action_sequence(family: str) -> list:
 
 def assertion_lines(family: str) -> list:
     return list(_ASSERTS.get(family, ["// TODO: assert the broken invariant fails here."]))
+
+
+def has_specific_assertions(family: str) -> bool:
+    """True if this family has dedicated action+assertion blocks (not the generic
+    TODO fallback). Used to assess compile-readiness honestly."""
+    return family in _ACTIONS and family in _ASSERTS

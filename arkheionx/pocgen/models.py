@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 TEMPLATE_ONLY = "template_only"
 NEAR_COMPILE = "near_compile"
 COMPILE_LIKELY = "compile_likely"
+FIXTURE_TESTED_COMPILE = "fixture_tested_compile"
 REQUIRES_MANUAL_FILL = "requires_manual_fill"
 
 
@@ -27,6 +28,7 @@ class PoCSkeleton:
     source: str = ""           # the .t.sol text
     confidence: str = "MEDIUM"
     compile_ready_level: str = REQUIRES_MANUAL_FILL
+    compile_readiness: str = TEMPLATE_ONLY
 
     def to_dict(self) -> dict:
         return dataclasses.asdict(self)

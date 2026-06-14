@@ -20,7 +20,7 @@ def skeletons_readme(skeletons) -> str:
     for s in skeletons:
         proof = "fork" if s.required_fork_env else "local"
         lines.append(f"| {s.file_name} | {s.candidate_id} | {s.family} | {proof} | "
-                     f"{s.compile_ready_level} |")
+                     f"{s.compile_readiness} |")
     lines += [
         "",
         "## Run (after filling TODOs)",

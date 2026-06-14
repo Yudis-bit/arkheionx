@@ -6,7 +6,21 @@ dust, trusted-role, buffer-capped, and unproven candidates are capped or killed.
 """
 from __future__ import annotations
 
-from . import caps, exploitability, gas_profit, impact_model, models as S, realism
+from . import caps, exploitability, gas_profit, impact_model, models as S, realism, score
+
+
+def _incomplete_fields(candidate):
+    """Fields a candidate must carry before it can be a SUBMIT_* (Rule 001.3/001.4)."""
+    missing = []
+    if not (candidate.attacker_capability or candidate.attacker):
+        missing.append("attacker")
+    if not candidate.victim:
+        missing.append("victim")
+    if not candidate.asset:
+        missing.append("asset")
+    if not candidate.broken_invariant:
+        missing.append("broken_invariant")
+    return missing
 
 
 def _base_label(candidate, context):
@@ -60,14 +74,23 @@ def classify(candidate, scope=None, context=None) -> S.SeverityVerdict:
         reasons.append("Reachable only by a trusted role; not an unprivileged bug.")
     else:
         label = _base_label(candidate, context)
+        # A submit-worthy label requires complete attacker/victim/asset/invariant.
+        missing = _incomplete_fields(candidate)
+        if label in S.SUBMIT_LABELS and missing:
+            label = S.PARK_INCOMPLETE
+            reasons.append("Cannot submit: missing " + ", ".join(missing) + ".")
 
-    impact_type, impact_text = impact_model.impact(family)
-    cap_type, cap_text = caps.cap(family)
+    impact_pair = impact_model.impact(family)
+    cap_pair = caps.cap(family)
     reach = exploitability.reachability(candidate)
     like = exploitability.likelihood(candidate)
     rep = exploitability.repeatability(family)
     gas_text = gas_profit.gas(family)
     real_text = realism.realism(family, candidate)
+    itype, _ = score.impact_type(family)
+    ctype, _ = score.cap_type(family)
+    proof_q = score.proof_quality(candidate)
+    sev_score = score.build_score(candidate, label)
 
     if label == S.NEEDS_FORK_PROOF:
         reasons.append("Real external state (AMM liquidity / deployed config) sets the actual "
@@ -77,21 +100,27 @@ def classify(candidate, scope=None, context=None) -> S.SeverityVerdict:
                        "program accepts it.")
     if label == S.KILL_DUST:
         reasons.append("Loss is dust with no attacker profit (immune for 18-decimal assets).")
+    if label == S.PARK_INCOMPLETE:
+        reasons.append("Park until the missing attacker/victim/asset/invariant fields are filled.")
 
     verdict = S.SeverityVerdict(
         candidate_id=candidate.id, label=label,
-        impact=f"{impact_type}: {impact_text}", likelihood=f"{reach}; {like}",
-        cap=f"{cap_type}: {cap_text}", repeatability=rep, gas=gas_text, realism=real_text,
-        reasons=reasons, final_recommendation=label, confidence=candidate.confidence,
+        impact=f"{impact_pair[0]}: {impact_pair[1]}", impact_type=itype,
+        likelihood=f"{reach}; {like}",
+        cap=f"{cap_pair[0]}: {cap_pair[1]}", cap_type=ctype, proof_quality=proof_q,
+        repeatability=rep, gas=gas_text, realism=real_text,
+        reasons=reasons, score=sev_score.to_dict(),
+        final_recommendation=label, confidence=candidate.confidence,
     )
 
     # --- annotate the candidate -------------------------------------------
     candidate.economic_severity = label
     candidate.recommendation = label
     candidate.severity_detail = {
-        "impact": verdict.impact, "likelihood": verdict.likelihood, "cap": verdict.cap,
+        "impact": verdict.impact, "impact_type": itype, "likelihood": verdict.likelihood,
+        "cap": verdict.cap, "cap_type": ctype, "proof_quality": proof_q,
         "repeatability": verdict.repeatability, "gas": verdict.gas, "realism": verdict.realism,
-        "reasons": verdict.reasons,
+        "score": sev_score.to_dict(), "reasons": verdict.reasons,
     }
     return verdict
 
