@@ -179,6 +179,25 @@ required. Internal notes live under `docs/private/` (local only).
 | --- | --- | --- | --- | --- |
 | `arkheionx hunter` | V9 universal senior exploit-hunter: program identity / scope map, source provenance, dedup corpus quality, freshness map, deployment reality, live-registry diff, value-flow and state-machine maps, ranked leads with a decision (PURSUE_NOW / NEEDS_POC / PARK_* / KILL_*), PoC plans, submission-risk, a report filter (default Submit: NO), engine evaluation, `triage.json`, and `manifest.json`. Read-only RPC only when provided (masked); no mutation; no auto-submit. Writes by default | human + `--json` | `hunter/*` | experimental (local-only) |
 
+`arkheionx war-run` is a **private, experimental, local-only** V10 Semantic DeFi
+Review Engine (internal codename: GodEye War Engine). It reconstructs a Solidity
+codebase as an economic machine — semantic map, DeFi entities, state transitions —
+derives candidate invariants, ranks attack candidates, generates Foundry PoC
+skeletons, gates economic severity (capping dust / trusted-role / unproven-buffer
+candidates), plans fork proof when deployed external state matters, and applies
+root-cause dedup memory. It is intentionally **not** part of the stable command
+contract, is not wired into any release, site, or remote surface, makes no RPC
+calls by default, performs no live-chain mutation, never broadcasts, requires no
+signing keys, and never auto-submits. Fork support is a plan only; RPC endpoints are
+referenced by environment variable name and redacted. No report is generated until
+an invariant is proven; output is local review context, not a finding or a severity,
+and human review is required.
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx war-run` | V10 semantic DeFi review engine: scope map, semantic map, call graph, storage-access map, DeFi entities, state transitions, candidate invariants (with suspicious-here reasons), attack-candidate ranking, Foundry PoC skeletons, economic severity verdicts (SUBMIT_* / VALID_BUT_LOW / NEEDS_FORK_PROOF / KILL_*), fork plan, dedup/scope risk, `triage.json`, and `manifest.json`. No RPC by default; no broadcast; fork is a plan only; no report generated. Writes by default | human + `--json` | `war-run/*` | experimental (local-only) |
+
+
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
 | `arkheionx scope-map` | Parse a scope note into structured review rules (in/out of scope, severity conditions, trusted assumptions, dependency assumptions, known/accepted issues, prior-audit notes, design choices, invariants, focus areas, do-not-waste-time filters, report-candidate requirements) | human + `--json` | `scope-map/scope-map.{md,json}` | stable-additive |

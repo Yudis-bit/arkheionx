@@ -1,0 +1,17 @@
+program:
+  name: Synthetic Credit Market
+  platform: generic-bounty
+chain: arbitrum
+in_scope:
+  - path: src
+    commit: deadbeef
+    contracts:
+      - OriginationRouter
+out_of_scope:
+  - The MockToken test helper is out of scope
+known_reports:
+  - reports/known.md
+rules:
+  no_production_testing: true
+  no_public_disclosure: true
+  no_frontend: true

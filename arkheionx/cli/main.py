@@ -72,6 +72,13 @@ def _hunter_command(args: argparse.Namespace) -> int:
     return hunter_command(args)
 
 
+def _war_run_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the V10 GodEye War Engine (Semantic DeFi Review Engine)."""
+    from arkheionx.warrun.command import war_run_command
+
+    return war_run_command(args)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
@@ -166,6 +173,27 @@ def build_parser() -> argparse.ArgumentParser:
     hunter.add_argument("--json", action="store_true", help="Print machine-readable hunter JSON to stdout only (no human text).")
     hunter.add_argument("--no-write", action="store_true", help="Build the hunter pack in memory only; do not write artifact files.")
     hunter.set_defaults(func=_hunter_command)
+
+    war_run = subparsers.add_parser(
+        "war-run",
+        help="V10 GodEye War Engine (experimental, local-first): reconstruct the economic "
+             "machine, derive invariants, rank attack paths, generate PoC skeletons, gate "
+             "economic severity, and plan fork proof. No report, no RPC by default, no "
+             "broadcast; fork is a plan only. Human review required.",
+    )
+    war_run.add_argument("target", nargs="?", default=".", help="Authorized local target repository / source dir.")
+    war_run.add_argument("--scope", default="", help="Path to a scope.yaml (or .json) describing program/in-scope/out-of-scope/rules.")
+    war_run.add_argument("--out", default="", help="Artifact output directory (default: <target>/.arkheionx/war-run/).")
+    war_run.add_argument("--max-candidates", type=int, default=10, help="Maximum attack candidates to keep (default 10).")
+    war_run.add_argument("--no-poc-skeletons", action="store_true", help="Do not generate Foundry PoC skeletons.")
+    war_run.add_argument("--no-fork", action="store_true", help="Do not generate a fork plan (local-only).")
+    war_run.add_argument("--allow-fork-plan", action="store_true", help="Generate a fork plan when external state matters (default on; explicit alias).")
+    war_run.add_argument("--memory", default="", help="Path to a root-cause memory directory (e.g. .arkheionx/memory) for dedup.")
+    war_run.add_argument("--asset-decimals", type=int, default=0, help="Optional realistic asset decimals to sharpen economic severity (e.g. 6 or 18).")
+    war_run.add_argument("--json", action="store_true", help="Print the machine-readable triage JSON to stdout only (no human text).")
+    war_run.add_argument("--markdown", action="store_true", help="(Default) human console output; artifacts are always Markdown+JSON.")
+    war_run.add_argument("--no-write", action="store_true", help="Build artifacts in memory only; do not write files.")
+    war_run.set_defaults(func=_war_run_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
