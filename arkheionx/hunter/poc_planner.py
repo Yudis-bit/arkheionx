@@ -13,11 +13,18 @@ from __future__ import annotations
 
 from . import lane_templates
 from . import models as M
+from . import reachability as R
 
 _DO_NOT_REPORT = "Do not write a report until the expected assertion passes."
 
 
 def _status(lead: M.HunterLead, *, rpc_ran: bool, baseline_provided: bool) -> str:
+    if R.is_unknown_gated(lead.attacker_reachability):
+        return M.POC_NEEDS_REACHABILITY
+    if R.is_trusted_role_gated(lead.attacker_reachability):
+        return M.POC_BLOCKED_TRUSTED_ROLE
+    if R.is_context_gated(lead.attacker_reachability):
+        return M.POC_NEEDS_DEPLOYMENT_STATE
     if lead.source_status in M.SOURCE_INADEQUATE:
         return M.POC_NEEDS_SOURCE
     if lead.lead_type in (M.DEPLOYMENT_MISMATCH, M.LIVE_REGISTRY_DIFF) and not rpc_ran:
@@ -54,7 +61,8 @@ def build_poc_plans(leads: list, *, rpc_ran: bool, baseline_provided: bool) -> l
     plans: list = []
     n = 0
     for lead in leads:
-        if lead.decision not in M.PURSUEABLE:
+        if lead.decision not in M.PURSUEABLE or not R.is_attacker_reachable(
+                lead.attacker_reachability):
             continue
         n += 1
         templates = lane_templates.templates_for_lead_type(lead.lead_type)
@@ -80,7 +88,7 @@ def build_poc_plans(leads: list, *, rpc_ran: bool, baseline_provided: bool) -> l
                               "confirm the exact root behavior against known/audit/test material first.",
             why_not_oos="Surface is within the in-scope contracts; re-confirm against the scope exclusions.",
             why_not_trusted_role_only=("An unprivileged external path reaches this surface."
-                                       if lead.attacker_reachability == "UNPRIVILEGED_EXTERNAL"
+                                       if R.is_attacker_reachable(lead.attacker_reachability)
                                        else "Confirm a non-privileged path exists before investing time."),
             baseline=("Provided baseline." if baseline_provided else
                       "No baseline; capture current behavior before/after the attack."),

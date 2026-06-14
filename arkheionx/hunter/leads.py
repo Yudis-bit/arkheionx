@@ -14,6 +14,7 @@ from __future__ import annotations
 from . import lane_templates
 from . import lead_types
 from . import models as M
+from . import reachability as R
 from .deployment import deployment_status_for_contract
 from .source_recovery import source_status_for_contract
 from .state_machine import state_machines_for_contract
@@ -36,6 +37,19 @@ def _band(score: int) -> str:
     if score >= 45:
         return M.MEDIUM
     return M.LOW
+
+
+def _reachability_score(original: int, label: str) -> int:
+    """Normalize the legacy visibility score using the resolved who-can-call label."""
+    if R.is_attacker_reachable(label):
+        return max(original, 80)
+    if R.is_unknown_gated(label) or R.is_context_gated(label):
+        return min(original, 40)
+    if R.is_trusted_role_gated(label):
+        return min(original, 20)
+    if R.is_internal(label) or R.is_non_value(label):
+        return 0
+    return original
 
 
 def _value_path_for_surface(value_paths: list, surface: str):
@@ -75,6 +89,7 @@ def build_leads(
     registry_diff: M.RegistryDiff,
     source_provenance: M.SourceProvenance,
     program_identity: M.ProgramIdentity,
+    reach_map=None,
 ) -> list:
     leads: list = []
     covered_contracts: set = set()
@@ -90,6 +105,21 @@ def build_leads(
         ordering = vp.state_update_ordering if vp else ""
         precise_reach = vp.attacker_reachability if vp else ""
         trusted_required = bool(vp.trusted_role_required) if vp else False
+        reach_conf = vp.reachability_confidence if vp else ""
+        reach_class = vp.reachability_decision_class if vp else ""
+        reach_ev = list(vp.reachability_evidence) if vp else []
+        reach_warn = list(vp.reachability_warnings) if vp else []
+
+        # The Reachability Truth Engine map takes precedence (it covers functions with
+        # no value path, e.g. role-gated setters/rate updates) and is the most precise.
+        fr = reach_map.lookup(contract, function) if (reach_map is not None and contract and function) else None
+        if fr is not None:
+            precise_reach = fr.final_label
+            trusted_required = R.is_trusted_role_gated(fr.final_label)
+            reach_conf = fr.confidence
+            reach_class = fr.decision_class
+            reach_ev = [f"{e.evidence_type}: {e.detail}" for e in fr.evidence]
+            reach_warn = list(fr.warnings)
 
         deployment_status = deployment_status_for_contract(deployment, contract)
         sm_ids = state_machines_for_contract(state_machines, contract)
@@ -105,10 +135,18 @@ def build_leads(
         km = known_matches.get(getattr(sl, "id", ""), M.KnownMatch(lead_id=getattr(sl, "id", "")))
         fv = freshness_verdicts.get(getattr(sl, "id", ""), M.FreshnessVerdict(lead_id=getattr(sl, "id", "")))
 
-        reach_score = getattr(sl, "attacker_reachability_score", 0)
+        reach_score = _reachability_score(
+            getattr(sl, "attacker_reachability_score", 0), precise_reach)
         materiality_score = getattr(sl, "materiality_score", 0)
         proof_score = getattr(sl, "proof_difficulty_score", 50)
-        trusted_score = 70 if (trusted_required or km.known_match_status == M.TRUSTED_ROLE_ONLY) else 20
+        trusted_gated = R.is_trusted_role_gated(precise_reach) or trusted_required
+        unknown_gated = R.is_unknown_gated(precise_reach)
+        if trusted_gated or km.known_match_status == M.TRUSTED_ROLE_ONLY:
+            trusted_score = 80
+        elif unknown_gated:
+            trusted_score = 50
+        else:
+            trusted_score = 20
 
         lead = M.HunterLead(
             lead_id=getattr(sl, "id", ""),
@@ -127,6 +165,10 @@ def build_leads(
             known_match_status=km.known_match_status,
             deployment_status=deployment_status,
             attacker_reachability=_reach_str(reach_score, precise_reach),
+            reachability_confidence=reach_conf,
+            reachability_decision_class=reach_class or R.decision_class(_reach_str(reach_score, precise_reach)),
+            reachability_evidence=reach_ev,
+            reachability_warnings=reach_warn,
             trusted_role_risk=_band(trusted_score),
             materiality=_band(materiality_score),
             proof_difficulty=_band(proof_score),

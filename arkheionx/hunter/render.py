@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from . import lane_templates
 from . import models as M
+from . import reachability as R
 
 ARTIFACT_ORDER = (
     "00-run-context.md", "01-scope-map.md", "02-source-provenance.md", "03-known-issue-map.md",
@@ -251,13 +252,54 @@ def _value_flow(pack: M.HunterPack) -> str:
             f"- State-machine vars: {', '.join(vp.state_machine_variables) or '(none)'}",
             f"- External calls: {', '.join(vp.external_calls) or '(none)'}",
             f"- State update ordering: {vp.state_update_ordering}",
-            f"- Attacker reachability: {vp.attacker_reachability} | trusted role required: {vp.trusted_role_required}",
+            f"- Reachability: {vp.attacker_reachability}"
+            + (f" ({vp.reachability_confidence})" if vp.reachability_confidence else "")
+            + f" | trusted role required: {vp.trusted_role_required}",
+            f"- Decision effect: {R.decision_effect(vp.attacker_reachability)}",
+            "- Reachability evidence:", _bullets(vp.reachability_evidence, empty="(visibility only; no gate evidence)"),
+        ]
+        if vp.reachability_warnings:
+            lines.append(f"- Reachability warnings: {', '.join(vp.reachability_warnings)}")
+        lines += [
             f"- Impact if broken: {vp.impact_if_broken}",
             f"- Source: {', '.join(vp.source_lines) or '-'}",
             "",
         ]
+    lines += _reachability_section(pack)
     lines += [_footer(), ""]
     return "\n".join(lines)
+
+
+def _reachability_section(pack: M.HunterPack) -> list:
+    """Render the Reachability Truth Engine map: who can call each external surface."""
+    fns = pack.function_reachability or []
+    s = pack.reachability_summary or {}
+    lines = ["## Function reachability (who can call) — Reachability Truth Engine", "",
+             "Visibility is not reachability. Each parsed function is classified by the "
+             "gate that actually protects it (modifier, helper, AccessControl, assembly sload role "
+             "getter, body check). An unresolved custom gate is never assumed unprivileged.", ""]
+    if s:
+        lines.append(
+            f"- Classified: {s.get('functions_classified', 0)} | attacker-reachable "
+            f"{s.get('attacker_reachable', 0)} | trusted-role-gated {s.get('trusted_role_gated', 0)} | "
+            f"unknown-gated {s.get('unknown_gated', 0)} | context-gated {s.get('context_gated', 0)}")
+    if not fns:
+        lines += ["", "- (no public/external functions classified from the local source)", ""]
+        return lines
+    lines.append("")
+    for fr in fns:
+        mods = ", ".join(fr.get("modifiers", [])) or "(none)"
+        lines += [
+            f"### {fr.get('surface')} — {fr.get('final_reachability')} ({fr.get('confidence')})",
+            f"- Visibility/mutability: {fr.get('visibility')} / {fr.get('state_mutability')} | modifiers: {mods}",
+            f"- Decision effect: {fr.get('decision_effect')}",
+            "- Evidence:", _bullets([f"{e.get('evidence_type')}: {e.get('detail')}" for e in fr.get("evidence", [])],
+                                    empty="(visibility only; no gate evidence)"),
+        ]
+        if fr.get("warnings"):
+            lines.append(f"- Warnings: {', '.join(fr.get('warnings'))}")
+        lines.append("")
+    return lines
 
 
 def _state_machine(pack: M.HunterPack) -> str:
@@ -287,7 +329,9 @@ def _top_leads(pack: M.HunterPack) -> str:
     if not top:
         lines += ["NO_PURSUEABLE_LEADS", "",
                   "No lead clears the bar right now. See 11-report-filter.md and 90-engine-evaluation.md.",
-                  "", _footer(), ""]
+                  ""]
+        lines += _reachability_suppressed_leads(pack)
+        lines += [_footer(), ""]
         return "\n".join(lines)
     for i, lead in enumerate(top, 1):
         lines += [
@@ -298,8 +342,10 @@ def _top_leads(pack: M.HunterPack) -> str:
             f"- Scope: {lead.scope_confidence} | Freshness: {lead.freshness_status} | Dedup: {lead.known_match_status} "
             f"({lead.dedup_status})",
             f"- Deployment: {lead.deployment_status or 'not verified'} | Source: {lead.source_status}",
-            f"- Attacker reachability: {lead.attacker_reachability} | Materiality: {lead.materiality} | "
-            f"Trusted-role risk: {lead.trusted_role_risk}",
+            f"- Attacker reachability: {lead.attacker_reachability}"
+            + (f" ({lead.reachability_confidence})" if lead.reachability_confidence else "")
+            + f" | Materiality: {lead.materiality} | Trusted-role risk: {lead.trusted_role_risk}",
+            f"- Reachability effect: {R.decision_effect(lead.attacker_reachability)}",
             f"- Expected severity ceiling: {lead.expected_severity_ceiling} | payout EV: {lead.expected_payout_ev}/100",
             f"- Value paths: {', '.join(lead.value_path_ids) or '-'} | State machines: {', '.join(lead.state_machine_ids) or '-'}",
             f"- PoC plan: {lead.poc_plan_id or '(none)'}",
@@ -307,14 +353,35 @@ def _top_leads(pack: M.HunterPack) -> str:
             "- Kill conditions:", _bullets(lead.kill_conditions),
             "",
         ]
+    lines += _reachability_suppressed_leads(pack)
     lines += [_footer(), ""]
     return "\n".join(lines)
+
+
+def _reachability_suppressed_leads(pack: M.HunterPack) -> list:
+    suppressed = [
+        lead for lead in pack.leads
+        if R.is_trusted_role_gated(lead.attacker_reachability)
+        or R.is_unknown_gated(lead.attacker_reachability)
+        or R.is_context_gated(lead.attacker_reachability)
+    ]
+    if not suppressed:
+        return []
+    lines = ["## Reachability-suppressed leads", "",
+             "These surfaces are not normal attacker-reachable leads.", ""]
+    for lead in suppressed:
+        lines.append(
+            f"- {lead.lead_id} {lead.surface}: {lead.attacker_reachability} -> {lead.decision}; "
+            f"PoC plan: {lead.poc_plan_id or 'none'}")
+    lines.append("")
+    return lines
 
 
 def _poc_plans(pack: M.HunterPack) -> str:
     lines = ["# 09 — PoC Plans", "",
              "A minimal PoC plan exists only for a pursueable lead. No plan is made for a killed "
-             "duplicate, an out-of-scope lead, or a trusted-role-only lead.", ""]
+             "duplicate, an out-of-scope lead, a trusted-role-only lead, or unresolved "
+             "reachability. Authorization bypasses must be separate attacker-reachable hypotheses.", ""]
     if not pack.poc_plans:
         lines.append("- (no pursueable leads; no PoC plans)")
     for p in pack.poc_plans:

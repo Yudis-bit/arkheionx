@@ -30,6 +30,7 @@ from . import lane_templates
 from . import leads as lead_builder
 from . import models as M
 from . import poc_planner
+from . import reachability as reach_mod
 from . import registry_diff as registry_mod
 from . import render
 from . import report_filter as rf_mod
@@ -168,7 +169,8 @@ def build_hunter_pack(
 
     # --- value flow / state machine / call graph ----------------------------
     sources = source_scan.load_contract_sources(rm, root)
-    value_paths = value_flow.build_value_paths(rm, sources)
+    reach_map = reach_mod.build_reachability_map(sources)
+    value_paths = value_flow.build_value_paths(rm, sources, reach_map)
     state_machines = state_machine.detect_state_machines(rm, sources, value_paths)
     call_edges = call_graph.build_call_graph(rm, sources)
     value_sm_contracts = state_machine.value_state_machine_contracts(state_machines)
@@ -204,7 +206,7 @@ def build_hunter_pack(
     leads = lead_builder.build_leads(
         sleads, known_matches=km_by_id, freshness_verdicts=fv_by_id, value_paths=value_paths,
         state_machines=state_machines, deployment=deployment, registry_diff=registry,
-        source_provenance=source_provenance, program_identity=program_identity)
+        source_provenance=source_provenance, program_identity=program_identity, reach_map=reach_map)
 
     baseline_provided = bool(baseline_ref or since_date or audit_date or fresh_allowlist
                              or any(d.kind == "audit" for d in corpus))
@@ -252,6 +254,7 @@ def build_hunter_pack(
         registry_diff=registry, engine_evaluation=evaluation, leads=leads,
         known_matches=known_matches, freshness_verdicts=freshness_verdicts, value_paths=value_paths,
         state_machines=state_machines, call_edges=call_edges, poc_plans=poc_plans,
+        function_reachability=reach_map.to_list(), reachability_summary=reach_map.summary(),
         submission_risks=submission_risks, report_filter=report_rows, hard_kills=hard_kills,
         decision_caps=decision_caps, engine_warnings=engine_warnings, missing_context=missing_context,
         counts=counts,
@@ -383,6 +386,8 @@ def _build_triage_json(pack: M.HunterPack) -> dict:
         "deployment_reality": pack.deployment_reality.to_dict(),
         "registry_diff": pack.registry_diff.to_dict(),
         "value_paths": [v.to_dict() for v in pack.value_paths],
+        "function_reachability": pack.function_reachability,
+        "reachability_summary": pack.reachability_summary,
         "state_machines": [s.to_dict() for s in pack.state_machines],
         "call_edges": [c.to_dict() for c in pack.call_edges],
         "known_matches": [k.to_dict() for k in pack.known_matches],

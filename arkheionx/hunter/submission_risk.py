@@ -9,6 +9,7 @@ promise — the human always makes the final call.
 from __future__ import annotations
 
 from . import models as M
+from . import reachability as R
 
 _HIGH, _MED, _LOW = M.RISK_HIGH, M.RISK_MEDIUM, M.RISK_LOW
 
@@ -41,7 +42,8 @@ def build_submission_risks(leads: list, *, rpc_ran: bool, scope_provided: bool) 
     for lead in leads:
         dup = _dup_risk(lead)
         oos = _HIGH if lead.known_match_status == M.OUT_OF_SCOPE else (_MED if not scope_provided else _LOW)
-        trusted = _HIGH if lead.known_match_status == M.TRUSTED_ROLE_ONLY else (
+        trusted = _HIGH if (lead.known_match_status == M.TRUSTED_ROLE_ONLY
+                            or R.is_trusted_role_gated(lead.attacker_reachability)) else (
             _MED if lead.trusted_role_risk_score >= 60 else _LOW)
         corpus_gap = _corpus_gap_risk(lead)
         deploy_gap = _deployment_gap_risk(lead, rpc_ran)
@@ -55,6 +57,12 @@ def build_submission_risks(leads: list, *, rpc_ran: bool, scope_provided: bool) 
             pushback.append("Reviewer may mark this out of scope; confirm the surface against scope rules.")
         if trusted != _LOW:
             pushback.append("Reviewer may say it needs a trusted role; show an unprivileged path.")
+        if R.is_trusted_role_gated(lead.attacker_reachability):
+            pushback.append(f"Reachability is {lead.attacker_reachability}: trusted-role-only by default. "
+                            "Only pursue with a separate authorization-bypass hypothesis.")
+        if R.is_unknown_gated(lead.attacker_reachability):
+            pushback.append(f"Reachability is {lead.attacker_reachability}: who-can-call is unresolved. "
+                            "Resolve the custom modifier / auth helper before claiming an unprivileged path.")
         if corpus_gap != _LOW:
             pushback.append("Dedup corpus is incomplete; a known finding may exist that was not parsed.")
         if deploy_gap == _HIGH:

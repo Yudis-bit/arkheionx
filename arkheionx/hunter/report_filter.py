@@ -11,6 +11,7 @@ always required.
 from __future__ import annotations
 
 from . import models as M
+from . import reachability as R
 
 SUBMIT_NO = "NO"
 SUBMIT_AFTER_POC = "AFTER_POC_ASSERTION_PASSES"
@@ -30,6 +31,12 @@ def build_report_filter(
     rows: list = []
     for lead in leads:
         poc_status = poc_status_by_lead.get(lead.lead_id, "")
+        if not poc_status and R.is_unknown_gated(lead.attacker_reachability):
+            poc_status = M.POC_NEEDS_REACHABILITY
+        elif not poc_status and R.is_trusted_role_gated(lead.attacker_reachability):
+            poc_status = M.POC_BLOCKED_TRUSTED_ROLE
+        elif not poc_status and R.is_context_gated(lead.attacker_reachability):
+            poc_status = M.POC_NEEDS_DEPLOYMENT_STATE
         gates_passed, reason = _gates(lead, poc_status, scope_collision)
         submit = SUBMIT_AFTER_POC if gates_passed else SUBMIT_NO
 
@@ -53,7 +60,9 @@ def build_report_filter(
             dedup=lead.known_match_status,
             deployment=lead.deployment_status or "n/a",
             attacker=lead.attacker_reachability,
-            trusted_role_required=(lead.known_match_status == M.TRUSTED_ROLE_ONLY or lead.trusted_role_risk_score >= 60),
+            trusted_role_required=(lead.known_match_status == M.TRUSTED_ROLE_ONLY
+                                   or R.is_trusted_role_gated(lead.attacker_reachability)
+                                   or lead.trusted_role_risk_score >= 60),
             principal_loss=principal,
             yield_theft=yield_theft,
             fee_theft=fee_theft,
@@ -84,7 +93,7 @@ def _gates(lead: M.HunterLead, poc_status: str, scope_collision: bool) -> tuple[
     if lead.known_match_status in (M.OUT_OF_SCOPE, M.PUBLIC_TEST_COVERED, M.DOCUMENTED_BEHAVIOR,
                                    M.LIKELY_DUPLICATE, M.TRUSTED_ROLE_ONLY):
         return False, f"Dedup/scope status {lead.known_match_status} blocks submission."
-    if lead.attacker_reachability != "UNPRIVILEGED_EXTERNAL":
+    if not R.is_attacker_reachable(lead.attacker_reachability):
         return False, "Not confirmed unprivileged-attacker reachable."
     if lead.materiality != M.HIGH:
         return False, "Material impact not established at HIGH."

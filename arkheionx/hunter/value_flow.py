@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 
 from . import models as M
+from . import reachability as R
 from . import source_scan
 
 # Value entry signals.
@@ -54,16 +55,26 @@ def _present(body_low: str, terms) -> list:
     return sorted({t for t in terms if t in body_low})
 
 
-def _reachability(fn) -> tuple[str, bool]:
+def _reachability(fn, contract: str = "", reach_map=None):
+    """Return (FunctionReachability | None, label, trusted_required).
+
+    Prefers the V9.1 Reachability Truth Engine classification (custom modifiers,
+    helpers, AccessControl, assembly sload getters, body auth). Falls back to a
+    conservative local heuristic only when the map has no entry for the function.
+    """
+    fr = reach_map.lookup(contract, fn.name) if reach_map is not None else None
+    if fr is not None:
+        return fr, fr.final_label, R.is_trusted_role_gated(fr.final_label)
     vis = (fn.visibility or "").lower()
     role_guarded = bool(_ROLE_GUARD_RE.search(fn.body)) or bool(_ROLE_GUARD_RE.search(fn.raw_signature))
     if vis in ("internal", "private"):
-        return "INTERNAL_ONLY", role_guarded
+        return None, R.INTERNAL_ONLY, role_guarded
     if role_guarded:
-        return "TRUSTED_ROLE", True
+        # Conservative: a guard we cannot resolve is role-gated, never unprivileged.
+        return None, R.PROBABLY_ROLE_GATED_EXTERNAL, True
     if vis in ("public", "external"):
-        return "UNPRIVILEGED_EXTERNAL", False
-    return "UNKNOWN", role_guarded
+        return None, R.UNPRIVILEGED_EXTERNAL, False
+    return None, R.UNKNOWN_REACHABILITY, role_guarded
 
 
 def _ordering(body: str) -> str:
@@ -92,7 +103,7 @@ def _entry_asset(body: str) -> str:
     return m.group(0) if m else ""
 
 
-def build_value_paths(review_map, sources: dict) -> list:
+def build_value_paths(review_map, sources: dict, reach_map=None) -> list:
     """Build value paths from contract sources (and review-map value paths)."""
     paths: list = []
     counter = 0
@@ -114,7 +125,11 @@ def build_value_paths(review_map, sources: dict) -> list:
             accounting = _present(low, _ACCOUNTING_VARS)
             state_vars = _present(low, _STATE_VARS)
             ext_calls = sorted({m.group(0).strip() for m in _EXTERNAL_CALL_RE.finditer(fn.body)})[:8]
-            reachability, trusted = _reachability(fn)
+            fr, reachability, trusted = _reachability(fn, contract, reach_map)
+            reach_conf = fr.confidence if fr is not None else ""
+            reach_class = fr.decision_class if fr is not None else R.decision_class(reachability)
+            reach_ev = ([f"{e.evidence_type}: {e.detail}" for e in fr.evidence] if fr is not None else [])
+            reach_warn = (list(fr.warnings) if fr is not None else [])
             direction = "out" if has_out else "in"
             impact = (
                 "Unauthorized value exit / accounting corruption if the guard or ordering is wrong."
@@ -133,6 +148,10 @@ def build_value_paths(review_map, sources: dict) -> list:
                 recipient="caller / arbitrary `to`" if has_out else "",
                 attacker_reachability=reachability,
                 trusted_role_required=trusted,
+                reachability_confidence=reach_conf,
+                reachability_decision_class=reach_class,
+                reachability_evidence=reach_ev,
+                reachability_warnings=reach_warn,
                 impact_if_broken=impact,
                 source_lines=[f"{path}:L{fn.line}"],
             ))

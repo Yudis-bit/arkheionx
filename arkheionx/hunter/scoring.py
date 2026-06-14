@@ -16,6 +16,7 @@ an evidence-backed post-audit freshness — bypasses the soft caps.
 from __future__ import annotations
 
 from . import models as M
+from . import reachability as R
 
 WEIGHTS = {
     "scope_confidence": 12,
@@ -52,10 +53,12 @@ _KNOWN_DUP_FLOOR = {
 
 
 def _severity_ceiling(lead: M.HunterLead) -> str:
-    if lead.attacker_reachability == "INTERNAL_OR_GUARDED" or lead.known_match_status == M.TRUSTED_ROLE_ONLY:
+    reach = lead.attacker_reachability
+    if (reach == "INTERNAL_OR_GUARDED" or R.is_internal(reach) or R.is_non_value(reach)
+            or R.is_trusted_role_gated(reach) or lead.known_match_status == M.TRUSTED_ROLE_ONLY):
         return M.LOW_ONLY
     mat = lead.materiality
-    reach_ok = lead.attacker_reachability == "UNPRIVILEGED_EXTERNAL"
+    reach_ok = R.is_attacker_reachable(reach)
     value_out = lead.lead_type in (
         M.VALUE_OUT_PATH, M.STATE_MACHINE_VALUE_FLOW, M.WITHDRAWAL_QUEUE, M.CLAIM_QUEUE,
         M.ADAPTER_WITHDRAWABILITY, M.BRIDGE_MESSAGE_ACCOUNTING, M.CROSS_CHAIN_DOMAIN_SEPARATION,
@@ -116,7 +119,7 @@ def _apply_boosts(lead: M.HunterLead, score: int, boosts: list) -> int:
         score = min(100, score + 5)
         boosts.append("New post-audit value-out surface with no known match.")
     if (lead.lead_type == M.STATE_MACHINE_VALUE_FLOW
-            and lead.attacker_reachability == "UNPRIVILEGED_EXTERNAL"):
+            and R.is_attacker_reachable(lead.attacker_reachability)):
         score = min(100, score + 5)
         boosts.append("State-machine value-flow with unprivileged reachability.")
     if lead.freshness_status == M.NEW_LIVE_REGISTRY_ENTRY:
@@ -139,12 +142,21 @@ def _hard_kill(lead: M.HunterLead, clear: bool) -> str:
         return M.KILL_DOCUMENTED_BEHAVIOR
     if ks == M.LIKELY_DUPLICATE and lead.known_issue_confidence == M.HIGH and not clear:
         return M.KILL_DUPLICATE
+    if R.is_non_value(lead.attacker_reachability):
+        return M.KILL_NO_MATERIAL_IMPACT
+    if R.is_internal(lead.attacker_reachability):
+        return M.KILL_NOT_ATTACKER_REACHABLE
+    # Unknown/context reachability is handled by a specific PARK_* cap below. Do not
+    # let coarse trusted-role text matching or the legacy visibility score override it.
+    if R.is_unknown_gated(lead.attacker_reachability) or R.is_context_gated(
+            lead.attacker_reachability):
+        return ""
     trusted_only = (
         ks == M.TRUSTED_ROLE_ONLY
-        or lead.attacker_reachability == "TRUSTED_ROLE"
-        or (lead.trusted_role_risk_score >= 60 and lead.attacker_reachability != "UNPRIVILEGED_EXTERNAL")
+        or R.is_trusted_role_gated(lead.attacker_reachability)
+        or (lead.trusted_role_risk_score >= 60 and not R.is_attacker_reachable(lead.attacker_reachability))
     )
-    if trusted_only and lead.attacker_reachability != "UNPRIVILEGED_EXTERNAL":
+    if trusted_only and not R.is_attacker_reachable(lead.attacker_reachability):
         return M.KILL_TRUSTED_ROLE
     if lead.deployment_status == M.ADDRESS_NO_CODE:
         return M.KILL_NO_MATERIAL_IMPACT
@@ -164,6 +176,17 @@ def _cap_decision(lead: M.HunterLead, caps_ctx: dict, clear: bool, caps: list) -
     if not caps_ctx.get("scope_provided"):
         caps.append("No scope file -> cannot confirm eligibility; capped to PARK_SCOPE.")
         return M.PARK_SCOPE
+    # V9.1 reachability caps: who-can-call must be resolved before pursuit. Unknown
+    # custom-modifier / auth-helper gating is parked (never assumed unprivileged);
+    # proxy/initializer context needs deployment state.
+    if R.is_unknown_gated(lead.attacker_reachability):
+        caps.append("Reachability unresolved (custom modifier / auth helper) -> PARK_REACHABILITY "
+                    "until an unprivileged path is proven; do not assume the function is callable.")
+        return M.PARK_REACHABILITY
+    if not clear and R.is_context_gated(lead.attacker_reachability):
+        caps.append("Reachability is deployment/initialization-context gated -> PARK_DEPLOYMENT "
+                    "until deployed state proves an attacker path.")
+        return M.PARK_DEPLOYMENT
     # A live registry entry not in the listed scope set is a scope question first.
     if lead.lead_type == M.LIVE_REGISTRY_DIFF and lead.freshness_status == M.NEW_LIVE_REGISTRY_ENTRY:
         caps.append("Live registry entry not in the listed scope set -> PARK_SCOPE until the program confirms it is in scope.")
@@ -196,7 +219,7 @@ def _cap_decision(lead: M.HunterLead, caps_ctx: dict, clear: bool, caps: list) -
 
 def _pursue_ready(lead: M.HunterLead, clear: bool) -> bool:
     return (
-        lead.attacker_reachability == "UNPRIVILEGED_EXTERNAL"
+        R.is_attacker_reachable(lead.attacker_reachability)
         and lead.materiality_score >= 70
         and (lead.dedup_status in (M.DEDUP_USABLE, M.DEDUP_STRONG) or clear)
         and (lead.freshness_status in M.FRESHNESS_POSITIVE or clear)
@@ -294,6 +317,7 @@ def _coarse_risk(lead: M.HunterLead) -> str:
     if lead.decision in M.PARK_DECISIONS:
         return {M.PARK_SCOPE: M.RISK_PARK_SCOPE, M.PARK_DEDUP: M.RISK_PARK_DEDUP,
                 M.PARK_DEPLOYMENT: M.RISK_PARK_DEPLOYMENT, M.PARK_SOURCE: M.RISK_PARK_SOURCE,
+                M.PARK_REACHABILITY: M.RISK_PARK_REACHABILITY,
                 M.PARK_BASELINE: M.RISK_PARK_DEDUP}.get(lead.decision, M.RISK_NEEDS_POC)
     return {M.KILL_DUPLICATE: M.RISK_KILL_DUPLICATE, M.KILL_OOS: M.RISK_KILL_OOS,
             M.KILL_TRUSTED_ROLE: M.RISK_KILL_TRUSTED_ROLE,

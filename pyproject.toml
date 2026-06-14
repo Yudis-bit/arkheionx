@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arkheionx"
-version = "9.0.0.dev0"
+version = "9.1.0.dev0"
 description = "Local-first security research workflow for Solidity and DeFi repositories: turn scope, value flow, protocol behavior, invariants, and local evidence into focused review lanes before report writing."
 readme = "README.md"
 requires-python = ">=3.11"

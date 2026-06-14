@@ -35,12 +35,17 @@ class ValueFlowTests(unittest.TestCase):
             self.assertTrue(vp.state_update_ordering)
 
     def test_trusted_path_marked(self) -> None:
+        from arkheionx.hunter import reachability as R
         b = FX / "trusted_role_only"
         res = build_hunter_pack(b, scope_file=str(b / "scope.md"), write=False)
         sweep = [vp for vp in res["pack"].value_paths if "sweep" in (vp.exit_function or "").lower()]
         self.assertTrue(sweep)
         self.assertTrue(sweep[0].trusted_role_required)
-        self.assertEqual(sweep[0].attacker_reachability, "TRUSTED_ROLE")
+        # V9.1: the coarse "TRUSTED_ROLE" is now the precise owner-gated label, and the
+        # reachability predicate must still classify it as trusted-role-gated (not unprivileged).
+        self.assertEqual(sweep[0].attacker_reachability, "OWNER_GATED_EXTERNAL")
+        self.assertTrue(R.is_trusted_role_gated(sweep[0].attacker_reachability))
+        self.assertFalse(R.is_attacker_reachable(sweep[0].attacker_reachability))
 
     def test_value_paths_in_triage_json(self) -> None:
         b = FX / "adapter_withdrawability"

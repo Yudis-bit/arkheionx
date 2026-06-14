@@ -107,6 +107,31 @@
       }
     },
     "value_paths": {"type": "array", "items": {"type": "object"}},
+    "function_reachability": {
+      "type": "array",
+      "description": "V9.1 Reachability Truth Engine: per-function reachability classification (who can call). Additive; not required for backward compatibility.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "function_name": {"type": "string"},
+          "contract_name": {"type": ["string", "null"]},
+          "contract": {"type": "string"},
+          "surface": {"type": "string"},
+          "visibility": {"type": "string"},
+          "final_reachability": {"type": "string"},
+          "decision_class": {
+            "type": "string",
+            "enum": ["ATTACKER_REACHABLE", "TRUSTED_ROLE_GATED", "UNKNOWN_GATED",
+                     "CONTEXT_GATED", "NO_VALUE_EFFECT", "INTERNAL"]
+          },
+          "confidence": {"type": "string", "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]},
+          "modifiers": {"type": "array", "items": {"type": "string"}},
+          "evidence": {"type": "array", "items": {"type": "object"}},
+          "warnings": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "reachability_summary": {"type": "object"},
     "state_machines": {"type": "array", "items": {"type": "object"}},
     "call_edges": {
       "type": "array",
@@ -139,7 +164,7 @@
           "decision": {
             "type": "string",
             "enum": ["PURSUE_NOW", "NEEDS_POC", "PARK_SCOPE", "PARK_DEDUP", "PARK_DEPLOYMENT",
-                     "PARK_SOURCE", "PARK_BASELINE", "KILL_DUPLICATE", "KILL_OOS",
+                     "PARK_SOURCE", "PARK_BASELINE", "PARK_REACHABILITY", "KILL_DUPLICATE", "KILL_OOS",
                      "KILL_TRUSTED_ROLE", "KILL_PUBLIC_TEST_COVERED", "KILL_DOCUMENTED_BEHAVIOR",
                      "KILL_LOW_ONLY", "KILL_NO_MATERIAL_IMPACT", "KILL_NOT_ATTACKER_REACHABLE"]
           },
@@ -174,8 +199,8 @@
           "status": {
             "type": "string",
             "enum": ["POC_READY", "POC_NEEDS_SOURCE", "POC_NEEDS_DEPLOYMENT_STATE", "POC_NEEDS_BASELINE",
-                     "POC_BLOCKED_OOS", "POC_BLOCKED_DUPLICATE", "POC_BLOCKED_TRUSTED_ROLE",
-                     "POC_BLOCKED_NO_MATERIAL_IMPACT"]
+                     "POC_NEEDS_REACHABILITY", "POC_BLOCKED_OOS", "POC_BLOCKED_DUPLICATE",
+                     "POC_BLOCKED_TRUSTED_ROLE", "POC_BLOCKED_NO_MATERIAL_IMPACT"]
           },
           "expected_assertion": {"type": "string"},
           "report_condition": {"type": "string"}

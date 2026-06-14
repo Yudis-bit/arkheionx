@@ -256,6 +256,9 @@ PARK_DEDUP = "PARK_DEDUP"
 PARK_DEPLOYMENT = "PARK_DEPLOYMENT"
 PARK_SOURCE = "PARK_SOURCE"
 PARK_BASELINE = "PARK_BASELINE"
+# V9.1: who-can-call is unresolved (custom modifier / auth helper). Conservative cap:
+# never assume unprivileged; park until reachability is proven.
+PARK_REACHABILITY = "PARK_REACHABILITY"
 KILL_DUPLICATE = "KILL_DUPLICATE"
 KILL_OOS = "KILL_OOS"
 KILL_TRUSTED_ROLE = "KILL_TRUSTED_ROLE"
@@ -266,11 +269,12 @@ KILL_NO_MATERIAL_IMPACT = "KILL_NO_MATERIAL_IMPACT"
 KILL_NOT_ATTACKER_REACHABLE = "KILL_NOT_ATTACKER_REACHABLE"
 DECISIONS = (
     PURSUE_NOW, NEEDS_POC, PARK_SCOPE, PARK_DEDUP, PARK_DEPLOYMENT, PARK_SOURCE,
-    PARK_BASELINE, KILL_DUPLICATE, KILL_OOS, KILL_TRUSTED_ROLE,
+    PARK_BASELINE, PARK_REACHABILITY, KILL_DUPLICATE, KILL_OOS, KILL_TRUSTED_ROLE,
     KILL_PUBLIC_TEST_COVERED, KILL_DOCUMENTED_BEHAVIOR, KILL_LOW_ONLY,
     KILL_NO_MATERIAL_IMPACT, KILL_NOT_ATTACKER_REACHABLE,
 )
-PARK_DECISIONS = (PARK_SCOPE, PARK_DEDUP, PARK_DEPLOYMENT, PARK_SOURCE, PARK_BASELINE)
+PARK_DECISIONS = (PARK_SCOPE, PARK_DEDUP, PARK_DEPLOYMENT, PARK_SOURCE, PARK_BASELINE,
+                  PARK_REACHABILITY)
 KILL_DECISIONS = (
     KILL_DUPLICATE, KILL_OOS, KILL_TRUSTED_ROLE, KILL_PUBLIC_TEST_COVERED,
     KILL_DOCUMENTED_BEHAVIOR, KILL_LOW_ONLY, KILL_NO_MATERIAL_IMPACT,
@@ -285,14 +289,17 @@ POC_READY = "POC_READY"
 POC_NEEDS_SOURCE = "POC_NEEDS_SOURCE"
 POC_NEEDS_DEPLOYMENT_STATE = "POC_NEEDS_DEPLOYMENT_STATE"
 POC_NEEDS_BASELINE = "POC_NEEDS_BASELINE"
+# V9.1: a pursued lead whose reachability is unresolved needs an explicit
+# modifier-bypass / auth-helper-bug / role-gate-ineffective hypothesis first.
+POC_NEEDS_REACHABILITY = "POC_NEEDS_REACHABILITY"
 POC_BLOCKED_OOS = "POC_BLOCKED_OOS"
 POC_BLOCKED_DUPLICATE = "POC_BLOCKED_DUPLICATE"
 POC_BLOCKED_TRUSTED_ROLE = "POC_BLOCKED_TRUSTED_ROLE"
 POC_BLOCKED_NO_MATERIAL_IMPACT = "POC_BLOCKED_NO_MATERIAL_IMPACT"
 POC_STATUSES = (
     POC_READY, POC_NEEDS_SOURCE, POC_NEEDS_DEPLOYMENT_STATE, POC_NEEDS_BASELINE,
-    POC_BLOCKED_OOS, POC_BLOCKED_DUPLICATE, POC_BLOCKED_TRUSTED_ROLE,
-    POC_BLOCKED_NO_MATERIAL_IMPACT,
+    POC_NEEDS_REACHABILITY, POC_BLOCKED_OOS, POC_BLOCKED_DUPLICATE,
+    POC_BLOCKED_TRUSTED_ROLE, POC_BLOCKED_NO_MATERIAL_IMPACT,
 )
 
 # ---------------------------------------------------------------------------
@@ -304,6 +311,7 @@ RISK_PARK_SCOPE = "PARK_SCOPE"
 RISK_PARK_DEDUP = "PARK_DEDUP"
 RISK_PARK_DEPLOYMENT = "PARK_DEPLOYMENT"
 RISK_PARK_SOURCE = "PARK_SOURCE"
+RISK_PARK_REACHABILITY = "PARK_REACHABILITY"
 RISK_KILL_DUPLICATE = "KILL_DUPLICATE"
 RISK_KILL_OOS = "KILL_OOS"
 RISK_KILL_TRUSTED_ROLE = "KILL_TRUSTED_ROLE"
@@ -599,6 +607,10 @@ class ValuePath:
     recipient: str = ""
     attacker_reachability: str = ""
     trusted_role_required: bool = False
+    reachability_confidence: str = ""
+    reachability_decision_class: str = ""
+    reachability_evidence: list = field(default_factory=list)
+    reachability_warnings: list = field(default_factory=list)
     impact_if_broken: str = ""
     source_lines: list = field(default_factory=list)
 
@@ -750,6 +762,10 @@ class HunterLead:
     known_match_status: str = KNOWN_UNKNOWN
     deployment_status: str = ""
     attacker_reachability: str = ""
+    reachability_confidence: str = ""
+    reachability_decision_class: str = ""
+    reachability_evidence: list = field(default_factory=list)
+    reachability_warnings: list = field(default_factory=list)
     trusted_role_risk: str = RISK_LOW
     materiality: str = MEDIUM
     proof_difficulty: str = MEDIUM
@@ -828,6 +844,8 @@ class HunterPack:
     value_paths: list = field(default_factory=list)          # ValuePath
     state_machines: list = field(default_factory=list)       # StateMachine
     call_edges: list = field(default_factory=list)           # CallEdge
+    function_reachability: list = field(default_factory=list)  # FunctionReachability dicts
+    reachability_summary: dict = field(default_factory=dict)
     poc_plans: list = field(default_factory=list)            # PocPlan
     submission_risks: list = field(default_factory=list)     # SubmissionRisk
     report_filter: list = field(default_factory=list)        # ReportFilterRow

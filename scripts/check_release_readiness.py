@@ -90,6 +90,7 @@ def bundled_demos() -> list[str]:
 
 def check() -> list[str]:
     failures: list[str] = []
+    private_dev = ".dev" in __version__ or CURRENT_MILESTONE.endswith("-dev")
 
     # Reuse the focused checkers.
     failures += _load("check_version_consistency").check()
@@ -146,12 +147,14 @@ def check() -> list[str]:
             if demo not in text:
                 failures.append(f"{doc} does not mention demo: {demo}")
 
-    # Release notes and changelog for the current milestone.
-    notes = ROOT / "release-notes" / f"{CURRENT_MILESTONE}.md"
+    # Private development milestones keep the public release surface pinned to the
+    # latest stable release until an explicit release-prep change is made.
+    release_milestone = STABLE_RELEASE if private_dev else CURRENT_MILESTONE
+    notes = ROOT / "release-notes" / f"{release_milestone}.md"
     if not notes.is_file():
-        failures.append(f"missing release notes: release-notes/{CURRENT_MILESTONE}.md")
-    if f"## {CURRENT_MILESTONE}" not in read("CHANGELOG.md"):
-        failures.append(f"CHANGELOG.md missing section: ## {CURRENT_MILESTONE}")
+        failures.append(f"missing release notes: release-notes/{release_milestone}.md")
+    if f"## {release_milestone}" not in read("CHANGELOG.md"):
+        failures.append(f"CHANGELOG.md missing section: ## {release_milestone}")
 
     # Review Map feature surface (v3.1.0+). Only enforced when the command is
     # present, so the gate stays correct across milestones.
@@ -178,7 +181,7 @@ def check() -> list[str]:
             failures.append(f"{script} stable tag does not track STABLE_RELEASE ({STABLE_RELEASE})")
 
     # No stale dev wording on the live README surface (dev version must not leak).
-    if __version__.endswith("-dev") and __version__ in readme:
+    if private_dev and __version__ in readme:
         failures.append(f"README.md leaks dev version string {__version__}")
     for claim in (f"{CURRENT_MILESTONE} is released", f"{CURRENT_MILESTONE} released", "now on PyPI", "available on PyPI"):
         if claim.lower() in readme.lower():
