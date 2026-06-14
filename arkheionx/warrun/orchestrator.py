@@ -34,6 +34,7 @@ from arkheionx.memory import MemoryStore, duplicate_classifier
 from arkheionx.memory import renderer as mem_render
 
 from . import renderer as war_render
+from . import quality_gates
 from .scope import load_scope
 
 # Forbidden outcome terms (mirror the hunter guard; never overclaim).
@@ -56,6 +57,42 @@ def _guard(texts):
             raise WarRunError(f"war-run guard: forbidden outcome term emitted: {term}")
     warnings = secret_redaction.scan(blob)
     return warnings
+
+
+def _artifact_type_for(name: str) -> str:
+    base = name.rsplit("/", 1)[-1]
+    return base.replace(".json", "").replace(".md", "")
+
+
+def _stamp(payload: dict, name: str, *, engine_version, generated_at, target_label,
+           target_hash, semantic_mode, confidence) -> dict:
+    """Stamp the standard machine-readable header onto a JSON artifact (additive;
+    preserves any artifact-specific schema_version / confidence / warnings)."""
+    payload.setdefault("schema_version", "v10-godeye")
+    payload.setdefault("artifact_type", _artifact_type_for(name))
+    payload["engine_version"] = engine_version
+    payload["generated_at"] = generated_at
+    payload["target_label"] = target_label
+    payload["target_hash"] = target_hash
+    payload["semantic_mode"] = semantic_mode
+    payload.setdefault("confidence", confidence)
+    payload.setdefault("warnings", [])
+    return payload
+
+
+def _manifest_artifacts(contents, jsons, poc_files, write):
+    entries = []
+    for name, payload in jsons.items():
+        entries.append({"path": name, "artifact_type": payload.get("artifact_type", ""),
+                        "format": "json", "generated": bool(write),
+                        "warnings": len(payload.get("warnings", []) or [])})
+    for name in contents:
+        entries.append({"path": name, "artifact_type": "markdown", "format": "md",
+                        "generated": bool(write), "warnings": 0})
+    for name in poc_files:
+        entries.append({"path": f"11-poc-skeletons/{name}", "artifact_type": "poc_skeleton",
+                        "format": "sol", "generated": bool(write), "warnings": 0})
+    return entries
 
 
 def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
@@ -161,6 +198,43 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
         manifest["secret_warnings"] = secret_warnings
         triage["secret_warnings"] = secret_warnings
 
+    # --- quality gates: verify + enforce before output ---------------------
+    gates = quality_gates.run_quality_gates(
+        graph, verdicts, fork_reqs,
+        secret_warnings=secret_warnings, report_generated=False)
+    downgrades = quality_gates.enforce(graph, gates, verdicts)
+    gate_status = quality_gates.overall_status(gates)
+    if downgrades:  # enforcement changed labels -> re-render the affected artifacts
+        contents["13-economic-severity.md"] = sev_render.severity_md(verdicts)
+        jsons["economic-severity.json"] = sev_render.severity_json(verdicts)
+        contents["10-candidate-ranking.md"] = attack_render.candidate_ranking_md(graph)
+    jsons["quality-gates.json"] = quality_gates.gates_json(gates, gate_status)
+    contents["quality-gates.md"] = quality_gates.gates_md(gates, gate_status)
+    if "quality-gates.json" not in artifact_paths:
+        artifact_paths += ["quality-gates.json", "quality-gates.md"]
+    triage["quality_gates"] = {"overall_status": gate_status,
+                               "gates": [g.to_dict() for g in gates]}
+    counts["quality_gate_status"] = gate_status
+
+    # --- stamp standard machine-readable headers on every JSON artifact ----
+    import hashlib as _hashlib
+    from pathlib import Path as _Path
+    engine_version = war_render.MILESTONE
+    generated_at = war_render.now()
+    target_label = _Path(str(target)).name or str(target)
+    target_hash = _hashlib.sha256(str(target).encode("utf-8")).hexdigest()[:16]
+    for _name, _payload in jsons.items():
+        _stamp(_payload, _name, engine_version=engine_version, generated_at=generated_at,
+               target_label=target_label, target_hash=target_hash,
+               semantic_mode=smap.mode, confidence=smap.confidence)
+    for _name, _payload in (("triage.json", triage), ("manifest.json", manifest)):
+        _stamp(_payload, _name, engine_version=engine_version, generated_at=generated_at,
+               target_label=target_label, target_hash=target_hash,
+               semantic_mode=smap.mode, confidence=smap.confidence)
+    manifest["artifacts"] = _manifest_artifacts(contents, jsons, poc_files, write)
+    manifest["artifact_paths"] = artifact_paths
+    manifest["artifact_count"] = len(artifact_paths)
+
     written = {}
     if write:
         out.mkdir(parents=True, exist_ok=True)
@@ -189,4 +263,5 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
         "smap": smap, "emap": emap, "tmap": tmap, "invset": invset, "graph": graph,
         "verdicts": verdicts, "fork_reqs": fork_reqs, "skeletons": skeletons, "scope": scope,
         "taint": taint, "contradictions": cset,
+        "gates": gates, "gate_status": gate_status,
     }
