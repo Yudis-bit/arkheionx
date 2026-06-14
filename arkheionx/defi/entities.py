@@ -72,7 +72,7 @@ def _rx(p):
 DETECTION_RULES = [
     (_rx(r"converttoassets|converttoshares|exchangerate|pricepershare|getrate"), EXCHANGE_RATE),
     (_rx(r"totalassets"), EXCHANGE_RATE),
-    (_rx(r"totalsupply|totalshares|^shares?$|sharesof|mintedshares|shareprice"), SHARE),
+    (_rx(r"totalshares|^shares?$|sharesof|mintedshares|shareprice"), SHARE),
     (_rx(r"\bshare"), SHARE),
     (_rx(r"vault"), VAULT),
     (_rx(r"tranche"), TRANCHE),

@@ -24,11 +24,19 @@ def _base_label(candidate, context):
     if family == "SWAP_ACTUAL_RECEIVED_VS_CREDITED":
         return S.NEEDS_FORK_PROOF if candidate.fork_requirement else S.SUBMIT_MEDIUM_CANDIDATE
     if family == "CROSS_CHAIN_SUPPLY_CONSERVATION":
-        return S.NEEDS_FORK_PROOF if candidate.fork_requirement else S.SUBMIT_MEDIUM_CANDIDATE
+        # Replayable destination mint inflates supply systemically; the replay itself
+        # is locally provable, so a non-fork candidate is High, not Medium.
+        return S.NEEDS_FORK_PROOF if candidate.fork_requirement else S.SUBMIT_HIGH_CANDIDATE
     if family == "DEPOSIT_CONSUMPTION":
         return S.SUBMIT_HIGH_CANDIDATE
+    if family == "ORACLE_DECIMAL_NORMALIZATION":
+        if dust_only:
+            return S.VALID_BUT_LOW
+        # An unprivileged over-borrow from a mis-scaled price is high-impact and
+        # locally provable; fork only if a real deployed feed sets the magnitude.
+        return S.NEEDS_FORK_PROOF if candidate.fork_requirement else S.SUBMIT_HIGH_CANDIDATE
     if family in ("VAULT_SHARE_ASSET_RECONCILIATION", "BORROW_CONSERVATION",
-                  "COLLATERAL_STATUS_RELEASE", "ORACLE_DECIMAL_NORMALIZATION"):
+                  "COLLATERAL_STATUS_RELEASE"):
         if dust_only:
             return S.VALID_BUT_LOW
         return S.SUBMIT_MEDIUM_CANDIDATE

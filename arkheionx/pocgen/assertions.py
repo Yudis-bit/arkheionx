@@ -43,6 +43,21 @@ _ACTIONS = {
         "uint256 credited = target.swapAndCredit(tokenIn, tokenOut, amountIn, route);",
         "uint256 actual = tokenOut.balanceOf(address(target)) - balBefore;",
     ],
+    "ORACLE_DECIMAL_NORMALIZATION": [
+        "uint8 feedDecimals = 8;    // TODO: set to the real price-feed decimals",
+        "uint8 tokenDecimals = 18;  // TODO: set to the real collateral token decimals",
+        "oracle.setAnswer(int256(2000 * 10 ** uint256(feedDecimals)), feedDecimals);",
+        "collateral.mint(borrower, 1 * 10 ** uint256(tokenDecimals));",
+        "uint256 protocolMax = target.maxBorrow(borrower);",
+        "uint256 safeMax = (1 * 2000) * 10 ** 18 / 10 ** uint256(feedDecimals); // normalized value",
+    ],
+    "CROSS_CHAIN_SUPPLY_CONSERVATION": [
+        "bytes32 msgId = keccak256(\"cross-chain-message-1\");",
+        "uint256 supplyBefore = token.totalSupply();",
+        "vm.prank(attacker); target.receiveMessage(msgId, attacker, amount);",
+        "vm.prank(attacker); target.receiveMessage(msgId, attacker, amount); // replay SAME id",
+        "uint256 supplyAfter = token.totalSupply();",
+    ],
     "ACCESS_CONTROLLED_VALUE_MOVEMENT": [
         "vm.prank(attacker);",
         "vm.expectRevert(); // unprivileged caller must not move value",
@@ -94,6 +109,20 @@ _ASSERTS = {
     "SWAP_ACTUAL_RECEIVED_VS_CREDITED": [
         "// INVARIANT: credited output must equal the measured balance delta.",
         "assertEq(credited, actual, \"credited != actual received\");",
+    ],
+    "ORACLE_DECIMAL_NORMALIZATION": [
+        "// INVARIANT: the borrow limit must use a decimal-normalized price.",
+        "assertLe(protocolMax, safeMax,",
+        "    \"protocol over-credits collateral value via a mis-scaled (non-normalized) price\");",
+        "// If the bug is present, protocolMax >> safeMax; an attacker over-borrows:",
+        "// vm.prank(borrower); target.borrow(protocolMax); // borrows beyond safe value",
+    ],
+    "CROSS_CHAIN_SUPPLY_CONSERVATION": [
+        "// INVARIANT: a cross-chain message must mint at most once (idempotent),",
+        "//   so destination minted supply is conserved against source locked/burned.",
+        "assertEq(supplyAfter - supplyBefore, amount,",
+        "    \"replaying one message minted more than once (supply not conserved)\");",
+        "// assertTrue(target.processed(msgId), \"message id must be marked consumed\");",
     ],
     "ACCESS_CONTROLLED_VALUE_MOVEMENT": [
         "// This candidate is expected to be KILLED: only a trusted role can move value.",

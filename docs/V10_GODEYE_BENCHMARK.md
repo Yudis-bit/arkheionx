@@ -2,9 +2,11 @@
 
 Internal benchmark for the V10 vertical slice. Each case runs `arkheionx war-run`
 on a generic synthetic fixture under `tests/fixtures/godeye/` (no protocol/token
-names are hardcoded). "PASS" means the required behavior is produced and tested;
-"PARTIAL" means the template/classifier exist and are exercised by a unit test, but
-there is no dedicated end-to-end fixture yet.
+names are hardcoded). "PASS" means the required behavior is produced end to end and
+asserted by unit tests.
+
+**Status: 9 / 9 PASS** (was 6/9 PASS, 3/9 PARTIAL in the first slice; the adapter,
+oracle, and cross-chain families now have dedicated end-to-end fixtures and tests).
 
 ## A/B. Cases and required results
 
@@ -16,14 +18,15 @@ there is no dedicated end-to-end fixture yet.
 | Deposit double-use | deposit_double_use_fixture | DEPOSIT_CONSUMPTION (suspicious) | yes | SUBMIT_HIGH_CANDIDATE | yes | no | PASS |
 | Collateral release before settlement | loan_repay_rounding_fixture | COLLATERAL_STATUS_RELEASE (suspicious) | yes | SUBMIT_MEDIUM_CANDIDATE | yes | no | PASS |
 | Trusted-role value move | trusted_role_fixture | (access-controlled) | yes | KILL_TRUSTED_ROLE | no (killed) | no | PASS |
-| Adapter actual-received-vs-credited | (no dedicated fixture) | SWAP_ACTUAL_RECEIVED_VS_CREDITED | via synthetic candidate | NEEDS_FORK_PROOF (with fork flag) | n/a | yes | PARTIAL |
-| Oracle decimal mismatch | (no dedicated fixture) | ORACLE_DECIMAL_NORMALIZATION | template + suspicion logic | SUBMIT_MEDIUM_CANDIDATE | n/a | no | PARTIAL |
-| Cross-chain mint/burn mismatch | (no dedicated fixture) | CROSS_CHAIN_SUPPLY_CONSERVATION | template + suspicion logic | NEEDS_FORK_PROOF (with fork flag) | n/a | yes | PARTIAL |
+| Adapter actual-received-vs-credited | adapter_actual_received_vs_credited_fixture | SWAP_ACTUAL_RECEIVED_VS_CREDITED (suspicious) | yes | SUBMIT_MEDIUM_CANDIDATE | yes (balanceOf delta vs credited) | no (local) | PASS |
+| Oracle decimal mismatch | oracle_decimal_normalization_fixture | ORACLE_DECIMAL_NORMALIZATION (suspicious) | yes | SUBMIT_HIGH_CANDIDATE | yes (normalized-value vs protocol max) | no (local) | PASS |
+| Cross-chain mint/burn mismatch | cross_chain_supply_conservation_fixture | CROSS_CHAIN_SUPPLY_CONSERVATION (suspicious) | yes | SUBMIT_HIGH_CANDIDATE | yes (replay-mint supply delta) | no (local) | PASS |
 
-The two headline real-inspired cases (#567 reconciliation and route-buffer consent)
-replay exactly as required: invariant found, candidate produced, severity capped
-(not High), PoC skeleton generated, and fork required only where real external
-state matters.
+All nine cases now replay end to end: invariant found, candidate produced with
+complete fields, severity gated (dust/trusted-role capped or killed; adapter Medium;
+oracle/cross-chain High; consent fork-required), PoC skeleton generated, and fork
+required only where real deployed external state sets the magnitude (the route-buffer
+consent case).
 
 ## C. Failure conditions (must NOT happen) — checked
 
@@ -45,16 +48,21 @@ arkheionx war-run tests/fixtures/godeye/borrow_swapdata_consent_fixture \
   --scope tests/fixtures/godeye/borrow_swapdata_consent_fixture/scope.yaml \
   --out /tmp/war-run-demo
 arkheionx war-run tests/fixtures/godeye/loan_repay_rounding_fixture --asset-decimals 18
+arkheionx war-run tests/fixtures/godeye/adapter_actual_received_vs_credited_fixture
+arkheionx war-run tests/fixtures/godeye/oracle_decimal_normalization_fixture
+arkheionx war-run tests/fixtures/godeye/cross_chain_supply_conservation_fixture
 ```
 
 The unit tests under `tests/test_v10_*.py` assert each benchmark behavior
-(104 tests). Full suite: `python3 -m unittest discover -s tests -p "test_*.py"`.
+(129 tests). Full suite: `python3 -m unittest discover -s tests`.
 
 ## Honest gaps
 
-- Adapter / oracle / cross-chain families have templates, suspicion logic, and unit
-  coverage, but no dedicated end-to-end fixture in this slice (PARTIAL).
 - Semantic extraction is fallback (regex + brace/paren matching), medium confidence;
   full solc AST ingestion is deferred (interface only).
 - Severity sharpening for the reconciliation family uses an `--asset-decimals`
   context hint; without it the default is the conservative VALID_BUT_LOW.
+- The oracle and cross-chain cases are classified High from a locally-provable shape
+  (mis-scaled price / replayable mint). The *magnitude* of a real loss still depends
+  on the deployed feed/token decimals and the real bridged supply; the candidate says
+  so and human review remains required.

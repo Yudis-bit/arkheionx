@@ -10,6 +10,8 @@ _FAMILY_ACTORS = {
     "VAULT_SHARE_ASSET_RECONCILIATION": ["attacker", "victim"],
     "COLLATERAL_STATUS_RELEASE": ["borrower", "lender"],
     "SWAP_ACTUAL_RECEIVED_VS_CREDITED": ["user"],
+    "ORACLE_DECIMAL_NORMALIZATION": ["borrower"],
+    "CROSS_CHAIN_SUPPLY_CONSERVATION": ["attacker"],
     "ACCESS_CONTROLLED_VALUE_MOVEMENT": ["attacker", "owner"],
 }
 

@@ -28,6 +28,14 @@ _SETUP = {
     "SWAP_ACTUAL_RECEIVED_VS_CREDITED": [
         "// TODO: deploy {contract} and a fee-on-transfer / rebasing mock token.",
     ],
+    "ORACLE_DECIMAL_NORMALIZATION": [
+        "// TODO: deploy {contract}, a mock price feed (set its decimals()), and a",
+        "//       collateral token (set its decimals()) with mismatched scales.",
+    ],
+    "CROSS_CHAIN_SUPPLY_CONSERVATION": [
+        "// TODO: deploy {contract} (destination side) and its mintable bridged token.",
+        "// TODO: prepare a single cross-chain message id and amount.",
+    ],
     "ACCESS_CONTROLLED_VALUE_MOVEMENT": [
         "// TODO: deploy {contract}; this path is gated by a trusted role.",
     ],

@@ -144,6 +144,55 @@ def _assets(transfers: set):
     return sorted(set(ai)), sorted(set(ao))
 
 
+def _shape_flags(fn, bodies, combined, transfers, etypes, vault_ctx):
+    """Shape-driven flags that attach an invariant family from *semantics*, not the
+    function name. They let an adapter ``deposit``, an oracle-reading ``borrow``, or
+    a bridge ``receiveMessage`` reach the right invariant even when the name does not
+    match a lifecycle. All heuristic / medium confidence."""
+    extra = []
+    low = combined.lower()
+    entry = bodies.get(fn.qualified_name)
+    entry_text = entry.body if entry is not None and entry.body else ""
+
+    # (1) credit-from-nominal: pull tokens in via transferFrom, then credit a ledger
+    #     by the nominal amount with no measured balance delta (balanceOf). Guarded
+    #     out of vault context, where the share/asset invariant owns this shape.
+    tf_pos = entry_text.lower().find("transferfrom")
+    credit_after = False
+    if tf_pos != -1:
+        for m in re.finditer(
+                r"\b(credit|credited|shares?|deposited|claimable|claim|owed|minted)\s*\[",
+                entry_text, re.I):
+            if m.start() > tf_pos:
+                credit_after = True
+                break
+    measures_delta = "balanceof" in low
+    if (not vault_ctx) and tf_pos != -1 and credit_after and not measures_delta:
+        extra.append("credit_no_balance_delta")
+
+    # (2) oracle price -> value math with hardcoded scaling / ignored decimals.
+    oracle_read = bool(re.search(r"latestrounddata|latestanswer|getprice|pricefeed|\.price\s*\(",
+                                 low))
+    hardcoded_scale = bool(re.search(r"1e18|1e8|1e6|10\s*\*\*", combined))
+    price_arith = bool(re.search(r"price\s*\)*\s*[*/]|[*/]\s*1e\d", low))
+    if oracle_read and (hardcoded_scale or price_arith):
+        extra.append("oracle_value_math")
+        if hardcoded_scale and "decimals" not in low:
+            extra.append("oracle_hardcoded_scale")
+
+    # (3) cross-chain destination overmint: mint against an incoming message id with
+    #     no processed/consumed/replay guard, so the message can be replayed.
+    mints = bool(re.search(r"\.\s*mint\s*\(", combined)) or "mint" in {t.lower() for t in transfers}
+    msgid_param = any("bytes32" in (p.type or "").lower() for p in fn.parameters) or \
+        any(re.search(r"msg.?id|message|nonce", p.name or "", re.I) for p in fn.parameters)
+    bridge_ctx = "CrossChainSupply" in etypes
+    no_consume_guard = not re.search(r"processed|consumed|usedhash|replay|nonce|seen\b", low)
+    if mints and (bridge_ctx or msgid_param) and no_consume_guard:
+        extra.append("xchain_overmint")
+
+    return extra
+
+
 def _invariants(lifecycle, flags, has_collateral, has_division):
     inv = []
     if lifecycle == T.LC_BORROW:
@@ -164,6 +213,14 @@ def _invariants(lifecycle, flags, has_collateral, has_division):
         inv.append(INV_XCHAIN)
     if "calldata_route" in flags and INV_CONSENT not in inv:
         inv.append(INV_CONSENT)
+    # Shape-driven families (name-independent): an adapter that credits the nominal
+    # amount, an oracle read mis-scaled into a value, a bridge that overmints.
+    if "credit_no_balance_delta" in flags and INV_SWAP_RECV not in inv:
+        inv.append(INV_SWAP_RECV)
+    if "oracle_value_math" in flags and INV_ORACLE not in inv:
+        inv.append(INV_ORACLE)
+    if "xchain_overmint" in flags and INV_XCHAIN not in inv:
+        inv.append(INV_XCHAIN)
     return inv
 
 
@@ -211,6 +268,7 @@ def build_transitions(smap, emap) -> T.TransitionMap:
                 flags.append("ext_before_write")
             if "balanceof" in combined.lower() and vault_ctx:
                 flags.append("balance_based_assets")
+            flags += _shape_flags(fn, bodies, combined, transfers, etypes, vault_ctx)
 
             actor = _actor(fn, requires)
             lifecycle = _lifecycle(fn.name, vault_ctx)
