@@ -12,9 +12,11 @@ from pathlib import Path
 
 from arkheionx.semantic import build_semantic_map
 from arkheionx.semantic import renderer as sem_render
+from arkheionx.semantic import detectors as sem_detectors
 from arkheionx.defi import build_defi_entities
 from arkheionx.defi import renderer as defi_render
 from arkheionx.state import build_transitions
+from arkheionx.state import find_contradictions
 from arkheionx.state import renderer as state_render
 from arkheionx.invariants import build_invariants
 from arkheionx.invariants import renderer as inv_render
@@ -72,6 +74,11 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
     tmap = build_transitions(smap, emap)
     invset = build_invariants(smap, emap, tmap)
 
+    # 5b: named taint / dataflow findings (semantic depth; review context).
+    taint = sem_detectors.build_taint_findings(smap, emap)
+    # 5c: state-machine contradictions (broken lifecycle states).
+    cset = find_contradictions(smap, emap, tmap)
+
     # 6: attack candidates
     graph = build_candidates(smap, emap, tmap, invset)
 
@@ -106,10 +113,14 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
     contents["02-semantic-map.md"] = sem_render.semantic_summary_md(smap)
     jsons["03-call-graph.json"] = sem_render.call_graph_json(smap)
     jsons["04-storage-access-map.json"] = sem_render.storage_access_json(smap)
+    jsons["15-dataflow-taint.json"] = sem_render.taint_findings_json(taint)
+    contents["15-dataflow-taint.md"] = sem_render.taint_findings_md(taint)
     jsons["05-defi-entities.json"] = defi_render.entities_json(emap)
     contents["05-defi-entities.md"] = defi_render.entities_md(emap)
     jsons["06-state-transitions.json"] = state_render.transitions_json(tmap)
     contents["06-state-transitions.md"] = state_render.transitions_md(tmap)
+    jsons["16-state-contradictions.json"] = state_render.contradictions_json(cset)
+    contents["16-state-contradictions.md"] = state_render.contradictions_md(cset)
     contents["07-invariants.md"] = inv_render.invariants_md(invset)
     jsons["08-invariants.json"] = inv_render.invariants_json(invset)
     jsons["09-attack-graph.json"] = attack_graph.attack_graph_json(graph)
@@ -132,10 +143,13 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
         "entities": len(emap.entities), "transitions": len(tmap.transitions),
         "invariants": len(invset.invariants), "suspicious_invariants": len(invset.suspicious()),
         "candidates": len(graph.candidates), "skeletons": len(skeletons),
-        "fork_required": len(fork_reqs),
+        "fork_required": len(fork_reqs), "taint_findings": len(taint),
+        "contradictions": len(cset.contradictions),
     }
     triage = war_render.triage_json(str(target), scope, smap, emap, tmap, invset, graph,
                                     verdicts, fork_reqs, artifact_paths)
+    triage["dataflow_taint"] = [t.to_dict() for t in taint]
+    triage["state_contradictions"] = [c.to_dict() for c in cset.contradictions]
     manifest = war_render.manifest_json(str(target), artifact_paths, counts)
 
     # safety guard + secret scan over everything we will write
@@ -174,4 +188,5 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
         "console": console, "artifact_paths": artifact_paths, "written": written,
         "smap": smap, "emap": emap, "tmap": tmap, "invset": invset, "graph": graph,
         "verdicts": verdicts, "fork_reqs": fork_reqs, "skeletons": skeletons, "scope": scope,
+        "taint": taint, "contradictions": cset,
     }

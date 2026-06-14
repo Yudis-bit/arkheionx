@@ -28,6 +28,44 @@ def storage_access_json(smap: M.SemanticMap) -> dict:
     }
 
 
+def taint_findings_json(findings) -> dict:
+    return {
+        "schema_version": M.SCHEMA_VERSION,
+        "artifact_type": "semantic_taint_findings",
+        "finding_count": len(findings),
+        "findings": [f.to_dict() for f in findings],
+    }
+
+
+def taint_findings_md(findings) -> str:
+    lines = [
+        "# 15 Dataflow / Taint Findings",
+        "",
+        "Named attacker-controlled / external-return flows into value-affecting sinks.",
+        "Heuristic (fallback semantic map); each is review context, not a finding.",
+        "",
+    ]
+    if not findings:
+        lines.append("_No taint findings on this target._")
+        return "\n".join(lines) + "\n"
+    for f in findings:
+        lines.append(f"## {f.detector} — `{f.function}`")
+        lines.append(f"- Source: {f.source_expr} ({f.source_kind})")
+        lines.append(f"- Sink: {f.sink_expr} ({f.sink_kind})")
+        if f.invariant_family:
+            lines.append(f"- Invariant family: {f.invariant_family}")
+        if f.attacker_role:
+            lines.append(f"- Attacker: {f.attacker_role}")
+        if f.missing_binding:
+            lines.append(f"- Missing binding: {f.missing_binding}")
+        if f.note:
+            lines.append(f"- Note: {f.note}")
+        if f.evidence_lines:
+            lines.append(f"- Evidence: {', '.join(f.evidence_lines)}")
+        lines.append("")
+    return "\n".join(lines) + "\n"
+
+
 def semantic_summary_md(smap: M.SemanticMap) -> str:
     lines = [
         "# 02 Semantic Map (summary)",

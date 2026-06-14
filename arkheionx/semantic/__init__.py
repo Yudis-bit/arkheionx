@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from . import models
 from .core import build_semantic_map
+from .detectors import TaintFinding, build_taint_findings
 from .models import (
     SCHEMA_VERSION,
     CallEdge,
@@ -25,6 +26,8 @@ from .models import (
 __all__ = [
     "models",
     "build_semantic_map",
+    "build_taint_findings",
+    "TaintFinding",
     "SemanticMap",
     "ContractSemantic",
     "FunctionSemantic",
