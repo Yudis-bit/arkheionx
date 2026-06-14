@@ -10,7 +10,10 @@ KILLED = "killed"
 PARKED = "parked"
 ACCEPTED = "accepted"
 REJECTED = "rejected"
+DUPLICATE = "duplicate"
 UNKNOWN = "unknown"
+
+STATUSES = (SUBMITTED, ACCEPTED, REJECTED, DUPLICATE, KILLED, PARKED, UNKNOWN)
 
 # Duplicate classifications.
 SAME_ROOT_CAUSE = "SAME_ROOT_CAUSE"

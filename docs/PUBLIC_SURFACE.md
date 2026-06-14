@@ -197,6 +197,23 @@ and human review is required.
 | --- | --- | --- | --- | --- |
 | `arkheionx war-run` | V10 semantic DeFi review engine: scope map, semantic map, call graph, storage-access map, DeFi entities, state transitions, candidate invariants (with suspicious-here reasons), attack-candidate ranking, Foundry PoC skeletons, economic severity verdicts (SUBMIT_* / VALID_BUT_LOW / NEEDS_FORK_PROOF / KILL_*), fork plan, dedup/scope risk, `triage.json`, and `manifest.json`. No RPC by default; no broadcast; fork is a plan only; no report generated. Writes by default | human + `--json` | `war-run/*` | experimental (local-only) |
 
+`arkheionx memory` is a **private, experimental, local-only** V10 root-cause memory
+brain that backs the war-run dedup layer. It records prior root causes / findings /
+kills / parks in a local file store under `.arkheionx/memory/` and classifies a new
+candidate as `SAME_ROOT_CAUSE` / `RELATED_BUT_DISTINCT` / `DISTINCT` / `UNKNOWN`
+using a *semantic* root-cause hash (invariant family + function role + attacker
+category), so the same root cause on a different pool dedupes the same. It is
+intentionally **not** part of the stable command contract, is not wired into any
+release, site, or remote surface, makes no RPC or network calls, and stores only
+local files. `memory export` emits the shareable semantic fingerprint and redacts
+the private freeform `notes` field. Output is local review context, not a finding;
+human review is required.
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx memory` | V10 root-cause memory brain (`add` / `list` / `classify` / `export`): record prior root causes with a semantic hash, list the store, classify a candidate as SAME_ROOT_CAUSE / RELATED_BUT_DISTINCT / DISTINCT / UNKNOWN, and export a notes-redacted fingerprint. Local files only; no RPC, no network, no auto-submit | human + `--json` | `.arkheionx/memory/*` | experimental (local-only) |
+
+
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |

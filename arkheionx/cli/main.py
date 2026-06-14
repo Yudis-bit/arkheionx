@@ -79,6 +79,13 @@ def _war_run_command(args: argparse.Namespace) -> int:
     return war_run_command(args)
 
 
+def _memory_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the V10 root-cause memory brain (add/list/classify/export)."""
+    from arkheionx.memory.command import memory_command
+
+    return memory_command(args)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
@@ -194,6 +201,60 @@ def build_parser() -> argparse.ArgumentParser:
     war_run.add_argument("--markdown", action="store_true", help="(Default) human console output; artifacts are always Markdown+JSON.")
     war_run.add_argument("--no-write", action="store_true", help="Build artifacts in memory only; do not write files.")
     war_run.set_defaults(func=_war_run_command)
+
+    memory = subparsers.add_parser(
+        "memory",
+        help="V10 root-cause memory brain (experimental, local-first): record prior root "
+             "causes / findings / kills / parks and classify a new candidate as "
+             "SAME_ROOT_CAUSE / RELATED_BUT_DISTINCT / DISTINCT / UNKNOWN. Local files only; "
+             "export redacts private notes. No network.",
+    )
+    memory.set_defaults(func=_memory_command)
+    msub = memory.add_subparsers(dest="memory_subcommand")
+
+    def _mem_common(p):
+        p.add_argument("--memory-dir", default="", help="Memory directory (default .arkheionx/memory).")
+        p.add_argument("--json", action="store_true", help="Machine-readable JSON output.")
+
+    m_add = msub.add_parser("add", help="Record a prior root cause / finding / kill / park.")
+    _mem_common(m_add)
+    m_add.add_argument("--target", default="", help="Target label (no secrets).")
+    m_add.add_argument("--program", default="", help="Bounty program / context name.")
+    m_add.add_argument("--repo", default="", help="Repo identifier.")
+    m_add.add_argument("--commit", default="", help="Commit hash.")
+    m_add.add_argument("--root-cause", default="", help="Human root-cause description.")
+    m_add.add_argument("--invariant-family", default="", help="Invariant family (for the semantic hash).")
+    m_add.add_argument("--entry-function", default="", help="Entry function (Contract.fn) for the function role.")
+    m_add.add_argument("--function-role", default="", help="Explicit function role (overrides entry-function).")
+    m_add.add_argument("--attacker", default="", help="Attacker capability (for the attacker category).")
+    m_add.add_argument("--status", default="unknown",
+                       choices=["submitted", "accepted", "rejected", "duplicate", "killed", "parked", "unknown"],
+                       help="Lifecycle status.")
+    m_add.add_argument("--finding-id", default="", help="External finding id.")
+    m_add.add_argument("--severity", default="", help="Recorded severity / decision label.")
+    m_add.add_argument("--notes", default="", help="Private freeform notes (never exported).")
+    m_add.add_argument("--category", default="", choices=["", "findings", "killed", "parked", "out_of_scope"],
+                       help="Override the storage category (default inferred from status).")
+    m_add.add_argument("--do-not-resubmit", action="store_true", help="Flag as do-not-resubmit.")
+    m_add.add_argument("--no-write", action="store_true", help="Compute only; do not write the store.")
+    m_add.set_defaults(func=_memory_command)
+
+    m_list = msub.add_parser("list", help="List recorded memory entries.")
+    _mem_common(m_list)
+    m_list.add_argument("--category", default="", choices=["", "findings", "killed", "parked", "out_of_scope"],
+                        help="Only this category (default all).")
+    m_list.set_defaults(func=_memory_command)
+
+    m_cls = msub.add_parser("classify", help="Classify a candidate against the memory store.")
+    _mem_common(m_cls)
+    m_cls.add_argument("--invariant-family", default="", help="Candidate invariant family.")
+    m_cls.add_argument("--entry-function", default="", help="Candidate entry function (Contract.fn).")
+    m_cls.add_argument("--attacker", default="", help="Candidate attacker capability.")
+    m_cls.set_defaults(func=_memory_command)
+
+    m_exp = msub.add_parser("export", help="Export the shareable semantic fingerprint (notes redacted).")
+    _mem_common(m_exp)
+    m_exp.set_defaults(func=_memory_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
