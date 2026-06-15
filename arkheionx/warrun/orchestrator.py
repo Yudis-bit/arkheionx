@@ -204,6 +204,81 @@ def _reality_input(candidate, severity, memory_match, policy):
     return BountyRealityInput(**context)
 
 
+_SCOPE_NO_MATCH_SENTINEL = "__arkheionx_scope_no_match__"
+
+
+def _safe_resolve(path: Path) -> Path:
+    try:
+        return path.resolve(strict=False)
+    except OSError:
+        return path.absolute()
+
+
+def _is_parent_or_same(parent: Path, child: Path) -> bool:
+    return parent == child or parent in child.parents
+
+
+def _normalize_scope_include_paths(target: Path, raw_paths: list | None) -> list | None:
+    """Normalize scope in_scope_paths for target-local Solidity discovery."""
+    if not raw_paths:
+        return None
+
+    target = Path(target)
+    target_abs = _safe_resolve(target)
+    normalized: list[str] = []
+
+    for raw in raw_paths:
+        value = str(raw or "").strip().replace("\\", "/").strip("/")
+        if not value:
+            continue
+
+        has_glob = any(ch in value for ch in "*?[]")
+        target_posix = target.as_posix().strip("/")
+
+        if has_glob:
+            if target_posix and (value == target_posix or value.startswith(target_posix + "/")):
+                rel = value[len(target_posix):].strip("/")
+                if not rel:
+                    return None
+                normalized.append(rel)
+            else:
+                normalized.append(value)
+            continue
+
+        raw_path = Path(value)
+
+        workspace_candidate = raw_path if raw_path.is_absolute() else Path.cwd() / raw_path
+        workspace_abs = _safe_resolve(workspace_candidate)
+
+        if _is_parent_or_same(workspace_abs, target_abs):
+            return None
+
+        try:
+            rel = workspace_abs.relative_to(target_abs)
+            rel_s = rel.as_posix().strip("/")
+            if not rel_s or rel_s == ".":
+                return None
+            normalized.append(rel_s)
+            continue
+        except ValueError:
+            pass
+
+        if not raw_path.is_absolute():
+            target_candidate = target / raw_path
+            target_candidate_abs = _safe_resolve(target_candidate)
+            if target_candidate.exists() and _is_parent_or_same(target_abs, target_candidate_abs):
+                rel = target_candidate_abs.relative_to(target_abs)
+                rel_s = rel.as_posix().strip("/")
+                if not rel_s or rel_s == ".":
+                    return None
+                normalized.append(rel_s)
+                continue
+
+    if normalized:
+        return sorted(dict.fromkeys(normalized))
+
+    return [_SCOPE_NO_MATCH_SENTINEL]
+
 def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
                 gen_poc=True, allow_fork_plan=True, memory_dir=None,
                 write=True, asset_decimals=0, include_tests=False,
@@ -215,11 +290,12 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
     out = Path(out_dir).expanduser() if out_dir else default_out_dir(target)
 
     scope = load_scope(scope_file)
+    normalized_include_paths = _normalize_scope_include_paths(target, scope.in_scope_paths)
 
     # 1-5: semantic -> entities -> transitions -> invariants
     smap = build_semantic_map(
         target,
-        include_paths=scope.in_scope_paths or None,
+        include_paths=normalized_include_paths,
         include_deps=include_deps,
         include_tests=include_tests,
         include_scripts=include_scripts,
