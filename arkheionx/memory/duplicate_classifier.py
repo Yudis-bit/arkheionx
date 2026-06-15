@@ -2,7 +2,34 @@
 from __future__ import annotations
 
 from . import models as M
+from . import families as F
 from . import root_cause_hash as rch
+
+
+def _sparse_legacy_match(candidate_components: dict, entry) -> bool:
+    """Match pre-fingerprint memory that only stored family/role/attacker."""
+
+    if getattr(entry, "root_cause", ""):
+        return False
+    entry_family = F.canonical(
+        getattr(entry, "root_cause_family", "") or getattr(entry, "invariant_family", "")
+    )
+    if entry_family != F.canonical(candidate_components["invariant_family"]):
+        return False
+    entry_role = (
+        getattr(entry, "affected_function", "")
+        or getattr(entry, "function_role", "")
+        or "unknown"
+    )
+    entry_attacker = (
+        getattr(entry, "attacker_capability", "")
+        or getattr(entry, "attacker_category", "")
+        or "user"
+    )
+    return (
+        rch.function_role(entry_role) == candidate_components["function_role"]
+        and rch.attacker_category(entry_attacker) == candidate_components["attacker_category"]
+    )
 
 
 def classify_candidate(candidate, known_hashes, known_families=None) -> str:
@@ -13,9 +40,12 @@ def classify_candidate(candidate, known_hashes, known_families=None) -> str:
         return M.DUP_UNKNOWN
     if h in known_hashes:
         return M.SAME_ROOT_CAUSE
+    if any(_sparse_legacy_match(comps, e) for e in known_hashes.values()):
+        return M.SAME_ROOT_CAUSE
     fams = known_families if known_families is not None else {
         e.invariant_family for e in known_hashes.values()}
-    if candidate.invariant_family in fams:
+    canonical_fams = {F.canonical(f) for f in fams}
+    if F.canonical(candidate.invariant_family) in canonical_fams:
         return M.RELATED_BUT_DISTINCT
     return M.DISTINCT
 

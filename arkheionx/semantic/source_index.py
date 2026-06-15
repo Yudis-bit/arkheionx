@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from arkheionx.ingest.solidity_discovery import discover_solidity
+
 # Directories we never treat as in-scope protocol source.
 _SKIP_DIRS = {
     ".git", "node_modules", "out", "cache", "artifacts", "build", "dist",
@@ -45,42 +47,20 @@ def discover_sources(
     include_paths: list | None = None,
     include_deps: bool = False,
     include_tests: bool = False,
+    include_scripts: bool = False,
+    solidity_root: Path | str | None = None,
 ) -> list:
     """Return a capped list of ``SourceFile`` for ``.sol`` files under ``root``.
 
     ``include_paths`` (relative globs/prefixes from scope) restricts discovery
     when provided; otherwise the whole tree (minus skip dirs) is scanned.
     """
-    root = Path(root)
-    if root.is_file() and root.suffix == ".sol":
-        try:
-            return [SourceFile(str(root), root.name, root.read_text(encoding="utf-8", errors="ignore"))]
-        except OSError:
-            return []
-    if not root.is_dir():
-        return []
-
-    prefixes = [p.strip().strip("/") for p in (include_paths or []) if p and p.strip()]
-    out: list = []
-    for path in sorted(root.rglob("*.sol")):
-        try:
-            rel = path.relative_to(root)
-        except ValueError:
-            continue
-        parts = rel.parts
-        if _is_skipped(parts[:-1], include_deps, include_tests):
-            continue
-        rel_str = str(rel)
-        if prefixes and not any(rel_str == pre or rel_str.startswith(pre.rstrip("/") + "/") or pre in rel_str
-                                for pre in prefixes):
-            continue
-        try:
-            if not path.is_file() or path.stat().st_size > _MAX_FILE_BYTES:
-                continue
-            text = path.read_text(encoding="utf-8", errors="ignore")
-        except OSError:
-            continue
-        out.append(SourceFile(str(path), rel_str, text))
-        if len(out) >= _MAX_FILES:
-            break
-    return out
+    result = discover_solidity(
+        root,
+        include_paths=include_paths,
+        include_deps=include_deps,
+        include_tests=include_tests,
+        include_scripts=include_scripts,
+        solidity_root=solidity_root,
+    )
+    return result.sources

@@ -7,8 +7,9 @@ while a genuinely different bug hashes differently.
 """
 from __future__ import annotations
 
-import hashlib
 import re
+
+from . import root_cause_fingerprint as fingerprint
 
 _ROLE_RULES = [
     (re.compile(r"repay|settle"), "repay"),
@@ -48,16 +49,28 @@ def attacker_category(capability: str) -> str:
 
 
 def root_cause_hash(invariant_family: str, fn_role: str, attacker_cat: str) -> str:
-    seed = "|".join([(invariant_family or "").strip().upper(), fn_role, attacker_cat])
-    return hashlib.sha256(seed.encode("utf-8")).hexdigest()[:16]
+    fp = fingerprint.build_fingerprint(
+        "",
+        explicit_family=invariant_family,
+        affected_function=fn_role,
+        attacker_capability=attacker_cat,
+    )
+    return fp.fingerprint_hash
 
 
 def components_for_candidate(candidate) -> dict:
     role = function_role(candidate.entry_function)
     cat = attacker_category(candidate.attacker_capability)
+    fp = fingerprint.build_fingerprint(
+        getattr(candidate, "root_cause", "") or getattr(candidate, "broken_invariant", ""),
+        explicit_family=getattr(candidate, "invariant_family", ""),
+        affected_function=role,
+        attacker_capability=cat,
+        victim_type=getattr(candidate, "victim", ""),
+    )
     return {
-        "invariant_family": candidate.invariant_family,
+        "invariant_family": fp.family,
         "function_role": role,
         "attacker_category": cat,
-        "root_cause_hash": root_cause_hash(candidate.invariant_family, role, cat),
+        "root_cause_hash": fp.fingerprint_hash,
     }

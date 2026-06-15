@@ -20,6 +20,12 @@ SCHEMA_VERSION = "v10-semantic"
 MODE_AST = "ast"
 MODE_FALLBACK = "fallback"
 
+FALLBACK_ONLY = "FALLBACK_ONLY"
+ABI_PLUS_FALLBACK = "ABI_PLUS_FALLBACK"
+AST_PLUS_FALLBACK = "AST_PLUS_FALLBACK"
+BUILD_INFO_PLUS_FALLBACK = "BUILD_INFO_PLUS_FALLBACK"
+LEGACY_ARTIFACT_PLUS_FALLBACK = "LEGACY_ARTIFACT_PLUS_FALLBACK"
+
 # Confidence ladder (string, to match the rest of the codebase).
 LOW = "LOW"
 MEDIUM = "MEDIUM"
@@ -224,6 +230,7 @@ class SemanticMap:
 
     root: str = ""
     mode: str = MODE_FALLBACK
+    artifact_mode: str = FALLBACK_ONLY
     confidence: str = MEDIUM
     contracts: list = field(default_factory=list)        # ContractSemantic
     call_edges: list = field(default_factory=list)        # CallEdge
@@ -256,6 +263,7 @@ class SemanticMap:
             "schema_version": SCHEMA_VERSION,
             "root": self.root,
             "mode": self.mode,
+            "artifact_mode": self.artifact_mode,
             "confidence": self.confidence,
             "files_indexed": self.files_indexed,
             "contracts": [c.to_dict() for c in self.contracts],

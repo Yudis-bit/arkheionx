@@ -54,6 +54,23 @@ def _base_label(candidate, context):
         if dust_only:
             return S.VALID_BUT_LOW
         return S.SUBMIT_MEDIUM_CANDIDATE
+    if family in (
+        "SIGNATURE_OPERATION_BINDING",
+        "THRESHOLD_AUTHORIZATION_BYPASS",
+        "DELEGATECALL_STORAGE_CONTROL",
+        "FACTORY_INITIALIZATION_TAKEOVER",
+    ):
+        if candidate.severity_hint in (
+            S.SUBMIT_CRITICAL_CANDIDATE,
+            S.SUBMIT_HIGH_CANDIDATE,
+            S.SUBMIT_MEDIUM_CANDIDATE,
+        ):
+            return candidate.severity_hint
+        return S.NEEDS_LOCAL_POC
+    if family == "NONCE_SEQUENCE_REPLAY":
+        return S.SUBMIT_HIGH_CANDIDATE
+    if family in ("SIGNATURE_REPLAY_DOMAIN", "KEY_REUSE_REPLAY"):
+        return S.PARK_CONTEXT
     return S.VALID_BUT_LOW_LIKELIHOOD
 
 

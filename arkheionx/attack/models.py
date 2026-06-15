@@ -47,6 +47,9 @@ class AttackCandidate:
     duplicate_risk: str = "UNKNOWN"
     scope_risk: str = "UNKNOWN"
     root_cause_hash: str = ""
+    root_cause_family: str = ""
+    requires_key_reuse: bool = False
+    bounty_reality: dict = field(default_factory=dict)
     recommendation: str = "NEEDS_POC"
     poc_skeleton: str = ""
     rank_score: float = 0.0

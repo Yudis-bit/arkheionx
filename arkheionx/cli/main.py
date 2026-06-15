@@ -197,6 +197,17 @@ def build_parser() -> argparse.ArgumentParser:
     war_run.add_argument("--allow-fork-plan", action="store_true", help="Generate a fork plan when external state matters (default on; explicit alias).")
     war_run.add_argument("--memory", default="", help="Path to a root-cause memory directory (e.g. .arkheionx/memory) for dedup.")
     war_run.add_argument("--asset-decimals", type=int, default=0, help="Optional realistic asset decimals to sharpen economic severity (e.g. 6 or 18).")
+    war_run.add_argument("--include-tests", action="store_true", help="Include Solidity test directories in source ingestion.")
+    war_run.add_argument("--include-scripts", action="store_true", help="Include Solidity script and migration directories in source ingestion.")
+    war_run.add_argument("--include-deps", action="store_true", help="Include vendored and external dependency directories in source ingestion.")
+    war_run.add_argument(
+        "--framework",
+        default="auto",
+        choices=["auto", "foundry", "hardhat", "truffle", "brownie", "generic"],
+        help="Repository framework override (default: auto).",
+    )
+    war_run.add_argument("--build-artifacts", default="", help="Optional compiler artifact or build-info path.")
+    war_run.add_argument("--solidity-root", default="", help="Optional Solidity source root relative to the target.")
     war_run.add_argument("--json", action="store_true", help="Print the machine-readable triage JSON to stdout only (no human text).")
     war_run.add_argument("--markdown", action="store_true", help="(Default) human console output; artifacts are always Markdown+JSON.")
     war_run.add_argument("--no-write", action="store_true", help="Build artifacts in memory only; do not write files.")

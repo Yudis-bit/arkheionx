@@ -22,6 +22,8 @@ import json
 import re
 from dataclasses import dataclass, field, fields, is_dataclass
 
+__test__ = False
+
 _HASH_LEN = 12
 
 # --- Controlled test-gap categories -----------------------------------------

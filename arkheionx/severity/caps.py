@@ -6,6 +6,18 @@ technically valid candidate is economically low.
 from __future__ import annotations
 
 CAP = {
+    "SIGNATURE_OPERATION_BINDING": ("position or wallet balance",
+        "Loss is bounded by assets controlled by the affected signed operation."),
+    "THRESHOLD_AUTHORIZATION_BYPASS": ("wallet balance",
+        "Loss is bounded by assets controlled by the bypassed authorization set."),
+    "NONCE_SEQUENCE_REPLAY": ("repeatable signed operation",
+        "Loss is bounded by the replayable operation and available balance."),
+    "DELEGATECALL_STORAGE_CONTROL": ("wallet balance / storage authority",
+        "Delegated execution may control the full wallet state."),
+    "FACTORY_INITIALIZATION_TAKEOVER": ("new account balance",
+        "Loss is bounded by value assigned to an uninitialized account."),
+    "KEY_REUSE_REPLAY": ("key reuse or domain capped",
+        "Impact exists only where the same signing authority spans domains."),
     "DEBT_REPAYMENT_RECONCILIATION": ("capped by rounding base units",
         "Loss <= per-tranche rounding (token base units). 18-decimal assets are "
         "effectively immune; only low-decimal currencies show meaningful dust."),

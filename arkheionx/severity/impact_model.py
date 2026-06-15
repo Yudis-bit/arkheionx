@@ -2,6 +2,18 @@
 from __future__ import annotations
 
 IMPACT = {
+    "SIGNATURE_OPERATION_BINDING": ("unauthorized value redirection",
+        "An executed value or control field is not bound by signer approval."),
+    "THRESHOLD_AUTHORIZATION_BYPASS": ("unauthorized wallet control",
+        "Fewer unique signers than the configured threshold can authorize execution."),
+    "NONCE_SEQUENCE_REPLAY": ("repeated unauthorized execution",
+        "A signed operation can execute more than once in the same domain."),
+    "DELEGATECALL_STORAGE_CONTROL": ("wallet storage takeover",
+        "Unsigned delegated-execution controls can mutate authorization storage."),
+    "FACTORY_INITIALIZATION_TAKEOVER": ("account ownership takeover",
+        "A deployed account can be initialized by an unauthorized caller."),
+    "KEY_REUSE_REPLAY": ("cross-domain replay dependent on reused authority",
+        "Replay requires the same signing authority in another domain."),
     "DEBT_REPAYMENT_RECONCILIATION": ("victim loss (lenders)",
         "Lenders are under-credited by the rounding remainder while the loan closes."),
     "LENDER_CONSENT_VALUE_AFFECTING_CALLDATA": ("victim loss (predepositor)",

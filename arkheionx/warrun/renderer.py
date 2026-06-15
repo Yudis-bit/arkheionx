@@ -5,7 +5,7 @@ import datetime as dt
 
 from arkheionx.version import PACKAGE_VERSION
 
-MILESTONE = "v10.0.0-dev"
+MILESTONE = "v10.1.0-dev"
 ARTIFACT_TYPE = "godeye_war_run"
 MANIFEST_TYPE = "godeye_war_run_manifest"
 BRANCH = "private/v10-godeye-war-engine"
@@ -74,12 +74,25 @@ def _next_action(c) -> str:
     return "INVESTIGATE"
 
 
-def console_lines(target, smap, emap, tmap, invset, graph, out_dir, wrote) -> list:
+def console_lines(target, smap, emap, tmap, invset, graph, out_dir, wrote, *,
+                  ingest_summary=None, auth_analysis=None, reality_results=None,
+                  gates=None) -> list:
+    reality_results = reality_results or []
+    gates = gates or []
     lines = [
-        "Arkheionx V10 GodEye War Run",
+        "Arkheionx V10.1 Reality Engine War Run",
         "",
         f"Target: {target}",
-        f"Contracts indexed: {len(smap.contracts)}",
+        f"Framework detected: {getattr(ingest_summary, 'framework', 'unknown')}",
+        f"Solidity files indexed: {getattr(ingest_summary, 'solidity_files_indexed', smap.files_indexed)}",
+        f"Contracts indexed: {getattr(ingest_summary, 'contracts_indexed', len(smap.contracts))}",
+        f"Artifact mode: {getattr(ingest_summary, 'artifact_mode', smap.artifact_mode)}",
+        f"Excluded dependency files: {getattr(ingest_summary, 'excluded_dependency_files', 0)}",
+        f"Auth engine active: {'yes' if getattr(auth_analysis, 'active', False) else 'no'}",
+        f"Root-cause memory matches: "
+        f"{sum(c.duplicate_risk in ('SAME_ROOT_CAUSE', 'RELATED_BUT_DISTINCT') for c in graph.candidates)}",
+        f"Bounty reality blocked candidates: {sum(result.blocked for result in reality_results)}",
+        f"Quality gate warnings: {sum(g.status in ('warn', 'fail') for g in gates)}",
         f"Semantic confidence: {smap.confidence.lower()}",
         f"Entities found: {len(emap.entities)}",
         f"State transitions found: {len(tmap.transitions)}",
@@ -89,6 +102,12 @@ def console_lines(target, smap, emap, tmap, invset, graph, out_dir, wrote) -> li
         "",
         "Top candidates:",
     ]
+    if getattr(ingest_summary, "contracts_indexed", len(smap.contracts)) == 0:
+        lines.insert(
+            12,
+            "ZERO_CONTRACTS_INDEXED: this war-run did not analyze Solidity contracts. "
+            "Check target path, framework detection, or ingestion settings.",
+        )
     if graph.candidates:
         for i, c in enumerate(graph.candidates[:5], 1):
             sev = c.economic_severity or "PENDING"
@@ -121,6 +140,7 @@ def triage_json(target, scope, smap, emap, tmap, invset, graph, verdicts, fork_r
         "scope": scope.to_dict(),
         "semantic": {
             "mode": smap.mode, "confidence": smap.confidence,
+            "artifact_mode": smap.artifact_mode,
             "files_indexed": smap.files_indexed, "contracts": len(smap.contracts),
             "call_edges": len(smap.call_edges), "external_calls": len(smap.external_calls),
             "dataflow_hints": len(smap.dataflow_hints),

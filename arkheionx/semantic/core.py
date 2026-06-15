@@ -8,7 +8,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from . import ast_loader, call_graph, dataflow, external_calls, models as M, source_index, storage_map
+from arkheionx.ingest.repo_detector import inspect_repository
+
+from . import artifact_loader, call_graph, dataflow, external_calls, models as M, storage_map
 from .fallback_parser import parse_sources
 
 
@@ -18,31 +20,43 @@ def build_semantic_map(
     include_paths: list | None = None,
     include_deps: bool = False,
     include_tests: bool = False,
+    include_scripts: bool = False,
+    framework: str = "auto",
+    build_artifacts: Path | str | None = None,
+    solidity_root: Path | str | None = None,
 ) -> M.SemanticMap:
     root = Path(root)
-    sources = source_index.discover_sources(
-        root, include_paths=include_paths, include_deps=include_deps, include_tests=include_tests)
-
-    availability = ast_loader.detect_artifacts(root)
-    ast_parse = ast_loader.load_ast_map(root)  # deferred -> None
+    ingest_summary, discovery, artifact_discovery = inspect_repository(
+        root,
+        framework=framework,
+        build_artifacts=build_artifacts,
+        solidity_root=solidity_root,
+        include_paths=include_paths,
+        include_deps=include_deps,
+        include_tests=include_tests,
+        include_scripts=include_scripts,
+    )
+    sources = list(discovery.sources)
+    artifact_facts = artifact_loader.load_artifacts(
+        root,
+        build_artifacts=build_artifacts,
+        discovery=artifact_discovery,
+    )
+    existing_rel = {source.rel for source in sources}
+    sources.extend(source for source in artifact_facts.virtual_sources if source.rel not in existing_rel)
 
     smap = M.SemanticMap(root=str(root))
-    if ast_parse is not None:  # pragma: no cover - AST ingestion deferred
-        parse = ast_parse
-        smap.mode = M.MODE_AST
-        smap.confidence = M.HIGH
-    else:
-        parse = parse_sources(sources)
-        smap.mode = M.MODE_FALLBACK
-        if availability.available:
-            smap.warnings.extend(availability.notes)
+    parse = parse_sources(sources)
+    smap.mode = M.MODE_FALLBACK
+    smap.artifact_mode = artifact_facts.mode
+    smap.warnings.extend(artifact_facts.warnings)
 
-    smap.contracts = parse.contracts
+    smap.contracts = artifact_loader.merge_contracts(parse.contracts, artifact_facts.contracts)
     smap.call_edges = call_graph.build_call_graph(parse)
     smap.storage_accesses = storage_map.build_storage_map(parse)
     smap.external_calls = external_calls.build_external_calls(parse)
     smap.dataflow_hints = dataflow.build_dataflow(parse)
-    smap.files_indexed = len(sources)
+    smap.files_indexed = discovery.files_indexed
     smap.warnings.extend(parse.warnings)
 
     total_fns = sum(len(c.functions) for c in smap.contracts)
@@ -55,4 +69,8 @@ def build_semantic_map(
     # Keep a transient handle to the parse side-table for downstream layers that
     # want raw function bodies (not serialized into the SemanticMap).
     smap._parse = parse  # type: ignore[attr-defined]
+    ingest_summary.contracts_indexed = len(smap.contracts)
+    ingest_summary.warnings = list(dict.fromkeys(ingest_summary.warnings + smap.warnings))
+    smap._ingest_summary = ingest_summary  # type: ignore[attr-defined]
+    smap._artifact_facts = artifact_facts  # type: ignore[attr-defined]
     return smap

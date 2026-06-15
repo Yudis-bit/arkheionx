@@ -1,6 +1,8 @@
 """Fork test-plan steps (Layer 8). Local simulation only; never broadcast."""
 from __future__ import annotations
 
+__test__ = False
+
 
 def test_steps(req) -> list:
     return [

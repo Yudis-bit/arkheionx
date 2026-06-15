@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from types import SimpleNamespace
 
-from . import duplicate_classifier, root_cause_hash as rch
+from . import duplicate_classifier, root_cause_fingerprint as rcf, root_cause_hash as rch
 from .models import MemoryEntry
 from .store import MemoryStore
 
@@ -37,14 +37,37 @@ def _category_for(status: str, explicit: str) -> str:
 def _add(args) -> int:
     store = _store(args)
     role = args.function_role or rch.function_role(args.entry_function or "")
+    fp = rcf.build_fingerprint(
+        args.root_cause or "",
+        explicit_family=args.invariant_family or "",
+        affected_function=role,
+        attacker_capability=args.attacker or "",
+        proof_status=args.severity or "",
+        program_outcome=args.status or "unknown",
+    )
     entry = MemoryEntry(
         target=args.target or "", program=args.program or "", repo=args.repo or "",
         commit=args.commit or "", root_cause=args.root_cause or "",
-        invariant_family=args.invariant_family or "", function_role=role,
+        invariant_family=args.invariant_family or fp.family, function_role=role,
         attacker_category=rch.attacker_category(args.attacker or ""),
         status=args.status or "unknown", finding_id=args.finding_id or "",
         severity=args.severity or "", notes=args.notes or "",
         do_not_resubmit=bool(args.do_not_resubmit),
+        root_cause_hash=fp.fingerprint_hash,
+        normalized_root_cause=fp.normalized_text,
+        root_cause_family=fp.family,
+        root_cause_subfamily=fp.subfamily,
+        lifecycle=fp.lifecycle,
+        affected_function=fp.affected_function,
+        affected_asset_type=fp.affected_asset_type,
+        attacker_capability=fp.attacker_capability,
+        victim_type=fp.victim_type,
+        impact_path=fp.impact_path,
+        cap_type=fp.cap_type,
+        proof_status=fp.proof_status,
+        program_outcome=fp.program_outcome,
+        fingerprint_confidence=fp.confidence,
+        fingerprint_warnings=fp.warnings,
     )
     category = _category_for(entry.status, args.category)
     store.add(category, entry, write=not args.no_write)
@@ -52,9 +75,11 @@ def _add(args) -> int:
         print(json.dumps({"added": entry.to_dict(), "category": category,
                           "memory_dir": str(store.base)}, indent=2))
     else:
-        print(f"memory: added [{category}] family={entry.invariant_family or '-'} "
+        warning_text = f" warnings=[{', '.join(entry.fingerprint_warnings)}]" \
+            if entry.fingerprint_warnings else ""
+        print(f"memory: added [{category}] family={entry.root_cause_family} "
               f"hash={entry.root_cause_hash} status={entry.status} "
-              f"do_not_resubmit={entry.do_not_resubmit}")
+              f"do_not_resubmit={entry.do_not_resubmit}{warning_text}")
     return 0
 
 
@@ -69,7 +94,12 @@ def _list(args) -> int:
         print("memory: (empty)")
         return 0
     for c, e in rows:
-        print(f"[{c}] {e.root_cause_hash or '-'} {e.invariant_family or '-'} "
+        family = e.root_cause_family or e.invariant_family or "UNKNOWN"
+        source_family = (
+            f" source_family={e.invariant_family}"
+            if e.invariant_family and e.invariant_family != family else ""
+        )
+        print(f"[{c}] {e.root_cause_hash} {family}{source_family} "
               f"role={e.function_role or '-'} status={e.status} "
               f"sev={e.severity or '-'} id={e.finding_id or '-'}")
     return 0

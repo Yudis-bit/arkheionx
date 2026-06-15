@@ -27,10 +27,23 @@ NO_SCOPE_SUBMIT_GATE = "NO_SCOPE_SUBMIT_GATE"
 FORK_DEPENDENCY_GATE = "FORK_DEPENDENCY_GATE"
 PROOF_QUALITY_GATE = "PROOF_QUALITY_GATE"
 HUMAN_REVIEW_GATE = "HUMAN_REVIEW_GATE"
+ZERO_CONTRACTS_INDEXED_WARNING = "ZERO_CONTRACTS_INDEXED_WARNING"
+NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED = "NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED"
+NO_SUBMIT_IF_KEY_REUSE_ONLY = "NO_SUBMIT_IF_KEY_REUSE_ONLY"
+NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY = "NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY"
+NO_SUBMIT_IF_FORCED_VALUE_TRANSFER_ONLY = "NO_SUBMIT_IF_FORCED_VALUE_TRANSFER_ONLY"
+NO_SUBMIT_IF_TRUSTED_ROLE_ONLY = "NO_SUBMIT_IF_TRUSTED_ROLE_ONLY"
+NO_SUBMIT_IF_DUST_ONLY = "NO_SUBMIT_IF_DUST_ONLY"
+NO_SUBMIT_IF_PREVIOUSLY_REJECTED = "NO_SUBMIT_IF_PREVIOUSLY_REJECTED"
+NO_SUBMIT_IF_DUPLICATE_ROOT_CAUSE = "NO_SUBMIT_IF_DUPLICATE_ROOT_CAUSE"
 
 # Hard gates whose failure must downgrade the offending submit candidate.
 _HARD = {REQUIRED_FIELDS_GATE, NO_DUST_HIGH_GATE, NO_TRUSTED_ROLE_SUBMIT_GATE,
-         NO_DUPLICATE_SUBMIT_GATE, NO_SCOPE_SUBMIT_GATE}
+         NO_DUPLICATE_SUBMIT_GATE, NO_SCOPE_SUBMIT_GATE,
+         NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED, NO_SUBMIT_IF_KEY_REUSE_ONLY,
+         NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY, NO_SUBMIT_IF_FORCED_VALUE_TRANSFER_ONLY,
+         NO_SUBMIT_IF_TRUSTED_ROLE_ONLY, NO_SUBMIT_IF_DUST_ONLY,
+         NO_SUBMIT_IF_PREVIOUSLY_REJECTED, NO_SUBMIT_IF_DUPLICATE_ROOT_CAUSE}
 
 
 @dataclass
@@ -49,11 +62,14 @@ def _is_submit(label) -> bool:
 
 
 def run_quality_gates(graph, verdicts, fork_reqs, *, secret_warnings=None,
-                      report_generated=False) -> list:
+                      report_generated=False, reality_results=None,
+                      ingest_summary=None) -> list:
     secret_warnings = secret_warnings or []
     vby_id = {v.candidate_id: v for v in verdicts}
     submit = [c for c in graph.candidates if _is_submit(c.economic_severity)]
     gates = []
+    reality_results = reality_results or []
+    candidates_by_id = {candidate.id: candidate for candidate in graph.candidates}
 
     missing = [c.id for c in submit if not (c.attacker_capability and c.victim and c.asset
                                             and c.broken_invariant and c.entry_function)]
@@ -99,6 +115,55 @@ def run_quality_gates(graph, verdicts, fork_reqs, *, secret_warnings=None,
 
     gates.append(QualityGate(HUMAN_REVIEW_GATE, PASS, [],
                              "Human review is always required; war-run never auto-submits."))
+
+    zero_contracts = bool(ingest_summary is not None and ingest_summary.contracts_indexed == 0)
+    gates.append(QualityGate(
+        ZERO_CONTRACTS_INDEXED_WARNING,
+        WARN if zero_contracts else PASS,
+        [],
+        "ZERO_CONTRACTS_INDEXED: check target path, framework detection, or ingestion settings."
+        if zero_contracts else "At least one Solidity contract was indexed.",
+    ))
+
+    def _reality_submit(tag=None):
+        affected = []
+        for result in reality_results:
+            if tag is not None and tag not in result.reason_tags:
+                continue
+            candidate = candidates_by_id.get(result.candidate_id)
+            if candidate is not None and _is_submit(candidate.economic_severity):
+                affected.append(candidate.id)
+        return affected
+
+    reality_blocked_submit = [
+        result.candidate_id for result in reality_results
+        if result.blocked
+        and result.candidate_id in candidates_by_id
+        and _is_submit(candidates_by_id[result.candidate_id].economic_severity)
+    ]
+    gates.append(QualityGate(
+        NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED,
+        FAIL if reality_blocked_submit else PASS,
+        reality_blocked_submit,
+        "Candidates blocked by bounty reality cannot retain SUBMIT_* labels.",
+    ))
+    tag_gates = (
+        (NO_SUBMIT_IF_KEY_REUSE_ONLY, "key_reuse"),
+        (NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY, "offchain_validation"),
+        (NO_SUBMIT_IF_FORCED_VALUE_TRANSFER_ONLY, "forced_value_transfer"),
+        (NO_SUBMIT_IF_TRUSTED_ROLE_ONLY, "trusted_role"),
+        (NO_SUBMIT_IF_DUST_ONLY, "dust"),
+        (NO_SUBMIT_IF_PREVIOUSLY_REJECTED, "previously_rejected"),
+        (NO_SUBMIT_IF_DUPLICATE_ROOT_CAUSE, "duplicate"),
+    )
+    for gate_id, tag in tag_gates:
+        affected = _reality_submit(tag)
+        gates.append(QualityGate(
+            gate_id,
+            FAIL if affected else PASS,
+            affected,
+            f"Candidates tagged {tag} by bounty reality cannot retain SUBMIT_* labels.",
+        ))
     return gates
 
 

@@ -42,6 +42,12 @@ def war_run_command(args: Namespace) -> int:
             memory_dir=str(getattr(args, "memory", "") or "") or None,
             write=write,
             asset_decimals=int(getattr(args, "asset_decimals", 0) or 0),
+            include_tests=bool(getattr(args, "include_tests", False)),
+            include_scripts=bool(getattr(args, "include_scripts", False)),
+            include_deps=bool(getattr(args, "include_deps", False)),
+            framework=str(getattr(args, "framework", "auto") or "auto"),
+            build_artifacts=str(getattr(args, "build_artifacts", "") or "") or None,
+            solidity_root=str(getattr(args, "solidity_root", "") or "") or None,
         )
     except WarRunError as exc:
         print(f"ArkheionX error: {exc}")
