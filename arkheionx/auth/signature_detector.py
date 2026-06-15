@@ -33,8 +33,25 @@ _SIGNALS = (
     "initializer",
 )
 
+_SIGNED_OPERATION_CONTEXT_SIGNALS = {
+    "ecrecover",
+    "ecdsa",
+    "signaturechecker",
+    "signer",
+    "threshold",
+    "nonce",
+    "sequence",
+    "execute",
+    "operationhash",
+    "transactionhash",
+    "multisig",
+    "wallet",
+}
+
 
 def _source_text(smap) -> str:
+    if hasattr(smap, "_source_text"):
+        return getattr(smap, "_source_text")
     discovery = discover_solidity(smap.root, include_tests=True, include_scripts=True)
     return "\n".join(source.text for source in discovery.sources)
 
@@ -157,4 +174,12 @@ def analyze_authorization(smap) -> M.AuthorizationAnalysis:
         key = (candidate.family, candidate.contract, candidate.function)
         unique.setdefault(key, candidate)
     analysis.candidates = list(unique.values())
+    signed_context_signal_count = len(
+        set(analysis.activation_signals) & _SIGNED_OPERATION_CONTEXT_SIGNALS
+    )
+    if analysis.activation_signals and not analysis.signed_operations \
+            and signed_context_signal_count >= 2:
+        analysis.warnings.append(
+            "AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION: authorization keywords were present but no signed operation was detected."
+        )
     return analysis

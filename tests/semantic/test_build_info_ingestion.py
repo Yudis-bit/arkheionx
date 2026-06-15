@@ -13,6 +13,9 @@ class BuildInfoIngestionTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             source_name = "contracts/GenericArtifactContract.sol"
+            source = root / source_name
+            source.parent.mkdir(parents=True)
+            source.write_text(SOURCE, encoding="utf-8")
             write_json(root / "artifacts" / "build-info" / "build.json", {
                 "input": {"sources": {source_name: {"content": SOURCE}}},
                 "output": {

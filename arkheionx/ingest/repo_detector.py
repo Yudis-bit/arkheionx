@@ -16,8 +16,12 @@ class IngestSummary:
     framework: str = "unknown"
     solidity_files_indexed: int = 0
     contracts_indexed: int = 0
+    real_contracts_indexed: int = 0
+    artifact_only_contracts_indexed: int = 0
     artifact_mode: str = FALLBACK_ONLY
     artifact_records: int = 0
+    stale_artifacts_ignored: int = 0
+    sample_artifacts_ignored: int = 0
     excluded_dependency_files: int = 0
     warnings: list = field(default_factory=list)
 

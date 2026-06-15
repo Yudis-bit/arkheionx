@@ -9,6 +9,14 @@ from .path_filters import exclusion_reason
 
 _MAX_FILE_BYTES = 600_000
 _MAX_FILES = 1200
+DISCOVERY_PATTERNS = (
+    "**/*.sol",
+    "contracts/**/*.sol",
+    "src/**/*.sol",
+    "modules/**/*.sol",
+    "packages/**/contracts/**/*.sol",
+    "packages/**/src/**/*.sol",
+)
 
 
 @dataclass
@@ -21,6 +29,7 @@ class SourceFile:
 @dataclass
 class SolidityDiscovery:
     root: str = ""
+    inspected_patterns: list = field(default_factory=lambda: list(DISCOVERY_PATTERNS))
     sources: list = field(default_factory=list)
     excluded_dependency_files: int = 0
     excluded_test_files: int = 0
@@ -85,7 +94,11 @@ def discover_solidity(
         return result
 
     try:
-        paths = sorted(scan_root.rglob("*.sol"))
+        found: dict[Path, Path] = {}
+        for pattern in DISCOVERY_PATTERNS:
+            for path in scan_root.glob(pattern):
+                found[path] = path
+        paths = sorted(found)
     except OSError as exc:
         result.warnings.append(f"source discovery failed: {exc}")
         return result

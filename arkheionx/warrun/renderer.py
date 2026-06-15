@@ -86,9 +86,13 @@ def console_lines(target, smap, emap, tmap, invset, graph, out_dir, wrote, *,
         f"Framework detected: {getattr(ingest_summary, 'framework', 'unknown')}",
         f"Solidity files indexed: {getattr(ingest_summary, 'solidity_files_indexed', smap.files_indexed)}",
         f"Contracts indexed: {getattr(ingest_summary, 'contracts_indexed', len(smap.contracts))}",
+        f"Real source contracts indexed: {getattr(ingest_summary, 'real_contracts_indexed', len(smap.contracts))}",
         f"Artifact mode: {getattr(ingest_summary, 'artifact_mode', smap.artifact_mode)}",
         f"Excluded dependency files: {getattr(ingest_summary, 'excluded_dependency_files', 0)}",
         f"Auth engine active: {'yes' if getattr(auth_analysis, 'active', False) else 'no'}",
+        f"Auth activation signals detected: {'yes' if getattr(auth_analysis, 'activation_signals', []) else 'no'}",
+        f"Signed operations detected: {len(getattr(auth_analysis, 'signed_operations', []) or [])}",
+        f"Auth candidates detected: {len(getattr(auth_analysis, 'candidates', []) or [])}",
         f"Root-cause memory matches: "
         f"{sum(c.duplicate_risk in ('SAME_ROOT_CAUSE', 'RELATED_BUT_DISTINCT') for c in graph.candidates)}",
         f"Bounty reality blocked candidates: {sum(result.blocked for result in reality_results)}",
@@ -107,6 +111,13 @@ def console_lines(target, smap, emap, tmap, invset, graph, out_dir, wrote, *,
             12,
             "ZERO_CONTRACTS_INDEXED: this war-run did not analyze Solidity contracts. "
             "Check target path, framework detection, or ingestion settings.",
+        )
+    if any("AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION" in warning
+           for warning in getattr(auth_analysis, "warnings", []) or []):
+        lines.insert(
+            15,
+            "AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION: authorization keywords were present "
+            "but no signed operation was detected.",
         )
     if graph.candidates:
         for i, c in enumerate(graph.candidates[:5], 1):

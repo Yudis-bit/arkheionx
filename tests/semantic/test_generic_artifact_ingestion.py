@@ -5,13 +5,16 @@ from pathlib import Path
 from arkheionx.semantic import build_semantic_map
 from arkheionx.semantic import models as M
 
-from ._artifact_helpers import write_json
+from ._artifact_helpers import SOURCE, write_json
 
 
 class GenericArtifactIngestionTest(unittest.TestCase):
     def test_generic_ast_artifact_enriches_contract(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
+            source = root / "contracts" / "GenericArtifactContract.sol"
+            source.parent.mkdir(parents=True)
+            source.write_text(SOURCE, encoding="utf-8")
             write_json(root / "artifacts" / "GenericArtifactContract.json", {
                 "contractName": "GenericArtifactContract",
                 "sourceName": "contracts/GenericArtifactContract.sol",

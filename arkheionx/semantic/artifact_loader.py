@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import re
 
 from arkheionx.ingest.artifact_discovery import ArtifactDiscovery, discover_artifacts
 from arkheionx.ingest.solidity_discovery import SourceFile
@@ -15,6 +16,8 @@ class ArtifactFacts:
     discovery: ArtifactDiscovery
     virtual_sources: list = field(default_factory=list)
     contracts: list = field(default_factory=list)
+    stale_artifacts_ignored: int = 0
+    sample_artifacts_ignored: int = 0
     warnings: list = field(default_factory=list)
 
     @property
@@ -79,11 +82,89 @@ def _contract_from_artifact(name: str, source_name: str, data: dict):
     return contract
 
 
+_SAMPLE_ARTIFACT_CONTRACTS = {
+    "Migrations",
+    "MetaCoin",
+    "ConvertLib",
+    "SimpleStorage",
+    "Greeter",
+    "Storage",
+}
+
+
+def _source_name(data: dict) -> str:
+    return str(data.get("sourceName") or data.get("sourcePath") or "").strip()
+
+
+def _contract_name(path: str, data: dict) -> str:
+    return str(data.get("contractName") or Path(path).stem or "").strip()
+
+
+def _normalize_source_name(value: str) -> str:
+    source = str(value or "").replace("\\", "/").strip()
+    source = re.sub(r"^[A-Za-z0-9_.-]+:/+", "", source)
+    while source.startswith("./"):
+        source = source[2:]
+    return source.strip("/")
+
+
+def _source_exists(root: Path, source_name: str, source_rels: set[str]) -> bool:
+    if not source_name:
+        return False
+    normalized = _normalize_source_name(source_name)
+    if normalized in source_rels:
+        return True
+    raw = Path(source_name)
+    if raw.is_absolute():
+        try:
+            rel = raw.resolve().relative_to(root.resolve()).as_posix()
+        except (OSError, ValueError):
+            return False
+        return rel in source_rels or raw.is_file()
+    candidate = root / normalized
+    try:
+        candidate.resolve().relative_to(root.resolve())
+    except (OSError, ValueError):
+        return False
+    if candidate.is_file():
+        return True
+    return any(rel.endswith("/" + normalized) for rel in source_rels)
+
+
+def _is_sample_artifact(contract_name: str, source_exists: bool) -> bool:
+    if contract_name in _SAMPLE_ARTIFACT_CONTRACTS and not source_exists:
+        return True
+    return contract_name == "Token" and not source_exists
+
+
+def _accept_artifact(record, root: Path, source_rels: set[str], facts: ArtifactFacts) -> bool:
+    data = record.data
+    contract_name = _contract_name(record.path, data)
+    source_name = _source_name(data)
+    source_exists = _source_exists(root, source_name, source_rels)
+    sample = _is_sample_artifact(contract_name, source_exists)
+    if sample:
+        facts.sample_artifacts_ignored += 1
+        facts.warnings.append(
+            f"STALE_ARTIFACT_IGNORED: sample artifact ignored for {contract_name}"
+        )
+        return False
+    if source_name and not source_exists:
+        facts.stale_artifacts_ignored += 1
+        facts.warnings.append(
+            f"STALE_ARTIFACT_IGNORED: artifact source missing for {contract_name}"
+        )
+        return False
+    return True
+
+
 def load_artifacts(root: Path | str, build_artifacts: Path | str | None = None,
-                   discovery: ArtifactDiscovery | None = None) -> ArtifactFacts:
+                   discovery: ArtifactDiscovery | None = None,
+                   source_rels: set[str] | None = None) -> ArtifactFacts:
     root = Path(root)
     discovery = discovery or discover_artifacts(root, build_artifacts)
     facts = ArtifactFacts(discovery=discovery, warnings=list(discovery.warnings))
+    source_rels = set(source_rels or set())
     seen_sources: set[str] = set()
     seen_contracts: set[tuple[str, str]] = set()
     for record in discovery.records:
@@ -91,6 +172,12 @@ def load_artifacts(root: Path | str, build_artifacts: Path | str | None = None,
         if record.style == "build_info":
             for source_name, source in data.get("input", {}).get("sources", {}).items():
                 if not isinstance(source, dict) or not isinstance(source.get("content"), str):
+                    continue
+                if not _source_exists(root, str(source_name), source_rels):
+                    facts.stale_artifacts_ignored += 1
+                    facts.warnings.append(
+                        f"STALE_ARTIFACT_IGNORED: build-info source missing for {source_name}"
+                    )
                     continue
                 if source_name not in seen_sources:
                     facts.virtual_sources.append(SourceFile(
@@ -107,6 +194,10 @@ def load_artifacts(root: Path | str, build_artifacts: Path | str | None = None,
                     for contract_name, contract_data in by_name.items():
                         if not isinstance(contract_data, dict):
                             continue
+                        if not _source_exists(root, str(source_name), source_rels):
+                            continue
+                        if _is_sample_artifact(str(contract_name), True):
+                            continue
                         key = (source_name, contract_name)
                         if key in seen_contracts:
                             continue
@@ -114,6 +205,8 @@ def load_artifacts(root: Path | str, build_artifacts: Path | str | None = None,
                         if contract:
                             facts.contracts.append(contract)
                             seen_contracts.add(key)
+            continue
+        if not _accept_artifact(record, root, source_rels, facts):
             continue
         if record.style == "legacy" and isinstance(data.get("source"), str):
             source_name = data.get("sourcePath") or Path(record.path).with_suffix(".sol").name
@@ -124,8 +217,8 @@ def load_artifacts(root: Path | str, build_artifacts: Path | str | None = None,
                     data["source"],
                 ))
                 seen_sources.add(source_name)
-        contract_name = data.get("contractName") or Path(record.path).stem
-        source_name = data.get("sourceName") or data.get("sourcePath") or ""
+        contract_name = _contract_name(record.path, data)
+        source_name = _source_name(data)
         key = (source_name, contract_name)
         if key not in seen_contracts:
             contract = _contract_from_artifact(contract_name, source_name, data)

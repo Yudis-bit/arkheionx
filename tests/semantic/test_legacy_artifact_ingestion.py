@@ -12,6 +12,9 @@ class LegacyArtifactIngestionTest(unittest.TestCase):
     def test_legacy_source_artifact(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
+            source = root / "contracts" / "GenericArtifactContract.sol"
+            source.parent.mkdir(parents=True)
+            source.write_text(SOURCE, encoding="utf-8")
             write_json(root / "build" / "contracts" / "GenericArtifactContract.json", {
                 "contractName": "GenericArtifactContract",
                 "sourcePath": "contracts/GenericArtifactContract.sol",

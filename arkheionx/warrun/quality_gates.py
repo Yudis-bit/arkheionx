@@ -28,6 +28,10 @@ FORK_DEPENDENCY_GATE = "FORK_DEPENDENCY_GATE"
 PROOF_QUALITY_GATE = "PROOF_QUALITY_GATE"
 HUMAN_REVIEW_GATE = "HUMAN_REVIEW_GATE"
 ZERO_CONTRACTS_INDEXED_WARNING = "ZERO_CONTRACTS_INDEXED_WARNING"
+ZERO_REAL_CONTRACTS_INDEXED = "ZERO_REAL_CONTRACTS_INDEXED"
+ARTIFACT_ONLY_WITH_NO_SOURCE_WARNING = "ARTIFACT_ONLY_WITH_NO_SOURCE_WARNING"
+STALE_ARTIFACT_IGNORED = "STALE_ARTIFACT_IGNORED"
+AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION = "AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION"
 NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED = "NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED"
 NO_SUBMIT_IF_KEY_REUSE_ONLY = "NO_SUBMIT_IF_KEY_REUSE_ONLY"
 NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY = "NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY"
@@ -40,6 +44,7 @@ NO_SUBMIT_IF_DUPLICATE_ROOT_CAUSE = "NO_SUBMIT_IF_DUPLICATE_ROOT_CAUSE"
 # Hard gates whose failure must downgrade the offending submit candidate.
 _HARD = {REQUIRED_FIELDS_GATE, NO_DUST_HIGH_GATE, NO_TRUSTED_ROLE_SUBMIT_GATE,
          NO_DUPLICATE_SUBMIT_GATE, NO_SCOPE_SUBMIT_GATE,
+         ZERO_REAL_CONTRACTS_INDEXED,
          NO_SUBMIT_IF_BOUNTY_REALITY_BLOCKED, NO_SUBMIT_IF_KEY_REUSE_ONLY,
          NO_SUBMIT_IF_OFFCHAIN_VALIDATION_ONLY, NO_SUBMIT_IF_FORCED_VALUE_TRANSFER_ONLY,
          NO_SUBMIT_IF_TRUSTED_ROLE_ONLY, NO_SUBMIT_IF_DUST_ONLY,
@@ -63,7 +68,7 @@ def _is_submit(label) -> bool:
 
 def run_quality_gates(graph, verdicts, fork_reqs, *, secret_warnings=None,
                       report_generated=False, reality_results=None,
-                      ingest_summary=None) -> list:
+                      ingest_summary=None, auth_analysis=None) -> list:
     secret_warnings = secret_warnings or []
     vby_id = {v.candidate_id: v for v in verdicts}
     submit = [c for c in graph.candidates if _is_submit(c.economic_severity)]
@@ -123,6 +128,58 @@ def run_quality_gates(graph, verdicts, fork_reqs, *, secret_warnings=None,
         [],
         "ZERO_CONTRACTS_INDEXED: check target path, framework detection, or ingestion settings."
         if zero_contracts else "At least one Solidity contract was indexed.",
+    ))
+    zero_real_contracts = bool(
+        ingest_summary is not None and getattr(ingest_summary, "real_contracts_indexed", 0) == 0
+    )
+    zero_real_submit = [c.id for c in submit] if zero_real_contracts else []
+    gates.append(QualityGate(
+        ZERO_REAL_CONTRACTS_INDEXED,
+        FAIL if zero_real_submit else WARN if zero_real_contracts else PASS,
+        zero_real_submit,
+        "ZERO_REAL_CONTRACTS_INDEXED: no live source-backed Solidity contracts were indexed."
+        if zero_real_contracts else "At least one live source-backed Solidity contract was indexed.",
+    ))
+    artifact_only = bool(
+        ingest_summary is not None
+        and getattr(ingest_summary, "contracts_indexed", 0) > 0
+        and getattr(ingest_summary, "solidity_files_indexed", 0) == 0
+    )
+    gates.append(QualityGate(
+        ARTIFACT_ONLY_WITH_NO_SOURCE_WARNING,
+        WARN if artifact_only else PASS,
+        [],
+        "ARTIFACT_ONLY_WITH_NO_SOURCE_WARNING: contracts came only from artifacts."
+        if artifact_only else "No artifact-only source gap detected.",
+    ))
+    stale_ignored = bool(
+        ingest_summary is not None
+        and (
+            getattr(ingest_summary, "stale_artifacts_ignored", 0)
+            or getattr(ingest_summary, "sample_artifacts_ignored", 0)
+        )
+    )
+    gates.append(QualityGate(
+        STALE_ARTIFACT_IGNORED,
+        WARN if stale_ignored else PASS,
+        [],
+        "STALE_ARTIFACT_IGNORED: ignored compiler artifacts without live source."
+        if stale_ignored else "No stale compiler artifacts were ignored.",
+    ))
+    auth_keywords_only = bool(
+        auth_analysis is not None
+        and not getattr(auth_analysis, "signed_operations", [])
+        and any(
+            "AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION" in warning
+            for warning in (getattr(auth_analysis, "warnings", []) or [])
+        )
+    )
+    gates.append(QualityGate(
+        AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION,
+        WARN if auth_keywords_only else PASS,
+        [],
+        "AUTH_KEYWORDS_ONLY_NO_SIGNED_OPERATION: keywords were present but no signed operation was detected."
+        if auth_keywords_only else "Signed-operation detection is consistent with authorization activation.",
     ))
 
     def _reality_submit(tag=None):

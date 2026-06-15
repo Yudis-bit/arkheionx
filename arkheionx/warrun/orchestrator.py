@@ -332,6 +332,8 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
         "contradictions": len(cset.contradictions),
         "solidity_files_indexed": ingest_summary.solidity_files_indexed,
         "contracts_indexed": ingest_summary.contracts_indexed,
+        "real_contracts_indexed": ingest_summary.real_contracts_indexed,
+        "artifact_only_contracts_indexed": ingest_summary.artifact_only_contracts_indexed,
         "auth_candidates": len(auth_analysis.candidates),
         "bounty_reality_blocked": sum(result.blocked for result in reality_results),
     }
@@ -357,7 +359,8 @@ def run_war_run(target, *, scope_file=None, out_dir=None, max_candidates=10,
     gates = quality_gates.run_quality_gates(
         graph, verdicts, fork_reqs,
         secret_warnings=secret_warnings, report_generated=False,
-        reality_results=reality_results, ingest_summary=ingest_summary)
+        reality_results=reality_results, ingest_summary=ingest_summary,
+        auth_analysis=auth_analysis)
     downgrades = quality_gates.enforce(graph, gates, verdicts)
     gate_status = quality_gates.overall_status(gates)
     if downgrades:  # enforcement changed labels -> re-render the affected artifacts

@@ -17,7 +17,11 @@ def ingest_md(summary) -> str:
         f"- Framework detected: {summary.framework}",
         f"- Solidity files indexed: {summary.solidity_files_indexed}",
         f"- Contracts indexed: {summary.contracts_indexed}",
+        f"- Real source contracts indexed: {summary.real_contracts_indexed}",
+        f"- Artifact-only contracts indexed: {summary.artifact_only_contracts_indexed}",
         f"- Artifact mode: {summary.artifact_mode}",
+        f"- Stale artifacts ignored: {summary.stale_artifacts_ignored}",
+        f"- Sample artifacts ignored: {summary.sample_artifacts_ignored}",
         f"- Excluded dependency files: {summary.excluded_dependency_files}",
     ]
     if summary.warnings:

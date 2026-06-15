@@ -37,16 +37,20 @@ def build_semantic_map(
         include_scripts=include_scripts,
     )
     sources = list(discovery.sources)
+    source_rels = {source.rel for source in sources}
     artifact_facts = artifact_loader.load_artifacts(
         root,
         build_artifacts=build_artifacts,
         discovery=artifact_discovery,
+        source_rels=source_rels,
     )
     existing_rel = {source.rel for source in sources}
     sources.extend(source for source in artifact_facts.virtual_sources if source.rel not in existing_rel)
 
     smap = M.SemanticMap(root=str(root))
     parse = parse_sources(sources)
+    source_contract_names = {contract.name for contract in parse.contracts}
+    source_contract_count = len(parse.contracts)
     smap.mode = M.MODE_FALLBACK
     smap.artifact_mode = artifact_facts.mode
     smap.warnings.extend(artifact_facts.warnings)
@@ -69,8 +73,34 @@ def build_semantic_map(
     # Keep a transient handle to the parse side-table for downstream layers that
     # want raw function bodies (not serialized into the SemanticMap).
     smap._parse = parse  # type: ignore[attr-defined]
+    smap._source_text = "\n".join(source.text for source in sources)  # type: ignore[attr-defined]
     ingest_summary.contracts_indexed = len(smap.contracts)
+    ingest_summary.real_contracts_indexed = source_contract_count
+    ingest_summary.artifact_only_contracts_indexed = sum(
+        1 for contract in smap.contracts if contract.name not in source_contract_names
+    )
+    ingest_summary.stale_artifacts_ignored = artifact_facts.stale_artifacts_ignored
+    ingest_summary.sample_artifacts_ignored = artifact_facts.sample_artifacts_ignored
+    if ingest_summary.contracts_indexed > 0 and ingest_summary.solidity_files_indexed == 0:
+        ingest_summary.warnings.append(
+            "ARTIFACT_ONLY_WITH_NO_SOURCE_WARNING: contracts were indexed only from compiler artifacts."
+        )
+    if artifact_facts.stale_artifacts_ignored or artifact_facts.sample_artifacts_ignored:
+        ingest_summary.warnings.append(
+            "STALE_ARTIFACT_IGNORED: ignored compiler artifacts without live repository source."
+        )
+    if ingest_summary.real_contracts_indexed == 0:
+        ingest_summary.warnings.append(
+            "ZERO_REAL_CONTRACTS_INDEXED: no live Solidity source contracts were indexed."
+        )
     ingest_summary.warnings = list(dict.fromkeys(ingest_summary.warnings + smap.warnings))
+    for warning in ingest_summary.warnings:
+        if (
+            warning.startswith("ZERO_REAL_CONTRACTS_INDEXED")
+            or warning.startswith("ARTIFACT_ONLY_WITH_NO_SOURCE_WARNING")
+            or warning.startswith("STALE_ARTIFACT_IGNORED")
+        ) and warning not in smap.warnings:
+            smap.warnings.append(warning)
     smap._ingest_summary = ingest_summary  # type: ignore[attr-defined]
     smap._artifact_facts = artifact_facts  # type: ignore[attr-defined]
     return smap

@@ -112,6 +112,28 @@ def parse_yaml_subset(text: str) -> dict:
     return result if isinstance(result, dict) else {}
 
 
+_SOLIDITY_FILE_RE = re.compile(r"\b(?:contracts|src|modules|packages)/[A-Za-z0-9_./-]+\.sol\b")
+_CONTRACT_CONTEXT_RE = re.compile(
+    r"\b(?:contract|interface|library)\s+([A-Z][A-Za-z0-9_]*)\b"
+)
+
+
+def _contract_names_from_scope_text(text: str) -> list[str]:
+    names: list[str] = []
+    for path in _SOLIDITY_FILE_RE.findall(text or ""):
+        name = Path(path).stem
+        if re.fullmatch(r"[A-Z][A-Za-z0-9_]*", name):
+            names.append(name)
+    names.extend(_CONTRACT_CONTEXT_RE.findall(text or ""))
+    out: list[str] = []
+    seen: set[str] = set()
+    for name in names:
+        if name not in seen:
+            seen.add(name)
+            out.append(name)
+    return out
+
+
 @dataclass
 class ScopeModel:
     present: bool = False
@@ -183,9 +205,7 @@ def load_scope(scope_file: str | None) -> ScopeModel:
     for entry in (data.get("out_of_scope") or []):
         if isinstance(entry, str):
             sm.out_of_scope_text.append(entry)
-            # contract-like token (CamelCase or ALLCAPS) -> out-of-scope contract
-            for tok in re.findall(r"\b(?:[A-Z][a-z0-9_]*[A-Z][A-Za-z0-9_]*|[A-Z]{3,})\b", entry):
-                sm.out_of_scope_contracts.append(tok)
+            sm.out_of_scope_contracts.extend(_contract_names_from_scope_text(entry))
         elif isinstance(entry, dict) and entry.get("contract"):
             sm.out_of_scope_contracts.append(str(entry["contract"]))
     for entry in (data.get("known_reports") or []):
