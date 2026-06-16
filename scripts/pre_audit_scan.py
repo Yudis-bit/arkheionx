@@ -4873,7 +4873,7 @@ def build_sarif_report(
                 "tool": {
                     "driver": {
                         "name": "Arkheionx Pre-Audit Scanner",
-                        "informationUri": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs",
+                        "informationUri": "https://github.com/Yudis-bit/arkheionx",
                         "semanticVersion": VERSION,
                         "rules": list(rules_by_id.values()),
                     }

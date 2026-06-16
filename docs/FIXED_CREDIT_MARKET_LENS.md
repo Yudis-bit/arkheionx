@@ -1,6 +1,6 @@
 # Fixed Credit Market Protocol Lens
 
-`fixed-credit-market` is the first Arkheionx [protocol lens](V7_5_PROTOCOL_LENS.md). It
+`fixed-credit-market` is the first Arkheionx [protocol lens](archive/versions/V7_5_PROTOCOL_LENS.md). It
 models Fixed Credit Market as a protocol-specific economic system rather than generic
 DeFi, so the review lanes, tasks, evidence requirements, and blind-spot ranking are
 shaped by how the protocol actually moves value.

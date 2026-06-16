@@ -36,8 +36,8 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs"
-Documentation = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
+Homepage = "https://github.com/Yudis-bit/arkheionx"
+Documentation = "https://github.com/Yudis-bit/arkheionx#readme"
 
 [project.scripts]
 arkheionx = "arkheionx.cli.main:main"

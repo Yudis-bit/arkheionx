@@ -1,6 +1,6 @@
 ---
 name: Research candidate
-about: Propose a new historical incident as a candidate PoC for the archive.
+about: Propose a new historical incident as a candidate validation fixture.
 title: "[candidate] <YYYY-MM-protocol>"
 labels: ["candidate", "intake"]
 ---

@@ -203,9 +203,9 @@ by a human or by an agent acting under human review, after a local test.
 
 ## See also
 
-- [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) — the end-to-end workflow
+- [`V4_1_RESEARCH_WORKFLOW.md`](archive/versions/V4_1_RESEARCH_WORKFLOW.md) — the end-to-end workflow
 - [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the v5 blind-spot layer built on these surfaces
-- [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the v5 attention-allocation workflow
+- [`V5_WORKFLOW.md`](archive/versions/V5_WORKFLOW.md) — the v5 attention-allocation workflow
 - [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — bug bounty triage
 - [`PRE_AUDIT_WORKFLOW.md`](PRE_AUDIT_WORKFLOW.md) — pre-audit readiness
 - [`REVIEW_MAP.md`](REVIEW_MAP.md) — the v4.0 review-map surface
@@ -225,4 +225,4 @@ This closes the loop: `hypothesis-log` captures what you tested and rejected, an
 `evidence-graph` reflects it back so the unresolved surfaces shrink as your
 research memory grows. A `confirmed-candidate` is still **not** a confirmed
 vulnerability — a human makes the final call with independent local proof. See
-[`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+[`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).

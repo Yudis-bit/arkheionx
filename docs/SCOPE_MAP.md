@@ -50,4 +50,4 @@ arkheionx scope-map examples/scope-fixture --scope-file examples/scope-fixture/s
 ```
 
 See [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) and
-[`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+[`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md).

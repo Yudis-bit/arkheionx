@@ -115,5 +115,5 @@ review is required for every conclusion. See
 - [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md) — the second V6 capability.
 - [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md) — everything still unresolved.
 - [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md) — the headline V6 package.
-- [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the end-to-end V6 workflow.
+- [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md) — the end-to-end V6 workflow.
 - [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the V5 layer V6 builds on.

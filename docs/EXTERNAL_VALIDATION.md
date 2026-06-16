@@ -1,78 +1,108 @@
 # External Validation
 
-Arkheionx external validation means collecting honest feedback from people who
-run the tool on authorized repositories or inspect the public demo artifacts.
+External validation is how ArkheionX earns credibility.
 
-It does not mean Arkheionx has customers, partners, audit coverage, or proven
-security outcomes unless those claims are backed by committed public evidence.
+It means auditors, security researchers, and protocol teams inspect ArkheionX outputs or run the tool on authorized repositories and explain what was useful, noisy, missing, or unsafe.
 
-## Useful Feedback
+It does not mean ArkheionX has endorsement, customers, audit coverage, or proven security outcomes unless public evidence supports that claim.
 
-- Was the five-minute demo easy to run?
-- Which report was most useful?
-- Which finding was noisy or confusing?
-- Did the evidence point to the right file/function?
-- Did the issue plan produce useful remediation tasks?
-- Did Launch Report, Sprint Plan, or Contest Readiness output help explain the
-  work to non-security stakeholders?
+## Why external feedback matters
 
-## What To Share
+ArkheionX sits between security tooling and developer infrastructure.
 
-- Public repository link if authorized.
-- Sanitized Markdown report excerpts.
-- Finding IDs and evidence summaries.
-- False-positive examples.
-- Suggested rule calibration changes.
+The next stage is not random feature expansion. The next stage is:
 
-## What Not To Share
+- real-world usage on established DeFi protocols;
+- external reviewer feedback from auditors and protocol teams;
+- case studies showing what the tool clarified during actual review work;
+- better language around what ArkheionX does and does not decide.
 
-- Private keys.
-- Mnemonics.
-- RPC credentials.
-- Secrets.
-- Confidential production material.
-- Undisclosed live-target exploit details.
+## Useful reviewer feedback
 
-## Feedback Paths
+Auditors and security researchers should answer:
 
-- `External evaluation feedback` issue template for sanitized evaluation
-  results.
-- `False positive report` issue template for noisy findings.
-- `False negative report` issue template for missed readiness signals.
-- `Report quality feedback` issue template for confusing output.
-- `Rule calibration request` issue template for confidence/priority tuning.
-- `GitHub Action feedback` issue template for CI and artifact workflow issues.
+- Does the review map match how you reason through a protocol?
+- Which outputs are useful?
+- Which outputs are noise?
+- What would you need before using this in a real audit?
+- Which terminology feels wrong?
+- What would make this safer?
+- Which case study would make this credible?
 
-## Validation Levels
+## Useful protocol-team feedback
 
-Arkheionx uses explicit validation levels so public language stays honest:
+Protocol teams should answer:
 
-| Level | Meaning |
+- Did ArkheionX identify value paths the team cares about?
+- Did it surface roles and trust assumptions accurately?
+- Did it point at missing or weak tests the team agrees are worth adding?
+- Were any outputs misleading, noisy, or too generic?
+- Could the generated evidence tasks fit into the team’s internal review workflow?
+- What would need to change before the team used it before an audit?
+
+## How auditors can review outputs
+
+Ask for:
+
+- `00-run-context.md`;
+- `02-value-flow-map.md`;
+- `04-assumptions.md`;
+- `05-review-lanes.md`;
+- `06-evidence-tasks.md`;
+- `08-report-filter.md`;
+- `review.json` when structured review is useful.
+
+Then check:
+
+- Are value paths real?
+- Are roles and assumptions missing anything important?
+- Are review lanes ordered in a way that makes sense?
+- Are evidence tasks testable?
+- Are kill conditions useful?
+- Does anything sound like an unsupported finding?
+
+## How protocol teams can test ArkheionX
+
+1. Choose an authorized repository.
+2. Create a short scope note.
+3. Run:
+
+```bash
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+```
+
+4. Open the generated review pack.
+5. Mark outputs as useful, noisy, wrong, or missing.
+6. Add one or two local tests inspired by the evidence tasks.
+7. Record whether ArkheionX helped clarify anything.
+
+## What ArkheionX still does not decide
+
+- Vulnerability validity.
+- Final severity.
+- Scope eligibility.
+- Economic impact.
+- Audit conclusions.
+- Bounty outcomes.
+- Protocol safety.
+
+## Evidence levels for public claims
+
+| level | public claim allowed |
 |---|---|
-| Level 0 | Internal toy/demo only. |
-| Level 1 | Public user tried the demo. |
-| Level 2 | Public user ran on a toy/public repo. |
-| Level 3 | Authorized private repo feedback, anonymized. |
-| Level 4 | Public case study with permission. |
-| Level 5 | Multiple public independent evaluations. |
+| Internal fixture only | "Works on bundled examples." |
+| Public demo tried by external user | "External user tried the demo." |
+| Public repository run | "Ran on an authorized public repository." |
+| Private authorized repo feedback | "Received anonymized authorized feedback." |
+| Public case study with permission | "Case study available." |
+| Multiple independent evaluations | "Multiple public independent evaluations." |
 
-Current status: v1.1.0 has internal demo and self-simulation coverage plus a
-structured workflow for external calibration. Do not claim broad adoption,
-customers, or production validation without committed public evidence and
-permission.
+Do not skip levels in public language.
 
-Read [`VALIDATION_LEVELS.md`](VALIDATION_LEVELS.md).
+## Templates
 
-## How Feedback Improves Arkheionx
+- [`../templates/reviewer-feedback-request.md`](../templates/reviewer-feedback-request.md)
+- [`../templates/protocol-team-feedback-request.md`](../templates/protocol-team-feedback-request.md)
+- [`../templates/case-study-intake.md`](../templates/case-study-intake.md)
 
-Feedback can lead to:
-
-- lower-noise rule packs;
-- better evidence summaries;
-- clearer docs;
-- improved fixture coverage;
-- safer wording;
-- better delivery artifacts for Launch Reports and Pre-Audit Sprints.
-
-Arkheionx remains a pre-audit readiness tool. It is not a formal audit and not
-a security guarantee.
+See also [`PUBLIC_FEEDBACK_GUIDE.md`](PUBLIC_FEEDBACK_GUIDE.md) and [`CASE_STUDIES.md`](CASE_STUDIES.md).

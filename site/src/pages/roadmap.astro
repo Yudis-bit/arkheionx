@@ -2,23 +2,19 @@
 import Layout from "../components/Layout.astro";
 
 const nearTerm = [
-  "Finalize public source package validation.",
-  "Validate the source installer on a fresh machine.",
-  "Keep the official website and docs in the public repository.",
-  "Improve CLI documentation and troubleshooting paths.",
-  "Harden fixture benchmark and snapshot drift documentation."
+  "Keep the docs surface small and navigable.",
+  "Document repository identity migration clearly.",
+  "Collect external reviewer feedback.",
+  "Collect protocol-team feedback.",
+  "Publish only evidence-backed case studies."
 ];
 
-const v4 = [
-  "Stronger review workspace structure.",
-  "More explicit protocol-surface output format.",
-  "Research memory (v4.1): an agent brief, a hypothesis log, and a case-study generator for AI-assisted review.",
-  "Blind Spot Intelligence (v5): prioritize high-impact surfaces with weak review evidence, map criticality potential, and generate counterfactual research prompts and a research pack.",
-  "Evidence Graph + Interaction Matrix (v6): classify the evidence on every high-impact surface and map the dangerous interactions that still lack tests. An evidence state is not a vulnerability claim; interaction priority is not severity.",
-  "Scope-Aware Orchestration + Evidence Judge (v7): turn audit scope into review lanes, task packs, evidence requirements, and report filters so AI-assisted security review starts from rules and evidence instead of vague prompts. A scope task is not a finding; a report candidate is not final triage.",
-  "Better fixture benchmark reporting.",
-  "Cleaner install and update experience.",
-  "Preparation for future binary release pipeline."
+const validation = [
+  "Run ArkheionX on established DeFi protocols with authorization.",
+  "Record what outputs were useful, noisy, missing, or unsafe.",
+  "Turn real review workflows into case studies.",
+  "Keep accepted findings separate from submitted or unaccepted issues.",
+  "Use external feedback to reduce review noise."
 ];
 
 const deferred = [
@@ -26,7 +22,8 @@ const deferred = [
   "Prebuilt binary release artifacts.",
   "Package registry distribution.",
   "Signed checksums and versioned release channels.",
-  "Optional integrations with external analysis tools."
+  "Optional integrations with external analysis tools.",
+  "Broad support or grant claims before validation."
 ];
 
 const nonGoals = [
@@ -34,7 +31,8 @@ const nonGoals = [
   "Replacing auditors or security researchers.",
   "Assigning final severity.",
   "Submitting bounty reports automatically.",
-  "Running live-chain actions by default."
+  "Running live-chain actions by default.",
+  "Claiming ecosystem endorsement."
 ];
 ---
 
@@ -59,8 +57,8 @@ const nonGoals = [
       </div>
       <div class="roadmap-current__card">
         <p>
-          The public repository is intended to expose a clean source branch, official website source,
-          documentation, and a source install path. Binary releases are not published yet.
+          The current priority is credibility: real protocol usage, external reviewer feedback,
+          case studies, and a clean repository identity. Feature expansion is secondary.
         </p>
       </div>
     </section>
@@ -68,14 +66,14 @@ const nonGoals = [
     <section class="roadmap-grid">
       <article>
         <span>Near-term</span>
-        <h2>Distribution and docs hardening</h2>
+        <h2>Credibility and docs hardening</h2>
         <ul>{nearTerm.map((item) => <li>{item}</li>)}</ul>
       </article>
 
       <article>
-        <span>v4 direction</span>
-        <h2>Review workspace maturity</h2>
-        <ul>{v4.map((item) => <li>{item}</li>)}</ul>
+        <span>Validation</span>
+        <h2>Real review feedback</h2>
+        <ul>{validation.map((item) => <li>{item}</li>)}</ul>
       </article>
 
       <article>

@@ -26,15 +26,18 @@ LEGACY_SOUP = [
 ]
 CLEAN_HEADINGS = [
     "## What it does",
+    "## What it is not",
+    "## Who it is for",
     "## Why it exists",
     "## Quickstart",
-    "## Core workflow",
-    "## Protocol Lens Packs",
-    "## Outputs",
-    "## Safety boundaries",
+    "## Example workflow",
     "## Documentation",
-    "## Release status",
-    "## License",
+    "## Outputs",
+    "## Case studies",
+    "## Current status",
+    "## Limitations",
+    "## Safety boundaries",
+    "## Security and ethics",
 ]
 
 
@@ -50,11 +53,10 @@ class ReadmeIsCleanTests(unittest.TestCase):
         self.assertLessEqual(len(lines), 160, "README exceeds the 160-line product budget")
 
     def test_core_story_and_command_present(self) -> None:
-        self.assertIn("# Arkheionx", self.readme)
-        self.assertIn(
-            "Local-first Ethereum security research workflow for Solidity and DeFi repositories.",
-            self.readme,
-        )
+        self.assertIn("# ArkheionX", self.readme)
+        self.assertIn("Local-first review infrastructure for smart contract security.", self.readme)
+        self.assertIn("It does not replace auditors.", self.readme)
+        self.assertIn("It gives auditors a better map.", self.readme)
         self.assertIn("arkheionx review", self.readme)
         self.assertIn("review-map", self.readme)
 

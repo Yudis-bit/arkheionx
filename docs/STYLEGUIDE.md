@@ -6,8 +6,10 @@ Conventions for files, names, and prose.
 
 - **Brand name (public):** Arkheionx.
 - **Archive/security-memory layer:** Arkheionx Vault.
-- **Repo slug (URL):** `DeFi-Exploit-PoCs`. Kept for backwards compatibility
-  with existing clones; the README and public docs use the brand name.
+- **Repo slug (URL):** `arkheionx` (`Yudis-bit/arkheionx`).
+- **Legacy slug:** `DeFi-Exploit-PoCs` may remain only in historical
+  documents, archived material, generated artifacts, migration notes, or
+  compatibility notes.
 - **Maintainer attribution:** Yudistira Putra (`arkheionx` /
   [@Yudis-bit](https://github.com/Yudis-bit)).
 

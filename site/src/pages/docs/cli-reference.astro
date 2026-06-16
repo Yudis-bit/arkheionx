@@ -15,9 +15,15 @@ const stable = [
     exit: "0"
   },
   {
+    command: "arkheionx review . --scope-file scope.md --out .arkheionx/review",
+    purpose: "Build the primary local review pack: scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks, report filter, and machine-readable manifest.",
+    use: "The primary command on a repo you are authorized to review.",
+    exit: "1 when review guidance is present (intentional), 0 when clean"
+  },
+  {
     command: "arkheionx review-map .",
-    purpose: "Build the local review map: contracts, value paths, assumptions, test gaps, proof directions, and source evidence.",
-    use: "The canonical first command on a repo you are authorized to review.",
+    purpose: "Build a compact local review map: contracts, value paths, assumptions, test gaps, proof directions, and source evidence.",
+    use: "Use for a quick first read or focused map.",
     exit: "1 when review guidance is present (intentional), 0 when clean"
   },
   {
@@ -100,12 +106,13 @@ const scope = [
       <div>
         <p class="cli-kicker">Command ladder</p>
         <h2>The path from install to review.</h2>
-        <p>Run these in order. <code>review-map</code> is the canonical first command.</p>
+        <p>Run these in order. <code>review</code> is the primary review-pack command.</p>
       </div>
       <div class="workflow-command__stack">
         <pre><code>arkheionx version          # confirm the install
 arkheionx doctor           # check environment + project
-arkheionx review-map .     # build the review map
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+arkheionx review-map .     # compact map if needed
 arkheionx value-paths .    # where value moves
 arkheionx assumptions .    # what must stay true
 arkheionx test-gap-map .   # what is untested (Source: file:line)
@@ -138,9 +145,9 @@ arkheionx proof-plan .     # a proof direction to try by hand</code></pre>
         <h2>Beyond the stable workflow.</h2>
         <p>
           These commands exist in the CLI but are not the canonical first run. The legacy
-          scanner commands (<code>scan</code>, <code>test-plan</code>, <code>search</code>) run
-          from a repository checkout and fail gracefully in a non-editable install, pointing you
-          back to <code>arkheionx review-map</code>.
+          scanner commands (<code>scan</code>, <code>test-plan</code>, <code>search</code>) are
+          legacy/advanced paths. Start with <code>arkheionx review</code> unless you need a focused
+          legacy scanner artifact.
         </p>
       </div>
       <div class="install-list-card">

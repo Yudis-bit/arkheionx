@@ -75,7 +75,7 @@ local/static research-memory commands built on top of the review map. They emit
 human Markdown and `--json`, write artifacts under `.arkheionx/research/` (unless
 `--no-write`), and never run RPC, live-chain, or exploit automation.
 `manual_review_required` stays true: hypotheses are review prompts, not findings.
-See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+See [`V4_1_RESEARCH_WORKFLOW.md`](archive/versions/V4_1_RESEARCH_WORKFLOW.md) and
 [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
@@ -94,7 +94,7 @@ live-chain, or exploit automation. `manual_review_required` stays true: blind
 spot candidates are not vulnerabilities, criticality potential is not severity,
 and counterfactuals are research prompts, not findings. See
 [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
-[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+[`V5_WORKFLOW.md`](archive/versions/V5_WORKFLOW.md).
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
@@ -115,7 +115,7 @@ claim, confirmed-candidate is not a confirmed vulnerability, interaction priorit
 is not severity, and unresolved does not mean vulnerable. See
 [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md),
 [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md), [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md),
-and [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+and [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
@@ -137,7 +137,7 @@ candidate is not final triage. Private scope notes are read only from local,
 gitignored files and are never committed. See
 [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md), [`SCOPE_MAP.md`](SCOPE_MAP.md),
 [`SCOPE_TASKS.md`](SCOPE_TASKS.md), [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md),
-[`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+[`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md).
 
 ## One-command review (v8)
 
@@ -232,7 +232,7 @@ evidence requirements are protocol-aware. The first lens is Fixed Credit Market
 vulnerability; an evidence score is not vulnerability validity; a candidate with
 evidence is not confirmed. The lens layer ships in the v7.5.0 package and
 carries its own schema version. See
-[`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) and
+[`V7_5_PROTOCOL_LENS.md`](archive/versions/V7_5_PROTOCOL_LENS.md) and
 [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md).
 
 Exit behavior: `lens-list` exits `0`; the analysis commands (`lens-map`,

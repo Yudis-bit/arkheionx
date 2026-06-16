@@ -5,32 +5,33 @@ const groups = [
   {
     label: "Start here",
     links: [
-      ["/docs/getting-started", "Getting started", "What Arkheionx is, who it is for, and what to expect."],
-      ["/docs/core-workflow", "Core workflow", "The arkheionx review command and the local review pack."],
-      ["/docs/cli-reference", "CLI reference", "Every command, flag, and exit code."]
+      ["/docs/getting-started", "What ArkheionX is", "Local-first review infrastructure for smart contract security."],
+      ["/docs/safety-model", "What it is not", "The limits: no auditor replacement, no automatic severity, no exploit generator."],
+      ["/docs/installation", "Installation", "Install from source and verify the local CLI."]
     ]
   },
   {
     label: "Review workflow",
     links: [
-      ["/docs/review-workflow", "Review pack", "How a repo becomes scope, value flow, lanes, and tasks."],
+      ["/docs/cli-reference", "CLI reference", "Commands that exist in the local parser."],
+      ["/docs/core-workflow", "Core workflow", "How a repo becomes scope, value flow, lanes, and tasks."],
+      ["/docs/review-workflow", "Interpreting results", "Read outputs as review context, not final truth."]
+    ]
+  },
+  {
+    label: "Evidence and outputs",
+    links: [
       ["/docs/evidence-judge", "Evidence judge", "Grade whether a local test proves its task."],
-      ["/docs/report-filter", "Report filter", "Block weak, out-of-scope, or under-proven candidates."]
+      ["/docs/report-filter", "Report filter", "Block weak, out-of-scope, or under-proven candidates."],
+      ["/docs/schemas", "Schemas", "Machine-readable review and manifest artifacts."]
     ]
   },
   {
-    label: "Protocol-aware review",
+    label: "Credibility",
     links: [
-      ["/docs/protocol-lens-packs", "Protocol Lens Packs", "Model a protocol family without making the engine target-specific."],
-      ["/docs/fixed-credit-market", "Fixed Credit Market lens", "The first generic protocol-family lens."]
-    ]
-  },
-  {
-    label: "Reference",
-    links: [
-      ["/docs/schemas", "Schemas", "Machine-readable review and manifest artifacts."],
-      ["/docs/safety-model", "Safety boundaries", "What Arkheionx does, and what it does not do."],
-      ["/releases", "Release notes", "What changed in the current release."]
+      ["/docs/protocol-lens-packs", "Protocol Lens Packs", "Protocol-family context without target-specific claims."],
+      ["/roadmap", "Roadmap", "Validation, feedback, and case-study priorities."],
+      ["/releases", "Versioning", "Stable release and development status."]
     ]
   }
 ];
@@ -51,17 +52,17 @@ const archive = [
 ---
 
 <Layout
-  title="Docs — Arkheionx"
-  description="Documentation for Arkheionx: the local-first review pack, protocol-aware lenses, schemas, and safety boundaries."
+  title="Docs — ArkheionX"
+  description="Documentation for ArkheionX: local-first review infrastructure, workflow, evidence, limitations, case studies, and validation."
 >
   <main class="docs-index">
     <header class="docs-top">
       <p class="kicker">Documentation</p>
-      <h1>Start with one local review pack.</h1>
+      <h1>Start with the map, not the claim.</h1>
       <p>
-        Arkheionx turns a Solidity or DeFi repository into a local review pack: scope, value
-        flow, protocol behavior, review lanes, evidence tasks, and a report filter. Human review
-        is required.
+        ArkheionX turns a Solidity or Foundry repository into local review context: value paths,
+        roles, trust assumptions, reachable flows, missing tests, evidence tasks, and unresolved
+        review gaps. Human review is required.
       </p>
     </header>
 

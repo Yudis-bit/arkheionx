@@ -11,7 +11,7 @@ class InternalEngineSplitTests(unittest.TestCase):
         for path in [
             "docs/INTERNAL_ENGINE_SPLIT.md",
             "docs/PACKAGE_ARCHITECTURE.md",
-            "docs/CLI_ROADMAP.md",
+            "docs/archive/legacy-workflows/CLI_ROADMAP.md",
             "arkheionx/core/models.py",
             "arkheionx/rules/registry.py",
             "arkheionx/generators/test_plan.py",

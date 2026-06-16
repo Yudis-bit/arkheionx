@@ -22,11 +22,11 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | GitHub repository surface | [`docs/GITHUB_REPO_SURFACE.md`](../docs/GITHUB_REPO_SURFACE.md) | GitHub repo surface, value-flow workbench, repository about |
 | Changelog | [`CHANGELOG.md`](../CHANGELOG.md) | v2.0.1, value-flow workbench, release notes |
 | CLI reference | [`docs/CLI_REFERENCE.md`](../docs/CLI_REFERENCE.md) | CLI reference, stable flags, planned flow commands |
-| Pre-v2 CLI candidate | [`docs/CLI_CANDIDATE.md`](../docs/CLI_CANDIDATE.md) | CLI candidate, module CLI, pre-v2 CLI |
-| CLI commands | [`docs/CLI_COMMANDS.md`](../docs/CLI_COMMANDS.md) | arkheionx scan, validate-config, test-plan |
-| CLI migration to v2 | [`docs/CLI_MIGRATION_TO_V2.md`](../docs/CLI_MIGRATION_TO_V2.md) | CLI migration to v2, command surface, installable CLI |
+| Pre-v2 CLI candidate | [`docs/archive/legacy-workflows/CLI_CANDIDATE.md`](../docs/archive/legacy-workflows/CLI_CANDIDATE.md) | CLI candidate, module CLI, pre-v2 CLI |
+| CLI commands | [`docs/archive/legacy-workflows/CLI_COMMANDS.md`](../docs/archive/legacy-workflows/CLI_COMMANDS.md) | arkheionx scan, validate-config, test-plan |
+| CLI migration to v2 | [`docs/archive/legacy-workflows/CLI_MIGRATION_TO_V2.md`](../docs/archive/legacy-workflows/CLI_MIGRATION_TO_V2.md) | CLI migration to v2, command surface, installable CLI |
 | Installation | [`docs/INSTALLATION.md`](../docs/INSTALLATION.md) | installable CLI, editable install, arkheionx command |
-| CLI installable guide | [`docs/CLI_INSTALLABLE.md`](../docs/CLI_INSTALLABLE.md) | console entrypoint, local package install, v2 CLI |
+| CLI installable guide | [`docs/archive/legacy-workflows/CLI_INSTALLABLE.md`](../docs/archive/legacy-workflows/CLI_INSTALLABLE.md) | console entrypoint, local package install, v2 CLI |
 | Packaging | [`docs/PACKAGING.md`](../docs/PACKAGING.md) | pyproject, package metadata, console script |
 | Package data | [`docs/PACKAGE_DATA.md`](../docs/PACKAGE_DATA.md) | package data, path resolution, runtime data |
 | Project package metadata | [`pyproject.toml`](../pyproject.toml) | pyproject, arkheionx command, console entrypoint |
@@ -41,7 +41,7 @@ EVM/Foundry active, SVM/Anchor and MoveVM/Aptos scaffold only.
 | Invariant safety boundaries | [`docs/INVARIANT_SAFETY_BOUNDARIES.md`](../docs/INVARIANT_SAFETY_BOUNDARIES.md) | invariant safety, local-only skeletons, human review |
 | Internal engine split | [`docs/INTERNAL_ENGINE_SPLIT.md`](../docs/INTERNAL_ENGINE_SPLIT.md) | internal engine split, package scaffold, script compatibility |
 | Package architecture | [`docs/PACKAGE_ARCHITECTURE.md`](../docs/PACKAGE_ARCHITECTURE.md) | package architecture, arkheionx package, core engine |
-| CLI roadmap | [`docs/CLI_ROADMAP.md`](../docs/CLI_ROADMAP.md) | CLI roadmap, installable CLI, v2 package path |
+| CLI roadmap | [`docs/archive/legacy-workflows/CLI_ROADMAP.md`](../docs/archive/legacy-workflows/CLI_ROADMAP.md) | CLI roadmap, installable CLI, v2 package path |
 | v1.0 release notes draft | [`docs/V1_0_RELEASE_NOTES_DRAFT.md`](../docs/V1_0_RELEASE_NOTES_DRAFT.md) | v1.0.0, release notes, stable public release |
 | Feedback loop | [`docs/FEEDBACK_LOOP.md`](../docs/FEEDBACK_LOOP.md) | feedback loop, false positive report, external calibration |
 | Public feedback guide | [`docs/PUBLIC_FEEDBACK_GUIDE.md`](../docs/PUBLIC_FEEDBACK_GUIDE.md) | public feedback, safe disclosure, report quality |

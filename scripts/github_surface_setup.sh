@@ -2,7 +2,7 @@
 # github_surface_setup.sh
 #
 # Apply repository description, resource URL, and topics for the Arkheionx
-# repository (Yudis-bit/DeFi-Exploit-PoCs).
+# repository (Yudis-bit/arkheionx).
 #
 # Safe by default:
 #   - Dry-run unless --apply is passed.
@@ -17,10 +17,10 @@
 #
 set -euo pipefail
 
-REPO="Yudis-bit/DeFi-Exploit-PoCs"
+REPO="Yudis-bit/arkheionx"
 
 DESCRIPTION="Local-first DeFi value-flow workbench for mapping how assets move through protocols and finding missing security tests."
-HOMEPAGE="https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
+HOMEPAGE="https://github.com/Yudis-bit/arkheionx#readme"
 
 TOPICS=(
   "arkheionx"

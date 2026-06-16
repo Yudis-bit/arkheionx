@@ -137,7 +137,7 @@ grep -q '<title>Install ArkheionX' /tmp/arkheionx-install-page
 
 curl -fsS -H 'Accept: */*' -o /tmp/arkheionx-install-script https://arkheionx.dev/install
 bash -n /tmp/arkheionx-install-script
-grep -q 'Yudis-bit/DeFi-Exploit-PoCs.git' /tmp/arkheionx-install-script
+grep -q 'Yudis-bit/arkheionx.git' /tmp/arkheionx-install-script
 grep -q 'BRANCH="main"' /tmp/arkheionx-install-script
 ```
 

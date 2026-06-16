@@ -17,7 +17,7 @@ surfaces, review-density gaps, and high-impact areas where expensive bugs are
 where it matters most.
 
 This document defines the V5 vocabulary. The commands that produce it are
-documented in [`V5_WORKFLOW.md`](V5_WORKFLOW.md) and
+documented in [`V5_WORKFLOW.md`](archive/versions/V5_WORKFLOW.md) and
 [`CLI_REFERENCE.md`](CLI_REFERENCE.md).
 
 ## Why this is a real capability, not a relabel
@@ -182,6 +182,6 @@ V6 takes the same surfaces and classifies each into an evidence state (tested,
 rejected-with-evidence, confirmed-candidate, unresolved, insufficient-evidence,
 needs-human-review, unclassified, out-of-scope), detects meaningful interactions
 between surfaces, and maps everything still unresolved. See
-[`V6_WORKFLOW.md`](V6_WORKFLOW.md). The same boundaries hold: an evidence state is
+[`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md). The same boundaries hold: an evidence state is
 not a vulnerability claim, interaction priority is not severity, and human review
 is required.

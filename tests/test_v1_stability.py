@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STABLE_ACTION = "Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v8.0.1"
+STABLE_ACTION = "Yudis-bit/arkheionx/.github/actions/pre-audit@v8.0.1"
 
 
 class V1StabilityTests(unittest.TestCase):
@@ -14,8 +14,8 @@ class V1StabilityTests(unittest.TestCase):
     def test_public_docs_name_stable_surface(self) -> None:
         readme = self.read("README.md")
         self.assertIn("Latest stable release: **v8.0.1", readme)
-        self.assertIn(STABLE_ACTION, readme)
         self.assertIn("docs/CLI_REFERENCE.md", readme)
+        self.assertIn("docs/PUBLIC_SURFACE.md", readme)
 
         action_docs = self.read("docs/GITHUB_ACTION_USAGE.md")
         self.assertIn("Stable v2.0.0 Inputs", action_docs)

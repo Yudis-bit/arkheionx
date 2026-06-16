@@ -92,7 +92,7 @@ update predictably. See [`UPDATE_FLOW.md`](UPDATE_FLOW.md).
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `ARKHEIONX_REPO_URL` | `https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git` | Git URL to install from. |
+| `ARKHEIONX_REPO_URL` | `https://github.com/Yudis-bit/arkheionx.git` | Git URL to install from. |
 | `ARKHEIONX_STABLE_TAG` | `v2.6.0` | Tag used by the stable channel. |
 | `ARKHEIONX_CHANNEL` | `stable` | `stable` or `main`. |
 | `ARKHEIONX_REF` | (unset) | Explicit git ref (sets source kind `ref`). |

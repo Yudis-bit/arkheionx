@@ -12,8 +12,9 @@ class ValueFlowPositioningTests(unittest.TestCase):
 
     def test_readme_uses_value_flow_positioning(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("Local-first Ethereum security research workflow", readme)
-        self.assertIn("value flow", readme)
+        self.assertIn("Local-first review infrastructure for smart contract security.", readme)
+        self.assertIn("value paths", readme)
+        self.assertIn("value-flow map", readme)
         self.assertIn("review-map", readme)
         self.assertIn("Not an audit", readme)
         self.assertIn("No severity guarantee.", readme)
@@ -32,9 +33,9 @@ class ValueFlowPositioningTests(unittest.TestCase):
         changelog = self.read("CHANGELOG.md")
         self.assertIn("## v2.2.0", changelog)
         self.assertNotIn("## v2.2.0 - Unreleased", changelog)
-        self.assertIn("v2.2.0 — Execution Proof & Trace Workbench", roadmap)
+        self.assertIn("v2.2.0: Execution Proof & Trace Workbench shipped.", roadmap)
         self.assertIn("v2.1.0 — Value Flow Map MVP", roadmap)
-        self.assertIn("v3.0.0 target: DeFi Value Flow Workbench", roadmap)
+        self.assertIn("v3.0.0 DeFi Value Flow Workbench target.", roadmap)
         self.assertIn("DeFi Value Flow Workbench", value_roadmap)
 
     def test_advanced_flow_submodes_are_marked_planned(self) -> None:
@@ -43,8 +44,8 @@ class ValueFlowPositioningTests(unittest.TestCase):
             for path in [
                 "README.md",
                 "docs/CLI_REFERENCE.md",
-                "docs/CLI_COMMANDS.md",
-                "docs/CLI_INSTALLABLE.md",
+                "docs/archive/legacy-workflows/CLI_COMMANDS.md",
+                "docs/archive/legacy-workflows/CLI_INSTALLABLE.md",
                 "docs/INSTALLATION.md",
                 "docs/PACKAGING.md",
                 "docs/PACKAGE_ARCHITECTURE.md",

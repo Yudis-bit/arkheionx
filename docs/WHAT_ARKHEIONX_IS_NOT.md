@@ -1,39 +1,53 @@
-# What ArkheionX is not
+# What ArkheionX Is Not
 
-ArkheionX is a local, static review-map tool for DeFi smart-contract
-repositories. To keep expectations honest, here is what it explicitly does
-**not** do.
+ArkheionX is review infrastructure, not a security verdict.
 
-ArkheionX is **not**:
+It helps build deterministic context for human review. It does not decide whether a protocol is safe.
 
-- **not an audit**, and not a replacement for one. It is a pre-review readiness
-  aid; a formal audit is still recommended.
-- **not a vulnerability guarantee.** It does not confirm vulnerabilities and
-  does not prove their absence.
-- **not an exploit tool.** It does not generate, simulate, or run exploits or
-  attacks, and it produces no attack payloads.
-- **not a severity oracle.** It does not assign final severity, impact, or
-  exploitability.
-- **not a live-chain or RPC scanner.** It does not call RPC endpoints, fork
-  networks, broadcast transactions, or read deployed contracts.
-- **not a secrets handler.** It does not request or accept private keys, seed
-  phrases, mnemonics, or production credentials.
-- **not a replacement for manual review.** A human makes every security
-  decision; ArkheionX only organizes context.
-- **not a replacement for tests, fuzzing, or formal verification.** It points at
-  gaps; you still write, run, and judge the tests.
-- **not a proof of safety.** A clean review map does not mean a protocol is
-  safe, and a passing local test does not prove the absence of a bug.
-- **not a source of adoption or production claims.** ArkheionX makes no claim of
-  users, customers, or production usage.
+## ArkheionX is not
 
-## Why this matters
+- An audit.
+- A replacement for auditors.
+- An AI auditor.
+- An autonomous auditor.
+- An exploit generator.
+- A live-chain scanner.
+- A bounty guarantee.
+- A severity oracle.
+- A proof that a protocol is safe.
+- An Ethereum Foundation endorsed project.
 
-Security tooling earns trust by being precise about its limits. ArkheionX is
-designed to help builders and reviewers reason about value flow, assumptions,
-and missing tests *before* an audit — not to stand in for one. If you need a
-verdict on whether code is safe, that decision belongs to a human reviewer and,
-where appropriate, a formal audit.
+## What it does not do
 
-See also: [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md),
-[`SECURITY.md`](SECURITY.md), and [`ETHICS.md`](ETHICS.md).
+ArkheionX does not:
+
+- automatically find vulnerabilities;
+- confirm vulnerabilities by itself;
+- assign final severity;
+- prove the absence of bugs;
+- guarantee bug bounty wins;
+- submit reports automatically;
+- run live-chain transactions;
+- require private keys or production credentials in the default workflow.
+
+## What output means
+
+ArkheionX output is review context.
+
+A review lane is not a finding. A missing-test signal is not proof of a bug. An evidence task is not a PoC. A local proof result still needs human interpretation. A report-filter classification is not final triage.
+
+## What still requires humans
+
+- Reading protocol-specific intent.
+- Writing and validating PoCs.
+- Deciding exploitability.
+- Deciding severity.
+- Deciding reportability.
+- Handling disclosure safely.
+- Accepting or rejecting a finding.
+
+## Why this boundary matters
+
+Security tooling earns trust by being precise about its limits. ArkheionX is useful when it reduces review blindness without pretending to replace review.
+
+See also [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md), [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md), [`SECURITY.md`](SECURITY.md), and [`ETHICS.md`](ETHICS.md).

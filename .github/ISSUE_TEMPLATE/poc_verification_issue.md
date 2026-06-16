@@ -1,11 +1,11 @@
 ---
-name: Reproducibility issue
-about: A PoC builds, but the assertions don't match what's documented.
+name: Validation fixture reproducibility issue
+about: A historical validation fixture builds, but the assertions do not match what is documented.
 title: "[reproducibility] <YYYY-MM-protocol>"
 labels: ["reproducibility"]
 ---
 
-## PoC
+## Validation fixture
 
 - **Path**: `EVM/test/<folder>/<file>.t.sol`
 - **Registry id**:

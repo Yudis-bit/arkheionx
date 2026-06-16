@@ -1,155 +1,76 @@
-# How to interpret ArkheionX results
+# Interpret Results
 
-ArkheionX output is **review guidance for a human**, not a verdict. This page
-explains what each part of a review map means — and what it does not mean.
+ArkheionX output is review context for a human. It is not final truth.
 
-## The mental model
+## Mental model
 
-ArkheionX reads your local Solidity/Foundry source statically and organizes it
-into a review map. Everything it produces is a prioritization and orientation
-aid. It does not execute your contracts, call any chain, or confirm that a bug
-exists.
+Read every ArkheionX signal as a prompt:
 
-## What each section means
+- "look here first";
+- "this path moves value";
+- "this assumption appears important";
+- "this local test area may be weak";
+- "this evidence still does not close the question."
 
-- **Inspect first / review priority.** A ranked order of where to look first.
-  Priority is *review order*, not severity. A HIGH item is not a finding; it is
-  a function whose value behavior deserves early human attention.
+Do not read it as:
 
-- **Value paths.** Static, heuristic routes for how value enters, moves, and
-  exits a contract (for example `deposit -> withdraw`). They are derived from
-  function names and token-transfer calls, so they are a starting map, not a
-  proven execution trace.
+- "this is vulnerable";
+- "this is high severity";
+- "this is safe";
+- "this is reportable";
+- "this will win a bounty."
 
-- **Assumptions.** Trust conditions a value path appears to depend on (oracle
-  freshness, access control, share proportionality, no reentrancy, standard
-  ERC20 behavior). These are prompts for a reviewer to confirm — they are
-  unverified by definition.
+## Common result types
 
-- **Test gaps.** A value-sensitive function with no matching local test
-  reference, or only an incidental one. A gap means *observed test coverage
-  looks missing or weak*. It does **not** mean the function is exploitable, and
-  the absence of a gap does not mean the function is safe. Each gap prints a
-  `Source: <file>:<line>` reference so you can open the exact function; the line
-  comes from the parsed source, not an invented number.
+| result | what it means | what it does not mean |
+|---|---|---|
+| Review lane | A prioritized human review path. | A finding or severity ranking. |
+| Value path | A static map of possible value movement. | A proven execution trace. |
+| Role or trust assumption | A dependency the path appears to rely on. | Proof that the dependency is unsafe. |
+| Missing or weak test area | Existing local test evidence looks incomplete. | The path is exploitable. |
+| Evidence task | A bounded local proof direction. | A completed PoC. |
+| Evidence level | How much support local artifacts provide. | Final vulnerability validity. |
+| Report-filter classification | Pre-report triage help. | Final acceptance, severity, or disclosure advice. |
 
-- **Proof suggestions / proof plans.** Local Foundry test *scaffolds* you can
-  fill in. A scaffold is a starting point with `TODO`s and `vm.skip`; it is not
-  a proof, and ArkheionX never asserts a test passed when it did not.
+## Review priorities
 
-- **Coverage hints (`referenced` / `none`).** A weak heuristic: does the
-  function name appear in a test file? `none` is a prompt to add a targeted
-  test, not a measurement of branch coverage.
+Priority is review order. It is not severity.
 
-## How to use it
+A high-priority item usually means the path has value movement, assumptions, weak evidence, complex interaction, or scope relevance. It still requires manual inspection.
 
-1. Run `arkheionx review-map .` and read the **Inspect first** list.
-2. For each high-priority value exit, open the **value path** and its
-   **assumptions**. Ask: is each assumption actually enforced in code?
-3. Check the **test gaps**: is there a test that exercises this value path under
-   adversarial conditions? If not, write one.
-4. Optionally scaffold a local proof with `arkheionx prove . --target <T> --run`
-   and review the result yourself.
+## Missing tests
 
-## Research memory outputs (v4.1)
+A missing-test signal means ArkheionX did not find convincing local evidence around a path or function. It can be wrong.
 
-Three commands build on the review map for AI-assisted review. They are review
-guidance, not findings:
+Use the signal to ask:
 
-- **Agent brief (`agent-brief`).** A focused, safe brief for an AI/security
-  agent: repository summary, coverage weakness ranking, value movement,
-  authorization surfaces, periphery/core surfaces, behavior-mismatch surfaces,
-  and a set of `open` hypotheses. It replaces a vague "find bugs" prompt; it does
-  not claim any bug.
-- **Hypothesis log (`hypothesis-log`).** A tracker where every hypothesis starts
-  `open`. A human (or an agent under human review) records the test command,
-  result, and a `rejected` / `confirmed` / `needs-human-review` status after a
-  local test. A **rejected** hypothesis is useful evidence: it means a tested
-  invariant or behavior held.
-- **Case study (`case-study`).** A sanitized research-session summary: what was
-  tested, what was rejected, what held, what was noisy, and what remains
-  unresolved. It is not an audit report and makes no vulnerability claim unless a
-  finding is independently confirmed.
+- Is there a meaningful test under a different name?
+- Does the test cover the value path, or only touch the function?
+- Is the path intentionally untested because it is out of scope?
+- What local assertion would close the question?
 
-Authorization, periphery/core, and behavior-mismatch surfaces are **heuristic
-review prompts** detected statically from names, signatures, and code patterns.
-"Potential behavior-mismatch review surface" means *look here*, never *bug here*.
+## Evidence
 
-See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
-[`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
+A passing local test can support a hypothesis. It does not automatically prove exploitability, impact, scope eligibility, or severity.
 
-## Blind spot intelligence outputs (v5)
+A failing local test can be useful too. It may kill a weak hypothesis or show that the current proof direction is wrong.
 
-V5 adds three outputs that prioritize *where to look*, plus a packaged pack:
+## Case-study discipline
 
-- **Blind spot candidate** (`blind-spots`) — a high-impact surface with weak
-  review evidence. Read the **blind spot score** as a heuristic review priority
-  (impact + review-gap + complexity + assumption), never a probability or
-  severity. Each candidate lists the reasons behind its score.
-- **Criticality potential** (`criticality-map`) — a heuristic estimate of blast
-  radius *if* a bug existed. It is **not** severity and claims no bug. Use the
-  criticality-vs-review-density view to find high-impact, weakly-reviewed surfaces.
-- **Counterfactual** (`counterfactuals`) — a testable "what if this assumption is
-  false?" question. It is a research prompt, not a finding. Each has a local test
-  direction and a stop condition (when to mark the hypothesis rejected).
-- **Research pack** (`research-pack`) — bundles all of the above with an agent
-  brief, hypotheses, an evidence log, and a do-not-claim file. Hand it to a
-  reviewer or an AI agent; record results in the evidence log.
+When using ArkheionX in a real review workflow, record:
 
-An **unknown surface** means review attention is not yet supported by evidence —
-it does **not** mean vulnerable. See
-[`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md).
+- the target and review question;
+- the value path;
+- the trust assumptions;
+- the weak or missing test area;
+- evidence generated;
+- human validation;
+- PoC status;
+- outcome;
+- what ArkheionX did not decide.
 
-## What it does not tell you
+See [`CASE_STUDIES.md`](CASE_STUDIES.md).
 
-ArkheionX does not assign final severity, does not confirm or rule out
-vulnerabilities, and does not prove safety. Treat its output as a structured
-second opinion that helps you spend review time where value moves. The security
-judgment is always yours.
+## Final rule
 
-See also: [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) and
-[`REVIEW_MAP.md`](REVIEW_MAP.md).
-
-
-## Interpreting V6 evidence states and interaction priority
-
-The v6 [`evidence-graph`](EVIDENCE_GRAPH.md) assigns each surface an **evidence
-state**. Read them like this — none is a verdict:
-
-- `tested` — a direct local test exists on a simple surface. Still confirm it
-  covers the relevant edge.
-- `needs-human-review` — a test references the surface but coverage is shallow
-  (often just the file). This is the "looks tested" trap: confirm the edge is
-  actually exercised.
-- `unresolved` — a high-impact surface with no usable local evidence. Not
-  vulnerable — just unproven.
-- `insufficient-evidence` — tests exist but do not prove the relevant assumption.
-- `unclassified` — detected, but not enough signal to say more.
-- `confirmed-candidate` / `rejected-with-evidence` — only appear when a local
-  hypothesis log records them. `confirmed-candidate` is **not** a confirmed
-  vulnerability.
-
-The [`interaction-matrix`](INTERACTION_MATRIX.md) assigns an **interaction
-priority** (very-high / high / medium / monitor). It is a heuristic review order,
-**not a severity**. A high priority means "test this combination first", not
-"this is a high-severity bug". See [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
-
-## Interpreting V7 scope-aware output
-
-V7 turns audit scope into review lanes, task packs, evidence requirements, and
-report filters. Read its output as planning context, never as a verdict:
-
-- **Lane priority** is review order, not severity.
-- **A scope task** is a research instruction (write a local test), not a finding
-  and not an exploit instruction.
-- **Evidence quality** (`strong`/`medium`/`weak`/`invalid`/`insufficient`) measures
-  whether a test proves its task — it is not vulnerability validity.
-- **`candidate-with-evidence`** means a human should review the candidate; it is
-  not a confirmed vulnerability. **`rejected-with-evidence`** is not proof the
-  protocol has no bugs.
-- **Report-filter classifications** (e.g. `likely-known-issue`,
-  `likely-trusted-role-assumption`, `likely-low-only`, `duplicate-prone`,
-  `potentially-reportable`) are a pre-submission triage aid, not final triage.
-
-A human makes the security call. See [`V7_WORKFLOW.md`](V7_WORKFLOW.md) and
-[`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md).
+ArkheionX helps reduce review blindness. It does not replace review.

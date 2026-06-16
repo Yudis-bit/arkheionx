@@ -1,71 +1,77 @@
-# Public alpha readiness
+# Public Alpha Readiness
 
-**Limited-alpha status: `PUBLIC_ALPHA_READY_EXCEPT_REPO_IDENTITY`**
-**Broad-public status: `BROAD_PUBLIC_READY_REQUIRES_REPO_IDENTITY_MIGRATION`**
+Status:
 
-This note records exactly what is ready for a limited public alpha and what is
-intentionally deferred. It is descriptive, not a guarantee.
+```text
+LIMITED_PUBLIC_ALPHA_WITH_IDENTITY_AND_VALIDATION_BLOCKERS
+```
 
-The two statuses are deliberately distinct. The repository is ready for a
-**limited** public alpha (technically green, safe, documented). It is **not yet
-ready for a broad public launch**, because the repository identity still
-misrepresents the tool — see
-[`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md) for the exact founder
-action plan that lifts the broad-public blocker.
+ArkheionX has a serious local review workflow, but broad public credibility depends on repository identity cleanup, real-world usage, external reviewer feedback, and case studies.
 
 ## Ready
 
-- **Local/static CLI** — installs and runs offline, no RPC, no live-chain calls,
-  no exploit automation, no secrets.
-- **Canonical path** — `arkheionx review-map .` is the single first command,
-  consistent across README, CLI `--help`, `doctor`, the quickstart, and the
-  website.
-- **Multi-contract demo** — `examples/vault-strategy-oracle-fixture` (Vault /
-  Strategy / PriceOracle / token) produces real value paths, assumptions, and
-  test gaps through the actual engine, and is locked by tests.
-- **License** — Apache-2.0 in [`LICENSE`](../LICENSE), enforced by the
-  release-readiness gate.
-- **Safety boundaries** — centralized disclaimer wording, a strict safety-wording
-  gate, and a results-interpretation guide
-  ([`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md),
-  [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md)).
-- **Docs quickstart** — [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md) follows the
-  canonical path; the legacy scanner is demoted to an advanced section.
-- **Validation gates** — `make validate`, unit tests, docs-link, version, safety,
-  and release-readiness checks pass.
-- **Install smoke** — a non-editable `pip install .` runs `version`, `doctor`,
-  and `review-map`; source-tree-only commands fail gracefully with guidance.
+- Local-first CLI workflow.
+- No private keys, secrets, RPC, or live-chain mutation required by default.
+- Primary review pack via `arkheionx review`.
+- Compact review-map workflow via `arkheionx review-map`.
+- Human-readable Markdown and machine-readable JSON artifacts.
+- Safety boundaries that say outputs are review context, not findings.
+- Apache-2.0 license.
+- Tests and fixtures exist for core workflows.
 
-## Deferred (not done; not claimed as done)
+## Not ready to claim
 
-- **Repository identity** — the repo is still named `DeFi-Exploit-PoCs` and keeps
-  its legacy `EVM/`, `MoveVM/`, and `SVM/` material. This was acceptable for a
-  *limited* alpha, but it is the **blocker for broad public readiness**: the name
-  and root contents misrepresent a local/static review tool. The exact migration
-  plan (preferred rename/split, every reference to update, and the gates/tests
-  that assert the old identity) is in
-  [`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md). Do not treat it as
-  resolved.
-- **Real-protocol case studies** — depth is demonstrated on fixtures only; there
-  is no real-world protocol case study yet.
-- **Deeper heuristic engine** — value-flow detection remains static and
-  heuristic; cross-contract tracing is illustrative, not a proven trace.
-- **Legacy scanner packaging** — the source-tree `scan`/`test-plan`/`search`
-  commands are not bundled in the installed wheel (see
-  [`PACKAGING.md`](PACKAGING.md)).
-- **Website deployment** — the site builds locally; `arkheionx.dev` DNS
-  deployment is pending and is not claimed to be live.
-- **Adoption** — no users, customers, partners, or production usage are claimed.
+- Enterprise readiness.
+- Ethereum Foundation endorsement.
+- Automatic vulnerability discovery.
+- Auditor replacement.
+- Public production adoption.
+- Accepted findings without proof.
+- Broad external validation.
 
-## Checklist
+## Blockers for broader promotion
 
-- [x] `LICENSE` exists (Apache-2.0)
-- [x] README first screen leads with the review-map value proposition
-- [x] Canonical command aligned (`arkheionx review-map .`)
-- [x] Multi-contract demo fixture exists and is tested
-- [x] Docs quickstart aligned to the canonical path
-- [x] Safety wording gate passes
-- [x] `make validate` passes
-- [x] Site build passes
-- [x] Non-editable install smoke passes (`version`, `doctor`, `review-map`)
-- [ ] Repository identity (broad-public blocker; see `REPO_IDENTITY_MIGRATION.md`)
+1. Repository identity: the public repository has been renamed to `Yudis-bit/arkheionx`; remaining old slug references should stay limited to historical, archived, generated, migration, or compatibility context.
+2. Real-world usage: ArkheionX needs runs on established DeFi protocols.
+3. External review: auditors and protocol teams need to inspect output and give feedback.
+4. Case studies: review workflows need evidence-backed writeups.
+5. Version clarity: public docs must separate stable release from private development branch work.
+
+## Ethereum Foundation feedback reflected
+
+Feedback from ecosystem grant review indicated that ArkheionX should strengthen real-world usage, external reviewer feedback, and case studies before pursuing broader ecosystem support.
+
+This does not mean endorsement. It means the credibility path is clear.
+
+## Current public posture
+
+ArkheionX can be shared carefully with technical reviewers as:
+
+```text
+local-first review infrastructure for smart contract security
+```
+
+It should not be promoted as:
+
+```text
+an AI auditor
+an exploit generator
+an automatic vulnerability finder
+an endorsed grant project
+```
+
+## Readiness checklist
+
+- [x] Local-first CLI exists.
+- [x] Review-pack workflow exists.
+- [x] Safety boundaries documented.
+- [x] Repository identity migration plan exists.
+- [x] External validation guide exists.
+- [x] Case-study template exists.
+- [ ] Public repository name migrated or clearly reframed.
+- [ ] At least one public real-protocol case study with reproducible evidence.
+- [ ] Auditor feedback recorded.
+- [ ] Protocol-team feedback recorded.
+- [ ] Version docs and tests aligned with current truth.
+
+See [`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md), [`EXTERNAL_VALIDATION.md`](EXTERNAL_VALIDATION.md), [`CASE_STUDIES.md`](CASE_STUDIES.md), and [`VERSIONING.md`](VERSIONING.md).

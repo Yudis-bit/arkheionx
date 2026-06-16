@@ -9,9 +9,10 @@ The canonical public name of this project is **Arkheionx**.
 **Arkheionx Vault** remains useful when referring specifically to the historical
 PoC archive and security-memory layer.
 
-The repository slug stays `DeFi-Exploit-PoCs` for backwards compatibility with
-existing links and clones, but public-facing surfaces should describe the full
-project as a GitHub-native DeFi Security Memory and Pre-Audit Readiness OS.
+The public repository has been renamed to `Yudis-bit/arkheionx`. The old
+`DeFi-Exploit-PoCs` slug may remain in historical documents, archived material,
+generated artifacts, or compatibility notes, but active public surfaces should
+use the Arkheionx name and the canonical repository URL.
 
 ## Identity
 

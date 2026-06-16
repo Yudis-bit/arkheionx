@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v3.1.0
+      - uses: Yudis-bit/arkheionx/.github/actions/pre-audit@v3.1.0
         with:
           protocol-type: auto
           output: ARKHEIONX_PRE_AUDIT_REPORT.md

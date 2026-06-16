@@ -22,11 +22,11 @@ class VersionMetadataTests(unittest.TestCase):
             __version__,
         )
 
-        self.assertEqual(__version__, "9.1.0.dev0")
-        self.assertEqual(PACKAGE_VERSION, "9.1.0.dev0")
+        self.assertEqual(__version__, "10.1.0.dev0")
+        self.assertEqual(PACKAGE_VERSION, "10.1.0.dev0")
         self.assertEqual(STABLE_RELEASE, "v8.0.1")
-        self.assertEqual(CURRENT_MILESTONE, "v9.1.0-dev")
-        self.assertEqual(NEXT_MILESTONE, "v9.1.0")
+        self.assertEqual(CURRENT_MILESTONE, "v10.1.0-dev")
+        self.assertEqual(NEXT_MILESTONE, "v10.1.0")
 
 
 class ValueDirectionTests(unittest.TestCase):

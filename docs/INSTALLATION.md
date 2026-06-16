@@ -1,85 +1,84 @@
 # Installation
 
-Arkheionx is local-first and installs from a source checkout. It is **not
-published to PyPI**. There are two supported paths.
-
-## Option A — installer script (recommended)
-
-```sh
-ARKHEIONX_LOCAL_PATH="$PWD" sh install.sh
-export PATH="$HOME/.arkheionx/bin:$PATH"   # venv method only
-arkheionx doctor --install
-```
-
-The installer prefers `pipx` and falls back to an isolated virtual environment
-under `~/.arkheionx`. It uses no root, edits no shell profile, asks for no
-secrets, and makes no RPC or live-chain calls. See [`INSTALLER.md`](INSTALLER.md)
-for options, environment variables, and a dry-run preview.
-
-For a managed lifecycle (`install → check → update → uninstall`), use
-[`arkup`](ARKUP.md):
-
-```sh
-sh arkup --install --local "$PWD"
-sh arkup --check
-sh arkup --update --dry-run
-```
-
-## Option B — editable pip install
-
-```sh
-python3 -m pip install -e .
-arkheionx doctor
-```
-
-If your system Python blocks editable installs because it is externally
-managed, create a virtual environment first:
-
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -e .
-```
+ArkheionX is currently installed from source. It is not published to PyPI and does not ship prebuilt binaries.
 
 ## Requirements
 
 - Python 3.11 or newer.
-- No runtime Python dependencies.
-- Foundry (`forge`) is optional but recommended for compiler- and
-  execution-confirmed evidence.
-- No RPC endpoint, no private keys, no secrets, no GitHub token, no hosted
-  service.
+- Git for source checkout workflows.
+- Foundry is optional, but useful when a reviewer wants compiler-confirmed or execution-confirmed local evidence.
 
-## Verify
+The default workflow does not require private keys, seed phrases, RPC URLs, production credentials, hosted services, or external AI APIs.
 
-```sh
+## Editable source install
+
+From this repository:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install -e .
 arkheionx version
 arkheionx doctor
+```
+
+## Installer script
+
+The source installer can install from a local checkout:
+
+```bash
+ARKHEIONX_LOCAL_PATH="$PWD" sh install.sh
+arkheionx version
 arkheionx doctor --install
 ```
 
-## First run
+The installer is intended to create an isolated local install. It should not ask for secrets, modify production configuration, call RPC endpoints, or run live-chain operations.
 
-```sh
-arkheionx demo --copy oracle-staking ./arkheionx-demo
-arkheionx open ./arkheionx-demo
-arkheionx hunt ./arkheionx-demo --top 5
+For installer options, dry-run behavior, update flow, and uninstall details, see [`INSTALLER.md`](INSTALLER.md), [`ARKUP.md`](ARKUP.md), and [`UNINSTALL.md`](UNINSTALL.md).
+
+## First review run
+
+Create or collect a scope note, then run:
+
+```bash
+arkheionx review . --scope-file scope.md --out .arkheionx/review
 ```
 
-See the guided [`DEMO_WORKFLOW.md`](DEMO_WORKFLOW.md), plus
-[`ONBOARDING.md`](ONBOARDING.md) and [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md).
+If you only want a compact first map:
 
-## Uninstall
-
-```sh
-sh uninstall.sh --dry-run
-sh uninstall.sh
+```bash
+arkheionx review-map .
 ```
 
-See [`UNINSTALL.md`](UNINSTALL.md).
+## Demo path
 
-## Safety
+```bash
+arkheionx demo --list
+arkheionx review-map examples/vault-strategy-oracle-fixture
+```
 
-The installed CLI is local/static only. It does not perform live-chain calls,
-transaction execution, deployed-contract scanning, remote cloning, or exploit
-automation. Trouble? See [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+See [`DEMO_WORKFLOW.md`](DEMO_WORKFLOW.md) for bundled demos.
+
+## Repository identity note
+
+The public repository has been renamed to `Yudis-bit/arkheionx`. New users should use <https://github.com/Yudis-bit/arkheionx>. The old `DeFi-Exploit-PoCs` slug may remain in historical documents, archived material, generated artifacts, or compatibility notes. Do not rename local folders automatically during installation.
+
+See [`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md).
+
+## Troubleshooting
+
+```bash
+arkheionx doctor
+arkheionx doctor --install
+arkheionx --help
+```
+
+Common issues:
+
+- The command is not on `PATH`.
+- Python is older than 3.11.
+- The current directory is not a Solidity or Foundry repository.
+- Foundry is not installed when compiler/test evidence is expected.
+
+See [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).

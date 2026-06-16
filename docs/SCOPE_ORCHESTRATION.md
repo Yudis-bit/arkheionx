@@ -73,7 +73,7 @@ A private scope note belongs only in local, gitignored files under
 `.arkheionx/private/private-terms.txt`). Nothing under `.arkheionx/` is committed.
 A built-in leak guard scans the public, committed surface for any private term you
 list, so target names never leak into source, tests, fixtures, docs, or output.
-See [`V7_WORKFLOW.md`](V7_WORKFLOW.md) for the end-to-end private workflow.
+See [`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md) for the end-to-end private workflow.
 
 ## What V7 is not
 
@@ -86,10 +86,10 @@ Human review is required for every conclusion.
 
 ## V7.5: protocol lenses build on this
 
-[V7.5 Protocol Lens Packs](V7_5_PROTOCOL_LENS.md) reuse this scope model verbatim:
+[V7.5 Protocol Lens Packs](archive/versions/V7_5_PROTOCOL_LENS.md) reuse this scope model verbatim:
 the same markdown scope parser, the same `.arkheionx/private/` leak guard, and the
 same surface records. A protocol lens adds protocol-aware behavior promises,
 economic invariants, temporal windows, and review lanes on top, so the lanes and
 tasks are shaped by a specific protocol family. The first lens is
 [Fixed Credit Market](FIXED_CREDIT_MARKET_LENS.md). See
-[`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md).
+[`V7_5_PROTOCOL_LENS.md`](archive/versions/V7_5_PROTOCOL_LENS.md).

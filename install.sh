@@ -20,7 +20,7 @@
 #   local   --local <path>; install from a local checkout.
 #
 # Environment (all optional):
-#   ARKHEIONX_REPO_URL       Git URL (default: https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git)
+#   ARKHEIONX_REPO_URL       Git URL (default: https://github.com/Yudis-bit/arkheionx.git)
 #   ARKHEIONX_STABLE_TAG     Stable tag for the stable channel (default: v8.0.1)
 #   ARKHEIONX_CHANNEL        stable | main (default: stable)
 #   ARKHEIONX_REF            Explicit git ref (sets source kind = ref)
@@ -34,7 +34,7 @@
 set -eu
 
 INSTALLER_VERSION="3.1.0"
-ARKHEIONX_REPO_URL="${ARKHEIONX_REPO_URL:-https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git}"
+ARKHEIONX_REPO_URL="${ARKHEIONX_REPO_URL:-https://github.com/Yudis-bit/arkheionx.git}"
 ARKHEIONX_STABLE_TAG="${ARKHEIONX_STABLE_TAG:-v8.0.1}"
 ARKHEIONX_CHANNEL="${ARKHEIONX_CHANNEL:-stable}"
 ARKHEIONX_REF="${ARKHEIONX_REF:-}"

@@ -1,160 +1,139 @@
-# Arkheionx
+# ArkheionX
 
-Local-first Ethereum security research workflow for Solidity and DeFi repositories.
+Local-first review infrastructure for smart contract security.
 
-Arkheionx turns scope, value flow, protocol behavior, invariants, and local evidence
-into focused review lanes before report writing.
+ArkheionX turns a Solidity or Foundry repository into deterministic review context: value paths, roles, trust assumptions, reachable flows, missing tests, evidence, and unresolved review gaps.
 
-**No RPC. No live-chain scanning. No auto-submit. Human review required.**
-
-```bash
-python3 -m pip install -e .
-arkheionx review . --scope-file scope.md --out .arkheionx/review
-```
+It does not replace auditors.
+It gives auditors a better map.
 
 ## What it does
 
-Arkheionx reads a Solidity or DeFi repository and a scope note and writes a single
-local review pack — Markdown for humans and JSON for tools. It maps where value
-moves, the assumptions that guard each path, which paths have no tests, and a ranked
-order of what a human should inspect first.
+ArkheionX reads an authorized local repository and builds review artifacts that help a human understand where to spend attention first:
 
-- Maps contracts, functions, value paths, assumptions, and review lanes.
-- Surfaces a prioritized "inspect first" order (review order, not severity).
-- Turns hypotheses into local evidence tasks, each with a kill condition.
-- Grades whether local proof actually supports a candidate.
-- Filters weak, out-of-scope, or under-proven candidates before report writing.
-- Runs `arkheionx review-map` for a quick read of any repo or the bundled demo.
+- value paths and asset movement;
+- roles, permissions, and trust assumptions;
+- reachable flows and interaction surfaces;
+- missing or weak test areas;
+- evidence tasks and kill conditions;
+- unresolved review questions;
+- machine-readable JSON and human-readable Markdown review packs.
+
+Foundry tells reviewers whether the tests they wrote pass. ArkheionX helps show what they may have forgotten to test.
+
+## What it is not
+
+Not an audit.
+
+ArkheionX does not automatically find vulnerabilities, replace auditors, confirm severity, prove safety, guarantee bounty outcomes, or act as an exploit generator.
+
+No severity guarantee.
+
+It does not claim endorsement from the Ethereum Foundation or any ecosystem grant program. Human review, local PoC validation, and protocol-specific judgment remain required.
+
+## Who it is for
+
+- Smart contract security researchers who need a deterministic map before deep review.
+- Protocol teams preparing for an audit, contest, or internal security review.
+- Auditors and audit firms that want structured context before manual analysis.
+- Ecosystem grant reviewers evaluating whether the project is credible, honest, and useful enough to test.
 
 ## Why it exists
 
-Reviewing a DeFi protocol is not just checking whether your tests pass. A reviewer
-needs to know where value enters, moves, and exits, which assumptions protect each
-path, and which paths have no tests at all. Arkheionx makes that surface explicit and
-repeatable before manual review, so review time goes where value moves.
+Large Solidity repositories are easy to review randomly. Reviewers need to know where value enters, moves, exits, and depends on assumptions before they decide what to test.
+
+ArkheionX exists to reduce review blindness. It makes context explicit, repeatable, and local-first so a human reviewer can reason from evidence instead of a loose prompt.
 
 ## Quickstart
 
 ```bash
-# Install from source (editable), or run the source installer:
-python3 -m pip install -e .   # or: sh install.sh
+python3 -m pip install -e .
+arkheionx version
+arkheionx doctor
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+```
+
+No API key, private key, RPC URL, or token is required for the default workflow.
+
+For source installation details, see [`docs/INSTALLATION.md`](docs/INSTALLATION.md) and [`docs/INSTALLER.md`](docs/INSTALLER.md). The source installer remains available with `sh install.sh`.
+
+## Example workflow
+
+```bash
+# Inspect CLI and environment truth.
 arkheionx version
 arkheionx doctor
 
-# Explore the bundled demos:
-arkheionx demo --list
-
-# Build a local review pack:
+# Build the primary review pack.
 arkheionx review . --scope-file scope.md --out .arkheionx/review
 
-# Quick review map of a repo or the bundled demo:
+# Build the older focused map when you want a compact first read.
+arkheionx review-map .
+
+# Try a bundled demo.
+arkheionx demo --list
 arkheionx review-map examples/vault-strategy-oracle-fixture
 ```
 
-No API key, private key, RPC URL, or token is required. See
-[`docs/INSTALLER.md`](docs/INSTALLER.md) and [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md).
+See [`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md), [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md), and [`docs/DEMO_WORKFLOW.md`](docs/DEMO_WORKFLOW.md).
 
-## Core workflow
-
-Arkheionx supports one workflow end to end:
-
-```text
-Scope → Value flow → Protocol behavior → Review lanes → Evidence tasks → Evidence judge → Report filter
-```
-
-- **Scope** — start from the actual review rules.
-- **Value flow** — map where assets enter, move, and exit.
-- **Protocol behavior** — capture the promises the system appears to rely on.
-- **Review lanes** — prioritize where a human should inspect first.
-- **Evidence tasks** — turn hypotheses into local tests with kill conditions.
-- **Evidence judge** — check whether local proof actually supports the claim.
-- **Report filter** — block weak, out-of-scope, or under-proven candidates.
-
-A human always makes the security call. See
-[`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md).
-
-## Protocol Lens Packs
-
-A protocol lens models a protocol family — value flows, behavior promises, economic
-invariants, and temporal windows — so the review lanes, tasks, and evidence
-requirements become protocol-aware. The engine stays generic; a lens adds context,
-not target-specific knowledge.
-
-```bash
-arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review
-```
-
-The first lens is the generic **Fixed Credit Market** family. A lens is a planning
-model, not a finding: it encodes no line numbers and no known bug, and it never runs
-against a live chain. See
-[`docs/PROTOCOL_LENS_PACKS.md`](docs/PROTOCOL_LENS_PACKS.md) and
-[`docs/FIXED_CREDIT_MARKET_LENS.md`](docs/FIXED_CREDIT_MARKET_LENS.md).
-
-## Outputs
-
-The review pack is written under `.arkheionx/` — generated, local, gitignored, and
-not intended to be committed as source truth:
-
-- Scope map, value-flow map, and interaction map.
-- Review lanes and evidence tasks with kill conditions.
-- Protocol model, economic invariants, and an evidence rubric.
-- A report filter and a model-agnostic agent input.
-- Machine-readable `review.json` and `manifest.json`. See
-  [`docs/SCHEMAS.md`](docs/SCHEMAS.md).
-
-## Safety boundaries
-
-Arkheionx provides review context, not final security judgments. Human review is
-required.
-
-Default operation is intentionally narrow:
-
-- Local repository analysis only.
-- No RPC by default.
-- No live-chain mutation.
-- No private keys or secrets.
-- No automated exploitation.
-- No auto-submit.
-- No guaranteed vulnerability discovery.
-- No severity guarantee.
-- Not an audit, certification, or replacement for manual review.
-
-Machine-generated context helps prioritize inspection; it does not decide impact or
-severity. Even a relevant local Foundry test executed is still review context, not a
-final security judgment. Run Arkheionx only on repositories you are authorized to
-review. See [`docs/SAFETY_BOUNDARIES.md`](docs/SAFETY_BOUNDARIES.md).
+For the repository layout and generated-output boundaries, see [`docs/REPOSITORY_STRUCTURE.md`](docs/REPOSITORY_STRUCTURE.md).
 
 ## Documentation
 
-Full index: [`docs/README.md`](docs/README.md).
+Start with [`docs/START_HERE.md`](docs/START_HERE.md), [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md), [`docs/REPOSITORY_STRUCTURE.md`](docs/REPOSITORY_STRUCTURE.md), [`docs/CASE_STUDIES.md`](docs/CASE_STUDIES.md), and [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md).
 
-- [`docs/CORE_WORKFLOW.md`](docs/CORE_WORKFLOW.md) — `arkheionx review` and the review pack
-- [`docs/PROTOCOL_LENS_PACKS.md`](docs/PROTOCOL_LENS_PACKS.md) — protocol-aware lenses
-- [`docs/FIXED_CREDIT_MARKET_LENS.md`](docs/FIXED_CREDIT_MARKET_LENS.md) — the first generic lens
-- [`docs/SCHEMAS.md`](docs/SCHEMAS.md) — machine-readable artifacts
-- [`docs/SAFETY_BOUNDARIES.md`](docs/SAFETY_BOUNDARIES.md) — boundaries and the exit-code contract
-- [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md) — every command and flag
-- [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md) — the stable command surface
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — direction
+## Outputs
 
-## GitHub Action
+The primary review pack is written under `.arkheionx/` and is intended to stay local. It includes run context, scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks, report filter, agent input, `review.json`, and `manifest.json`.
 
-Pinned stable action example:
+Outputs are review context, not final truth. A relevant local Foundry test executed is evidence, but still not a final security judgment.
 
-```yaml
-uses: Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@v8.0.1
-```
+See [`docs/OUTPUT_ARTIFACTS.md`](docs/OUTPUT_ARTIFACTS.md), [`docs/EVIDENCE_PACKAGE.md`](docs/EVIDENCE_PACKAGE.md), and [`docs/INTERPRET_RESULTS.md`](docs/INTERPRET_RESULTS.md).
 
-See [`docs/GITHUB_ACTION_USAGE.md`](docs/GITHUB_ACTION_USAGE.md).
+## Case studies
 
-## Release status
+ArkheionX needs real review evidence, not adoption theater. The case-study layer records what question was asked, what value path was mapped, what evidence was produced, what a human validated, and what ArkheionX did not decide. Start with [`docs/CASE_STUDIES.md`](docs/CASE_STUDIES.md).
 
-Latest stable release: **v8.0.1** — Clean Product Surface. Current package version:
-**8.0.1**. This is a product-surface patch on top of v8.0.0: it cleans the README and
-website and changes no engine behavior, CLI command, or analysis. Release tags, the
-GitHub Release, and the site deploy are cut at release time.
+## Current status
 
-## License
+Latest stable release: **v8.0.1**.
 
-Arkheionx is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE).
-Security policy: [`SECURITY.md`](SECURITY.md).
+This checkout may include unreleased development work beyond the latest stable release. Use [`docs/VERSIONING.md`](docs/VERSIONING.md) for package, release, milestone, and experimental/internal status.
+
+The public repository has been renamed to `Yudis-bit/arkheionx`. New users should use <https://github.com/Yudis-bit/arkheionx>. The old `DeFi-Exploit-PoCs` slug may remain in historical documents, archived material, generated artifacts, or compatibility notes. See [`docs/REPO_IDENTITY_MIGRATION.md`](docs/REPO_IDENTITY_MIGRATION.md).
+
+The stable command surface is tracked in [`docs/PUBLIC_SURFACE.md`](docs/PUBLIC_SURFACE.md).
+
+## Limitations
+
+- Static/local context can miss important behavior, and missing-test signals can be noisy.
+- Value paths are review maps, not proven execution traces.
+- Evidence tasks require human judgment, PoC validation, and protocol-specific review.
+- Severity decisions are not automatic, and a clean run does not prove a protocol safe.
+
+## Safety boundaries
+
+Local repository analysis only. No RPC by default. No live-chain mutation. No private keys or secrets. No automated exploitation. No auto-submit. Not an audit, certification, or replacement for manual review. No severity guarantee.
+
+No RPC. No live-chain scanning. No auto-submit. Human review required.
+
+## External feedback
+
+Feedback from ecosystem grant review indicated that ArkheionX should strengthen real-world usage, external reviewer feedback, and case studies before pursuing broader ecosystem support. That feedback is directionally useful: the next stage is credibility, real usage on established DeFi protocols, reviewer feedback, and clear case studies.
+
+See [`docs/EXTERNAL_VALIDATION.md`](docs/EXTERNAL_VALIDATION.md) and [`docs/PUBLIC_FEEDBACK_GUIDE.md`](docs/PUBLIC_FEEDBACK_GUIDE.md).
+
+## Contributing
+
+Contributions are useful when they improve deterministic review context, reduce noise, clarify outputs, strengthen fixtures, or improve documentation accuracy.
+
+Start with [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
+
+## Security and ethics
+
+Use ArkheionX only on repositories you own or are authorized to review.
+
+No live-chain mutation, private keys, production credentials, exploit automation, auto-submit, or unsupported vulnerability claims belong in the default workflow.
+
+Security policy: [`SECURITY.md`](SECURITY.md). License: [`LICENSE`](LICENSE).

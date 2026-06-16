@@ -64,4 +64,4 @@ claims. A finding is only ever confirmed by a human with independent local proof
 ## Related
 
 - [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md),
-  [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md), [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+  [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md), [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).

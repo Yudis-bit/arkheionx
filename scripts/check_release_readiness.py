@@ -36,13 +36,18 @@ READINESS_DOCS = [
     "docs/STABILITY_CONTRACT.md",
     "docs/V3_READINESS.md",
 ]
-REQUIRED_README_DISCLAIMERS = [
-    "No RPC by default",
-    "No private keys or secrets",
-    "No automated exploitation",
-    "No auto-submit",
-    "No guaranteed vulnerability discovery",
-    "No severity guarantee",
+REQUIRED_README_BOUNDARIES = [
+    ("No RPC by default", ["No RPC by default"]),
+    ("No private keys or secrets", ["No private keys or secrets", "private keys"]),
+    ("No automated exploitation", ["No automated exploitation", "exploit automation"]),
+    ("No auto-submit", ["No auto-submit", "auto-submit"]),
+    (
+        "No automatic vulnerability discovery claim",
+        ["does not automatically find vulnerabilities", "No automatic vulnerability discovery"],
+    ),
+    ("No bounty guarantee claim", ["guarantee bounty outcomes", "No bounty guarantee"]),
+    ("No severity guarantee", ["No severity guarantee"]),
+    ("Human review required", ["Human review required"]),
 ]
 # Promotional claims that must not appear on the live README surface. Phrased to
 # avoid colliding with the negative disclaimers above (e.g. "No Homebrew").
@@ -130,9 +135,10 @@ def check() -> list[str]:
             failures.append(f"missing README visual: {visual}")
         if visual not in readme:
             failures.append(f"README.md does not reference visual: {visual}")
-    for disclaimer in REQUIRED_README_DISCLAIMERS:
-        if disclaimer not in readme:
-            failures.append(f"README.md missing safety disclaimer: {disclaimer}")
+    readme_lower = readme.lower()
+    for label, options in REQUIRED_README_BOUNDARIES:
+        if not any(option.lower() in readme_lower for option in options):
+            failures.append(f"README.md missing safety boundary: {label}")
     for pattern in FORBIDDEN_README:
         if re.search(pattern, readme, re.IGNORECASE):
             failures.append(f"README.md contains forbidden claim pattern: {pattern}")
@@ -172,7 +178,7 @@ def check() -> list[str]:
 
     # GitHub Action examples and install/arkup stable tag track STABLE_RELEASE.
     action_tag = f"pre-audit@{STABLE_RELEASE}"
-    for doc in ("README.md", "docs/GITHUB_ACTION_USAGE.md"):
+    for doc in ("docs/GITHUB_ACTION_USAGE.md",):
         if action_tag not in read(doc):
             failures.append(f"{doc} GitHub Action example does not use {action_tag}")
     stable_tag_line = f'ARKHEIONX_STABLE_TAG:-{STABLE_RELEASE}'

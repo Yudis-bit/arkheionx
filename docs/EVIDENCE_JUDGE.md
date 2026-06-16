@@ -51,11 +51,11 @@ arkheionx evidence-judge examples/scope-fixture --scope-file examples/scope-fixt
 
 The bundled fixture ships a deliberately strong, weak, and invalid test so the
 grades are visible. See [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) and
-[`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+[`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md).
 
 ## V7.5: protocol-lens evidence
 
-The [V7.5 protocol lens](V7_5_PROTOCOL_LENS.md) layer adds two protocol-aware
+The [V7.5 protocol lens](archive/versions/V7_5_PROTOCOL_LENS.md) layer adds two protocol-aware
 evidence surfaces: `arkheionx lens-evidence` classifies each economic invariant's
 local-test coverage into one of nine statuses
 (`DIRECTLY_TESTED_STRONG`, `DIRECTLY_TESTED_WEAK`, `INDIRECTLY_TESTED`,

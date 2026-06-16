@@ -51,7 +51,7 @@ class PackagingConfigTests(unittest.TestCase):
     def test_version_consistent_between_version_py_and_pyproject(self) -> None:
         data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
         self.assertEqual(data["project"]["version"], PACKAGE_VERSION)
-        self.assertEqual(PACKAGE_VERSION, "9.1.0.dev0")
+        self.assertEqual(PACKAGE_VERSION, "10.1.0.dev0")
 
     def test_pyproject_ships_schemas(self) -> None:
         data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
@@ -135,7 +135,7 @@ class WheelContentTests(unittest.TestCase):
         with zipfile.ZipFile(self.wheel) as z:
             text = z.read(meta).decode("utf-8")
         self.assertIn(f"Version: {PACKAGE_VERSION}", text)
-        self.assertIn("Version: 9.1.0.dev0", text)
+        self.assertIn("Version: 10.1.0.dev0", text)
 
 
 if __name__ == "__main__":
