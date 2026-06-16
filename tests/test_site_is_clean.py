@@ -27,27 +27,23 @@ class SiteIsCleanTests(unittest.TestCase):
         cls.docs_lower = cls.docs.lower()
 
     def test_homepage_has_clear_hero(self) -> None:
-        self.assertIn(
-            "Local-first security research workflow for Solidity and DeFi repos.",
-            self.home,
-        )
-        self.assertIn(
-            "Arkheionx turns scope, value flow, protocol behavior, invariants, and local evidence",
-            self.home,
-        )
+        self.assertIn("Review the map before the hunt.", self.home)
+        self.assertIn("Local-first review infrastructure", self.home)
+        self.assertIn("ArkheionX maps value paths, roles, trust assumptions", self.home)
 
     def test_homepage_has_safety_boundary(self) -> None:
-        self.assertIn(
-            "No RPC. No live-chain scanning. No auto-submit. Human review required.",
-            self.home,
-        )
+        self.assertIn("No RPC or live-chain scanning by default.", self.home)
+        self.assertIn("Not an audit.", self.home)
+        self.assertIn("Not an AI auditor.", self.home)
+        self.assertIn("Not an exploit generator.", self.home)
+        self.assertIn("Human review required.", self.home)
         self.assertIn("does not confirm vulnerabilities", self.home_lower)
 
     def test_homepage_has_install_command(self) -> None:
         self.assertIn("curl -fsSL https://arkheionx.dev/install.sh | bash", self.home)
 
-    def test_homepage_has_exactly_seven_sections(self) -> None:
-        self.assertEqual(self.home.count("<section"), 7)
+    def test_homepage_has_current_section_count(self) -> None:
+        self.assertEqual(self.home.count("<section"), 11)
 
     def test_homepage_and_docs_avoid_ai_hype(self) -> None:
         for word in AI_HYPE:

@@ -36,7 +36,7 @@ files are local only and must not be committed.
 ## Docs
 
 - [`SCOPE_ORCHESTRATION.md`](../SCOPE_ORCHESTRATION.md)
-- [`V7_WORKFLOW.md`](../V7_WORKFLOW.md)
+- [`V7_WORKFLOW.md`](../archive/versions/V7_WORKFLOW.md)
 - [`SCOPE_MAP.md`](../SCOPE_MAP.md)
 - [`SCOPE_TASKS.md`](../SCOPE_TASKS.md)
 - [`EVIDENCE_JUDGE.md`](../EVIDENCE_JUDGE.md)

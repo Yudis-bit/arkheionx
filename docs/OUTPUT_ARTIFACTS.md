@@ -1,124 +1,71 @@
 # Output Artifacts
 
-Arkheionx supports custom output paths, but v1.0.0 recommends the names below
-for stable CI and local workflows.
+ArkheionX writes local artifacts for review. They are generated context, not source truth.
 
-| Artifact | Recommended Name |
+## Primary review pack
+
+The current primary workflow is:
+
+```bash
+arkheionx review . --scope-file scope.md --out .arkheionx/review
+```
+
+Recommended output location:
+
+```text
+.arkheionx/review/
+```
+
+Core files:
+
+| file | purpose |
 |---|---|
-| Pre-Audit Report | `ARKHEIONX_PRE_AUDIT_REPORT.md` |
-| JSON Report | `arkheionx-report.json` |
-| SARIF | `arkheionx.sarif.json` |
-| Baseline | `arkheionx.baseline.json` |
-| Diff Markdown | `ARKHEIONX_DIFF.md` |
-| Diff JSON | `arkheionx-diff.json` |
-| Issue Plan | `ARKHEIONX_ISSUE_PLAN.json` |
-| Issue Checklist | `ARKHEIONX_ISSUE_CHECKLIST.md` |
-| Issue Dry Run | `ARKHEIONX_ISSUE_DRY_RUN.md` |
-| Launch Report | `ARKHEIONX_LAUNCH_REPORT.md` |
-| Sprint Plan | `ARKHEIONX_SPRINT_PLAN.md` |
-| Contest Readiness | `ARKHEIONX_CONTEST_READINESS.md` |
-| Executive Summary | `ARKHEIONX_EXECUTIVE_SUMMARY.md` |
-| Remediation Roadmap | `ARKHEIONX_REMEDIATION_ROADMAP.md` |
-| Test Plan | `ARKHEIONX_TEST_PLAN.md` |
-| Test Plan JSON | `ARKHEIONX_TEST_PLAN.json` |
-| Foundry Invariant Skeleton | `ArkheionxReadinessInvariants.t.sol` |
-| Action Summary | `ARKHEIONX_ACTION_SUMMARY.md` |
-| PR Comment Body | `ARKHEIONX_PR_COMMENT.md` |
+| `00-run-context.md` | Run metadata, version info, scope/lens context, and read order. |
+| `01-scope-map.md` | Structured scope and review rules. |
+| `02-value-flow-map.md` | Value entry, movement, and exit context. |
+| `03-interaction-map.md` | Contract and role interaction context. |
+| `04-assumptions.md` | Trust assumptions and review dependencies. |
+| `05-review-lanes.md` | Ordered lanes for human inspection. |
+| `06-evidence-tasks.md` | Local proof tasks and kill conditions. |
+| `07-evidence-rubric.md` | Evidence quality rubric. |
+| `08-report-filter.md` | Pre-report triage and reasons to stop. |
+| `09-agent-input.md` | Model-agnostic AI-assisted review context. |
+| `review.json` | Consolidated machine-readable review context. |
+| `manifest.json` | Artifact manifest and safety metadata. |
 
-## Reports Directory
+Protocol-lens runs may add files such as protocol model, behavior promises, economic invariants, temporal windows, and lens-specific evidence tasks.
 
-It is safe to write outputs into a repository-local `reports/` directory:
+## Focused review-map artifacts
 
-```sh
-python3 scripts/pre_audit_scan.py \
-  --root . \
-  --protocol-type auto \
-  --output reports/ARKHEIONX_PRE_AUDIT_REPORT.md \
-  --json-output reports/arkheionx-report.json \
-  --sarif-output reports/arkheionx.sarif.json \
-  --baseline-output reports/arkheionx.baseline.json
-```
+`arkheionx review-map .` writes compact focused artifacts under `.arkheionx/out/review-map/`, including:
 
-Arkheionx ignores its own generated reports, SARIF, baselines, issue plans,
-dry-run outputs, delivery artifacts, test plans, and invariant skeletons by
-default on future scans. This prevents previous outputs from influencing score,
-evidence, findings, negative evidence, protocol detection, or issue plans.
+- `review-map.md`;
+- `review-map.json`;
+- value paths;
+- assumptions;
+- test gaps;
+- proof suggestions;
+- evidence links.
 
-v1.8.0 scanner reports include Fix First, grouped finding summaries, compact
-suppression summaries, and config summaries in Markdown and JSON. Config
-summary fields include config source, effective protocol type, enabled rule
-packs, minimum confidence, suppression count, output profile, and generated
-artifact handling.
+This is useful for a quick first read, but the canonical review-pack workflow is `arkheionx review`.
 
-See [`OUTPUT_PROFILES.md`](OUTPUT_PROFILES.md), [`FIX_FIRST.md`](FIX_FIRST.md),
-and [`REPORT_UX.md`](REPORT_UX.md).
+## Evidence artifacts
 
-## Custom Paths
+Evidence-related commands may write proof, trace, evidence, report, validation, and review-package artifacts under `.arkheionx/out/`.
 
-Custom output paths are supported. Use names that make generated status obvious
-and keep scanner outputs separate from protocol source files when possible.
+These artifacts can support a hypothesis. They do not replace human validation, PoC review, severity analysis, or disclosure judgment.
 
-Generated artifacts are local/static outputs. They are not formal audit reports
-and do not confirm vulnerabilities.
+## Legacy scanner artifacts
 
-## Module CLI Outputs
+The older scanner workflow can still write report, SARIF, baseline, diff, issue-plan, test-plan, launch, sprint, and contest-readiness artifacts.
 
-v1.9.0 can write the same artifacts through the pre-v2 module CLI candidate:
+Those outputs remain supported as advanced/legacy workflows, but they are not the public first-run path.
 
-```sh
-python3 -m arkheionx.cli.main scan examples/amm-fixture \
-  --protocol-type amm \
-  --output examples/reports/cli-amm-report.md \
-  --json-output examples/reports/cli-amm-report.json \
-  --sarif-output examples/reports/cli-amm.sarif.json \
-  --issue-plan-output examples/reports/cli-amm-issue-plan.json
-```
+## Generated artifact rules
 
-The module CLI wraps the existing scripts and does not change artifact schemas.
+- Keep generated artifacts out of source truth unless intentionally committed as fixtures or examples.
+- Do not feed old generated reports back into a review as if they were protocol source.
+- Treat all generated Markdown and JSON as review context.
+- Do not infer severity, safety, exploitability, or acceptance from artifact names.
 
-v2.0.0 can write the same artifacts through the installed console command:
-
-```sh
-arkheionx scan examples/amm-fixture \
-  --protocol-type amm \
-  --output examples/reports/package-cli-amm-report.md \
-  --json-output examples/reports/package-cli-amm-report.json \
-  --sarif-output examples/reports/package-cli-amm.sarif.json \
-  --issue-plan-output examples/reports/package-cli-amm-issue-plan.json
-```
-
-## Protocol-Pack Examples
-
-v1.4.0 adds AMM and lending fixture outputs that use the same artifact shapes:
-
-- `examples/reports/amm-fixture-pre-audit-report.md`
-- `examples/reports/amm-fixture-pre-audit-report.json`
-- `examples/reports/amm-fixture.sarif.json`
-- `examples/reports/amm-fixture-issue-plan.json`
-- `examples/reports/lending-fixture-pre-audit-report.md`
-- `examples/reports/lending-fixture-pre-audit-report.json`
-- `examples/reports/lending-fixture.sarif.json`
-- `examples/reports/lending-fixture-issue-plan.json`
-
-## Test Plan Examples
-
-v1.5.0 adds defensive test-plan artifacts generated from report JSON:
-
-- `examples/reports/amm-fixture-test-plan.md`
-- `examples/reports/amm-fixture-test-plan.json`
-- `examples/reports/ArkheionxAMMInvariants.t.sol`
-- `examples/reports/lending-fixture-test-plan.md`
-- `examples/reports/lending-fixture-test-plan.json`
-- `examples/reports/ArkheionxLendingInvariants.t.sol`
-- `examples/reports/amm-lending-hybrid-fixture-test-plan.md`
-- `examples/reports/amm-lending-hybrid-fixture-test-plan.json`
-- `examples/reports/ArkheionxHybridInvariants.t.sol`
-
-These skeletons are starter scaffolds with TODO placeholders. They are not
-formal verification and require project-specific review.
-
-## Internal Engine Split
-
-v1.6.0 does not add new public output artifact shapes. It adds the internal
-`arkheionx/` package scaffold and begins moving generator internals behind the
-same script entrypoints and output paths.
+See [`GENERATED_ARTIFACT_IGNORE.md`](GENERATED_ARTIFACT_IGNORE.md), [`SCHEMAS.md`](SCHEMAS.md), and [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md).

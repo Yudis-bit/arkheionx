@@ -1,17 +1,17 @@
 ---
 name: Assertion hardening
-about: Propose strengthening an existing PoC's assertions (weak/none -> medium/strong).
+about: Propose strengthening an existing validation fixture's assertions (weak/none -> medium/strong).
 title: "[harden] <registry-id>"
 labels: ["assertion-hardening"]
 ---
 
-<!-- Use this template to propose lifting a PoC from L1 to L2 (or L2 to
+<!-- Use this template to propose lifting a validation fixture from L1 to L2 (or L2 to
      stronger L2) per docs/POC_MATURITY_MODEL.md. -->
 
-## Target PoC
+## Target validation fixture
 
 - **Registry id** (`metadata/registry.json`):
-- **PoC path** (`EVM/test/...`):
+- **Fixture path** (`EVM/test/...`):
 - **Current `assertion_quality`** (`weak` / `medium` / `strong` / `none`):
 - **Current maturity level** (from `reports/poc_maturity_index.md`):
 

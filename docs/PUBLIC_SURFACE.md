@@ -75,7 +75,7 @@ local/static research-memory commands built on top of the review map. They emit
 human Markdown and `--json`, write artifacts under `.arkheionx/research/` (unless
 `--no-write`), and never run RPC, live-chain, or exploit automation.
 `manual_review_required` stays true: hypotheses are review prompts, not findings.
-See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+See [`V4_1_RESEARCH_WORKFLOW.md`](archive/versions/V4_1_RESEARCH_WORKFLOW.md) and
 [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
@@ -94,7 +94,7 @@ live-chain, or exploit automation. `manual_review_required` stays true: blind
 spot candidates are not vulnerabilities, criticality potential is not severity,
 and counterfactuals are research prompts, not findings. See
 [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
-[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+[`V5_WORKFLOW.md`](archive/versions/V5_WORKFLOW.md).
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
@@ -115,7 +115,7 @@ claim, confirmed-candidate is not a confirmed vulnerability, interaction priorit
 is not severity, and unresolved does not mean vulnerable. See
 [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md),
 [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md), [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md),
-and [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+and [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
@@ -137,7 +137,7 @@ candidate is not final triage. Private scope notes are read only from local,
 gitignored files and are never committed. See
 [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md), [`SCOPE_MAP.md`](SCOPE_MAP.md),
 [`SCOPE_TASKS.md`](SCOPE_TASKS.md), [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md),
-[`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+[`REPORT_FILTER.md`](REPORT_FILTER.md), and [`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md).
 
 ## One-command review (v8)
 
@@ -150,6 +150,70 @@ invalid usage or a runtime error. See [`CORE_WORKFLOW.md`](CORE_WORKFLOW.md).
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
 | `arkheionx review` | One-command local review pack: run context, scope map, value-flow map, interaction map, assumptions, review lanes, evidence tasks (with kill conditions), evidence rubric, report filter, agent input, `review.json`, and `manifest.json`; add `--lens` for protocol-aware artifacts. Writes by default | human + `--json` (manifest) | `review/*` | stable-additive |
+
+## Private / experimental commands (local-only)
+
+`arkheionx triage` is a **private, experimental, local-only** senior research-triage
+mode. It runs *before* `arkheionx review` and decides what is worth reviewing and
+what to kill early, so review time is not spent proving what should never be pursued.
+It is intentionally **not** part of the stable command contract, is not wired into any
+release, site, or remote surface, and makes no RPC or live-chain calls by default.
+Output is a local planning pack — not a finding, not severity; human review is
+required. Internal note: `docs/internal/SENIOR_TRIAGE_MODE.md` (local only).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx triage` | Senior research triage before review: target decision, bounty-eligibility read, known-issue / dedup map, freshness diff, optional deployment-reality plan, research-priority scoreboard, top-3 leads, do-not-touch list, agent brief, `triage.json`, and `manifest.json`. No RPC by default; no auto-submit; no vulnerability claims. Writes by default | human + `--json` | `triage/*` | experimental (local-only) |
+
+`arkheionx hunter` is a **private, experimental, local-only** V9 universal senior
+exploit-hunter mode (also reachable as `arkheionx triage --hunter`). It chooses the
+highest-EV bounty surface — fresh, in-scope, payable, non-duplicate, attacker-reachable
+— and avoids known / out-of-scope / dead leads before any PoC. It is intentionally
+**not** part of the stable command contract, is not wired into any release, site, or
+remote surface, makes read-only RPC calls only when an endpoint is explicitly provided
+(the endpoint is masked), performs no live-chain mutation, and never auto-submits.
+Output is a local planning pack — not a finding, not severity; human review is
+required. Internal notes live under `docs/private/` (local only).
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx hunter` | V9 universal senior exploit-hunter: program identity / scope map, source provenance, dedup corpus quality, freshness map, deployment reality, live-registry diff, value-flow and state-machine maps, ranked leads with a decision (PURSUE_NOW / NEEDS_POC / PARK_* / KILL_*), PoC plans, submission-risk, a report filter (default Submit: NO), engine evaluation, `triage.json`, and `manifest.json`. Read-only RPC only when provided (masked); no mutation; no auto-submit. Writes by default | human + `--json` | `hunter/*` | experimental (local-only) |
+
+`arkheionx war-run` is a **private, experimental, local-only** V10 Semantic DeFi
+Review Engine (internal codename: GodEye War Engine). It reconstructs a Solidity
+codebase as an economic machine — semantic map, DeFi entities, state transitions —
+derives candidate invariants, ranks attack candidates, generates Foundry PoC
+skeletons, gates economic severity (capping dust / trusted-role / unproven-buffer
+candidates), plans fork proof when deployed external state matters, and applies
+root-cause dedup memory. It is intentionally **not** part of the stable command
+contract, is not wired into any release, site, or remote surface, makes no RPC
+calls by default, performs no live-chain mutation, never broadcasts, requires no
+signing keys, and never auto-submits. Fork support is a plan only; RPC endpoints are
+referenced by environment variable name and redacted. No report is generated until
+an invariant is proven; output is local review context, not a finding or a severity,
+and human review is required.
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx war-run` | V10 semantic DeFi review engine: scope map, semantic map, call graph, storage-access map, DeFi entities, state transitions, candidate invariants (with suspicious-here reasons), attack-candidate ranking, Foundry PoC skeletons, economic severity verdicts (SUBMIT_* / VALID_BUT_LOW / NEEDS_FORK_PROOF / KILL_*), fork plan, dedup/scope risk, `triage.json`, and `manifest.json`. No RPC by default; no broadcast; fork is a plan only; no report generated. Writes by default | human + `--json` | `war-run/*` | experimental (local-only) |
+
+`arkheionx memory` is a **private, experimental, local-only** V10 root-cause memory
+brain that backs the war-run dedup layer. It records prior root causes / findings /
+kills / parks in a local file store under `.arkheionx/memory/` and classifies a new
+candidate as `SAME_ROOT_CAUSE` / `RELATED_BUT_DISTINCT` / `DISTINCT` / `UNKNOWN`
+using a *semantic* root-cause hash (invariant family + function role + attacker
+category), so the same root cause on a different pool dedupes the same. It is
+intentionally **not** part of the stable command contract, is not wired into any
+release, site, or remote surface, makes no RPC or network calls, and stores only
+local files. `memory export` emits the shareable semantic fingerprint and redacts
+the private freeform `notes` field. Output is local review context, not a finding;
+human review is required.
+
+| Command | Purpose | Human / JSON | Artifacts | Stability |
+| --- | --- | --- | --- | --- |
+| `arkheionx memory` | V10 root-cause memory brain (`add` / `list` / `classify` / `export`): record prior root causes with a semantic hash, list the store, classify a candidate as SAME_ROOT_CAUSE / RELATED_BUT_DISTINCT / DISTINCT / UNKNOWN, and export a notes-redacted fingerprint. Local files only; no RPC, no network, no auto-submit | human + `--json` | `.arkheionx/memory/*` | experimental (local-only) |
+
+
 
 | Command | Purpose | Human / JSON | Artifacts | Stability |
 | --- | --- | --- | --- | --- |
@@ -168,7 +232,7 @@ evidence requirements are protocol-aware. The first lens is Fixed Credit Market
 vulnerability; an evidence score is not vulnerability validity; a candidate with
 evidence is not confirmed. The lens layer ships in the v7.5.0 package and
 carries its own schema version. See
-[`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) and
+[`V7_5_PROTOCOL_LENS.md`](archive/versions/V7_5_PROTOCOL_LENS.md) and
 [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md).
 
 Exit behavior: `lens-list` exits `0`; the analysis commands (`lens-map`,

@@ -2,39 +2,37 @@
 import Layout from "../components/Layout.astro";
 
 const available = [
-  "v8.0.0 source release (review-map + research memory + Blind Spot Intelligence + Evidence Graph + Interaction Matrix + Scope-Aware Orchestration + Evidence Judge + Protocol Lens Packs)",
-  "Founder-cut git tag, GitHub release, and site deploy at release time",
+  "Latest stable release metadata: v8.0.1",
+  "Source install workflow",
   "Source installer endpoint",
   "Manual GitHub install path",
-  "Local-first review workflow documentation"
+  "Local-first review workflow documentation",
+  "Development checkout may include unreleased v10.1 work"
 ];
 
 const notYet = [
   "Prebuilt binaries",
   "Signed checksums",
   "Package registry (PyPI) release",
-  "Versioned installer channels"
+  "Versioned installer channels",
+  "Broad external validation"
 ];
 ---
 
 <Layout
   title="Releases — ArkheionX"
-  description="ArkheionX release status: v8.0.0 is the current source release, installed from source. Binary and registry distribution come later."
+  description="ArkheionX release status: latest stable v8.0.1, source install current, development work separated from stable public claims."
 >
   <main class="releases-page">
     <section class="releases-hero">
       <p class="releases-kicker">Releases</p>
-      <h1>v8.0.0 is the current release. Install from source.</h1>
+      <h1>Latest stable is v8.0.1. Install from source.</h1>
       <p>
-        v8.0.0 is the current package version, finalized from source and adding the Protocol Lens
-        Packs layer (the first lens is Fixed Credit Market) on top of the v7 Scope-Aware Orchestration
-        and Evidence Judge layer, the v6 Evidence Graph and Interaction Matrix layer, the v5 Blind
-        Spot Intelligence layer, the v4.0.0 review-map workflow, and the v4.1 research memory. The
-        git tag, GitHub release, and site deploy are founder actions at release time. The current
-        distribution model is source-first; prebuilt binaries, signed checksums, and a package
-        registry release come after further release-pipeline hardening.
+        ArkheionX separates stable public release language from unreleased development work. The
+        latest stable release is v8.0.1. A local checkout may include v10.1 development metadata and
+        experimental commands. Treat development work as unreleased until the repository, docs, and
+        validation gates agree.
       </p>
-      <p><a href="/arkheionx-v4-technical-paper.pdf">Read the Arkheionx v4 technical paper</a> (PDF).</p>
     </section>
 
     <section class="releases-install">

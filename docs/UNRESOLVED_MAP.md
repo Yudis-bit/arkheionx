@@ -51,4 +51,4 @@ human. Human review is required.
 ## Related
 
 - [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md),
-  [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md), [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+  [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md), [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).

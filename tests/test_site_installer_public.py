@@ -23,7 +23,7 @@ class SiteInstallerPublicTests(unittest.TestCase):
 
     def test_installer_uses_public_main_source(self) -> None:
         self.assertIn("set -euo pipefail", self.text)
-        self.assertIn("https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git", self.text)
+        self.assertIn("https://github.com/Yudis-bit/arkheionx.git", self.text)
         self.assertIn('BRANCH="main"', self.text)
         self.assertIn('git clone --branch "$BRANCH" --single-branch', self.text)
         self.assertIn('merge --ff-only "origin/$BRANCH"', self.text)

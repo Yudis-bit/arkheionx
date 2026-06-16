@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx Senior Triage Manifest",
+  "description": "Manifest for a local senior-triage pack produced by the private `arkheionx triage` mode. A triage pack is a local/static planning artifact, not a finding and not severity. It is local-only: no push, no remote write, no live-chain calls, no auto-submit. Human review required.",
+  "type": "object",
+  "required": [
+    "schema_version", "artifact_type", "arkheionx_version", "command", "repo_path",
+    "scope_file", "known_path", "audits_path", "addresses_file", "generated_at",
+    "artifact_count", "artifact_paths", "rpc_mode", "safety_flags", "safety_boundaries",
+    "human_review_required", "local_only", "no_push", "no_remote_write"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["senior-triage-v1"]},
+    "artifact_type": {"type": "string", "enum": ["senior_triage_manifest"]},
+    "arkheionx_version": {"type": "string"},
+    "command": {"type": "string", "enum": ["triage"]},
+    "repo_path": {"type": "string"},
+    "scope_file": {"type": "string"},
+    "known_path": {"type": "string"},
+    "audits_path": {"type": "string"},
+    "addresses_file": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "artifact_count": {"type": "integer"},
+    "artifact_paths": {"type": "array", "items": {"type": "string"}},
+    "rpc_mode": {"type": "string", "enum": ["not_provided", "provided_not_run", "read_only", "disabled"]},
+    "rpc_endpoint_masked": {"type": "string"},
+    "safety_flags": {
+      "type": "object",
+      "required": [
+        "no_rpc_by_default", "no_live_chain", "no_exploit_automation", "no_auto_submit",
+        "no_vulnerability_claims", "no_severity_claims", "human_review_required"
+      ],
+      "properties": {
+        "no_rpc_by_default": {"type": "boolean", "enum": [true]},
+        "no_live_chain": {"type": "boolean", "enum": [true]},
+        "no_exploit_automation": {"type": "boolean", "enum": [true]},
+        "no_auto_submit": {"type": "boolean", "enum": [true]},
+        "no_vulnerability_claims": {"type": "boolean", "enum": [true]},
+        "no_severity_claims": {"type": "boolean", "enum": [true]},
+        "human_review_required": {"type": "boolean", "enum": [true]}
+      }
+    },
+    "safety_boundaries": {"type": "array", "items": {"type": "string"}},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "local_only": {"type": "boolean", "enum": [true]},
+    "no_push": {"type": "boolean", "enum": [true]},
+    "no_remote_write": {"type": "boolean", "enum": [true]}
+  }
+}

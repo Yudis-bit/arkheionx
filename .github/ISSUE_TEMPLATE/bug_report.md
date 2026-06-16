@@ -1,11 +1,11 @@
 ---
-name: Broken PoC
-about: A previously listed PoC no longer reproduces, fails to build, or asserts the wrong post-state.
+name: Broken validation fixture
+about: A historical validation fixture no longer reproduces, fails to build, or asserts the wrong post-state.
 title: "[broken-poc] <YYYY-MM-protocol>"
 labels: ["broken-poc"]
 ---
 
-## PoC
+## Validation fixture
 
 - **Path**: `EVM/test/<folder>/<file>.t.sol`
 - **Registry id** (`metadata/registry.json`):

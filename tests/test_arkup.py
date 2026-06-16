@@ -32,7 +32,7 @@ def write_receipt(install_dir: Path, **fields) -> Path:
         "updated_at": "2026-01-01T00:00:00+00:00",
         "install_method": "venv",
         "source_kind": "stable",
-        "repo_url": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git",
+        "repo_url": "https://github.com/Yudis-bit/arkheionx.git",
         "ref": "v2.5.0",
         "local_path": "",
         "install_dir": str(install_dir),

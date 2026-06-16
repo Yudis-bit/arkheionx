@@ -1,115 +1,44 @@
-# ArkheionX documentation index
+# ArkheionX Documentation
 
-ArkheionX is a local-first, deterministic review-map tool for Solidity / Foundry
-repositories. This index points to the docs that matter, in reading order. The
-core workflow is:
+ArkheionX is local-first review infrastructure for smart contract security.
 
-> repo → review-map → value paths → assumptions → test gaps → proof direction → human review
+It turns Solidity and Foundry repositories into deterministic review context: value paths, roles, trust assumptions, reachable flows, missing tests, evidence, and unresolved review gaps.
 
-Everything ArkheionX produces is review guidance for a human. It does not confirm
-vulnerabilities, assign severity, or replace an audit.
-
-## v8 — one-command review (start here)
-
-- [`CORE_WORKFLOW.md`](CORE_WORKFLOW.md) — `arkheionx review`, the review pack, and the pipeline.
-- [`PROTOCOL_LENS_PACKS.md`](PROTOCOL_LENS_PACKS.md) — generic protocol-family lenses.
-- [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md) — the first generic lens.
-- [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md) · [`REPORT_FILTER.md`](REPORT_FILTER.md) — grade evidence, filter candidates.
-- [`SCHEMAS.md`](SCHEMAS.md) — the machine-readable artifacts and how to validate them.
-- [`SAFETY_BOUNDARIES.md`](SAFETY_BOUNDARIES.md) — the boundaries and the exit-code contract.
+Current status: latest stable release is `v8.0.1`; this checkout may include unreleased development work. See [`VERSIONING.md`](VERSIONING.md).
 
 ## Start here
 
-1. [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md) — run the canonical workflow on the bundled demo.
-2. [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md) — what each output section means (and does not).
-3. [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) — the boundaries, stated plainly.
-4. [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — safe triage and hypothesis workflow.
-5. [`PUBLIC_ALPHA_READINESS.md`](PUBLIC_ALPHA_READINESS.md) — what is ready and what is deferred.
-6. [`START_HERE.md`](START_HERE.md) · [`INSTALLATION.md`](INSTALLATION.md) — orientation and install.
+1. [What ArkheionX is](WHAT_IS_ARKHEIONX.md)
+2. [What ArkheionX is not](WHAT_ARKHEIONX_IS_NOT.md)
+3. [Installation](INSTALLATION.md)
+4. [CLI reference](CLI_REFERENCE.md)
+5. [Core review workflow](CORE_WORKFLOW.md)
+6. [Interpreting results](INTERPRET_RESULTS.md)
+7. [Case studies](CASE_STUDIES.md)
+8. [External validation](EXTERNAL_VALIDATION.md)
+9. [Roadmap](ROADMAP.md)
 
-## Core workflow
+## Canonical public docs
 
-- [`CLI_REFERENCE.md`](CLI_REFERENCE.md) — every command and its options.
-- [`REVIEW_MAP.md`](REVIEW_MAP.md) — the review-map model in depth.
-- [`VALUE_FLOW_WORKBENCH.md`](VALUE_FLOW_WORKBENCH.md) — value-path thinking.
-- [`PROTOCOL_MAP.md`](PROTOCOL_MAP.md) — roles, journeys, money flow.
-- [`TRACE_ENGINE.md`](TRACE_ENGINE.md) · [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md) · [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — proof and evidence steps.
-- [`PUBLIC_SURFACE.md`](PUBLIC_SURFACE.md) · [`STABILITY_CONTRACT.md`](STABILITY_CONTRACT.md) — the supported, stable surface.
+- [Output artifacts](OUTPUT_ARTIFACTS.md)
+- [Evidence package](EVIDENCE_PACKAGE.md)
+- [Repository identity migration](REPO_IDENTITY_MIGRATION.md)
+- [Repository rename compatibility](REPO_RENAME_COMPATIBILITY.md)
+- [Repository structure](REPOSITORY_STRUCTURE.md)
+- [Public alpha readiness](PUBLIC_ALPHA_READINESS.md)
+- [Versioning](VERSIONING.md)
+- [Public feedback guide](PUBLIC_FEEDBACK_GUIDE.md)
 
-## Use cases
+## Deeper references
 
-- [`PRE_AUDIT_WORKFLOW.md`](PRE_AUDIT_WORKFLOW.md) — prepare a repo before an audit.
-- [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — safe triage and hypothesis generation.
-- [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) — AI-assisted review with research memory (agent brief, hypothesis log, case study).
-- [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md) — the research memory object model and schema plan.
-- [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the v5 blind-spot model: review density, criticality potential, counterfactuals, unknown surfaces.
-- [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the v5 attention-allocation workflow (blind-spots → criticality-map → counterfactuals → research-pack).
-- [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the v6 evidence workflow (evidence-graph → interaction-matrix → unresolved-map → complete-review).
-- [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md) — classify every important surface into an evidence state.
-- [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) — the v7 scope-aware orchestration model (scope-map → scope-lanes → scope-tasks → scope-pack → evidence-judge → report-filter).
-- [`V7_WORKFLOW.md`](V7_WORKFLOW.md) — the v7 scope-aware workflow, including using V7 on a private scope.
-- [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md) — meaningful combinations of surfaces that may hide bugs.
-- [`SOLO_RESEARCH_WORKFLOW.md`](SOLO_RESEARCH_WORKFLOW.md) — reviewer onboarding and solo research.
-- [`LOCAL_VALIDATION.md`](LOCAL_VALIDATION.md) — collect local evidence around a finding.
+- [Public command surface](PUBLIC_SURFACE.md)
+- [Safety boundaries](SAFETY_BOUNDARIES.md)
+- [Protocol lens packs](PROTOCOL_LENS_PACKS.md)
+- [Fixed Credit Market lens](FIXED_CREDIT_MARKET_LENS.md)
+- [Schemas](SCHEMAS.md)
+- [Review map](REVIEW_MAP.md)
+- [Local validation](LOCAL_VALIDATION.md)
 
-## V7 release
+## Historical docs
 
-- [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md) — the v7 scope-aware orchestration model and safety boundary.
-- [`V7_WORKFLOW.md`](V7_WORKFLOW.md) — the end-to-end v7 workflow and the private-scope workflow.
-- [`SCOPE_MAP.md`](SCOPE_MAP.md) — parse a scope note into structured review rules.
-- [`SCOPE_TASKS.md`](SCOPE_TASKS.md) — review lanes and precise, testable scope tasks.
-- [`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md) — grade whether local tests prove the intended task.
-- [`REPORT_FILTER.md`](REPORT_FILTER.md) — classify candidates against scope before submission.
-- Release package: [`releases/V7_RELEASE_NOTES.md`](releases/V7_RELEASE_NOTES.md) and [`../release-notes/v7.0.0.md`](../release-notes/v7.0.0.md).
-
-## V7.5 release (protocol lens packs)
-
-- [`V7_5_PROTOCOL_LENS.md`](V7_5_PROTOCOL_LENS.md) — what protocol lenses are, the commands, and the generated pack.
-- [`FIXED_CREDIT_MARKET_LENS.md`](FIXED_CREDIT_MARKET_LENS.md) — the first lens: families, behavior promises, economic invariants, review lanes, temporal windows.
-- Release notes: [`../release-notes/v7.5.0.md`](../release-notes/v7.5.0.md).
-
-## V6 release
-
-- [`V6_WORKFLOW.md`](V6_WORKFLOW.md) — the end-to-end Evidence Graph + Interaction Matrix workflow.
-- [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md) — evidence nodes, evidence states, and evidence strength.
-- [`INTERACTION_MATRIX.md`](INTERACTION_MATRIX.md) — interaction classes and the transparent priority score.
-- [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md) — high-impact unresolved surfaces and interactions.
-- [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md) — the headline complete-review package.
-- Release package: [`releases/V6_RELEASE_NOTES.md`](releases/V6_RELEASE_NOTES.md) and [`../release-notes/v6.0.0.md`](../release-notes/v6.0.0.md).
-
-## V5 release
-
-- [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) — the Blind Spot Intelligence model and safety boundary.
-- [`V5_WORKFLOW.md`](V5_WORKFLOW.md) — the end-to-end v5 workflow.
-- Release package: [`releases/V5_RELEASE_NOTES.md`](releases/V5_RELEASE_NOTES.md) and [`../release-notes/v5.0.0.md`](../release-notes/v5.0.0.md).
-
-## V4 release
-
-- [`V4_STABLE_SCOPE.md`](V4_STABLE_SCOPE.md) — what V4 stabilizes (and what stays experimental).
-- [`V4_INFORMATION_ARCHITECTURE.md`](V4_INFORMATION_ARCHITECTURE.md) — how the public surface is organized.
-- [`PACKAGING.md`](PACKAGING.md) — installed vs source-tree commands.
-- Release package: [`releases/V4_RELEASE_NOTES.md`](releases/V4_RELEASE_NOTES.md) and [`releases/V4_RELEASE_CHECKLIST.md`](releases/V4_RELEASE_CHECKLIST.md).
-- Technical paper: [Read the Arkheionx v4 technical paper](papers/arkheionx-v4-technical-paper.md) ([PDF](papers/arkheionx-v4-technical-paper.pdf)) — see [`papers/README.md`](papers/README.md).
-
-## Advanced / project
-
-- [`PACKAGING.md`](PACKAGING.md) — installed vs source-tree commands.
-- [`REAL_PROTOCOL_PROOF_PLAN.md`](REAL_PROTOCOL_PROOF_PLAN.md) — how real-protocol proof will be earned.
-- [`REPO_IDENTITY_MIGRATION.md`](REPO_IDENTITY_MIGRATION.md) — the broad-public identity blocker and its fix.
-- [`FIXTURE_HARNESS.md`](FIXTURE_HARNESS.md) · [`FIXTURE_BENCHMARKS.md`](FIXTURE_BENCHMARKS.md) — deterministic fixture benchmarks.
-- [`ROADMAP.md`](ROADMAP.md) — direction, including planned (not shipped) work.
-- [`../CONTRIBUTING.md`](../CONTRIBUTING.md) · [`../SECURITY.md`](../SECURITY.md) — contribute and report.
-
-## Reference (long tail)
-
-The legacy pre-audit scanner, rule packs, schema references, and service/business
-materials remain available for teams that need them, but they are **not** the
-canonical first-run path:
-
-- Rule packs: [`VAULT_RULE_PACK.md`](VAULT_RULE_PACK.md), [`LENDING_RULE_PACK.md`](LENDING_RULE_PACK.md), [`AMM_RULE_PACK.md`](AMM_RULE_PACK.md), [`ORACLE_RULE_PACK.md`](ORACLE_RULE_PACK.md).
-- Schema/output references: [`SCHEMA_REFERENCE.md`](SCHEMA_REFERENCE.md), [`OUTPUT_ARTIFACTS.md`](OUTPUT_ARTIFACTS.md), [`SARIF_OUTPUT.md`](SARIF_OUTPUT.md).
-- Legacy scanner & CI: [`GITHUB_ACTION_USAGE.md`](GITHUB_ACTION_USAGE.md), [`PRE_AUDIT_SPRINT_WORKFLOW.md`](PRE_AUDIT_SPRINT_WORKFLOW.md).
-- Case studies: [`CASE_STUDY_SAMPLE.md`](CASE_STUDY_SAMPLE.md) and the `case-studies/` directory.
-
-Other documents in this directory are deeper references; the curated paths above
-are the recommended entry points.
+Historical version notes, launch docs, marketing drafts, private notes, and old workflow references are not the current public entry point. Preserved material lives in [`archive/`](archive/) where it has been moved, or remains in place when tests and release gates still assert an old path.

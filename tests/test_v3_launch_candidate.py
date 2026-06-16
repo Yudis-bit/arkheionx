@@ -34,11 +34,11 @@ class VersionMetadataTests(unittest.TestCase):
             __version__,
         )
 
-        self.assertEqual(__version__, "8.0.1")
-        self.assertEqual(PACKAGE_VERSION, "8.0.1")
+        self.assertEqual(__version__, "10.1.0.dev0")
+        self.assertEqual(PACKAGE_VERSION, "10.1.0.dev0")
         self.assertEqual(STABLE_RELEASE, "v8.0.1")
-        self.assertEqual(CURRENT_MILESTONE, "v8.0.1")
-        self.assertEqual(NEXT_MILESTONE, "v8.1.0")
+        self.assertEqual(CURRENT_MILESTONE, "v10.1.0-dev")
+        self.assertEqual(NEXT_MILESTONE, "v10.1.0")
 
 
 class ReadmeSurfaceTests(unittest.TestCase):
@@ -46,11 +46,10 @@ class ReadmeSurfaceTests(unittest.TestCase):
         self.readme = read("README.md")
 
     def test_clean_product_positioning(self) -> None:
-        self.assertIn("# Arkheionx", self.readme)
-        self.assertIn(
-            "Local-first Ethereum security research workflow for Solidity and DeFi repositories.",
-            self.readme,
-        )
+        self.assertIn("# ArkheionX", self.readme)
+        self.assertIn("Local-first review infrastructure for smart contract security.", self.readme)
+        self.assertIn("It does not replace auditors.", self.readme)
+        self.assertIn("It gives auditors a better map.", self.readme)
         self.assertIn("Latest stable release: **v8.0.1", self.readme)
         # Legacy launch soup must be gone from the current product surface.
         for legacy in [
@@ -84,10 +83,11 @@ class DocsTests(unittest.TestCase):
 
     def test_roadmap_marks_current_and_history(self) -> None:
         roadmap = read("docs/ROADMAP.md")
-        self.assertIn("Current milestone: v8.0.1", roadmap)
-        self.assertIn("Next milestone: v8.1.0", roadmap)
+        self.assertIn("Current milestone: v10.1.0-dev.", roadmap)
+        self.assertIn("Next milestone: v10.1.0.", roadmap)
         self.assertIn("Latest stable: v8.0.1", roadmap)
         self.assertIn("v3.1.0 — Protocol Review Map", roadmap)
+        self.assertIn("v10.1.0-dev — current development milestone in this checkout.", roadmap)
 
     def test_release_notes_exist_with_required_sections(self) -> None:
         notes = read("release-notes/v3.0.0.md")
@@ -104,7 +104,7 @@ class StableTagTests(unittest.TestCase):
     def test_install_and_arkup_track_stable(self) -> None:
         for script in ("install.sh", "arkup"):
             self.assertIn("ARKHEIONX_STABLE_TAG:-v8.0.1", read(script))
-        self.assertIn("pre-audit@v8.0.1", read("README.md"))
+        self.assertIn("pre-audit@v8.0.1", read("docs/GITHUB_ACTION_USAGE.md"))
 
 
 if __name__ == "__main__":

@@ -7,8 +7,8 @@ Honest, current state of each VM family.
 | VM | Runtime | Status | Test command | CI | Notes |
 |---|---|---|---|---|---|
 | EVM | Foundry | Supported | `forge test` (from `EVM/`) | `evm.yml` | All currently merged PoCs are EVM. |
-| SVM | Anchor / Solana CLI | Template | `anchor test` (from `SVM/`) | not wired | Single empty test stub. No real PoC yet. |
-| MoveVM | Aptos CLI | Template | `aptos move test` (from `MoveVM/`) | not wired | Single empty entry function. No real PoC yet. |
+| SVM | Anchor / Solana CLI | Template | `anchor test` (from `SVM/`) | not wired | Single empty validation stub. No real fixture yet. |
+| MoveVM | Aptos CLI | Template | `aptos move test` (from `MoveVM/`) | not wired | Single empty entry function. No real fixture yet. |
 
 Status values:
 
@@ -34,7 +34,7 @@ EVM is the only VM that ships real, runnable PoCs today.
 
 - Source of truth: `SVM/`
 - Configuration: `SVM/Anchor.toml`
-- Test stub: `SVM/tests/exploit.ts` (empty; no `expect` calls)
+- Test stub: `SVM/tests/exploit.ts` (legacy placeholder name; empty; no `expect` calls)
 - No on-chain program, no real exploit logic.
 
 The directory exists so future PoCs have a place to land. **Do not interpret
@@ -47,7 +47,7 @@ If you want to contribute the first real SVM PoC, start by reading
 
 - Source of truth: `MoveVM/`
 - Configuration: `MoveVM/Move.toml` (Aptos framework, mainnet branch)
-- Source stub: `MoveVM/sources/exploit.move` (empty entry function)
+- Source stub: `MoveVM/sources/exploit.move` (legacy placeholder name; empty entry function)
 - No real exploit logic.
 
 Same caveat as SVM: the directory is scaffolding, not a claim of coverage.

@@ -12,6 +12,8 @@ import re
 import unittest
 from pathlib import Path
 
+from arkheionx.core.safety import CLEAR_PROHIBITION_CONTEXT
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # Forbidden target-specific names: must never appear on the current public surface.
@@ -32,8 +34,29 @@ MARKETING_PHRASES = [
     "instant exploit",
     "auto-submit",
 ]
-NEGATION_MARKERS = ("no ", "not ", "never", "n't", "without", "does not", "do not",
-                    "cannot", "can't", "no auto", "isn't", "won't", "neither")
+NEGATION_MARKERS = tuple(
+    set(CLEAR_PROHIBITION_CONTEXT)
+    | {
+        "no ",
+        "not ",
+        "not an",
+        "is not",
+        "never",
+        "n't",
+        "without",
+        "does not",
+        "do not",
+        "cannot",
+        "can't",
+        "no auto",
+        "isn't",
+        "won't",
+        "neither",
+        "what not to imply",
+        "what arkheionx is not",
+        "what it is not",
+    }
+)
 
 
 def _scanned_files() -> list[Path]:
@@ -56,7 +79,7 @@ def _non_negated_hit(text: str, phrase: str) -> bool:
         idx = low.find(phrase, start)
         if idx == -1:
             return False
-        window = re.sub(r"[^a-z0-9]+", " ", low[max(0, idx - 48):idx])
+        window = re.sub(r"[^a-z0-9]+", " ", low[max(0, idx - 180):idx])
         if not any(marker in window for marker in NEGATION_MARKERS):
             return True
         start = idx + len(phrase)

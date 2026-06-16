@@ -14,9 +14,14 @@ artifacts/arkheionx/
 .arkheionx/private/
 .arkheionx/runs/
 .arkheionx/lens-pack/
+
+# Local agent state
+.codex/
+.agents/
+
 __pycache__/
 **/__pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -29,11 +34,18 @@ dist/
 !.env.example
 .DS_Store
 POST_DRAFT.txt
+full-tree.txt
+repo-tree.txt
 assets/
 !docs/assets/
 !docs/assets/**
 !README.md
 !WRITEUP.md
+
+# Site build output and dependencies
+site/dist/
+site/node_modules/
+site/.astro/
 
 # Local reference clones (e.g. SunWeb3Sec/DeFiHackLabs) used by
 # scripts/poc_factory.py. Never tracked.
@@ -45,4 +57,11 @@ EVM/cache/
 out/
 cache/
 broadcast/
-artifacts/
+
+# Generated artifact directories remain local/build output by default.
+**/artifacts/
+
+# Keep only the root boundary README trackable.
+!/artifacts/
+/artifacts/*
+!/artifacts/README.md

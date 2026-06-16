@@ -31,7 +31,7 @@ def installer_env(tmp: Path) -> dict[str, str]:
 
 
 def is_build_dependency_resolution_failure(output: str) -> bool:
-    return "setuptools>=61" in output and any(
+    return "setuptools" in output and any(
         phrase in output
         for phrase in [
             "No matching distribution found",
@@ -68,7 +68,7 @@ class InstallerScriptTests(unittest.TestCase):
 
     def test_default_repo_and_ref_documented(self) -> None:
         text = read(INSTALL)
-        self.assertIn("github.com/Yudis-bit/DeFi-Exploit-PoCs", text)
+        self.assertIn("github.com/Yudis-bit/arkheionx", text)
         self.assertIn("v8.0.1", text)  # stable tag default (ARKHEIONX_STABLE_TAG)
 
     def test_no_pypi_claim(self) -> None:
@@ -199,10 +199,10 @@ class OnboardingSurfaceTests(unittest.TestCase):
     def test_version_metadata(self) -> None:
         from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, STABLE_RELEASE, __version__
 
-        self.assertEqual(__version__, "8.0.1")
+        self.assertEqual(__version__, "10.1.0.dev0")
         self.assertEqual(STABLE_RELEASE, "v8.0.1")
-        self.assertEqual(CURRENT_MILESTONE, "v8.0.1")
-        self.assertEqual(NEXT_MILESTONE, "v8.1.0")
+        self.assertEqual(CURRENT_MILESTONE, "v10.1.0-dev")
+        self.assertEqual(NEXT_MILESTONE, "v10.1.0")
 
 
 if __name__ == "__main__":

@@ -119,7 +119,7 @@ arkheionx case-study .        # write the research-session memory
 
 `confirmed` is never set by ArkheionX. Only a human sets it, and only with
 independent local proof. See
-[`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) and
+[`V4_1_RESEARCH_WORKFLOW.md`](archive/versions/V4_1_RESEARCH_WORKFLOW.md) and
 [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md).
 
 ## Prioritize with Blind Spot Intelligence (v5)
@@ -142,7 +142,7 @@ tests, then record results in `hypothesis-log`. Hand `research-pack`'s
 Blind spot candidates are not vulnerabilities and criticality potential is not
 severity. They allocate attention; a human still makes every call. See
 [`BLIND_SPOT_INTELLIGENCE.md`](BLIND_SPOT_INTELLIGENCE.md) and
-[`V5_WORKFLOW.md`](V5_WORKFLOW.md).
+[`V5_WORKFLOW.md`](archive/versions/V5_WORKFLOW.md).
 
 ## What good ArkheionX bounty output looks like
 
@@ -178,7 +178,7 @@ deliberately **not** listed — the map tracks observed coverage, not guesses.
 
 ## Related
 
-- [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md) — AI-assisted research memory workflow.
+- [`V4_1_RESEARCH_WORKFLOW.md`](archive/versions/V4_1_RESEARCH_WORKFLOW.md) — AI-assisted research memory workflow.
 - [`RESEARCH_MEMORY_MODEL.md`](RESEARCH_MEMORY_MODEL.md) — the research memory object model.
 - [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md) — what each output section means.
 - [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) — the boundaries.
@@ -203,7 +203,7 @@ tests for the unresolved surfaces and interactions, and record the outcome. A
 `confirmed-candidate` is **not** a confirmed vulnerability and an interaction
 priority is **not** a severity — do not submit either as a finding. Validate
 manually, keep it local, and only review repositories you are authorized to
-review. See [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+review. See [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).
 
 ## Scope-aware contest triage (v7)
 
@@ -229,6 +229,6 @@ confirm vulnerabilities; candidate-with-evidence is not a confirmed vulnerabilit
 `report-filter` classifies each candidate against the scope before you spend a
 submission, and is not final triage. Keep private scope notes in local, gitignored
 files under `.arkheionx/private/`; a built-in leak guard keeps target names out of
-public files. See [`V7_WORKFLOW.md`](V7_WORKFLOW.md) and
+public files. See [`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md) and
 [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md). A human always makes the final
 call.

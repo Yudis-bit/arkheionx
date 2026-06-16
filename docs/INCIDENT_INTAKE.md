@@ -74,7 +74,7 @@ between the incident and now, capture that in `notes`.
 
 ## Stage 5: PoC creation
 
-Copy `EVM/templates/ExploitTemplate.t.sol` to
+Copy the legacy validation fixture template at `EVM/templates/ExploitTemplate.t.sol` to
 `EVM/test/<YYYY-MM>/Exploit_<YYYY-MM>.t.sol` (or the protocol-named
 pattern for newer entries). Implement:
 

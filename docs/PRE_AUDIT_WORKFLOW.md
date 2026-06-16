@@ -51,7 +51,7 @@ arkheionx hypothesis-log .
 arkheionx case-study .
 ```
 
-See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md).
+See [`V4_1_RESEARCH_WORKFLOW.md`](archive/versions/V4_1_RESEARCH_WORKFLOW.md).
 
 ## What this gives the reviewer
 
@@ -73,5 +73,5 @@ See [`V4_1_RESEARCH_WORKFLOW.md`](V4_1_RESEARCH_WORKFLOW.md).
 - [`TRY_IN_5_MINUTES.md`](TRY_IN_5_MINUTES.md) — first run.
 - [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md) — what the output means.
 - [`BUG_BOUNTY_WORKFLOW.md`](BUG_BOUNTY_WORKFLOW.md) — the triage variant.
-- [`V4_STABLE_SCOPE.md`](V4_STABLE_SCOPE.md) — what is stable in V4.
+- [`V4_STABLE_SCOPE.md`](archive/versions/V4_STABLE_SCOPE.md) — what is stable in V4.
 - [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md) — the boundaries.

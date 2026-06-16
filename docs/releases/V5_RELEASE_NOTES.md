@@ -94,7 +94,7 @@ unit-test suite, `make validate`, the package build (`python -m build` +
 ## 11. Documentation
 
 - [`../BLIND_SPOT_INTELLIGENCE.md`](../BLIND_SPOT_INTELLIGENCE.md) — the model.
-- [`../V5_WORKFLOW.md`](../V5_WORKFLOW.md) — the end-to-end workflow.
+- [`../V5_WORKFLOW.md`](../archive/versions/V5_WORKFLOW.md) — the end-to-end workflow.
 - [`../CLI_REFERENCE.md`](../CLI_REFERENCE.md) — command reference.
 - [`../BUG_BOUNTY_WORKFLOW.md`](../BUG_BOUNTY_WORKFLOW.md) — bounty triage flow.
 

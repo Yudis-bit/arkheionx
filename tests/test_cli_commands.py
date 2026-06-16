@@ -22,10 +22,10 @@ class CliCommandTests(unittest.TestCase):
             result = self.run_cli(*args)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         version = self.run_cli("version")
-        self.assertIn("package version: 8.0.1", version.stdout)
+        self.assertIn("package version: 10.1.0.dev0", version.stdout)
         self.assertIn("Latest stable release: v8.0.1", version.stdout)
-        self.assertIn("Current milestone: v8.0.1", version.stdout)
-        self.assertIn("Next milestone: v8.1.0", version.stdout)
+        self.assertIn("Current milestone: v10.1.0-dev", version.stdout)
+        self.assertIn("Next milestone: v10.1.0", version.stdout)
         doctor = self.run_cli("doctor")
         self.assertIn("LOCAL / STATIC", doctor.stdout)
         self.assertIn("Safety", doctor.stdout)
@@ -44,7 +44,7 @@ class CliCommandTests(unittest.TestCase):
     def test_version_includes_package_version_and_next_step(self) -> None:
         result = self.run_cli("version")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("package version: 8.0.1", result.stdout)
+        self.assertIn("package version: 10.1.0.dev0", result.stdout)
         self.assertIn("Next", result.stdout)
         self.assertIn("arkheionx doctor", result.stdout)
 
@@ -113,13 +113,13 @@ class CliCommandTests(unittest.TestCase):
 
     def test_cli_docs_exist(self) -> None:
         for path in [
-            "docs/CLI_CANDIDATE.md",
-            "docs/CLI_COMMANDS.md",
-            "docs/CLI_MIGRATION_TO_V2.md",
+            "docs/archive/legacy-workflows/CLI_CANDIDATE.md",
+            "docs/archive/legacy-workflows/CLI_COMMANDS.md",
+            "docs/archive/legacy-workflows/CLI_MIGRATION_TO_V2.md",
         ]:
             text = (REPO_ROOT / path).read_text(encoding="utf-8")
             self.assertIn("CLI", text)
-        commands = (REPO_ROOT / "docs/CLI_COMMANDS.md").read_text(encoding="utf-8")
+        commands = (REPO_ROOT / "docs/archive/legacy-workflows/CLI_COMMANDS.md").read_text(encoding="utf-8")
         self.assertIn("validate-config", commands)
         self.assertIn("test-plan", commands)
 

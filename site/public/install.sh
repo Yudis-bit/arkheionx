@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ArkheionX official source installer
 # Website: https://arkheionx.dev
-# Source:  https://github.com/Yudis-bit/DeFi-Exploit-PoCs
+# Source:  https://github.com/Yudis-bit/arkheionx
 #
 # Recommended first-use path:
 #   curl -fsSL https://arkheionx.dev/install.sh -o arkheionx-install.sh
@@ -26,7 +26,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/Yudis-bit/DeFi-Exploit-PoCs.git"
+REPO_URL="https://github.com/Yudis-bit/arkheionx.git"
 BRANCH="main"
 ARKHEIONX_HOME="${ARKHEIONX_HOME:-$HOME/.arkheionx}"
 SRC_DIR="$ARKHEIONX_HOME/src"

@@ -58,7 +58,7 @@ If fewer topics are preferred, use: `arkheionx`, `defi-security`,
 Recommended website/resource field:
 
 ```text
-https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme
+https://github.com/Yudis-bit/arkheionx#readme
 ```
 
 ## Optional GitHub CLI Commands
@@ -67,11 +67,11 @@ Do not run these from automation unless the maintainer explicitly chooses to
 update repository metadata. They require authenticated `gh` CLI access.
 
 ```sh
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs \
+gh repo edit Yudis-bit/arkheionx \
   --description "Foundry-style local security workbench for DeFi protocol mapping, money-flow analysis, proof/trace evidence, and report drafting." \
-  --homepage "https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme"
+  --homepage "https://github.com/Yudis-bit/arkheionx#readme"
 
-gh repo edit Yudis-bit/DeFi-Exploit-PoCs \
+gh repo edit Yudis-bit/arkheionx \
   --add-topic arkheionx --add-topic defi-security \
   --add-topic smart-contract-security --add-topic foundry \
   --add-topic solidity --add-topic security-tools \

@@ -468,7 +468,7 @@ this is documented behavior, not a crash.
 
 ## Appendix B: Further reading
 
-- [V4 stable scope](../V4_STABLE_SCOPE.md)
+- [V4 stable scope](../archive/versions/V4_STABLE_SCOPE.md)
 - [CLI reference](../CLI_REFERENCE.md)
 - [Review map model](../REVIEW_MAP.md)
 - [What Arkheionx is not](../WHAT_ARKHEIONX_IS_NOT.md)

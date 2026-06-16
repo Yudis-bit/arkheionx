@@ -50,4 +50,4 @@ arkheionx scope-tasks examples/scope-fixture --scope-file examples/scope-fixture
 ```
 
 See [`SCOPE_ORCHESTRATION.md`](SCOPE_ORCHESTRATION.md),
-[`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md), and [`V7_WORKFLOW.md`](V7_WORKFLOW.md).
+[`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md), and [`V7_WORKFLOW.md`](archive/versions/V7_WORKFLOW.md).

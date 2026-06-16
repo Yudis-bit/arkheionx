@@ -1,74 +1,70 @@
-# Core workflow — `arkheionx review`
+# Core Review Workflow
 
-`arkheionx review` is the primary, "start here" command. It turns a local
-repository (plus an optional scope note and an optional generic protocol-family
-lens) into one review pack: numbered human-readable Markdown plus machine-readable
-`review.json` and `manifest.json`.
+`arkheionx review` is the primary public workflow.
+
+It turns a local repository, an optional scope note, and an optional protocol-family lens into one review pack: Markdown for humans and JSON for tools.
 
 ```bash
-# One-command review pack:
 arkheionx review . --scope-file scope.md --out .arkheionx/review
-
-# Protocol-aware deep dive (adds lens artifacts):
 arkheionx review . --scope-file scope.md --lens fixed-credit-market --out .arkheionx/review
 ```
 
-The pipeline:
+## Pipeline
 
-> scope → value flow → interaction map → assumptions → review lanes → evidence tasks → evidence rubric → report filter → human review
+```text
+scope -> value flow -> interaction map -> assumptions -> review lanes -> evidence tasks -> evidence rubric -> report filter -> human review
+```
 
-`arkheionx review` orchestrates the existing layers (the review map, scope-aware
-orchestration, and — when `--lens` is given — a protocol lens). It adds no new
-analysis and makes no vulnerability or severity claim.
+ArkheionX does not make a vulnerability claim at any step in this pipeline. It builds context for a human reviewer.
 
 ## What the pack contains
 
-Core artifacts (always written):
+Core artifacts:
 
-- `00-run-context.md` — version, repo, scope, lens, counts, read order, exit codes.
-- `01-scope-map.md` — the scope turned into structured review rules.
-- `02-value-flow-map.md` — where value enters, moves, and exits.
-- `03-interaction-map.md` — cross-contract and external-call interactions.
-- `04-assumptions.md` — the trust each value path appears to rely on.
-- `05-review-lanes.md` — review lanes selected for this scope (review order, not severity).
-- `06-evidence-tasks.md` — precise, bounded tasks, each with a **kill condition**.
-- `07-evidence-rubric.md` — how local-test evidence is graded.
-- `08-report-filter.md` — how candidates are classified before submission.
-- `09-agent-input.md` — model-agnostic instructions for an AI-assisted reviewer.
-- `review.json` — the consolidated machine-readable pack (see [`SCHEMAS.md`](SCHEMAS.md)).
-- `manifest.json` — the pack manifest (counts, safety flags, exit-code semantics).
+| artifact | purpose |
+|---|---|
+| `00-run-context.md` | Version, repo, scope, lens, counts, read order, and boundary notes. |
+| `01-scope-map.md` | Scope rules converted into structured review context. |
+| `02-value-flow-map.md` | Where value appears to enter, move, and exit. |
+| `03-interaction-map.md` | Cross-contract and external-call interaction surfaces. |
+| `04-assumptions.md` | Trust assumptions guarding value paths. |
+| `05-review-lanes.md` | Ordered review lanes. Review order is not severity. |
+| `06-evidence-tasks.md` | Bounded evidence tasks with kill conditions. |
+| `07-evidence-rubric.md` | How to judge whether local evidence supports the task. |
+| `08-report-filter.md` | Pre-report classification for weak, out-of-scope, duplicate-prone, or under-proven candidates. |
+| `09-agent-input.md` | Model-agnostic context for AI-assisted review. |
+| `review.json` | Consolidated machine-readable review pack. |
+| `manifest.json` | Pack manifest, counts, safety flags, and artifact metadata. |
 
-With `--lens`, the pack also includes `10-protocol-model.md`,
-`11-behavior-promises.md`, `12-economic-invariants.md`, `13-temporal-windows.md`,
-`14-lens-review-lanes.md`, and `15-lens-evidence-tasks.md`. See
-[`PROTOCOL_LENS_PACKS.md`](PROTOCOL_LENS_PACKS.md).
+With a lens, the pack adds protocol-family context such as behavior promises, economic invariants, temporal windows, lens review lanes, and lens evidence tasks.
 
 ## Kill conditions
 
-Every evidence task carries a **kill condition**: the practical signal that the
-hypothesis is dead and should be abandoned (the invariant holds for realistic
-actors, the path is out of scope / known / accepted / trusted-role-only, or there
-is no material impact). Kill conditions exist so a reviewer or agent stops a weak
-hypothesis quickly.
+Evidence tasks include kill conditions so weak hypotheses can be dropped quickly.
 
-## Then what
+Examples:
 
-1. Read `00-run-context.md`, then `01-scope-map.md` and `04-assumptions.md`.
-2. Give `09-agent-input.md` plus `06-evidence-tasks.md` to a reviewer or agent.
-3. Write local Foundry tests; grade them with `07-evidence-rubric.md`
-   ([`EVIDENCE_JUDGE.md`](EVIDENCE_JUDGE.md)).
-4. Classify candidates with `08-report-filter.md` ([`REPORT_FILTER.md`](REPORT_FILTER.md)).
-5. A human makes the security call.
+- the path is out of scope;
+- a trusted-role assumption fully explains the behavior;
+- the invariant holds under realistic local tests;
+- impact is not material;
+- the candidate duplicates known/accepted behavior;
+- required evidence cannot be produced.
 
-## Exit codes
+Killing weak hypotheses is a feature. It prevents noisy report writing.
 
-See [`SAFETY_BOUNDARIES.md`](SAFETY_BOUNDARIES.md#exit-codes) and
-[`CLI_REFERENCE.md`](CLI_REFERENCE.md). Analysis commands may return `1` when the
-output is heuristic and needs human review — a warning-style code, not a crash.
+## Human workflow
+
+1. Read `00-run-context.md`.
+2. Review scope and assumptions.
+3. Follow the highest-value review lanes.
+4. Write or run local tests for the evidence tasks.
+5. Record whether the evidence supports, rejects, or fails to prove the hypothesis.
+6. Use the report filter before writing a report candidate.
+7. Let a human reviewer decide severity and reportability.
 
 ## Boundary
 
-Local/static only. No RPC, no live-chain scanning, no exploit automation, no
-auto-submit. A review pack is a planning artifact, not a finding. A review lane is
-not a vulnerability. Evidence quality is not vulnerability validity. Human review is
-required.
+The review pack is a planning artifact. It is not a finding, audit result, proof of safety, severity assignment, or endorsement.
+
+See [`INTERPRET_RESULTS.md`](INTERPRET_RESULTS.md), [`OUTPUT_ARTIFACTS.md`](OUTPUT_ARTIFACTS.md), and [`EVIDENCE_PACKAGE.md`](EVIDENCE_PACKAGE.md).

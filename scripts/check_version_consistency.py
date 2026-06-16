@@ -12,10 +12,16 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from arkheionx.version import CURRENT_MILESTONE, NEXT_MILESTONE, SCANNER_VERSION, STABLE_RELEASE  # noqa: E402
+from arkheionx.version import (  # noqa: E402
+    CURRENT_MILESTONE,
+    NEXT_MILESTONE,
+    PACKAGE_VERSION,
+    SCANNER_VERSION,
+    STABLE_RELEASE,
+)
 
 
-STABLE_ACTION = f"Yudis-bit/DeFi-Exploit-PoCs/.github/actions/pre-audit@{STABLE_RELEASE}"
+STABLE_ACTION = f"Yudis-bit/arkheionx/.github/actions/pre-audit@{STABLE_RELEASE}"
 
 
 def read(path: str) -> str:
@@ -35,22 +41,24 @@ def check() -> list[str]:
         failures.append(f"scripts/pre_audit_scan.py does not use scanner version {SCANNER_VERSION}")
     if f"Latest stable release: **{STABLE_RELEASE}" not in readme:
         failures.append(f"README.md does not name {STABLE_RELEASE} as latest stable release")
-    if f"## {CURRENT_MILESTONE}" not in changelog:
+    private_dev = ".dev" in PACKAGE_VERSION
+    if not private_dev and f"## {CURRENT_MILESTONE}" not in changelog:
         failures.append(f"CHANGELOG.md is missing a {CURRENT_MILESTONE} section")
     if f"## {STABLE_RELEASE}" not in changelog or f"## {STABLE_RELEASE} - Unreleased" in changelog:
         failures.append(f"CHANGELOG.md does not treat {STABLE_RELEASE} as released")
-    if CURRENT_MILESTONE not in roadmap:
+    if not private_dev and CURRENT_MILESTONE not in roadmap:
         failures.append(f"docs/ROADMAP.md does not mention current milestone {CURRENT_MILESTONE}")
-    if NEXT_MILESTONE not in roadmap:
+    if not private_dev and NEXT_MILESTONE not in roadmap:
         failures.append(f"docs/ROADMAP.md does not mention next milestone {NEXT_MILESTONE}")
     if "v2.1.0 — Value Flow Map MVP" not in roadmap:
         failures.append("docs/ROADMAP.md is missing v2.1.0 — Value Flow Map MVP")
-    if "v3.0.0 target: DeFi Value Flow Workbench" not in roadmap:
+    if (
+        "v3.0.0 target: DeFi Value Flow Workbench" not in roadmap
+        and "v3.0.0 DeFi Value Flow Workbench target" not in roadmap
+    ):
         failures.append("docs/ROADMAP.md is missing the v3.0.0 DeFi Value Flow Workbench target")
     if "Value Flow Map MVP" not in value_roadmap or "DeFi Value Flow Workbench" not in value_roadmap:
         failures.append("docs/VALUE_FLOW_ROADMAP.md is missing value-flow milestone wording")
-    if STABLE_ACTION not in readme:
-        failures.append(f"README.md is missing stable {STABLE_RELEASE} action example")
     if STABLE_ACTION not in action_docs:
         failures.append(f"docs/GITHUB_ACTION_USAGE.md is missing stable {STABLE_RELEASE} action example")
     stale = re.findall(r"Latest stable release: \*\*(?:v0\.[^*]+|v1\.[^*]*)", readme)

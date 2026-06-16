@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkheionx V9 Universal Hunter Manifest",
+  "description": "Machine-readable manifest.json for a V9 `arkheionx hunter` run. Records the command, version, branch, timestamp, input paths, RPC mode, masked endpoint, known-corpus quality, source-recovery status, the artifact list, the safety guarantees, and that human review is required. Local-only; never pushed or written remotely.",
+  "type": "object",
+  "required": [
+    "schema_version", "artifact_type", "arkheionx_version", "command", "generated_at",
+    "repo_path", "input_paths", "rpc_mode", "rpc_endpoint_masked", "known_corpus_quality",
+    "source_recovery_status", "artifact_count", "artifact_paths", "safety_flags",
+    "safety_boundaries", "human_review_required", "local_only", "no_push", "no_remote_write"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["v9-universal-hunter"]},
+    "artifact_type": {"type": "string", "enum": ["hunter_manifest"]},
+    "arkheionx_version": {"type": "string"},
+    "command": {"type": "string", "enum": ["hunter"]},
+    "branch": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "repo_path": {"type": "string"},
+    "input_paths": {
+      "type": "object",
+      "properties": {
+        "scope_file": {"type": "string"},
+        "known_path": {"type": "string"},
+        "audits_path": {"type": "string"},
+        "addresses_file": {"type": "string"},
+        "source_dir": {"type": "string"},
+        "baseline_ref": {"type": "string"},
+        "since_date": {"type": "string"},
+        "audit_date": {"type": "string"}
+      }
+    },
+    "rpc_mode": {"type": "string", "enum": ["RPC_NOT_PROVIDED", "READ_ONLY_RPC_ENABLED", "RPC_CHECK_FAILED"]},
+    "rpc_endpoint_masked": {"type": "string"},
+    "known_corpus_quality": {"type": "string", "enum": ["DEDUP_BLIND", "DEDUP_PARTIAL", "DEDUP_USABLE", "DEDUP_STRONG"]},
+    "source_recovery_status": {"type": "string"},
+    "artifact_count": {"type": "integer"},
+    "artifact_paths": {"type": "array", "items": {"type": "string"}},
+    "safety_flags": {"type": "object"},
+    "safety_boundaries": {"type": "array", "items": {"type": "string"}},
+    "human_review_required": {"type": "boolean", "enum": [true]},
+    "local_only": {"type": "boolean", "enum": [true]},
+    "no_push": {"type": "boolean", "enum": [true]},
+    "no_remote_write": {"type": "boolean", "enum": [true]}
+  }
+}

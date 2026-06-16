@@ -101,4 +101,4 @@ required.
 ## Related
 
 - [`EVIDENCE_GRAPH.md`](EVIDENCE_GRAPH.md), [`UNRESOLVED_MAP.md`](UNRESOLVED_MAP.md),
-  [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md), [`V6_WORKFLOW.md`](V6_WORKFLOW.md).
+  [`COMPLETE_REVIEW.md`](COMPLETE_REVIEW.md), [`V6_WORKFLOW.md`](archive/versions/V6_WORKFLOW.md).

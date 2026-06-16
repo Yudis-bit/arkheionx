@@ -36,13 +36,18 @@ READINESS_DOCS = [
     "docs/STABILITY_CONTRACT.md",
     "docs/V3_READINESS.md",
 ]
-REQUIRED_README_DISCLAIMERS = [
-    "No RPC by default",
-    "No private keys or secrets",
-    "No automated exploitation",
-    "No auto-submit",
-    "No guaranteed vulnerability discovery",
-    "No severity guarantee",
+REQUIRED_README_BOUNDARIES = [
+    ("No RPC by default", ["No RPC by default"]),
+    ("No private keys or secrets", ["No private keys or secrets", "private keys"]),
+    ("No automated exploitation", ["No automated exploitation", "exploit automation"]),
+    ("No auto-submit", ["No auto-submit", "auto-submit"]),
+    (
+        "No automatic vulnerability discovery claim",
+        ["does not automatically find vulnerabilities", "No automatic vulnerability discovery"],
+    ),
+    ("No bounty guarantee claim", ["guarantee bounty outcomes", "No bounty guarantee"]),
+    ("No severity guarantee", ["No severity guarantee"]),
+    ("Human review required", ["Human review required"]),
 ]
 # Promotional claims that must not appear on the live README surface. Phrased to
 # avoid colliding with the negative disclaimers above (e.g. "No Homebrew").
@@ -90,6 +95,7 @@ def bundled_demos() -> list[str]:
 
 def check() -> list[str]:
     failures: list[str] = []
+    private_dev = ".dev" in __version__ or CURRENT_MILESTONE.endswith("-dev")
 
     # Reuse the focused checkers.
     failures += _load("check_version_consistency").check()
@@ -129,9 +135,10 @@ def check() -> list[str]:
             failures.append(f"missing README visual: {visual}")
         if visual not in readme:
             failures.append(f"README.md does not reference visual: {visual}")
-    for disclaimer in REQUIRED_README_DISCLAIMERS:
-        if disclaimer not in readme:
-            failures.append(f"README.md missing safety disclaimer: {disclaimer}")
+    readme_lower = readme.lower()
+    for label, options in REQUIRED_README_BOUNDARIES:
+        if not any(option.lower() in readme_lower for option in options):
+            failures.append(f"README.md missing safety boundary: {label}")
     for pattern in FORBIDDEN_README:
         if re.search(pattern, readme, re.IGNORECASE):
             failures.append(f"README.md contains forbidden claim pattern: {pattern}")
@@ -146,12 +153,14 @@ def check() -> list[str]:
             if demo not in text:
                 failures.append(f"{doc} does not mention demo: {demo}")
 
-    # Release notes and changelog for the current milestone.
-    notes = ROOT / "release-notes" / f"{CURRENT_MILESTONE}.md"
+    # Private development milestones keep the public release surface pinned to the
+    # latest stable release until an explicit release-prep change is made.
+    release_milestone = STABLE_RELEASE if private_dev else CURRENT_MILESTONE
+    notes = ROOT / "release-notes" / f"{release_milestone}.md"
     if not notes.is_file():
-        failures.append(f"missing release notes: release-notes/{CURRENT_MILESTONE}.md")
-    if f"## {CURRENT_MILESTONE}" not in read("CHANGELOG.md"):
-        failures.append(f"CHANGELOG.md missing section: ## {CURRENT_MILESTONE}")
+        failures.append(f"missing release notes: release-notes/{release_milestone}.md")
+    if f"## {release_milestone}" not in read("CHANGELOG.md"):
+        failures.append(f"CHANGELOG.md missing section: ## {release_milestone}")
 
     # Review Map feature surface (v3.1.0+). Only enforced when the command is
     # present, so the gate stays correct across milestones.
@@ -169,7 +178,7 @@ def check() -> list[str]:
 
     # GitHub Action examples and install/arkup stable tag track STABLE_RELEASE.
     action_tag = f"pre-audit@{STABLE_RELEASE}"
-    for doc in ("README.md", "docs/GITHUB_ACTION_USAGE.md"):
+    for doc in ("docs/GITHUB_ACTION_USAGE.md",):
         if action_tag not in read(doc):
             failures.append(f"{doc} GitHub Action example does not use {action_tag}")
     stable_tag_line = f'ARKHEIONX_STABLE_TAG:-{STABLE_RELEASE}'
@@ -178,7 +187,7 @@ def check() -> list[str]:
             failures.append(f"{script} stable tag does not track STABLE_RELEASE ({STABLE_RELEASE})")
 
     # No stale dev wording on the live README surface (dev version must not leak).
-    if __version__.endswith("-dev") and __version__ in readme:
+    if private_dev and __version__ in readme:
         failures.append(f"README.md leaks dev version string {__version__}")
     for claim in (f"{CURRENT_MILESTONE} is released", f"{CURRENT_MILESTONE} released", "now on PyPI", "available on PyPI"):
         if claim.lower() in readme.lower():

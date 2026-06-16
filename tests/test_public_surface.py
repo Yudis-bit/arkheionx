@@ -17,27 +17,29 @@ class PublicSurfaceTests(unittest.TestCase):
 
     def test_readme_front_page_positioning(self) -> None:
         readme = self.read("README.md")
-        self.assertIn("# Arkheionx", readme)
-        self.assertIn(
-            "Local-first Ethereum security research workflow for Solidity and DeFi repositories.",
-            readme,
-        )
+        self.assertIn("# ArkheionX", readme)
+        self.assertIn("Local-first review infrastructure for smart contract security.", readme)
+        self.assertIn("It does not replace auditors.", readme)
+        self.assertIn("It gives auditors a better map.", readme)
         self.assertIn(
             "No RPC. No live-chain scanning. No auto-submit. Human review required.",
             readme,
         )
-        # Clean product README structure (the v8.0.1 surface).
+        # Clean product README structure for the current public ArkheionX surface.
         for heading in [
             "## What it does",
+            "## What it is not",
+            "## Who it is for",
             "## Why it exists",
             "## Quickstart",
-            "## Core workflow",
-            "## Protocol Lens Packs",
-            "## Outputs",
-            "## Safety boundaries",
+            "## Example workflow",
             "## Documentation",
-            "## Release status",
-            "## License",
+            "## Outputs",
+            "## Case studies",
+            "## Current status",
+            "## Limitations",
+            "## Safety boundaries",
+            "## Security and ethics",
         ]:
             self.assertIn(heading, readme)
         self.assertIn("arkheionx review", readme)
@@ -50,6 +52,7 @@ class PublicSurfaceTests(unittest.TestCase):
             "What's Stable in v3",
             "Try the V4 demo",
             "Map the protocol. Prove the path. Prepare the handoff.",
+            "Local-first Ethereum security research workflow",
         ]:
             self.assertNotIn(legacy, readme)
         self.assertNotIn("Latest stable release: **v2.3.0", readme)
@@ -75,7 +78,7 @@ class PublicSurfaceTests(unittest.TestCase):
             "developer-tools",
         ]:
             self.assertIn(f"`{topic}`", surface)
-        self.assertIn("https://github.com/Yudis-bit/DeFi-Exploit-PoCs#readme", surface)
+        self.assertIn("https://github.com/Yudis-bit/arkheionx#readme", surface)
 
     def test_readme_documentation_links_exist(self) -> None:
         readme = self.read("README.md")

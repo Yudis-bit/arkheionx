@@ -1,0 +1,13 @@
+{
+  "program": "{{PROGRAM_NAME}}",
+  "chain": "ethereum",
+  "contracts": [
+    {
+      "name": "Vault",
+      "address": "0x1111111111111111111111111111111111111111",
+      "proxy_expected": true,
+      "expected_implementation": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_reference": "contracts/Vault.sol"
+    }
+  ]
+}

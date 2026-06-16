@@ -1,102 +1,70 @@
 # Start Here
 
-A 60-second orientation to Arkheionx. For the full command surface see
-[`CLI_REFERENCE.md`](CLI_REFERENCE.md); for terminal behaviour see
-[`CLI_UX.md`](CLI_UX.md).
+ArkheionX is local-first review infrastructure for smart contract security.
 
-## What Arkheionx is
+It turns an authorized Solidity or Foundry repository into deterministic review context: value paths, roles, trust assumptions, reachable flows, missing tests, evidence tasks, and unresolved review gaps.
 
-A local/static pre-audit readiness CLI for DeFi repositories. It turns a
-Solidity/Foundry repo into a structured review map: contracts, value paths,
-assumptions, test gaps, proof suggestions, and links to existing evidence.
+It does not replace auditors. It gives auditors a better map.
 
-## 30-second mental model
+## The 30-second model
 
-Foundry runs tests and tells you pass/fail. Arkheionx maps what your protocol
-still needs to prove before audit or review:
+| Foundry | ArkheionX |
+|---|---|
+| Runs the tests you wrote. | Maps what still needs review. |
+| Reports pass or fail. | Surfaces value paths, assumptions, and weak test areas. |
+| Confirms a local test result. | Helps organize evidence and unresolved questions. |
 
-| Foundry | Arkheionx |
-| --- | --- |
-| Runs tests | Maps value paths |
-| Reports pass/fail | Lists assumptions and test gaps |
-| — | Suggests local proofs and links existing evidence |
-
-## What it does not do
-
-No RPC. No live-chain calls. No private keys or secrets. No transaction
-broadcasting. No exploit automation. No auto-submit. It does not confirm
-vulnerabilities, assign severity, or replace a formal audit.
+ArkheionX output is not a finding by itself. A human reviewer still writes, runs, and judges the proof.
 
 ## First run
 
-```sh
-arkheionx review-map .
+```bash
+arkheionx version
+arkheionx doctor
+arkheionx review . --scope-file scope.md --out .arkheionx/review
 ```
 
-No Solidity repo handy? Copy a bundled demo first:
+If you do not have a scope file yet, create a short Markdown note with:
 
-```sh
-arkheionx demo --copy amm-swap ./arkheionx-demo
-arkheionx review-map ./arkheionx-demo
+- contracts in scope;
+- roles and trusted actors;
+- assets and value paths worth reviewing;
+- known limitations, accepted risks, or prior-audit context.
+
+## No repo handy
+
+Use a bundled demo:
+
+```bash
+arkheionx demo --list
+arkheionx review-map examples/vault-strategy-oracle-fixture
 ```
 
-Focused review-map views are available on the v3.3.0 development branch:
+`review-map` is still useful for a compact first read: value paths, assumptions, test gaps, proof suggestions, and evidence links. The primary pack workflow is `arkheionx review`.
 
-```sh
-arkheionx test-gap-map ./arkheionx-demo
-arkheionx value-paths ./arkheionx-demo
-arkheionx assumptions ./arkheionx-demo
-arkheionx proof-plan ./arkheionx-demo
-arkheionx evidence-links ./arkheionx-demo
-```
+## Read the output in this order
 
-They read existing `.arkheionx/out/review-map/` artifacts when present or derive
-the same payloads locally when missing. Use `--json` for machine-readable output
-and `--no-write` to build in memory without creating artifact directories.
-`evidence-links` is read-only over existing linked local artifacts; it does not
-create evidence.
+1. `00-run-context.md`
+2. `01-scope-map.md`
+3. `02-value-flow-map.md`
+4. `04-assumptions.md`
+5. `05-review-lanes.md`
+6. `06-evidence-tasks.md`
+7. `08-report-filter.md`
 
-## How to read the output
+Open the value exits first, then the assumptions that guard them, then the missing or weak test areas.
 
-The terminal output is, top to bottom:
+## What to do next
 
-1. A banner and the mode/safety line (local/static, no RPC, no keys).
-2. Honest phase lines — inspecting, mapping, writing — with real counts.
-3. Review Priorities — what to look at first (review order, not findings).
-4. Summary — the counts behind the map.
-5. Artifacts — files written under `.arkheionx/out/review-map/`.
-6. Next — the exact commands to run next.
-7. Boundary — the safety reminder.
+- Write local tests for the highest-value unresolved paths.
+- Record what evidence supports or kills each hypothesis.
+- Keep severity and reportability decisions human-reviewed.
+- Use case-study notes only when the workflow produced useful evidence.
 
-Start with Review Priorities, then open the test gaps, then the proof
-suggestions.
+## Boundaries
 
-## What artifacts mean
+ArkheionX is local/static by default. It does not require private keys, RPC URLs, live-chain access, or production credentials. It does not automatically find vulnerabilities, confirm severity, or submit reports.
 
-Artifacts are written under `.arkheionx/out/review-map/` (gitignored):
-`review-map.md` and `review-map.json` (the full map), plus focused
-`value-paths.json`, `assumptions.json`, `test-gaps.json`, `proof-plan.json`,
-`evidence-links.json`, a `review-summary.md`, and a `review-map.mmd` diagram.
-A `test-gap-map.json` / `test-gap-map.md` pair ranks which tests or local proofs
-to write first (review order, not severity). All are plain text. Use `--no-write`
-to skip writing and `--json` for a machine-readable map on stdout.
+See [`WHAT_ARKHEIONX_IS_NOT.md`](WHAT_ARKHEIONX_IS_NOT.md), [`CLI_REFERENCE.md`](CLI_REFERENCE.md), and [`CORE_WORKFLOW.md`](CORE_WORKFLOW.md).
 
-## After review-map
-
-Use the proof suggestions to create or run local proofs, then raise evidence
-levels with the existing workflow:
-
-```sh
-arkheionx prove . --target <Contract.function> --run
-arkheionx trace . --target <Contract.function>
-arkheionx evidence . --target <Contract.function>
-```
-
-See [`REVIEW_MAP.md`](REVIEW_MAP.md) for the full review-map reference.
-
-## Safety boundaries
-
-Arkheionx uses authorized local/static repository analysis only. Review-map
-output is review guidance; most signals start at `HEURISTIC` and only rise when
-connected to proof, trace, and evidence. Human review remains required. Use it
-only on repositories you own or are authorized to review.
+For a quick map of the repository tree, generated-output directories, and historical fixture folders, see [`REPOSITORY_STRUCTURE.md`](REPOSITORY_STRUCTURE.md).

@@ -2,52 +2,51 @@
 import Layout from "../components/Layout.astro";
 
 const workflow = [
-  ["Scope", "Start from the actual review rules."],
+  ["Scope", "Start from the actual review rules and target boundaries."],
   ["Value flow", "Map where assets enter, move, and exit."],
-  ["Protocol behavior", "Capture the promises the system appears to rely on."],
+  ["Roles", "Surface owners, admins, keepers, distributors, routers, and trusted dependencies."],
+  ["Assumptions", "Capture the trust claims that protect each path."],
   ["Review lanes", "Prioritize where a human should inspect first."],
-  ["Evidence tasks", "Turn hypotheses into local tests with kill conditions."],
-  ["Evidence judge", "Check whether local proof actually supports the claim."],
-  ["Report filter", "Block weak, out-of-scope, or under-proven candidates."]
+  ["Evidence tasks", "Turn open questions into local tests with kill conditions."],
+  ["Report filter", "Block weak, out-of-scope, or under-proven candidates before writing."]
 ];
 
 const outputs = [
   ["Scope map", "What is in and out of scope, read from the scope note."],
   ["Value-flow map", "Where assets enter, move, and exit the system."],
   ["Interaction map", "How contracts and roles touch each other."],
-  ["Review lanes", "A prioritized order for a human to inspect."],
+  ["Review lanes", "A prioritized order for a human to inspect, not severity."],
   ["Evidence tasks", "Local test ideas, each with a kill condition."],
-  ["Protocol model", "Behavior promises captured as review context."],
-  ["Invariants", "The economic conditions expected to hold."],
+  ["Trust assumptions", "The assumptions each value path appears to rely on."],
+  ["Unresolved gaps", "Questions that still need evidence or human review."],
   ["Evidence rubric", "How to grade whether a test proves its task."],
-  ["Report filter", "A gate for weak or out-of-scope candidates."],
-  ["Agent input", "A model-agnostic brief for AI-assisted review."]
+  ["Report filter", "A gate for weak or out-of-scope candidates."]
 ];
 
 const safety = [
-  ["Planning, not verdicts", "Review lanes are not findings."],
+  ["Review context", "Review lanes are not findings."],
   ["Local-first", "No RPC or live-chain scanning by default."],
-  ["Evidence-first", "Candidates need local proof before report writing."],
-  ["Human review required", "Arkheionx does not submit reports or assign final severity."]
+  ["PoC still required", "Candidates need local proof before report writing."],
+  ["Human review required", "ArkheionX does not submit reports or assign final severity."]
 ];
 
-const repo = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs";
+const repo = "https://github.com/Yudis-bit/arkheionx";
 ---
 
 <Layout
-  title="Arkheionx — Local-first security research workflow for Solidity and DeFi"
-  description="Arkheionx turns scope, value flow, protocol behavior, invariants, and local evidence into focused review lanes before report writing. No RPC. No live-chain scanning. Human review required."
+  title="ArkheionX — Local-first review infrastructure for smart contract security"
+  description="ArkheionX maps value paths, roles, trust assumptions, reachable flows, missing tests, and evidence gaps so human reviewers can reason faster and miss less."
 >
   <main class="home">
     <!-- 1. Hero -->
     <section class="hero">
-      <p class="eyebrow">Local-first · Solidity &amp; DeFi</p>
-      <h1>Local-first security research workflow for Solidity and DeFi repos.</h1>
+      <p class="eyebrow">Local-first review infrastructure</p>
+      <h1>Review the map before the hunt.</h1>
       <p class="lede">
-        Arkheionx turns scope, value flow, protocol behavior, invariants, and local evidence
-        into focused review lanes before report writing.
+        ArkheionX maps value paths, roles, trust assumptions, reachable flows, missing tests,
+        and evidence gaps so human reviewers can reason faster and miss less.
       </p>
-      <p class="boundary">No RPC. No live-chain scanning. No auto-submit. Human review required.</p>
+      <p class="boundary">Not an audit. It does not confirm vulnerabilities. Not an AI auditor. Not an exploit generator. Human review required.</p>
 
       <div class="actions">
         <a class="btn btn-primary" href="/docs">Read docs</a>
@@ -60,22 +59,32 @@ const repo = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs";
       </div>
     </section>
 
-    <!-- 2. Problem -->
+    <!-- 2. What it is -->
     <section class="band">
-      <p class="kicker">The problem</p>
+      <p class="kicker">What ArkheionX is</p>
       <div class="prose">
-        <p>Large Solidity repositories are easy to review randomly.</p>
+        <p>ArkheionX is local-first review infrastructure for smart contract security.</p>
         <p>
-          Arkheionx gives the review a structure before anyone writes a finding: what is in
-          scope, where value moves, which assumptions matter, and what local evidence is still
-          missing.
+          It turns a Solidity or Foundry repository into deterministic review context before
+          anyone writes a finding: what is in scope, where value moves, which assumptions matter,
+          and what local evidence is still missing.
         </p>
       </div>
     </section>
 
-    <!-- 3. Workflow -->
+    <!-- 3. What it is not -->
     <section class="band">
-      <p class="kicker">Workflow</p>
+      <p class="kicker">What it is not</p>
+      <h2>It gives auditors a better map. It does not replace them.</h2>
+      <p class="prose">
+        ArkheionX does not automatically find vulnerabilities, confirm severity, prove protocol
+        safety, guarantee bounty outcomes, or claim ecosystem endorsement.
+      </p>
+    </section>
+
+    <!-- 4. Workflow -->
+    <section class="band">
+      <p class="kicker">How it works</p>
       <h2>One repository becomes a structured review.</h2>
       <ol class="flow">
         {workflow.map((step, i) => (
@@ -90,7 +99,7 @@ const repo = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs";
       </ol>
     </section>
 
-    <!-- 4. CLI example -->
+    <!-- 5. CLI example -->
     <section class="band">
       <p class="kicker">One command</p>
       <h2>Build a local review pack.</h2>
@@ -110,7 +119,7 @@ const repo = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs";
       </div>
     </section>
 
-    <!-- 5. Outputs -->
+    <!-- 6. Outputs -->
     <section class="band">
       <p class="kicker">Outputs</p>
       <h2>What the review pack contains.</h2>
@@ -124,13 +133,38 @@ const repo = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs";
       </div>
     </section>
 
-    <!-- 6. Safety boundary -->
+    <!-- 7. Case studies -->
     <section class="band">
-      <p class="kicker">Safety boundary</p>
-      <h2>Arkheionx does not decide whether something is a vulnerability.</h2>
+      <p class="kicker">Case studies</p>
+      <h2>Credibility comes from review evidence.</h2>
       <p class="prose">
-        It helps structure review evidence before a human makes that call.
-        It does not confirm vulnerabilities, and it does not assign final severity.
+        ArkheionX case studies record the target, review question, value path, trust assumptions,
+        evidence generated, human validation, PoC status, outcome, and limitations. They do not
+        claim acceptance unless acceptance is proven.
+      </p>
+      <div class="actions">
+        <a class="btn" href="/docs">Read case-study docs</a>
+      </div>
+    </section>
+
+    <!-- 8. Current status -->
+    <section class="band">
+      <p class="kicker">Current status</p>
+      <h2>Useful, but still earning external credibility.</h2>
+      <p class="prose">
+        The next stage is real-world usage on established DeFi protocols, external reviewer
+        feedback, and case studies. The old repository identity should be renamed or publicly
+        reframed around ArkheionX.
+      </p>
+    </section>
+
+    <!-- 9. Limitations -->
+    <section class="band">
+      <p class="kicker">Limitations</p>
+      <h2>ArkheionX output is review context, not final truth.</h2>
+      <p class="prose">
+        Static context can miss behavior. Missing-test signals can be noisy. PoC validation is still
+        required. Severity decisions are not automatic.
       </p>
       <div class="safety">
         {safety.map((card) => (
@@ -142,7 +176,22 @@ const repo = "https://github.com/Yudis-bit/DeFi-Exploit-PoCs";
       </div>
     </section>
 
-    <!-- 7. Final CTA -->
+    <!-- 10. Feedback -->
+    <section class="band">
+      <p class="kicker">Feedback</p>
+      <h2>Reviewers should tell us what is useful and what is noise.</h2>
+      <p class="prose">
+        The most useful feedback comes from auditors and protocol teams: which outputs match real
+        review workflow, which terms are wrong, what would make this safer, and what case study
+        would make ArkheionX credible.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/docs">Read docs</a>
+        <a class="btn" href={repo} target="_blank" rel="noreferrer">Open GitHub</a>
+      </div>
+    </section>
+
+    <!-- 11. Final CTA -->
     <section class="cta">
       <h2>Start with one local review pack.</h2>
       <div class="actions">

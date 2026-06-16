@@ -48,6 +48,44 @@ FIRST_RUN_EPILOG = (
 )
 
 
+def _triage_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the private senior-triage mode.
+
+    Imported on demand so the shared command parser stays import-safe (and every
+    other command keeps working) even while this experimental mode evolves.
+    ``--hunter`` routes to the V9 universal hunter engine for compatibility.
+    """
+    if getattr(args, "hunter", False):
+        from arkheionx.hunter.command import hunter_command
+
+        return hunter_command(args)
+
+    from arkheionx.senior_triage.command import triage_command
+
+    return triage_command(args)
+
+
+def _hunter_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the V9 Universal Senior Exploit Hunter mode."""
+    from arkheionx.hunter.command import hunter_command
+
+    return hunter_command(args)
+
+
+def _war_run_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the V10 GodEye War Engine (Semantic DeFi Review Engine)."""
+    from arkheionx.warrun.command import war_run_command
+
+    return war_run_command(args)
+
+
+def _memory_command(args: argparse.Namespace) -> int:
+    """Lazy dispatch for the V10 root-cause memory brain (add/list/classify/export)."""
+    from arkheionx.memory.command import memory_command
+
+    return memory_command(args)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="arkheionx",
@@ -76,6 +114,158 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--json", action="store_true", help="Print machine-readable manifest JSON to stdout only (no human text).")
     review.add_argument("--no-write", action="store_true", help="Build the pack in memory only; do not write artifact files.")
     review.set_defaults(func=workbench.review_command)
+
+    triage = subparsers.add_parser(
+        "triage",
+        help="Run senior research triage before review (experimental, local-only). Produces a local triage pack that prioritizes what is worth reviewing and what should be killed early. Planning artifact, not a finding; human review required.",
+    )
+    triage.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    triage.add_argument("--scope-file", default="", help="Path to a markdown scope / program-rules note (optional).")
+    triage.add_argument("--known", default="", help="Optional folder of known issues / prior findings / public reports.")
+    triage.add_argument("--audits", default="", help="Optional folder of prior audit reports.")
+    triage.add_argument("--addresses", default="", help="Optional addresses JSON for a static deployment-reality plan.")
+    triage.add_argument("--baseline-ref", default="", help="Optional git ref to diff against for freshness.")
+    triage.add_argument("--since-date", default="", help="Optional YYYY-MM-DD freshness baseline date.")
+    triage.add_argument(
+        "--rpc-url",
+        dest="rpc",
+        default="",
+        help="Optional read-only RPC endpoint (advanced). Disabled by default; only read-only methods are issued, no live-chain mutation occurs, and the endpoint is masked in output.",
+    )
+    triage.add_argument("--deployment-calls", default="", help="Optional read-only eth_call spec JSON (requires --rpc-url).")
+    triage.add_argument("--strict-context", action="store_true", help="Apply fail-closed decision caps more aggressively when context is missing.")
+    triage.add_argument("--max-leads", type=int, default=12, help="Maximum raw leads to score (default 12).")
+    triage.add_argument("--top", type=int, default=3, help="Top leads to surface in JSON (default 3, max 5). Markdown top stays at 3.")
+    triage.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/triage/).")
+    triage.add_argument("--json", action="store_true", help="Print machine-readable triage JSON to stdout only (no human text).")
+    triage.add_argument("--no-write", action="store_true", help="Build the triage pack in memory only; do not write artifact files.")
+    # V9 hunter-compatibility flags: `arkheionx triage --hunter` runs the universal hunter engine.
+    triage.add_argument("--hunter", action="store_true", help="Run the V9 Universal Senior Exploit Hunter engine instead of classic triage (compatibility alias for `arkheionx hunter`).")
+    triage.add_argument("--source-dir", default="", help="Optional local source directory for source recovery (hunter mode).")
+    triage.add_argument("--source-recovery", default="auto", choices=["auto", "sourcify", "etherscan", "none"], help="Source recovery mode (hunter mode).")
+    triage.add_argument("--no-source-recovery", action="store_true", help="Disable network source recovery (hunter mode).")
+    triage.add_argument("--registry-calls", default="", help="Optional read-only registry eth_call spec JSON (requires --rpc-url; hunter mode).")
+    triage.add_argument("--audit-date", default="", help="Optional YYYY-MM-DD audit date freshness baseline (hunter mode).")
+    triage.add_argument("--fresh-allowlist", default="", help="Optional comma-separated surfaces (or a file) marked fresh (hunter mode).")
+    triage.set_defaults(func=_triage_command)
+
+    hunter = subparsers.add_parser(
+        "hunter",
+        help="V9 Universal Senior Exploit Hunter mode (experimental, local-first). Chooses the highest-EV bounty surface — fresh, in-scope, payable, non-duplicate, attacker-reachable — and avoids known/OOS/dead leads before PoC. Read-only RPC only (masked), no mutation, no auto-submit; human review required.",
+    )
+    hunter.add_argument("repo", nargs="?", default=".", help="Authorized local repository root.")
+    hunter.add_argument("--scope-file", default="", help="Path to a markdown scope / program-rules note.")
+    hunter.add_argument("--known", default="", help="Optional folder of known issues / prior findings / public reports.")
+    hunter.add_argument("--audits", default="", help="Optional folder of prior audit reports.")
+    hunter.add_argument("--addresses", default="", help="Optional addresses JSON (parser v2: flat/contracts/program/env/chains/list).")
+    hunter.add_argument("--source-dir", default="", help="Optional local source directory for source recovery.")
+    hunter.add_argument("--source-recovery", default="auto", choices=["auto", "sourcify", "etherscan", "none"], help="Source recovery mode (default auto; network recovery is opt-in).")
+    hunter.add_argument("--no-source-recovery", action="store_true", help="Disable network source recovery.")
+    hunter.add_argument("--baseline-ref", default="", help="Optional git ref to diff against for freshness.")
+    hunter.add_argument("--since-date", default="", help="Optional YYYY-MM-DD freshness baseline date.")
+    hunter.add_argument("--audit-date", default="", help="Optional YYYY-MM-DD audit date freshness baseline.")
+    hunter.add_argument("--fresh-allowlist", default="", help="Optional comma-separated surfaces (or a file) explicitly marked fresh.")
+    hunter.add_argument(
+        "--rpc-url",
+        dest="rpc",
+        default="",
+        help="Optional read-only RPC endpoint. Disabled by default; only read-only methods are issued, no live-chain mutation occurs, and the endpoint is masked in output.",
+    )
+    hunter.add_argument("--deployment-calls", default="", help="Optional read-only eth_call spec JSON (requires --rpc-url).")
+    hunter.add_argument("--registry-calls", default="", help="Optional read-only registry eth_call spec JSON (requires --rpc-url).")
+    hunter.add_argument("--strict-context", action="store_true", help="Apply fail-closed decision caps more aggressively when context is missing.")
+    hunter.add_argument("--top", type=int, default=5, help="Top leads to surface (default 5, max 5).")
+    hunter.add_argument("--max-leads", type=int, default=25, help="Maximum raw leads to score (default 25).")
+    hunter.add_argument("--out", default="", help="Artifact output directory (default: <repo>/.arkheionx/hunter/).")
+    hunter.add_argument("--json", action="store_true", help="Print machine-readable hunter JSON to stdout only (no human text).")
+    hunter.add_argument("--no-write", action="store_true", help="Build the hunter pack in memory only; do not write artifact files.")
+    hunter.set_defaults(func=_hunter_command)
+
+    war_run = subparsers.add_parser(
+        "war-run",
+        help="V10 GodEye War Engine (experimental, local-first): reconstruct the economic "
+             "machine, derive invariants, rank attack paths, generate PoC skeletons, gate "
+             "economic severity, and plan fork proof. No report, no RPC by default, no "
+             "broadcast; fork is a plan only. Human review required.",
+    )
+    war_run.add_argument("target", nargs="?", default=".", help="Authorized local target repository / source dir.")
+    war_run.add_argument("--scope", default="", help="Path to a scope.yaml (or .json) describing program/in-scope/out-of-scope/rules.")
+    war_run.add_argument("--out", default="", help="Artifact output directory (default: <target>/.arkheionx/war-run/).")
+    war_run.add_argument("--max-candidates", type=int, default=10, help="Maximum attack candidates to keep (default 10).")
+    war_run.add_argument("--no-poc-skeletons", action="store_true", help="Do not generate Foundry PoC skeletons.")
+    war_run.add_argument("--no-fork", action="store_true", help="Do not generate a fork plan (local-only).")
+    war_run.add_argument("--allow-fork-plan", action="store_true", help="Generate a fork plan when external state matters (default on; explicit alias).")
+    war_run.add_argument("--memory", default="", help="Path to a root-cause memory directory (e.g. .arkheionx/memory) for dedup.")
+    war_run.add_argument("--asset-decimals", type=int, default=0, help="Optional realistic asset decimals to sharpen economic severity (e.g. 6 or 18).")
+    war_run.add_argument("--include-tests", action="store_true", help="Include Solidity test directories in source ingestion.")
+    war_run.add_argument("--include-scripts", action="store_true", help="Include Solidity script and migration directories in source ingestion.")
+    war_run.add_argument("--include-deps", action="store_true", help="Include vendored and external dependency directories in source ingestion.")
+    war_run.add_argument(
+        "--framework",
+        default="auto",
+        choices=["auto", "foundry", "hardhat", "truffle", "brownie", "generic"],
+        help="Repository framework override (default: auto).",
+    )
+    war_run.add_argument("--build-artifacts", default="", help="Optional compiler artifact or build-info path.")
+    war_run.add_argument("--solidity-root", default="", help="Optional Solidity source root relative to the target.")
+    war_run.add_argument("--json", action="store_true", help="Print the machine-readable triage JSON to stdout only (no human text).")
+    war_run.add_argument("--markdown", action="store_true", help="(Default) human console output; artifacts are always Markdown+JSON.")
+    war_run.add_argument("--no-write", action="store_true", help="Build artifacts in memory only; do not write files.")
+    war_run.set_defaults(func=_war_run_command)
+
+    memory = subparsers.add_parser(
+        "memory",
+        help="V10 root-cause memory brain (experimental, local-first): record prior root "
+             "causes / findings / kills / parks and classify a new candidate as "
+             "SAME_ROOT_CAUSE / RELATED_BUT_DISTINCT / DISTINCT / UNKNOWN. Local files only; "
+             "export redacts private notes. No network.",
+    )
+    memory.set_defaults(func=_memory_command)
+    msub = memory.add_subparsers(dest="memory_subcommand")
+
+    def _mem_common(p):
+        p.add_argument("--memory-dir", default="", help="Memory directory (default .arkheionx/memory).")
+        p.add_argument("--json", action="store_true", help="Machine-readable JSON output.")
+
+    m_add = msub.add_parser("add", help="Record a prior root cause / finding / kill / park.")
+    _mem_common(m_add)
+    m_add.add_argument("--target", default="", help="Target label (no secrets).")
+    m_add.add_argument("--program", default="", help="Bounty program / context name.")
+    m_add.add_argument("--repo", default="", help="Repo identifier.")
+    m_add.add_argument("--commit", default="", help="Commit hash.")
+    m_add.add_argument("--root-cause", default="", help="Human root-cause description.")
+    m_add.add_argument("--invariant-family", default="", help="Invariant family (for the semantic hash).")
+    m_add.add_argument("--entry-function", default="", help="Entry function (Contract.fn) for the function role.")
+    m_add.add_argument("--function-role", default="", help="Explicit function role (overrides entry-function).")
+    m_add.add_argument("--attacker", default="", help="Attacker capability (for the attacker category).")
+    m_add.add_argument("--status", default="unknown",
+                       choices=["submitted", "accepted", "rejected", "duplicate", "killed", "parked", "unknown"],
+                       help="Lifecycle status.")
+    m_add.add_argument("--finding-id", default="", help="External finding id.")
+    m_add.add_argument("--severity", default="", help="Recorded severity / decision label.")
+    m_add.add_argument("--notes", default="", help="Private freeform notes (never exported).")
+    m_add.add_argument("--category", default="", choices=["", "findings", "killed", "parked", "out_of_scope"],
+                       help="Override the storage category (default inferred from status).")
+    m_add.add_argument("--do-not-resubmit", action="store_true", help="Flag as do-not-resubmit.")
+    m_add.add_argument("--no-write", action="store_true", help="Compute only; do not write the store.")
+    m_add.set_defaults(func=_memory_command)
+
+    m_list = msub.add_parser("list", help="List recorded memory entries.")
+    _mem_common(m_list)
+    m_list.add_argument("--category", default="", choices=["", "findings", "killed", "parked", "out_of_scope"],
+                        help="Only this category (default all).")
+    m_list.set_defaults(func=_memory_command)
+
+    m_cls = msub.add_parser("classify", help="Classify a candidate against the memory store.")
+    _mem_common(m_cls)
+    m_cls.add_argument("--invariant-family", default="", help="Candidate invariant family.")
+    m_cls.add_argument("--entry-function", default="", help="Candidate entry function (Contract.fn).")
+    m_cls.add_argument("--attacker", default="", help="Candidate attacker capability.")
+    m_cls.set_defaults(func=_memory_command)
+
+    m_exp = msub.add_parser("export", help="Export the shareable semantic fingerprint (notes redacted).")
+    _mem_common(m_exp)
+    m_exp.set_defaults(func=_memory_command)
 
     scan = subparsers.add_parser("scan", help="Run a local Arkheionx value-flow/readiness scan.")
     scan.add_argument("root", help="Authorized local repository root to scan.")
