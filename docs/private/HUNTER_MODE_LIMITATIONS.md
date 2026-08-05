@@ -11,7 +11,7 @@ It does not assign final severity.
 It does not submit reports and has no auto-submit.
 It does not mutate any chain and sends no transactions.
 It does not sign anything and never reads private keys or seed phrases.
-It does not exploit live systems.
+It does not run exploits against live systems.
 It does not scan remote or unauthorized infrastructure.
 It does not replace a human reviewer or an audit.
 It does not guarantee a finding, a payout, or a severity.
