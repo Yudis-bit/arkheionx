@@ -1,0 +1,29 @@
+{
+  "contractName": "MetaCoin",
+  "sourcePath": "contracts/MetaCoin.sol",
+  "abi": [
+    {
+      "type": "function",
+      "name": "sendCoin",
+      "inputs": [
+        { "name": "receiver", "type": "address" },
+        { "name": "amount", "type": "uint256" }
+      ],
+      "outputs": [{ "name": "sufficient", "type": "bool" }],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getBalance",
+      "inputs": [{ "name": "addr", "type": "address" }],
+      "outputs": [{ "name": "", "type": "uint256" }],
+      "stateMutability": "view"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f5ffd5b506101438061001d5f395ff3fe",
+  "deployedBytecode": "0x60806040526004361061001a575f5ffd5b3661001f57005b5f5ffd5b00",
+  "compiler": {
+    "version": "0.8.20+commit.a1b79de6"
+  },
+  "networks": {}
+}

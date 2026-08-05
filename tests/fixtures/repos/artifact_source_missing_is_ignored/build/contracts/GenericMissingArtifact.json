@@ -1,0 +1,9 @@
+{
+  "contractName": "GenericMissingArtifact",
+  "sourcePath": "contracts/GenericMissingArtifact.sol",
+  "source": "pragma solidity ^0.8.20;\ncontract GenericArtifactContract {\n    uint256 public value;\n    function setValue(uint256 next) external { value = next; }\n}\n",
+  "compiler": {
+    "version": "generic"
+  },
+  "abi": []
+}

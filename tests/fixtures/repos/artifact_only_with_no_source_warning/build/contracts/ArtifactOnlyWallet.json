@@ -1,0 +1,22 @@
+{
+  "contractName": "ArtifactOnlyWallet",
+  "abi": [
+    {
+      "type": "function",
+      "name": "execute",
+      "inputs": [
+        { "name": "destination", "type": "address" },
+        { "name": "value", "type": "uint256" },
+        { "name": "data", "type": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f5ffd5b506101438061001d5f395ff3fe",
+  "deployedBytecode": "0x60806040526004361061001a575f5ffd5b3661001f57005b5f5ffd5b00",
+  "compiler": {
+    "version": "0.8.20+commit.a1b79de6"
+  },
+  "networks": {}
+}

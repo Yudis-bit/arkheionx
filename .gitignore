@@ -65,3 +65,11 @@ broadcast/
 !/artifacts/
 /artifacts/*
 !/artifacts/README.md
+
+# Test fixtures intentionally track sample compiler artifacts as regression
+# data for the stale/sample artifact filtering tests. Re-include fixture
+# build output despite the broad build/ and **/artifacts/ rules above.
+!tests/fixtures/repos/**/build/
+!tests/fixtures/repos/**/build/**
+!tests/fixtures/repos/**/artifacts/
+!tests/fixtures/repos/**/artifacts/**
