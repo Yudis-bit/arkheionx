@@ -18,708 +18,6 @@
       },
       "results": [
         {
-          "level": "note",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 1
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "No invariant tests detected for DeFi protocol shape: Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "513273fd79a5b51907be9ccf"
-          },
-          "properties": {
-            "affected_functions": [],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "testing-readiness",
-            "confidence": "low",
-            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-            "detection_sources": [
-              "keyword"
-            ],
-            "evidence_count": 2,
-            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-            "historical_pattern_similarity": "",
-            "invariant_candidates": [
-              "Core accounting relationships hold after any allowed user action.",
-              "Privileged actions cannot silently bypass documented accounting assumptions."
-            ],
-            "knowledge": {
-              "broken_invariants": [
-                "protocol-specific-conservation-invariant",
-                "authorization-or-lifecycle-invariant"
-              ],
-              "failed_assumptions": [
-                "unit-tests-cover-compositional-state",
-                "happy-path-tests-cover-adversarial-sequences"
-              ],
-              "finding_map_version": "0.9.0",
-              "related_docs": [
-                "docs/READINESS_SCORE.md",
-                "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
-              ],
-              "related_patterns": [
-                "pattern-missing-invariant-coverage",
-                "pattern-assumption-not-encoded-in-tests"
-              ],
-              "related_pocs": [
-                "poc-2020-08-opyn",
-                "poc-2020-09-bzx-ifusdc",
-                "poc-2021-10-indexed-finance"
-              ],
-              "root_causes": [
-                "critical-assumption-only-documented-or-implicit",
-                "state-machine-not-fuzzed"
-              ],
-              "rule_pack": "testing",
-              "search_terms": [
-                "missing invariant",
-                "audit blocker",
-                "stateful fuzz",
-                "invariant testing"
-              ],
-              "suggested_tests": [
-                "foundry-invariant-skeleton",
-                "stateful-fuzz-sequence",
-                "roundtrip-or-conservation-invariant"
-              ]
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Low readiness gap",
-            "readiness_gap": true,
-            "rule_family": "testing",
-            "suggested_tests": [
-              "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-              "Add a stateful invariant suite for the core protocol lifecycle.",
-              "Add handler actions for normal user flows and documented edge cases.",
-              "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
-            ],
-            "tags": [
-              "invariant-testing",
-              "amm"
-            ]
-          },
-          "ruleId": "ARK-TST-002"
-        },
-        {
-          "level": "note",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 1
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "3e0db8a302dcfc0b19bcdf3e"
-          },
-          "properties": {
-            "affected_functions": [],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "oracle-pricing",
-            "confidence": "low",
-            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-            "detection_sources": [
-              "keyword",
-              "test-coverage"
-            ],
-            "evidence_count": 3,
-            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-            "historical_pattern_similarity": "",
-            "invariant_candidates": [
-              "Normalized oracle values remain within documented unit and decimal assumptions."
-            ],
-            "knowledge": {
-              "finding_map_version": "0.9.0",
-              "related_docs": [],
-              "related_patterns": [],
-              "related_pocs": [],
-              "search_terms": [],
-              "suggested_tests": []
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Low readiness gap",
-            "readiness_gap": true,
-            "rule_family": "oracle",
-            "suggested_tests": [
-              "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-              "Test decimals normalization across expected feed decimals.",
-              "Test zero, negative, or invalid oracle answers if applicable.",
-              "Assert normalized price units match accounting units."
-            ],
-            "tags": [
-              "oracle-risk",
-              "price-assumptions"
-            ]
-          },
-          "ruleId": "ARK-ORC-002"
-        },
-        {
-          "level": "warning",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 28
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "External-call value flow needs reentrancy review: Review state update order and add local malicious-receiver tests where callbacks are possible. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "93c080a4c61fba5511c77110"
-          },
-          "properties": {
-            "affected_functions": [
-              "addLiquidity",
-              "removeLiquidity",
-              "swap"
-            ],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "reentrancy-value-flow",
-            "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-            "detection_sources": [
-              "keyword",
-              "semantic-lite",
-              "test-coverage"
-            ],
-            "evidence_count": 5,
-            "false_positive_notes": "",
-            "historical_pattern_similarity": "",
-            "invariant_candidates": [
-              "External-call flows cannot observe or preserve inconsistent accounting state."
-            ],
-            "knowledge": {
-              "broken_invariants": [
-                "single-claim-or-withdrawal",
-                "state-updated-before-external-value-flow"
-              ],
-              "failed_assumptions": [
-                "token-transfer-does-not-yield-control",
-                "claim-or-withdraw-path-cannot-repeat"
-              ],
-              "finding_map_version": "0.9.0",
-              "related_docs": [
-                "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
-                "docs/RULE_PACKS.md"
-              ],
-              "related_patterns": [
-                "pattern-external-call-before-state-update",
-                "pattern-callback-capable-token"
-              ],
-              "related_pocs": [
-                "poc-2018-10-spankchain",
-                "poc-2020-04-uniswap-imbtc",
-                "poc-2021-03-dodo-crowdpool"
-              ],
-              "root_causes": [
-                "external-control-before-state-finalization",
-                "callback-assumption-failure"
-              ],
-              "rule_pack": "reentrancy_value_flow",
-              "search_terms": [
-                "reentrancy value flow",
-                "callback capable token",
-                "claim refund flow"
-              ],
-              "suggested_tests": [
-                "reentrant-receiver-mock",
-                "state-update-before-external-call-test",
-                "double-claim-prevention"
-              ]
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Medium readiness gap",
-            "readiness_gap": true,
-            "rule_family": "reentrancy-value-flow",
-            "suggested_tests": [
-              "Review state update order and add local malicious-receiver tests where callbacks are possible.",
-              "Add a benign callback-capable receiver stub.",
-              "Assert state updates happen before external value transfer where required.",
-              "Test withdraw, claim, refund, or swap flows for accounting consistency."
-            ],
-            "tags": [
-              "reentrancy-review",
-              "value-flow"
-            ]
-          },
-          "ruleId": "ARK-REENT-001"
-        },
-        {
-          "level": "note",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 1
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "Oracle-dependent logic without stale-price tests: Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "204867f6f7d3206783b6abd7"
-          },
-          "properties": {
-            "affected_functions": [],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "oracle-pricing",
-            "confidence": "low",
-            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-            "detection_sources": [
-              "keyword",
-              "test-coverage"
-            ],
-            "evidence_count": 3,
-            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-            "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
-            "invariant_candidates": [
-              "Accounting decisions only use oracle data that satisfies documented freshness policy."
-            ],
-            "knowledge": {
-              "broken_invariants": [
-                "accounting-value-uses-valid-price",
-                "collateral-value-is-bounded",
-                "share-price-uses-trusted-input"
-              ],
-              "failed_assumptions": [
-                "oracle-price-is-current",
-                "oracle-answer-is-normalized",
-                "pool-price-is-manipulation-resistant"
-              ],
-              "finding_map_version": "0.9.0",
-              "related_docs": [
-                "docs/ORACLE_RULE_PACK.md",
-                "docs/RULE_PACKS.md",
-                "docs/SEARCH_GUIDE.md"
-              ],
-              "related_patterns": [
-                "pattern-oracle-stale-price",
-                "pattern-spot-price-manipulation",
-                "pattern-pool-price-accounting"
-              ],
-              "related_pocs": [
-                "poc-2025-11-moonwell",
-                "poc-2020-10-harvest",
-                "poc-2021-02-yearn-v1-dai"
-              ],
-              "root_causes": [
-                "missing-oracle-freshness-validation",
-                "implicit-price-trust",
-                "missing-price-bounds"
-              ],
-              "rule_pack": "oracle",
-              "search_terms": [
-                "oracle stale price",
-                "Chainlink updatedAt",
-                "heartbeat validation",
-                "price bounds",
-                "TWAP vs spot"
-              ],
-              "suggested_tests": [
-                "stale-round-rejection",
-                "heartbeat-bound-test",
-                "decimal-normalization-test",
-                "price-bounds-test"
-              ]
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Low readiness gap",
-            "readiness_gap": true,
-            "rule_family": "oracle",
-            "suggested_tests": [
-              "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
-              "Reject stale oracle rounds or document fallback behavior.",
-              "Test updatedAt or heartbeat boundaries.",
-              "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
-            ],
-            "tags": [
-              "oracle-risk",
-              "oracle-rule-pack",
-              "pre-audit-readiness"
-            ]
-          },
-          "ruleId": "ARK-ORC-001"
-        },
-        {
-          "level": "note",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 1
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "Spot or reserve-based pricing without manipulation-resistance tests: Add local pool/reserve tests for TWAP, bounds, and spot-price movement assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "c7c2a014effc261606b9ab6b"
-          },
-          "properties": {
-            "affected_functions": [],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "oracle-pricing",
-            "confidence": "low",
-            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-            "detection_sources": [
-              "keyword",
-              "test-coverage"
-            ],
-            "evidence_count": 3,
-            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-            "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
-            "invariant_candidates": [
-              "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
-            ],
-            "knowledge": {
-              "broken_invariants": [
-                "price-input-remains-manipulation-resistant",
-                "accounting-value-is-not-single-pool-dependent"
-              ],
-              "failed_assumptions": [
-                "pool-reserves-reflect-fair-price",
-                "spot-price-cannot-be-moved-economically"
-              ],
-              "finding_map_version": "0.9.0",
-              "related_docs": [
-                "docs/ORACLE_RULE_PACK.md",
-                "docs/RULE_PACKS.md"
-              ],
-              "related_patterns": [
-                "pattern-spot-price-manipulation",
-                "pattern-amm-invariant-steering"
-              ],
-              "related_pocs": [
-                "poc-2020-10-harvest",
-                "poc-2021-01-saddle",
-                "poc-2025-12-yeth"
-              ],
-              "root_causes": [
-                "same-transaction-price-trust",
-                "missing-twap-or-bounds"
-              ],
-              "rule_pack": "oracle",
-              "search_terms": [
-                "spot price manipulation",
-                "getReserves",
-                "TWAP",
-                "pool price"
-              ],
-              "suggested_tests": [
-                "twap-vs-spot-behavior",
-                "reserve-manipulation-sanity-test",
-                "price-bounds-test"
-              ]
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Low readiness gap",
-            "readiness_gap": true,
-            "rule_family": "oracle",
-            "suggested_tests": [
-              "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
-              "Test spot-price movement bounds.",
-              "Test TWAP or delay assumptions when used.",
-              "Document reserve-price dependency and expected safeguards."
-            ],
-            "tags": [
-              "oracle-risk",
-              "spot-price",
-              "reserve-pricing",
-              "oracle-rule-pack"
-            ]
-          },
-          "ruleId": "ARK-ORC-003"
-        },
-        {
-          "level": "note",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 1
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "Missing price bounds or fallback assumptions documentation: Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "18c27a0df2b8711caa82c079"
-          },
-          "properties": {
-            "affected_functions": [],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "oracle-pricing",
-            "confidence": "low",
-            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-            "detection_sources": [
-              "keyword",
-              "test-coverage"
-            ],
-            "evidence_count": 3,
-            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-            "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
-            "invariant_candidates": [
-              "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
-            ],
-            "knowledge": {
-              "finding_map_version": "0.9.0",
-              "related_docs": [],
-              "related_patterns": [],
-              "related_pocs": [],
-              "search_terms": [],
-              "suggested_tests": []
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Low readiness gap",
-            "readiness_gap": true,
-            "rule_family": "oracle",
-            "suggested_tests": [
-              "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
-              "Test documented price bounds.",
-              "Test invalid answer fallback behavior.",
-              "Add documentation for price shock and fallback assumptions."
-            ],
-            "tags": [
-              "oracle-risk",
-              "documentation-readiness",
-              "oracle-rule-pack"
-            ]
-          },
-          "ruleId": "ARK-ORC-005"
-        },
-        {
-          "level": "note",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 28
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "External call path without documented ordering assumptions: Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "5267b7cf94570dcb176a34ce"
-          },
-          "properties": {
-            "affected_functions": [
-              "addLiquidity",
-              "removeLiquidity",
-              "swap"
-            ],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "reentrancy-value-flow",
-            "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-            "detection_sources": [
-              "keyword",
-              "semantic-lite",
-              "test-coverage"
-            ],
-            "evidence_count": 5,
-            "false_positive_notes": "",
-            "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
-            "invariant_candidates": [
-              "External call ordering follows documented state-transition policy."
-            ],
-            "knowledge": {
-              "finding_map_version": "0.9.0",
-              "related_docs": [],
-              "related_patterns": [],
-              "related_pocs": [],
-              "search_terms": [],
-              "suggested_tests": []
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Low readiness gap",
-            "readiness_gap": true,
-            "rule_family": "reentrancy-value-flow",
-            "suggested_tests": [
-              "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
-              "Document checks-effects-interactions or guard assumptions.",
-              "Test state before and after external calls.",
-              "Assert failure paths preserve accounting state."
-            ],
-            "tags": [
-              "reentrancy-review",
-              "documentation-readiness",
-              "reentrancy-rule-pack"
-            ]
-          },
-          "ruleId": "ARK-REENT-004"
-        },
-        {
-          "level": "warning",
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "src/ToyAMMPool.sol",
-                  "uriBaseId": "%SRCROOT%"
-                },
-                "region": {
-                  "startLine": 24
-                }
-              }
-            }
-          ],
-          "message": {
-            "text": "AMM invariant assumptions not covered by tests: Add local tests or invariants showing swaps and liquidity operations preserve documented AMM accounting within fee and rounding bounds. This is a pre-audit readiness gap, not a confirmed vulnerability."
-          },
-          "partialFingerprints": {
-            "arkheionxFingerprint": "cb6a1b50135e01f31517c594"
-          },
-          "properties": {
-            "affected_functions": [
-              "addLiquidity",
-              "getAmountOut",
-              "getReserves",
-              "removeLiquidity",
-              "swap"
-            ],
-            "arkheionx_kind": "pre-audit-readiness",
-            "category": "amm-invariant",
-            "confidence": "medium",
-            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
-            "detection_sources": [
-              "semantic-lite"
-            ],
-            "evidence_count": 5,
-            "false_positive_notes": "",
-            "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
-            "invariant_candidates": [
-              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
-              "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
-            ],
-            "knowledge": {
-              "broken_invariants": [
-                "constant-product-or-stableswap-invariant",
-                "lp-value-conservation"
-              ],
-              "failed_assumptions": [
-                "pool-invariant-remains-stable-through-edge-sequences",
-                "liquidity-add-remove-is-proportional"
-              ],
-              "finding_map_version": "0.9.0",
-              "related_docs": [
-                "docs/AMM_RULE_PACK.md",
-                "docs/RULE_PACKS.md",
-                "docs/EXPLOIT_TAXONOMY.md"
-              ],
-              "related_patterns": [
-                "pattern-amm-invariant-steering",
-                "pattern-spot-price-manipulation"
-              ],
-              "related_pocs": [
-                "poc-2021-01-saddle",
-                "poc-2021-10-indexed-finance",
-                "poc-2025-12-yeth"
-              ],
-              "root_causes": [
-                "pool-invariant-can-be-steered",
-                "slippage-boundary-undertested"
-              ],
-              "rule_pack": "amm",
-              "search_terms": [
-                "AMM invariant",
-                "constant product",
-                "reserve accounting",
-                "liquidity invariant"
-              ],
-              "suggested_tests": [
-                "swap-invariant-conservation",
-                "reserve-accounting-test",
-                "liquidity-proportionality",
-                "fee-rounding-bound"
-              ]
-            },
-            "negative_evidence_count": 0,
-            "not_a_vulnerability_confirmation": true,
-            "not_formal_audit": true,
-            "priority": "Medium readiness gap",
-            "readiness_gap": true,
-            "rule_family": "amm",
-            "suggested_tests": [
-              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
-              "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
-              "Test repeated swaps across small and large reserve states.",
-              "Document expected invariant tolerance."
-            ],
-            "tags": [
-              "amm-invariant",
-              "amm-rule-pack",
-              "pre-audit-readiness"
-            ]
-          },
-          "ruleId": "ARK-AMM-001"
-        },
-        {
           "level": "warning",
           "locations": [
             {
@@ -940,6 +238,111 @@
             }
           ],
           "message": {
+            "text": "AMM invariant assumptions not covered by tests: Add local tests or invariants showing swaps and liquidity operations preserve documented AMM accounting within fee and rounding bounds. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "cb6a1b50135e01f31517c594"
+          },
+          "properties": {
+            "affected_functions": [
+              "addLiquidity",
+              "getAmountOut",
+              "getReserves",
+              "removeLiquidity",
+              "swap"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "amm-invariant",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected, and related test coverage terms were also found; priority may be reduced.",
+            "detection_sources": [
+              "semantic-lite"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
+            "historical_pattern_similarity": "Maps to historical AMM invariant and pool-price accounting readiness classes. This is defensive test inspiration, not vulnerability confirmation.",
+            "invariant_candidates": [
+              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+              "Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+            ],
+            "knowledge": {
+              "broken_invariants": [
+                "constant-product-or-stableswap-invariant",
+                "lp-value-conservation"
+              ],
+              "failed_assumptions": [
+                "pool-invariant-remains-stable-through-edge-sequences",
+                "liquidity-add-remove-is-proportional"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/AMM_RULE_PACK.md",
+                "docs/RULE_PACKS.md",
+                "docs/EXPLOIT_TAXONOMY.md"
+              ],
+              "related_patterns": [
+                "pattern-amm-invariant-steering",
+                "pattern-spot-price-manipulation"
+              ],
+              "related_pocs": [
+                "poc-2021-01-saddle",
+                "poc-2021-10-indexed-finance",
+                "poc-2025-12-yeth"
+              ],
+              "root_causes": [
+                "pool-invariant-can-be-steered",
+                "slippage-boundary-undertested"
+              ],
+              "rule_pack": "amm",
+              "search_terms": [
+                "AMM invariant",
+                "constant product",
+                "reserve accounting",
+                "liquidity invariant"
+              ],
+              "suggested_tests": [
+                "swap-invariant-conservation",
+                "reserve-accounting-test",
+                "liquidity-proportionality",
+                "fee-rounding-bound"
+              ]
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "rule_family": "amm",
+            "suggested_tests": [
+              "Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.",
+              "Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.",
+              "Test repeated swaps across small and large reserve states.",
+              "Document expected invariant tolerance."
+            ],
+            "tags": [
+              "amm-invariant",
+              "amm-rule-pack",
+              "pre-audit-readiness"
+            ]
+          },
+          "ruleId": "ARK-AMM-001"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 24
+                }
+              }
+            }
+          ],
+          "message": {
             "text": "Fee-on-transfer or non-standard token assumptions not documented: Document supported token assumptions or add balanceBefore/balanceAfter accounting tests for fee-on-transfer and non-standard token behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
           },
           "partialFingerprints": {
@@ -1124,61 +527,739 @@
             ]
           },
           "ruleId": "ARK-AMM-005"
+        },
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 28
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "External-call value flow needs reentrancy review: Review state update order and add local malicious-receiver tests where callbacks are possible. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "d46d40db998cb906240db620"
+          },
+          "properties": {
+            "affected_functions": [
+              "addLiquidity",
+              "removeLiquidity",
+              "swap"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reentrancy-value-flow",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
+            "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "External-call flows cannot observe or preserve inconsistent accounting state."
+            ],
+            "knowledge": {
+              "broken_invariants": [
+                "single-claim-or-withdrawal",
+                "state-updated-before-external-value-flow"
+              ],
+              "failed_assumptions": [
+                "token-transfer-does-not-yield-control",
+                "claim-or-withdraw-path-cannot-repeat"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/REENTRANCY_VALUE_FLOW_RULE_PACK.md",
+                "docs/RULE_PACKS.md"
+              ],
+              "related_patterns": [
+                "pattern-external-call-before-state-update",
+                "pattern-callback-capable-token"
+              ],
+              "related_pocs": [
+                "poc-2018-10-spankchain",
+                "poc-2020-04-uniswap-imbtc",
+                "poc-2021-03-dodo-crowdpool"
+              ],
+              "root_causes": [
+                "external-control-before-state-finalization",
+                "callback-assumption-failure"
+              ],
+              "rule_pack": "reentrancy_value_flow",
+              "search_terms": [
+                "reentrancy value flow",
+                "callback capable token",
+                "claim refund flow"
+              ],
+              "suggested_tests": [
+                "reentrant-receiver-mock",
+                "state-update-before-external-call-test",
+                "double-claim-prevention"
+              ]
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Medium readiness gap",
+            "readiness_gap": true,
+            "rule_family": "reentrancy-value-flow",
+            "suggested_tests": [
+              "Review state update order and add local malicious-receiver tests where callbacks are possible.",
+              "Add a benign callback-capable receiver stub.",
+              "Assert state updates happen before external value transfer where required.",
+              "Test withdraw, claim, refund, or swap flows for accounting consistency."
+            ],
+            "tags": [
+              "reentrancy-review",
+              "value-flow"
+            ]
+          },
+          "ruleId": "ARK-REENT-001"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 28
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "External call path without documented ordering assumptions: Document state-update ordering, callback assumptions, and why any unguarded external calls are safe by design. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "5267b7cf94570dcb176a34ce"
+          },
+          "properties": {
+            "affected_functions": [
+              "addLiquidity",
+              "removeLiquidity",
+              "swap"
+            ],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "reentrancy-value-flow",
+            "confidence": "medium",
+            "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+            "detection_sources": [
+              "keyword",
+              "semantic-lite",
+              "test-coverage"
+            ],
+            "evidence_count": 5,
+            "false_positive_notes": "",
+            "historical_pattern_similarity": "Maps to checks-effects-interactions and callback boundary readiness classes.",
+            "invariant_candidates": [
+              "External call ordering follows documented state-transition policy."
+            ],
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "rule_family": "reentrancy-value-flow",
+            "suggested_tests": [
+              "Pair ordering documentation with a local receiver test that exercises the documented boundary.",
+              "Document checks-effects-interactions or guard assumptions.",
+              "Test state before and after external calls.",
+              "Assert failure paths preserve accounting state."
+            ],
+            "tags": [
+              "reentrancy-review",
+              "documentation-readiness",
+              "reentrancy-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-REENT-004"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Oracle-dependent logic without stale-price tests: Add local mock oracle tests for stale round rejection, heartbeat windows, answeredInRound, and updatedAt behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "204867f6f7d3206783b6abd7"
+          },
+          "properties": {
+            "affected_functions": [],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "low",
+            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "detection_sources": [
+              "keyword",
+              "test-coverage"
+            ],
+            "evidence_count": 3,
+            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+            "historical_pattern_similarity": "Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.",
+            "invariant_candidates": [
+              "Accounting decisions only use oracle data that satisfies documented freshness policy."
+            ],
+            "knowledge": {
+              "broken_invariants": [
+                "accounting-value-uses-valid-price",
+                "collateral-value-is-bounded",
+                "share-price-uses-trusted-input"
+              ],
+              "failed_assumptions": [
+                "oracle-price-is-current",
+                "oracle-answer-is-normalized",
+                "pool-price-is-manipulation-resistant"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/ORACLE_RULE_PACK.md",
+                "docs/RULE_PACKS.md",
+                "docs/SEARCH_GUIDE.md"
+              ],
+              "related_patterns": [
+                "pattern-oracle-stale-price",
+                "pattern-spot-price-manipulation",
+                "pattern-pool-price-accounting"
+              ],
+              "related_pocs": [
+                "poc-2025-11-moonwell",
+                "poc-2020-10-harvest",
+                "poc-2021-02-yearn-v1-dai"
+              ],
+              "root_causes": [
+                "missing-oracle-freshness-validation",
+                "implicit-price-trust",
+                "missing-price-bounds"
+              ],
+              "rule_pack": "oracle",
+              "search_terms": [
+                "oracle stale price",
+                "Chainlink updatedAt",
+                "heartbeat validation",
+                "price bounds",
+                "TWAP vs spot"
+              ],
+              "suggested_tests": [
+                "stale-round-rejection",
+                "heartbeat-bound-test",
+                "decimal-normalization-test",
+                "price-bounds-test"
+              ]
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "rule_family": "oracle",
+            "suggested_tests": [
+              "Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.",
+              "Reject stale oracle rounds or document fallback behavior.",
+              "Test updatedAt or heartbeat boundaries.",
+              "Test borrow, liquidation, vault, or reward flows when oracle data is stale."
+            ],
+            "tags": [
+              "oracle-risk",
+              "oracle-rule-pack",
+              "pre-audit-readiness"
+            ]
+          },
+          "ruleId": "ARK-ORC-001"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage: Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "b855f100dbbf70fe3aa9f3e2"
+          },
+          "properties": {
+            "affected_functions": [],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "low",
+            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "detection_sources": [
+              "keyword",
+              "test-coverage"
+            ],
+            "evidence_count": 3,
+            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+            "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "Normalized oracle values remain within documented unit and decimal assumptions."
+            ],
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "rule_family": "oracle",
+            "suggested_tests": [
+              "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+              "Test decimals normalization across expected feed decimals.",
+              "Test zero, negative, or invalid oracle answers if applicable.",
+              "Assert normalized price units match accounting units."
+            ],
+            "tags": [
+              "oracle-risk",
+              "price-assumptions"
+            ]
+          },
+          "ruleId": "ARK-ORC-002"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Spot or reserve-based pricing without manipulation-resistance tests: Add local pool/reserve tests for TWAP, bounds, and spot-price movement assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "c7c2a014effc261606b9ab6b"
+          },
+          "properties": {
+            "affected_functions": [],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "low",
+            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "detection_sources": [
+              "keyword",
+              "test-coverage"
+            ],
+            "evidence_count": 3,
+            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+            "historical_pattern_similarity": "Maps to historical price-manipulation readiness classes.",
+            "invariant_candidates": [
+              "Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio."
+            ],
+            "knowledge": {
+              "broken_invariants": [
+                "price-input-remains-manipulation-resistant",
+                "accounting-value-is-not-single-pool-dependent"
+              ],
+              "failed_assumptions": [
+                "pool-reserves-reflect-fair-price",
+                "spot-price-cannot-be-moved-economically"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/ORACLE_RULE_PACK.md",
+                "docs/RULE_PACKS.md"
+              ],
+              "related_patterns": [
+                "pattern-spot-price-manipulation",
+                "pattern-amm-invariant-steering"
+              ],
+              "related_pocs": [
+                "poc-2020-10-harvest",
+                "poc-2021-01-saddle",
+                "poc-2025-12-yeth"
+              ],
+              "root_causes": [
+                "same-transaction-price-trust",
+                "missing-twap-or-bounds"
+              ],
+              "rule_pack": "oracle",
+              "search_terms": [
+                "spot price manipulation",
+                "getReserves",
+                "TWAP",
+                "pool price"
+              ],
+              "suggested_tests": [
+                "twap-vs-spot-behavior",
+                "reserve-manipulation-sanity-test",
+                "price-bounds-test"
+              ]
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "rule_family": "oracle",
+            "suggested_tests": [
+              "Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.",
+              "Test spot-price movement bounds.",
+              "Test TWAP or delay assumptions when used.",
+              "Document reserve-price dependency and expected safeguards."
+            ],
+            "tags": [
+              "oracle-risk",
+              "spot-price",
+              "reserve-pricing",
+              "oracle-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ORC-003"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Missing price bounds or fallback assumptions documentation: Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "18c27a0df2b8711caa82c079"
+          },
+          "properties": {
+            "affected_functions": [],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "oracle-pricing",
+            "confidence": "low",
+            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "detection_sources": [
+              "keyword",
+              "test-coverage"
+            ],
+            "evidence_count": 3,
+            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+            "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+            "invariant_candidates": [
+              "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+            ],
+            "knowledge": {
+              "finding_map_version": "0.9.0",
+              "related_docs": [],
+              "related_patterns": [],
+              "related_pocs": [],
+              "search_terms": [],
+              "suggested_tests": []
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "rule_family": "oracle",
+            "suggested_tests": [
+              "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+              "Test documented price bounds.",
+              "Test invalid answer fallback behavior.",
+              "Add documentation for price shock and fallback assumptions."
+            ],
+            "tags": [
+              "oracle-risk",
+              "documentation-readiness",
+              "oracle-rule-pack"
+            ]
+          },
+          "ruleId": "ARK-ORC-005"
+        },
+        {
+          "level": "note",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ToyAMMPool.sol",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "No invariant tests detected for DeFi protocol shape: Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions. This is a pre-audit readiness gap, not a confirmed vulnerability."
+          },
+          "partialFingerprints": {
+            "arkheionxFingerprint": "24adf3a5e47504eab250ece6"
+          },
+          "properties": {
+            "affected_functions": [],
+            "arkheionx_kind": "pre-audit-readiness",
+            "category": "testing-readiness",
+            "confidence": "low",
+            "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+            "detection_sources": [
+              "keyword"
+            ],
+            "evidence_count": 2,
+            "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+            "historical_pattern_similarity": "",
+            "invariant_candidates": [
+              "Core accounting relationships hold after any allowed user action.",
+              "Privileged actions cannot silently bypass documented accounting assumptions."
+            ],
+            "knowledge": {
+              "broken_invariants": [
+                "protocol-specific-conservation-invariant",
+                "authorization-or-lifecycle-invariant"
+              ],
+              "failed_assumptions": [
+                "unit-tests-cover-compositional-state",
+                "happy-path-tests-cover-adversarial-sequences"
+              ],
+              "finding_map_version": "0.9.0",
+              "related_docs": [
+                "docs/READINESS_SCORE.md",
+                "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
+              ],
+              "related_patterns": [
+                "pattern-missing-invariant-coverage",
+                "pattern-assumption-not-encoded-in-tests"
+              ],
+              "related_pocs": [
+                "poc-2020-08-opyn",
+                "poc-2020-09-bzx-ifusdc",
+                "poc-2021-10-indexed-finance"
+              ],
+              "root_causes": [
+                "critical-assumption-only-documented-or-implicit",
+                "state-machine-not-fuzzed"
+              ],
+              "rule_pack": "testing",
+              "search_terms": [
+                "missing invariant",
+                "audit blocker",
+                "stateful fuzz",
+                "invariant testing"
+              ],
+              "suggested_tests": [
+                "foundry-invariant-skeleton",
+                "stateful-fuzz-sequence",
+                "roundtrip-or-conservation-invariant"
+              ]
+            },
+            "negative_evidence_count": 0,
+            "not_a_vulnerability_confirmation": true,
+            "not_formal_audit": true,
+            "priority": "Low readiness gap",
+            "readiness_gap": true,
+            "rule_family": "testing",
+            "suggested_tests": [
+              "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+              "Add a stateful invariant suite for the core protocol lifecycle.",
+              "Add handler actions for normal user flows and documented edge cases.",
+              "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
+            ],
+            "tags": [
+              "invariant-testing",
+              "amm"
+            ]
+          },
+          "ruleId": "ARK-TST-002"
         }
       ],
       "tool": {
         "driver": {
-          "informationUri": "https://github.com/Yudis-bit/DeFi-Exploit-PoCs",
+          "informationUri": "https://github.com/Yudis-bit/arkheionx",
           "name": "Arkheionx Pre-Audit Scanner",
           "rules": [
             {
               "fullDescription": {
-                "text": "Protocol-like value flows were detected, but no invariant/property testing signal was found."
+                "text": "LP supply, mint, burn, or share-accounting signals were detected without visible first-provider, proportional mint/burn, or rounding boundary tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.",
-                "text": "Defensive readiness checks:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions."
+                "markdown": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\nSuggested defensive tests:\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n\nInvariant candidates:\n- LP share supply tracks pool ownership within documented rounding.",
+                "text": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\nSuggested defensive tests:\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n\nInvariant candidates:\n- LP share supply tracks pool ownership within documented rounding."
               },
-              "id": "ARK-TST-002",
-              "name": "no-invariant-tests-detected-for-defi-protocol-shape",
+              "id": "ARK-AMM-002",
+              "name": "lp-share-accounting-without-mint/burn-boundary-tests",
               "properties": {
-                "category": "testing-readiness",
+                "category": "amm-lp-accounting",
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
-                "rule_family": "testing",
+                "rule_family": "amm",
                 "tags": [
-                  "invariant-testing",
-                  "amm"
+                  "amm-lp-accounting",
+                  "amm-rule-pack",
+                  "share-accounting"
                 ]
               },
               "shortDescription": {
-                "text": "No invariant tests detected for DeFi protocol shape"
+                "text": "LP share accounting without mint/burn boundary tests"
               }
             },
             {
               "fullDescription": {
-                "text": "Oracle and price-feed signals were detected without enough freshness or sanity-check language."
+                "text": "Reserve-ratio, quote, getAmountOut, or spot-price signals were detected without visible TWAP, delay, bounds, or manipulation-resistance tests."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions.",
-                "text": "Defensive readiness checks:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions."
+                "markdown": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions.",
+                "text": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions."
               },
-              "id": "ARK-ORC-002",
-              "name": "oracle-usage-lacks-visible-staleness,-twap,-bounds,-or-sanity-coverage",
+              "id": "ARK-AMM-003",
+              "name": "spot-price-or-reserve-price-dependency-without-manipulation-resistance-tests",
               "properties": {
-                "category": "oracle-pricing",
+                "category": "amm-pricing",
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
-                "rule_family": "oracle",
+                "rule_family": "amm",
                 "tags": [
+                  "amm-pricing",
+                  "spot-price",
                   "oracle-risk",
-                  "price-assumptions"
+                  "amm-rule-pack"
                 ]
               },
               "shortDescription": {
-                "text": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage"
+                "text": "Spot-price or reserve-price dependency without manipulation-resistance tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "AMM reserve, swap, or liquidity signals were detected without visible invariant or reserve-accounting tests."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
+                "text": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
+              },
+              "id": "ARK-AMM-001",
+              "name": "amm-invariant-assumptions-not-covered-by-tests",
+              "properties": {
+                "category": "amm-invariant",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "rule_family": "amm",
+                "tags": [
+                  "amm-invariant",
+                  "amm-rule-pack",
+                  "pre-audit-readiness"
+                ]
+              },
+              "shortDescription": {
+                "text": "AMM invariant assumptions not covered by tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Token transfer and amountIn accounting signals were detected without clear received-amount tests or non-standard token assumptions."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
+                "text": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
+              },
+              "id": "ARK-AMM-004",
+              "name": "fee-on-transfer-or-non-standard-token-assumptions-not-documented",
+              "properties": {
+                "category": "amm-token-assumptions",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "rule_family": "amm",
+                "tags": [
+                  "amm-token-assumptions",
+                  "fee-on-transfer",
+                  "amm-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Fee-on-transfer or non-standard token assumptions not documented"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Swap path signals were detected without clear minOut, deadline, slippage, or stale-quote constraints."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy.",
+                "text": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy."
+              },
+              "id": "ARK-AMM-005",
+              "name": "slippage/min-output-constraints-missing-or-unclear",
+              "properties": {
+                "category": "amm-slippage",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "rule_family": "amm",
+                "tags": [
+                  "amm-slippage",
+                  "min-output",
+                  "amm-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "Slippage/min-output constraints missing or unclear"
               }
             },
             {
@@ -1186,8 +1267,8 @@
                 "text": "External call or token transfer terms were detected without guard or reentrancy-review signals."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n\nSuggested defensive tests:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n\nInvariant candidates:\n- External-call flows cannot observe or preserve inconsistent accounting state.",
-                "text": "Defensive readiness checks:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n\nSuggested defensive tests:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n\nInvariant candidates:\n- External-call flows cannot observe or preserve inconsistent accounting state."
+                "markdown": "Defensive readiness checks:\n- checks-effects-interactions ordering\n- local malicious-receiver callback test\n- double-withdraw or double-claim prevention\n\nSuggested defensive tests:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n\nInvariant candidates:\n- External-call flows cannot observe or preserve inconsistent accounting state.",
+                "text": "Defensive readiness checks:\n- checks-effects-interactions ordering\n- local malicious-receiver callback test\n- double-withdraw or double-claim prevention\n\nSuggested defensive tests:\n- Review state update order and add local malicious-receiver tests where callbacks are possible.\n- Add a benign callback-capable receiver stub.\n- Assert state updates happen before external value transfer where required.\n\nInvariant candidates:\n- External-call flows cannot observe or preserve inconsistent accounting state."
               },
               "id": "ARK-REENT-001",
               "name": "external-call-value-flow-needs-reentrancy-review",
@@ -1204,6 +1285,32 @@
               },
               "shortDescription": {
                 "text": "External-call value flow needs reentrancy review"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\nSuggested defensive tests:\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n\nInvariant candidates:\n- External call ordering follows documented state-transition policy.",
+                "text": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\nSuggested defensive tests:\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n\nInvariant candidates:\n- External call ordering follows documented state-transition policy."
+              },
+              "id": "ARK-REENT-004",
+              "name": "external-call-path-without-documented-ordering-assumptions",
+              "properties": {
+                "category": "reentrancy-value-flow",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "rule_family": "reentrancy-value-flow",
+                "tags": [
+                  "reentrancy-review",
+                  "documentation-readiness",
+                  "reentrancy-rule-pack"
+                ]
+              },
+              "shortDescription": {
+                "text": "External call path without documented ordering assumptions"
               }
             },
             {
@@ -1230,6 +1337,31 @@
               },
               "shortDescription": {
                 "text": "Oracle-dependent logic without stale-price tests"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Oracle and price-feed signals were detected without enough freshness or sanity-check language."
+              },
+              "help": {
+                "markdown": "Defensive readiness checks:\n- stale-round and heartbeat handling\n- decimals normalization to accounting units\n- documented price bounds, TWAP, or fallback policy\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions.",
+                "text": "Defensive readiness checks:\n- stale-round and heartbeat handling\n- decimals normalization to accounting units\n- documented price bounds, TWAP, or fallback policy\n\nSuggested defensive tests:\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n\nInvariant candidates:\n- Normalized oracle values remain within documented unit and decimal assumptions."
+              },
+              "id": "ARK-ORC-002",
+              "name": "oracle-usage-lacks-visible-staleness,-twap,-bounds,-or-sanity-coverage",
+              "properties": {
+                "category": "oracle-pricing",
+                "defensive_only": true,
+                "not_formal_audit": true,
+                "readiness_gap": true,
+                "rule_family": "oracle",
+                "tags": [
+                  "oracle-risk",
+                  "price-assumptions"
+                ]
+              },
+              "shortDescription": {
+                "text": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage"
               }
             },
             {
@@ -1287,159 +1419,27 @@
             },
             {
               "fullDescription": {
-                "text": "External call/value-flow signals were detected without clear ordering or reentrancy assumption documentation."
+                "text": "Protocol-like value flows were detected, but no invariant/property testing signal was found."
               },
               "help": {
-                "markdown": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\nSuggested defensive tests:\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n\nInvariant candidates:\n- External call ordering follows documented state-transition policy.",
-                "text": "Defensive readiness checks:\n- ordering documentation\n- callback assumptions\n- external call failure behavior\n\nSuggested defensive tests:\n- Pair ordering documentation with a local receiver test that exercises the documented boundary.\n- Document checks-effects-interactions or guard assumptions.\n- Test state before and after external calls.\n\nInvariant candidates:\n- External call ordering follows documented state-transition policy."
+                "markdown": "Defensive readiness checks:\n- stateful invariant suite for the core lifecycle\n- handler actions for normal and edge-case user flows\n- conservation properties for value-bearing state\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.",
+                "text": "Defensive readiness checks:\n- stateful invariant suite for the core lifecycle\n- handler actions for normal and edge-case user flows\n- conservation properties for value-bearing state\n\nSuggested defensive tests:\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n\nInvariant candidates:\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions."
               },
-              "id": "ARK-REENT-004",
-              "name": "external-call-path-without-documented-ordering-assumptions",
+              "id": "ARK-TST-002",
+              "name": "no-invariant-tests-detected-for-defi-protocol-shape",
               "properties": {
-                "category": "reentrancy-value-flow",
+                "category": "testing-readiness",
                 "defensive_only": true,
                 "not_formal_audit": true,
                 "readiness_gap": true,
-                "rule_family": "reentrancy-value-flow",
+                "rule_family": "testing",
                 "tags": [
-                  "reentrancy-review",
-                  "documentation-readiness",
-                  "reentrancy-rule-pack"
+                  "invariant-testing",
+                  "amm"
                 ]
               },
               "shortDescription": {
-                "text": "External call path without documented ordering assumptions"
-              }
-            },
-            {
-              "fullDescription": {
-                "text": "AMM reserve, swap, or liquidity signals were detected without visible invariant or reserve-accounting tests."
-              },
-              "help": {
-                "markdown": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds.",
-                "text": "Defensive readiness checks:\n- swap invariant conservation\n- reserve accounting\n- add/remove liquidity consistency\n- fee and rounding bounds\n\nSuggested defensive tests:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Assert swaps preserve the documented constant-product or stableswap invariant within fee and rounding bounds.\n- Test repeated swaps across small and large reserve states.\n\nInvariant candidates:\n- Assert swaps preserve the documented constant-product or stableswap invariant within expected fee and rounding bounds.\n- Swaps and liquidity operations preserve documented AMM accounting within expected fee and rounding bounds."
-              },
-              "id": "ARK-AMM-001",
-              "name": "amm-invariant-assumptions-not-covered-by-tests",
-              "properties": {
-                "category": "amm-invariant",
-                "defensive_only": true,
-                "not_formal_audit": true,
-                "readiness_gap": true,
-                "rule_family": "amm",
-                "tags": [
-                  "amm-invariant",
-                  "amm-rule-pack",
-                  "pre-audit-readiness"
-                ]
-              },
-              "shortDescription": {
-                "text": "AMM invariant assumptions not covered by tests"
-              }
-            },
-            {
-              "fullDescription": {
-                "text": "LP supply, mint, burn, or share-accounting signals were detected without visible first-provider, proportional mint/burn, or rounding boundary tests."
-              },
-              "help": {
-                "markdown": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\nSuggested defensive tests:\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n\nInvariant candidates:\n- LP share supply tracks pool ownership within documented rounding.",
-                "text": "Defensive readiness checks:\n- first liquidity provider behavior\n- proportional minting\n- proportional withdrawal\n- dust handling\n\nSuggested defensive tests:\n- Test first liquidity, repeated add/remove liquidity, and tiny-liquidity burn cases to verify LP shares remain proportional.\n- Test first liquidity provider behavior.\n- Test proportional minting and proportional withdrawal.\n\nInvariant candidates:\n- LP share supply tracks pool ownership within documented rounding."
-              },
-              "id": "ARK-AMM-002",
-              "name": "lp-share-accounting-without-mint/burn-boundary-tests",
-              "properties": {
-                "category": "amm-lp-accounting",
-                "defensive_only": true,
-                "not_formal_audit": true,
-                "readiness_gap": true,
-                "rule_family": "amm",
-                "tags": [
-                  "amm-lp-accounting",
-                  "amm-rule-pack",
-                  "share-accounting"
-                ]
-              },
-              "shortDescription": {
-                "text": "LP share accounting without mint/burn boundary tests"
-              }
-            },
-            {
-              "fullDescription": {
-                "text": "Reserve-ratio, quote, getAmountOut, or spot-price signals were detected without visible TWAP, delay, bounds, or manipulation-resistance tests."
-              },
-              "help": {
-                "markdown": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions.",
-                "text": "Defensive readiness checks:\n- TWAP or delay assumption\n- reserve manipulation sanity test\n- price movement bounds\n\nSuggested defensive tests:\n- Move reserves in a local pool test and assert dependent protocol decisions respect documented price bounds or TWAP assumptions.\n- Test reserve-price movement bounds.\n- Test TWAP or delay assumptions if used.\n\nInvariant candidates:\n- Reserve-based price consumers respect documented bounds and delay assumptions."
-              },
-              "id": "ARK-AMM-003",
-              "name": "spot-price-or-reserve-price-dependency-without-manipulation-resistance-tests",
-              "properties": {
-                "category": "amm-pricing",
-                "defensive_only": true,
-                "not_formal_audit": true,
-                "readiness_gap": true,
-                "rule_family": "amm",
-                "tags": [
-                  "amm-pricing",
-                  "spot-price",
-                  "oracle-risk",
-                  "amm-rule-pack"
-                ]
-              },
-              "shortDescription": {
-                "text": "Spot-price or reserve-price dependency without manipulation-resistance tests"
-              }
-            },
-            {
-              "fullDescription": {
-                "text": "Token transfer and amountIn accounting signals were detected without clear received-amount tests or non-standard token assumptions."
-              },
-              "help": {
-                "markdown": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens.",
-                "text": "Defensive readiness checks:\n- actual received amount accounting\n- fee-on-transfer simulation\n- unsupported token documentation\n\nSuggested defensive tests:\n- Use a local fee-on-transfer token mock or document that such tokens are unsupported and guarded by configuration.\n- Test actual received amount accounting with balanceBefore/balanceAfter pattern.\n- Simulate fee-on-transfer behavior with a local mock if supported.\n\nInvariant candidates:\n- Pool accounting uses actual received token amounts or explicitly rejects unsupported tokens."
-              },
-              "id": "ARK-AMM-004",
-              "name": "fee-on-transfer-or-non-standard-token-assumptions-not-documented",
-              "properties": {
-                "category": "amm-token-assumptions",
-                "defensive_only": true,
-                "not_formal_audit": true,
-                "readiness_gap": true,
-                "rule_family": "amm",
-                "tags": [
-                  "amm-token-assumptions",
-                  "fee-on-transfer",
-                  "amm-rule-pack"
-                ]
-              },
-              "shortDescription": {
-                "text": "Fee-on-transfer or non-standard token assumptions not documented"
-              }
-            },
-            {
-              "fullDescription": {
-                "text": "Swap path signals were detected without clear minOut, deadline, slippage, or stale-quote constraints."
-              },
-              "help": {
-                "markdown": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy.",
-                "text": "Defensive readiness checks:\n- minOut enforcement\n- deadline behavior\n- stale quote handling\n\nSuggested defensive tests:\n- Assert swaps revert or follow documented policy when amountOut falls below a user-provided bound or quote is stale.\n- Test minOut enforcement.\n- Test stale quote or deadline behavior if supported.\n\nInvariant candidates:\n- Swap execution respects user-provided output bounds and documented deadline policy."
-              },
-              "id": "ARK-AMM-005",
-              "name": "slippage/min-output-constraints-missing-or-unclear",
-              "properties": {
-                "category": "amm-slippage",
-                "defensive_only": true,
-                "not_formal_audit": true,
-                "readiness_gap": true,
-                "rule_family": "amm",
-                "tags": [
-                  "amm-slippage",
-                  "min-output",
-                  "amm-rule-pack"
-                ]
-              },
-              "shortDescription": {
-                "text": "Slippage/min-output constraints missing or unclear"
+                "text": "No invariant tests detected for DeFi protocol shape"
               }
             }
           ],

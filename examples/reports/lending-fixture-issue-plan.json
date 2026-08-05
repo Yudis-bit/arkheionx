@@ -113,7 +113,7 @@
       "why_fix_first": "appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-06-06T12:31:33+00:00",
+  "generated_at": "2026-08-05T18:37:05+00:00",
   "issue_grouping": "one-per-finding",
   "issues": [
     {
@@ -399,7 +399,7 @@
         "getPrice",
         "liquidate"
       ],
-      "body": "<!-- arkheionx-issue:ARK-ORC-002 -->\n\n# Arkheionx readiness gap: ARK-ORC-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-002`\n- Priority: `High readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Rule family: `oracle`\n- Fix First rank: `3`\n- Fingerprint: `8a1699ea5c99922d1c6da655`\n\n## Evidence\n\n- `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`\n- `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`\n- `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding.\n\n## Why It Matters\n\nOracle and price-feed signals were detected without enough freshness or sanity-check language.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n\n## Suggested Tests\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n- Assert normalized price units match accounting units.\n\n## Invariant Candidates\n\n- Normalized oracle values remain within documented unit and decimal assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/lending-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/lending-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/lending-fixture.sarif.json`\n- Issue Plan: `examples/reports/lending-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-ORC-002 -->\n\n# Arkheionx readiness gap: ARK-ORC-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-ORC-002`\n- Priority: `High readiness gap`\n- Category: `oracle-pricing`\n- Confidence: `medium`\n- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.\n- Rule family: `oracle`\n- Fix First rank: `3`\n- Fingerprint: `2b5212e9506e054f6e136eee`\n\n## Evidence\n\n- `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`\n- `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`\n- `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`\n- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.\n- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `answer, getPrice, latestRoundData, priceFeed`\n\n## Why It Matters\n\nPrice-dependent accounting can be wrong when oracle data is stale, out of bounds, or mis-normalized and no freshness or sanity check is visible to a reviewer.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- stale-round and heartbeat handling\n- decimals normalization to accounting units\n- documented price bounds, TWAP, or fallback policy\n\n## Suggested Tests\n\n- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.\n- Test decimals normalization across expected feed decimals.\n- Test zero, negative, or invalid oracle answers if applicable.\n- Assert normalized price units match accounting units.\n\n## Invariant Candidates\n\n- Normalized oracle values remain within documented unit and decimal assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/lending-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/lending-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/lending-fixture.sarif.json`\n- Issue Plan: `examples/reports/lending-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "oracle-pricing",
       "confidence": "medium",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
@@ -450,13 +450,13 @@
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
+          "snippet": "answer, getPrice, latestRoundData, priceFeed",
           "type": "keyword"
         }
       ],
       "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
       "finding_id": "ARK-ORC-002",
-      "fingerprint": "8a1699ea5c99922d1c6da655",
+      "fingerprint": "2b5212e9506e054f6e136eee",
       "fix_first_rank": 3,
       "invariant_candidates": [
         "Normalized oracle values remain within documented unit and decimal assumptions."
@@ -473,7 +473,11 @@
       "negative_evidence": [],
       "negative_evidence_count": 0,
       "priority": "High readiness gap",
-      "recommended_defensive_checks": [],
+      "recommended_defensive_checks": [
+        "stale-round and heartbeat handling",
+        "decimals normalization to accounting units",
+        "documented price bounds, TWAP, or fallback policy"
+      ],
       "related_knowledge": {
         "finding_map_version": "0.9.0",
         "related_docs": [],
@@ -1277,7 +1281,7 @@
     },
     {
       "affected_functions": [],
-      "body": "<!-- arkheionx-issue:ARK-TST-002 -->\n\n# Arkheionx readiness gap: ARK-TST-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-TST-002`\n- Priority: `Low readiness gap`\n- Category: `testing-readiness`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `testing`\n- Fix First rank: `10`\n- Fingerprint: `365ac6a8f4023a1d577381a3`\n\n## Evidence\n\n- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding.\n- `test/ToyLendingMarket.t.sol:1`: Keyword signal matched this readiness finding.\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant\n- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance\n- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol\n\n## Why It Matters\n\nProtocol-like value flows were detected, but no invariant/property testing signal was found.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n\n## Suggested Tests\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.\n\n## Invariant Candidates\n\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/lending-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/lending-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/lending-fixture.sarif.json`\n- Issue Plan: `examples/reports/lending-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
+      "body": "<!-- arkheionx-issue:ARK-TST-002 -->\n\n# Arkheionx readiness gap: ARK-TST-002\n\nThis issue was generated from an Arkheionx pre-audit readiness scan. It is not a formal audit finding. It does not confirm a vulnerability. It is a defensive remediation task for authorized repository maintainers.\n\n## Finding Summary\n\n- ID: `ARK-TST-002`\n- Priority: `Low readiness gap`\n- Category: `testing-readiness`\n- Confidence: `low`\n- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.\n- Rule family: `testing`\n- Fix First rank: `10`\n- Fingerprint: `616a5903e85dce60c03ada74`\n\n## Evidence\n\n- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing`\n- `test/ToyLendingMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing`\n\nFalse-positive notes:\n\nKeyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.\n\n## Related Knowledge\n\n- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests\n- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant\n- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance\n- Docs: docs/READINESS_SCORE.md, templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol\n\n## Why It Matters\n\nProtocol-like value flows without invariant or property tests leave core accounting assumptions unverified under fees, rounding, and unexpected action sequences.\n\n## Historical Pattern Similarity\n\nHistorical pattern similarity was not strong enough for a specific automated mapping. Manual review is still recommended.\n\n## Recommended Defensive Checks\n\n- stateful invariant suite for the core lifecycle\n- handler actions for normal and edge-case user flows\n- conservation properties for value-bearing state\n\n## Suggested Tests\n\n- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.\n- Add a stateful invariant suite for the core protocol lifecycle.\n- Add handler actions for normal user flows and documented edge cases.\n- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.\n\n## Invariant Candidates\n\n- Core accounting relationships hold after any allowed user action.\n- Privileged actions cannot silently bypass documented accounting assumptions.\n\n## Suggested Owner Notes\n\n- Assign this to the maintainer responsible for the affected contract or test area.\n- Keep remediation defensive and local to this repository.\n- Re-run Arkheionx after changes and compare against the latest baseline if available.\n\n## Acceptance Checklist\n\n- [ ] Add or update tests.\n- [ ] Document assumptions.\n- [ ] Review privileged roles if relevant.\n- [ ] Re-run Arkheionx.\n- [ ] Compare against baseline if relevant.\n\n## Generated Artifacts\n\n- Markdown Report: `examples/reports/lending-fixture-pre-audit-report.md`\n- Json Report: `examples/reports/lending-fixture-pre-audit-report.json`\n- Sarif Report: `examples/reports/lending-fixture.sarif.json`\n- Issue Plan: `examples/reports/lending-fixture-issue-plan.json`\n\n## Safety Boundary\n\nDo not add live-target testing, exploit payloads, private keys, RPC requirements, or bounty-claim language to this issue.\n",
       "category": "testing-readiness",
       "confidence": "low",
       "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
@@ -1291,7 +1295,7 @@
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
+          "snippet": "invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing",
           "type": "keyword"
         },
         {
@@ -1299,13 +1303,13 @@
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
+          "snippet": "invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing",
           "type": "keyword"
         }
       ],
       "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
       "finding_id": "ARK-TST-002",
-      "fingerprint": "365ac6a8f4023a1d577381a3",
+      "fingerprint": "616a5903e85dce60c03ada74",
       "fix_first_rank": 10,
       "invariant_candidates": [
         "Core accounting relationships hold after any allowed user action.",
@@ -1324,7 +1328,11 @@
       "negative_evidence": [],
       "negative_evidence_count": 0,
       "priority": "Low readiness gap",
-      "recommended_defensive_checks": [],
+      "recommended_defensive_checks": [
+        "stateful invariant suite for the core lifecycle",
+        "handler actions for normal and edge-case user flows",
+        "conservation properties for value-bearing state"
+      ],
       "related_knowledge": {
         "broken_invariants": [
           "protocol-specific-conservation-invariant",

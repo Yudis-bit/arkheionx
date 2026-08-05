@@ -1,0 +1,43 @@
+{
+  "contractName": "GenericCoreWallet",
+  "sourcePath": "contracts/GenericCoreWallet.sol",
+  "source": "pragma solidity ^0.8.20;\n\ncontract GenericCoreWallet {\n    address public owner;\n    uint256 public sequence;\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    function execute(address destination, uint256 value, bytes calldata data) external {\n        require(msg.sender == owner, \"owner\");\n        sequence += 1;\n        (bool ok,) = destination.call{value: value}(data);\n        require(ok, \"call\");\n    }\n}\n",
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "sequence",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "execute",
+      "inputs": [
+        { "name": "destination", "type": "address" },
+        { "name": "value", "type": "uint256" },
+        { "name": "data", "type": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f5ffd5b506101438061001d5f395ff3fe",
+  "deployedBytecode": "0x60806040526004361061001a575f5ffd5b3661001f57005b5f5ffd5b00",
+  "compiler": {
+    "version": "0.8.20+commit.a1b79de6"
+  },
+  "networks": {}
+}

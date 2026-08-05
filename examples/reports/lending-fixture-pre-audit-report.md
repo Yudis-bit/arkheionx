@@ -3,7 +3,7 @@
 ## Scope
 
 - Repository root: `examples/lending-fixture`
-- Generated at: `2026-06-06T12:31:33+00:00`
+- Generated at: `2026-08-05T18:37:05+00:00`
 - Protocol type: `lending`
 - Protocol confidence: `manual`
 - Files scanned: `4`
@@ -306,60 +306,13 @@ Arkheionx scanned `examples/lending-fixture` as `lending` readiness context. Thi
 
 ## All Readiness Gaps
 
-### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword`
-- Category: `testing-readiness`
-
-Evidence:
-- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding.
-- `test/ToyLendingMarket.t.sol:1`: Keyword signal matched this readiness finding.
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- scanner signal
-
-Affected files:
-- `src/ToyLendingMarket.sol`
-- `test/ToyLendingMarket.t.sol`
-
-What was detected:
-
-Protocol-like value flows were detected, but no invariant/property testing signal was found.
-
-Related Knowledge:
-
-- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
-- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
-- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
-
-Suggested tests:
-
-- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
-- Add a stateful invariant suite for the core protocol lifecycle.
-- Add handler actions for normal user flows and documented edge cases.
-- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
-
-Invariant candidates:
-
-- Core accounting relationships hold after any allowed user action.
-- Privileged actions cannot silently bypass documented accounting assumptions.
-
-Search tags: `invariant-testing, lending`
-
-### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
+### ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests
 
 - Priority: `High readiness gap`
-- Confidence: `medium`
+- Confidence: `high`
 - Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
 - Detection sources: `keyword, semantic-lite, test-coverage`
-- Category: `oracle-pricing`
+- Category: `lending-oracle`
 
 Evidence:
 - `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
@@ -367,7 +320,26 @@ Evidence:
 - `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
 
 Detected signals:
-- scanner signal
+- `LTV`
+- `accrueInterest`
+- `answer`
+- `borrow`
+- `borrowIndex`
+- `cash`
+- `closeFactor`
+- `collateral`
+- `collateralFactor`
+- `debt`
+- `getPrice`
+- `guardian`
+- `healthFactor`
+- `interestIndex`
+- `latestRoundData`
+- `liquidate`
+- `liquidationBonus`
+- `liquidationThreshold`
+- `priceFeed`
+- `ratePerSecond`
 
 Affected files:
 - `src/ToyLendingMarket.sol`
@@ -375,21 +347,41 @@ Affected files:
 
 What was detected:
 
-Oracle and price-feed signals were detected without enough freshness or sanity-check language.
+Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.
 
+Why it matters:
+
+Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices.
+
+Historical pattern similarity:
+
+Maps to oracle-dependent liquidation and collateral valuation readiness classes.
+
+Recommended defensive checks:
+
+- stale oracle rejection
+- decimals normalization
+- price shock boundary
+- borrow blocked on invalid price
+
+Related Knowledge:
+
+- Historical patterns: pattern-oracle-stale-price, pattern-collateral-debt-invariant
+- Suggested defensive tests: stale-oracle-rejection, decimals-normalization-test, price-shock-boundary-test
+- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest
 
 Suggested tests:
 
-- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-- Test decimals normalization across expected feed decimals.
-- Test zero, negative, or invalid oracle answers if applicable.
-- Assert normalized price units match accounting units.
+- Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
+- Test stale oracle rejection for borrow and liquidation paths.
+- Test decimals normalization for collateral valuation.
+- Test price shock boundaries around health-factor transitions.
 
 Invariant candidates:
 
-- Normalized oracle values remain within documented unit and decimal assumptions.
+- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
 
-Search tags: `oracle-risk, price-assumptions`
+Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
 
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
@@ -452,10 +444,10 @@ Invariant candidates:
 
 Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
 
-### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
+### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
 
-- Priority: `Medium readiness gap`
-- Confidence: `high`
+- Priority: `High readiness gap`
+- Confidence: `medium`
 - Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
 - Detection sources: `keyword, semantic-lite, test-coverage`
 - Category: `oracle-pricing`
@@ -477,36 +469,31 @@ Affected files:
 
 What was detected:
 
-Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.
+Oracle and price-feed signals were detected without enough freshness or sanity-check language.
 
 Why it matters:
 
-Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.
-
-Historical pattern similarity:
-
-Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.
+Price-dependent accounting can be wrong when oracle data is stale, out of bounds, or mis-normalized and no freshness or sanity check is visible to a reviewer.
 
 Recommended defensive checks:
 
-- price bounds
-- fallback policy
-- stale-price policy
-- sequencer downtime notes
+- stale-round and heartbeat handling
+- decimals normalization to accounting units
+- documented price bounds, TWAP, or fallback policy
 
 
 Suggested tests:
 
-- Add documentation plus local tests showing fallback and out-of-bounds price behavior.
-- Test documented price bounds.
-- Test invalid answer fallback behavior.
-- Add documentation for price shock and fallback assumptions.
+- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Test decimals normalization across expected feed decimals.
+- Test zero, negative, or invalid oracle answers if applicable.
+- Assert normalized price units match accounting units.
 
 Invariant candidates:
 
-- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
+- Normalized oracle values remain within documented unit and decimal assumptions.
 
-Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
+Search tags: `oracle-risk, price-assumptions`
 
 ### ARK-ACC-001 - Privileged setters without role-boundary tests
 
@@ -568,6 +555,138 @@ Invariant candidates:
 - Unauthorized users cannot mutate privileged configuration.
 
 Search tags: `access-control-review, admin-risk, access-control-rule-pack`
+
+### ARK-LEND-005 - Reserve/cash accounting assumptions not covered
+
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
+- Category: `lending-liquidity`
+
+Evidence:
+- `src/ToyLendingMarket.sol:48` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
+- `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
+- `src/ToyLendingMarket.sol:62` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
+
+Detected signals:
+- `LTV`
+- `accrueInterest`
+- `borrow`
+- `borrowIndex`
+- `cash`
+- `closeFactor`
+- `collateral`
+- `collateralFactor`
+- `debt`
+- `guardian`
+- `healthFactor`
+- `interestIndex`
+- `liquidate`
+- `liquidationBonus`
+- `liquidationThreshold`
+- `ratePerSecond`
+- `repay`
+- `totalBorrows`
+- `totalReserves`
+
+Affected files:
+- `src/ToyLendingMarket.sol`
+- `test/ToyLendingMarket.t.sol`
+
+What was detected:
+
+Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.
+
+Why it matters:
+
+Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.
+
+Historical pattern similarity:
+
+Maps to cash/debt mismatch and liquidity accounting readiness classes.
+
+Recommended defensive checks:
+
+- available liquidity bound
+- repay updates cash/debt
+- reserve withdrawal constraints
+- utilization bounds
+
+Related Knowledge:
+
+- Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift
+- Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints
+- Related PoCs: poc-2020-11-cheese-bank
+
+Suggested tests:
+
+- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
+- Test borrow cannot exceed available liquidity.
+- Test repay updates cash, debt, and reserves consistently.
+- Assert reserves cannot be withdrawn beyond documented constraints.
+
+Invariant candidates:
+
+- Cash, total borrows, total reserves, and utilization remain internally consistent.
+
+Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
+
+### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
+
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `keyword, semantic-lite, test-coverage`
+- Category: `oracle-pricing`
+
+Evidence:
+- `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
+- `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
+- `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
+
+Detected signals:
+- `answer`
+- `getPrice`
+- `latestRoundData`
+- `priceFeed`
+
+Affected files:
+- `src/ToyLendingMarket.sol`
+- `test/ToyLendingMarket.t.sol`
+
+What was detected:
+
+Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.
+
+Why it matters:
+
+Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.
+
+Historical pattern similarity:
+
+Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.
+
+Recommended defensive checks:
+
+- price bounds
+- fallback policy
+- stale-price policy
+- sequencer downtime notes
+
+
+Suggested tests:
+
+- Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+- Test documented price bounds.
+- Test invalid answer fallback behavior.
+- Add documentation for price shock and fallback assumptions.
+
+Invariant candidates:
+
+- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
+
+Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
 ### ARK-LEND-001 - Collateral/debt solvency invariant not covered by tests
 
@@ -797,40 +916,26 @@ Invariant candidates:
 
 Search tags: `lending-interest-index, precision, lending-rule-pack`
 
-### ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests
+### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
 
-- Priority: `High readiness gap`
-- Confidence: `high`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `keyword, semantic-lite, test-coverage`
-- Category: `lending-oracle`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
+- Detection sources: `keyword`
+- Category: `testing-readiness`
 
 Evidence:
-- `src/ToyLendingMarket.sol:52` in `getPrice`: Solidity function contains oracle or price-feed call evidence. Snippet: `(, int256 answer,,,) = priceFeed.latestRoundData();`
-- `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
-- `src/ToyLendingMarket.sol:94` in `liquidate`: Solidity function contains oracle or price-feed call evidence. Snippet: `uint256 seized = actualRepay * liquidationBonus / getPrice();`
+- `src/ToyLendingMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing`
+- `test/ToyLendingMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing`
+
+False-positive notes:
+
+Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
 
 Detected signals:
-- `LTV`
-- `accrueInterest`
-- `answer`
-- `borrow`
-- `borrowIndex`
-- `cash`
-- `closeFactor`
-- `collateral`
-- `collateralFactor`
-- `debt`
-- `getPrice`
-- `guardian`
-- `healthFactor`
-- `interestIndex`
-- `latestRoundData`
-- `liquidate`
-- `liquidationBonus`
-- `liquidationThreshold`
-- `priceFeed`
-- `ratePerSecond`
+- `invariant_tests_missing`
+- `fuzz_tests_missing`
+- `handler_contracts_missing`
 
 Affected files:
 - `src/ToyLendingMarket.sol`
@@ -838,117 +943,37 @@ Affected files:
 
 What was detected:
 
-Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.
+Protocol-like value flows were detected, but no invariant/property testing signal was found.
 
 Why it matters:
 
-Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices.
-
-Historical pattern similarity:
-
-Maps to oracle-dependent liquidation and collateral valuation readiness classes.
+Protocol-like value flows without invariant or property tests leave core accounting assumptions unverified under fees, rounding, and unexpected action sequences.
 
 Recommended defensive checks:
 
-- stale oracle rejection
-- decimals normalization
-- price shock boundary
-- borrow blocked on invalid price
+- stateful invariant suite for the core lifecycle
+- handler actions for normal and edge-case user flows
+- conservation properties for value-bearing state
 
 Related Knowledge:
 
-- Historical patterns: pattern-oracle-stale-price, pattern-collateral-debt-invariant
-- Suggested defensive tests: stale-oracle-rejection, decimals-normalization-test, price-shock-boundary-test
-- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest
+- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
+- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
+- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
 
 Suggested tests:
 
-- Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
-- Test stale oracle rejection for borrow and liquidation paths.
-- Test decimals normalization for collateral valuation.
-- Test price shock boundaries around health-factor transitions.
+- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+- Add a stateful invariant suite for the core protocol lifecycle.
+- Add handler actions for normal user flows and documented edge cases.
+- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
 
 Invariant candidates:
 
-- Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
+- Core accounting relationships hold after any allowed user action.
+- Privileged actions cannot silently bypass documented accounting assumptions.
 
-Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
-
-### ARK-LEND-005 - Reserve/cash accounting assumptions not covered
-
-- Priority: `Medium readiness gap`
-- Confidence: `high`
-- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
-- Detection sources: `semantic-lite`
-- Category: `lending-liquidity`
-
-Evidence:
-- `src/ToyLendingMarket.sol:48` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
-- `src/ToyLendingMarket.sol:58` in `collateralValue`: Solidity function contains oracle or price-feed call evidence. Snippet: `return collateral[user] * getPrice() / 1e18;`
-- `src/ToyLendingMarket.sol:62` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
-
-Detected signals:
-- `LTV`
-- `accrueInterest`
-- `borrow`
-- `borrowIndex`
-- `cash`
-- `closeFactor`
-- `collateral`
-- `collateralFactor`
-- `debt`
-- `guardian`
-- `healthFactor`
-- `interestIndex`
-- `liquidate`
-- `liquidationBonus`
-- `liquidationThreshold`
-- `ratePerSecond`
-- `repay`
-- `totalBorrows`
-- `totalReserves`
-
-Affected files:
-- `src/ToyLendingMarket.sol`
-- `test/ToyLendingMarket.t.sol`
-
-What was detected:
-
-Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.
-
-Why it matters:
-
-Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.
-
-Historical pattern similarity:
-
-Maps to cash/debt mismatch and liquidity accounting readiness classes.
-
-Recommended defensive checks:
-
-- available liquidity bound
-- repay updates cash/debt
-- reserve withdrawal constraints
-- utilization bounds
-
-Related Knowledge:
-
-- Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift
-- Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints
-- Related PoCs: poc-2020-11-cheese-bank
-
-Suggested tests:
-
-- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
-- Test borrow cannot exceed available liquidity.
-- Test repay updates cash, debt, and reserves consistently.
-- Assert reserves cannot be withdrawn beyond documented constraints.
-
-Invariant candidates:
-
-- Cash, total borrows, total reserves, and utilization remain internally consistent.
-
-Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
+Search tags: `invariant-testing, lending`
 
 ## Suppressed Readiness Gaps
 

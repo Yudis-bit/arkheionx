@@ -38,33 +38,33 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 
 ### lending
 
-- Findings: `ARK-LEND-001, ARK-LEND-002, ARK-LEND-005, ARK-LEND-004`
+- Findings: `ARK-LEND-005, ARK-LEND-001, ARK-LEND-002, ARK-LEND-004`
 - Suggested tests:
+  - Test borrow cannot exceed available liquidity.
+  - Test repay updates cash, debt, and reserves consistently.
+  - Assert reserves cannot be withdrawn beyond documented constraints.
+  - Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
   - Assert solvent positions remain solvent after deposit, borrow, repay, and withdraw flows.
   - Test debt cannot exceed documented collateral constraints.
-  - Test unsafe withdrawals are rejected or explicitly documented.
-  - Assert debt cannot exceed documented collateral constraints and collateral withdrawals cannot make a position unsafe unless intended and tested.
-  - Test just-above-threshold positions cannot be liquidated.
-  - Test just-below-threshold positions can be liquidated according to policy.
 - Invariant candidates:
+  - Cash, total borrows, total reserves, and utilization remain internally consistent.
   - Collateral value and debt remain inside documented solvency constraints after allowed user actions.
   - Liquidation eligibility changes only at documented threshold boundaries.
-  - Cash, total borrows, total reserves, and utilization remain internally consistent.
   - Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
 
 ### oracle
 
-- Findings: `ARK-ORC-002, ARK-ORC-001, ARK-ORC-003, ARK-ORC-005`
+- Findings: `ARK-ORC-001, ARK-ORC-002, ARK-ORC-003, ARK-ORC-005`
 - Suggested tests:
-  - Test decimals normalization across expected feed decimals.
-  - Test zero, negative, or invalid oracle answers if applicable.
-  - Assert normalized price units match accounting units.
-  - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - Reject stale oracle rounds or document fallback behavior.
   - Test updatedAt or heartbeat boundaries.
+  - Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+  - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+  - Test decimals normalization across expected feed decimals.
+  - Test zero, negative, or invalid oracle answers if applicable.
 - Invariant candidates:
-  - Normalized oracle values remain within documented unit and decimal assumptions.
   - Accounting decisions only use oracle data that satisfies documented freshness policy.
+  - Normalized oracle values remain within documented unit and decimal assumptions.
   - Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
   - Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
 
@@ -162,6 +162,27 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Review whether slippage is enforced by a router outside this repository.
 
+### ARK-LEND-005 - Reserve/cash accounting assumptions not covered
+
+- Rule family: `lending`
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Source evidence summary: src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
+- Matched signals: borrow, cash, collateral, debt, healthFactor, liquidate
+- Suggested tests:
+  - Test borrow cannot exceed available liquidity.
+  - Test repay updates cash, debt, and reserves consistently.
+  - Assert reserves cannot be withdrawn beyond documented constraints.
+  - Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
+- Invariant candidates:
+  - Cash, total borrows, total reserves, and utilization remain internally consistent.
+- Project bindings to fill in:
+  - Market cash state
+  - Borrow/repay functions
+  - Reserve accounting
+- Manual review notes:
+  - Review reserve factor and protocol fee accounting.
+
 ### ARK-LEND-001 - Collateral/debt solvency invariant not covered by tests
 
 - Rule family: `lending`
@@ -205,73 +226,33 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Review rounding around exact threshold values.
 
-### ARK-LEND-005 - Reserve/cash accounting assumptions not covered
+### ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests
 
 - Rule family: `lending`
-- Priority: `Medium readiness gap`
-- Confidence: `high`
-- Source evidence summary: src/ToyHybridMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.
-- Matched signals: borrow, cash, collateral, debt, healthFactor, liquidate
-- Suggested tests:
-  - Test borrow cannot exceed available liquidity.
-  - Test repay updates cash, debt, and reserves consistently.
-  - Assert reserves cannot be withdrawn beyond documented constraints.
-  - Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
-- Invariant candidates:
-  - Cash, total borrows, total reserves, and utilization remain internally consistent.
-- Project bindings to fill in:
-  - Market cash state
-  - Borrow/repay functions
-  - Reserve accounting
-- Manual review notes:
-  - Review reserve factor and protocol fee accounting.
-
-### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
-
-- Rule family: `testing`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: src/ToyHybridMarket.sol: Keyword signal matched this readiness finding.
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: borrow, cash, collateral, debt, getReserves.
+- Matched signals: borrow, cash, collateral, debt, getReserves, healthFactor
 - Suggested tests:
-  - Add a stateful invariant suite for the core protocol lifecycle.
-  - Add handler actions for normal user flows and documented edge cases.
-  - Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
-  - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+  - Test stale oracle rejection for borrow and liquidation paths.
+  - Test decimals normalization for collateral valuation.
+  - Test price shock boundaries around health-factor transitions.
+  - Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
 - Invariant candidates:
-  - Core accounting relationships hold after any allowed user action.
-  - Privileged actions cannot silently bypass documented accounting assumptions.
+  - Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
 - Project bindings to fill in:
-  - Target contracts
-  - Allowed action handler
-  - Local mocks for assets and oracle inputs
+  - Lending market
+  - Oracle mock
+  - Health-factor logic
 - Manual review notes:
-  - Review whether the protocol uses another property-testing framework outside Foundry.
-
-### ARK-ORC-002 - Oracle decimals or normalization not covered by tests
-
-- Rule family: `oracle`
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
-- Suggested tests:
-  - Test decimals normalization across expected feed decimals.
-  - Test zero, negative, or invalid oracle answers if applicable.
-  - Assert normalized price units match accounting units.
-  - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-- Invariant candidates:
-  - Normalized oracle values remain within documented unit and decimal assumptions.
-- Project bindings to fill in:
-  - Oracle adapter
-  - Accounting consumer
-- Manual review notes:
-  - Review whether feed decimals are fixed at deployment.
+  - Review fallback behavior and collateral-specific feed assumptions.
 
 ### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
 
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
 - Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Reject stale oracle rounds or document fallback behavior.
@@ -286,12 +267,32 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Check whether freshness validation is implemented in an imported adapter.
 
+### ARK-ORC-002 - Oracle decimals or normalization not covered by tests
+
+- Rule family: `oracle`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
+- Matched signals: getReserves, pool, reserve0, reserve1
+- Suggested tests:
+  - Test decimals normalization across expected feed decimals.
+  - Test zero, negative, or invalid oracle answers if applicable.
+  - Assert normalized price units match accounting units.
+  - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Invariant candidates:
+  - Normalized oracle values remain within documented unit and decimal assumptions.
+- Project bindings to fill in:
+  - Oracle adapter
+  - Accounting consumer
+- Manual review notes:
+  - Review whether feed decimals are fixed at deployment.
+
 ### ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests
 
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
 - Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Test spot-price movement bounds.
@@ -311,7 +312,7 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Rule family: `oracle`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
 - Matched signals: getReserves, pool, reserve0, reserve1
 - Suggested tests:
   - Test documented price bounds.
@@ -326,26 +327,27 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Review whether fallback behavior is intentionally unavailable.
 
-### ARK-LEND-004 - Oracle-dependent borrowing/liquidation without stale-price tests
+### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
 
-- Rule family: `lending`
+- Rule family: `testing`
 - Priority: `Low readiness gap`
 - Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
-- Matched signals: borrow, cash, collateral, debt, getReserves, healthFactor
+- Source evidence summary: src/ToyHybridMarket.sol: Keyword signal matched this readiness finding.
+- Matched signals: invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing
 - Suggested tests:
-  - Test stale oracle rejection for borrow and liquidation paths.
-  - Test decimals normalization for collateral valuation.
-  - Test price shock boundaries around health-factor transitions.
-  - Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.
+  - Add a stateful invariant suite for the core protocol lifecycle.
+  - Add handler actions for normal user flows and documented edge cases.
+  - Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
+  - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
 - Invariant candidates:
-  - Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
+  - Core accounting relationships hold after any allowed user action.
+  - Privileged actions cannot silently bypass documented accounting assumptions.
 - Project bindings to fill in:
-  - Lending market
-  - Oracle mock
-  - Health-factor logic
+  - Target contracts
+  - Allowed action handler
+  - Local mocks for assets and oracle inputs
 - Manual review notes:
-  - Review fallback behavior and collateral-specific feed assumptions.
+  - Review whether the protocol uses another property-testing framework outside Foundry.
 
 ## Foundry Skeleton
 
@@ -356,16 +358,16 @@ This generated plan turns Arkheionx readiness findings into defensive local test
   - `invariant_reservePriceConsumersRespectBounds`
   - `invariant_poolUsesActualReceivedAmounts`
   - `invariant_swapsRespectUserOutputBounds`
+  - `invariant_lendingCashAndDebtAccountingConsistent`
   - `invariant_collateralDebtSolvencyHolds`
   - `invariant_liquidationBoundaryMatchesPolicy`
-  - `invariant_lendingCashAndDebtAccountingConsistent`
-  - `invariant_coreAccountingRelationshipsHold`
-  - `invariant_privilegedActionsRespectDocumentedAssumptions`
-  - `invariant_oracleNormalizationMatchesAccountingUnits`
+  - `invariant_lendingOracleValidityPolicyIsRespected`
   - `invariant_oracleFreshnessPolicyIsRespected`
+  - `invariant_oracleNormalizationMatchesAccountingUnits`
   - `invariant_reservePriceDependencyIsBounded`
   - `invariant_invalidPricesDoNotDriveCriticalAccounting`
-  - `invariant_lendingOracleValidityPolicyIsRespected`
+  - `invariant_coreAccountingRelationshipsHold`
+  - `invariant_privilegedActionsRespectDocumentedAssumptions`
 
 ## What To Do Next
 

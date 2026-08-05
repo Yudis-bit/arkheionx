@@ -39,17 +39,17 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 
 ### oracle
 
-- Findings: `ARK-ORC-002, ARK-ORC-001, ARK-ORC-003, ARK-ORC-005`
+- Findings: `ARK-ORC-001, ARK-ORC-002, ARK-ORC-003, ARK-ORC-005`
 - Suggested tests:
-  - Test decimals normalization across expected feed decimals.
-  - Test zero, negative, or invalid oracle answers if applicable.
-  - Assert normalized price units match accounting units.
-  - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
   - Reject stale oracle rounds or document fallback behavior.
   - Test updatedAt or heartbeat boundaries.
+  - Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+  - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+  - Test decimals normalization across expected feed decimals.
+  - Test zero, negative, or invalid oracle answers if applicable.
 - Invariant candidates:
-  - Normalized oracle values remain within documented unit and decimal assumptions.
   - Accounting decisions only use oracle data that satisfies documented freshness policy.
+  - Normalized oracle values remain within documented unit and decimal assumptions.
   - Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
   - Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
 
@@ -122,25 +122,6 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Review whether price output is advisory or used for critical accounting.
 
-### ARK-REENT-001 - Value flow with external calls needs reentrancy review
-
-- Rule family: `reentrancy-value-flow`
-- Priority: `Medium readiness gap`
-- Confidence: `medium`
-- Source evidence summary: src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.
-- Suggested tests:
-  - Add a benign callback-capable receiver stub.
-  - Assert state updates happen before external value transfer where required.
-  - Test withdraw, claim, refund, or swap flows for accounting consistency.
-  - Review state update order and add local malicious-receiver tests where callbacks are possible.
-- Invariant candidates:
-  - External-call flows cannot observe or preserve inconsistent accounting state.
-- Project bindings to fill in:
-  - External-call flow
-  - Local receiver stub
-- Manual review notes:
-  - Review inherited guards and pull-payment patterns.
-
 ### ARK-AMM-001 - AMM invariant assumptions not covered by tests
 
 - Rule family: `amm`
@@ -201,105 +182,25 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Review whether slippage is enforced by a router outside this repository.
 
-### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
+### ARK-REENT-001 - Value flow with external calls needs reentrancy review
 
-- Rule family: `testing`
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Source evidence summary: src/ToyAMMPool.sol: Keyword signal matched this readiness finding.
+- Rule family: `reentrancy-value-flow`
+- Priority: `Medium readiness gap`
+- Confidence: `medium`
+- Source evidence summary: src/ToyAMMPool.sol in `addLiquidity`: Solidity function contains external value-flow call evidence.
+- Matched signals: transfer, transferFrom
 - Suggested tests:
-  - Add a stateful invariant suite for the core protocol lifecycle.
-  - Add handler actions for normal user flows and documented edge cases.
-  - Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
-  - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+  - Add a benign callback-capable receiver stub.
+  - Assert state updates happen before external value transfer where required.
+  - Test withdraw, claim, refund, or swap flows for accounting consistency.
+  - Review state update order and add local malicious-receiver tests where callbacks are possible.
 - Invariant candidates:
-  - Core accounting relationships hold after any allowed user action.
-  - Privileged actions cannot silently bypass documented accounting assumptions.
+  - External-call flows cannot observe or preserve inconsistent accounting state.
 - Project bindings to fill in:
-  - Target contracts
-  - Allowed action handler
-  - Local mocks for assets and oracle inputs
+  - External-call flow
+  - Local receiver stub
 - Manual review notes:
-  - Review whether the protocol uses another property-testing framework outside Foundry.
-
-### ARK-ORC-002 - Oracle decimals or normalization not covered by tests
-
-- Rule family: `oracle`
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
-- Suggested tests:
-  - Test decimals normalization across expected feed decimals.
-  - Test zero, negative, or invalid oracle answers if applicable.
-  - Assert normalized price units match accounting units.
-  - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-- Invariant candidates:
-  - Normalized oracle values remain within documented unit and decimal assumptions.
-- Project bindings to fill in:
-  - Oracle adapter
-  - Accounting consumer
-- Manual review notes:
-  - Review whether feed decimals are fixed at deployment.
-
-### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
-
-- Rule family: `oracle`
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
-- Matched signals: getReserves, pool, reserve0, reserve1
-- Suggested tests:
-  - Reject stale oracle rounds or document fallback behavior.
-  - Test updatedAt or heartbeat boundaries.
-  - Test borrow, liquidation, vault, or reward flows when oracle data is stale.
-  - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
-- Invariant candidates:
-  - Accounting decisions only use oracle data that satisfies documented freshness policy.
-- Project bindings to fill in:
-  - Oracle adapter or mock feed
-  - Consumer contract
-- Manual review notes:
-  - Check whether freshness validation is implemented in an imported adapter.
-
-### ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests
-
-- Rule family: `oracle`
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
-- Matched signals: getReserves, pool, reserve0, reserve1
-- Suggested tests:
-  - Test spot-price movement bounds.
-  - Test TWAP or delay assumptions when used.
-  - Document reserve-price dependency and expected safeguards.
-  - Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.
-- Invariant candidates:
-  - Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
-- Project bindings to fill in:
-  - AMM or price source mock
-  - Price consumer
-- Manual review notes:
-  - Review whether price source is advisory or authoritative.
-
-### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
-
-- Rule family: `oracle`
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Source evidence summary: No semantic-lite oracle test coverage terms were detected.
-- Matched signals: getReserves, pool, reserve0, reserve1
-- Suggested tests:
-  - Test documented price bounds.
-  - Test invalid answer fallback behavior.
-  - Add documentation for price shock and fallback assumptions.
-  - Add documentation plus local tests showing fallback and out-of-bounds price behavior.
-- Invariant candidates:
-  - Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
-- Project bindings to fill in:
-  - Oracle adapter
-  - Consumer path
-- Manual review notes:
-  - Review whether fallback behavior is intentionally unavailable.
+  - Review inherited guards and pull-payment patterns.
 
 ### ARK-REENT-004 - External call path without documented ordering assumptions
 
@@ -321,6 +222,108 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Manual review notes:
   - Review code paths manually before deciding severity.
 
+### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
+
+- Rule family: `oracle`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
+- Matched signals: getReserves, pool, reserve0, reserve1
+- Suggested tests:
+  - Reject stale oracle rounds or document fallback behavior.
+  - Test updatedAt or heartbeat boundaries.
+  - Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+  - Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+- Invariant candidates:
+  - Accounting decisions only use oracle data that satisfies documented freshness policy.
+- Project bindings to fill in:
+  - Oracle adapter or mock feed
+  - Consumer contract
+- Manual review notes:
+  - Check whether freshness validation is implemented in an imported adapter.
+
+### ARK-ORC-002 - Oracle decimals or normalization not covered by tests
+
+- Rule family: `oracle`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
+- Matched signals: getReserves, pool, reserve0, reserve1
+- Suggested tests:
+  - Test decimals normalization across expected feed decimals.
+  - Test zero, negative, or invalid oracle answers if applicable.
+  - Assert normalized price units match accounting units.
+  - Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Invariant candidates:
+  - Normalized oracle values remain within documented unit and decimal assumptions.
+- Project bindings to fill in:
+  - Oracle adapter
+  - Accounting consumer
+- Manual review notes:
+  - Review whether feed decimals are fixed at deployment.
+
+### ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests
+
+- Rule family: `oracle`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
+- Matched signals: getReserves, pool, reserve0, reserve1
+- Suggested tests:
+  - Test spot-price movement bounds.
+  - Test TWAP or delay assumptions when used.
+  - Document reserve-price dependency and expected safeguards.
+  - Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.
+- Invariant candidates:
+  - Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
+- Project bindings to fill in:
+  - AMM or price source mock
+  - Price consumer
+- Manual review notes:
+  - Review whether price source is advisory or authoritative.
+
+### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
+
+- Rule family: `oracle`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Source evidence summary: test/documentation coverage: No semantic-lite oracle test coverage terms were detected. Matched signals: getReserves, pool, reserve0, reserve1.
+- Matched signals: getReserves, pool, reserve0, reserve1
+- Suggested tests:
+  - Test documented price bounds.
+  - Test invalid answer fallback behavior.
+  - Add documentation for price shock and fallback assumptions.
+  - Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+- Invariant candidates:
+  - Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
+- Project bindings to fill in:
+  - Oracle adapter
+  - Consumer path
+- Manual review notes:
+  - Review whether fallback behavior is intentionally unavailable.
+
+### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
+
+- Rule family: `testing`
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Source evidence summary: src/ToyAMMPool.sol: Keyword signal matched this readiness finding.
+- Matched signals: invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing
+- Suggested tests:
+  - Add a stateful invariant suite for the core protocol lifecycle.
+  - Add handler actions for normal user flows and documented edge cases.
+  - Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
+  - Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
+- Invariant candidates:
+  - Core accounting relationships hold after any allowed user action.
+  - Privileged actions cannot silently bypass documented accounting assumptions.
+- Project bindings to fill in:
+  - Target contracts
+  - Allowed action handler
+  - Local mocks for assets and oracle inputs
+- Manual review notes:
+  - Review whether the protocol uses another property-testing framework outside Foundry.
+
 ## Foundry Skeleton
 
 - Suggested output: `examples/reports/ArkheionxAMMInvariants.t.sol`
@@ -328,17 +331,17 @@ This generated plan turns Arkheionx readiness findings into defensive local test
 - Skeleton functions:
   - `invariant_lpSharesTrackPoolOwnership`
   - `invariant_reservePriceConsumersRespectBounds`
-  - `invariant_externalCallFlowsPreserveAccountingState`
   - `invariant_ammAccountingPreservesDocumentedInvariant`
   - `invariant_poolUsesActualReceivedAmounts`
   - `invariant_swapsRespectUserOutputBounds`
-  - `invariant_coreAccountingRelationshipsHold`
-  - `invariant_privilegedActionsRespectDocumentedAssumptions`
-  - `invariant_oracleNormalizationMatchesAccountingUnits`
+  - `invariant_externalCallFlowsPreserveAccountingState`
+  - `invariant_externalCallOrderingMatchesPolicy`
   - `invariant_oracleFreshnessPolicyIsRespected`
+  - `invariant_oracleNormalizationMatchesAccountingUnits`
   - `invariant_reservePriceDependencyIsBounded`
   - `invariant_invalidPricesDoNotDriveCriticalAccounting`
-  - `invariant_externalCallOrderingMatchesPolicy`
+  - `invariant_coreAccountingRelationshipsHold`
+  - `invariant_privilegedActionsRespectDocumentedAssumptions`
 
 ## What To Do Next
 

@@ -14,23 +14,19 @@ contract ArkheionxAMMInvariants {
     // TODO: Liquidity actors.
     // TODO: AMM price function.
     // TODO: Price consumer.
-    // TODO: External-call flow.
-    // TODO: Local receiver stub.
     // TODO: Token0 and token1 mocks.
     // TODO: Swap handler.
     // TODO: Transfer path.
     // TODO: Token mock with configurable received amount.
     // TODO: Swap function.
+    // TODO: Slippage or deadline inputs.
+    // TODO: External-call flow.
 
     function invariant_lpSharesTrackPoolOwnership() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
     function invariant_reservePriceConsumersRespectBounds() public {
-        // TODO: implement a defensive property for the mapped readiness finding.
-    }
-
-    function invariant_externalCallFlowsPreserveAccountingState() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
@@ -46,19 +42,19 @@ contract ArkheionxAMMInvariants {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
-    function invariant_coreAccountingRelationshipsHold() public {
+    function invariant_externalCallFlowsPreserveAccountingState() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
-    function invariant_privilegedActionsRespectDocumentedAssumptions() public {
-        // TODO: implement a defensive property for the mapped readiness finding.
-    }
-
-    function invariant_oracleNormalizationMatchesAccountingUnits() public {
+    function invariant_externalCallOrderingMatchesPolicy() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
     function invariant_oracleFreshnessPolicyIsRespected() public {
+        // TODO: implement a defensive property for the mapped readiness finding.
+    }
+
+    function invariant_oracleNormalizationMatchesAccountingUnits() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
@@ -70,7 +66,11 @@ contract ArkheionxAMMInvariants {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
-    function invariant_externalCallOrderingMatchesPolicy() public {
+    function invariant_coreAccountingRelationshipsHold() public {
+        // TODO: implement a defensive property for the mapped readiness finding.
+    }
+
+    function invariant_privilegedActionsRespectDocumentedAssumptions() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 

@@ -87,128 +87,6 @@
   },
   "findings": [
     {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyLendingMarket.sol",
-        "test/ToyLendingMarket.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "testing-readiness",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
-      "detected_signals": [],
-      "detection_sources": [
-        "keyword"
-      ],
-      "evidence": [
-        {
-          "file": "src/ToyLendingMarket.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyLendingMarket.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 2,
-      "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "365ac6a8f4023a1d577381a3",
-      "historical_pattern_similarity": "",
-      "id": "ARK-TST-002",
-      "invariant_candidates": [
-        "Core accounting relationships hold after any allowed user action.",
-        "Privileged actions cannot silently bypass documented accounting assumptions."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "protocol-specific-conservation-invariant",
-          "authorization-or-lifecycle-invariant"
-        ],
-        "failed_assumptions": [
-          "unit-tests-cover-compositional-state",
-          "happy-path-tests-cover-adversarial-sequences"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/READINESS_SCORE.md",
-          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
-        ],
-        "related_patterns": [
-          "pattern-missing-invariant-coverage",
-          "pattern-assumption-not-encoded-in-tests"
-        ],
-        "related_pocs": [
-          "poc-2020-08-opyn",
-          "poc-2020-09-bzx-ifusdc",
-          "poc-2021-10-indexed-finance"
-        ],
-        "root_causes": [
-          "critical-assumption-only-documented-or-implicit",
-          "state-machine-not-fuzzed"
-        ],
-        "rule_pack": "testing",
-        "search_terms": [
-          "missing invariant",
-          "audit blocker",
-          "stateful fuzz",
-          "invariant testing"
-        ],
-        "suggested_tests": [
-          "foundry-invariant-skeleton",
-          "stateful-fuzz-sequence",
-          "roundtrip-or-conservation-invariant"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-      "recommended_defensive_checks": [],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-        "Add a stateful invariant suite for the core protocol lifecycle.",
-        "Add handler actions for normal user flows and documented edge cases.",
-        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
-      ],
-      "suppressible": true,
-      "tags": [
-        "invariant-testing",
-        "lending"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_coreAccountingRelationshipsHold",
-          "invariant_privilegedActionsRespectDocumentedAssumptions"
-        ],
-        "manual_review_notes": [
-          "Review whether the protocol uses another property-testing framework outside Foundry."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Target contracts",
-          "Allowed action handler",
-          "Local mocks for assets and oracle inputs"
-        ],
-        "rule_family": "testing",
-        "safety_notes": [
-          "Generated invariants are starting points and need human tailoring."
-        ]
-      },
-      "title": "No invariant tests detected for DeFi protocol shape",
-      "why_it_matters": ""
-    },
-    {
       "affected_contracts": [
         "ToyLendingMarket"
       ],
@@ -221,11 +99,35 @@
         "getPrice",
         "liquidate"
       ],
-      "category": "oracle-pricing",
-      "confidence": "medium",
+      "category": "lending-oracle",
+      "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
-      "detected_signals": [],
+      "detail": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
+      "detected_signals": [
+        "LTV",
+        "accrueInterest",
+        "answer",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor",
+        "collateral",
+        "collateralFactor",
+        "debt",
+        "getPrice",
+        "guardian",
+        "healthFactor",
+        "interestIndex",
+        "latestRoundData",
+        "liquidate",
+        "liquidationBonus",
+        "liquidationThreshold",
+        "priceFeed",
+        "ratePerSecond",
+        "repay",
+        "totalBorrows",
+        "totalReserves"
+      ],
       "detection_sources": [
         "keyword",
         "semantic-lite",
@@ -272,63 +174,102 @@
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
+          "snippet": "LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral",
           "type": "keyword"
         }
       ],
       "evidence_count": 5,
       "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
       "false_positive_notes": "",
-      "fingerprint": "8a1699ea5c99922d1c6da655",
-      "historical_pattern_similarity": "",
-      "id": "ARK-ORC-002",
+      "fingerprint": "995093a52992e5d7d6b2e42d",
+      "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
+      "id": "ARK-LEND-004",
       "invariant_candidates": [
-        "Normalized oracle values remain within documented unit and decimal assumptions."
+        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
       ],
       "knowledge": {
+        "broken_invariants": [
+          "health-factor-uses-valid-price",
+          "borrow-and-liquidation-use-bounded-price"
+        ],
+        "failed_assumptions": [
+          "collateral-price-is-current",
+          "oracle-answer-is-normalized"
+        ],
         "finding_map_version": "0.9.0",
-        "related_docs": [],
-        "related_patterns": [],
-        "related_pocs": [],
-        "search_terms": [],
-        "suggested_tests": []
+        "related_docs": [
+          "docs/LENDING_RULE_PACK.md",
+          "docs/ORACLE_RULE_PACK.md"
+        ],
+        "related_patterns": [
+          "pattern-oracle-stale-price",
+          "pattern-collateral-debt-invariant"
+        ],
+        "related_pocs": [
+          "poc-2025-11-moonwell",
+          "poc-2020-10-harvest"
+        ],
+        "root_causes": [
+          "missing-oracle-freshness-validation",
+          "implicit-collateral-price-trust"
+        ],
+        "rule_pack": "lending",
+        "search_terms": [
+          "lending oracle",
+          "stale price",
+          "price shock",
+          "collateral value"
+        ],
+        "suggested_tests": [
+          "stale-oracle-rejection",
+          "decimals-normalization-test",
+          "price-shock-boundary-test",
+          "borrow-blocked-on-invalid-price"
+        ]
       },
       "negative_evidence": [],
       "negative_evidence_count": 0,
       "priority": "High readiness gap",
-      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-      "recommended_defensive_checks": [],
+      "recommendation": "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
+      "recommended_defensive_checks": [
+        "stale oracle rejection",
+        "decimals normalization",
+        "price shock boundary",
+        "borrow blocked on invalid price"
+      ],
       "severity": "High readiness gap",
       "suggested_tests": [
-        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-        "Test decimals normalization across expected feed decimals.",
-        "Test zero, negative, or invalid oracle answers if applicable.",
-        "Assert normalized price units match accounting units."
+        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "Test stale oracle rejection for borrow and liquidation paths.",
+        "Test decimals normalization for collateral valuation.",
+        "Test price shock boundaries around health-factor transitions."
       ],
       "suppressible": true,
       "tags": [
+        "lending-oracle",
         "oracle-risk",
-        "price-assumptions"
+        "lending-rule-pack"
       ],
       "test_plan": {
         "foundry_skeleton_functions": [
-          "invariant_oracleNormalizationMatchesAccountingUnits"
+          "invariant_lendingOracleValidityPolicyIsRespected"
         ],
         "manual_review_notes": [
-          "Review whether feed decimals are fixed at deployment."
+          "Review fallback behavior and collateral-specific feed assumptions."
         ],
         "mapped": true,
         "required_project_bindings": [
-          "Oracle adapter",
-          "Accounting consumer"
+          "Lending market",
+          "Oracle mock",
+          "Health-factor logic"
         ],
-        "rule_family": "oracle",
+        "rule_family": "lending",
         "safety_notes": [
-          "Use synthetic feed answers and local mocks."
+          "Use local oracle values and synthetic price shocks."
         ]
       },
-      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
-      "why_it_matters": ""
+      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+      "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
     },
     {
       "affected_contracts": [
@@ -516,9 +457,9 @@
         "liquidate"
       ],
       "category": "oracle-pricing",
-      "confidence": "high",
+      "confidence": "medium",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
       "detected_signals": [
         "answer",
         "getPrice",
@@ -578,11 +519,11 @@
       "evidence_count": 5,
       "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
       "false_positive_notes": "",
-      "fingerprint": "03e5bec16b613d6d10e20dd7",
-      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
-      "id": "ARK-ORC-005",
+      "fingerprint": "2b5212e9506e054f6e136eee",
+      "historical_pattern_similarity": "",
+      "id": "ARK-ORC-002",
       "invariant_candidates": [
-        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+        "Normalized oracle values remain within documented unit and decimal assumptions."
       ],
       "knowledge": {
         "finding_map_version": "0.9.0",
@@ -594,46 +535,44 @@
       },
       "negative_evidence": [],
       "negative_evidence_count": 0,
-      "priority": "Medium readiness gap",
-      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+      "priority": "High readiness gap",
+      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [
-        "price bounds",
-        "fallback policy",
-        "stale-price policy",
-        "sequencer downtime notes"
+        "stale-round and heartbeat handling",
+        "decimals normalization to accounting units",
+        "documented price bounds, TWAP, or fallback policy"
       ],
-      "severity": "Medium readiness gap",
+      "severity": "High readiness gap",
       "suggested_tests": [
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
-        "Test documented price bounds.",
-        "Test invalid answer fallback behavior.",
-        "Add documentation for price shock and fallback assumptions."
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
       ],
       "suppressible": true,
       "tags": [
         "oracle-risk",
-        "documentation-readiness",
-        "oracle-rule-pack"
+        "price-assumptions"
       ],
       "test_plan": {
         "foundry_skeleton_functions": [
-          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+          "invariant_oracleNormalizationMatchesAccountingUnits"
         ],
         "manual_review_notes": [
-          "Review whether fallback behavior is intentionally unavailable."
+          "Review whether feed decimals are fixed at deployment."
         ],
         "mapped": true,
         "required_project_bindings": [
           "Oracle adapter",
-          "Consumer path"
+          "Accounting consumer"
         ],
         "rule_family": "oracle",
         "safety_notes": [
-          "Use local invalid-value mocks."
+          "Use synthetic feed answers and local mocks."
         ]
       },
-      "title": "Missing price bounds or fallback assumptions documentation",
-      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+      "why_it_matters": "Price-dependent accounting can be wrong when oracle data is stale, out of bounds, or mis-normalized and no freshness or sanity check is visible to a reviewer."
     },
     {
       "affected_contracts": [
@@ -797,6 +736,321 @@
       },
       "title": "Privileged setters without role-boundary tests",
       "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "ToyLendingMarket"
+      ],
+      "affected_files": [
+        "src/ToyLendingMarket.sol",
+        "test/ToyLendingMarket.t.sol"
+      ],
+      "affected_functions": [
+        "borrow",
+        "collateralValue",
+        "depositCollateral",
+        "healthFactor",
+        "repay"
+      ],
+      "category": "lending-liquidity",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
+      "detected_signals": [
+        "LTV",
+        "accrueInterest",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor",
+        "collateral",
+        "collateralFactor",
+        "debt",
+        "guardian",
+        "healthFactor",
+        "interestIndex",
+        "liquidate",
+        "liquidationBonus",
+        "liquidationThreshold",
+        "ratePerSecond",
+        "repay",
+        "totalBorrows",
+        "totalReserves"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "depositCollateral",
+          "line": 48,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "collateral[msg.sender] += msg.value;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "collateralValue",
+          "line": 58,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return collateral[user] * getPrice() / 1e18;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "healthFactor",
+          "line": 62,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (debt[user] == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "borrow",
+          "line": 69,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "uint256 projectedDebt = debt[msg.sender] + amount;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "repay",
+          "line": 79,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "1594a1336d67ce91c23f435b",
+      "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
+      "id": "ARK-LEND-005",
+      "invariant_candidates": [
+        "Cash, total borrows, total reserves, and utilization remain internally consistent."
+      ],
+      "knowledge": {
+        "broken_invariants": [
+          "borrow-cannot-exceed-available-liquidity",
+          "cash-plus-borrows-reserves-reconcile"
+        ],
+        "failed_assumptions": [
+          "cash-matches-available-liquidity",
+          "repay-updates-debt-and-cash-consistently"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/LENDING_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-collateral-debt-invariant",
+          "pattern-accounting-index-drift"
+        ],
+        "related_pocs": [
+          "poc-2020-11-cheese-bank"
+        ],
+        "root_causes": [
+          "available-liquidity-assumption",
+          "cash-reserve-accounting-drift"
+        ],
+        "rule_pack": "lending",
+        "search_terms": [
+          "reserve accounting",
+          "available liquidity",
+          "totalBorrows",
+          "utilization"
+        ],
+        "suggested_tests": [
+          "available-liquidity-bound",
+          "repay-cash-debt-consistency",
+          "reserve-withdrawal-constraints",
+          "utilization-bound-test"
+        ]
+      },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
+      "recommended_defensive_checks": [
+        "available liquidity bound",
+        "repay updates cash/debt",
+        "reserve withdrawal constraints",
+        "utilization bounds"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "Test borrow cannot exceed available liquidity.",
+        "Test repay updates cash, debt, and reserves consistently.",
+        "Assert reserves cannot be withdrawn beyond documented constraints."
+      ],
+      "suppressible": true,
+      "tags": [
+        "lending-liquidity",
+        "reserve-accounting",
+        "lending-rule-pack"
+      ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_lendingCashAndDebtAccountingConsistent"
+        ],
+        "manual_review_notes": [
+          "Review reserve factor and protocol fee accounting."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Market cash state",
+          "Borrow/repay functions",
+          "Reserve accounting"
+        ],
+        "rule_family": "lending",
+        "safety_notes": [
+          "Use local asset mocks and synthetic liquidity."
+        ]
+      },
+      "title": "Reserve/cash accounting assumptions not covered",
+      "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
+    },
+    {
+      "affected_contracts": [
+        "ToyLendingMarket"
+      ],
+      "affected_files": [
+        "src/ToyLendingMarket.sol",
+        "test/ToyLendingMarket.t.sol"
+      ],
+      "affected_functions": [
+        "collateralValue",
+        "getPrice",
+        "liquidate"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+      "detected_signals": [
+        "answer",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "getPrice",
+          "line": 52,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "collateralValue",
+          "line": 58,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return collateral[user] * getPrice() / 1e18;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "liquidate",
+          "line": 94,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyLendingMarket.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, getPrice, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "03e5bec16b613d6d10e20dd7",
+      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+      "id": "ARK-ORC-005",
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+      "recommended_defensive_checks": [
+        "price bounds",
+        "fallback policy",
+        "stale-price policy",
+        "sequencer downtime notes"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "documentation-readiness",
+        "oracle-rule-pack"
+      ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+        ],
+        "manual_review_notes": [
+          "Review whether fallback behavior is intentionally unavailable."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Consumer path"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local invalid-value mocks."
+        ]
+      },
+      "title": "Missing price bounds or fallback assumptions documentation",
+      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
     {
       "affected_contracts": [
@@ -1349,371 +1603,134 @@
       "why_it_matters": "Interest/index accounting can drift when rates, time steps, small balances, and repeated accrual interact."
     },
     {
-      "affected_contracts": [
-        "ToyLendingMarket"
-      ],
+      "affected_contracts": [],
       "affected_files": [
         "src/ToyLendingMarket.sol",
         "test/ToyLendingMarket.t.sol"
       ],
-      "affected_functions": [
-        "collateralValue",
-        "getPrice",
-        "liquidate"
-      ],
-      "category": "lending-oracle",
-      "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
+      "affected_functions": [],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
       "detected_signals": [
-        "LTV",
-        "accrueInterest",
-        "answer",
-        "borrow",
-        "borrowIndex",
-        "cash",
-        "closeFactor",
-        "collateral",
-        "collateralFactor",
-        "debt",
-        "getPrice",
-        "guardian",
-        "healthFactor",
-        "interestIndex",
-        "latestRoundData",
-        "liquidate",
-        "liquidationBonus",
-        "liquidationThreshold",
-        "priceFeed",
-        "ratePerSecond",
-        "repay",
-        "totalBorrows",
-        "totalReserves"
+        "invariant_tests_missing",
+        "fuzz_tests_missing",
+        "handler_contracts_missing"
       ],
       "detection_sources": [
-        "keyword",
-        "semantic-lite",
-        "test-coverage"
+        "keyword"
       ],
       "evidence": [
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "getPrice",
-          "line": 52,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "collateralValue",
-          "line": 58,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "return collateral[user] * getPrice() / 1e18;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "liquidate",
-          "line": 94,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
-          "type": "semantic-lite"
-        },
-        {
-          "file": "",
-          "function": "",
-          "line": 1,
-          "reason": "No semantic-lite oracle test coverage terms were detected.",
-          "snippet": "",
-          "type": "test-coverage"
-        },
         {
           "file": "src/ToyLendingMarket.sol",
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral",
+          "snippet": "invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyLendingMarket.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing",
           "type": "keyword"
         }
       ],
-      "evidence_count": 5,
-      "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
-      "fingerprint": "995093a52992e5d7d6b2e42d",
-      "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
-      "id": "ARK-LEND-004",
+      "evidence_count": 2,
+      "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "616a5903e85dce60c03ada74",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
       "invariant_candidates": [
-        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
       ],
       "knowledge": {
         "broken_invariants": [
-          "health-factor-uses-valid-price",
-          "borrow-and-liquidation-use-bounded-price"
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
         ],
         "failed_assumptions": [
-          "collateral-price-is-current",
-          "oracle-answer-is-normalized"
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
         ],
         "finding_map_version": "0.9.0",
         "related_docs": [
-          "docs/LENDING_RULE_PACK.md",
-          "docs/ORACLE_RULE_PACK.md"
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
         ],
         "related_patterns": [
-          "pattern-oracle-stale-price",
-          "pattern-collateral-debt-invariant"
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
         ],
         "related_pocs": [
-          "poc-2025-11-moonwell",
-          "poc-2020-10-harvest"
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
         ],
         "root_causes": [
-          "missing-oracle-freshness-validation",
-          "implicit-collateral-price-trust"
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
         ],
-        "rule_pack": "lending",
+        "rule_pack": "testing",
         "search_terms": [
-          "lending oracle",
-          "stale price",
-          "price shock",
-          "collateral value"
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
         ],
         "suggested_tests": [
-          "stale-oracle-rejection",
-          "decimals-normalization-test",
-          "price-shock-boundary-test",
-          "borrow-blocked-on-invalid-price"
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
         ]
       },
       "negative_evidence": [],
       "negative_evidence_count": 0,
-      "priority": "High readiness gap",
-      "recommendation": "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
+      "priority": "Low readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
       "recommended_defensive_checks": [
-        "stale oracle rejection",
-        "decimals normalization",
-        "price shock boundary",
-        "borrow blocked on invalid price"
+        "stateful invariant suite for the core lifecycle",
+        "handler actions for normal and edge-case user flows",
+        "conservation properties for value-bearing state"
       ],
-      "severity": "High readiness gap",
+      "severity": "Low readiness gap",
       "suggested_tests": [
-        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
-        "Test stale oracle rejection for borrow and liquidation paths.",
-        "Test decimals normalization for collateral valuation.",
-        "Test price shock boundaries around health-factor transitions."
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
       ],
       "suppressible": true,
       "tags": [
-        "lending-oracle",
-        "oracle-risk",
-        "lending-rule-pack"
+        "invariant-testing",
+        "lending"
       ],
       "test_plan": {
         "foundry_skeleton_functions": [
-          "invariant_lendingOracleValidityPolicyIsRespected"
+          "invariant_coreAccountingRelationshipsHold",
+          "invariant_privilegedActionsRespectDocumentedAssumptions"
         ],
         "manual_review_notes": [
-          "Review fallback behavior and collateral-specific feed assumptions."
+          "Review whether the protocol uses another property-testing framework outside Foundry."
         ],
         "mapped": true,
         "required_project_bindings": [
-          "Lending market",
-          "Oracle mock",
-          "Health-factor logic"
+          "Target contracts",
+          "Allowed action handler",
+          "Local mocks for assets and oracle inputs"
         ],
-        "rule_family": "lending",
+        "rule_family": "testing",
         "safety_notes": [
-          "Use local oracle values and synthetic price shocks."
+          "Generated invariants are starting points and need human tailoring."
         ]
       },
-      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
-      "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
-    },
-    {
-      "affected_contracts": [
-        "ToyLendingMarket"
-      ],
-      "affected_files": [
-        "src/ToyLendingMarket.sol",
-        "test/ToyLendingMarket.t.sol"
-      ],
-      "affected_functions": [
-        "borrow",
-        "collateralValue",
-        "depositCollateral",
-        "healthFactor",
-        "repay"
-      ],
-      "category": "lending-liquidity",
-      "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
-      "detected_signals": [
-        "LTV",
-        "accrueInterest",
-        "borrow",
-        "borrowIndex",
-        "cash",
-        "closeFactor",
-        "collateral",
-        "collateralFactor",
-        "debt",
-        "guardian",
-        "healthFactor",
-        "interestIndex",
-        "liquidate",
-        "liquidationBonus",
-        "liquidationThreshold",
-        "ratePerSecond",
-        "repay",
-        "totalBorrows",
-        "totalReserves"
-      ],
-      "detection_sources": [
-        "semantic-lite"
-      ],
-      "evidence": [
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "depositCollateral",
-          "line": 48,
-          "reason": "Solidity function contains external value-flow call evidence.",
-          "snippet": "collateral[msg.sender] += msg.value;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "collateralValue",
-          "line": 58,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "return collateral[user] * getPrice() / 1e18;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "healthFactor",
-          "line": 62,
-          "reason": "Solidity function shape matches this readiness finding.",
-          "snippet": "if (debt[user] == 0) {",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "borrow",
-          "line": 69,
-          "reason": "Solidity function contains external value-flow call evidence.",
-          "snippet": "uint256 projectedDebt = debt[msg.sender] + amount;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "repay",
-          "line": 79,
-          "reason": "Solidity function contains external value-flow call evidence.",
-          "snippet": "uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;",
-          "type": "semantic-lite"
-        }
-      ],
-      "evidence_count": 5,
-      "evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
-      "false_positive_notes": "",
-      "fingerprint": "1594a1336d67ce91c23f435b",
-      "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
-      "id": "ARK-LEND-005",
-      "invariant_candidates": [
-        "Cash, total borrows, total reserves, and utilization remain internally consistent."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "borrow-cannot-exceed-available-liquidity",
-          "cash-plus-borrows-reserves-reconcile"
-        ],
-        "failed_assumptions": [
-          "cash-matches-available-liquidity",
-          "repay-updates-debt-and-cash-consistently"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/LENDING_RULE_PACK.md",
-          "docs/RULE_PACKS.md"
-        ],
-        "related_patterns": [
-          "pattern-collateral-debt-invariant",
-          "pattern-accounting-index-drift"
-        ],
-        "related_pocs": [
-          "poc-2020-11-cheese-bank"
-        ],
-        "root_causes": [
-          "available-liquidity-assumption",
-          "cash-reserve-accounting-drift"
-        ],
-        "rule_pack": "lending",
-        "search_terms": [
-          "reserve accounting",
-          "available liquidity",
-          "totalBorrows",
-          "utilization"
-        ],
-        "suggested_tests": [
-          "available-liquidity-bound",
-          "repay-cash-debt-consistency",
-          "reserve-withdrawal-constraints",
-          "utilization-bound-test"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Medium readiness gap",
-      "recommendation": "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
-      "recommended_defensive_checks": [
-        "available liquidity bound",
-        "repay updates cash/debt",
-        "reserve withdrawal constraints",
-        "utilization bounds"
-      ],
-      "severity": "Medium readiness gap",
-      "suggested_tests": [
-        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
-        "Test borrow cannot exceed available liquidity.",
-        "Test repay updates cash, debt, and reserves consistently.",
-        "Assert reserves cannot be withdrawn beyond documented constraints."
-      ],
-      "suppressible": true,
-      "tags": [
-        "lending-liquidity",
-        "reserve-accounting",
-        "lending-rule-pack"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_lendingCashAndDebtAccountingConsistent"
-        ],
-        "manual_review_notes": [
-          "Review reserve factor and protocol fee accounting."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Market cash state",
-          "Borrow/repay functions",
-          "Reserve accounting"
-        ],
-        "rule_family": "lending",
-        "safety_notes": [
-          "Use local asset mocks and synthetic liquidity."
-        ]
-      },
-      "title": "Reserve/cash accounting assumptions not covered",
-      "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": "Protocol-like value flows without invariant or property tests leave core accounting assumptions unverified under fees, rounding, and unexpected action sequences."
     }
   ],
   "findings_by_confidence": {
@@ -1785,7 +1802,7 @@
       "why_fix_first": "high-confidence local evidence; appears across multiple files; clear defensive tests are available."
     }
   ],
-  "generated_at": "2026-06-06T12:31:33+00:00",
+  "generated_at": "2026-08-05T18:37:05+00:00",
   "generated_outputs": {
     "baseline": "",
     "comment": "",
@@ -1916,128 +1933,6 @@
   "protocol_type": "lending",
   "readiness_gaps": [
     {
-      "affected_contracts": [],
-      "affected_files": [
-        "src/ToyLendingMarket.sol",
-        "test/ToyLendingMarket.t.sol"
-      ],
-      "affected_functions": [],
-      "category": "testing-readiness",
-      "confidence": "low",
-      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
-      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
-      "detected_signals": [],
-      "detection_sources": [
-        "keyword"
-      ],
-      "evidence": [
-        {
-          "file": "src/ToyLendingMarket.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        },
-        {
-          "file": "test/ToyLendingMarket.t.sol",
-          "function": "",
-          "line": 1,
-          "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
-          "type": "keyword"
-        }
-      ],
-      "evidence_count": 2,
-      "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
-      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
-      "fingerprint": "365ac6a8f4023a1d577381a3",
-      "historical_pattern_similarity": "",
-      "id": "ARK-TST-002",
-      "invariant_candidates": [
-        "Core accounting relationships hold after any allowed user action.",
-        "Privileged actions cannot silently bypass documented accounting assumptions."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "protocol-specific-conservation-invariant",
-          "authorization-or-lifecycle-invariant"
-        ],
-        "failed_assumptions": [
-          "unit-tests-cover-compositional-state",
-          "happy-path-tests-cover-adversarial-sequences"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/READINESS_SCORE.md",
-          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
-        ],
-        "related_patterns": [
-          "pattern-missing-invariant-coverage",
-          "pattern-assumption-not-encoded-in-tests"
-        ],
-        "related_pocs": [
-          "poc-2020-08-opyn",
-          "poc-2020-09-bzx-ifusdc",
-          "poc-2021-10-indexed-finance"
-        ],
-        "root_causes": [
-          "critical-assumption-only-documented-or-implicit",
-          "state-machine-not-fuzzed"
-        ],
-        "rule_pack": "testing",
-        "search_terms": [
-          "missing invariant",
-          "audit blocker",
-          "stateful fuzz",
-          "invariant testing"
-        ],
-        "suggested_tests": [
-          "foundry-invariant-skeleton",
-          "stateful-fuzz-sequence",
-          "roundtrip-or-conservation-invariant"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Low readiness gap",
-      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-      "recommended_defensive_checks": [],
-      "severity": "Low readiness gap",
-      "suggested_tests": [
-        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
-        "Add a stateful invariant suite for the core protocol lifecycle.",
-        "Add handler actions for normal user flows and documented edge cases.",
-        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
-      ],
-      "suppressible": true,
-      "tags": [
-        "invariant-testing",
-        "lending"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_coreAccountingRelationshipsHold",
-          "invariant_privilegedActionsRespectDocumentedAssumptions"
-        ],
-        "manual_review_notes": [
-          "Review whether the protocol uses another property-testing framework outside Foundry."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Target contracts",
-          "Allowed action handler",
-          "Local mocks for assets and oracle inputs"
-        ],
-        "rule_family": "testing",
-        "safety_notes": [
-          "Generated invariants are starting points and need human tailoring."
-        ]
-      },
-      "title": "No invariant tests detected for DeFi protocol shape",
-      "why_it_matters": ""
-    },
-    {
       "affected_contracts": [
         "ToyLendingMarket"
       ],
@@ -2050,11 +1945,35 @@
         "getPrice",
         "liquidate"
       ],
-      "category": "oracle-pricing",
-      "confidence": "medium",
+      "category": "lending-oracle",
+      "confidence": "high",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
-      "detected_signals": [],
+      "detail": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
+      "detected_signals": [
+        "LTV",
+        "accrueInterest",
+        "answer",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor",
+        "collateral",
+        "collateralFactor",
+        "debt",
+        "getPrice",
+        "guardian",
+        "healthFactor",
+        "interestIndex",
+        "latestRoundData",
+        "liquidate",
+        "liquidationBonus",
+        "liquidationThreshold",
+        "priceFeed",
+        "ratePerSecond",
+        "repay",
+        "totalBorrows",
+        "totalReserves"
+      ],
       "detection_sources": [
         "keyword",
         "semantic-lite",
@@ -2101,63 +2020,102 @@
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "",
+          "snippet": "LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral",
           "type": "keyword"
         }
       ],
       "evidence_count": 5,
       "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
       "false_positive_notes": "",
-      "fingerprint": "8a1699ea5c99922d1c6da655",
-      "historical_pattern_similarity": "",
-      "id": "ARK-ORC-002",
+      "fingerprint": "995093a52992e5d7d6b2e42d",
+      "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
+      "id": "ARK-LEND-004",
       "invariant_candidates": [
-        "Normalized oracle values remain within documented unit and decimal assumptions."
+        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
       ],
       "knowledge": {
+        "broken_invariants": [
+          "health-factor-uses-valid-price",
+          "borrow-and-liquidation-use-bounded-price"
+        ],
+        "failed_assumptions": [
+          "collateral-price-is-current",
+          "oracle-answer-is-normalized"
+        ],
         "finding_map_version": "0.9.0",
-        "related_docs": [],
-        "related_patterns": [],
-        "related_pocs": [],
-        "search_terms": [],
-        "suggested_tests": []
+        "related_docs": [
+          "docs/LENDING_RULE_PACK.md",
+          "docs/ORACLE_RULE_PACK.md"
+        ],
+        "related_patterns": [
+          "pattern-oracle-stale-price",
+          "pattern-collateral-debt-invariant"
+        ],
+        "related_pocs": [
+          "poc-2025-11-moonwell",
+          "poc-2020-10-harvest"
+        ],
+        "root_causes": [
+          "missing-oracle-freshness-validation",
+          "implicit-collateral-price-trust"
+        ],
+        "rule_pack": "lending",
+        "search_terms": [
+          "lending oracle",
+          "stale price",
+          "price shock",
+          "collateral value"
+        ],
+        "suggested_tests": [
+          "stale-oracle-rejection",
+          "decimals-normalization-test",
+          "price-shock-boundary-test",
+          "borrow-blocked-on-invalid-price"
+        ]
       },
       "negative_evidence": [],
       "negative_evidence_count": 0,
       "priority": "High readiness gap",
-      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-      "recommended_defensive_checks": [],
+      "recommendation": "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
+      "recommended_defensive_checks": [
+        "stale oracle rejection",
+        "decimals normalization",
+        "price shock boundary",
+        "borrow blocked on invalid price"
+      ],
       "severity": "High readiness gap",
       "suggested_tests": [
-        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-        "Test decimals normalization across expected feed decimals.",
-        "Test zero, negative, or invalid oracle answers if applicable.",
-        "Assert normalized price units match accounting units."
+        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+        "Test stale oracle rejection for borrow and liquidation paths.",
+        "Test decimals normalization for collateral valuation.",
+        "Test price shock boundaries around health-factor transitions."
       ],
       "suppressible": true,
       "tags": [
+        "lending-oracle",
         "oracle-risk",
-        "price-assumptions"
+        "lending-rule-pack"
       ],
       "test_plan": {
         "foundry_skeleton_functions": [
-          "invariant_oracleNormalizationMatchesAccountingUnits"
+          "invariant_lendingOracleValidityPolicyIsRespected"
         ],
         "manual_review_notes": [
-          "Review whether feed decimals are fixed at deployment."
+          "Review fallback behavior and collateral-specific feed assumptions."
         ],
         "mapped": true,
         "required_project_bindings": [
-          "Oracle adapter",
-          "Accounting consumer"
+          "Lending market",
+          "Oracle mock",
+          "Health-factor logic"
         ],
-        "rule_family": "oracle",
+        "rule_family": "lending",
         "safety_notes": [
-          "Use synthetic feed answers and local mocks."
+          "Use local oracle values and synthetic price shocks."
         ]
       },
-      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
-      "why_it_matters": ""
+      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+      "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
     },
     {
       "affected_contracts": [
@@ -2345,9 +2303,9 @@
         "liquidate"
       ],
       "category": "oracle-pricing",
-      "confidence": "high",
+      "confidence": "medium",
       "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+      "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
       "detected_signals": [
         "answer",
         "getPrice",
@@ -2407,11 +2365,11 @@
       "evidence_count": 5,
       "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
       "false_positive_notes": "",
-      "fingerprint": "03e5bec16b613d6d10e20dd7",
-      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
-      "id": "ARK-ORC-005",
+      "fingerprint": "2b5212e9506e054f6e136eee",
+      "historical_pattern_similarity": "",
+      "id": "ARK-ORC-002",
       "invariant_candidates": [
-        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+        "Normalized oracle values remain within documented unit and decimal assumptions."
       ],
       "knowledge": {
         "finding_map_version": "0.9.0",
@@ -2423,46 +2381,44 @@
       },
       "negative_evidence": [],
       "negative_evidence_count": 0,
-      "priority": "Medium readiness gap",
-      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+      "priority": "High readiness gap",
+      "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
       "recommended_defensive_checks": [
-        "price bounds",
-        "fallback policy",
-        "stale-price policy",
-        "sequencer downtime notes"
+        "stale-round and heartbeat handling",
+        "decimals normalization to accounting units",
+        "documented price bounds, TWAP, or fallback policy"
       ],
-      "severity": "Medium readiness gap",
+      "severity": "High readiness gap",
       "suggested_tests": [
-        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
-        "Test documented price bounds.",
-        "Test invalid answer fallback behavior.",
-        "Add documentation for price shock and fallback assumptions."
+        "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+        "Test decimals normalization across expected feed decimals.",
+        "Test zero, negative, or invalid oracle answers if applicable.",
+        "Assert normalized price units match accounting units."
       ],
       "suppressible": true,
       "tags": [
         "oracle-risk",
-        "documentation-readiness",
-        "oracle-rule-pack"
+        "price-assumptions"
       ],
       "test_plan": {
         "foundry_skeleton_functions": [
-          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+          "invariant_oracleNormalizationMatchesAccountingUnits"
         ],
         "manual_review_notes": [
-          "Review whether fallback behavior is intentionally unavailable."
+          "Review whether feed decimals are fixed at deployment."
         ],
         "mapped": true,
         "required_project_bindings": [
           "Oracle adapter",
-          "Consumer path"
+          "Accounting consumer"
         ],
         "rule_family": "oracle",
         "safety_notes": [
-          "Use local invalid-value mocks."
+          "Use synthetic feed answers and local mocks."
         ]
       },
-      "title": "Missing price bounds or fallback assumptions documentation",
-      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
+      "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+      "why_it_matters": "Price-dependent accounting can be wrong when oracle data is stale, out of bounds, or mis-normalized and no freshness or sanity check is visible to a reviewer."
     },
     {
       "affected_contracts": [
@@ -2626,6 +2582,321 @@
       },
       "title": "Privileged setters without role-boundary tests",
       "why_it_matters": "Privileged setters can alter fees, oracles, strategies, treasury, roles, pause state, or accounting assumptions."
+    },
+    {
+      "affected_contracts": [
+        "ToyLendingMarket"
+      ],
+      "affected_files": [
+        "src/ToyLendingMarket.sol",
+        "test/ToyLendingMarket.t.sol"
+      ],
+      "affected_functions": [
+        "borrow",
+        "collateralValue",
+        "depositCollateral",
+        "healthFactor",
+        "repay"
+      ],
+      "category": "lending-liquidity",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
+      "detected_signals": [
+        "LTV",
+        "accrueInterest",
+        "borrow",
+        "borrowIndex",
+        "cash",
+        "closeFactor",
+        "collateral",
+        "collateralFactor",
+        "debt",
+        "guardian",
+        "healthFactor",
+        "interestIndex",
+        "liquidate",
+        "liquidationBonus",
+        "liquidationThreshold",
+        "ratePerSecond",
+        "repay",
+        "totalBorrows",
+        "totalReserves"
+      ],
+      "detection_sources": [
+        "semantic-lite"
+      ],
+      "evidence": [
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "depositCollateral",
+          "line": 48,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "collateral[msg.sender] += msg.value;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "collateralValue",
+          "line": 58,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return collateral[user] * getPrice() / 1e18;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "healthFactor",
+          "line": 62,
+          "reason": "Solidity function shape matches this readiness finding.",
+          "snippet": "if (debt[user] == 0) {",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "borrow",
+          "line": 69,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "uint256 projectedDebt = debt[msg.sender] + amount;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "repay",
+          "line": 79,
+          "reason": "Solidity function contains external value-flow call evidence.",
+          "snippet": "uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;",
+          "type": "semantic-lite"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "1594a1336d67ce91c23f435b",
+      "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
+      "id": "ARK-LEND-005",
+      "invariant_candidates": [
+        "Cash, total borrows, total reserves, and utilization remain internally consistent."
+      ],
+      "knowledge": {
+        "broken_invariants": [
+          "borrow-cannot-exceed-available-liquidity",
+          "cash-plus-borrows-reserves-reconcile"
+        ],
+        "failed_assumptions": [
+          "cash-matches-available-liquidity",
+          "repay-updates-debt-and-cash-consistently"
+        ],
+        "finding_map_version": "0.9.0",
+        "related_docs": [
+          "docs/LENDING_RULE_PACK.md",
+          "docs/RULE_PACKS.md"
+        ],
+        "related_patterns": [
+          "pattern-collateral-debt-invariant",
+          "pattern-accounting-index-drift"
+        ],
+        "related_pocs": [
+          "poc-2020-11-cheese-bank"
+        ],
+        "root_causes": [
+          "available-liquidity-assumption",
+          "cash-reserve-accounting-drift"
+        ],
+        "rule_pack": "lending",
+        "search_terms": [
+          "reserve accounting",
+          "available liquidity",
+          "totalBorrows",
+          "utilization"
+        ],
+        "suggested_tests": [
+          "available-liquidity-bound",
+          "repay-cash-debt-consistency",
+          "reserve-withdrawal-constraints",
+          "utilization-bound-test"
+        ]
+      },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommendation": "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
+      "recommended_defensive_checks": [
+        "available liquidity bound",
+        "repay updates cash/debt",
+        "reserve withdrawal constraints",
+        "utilization bounds"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+        "Test borrow cannot exceed available liquidity.",
+        "Test repay updates cash, debt, and reserves consistently.",
+        "Assert reserves cannot be withdrawn beyond documented constraints."
+      ],
+      "suppressible": true,
+      "tags": [
+        "lending-liquidity",
+        "reserve-accounting",
+        "lending-rule-pack"
+      ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_lendingCashAndDebtAccountingConsistent"
+        ],
+        "manual_review_notes": [
+          "Review reserve factor and protocol fee accounting."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Market cash state",
+          "Borrow/repay functions",
+          "Reserve accounting"
+        ],
+        "rule_family": "lending",
+        "safety_notes": [
+          "Use local asset mocks and synthetic liquidity."
+        ]
+      },
+      "title": "Reserve/cash accounting assumptions not covered",
+      "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
+    },
+    {
+      "affected_contracts": [
+        "ToyLendingMarket"
+      ],
+      "affected_files": [
+        "src/ToyLendingMarket.sol",
+        "test/ToyLendingMarket.t.sol"
+      ],
+      "affected_functions": [
+        "collateralValue",
+        "getPrice",
+        "liquidate"
+      ],
+      "category": "oracle-pricing",
+      "confidence": "high",
+      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+      "detail": "Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.",
+      "detected_signals": [
+        "answer",
+        "getPrice",
+        "latestRoundData",
+        "priceFeed"
+      ],
+      "detection_sources": [
+        "keyword",
+        "semantic-lite",
+        "test-coverage"
+      ],
+      "evidence": [
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "getPrice",
+          "line": 52,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "collateralValue",
+          "line": 58,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "return collateral[user] * getPrice() / 1e18;",
+          "type": "semantic-lite"
+        },
+        {
+          "contract": "ToyLendingMarket",
+          "file": "src/ToyLendingMarket.sol",
+          "function": "liquidate",
+          "line": 94,
+          "reason": "Solidity function contains oracle or price-feed call evidence.",
+          "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
+          "type": "semantic-lite"
+        },
+        {
+          "file": "",
+          "function": "",
+          "line": 1,
+          "reason": "No semantic-lite oracle test coverage terms were detected.",
+          "snippet": "",
+          "type": "test-coverage"
+        },
+        {
+          "file": "src/ToyLendingMarket.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "answer, getPrice, latestRoundData, priceFeed",
+          "type": "keyword"
+        }
+      ],
+      "evidence_count": 5,
+      "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+      "false_positive_notes": "",
+      "fingerprint": "03e5bec16b613d6d10e20dd7",
+      "historical_pattern_similarity": "Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.",
+      "id": "ARK-ORC-005",
+      "invariant_candidates": [
+        "Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions."
+      ],
+      "knowledge": {
+        "finding_map_version": "0.9.0",
+        "related_docs": [],
+        "related_patterns": [],
+        "related_pocs": [],
+        "search_terms": [],
+        "suggested_tests": []
+      },
+      "negative_evidence": [],
+      "negative_evidence_count": 0,
+      "priority": "Medium readiness gap",
+      "recommendation": "Document min/max bounds, fallback oracle behavior, stale-price policy, and L2 sequencer assumptions if relevant.",
+      "recommended_defensive_checks": [
+        "price bounds",
+        "fallback policy",
+        "stale-price policy",
+        "sequencer downtime notes"
+      ],
+      "severity": "Medium readiness gap",
+      "suggested_tests": [
+        "Add documentation plus local tests showing fallback and out-of-bounds price behavior.",
+        "Test documented price bounds.",
+        "Test invalid answer fallback behavior.",
+        "Add documentation for price shock and fallback assumptions."
+      ],
+      "suppressible": true,
+      "tags": [
+        "oracle-risk",
+        "documentation-readiness",
+        "oracle-rule-pack"
+      ],
+      "test_plan": {
+        "foundry_skeleton_functions": [
+          "invariant_invalidPricesDoNotDriveCriticalAccounting"
+        ],
+        "manual_review_notes": [
+          "Review whether fallback behavior is intentionally unavailable."
+        ],
+        "mapped": true,
+        "required_project_bindings": [
+          "Oracle adapter",
+          "Consumer path"
+        ],
+        "rule_family": "oracle",
+        "safety_notes": [
+          "Use local invalid-value mocks."
+        ]
+      },
+      "title": "Missing price bounds or fallback assumptions documentation",
+      "why_it_matters": "Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes."
     },
     {
       "affected_contracts": [
@@ -3178,371 +3449,134 @@
       "why_it_matters": "Interest/index accounting can drift when rates, time steps, small balances, and repeated accrual interact."
     },
     {
-      "affected_contracts": [
-        "ToyLendingMarket"
-      ],
+      "affected_contracts": [],
       "affected_files": [
         "src/ToyLendingMarket.sol",
         "test/ToyLendingMarket.t.sol"
       ],
-      "affected_functions": [
-        "collateralValue",
-        "getPrice",
-        "liquidate"
-      ],
-      "category": "lending-oracle",
-      "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
+      "affected_functions": [],
+      "category": "testing-readiness",
+      "confidence": "low",
+      "confidence_reason": "Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.",
+      "detail": "Protocol-like value flows were detected, but no invariant/property testing signal was found.",
       "detected_signals": [
-        "LTV",
-        "accrueInterest",
-        "answer",
-        "borrow",
-        "borrowIndex",
-        "cash",
-        "closeFactor",
-        "collateral",
-        "collateralFactor",
-        "debt",
-        "getPrice",
-        "guardian",
-        "healthFactor",
-        "interestIndex",
-        "latestRoundData",
-        "liquidate",
-        "liquidationBonus",
-        "liquidationThreshold",
-        "priceFeed",
-        "ratePerSecond",
-        "repay",
-        "totalBorrows",
-        "totalReserves"
+        "invariant_tests_missing",
+        "fuzz_tests_missing",
+        "handler_contracts_missing"
       ],
       "detection_sources": [
-        "keyword",
-        "semantic-lite",
-        "test-coverage"
+        "keyword"
       ],
       "evidence": [
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "getPrice",
-          "line": 52,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "collateralValue",
-          "line": 58,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "return collateral[user] * getPrice() / 1e18;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "liquidate",
-          "line": 94,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
-          "type": "semantic-lite"
-        },
-        {
-          "file": "",
-          "function": "",
-          "line": 1,
-          "reason": "No semantic-lite oracle test coverage terms were detected.",
-          "snippet": "",
-          "type": "test-coverage"
-        },
         {
           "file": "src/ToyLendingMarket.sol",
           "function": "",
           "line": 1,
           "reason": "Keyword signal matched this readiness finding.",
-          "snippet": "LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral",
+          "snippet": "invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing",
+          "type": "keyword"
+        },
+        {
+          "file": "test/ToyLendingMarket.t.sol",
+          "function": "",
+          "line": 1,
+          "reason": "Keyword signal matched this readiness finding.",
+          "snippet": "invariant_tests_missing, fuzz_tests_missing, handler_contracts_missing",
           "type": "keyword"
         }
       ],
-      "evidence_count": 5,
-      "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-      "false_positive_notes": "",
-      "fingerprint": "995093a52992e5d7d6b2e42d",
-      "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
-      "id": "ARK-LEND-004",
+      "evidence_count": 2,
+      "evidence_summary": "src/ToyLendingMarket.sol: Keyword signal matched this readiness finding.",
+      "false_positive_notes": "Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.",
+      "fingerprint": "616a5903e85dce60c03ada74",
+      "historical_pattern_similarity": "",
+      "id": "ARK-TST-002",
       "invariant_candidates": [
-        "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
+        "Core accounting relationships hold after any allowed user action.",
+        "Privileged actions cannot silently bypass documented accounting assumptions."
       ],
       "knowledge": {
         "broken_invariants": [
-          "health-factor-uses-valid-price",
-          "borrow-and-liquidation-use-bounded-price"
+          "protocol-specific-conservation-invariant",
+          "authorization-or-lifecycle-invariant"
         ],
         "failed_assumptions": [
-          "collateral-price-is-current",
-          "oracle-answer-is-normalized"
+          "unit-tests-cover-compositional-state",
+          "happy-path-tests-cover-adversarial-sequences"
         ],
         "finding_map_version": "0.9.0",
         "related_docs": [
-          "docs/LENDING_RULE_PACK.md",
-          "docs/ORACLE_RULE_PACK.md"
+          "docs/READINESS_SCORE.md",
+          "templates/invariant_skeletons/ArkheionxReadinessInvariants.t.sol"
         ],
         "related_patterns": [
-          "pattern-oracle-stale-price",
-          "pattern-collateral-debt-invariant"
+          "pattern-missing-invariant-coverage",
+          "pattern-assumption-not-encoded-in-tests"
         ],
         "related_pocs": [
-          "poc-2025-11-moonwell",
-          "poc-2020-10-harvest"
+          "poc-2020-08-opyn",
+          "poc-2020-09-bzx-ifusdc",
+          "poc-2021-10-indexed-finance"
         ],
         "root_causes": [
-          "missing-oracle-freshness-validation",
-          "implicit-collateral-price-trust"
+          "critical-assumption-only-documented-or-implicit",
+          "state-machine-not-fuzzed"
         ],
-        "rule_pack": "lending",
+        "rule_pack": "testing",
         "search_terms": [
-          "lending oracle",
-          "stale price",
-          "price shock",
-          "collateral value"
+          "missing invariant",
+          "audit blocker",
+          "stateful fuzz",
+          "invariant testing"
         ],
         "suggested_tests": [
-          "stale-oracle-rejection",
-          "decimals-normalization-test",
-          "price-shock-boundary-test",
-          "borrow-blocked-on-invalid-price"
+          "foundry-invariant-skeleton",
+          "stateful-fuzz-sequence",
+          "roundtrip-or-conservation-invariant"
         ]
       },
       "negative_evidence": [],
       "negative_evidence_count": 0,
-      "priority": "High readiness gap",
-      "recommendation": "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
+      "priority": "Low readiness gap",
+      "recommendation": "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
       "recommended_defensive_checks": [
-        "stale oracle rejection",
-        "decimals normalization",
-        "price shock boundary",
-        "borrow blocked on invalid price"
+        "stateful invariant suite for the core lifecycle",
+        "handler actions for normal and edge-case user flows",
+        "conservation properties for value-bearing state"
       ],
-      "severity": "High readiness gap",
+      "severity": "Low readiness gap",
       "suggested_tests": [
-        "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
-        "Test stale oracle rejection for borrow and liquidation paths.",
-        "Test decimals normalization for collateral valuation.",
-        "Test price shock boundaries around health-factor transitions."
+        "Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.",
+        "Add a stateful invariant suite for the core protocol lifecycle.",
+        "Add handler actions for normal user flows and documented edge cases.",
+        "Add conservation properties for assets, shares, rewards, debt, or reserves as applicable."
       ],
       "suppressible": true,
       "tags": [
-        "lending-oracle",
-        "oracle-risk",
-        "lending-rule-pack"
+        "invariant-testing",
+        "lending"
       ],
       "test_plan": {
         "foundry_skeleton_functions": [
-          "invariant_lendingOracleValidityPolicyIsRespected"
+          "invariant_coreAccountingRelationshipsHold",
+          "invariant_privilegedActionsRespectDocumentedAssumptions"
         ],
         "manual_review_notes": [
-          "Review fallback behavior and collateral-specific feed assumptions."
+          "Review whether the protocol uses another property-testing framework outside Foundry."
         ],
         "mapped": true,
         "required_project_bindings": [
-          "Lending market",
-          "Oracle mock",
-          "Health-factor logic"
+          "Target contracts",
+          "Allowed action handler",
+          "Local mocks for assets and oracle inputs"
         ],
-        "rule_family": "lending",
+        "rule_family": "testing",
         "safety_notes": [
-          "Use local oracle values and synthetic price shocks."
+          "Generated invariants are starting points and need human tailoring."
         ]
       },
-      "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
-      "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
-    },
-    {
-      "affected_contracts": [
-        "ToyLendingMarket"
-      ],
-      "affected_files": [
-        "src/ToyLendingMarket.sol",
-        "test/ToyLendingMarket.t.sol"
-      ],
-      "affected_functions": [
-        "borrow",
-        "collateralValue",
-        "depositCollateral",
-        "healthFactor",
-        "repay"
-      ],
-      "category": "lending-liquidity",
-      "confidence": "high",
-      "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-      "detail": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
-      "detected_signals": [
-        "LTV",
-        "accrueInterest",
-        "borrow",
-        "borrowIndex",
-        "cash",
-        "closeFactor",
-        "collateral",
-        "collateralFactor",
-        "debt",
-        "guardian",
-        "healthFactor",
-        "interestIndex",
-        "liquidate",
-        "liquidationBonus",
-        "liquidationThreshold",
-        "ratePerSecond",
-        "repay",
-        "totalBorrows",
-        "totalReserves"
-      ],
-      "detection_sources": [
-        "semantic-lite"
-      ],
-      "evidence": [
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "depositCollateral",
-          "line": 48,
-          "reason": "Solidity function contains external value-flow call evidence.",
-          "snippet": "collateral[msg.sender] += msg.value;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "collateralValue",
-          "line": 58,
-          "reason": "Solidity function contains oracle or price-feed call evidence.",
-          "snippet": "return collateral[user] * getPrice() / 1e18;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "healthFactor",
-          "line": 62,
-          "reason": "Solidity function shape matches this readiness finding.",
-          "snippet": "if (debt[user] == 0) {",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "borrow",
-          "line": 69,
-          "reason": "Solidity function contains external value-flow call evidence.",
-          "snippet": "uint256 projectedDebt = debt[msg.sender] + amount;",
-          "type": "semantic-lite"
-        },
-        {
-          "contract": "ToyLendingMarket",
-          "file": "src/ToyLendingMarket.sol",
-          "function": "repay",
-          "line": 79,
-          "reason": "Solidity function contains external value-flow call evidence.",
-          "snippet": "uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;",
-          "type": "semantic-lite"
-        }
-      ],
-      "evidence_count": 5,
-      "evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
-      "false_positive_notes": "",
-      "fingerprint": "1594a1336d67ce91c23f435b",
-      "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
-      "id": "ARK-LEND-005",
-      "invariant_candidates": [
-        "Cash, total borrows, total reserves, and utilization remain internally consistent."
-      ],
-      "knowledge": {
-        "broken_invariants": [
-          "borrow-cannot-exceed-available-liquidity",
-          "cash-plus-borrows-reserves-reconcile"
-        ],
-        "failed_assumptions": [
-          "cash-matches-available-liquidity",
-          "repay-updates-debt-and-cash-consistently"
-        ],
-        "finding_map_version": "0.9.0",
-        "related_docs": [
-          "docs/LENDING_RULE_PACK.md",
-          "docs/RULE_PACKS.md"
-        ],
-        "related_patterns": [
-          "pattern-collateral-debt-invariant",
-          "pattern-accounting-index-drift"
-        ],
-        "related_pocs": [
-          "poc-2020-11-cheese-bank"
-        ],
-        "root_causes": [
-          "available-liquidity-assumption",
-          "cash-reserve-accounting-drift"
-        ],
-        "rule_pack": "lending",
-        "search_terms": [
-          "reserve accounting",
-          "available liquidity",
-          "totalBorrows",
-          "utilization"
-        ],
-        "suggested_tests": [
-          "available-liquidity-bound",
-          "repay-cash-debt-consistency",
-          "reserve-withdrawal-constraints",
-          "utilization-bound-test"
-        ]
-      },
-      "negative_evidence": [],
-      "negative_evidence_count": 0,
-      "priority": "Medium readiness gap",
-      "recommendation": "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
-      "recommended_defensive_checks": [
-        "available liquidity bound",
-        "repay updates cash/debt",
-        "reserve withdrawal constraints",
-        "utilization bounds"
-      ],
-      "severity": "Medium readiness gap",
-      "suggested_tests": [
-        "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
-        "Test borrow cannot exceed available liquidity.",
-        "Test repay updates cash, debt, and reserves consistently.",
-        "Assert reserves cannot be withdrawn beyond documented constraints."
-      ],
-      "suppressible": true,
-      "tags": [
-        "lending-liquidity",
-        "reserve-accounting",
-        "lending-rule-pack"
-      ],
-      "test_plan": {
-        "foundry_skeleton_functions": [
-          "invariant_lendingCashAndDebtAccountingConsistent"
-        ],
-        "manual_review_notes": [
-          "Review reserve factor and protocol fee accounting."
-        ],
-        "mapped": true,
-        "required_project_bindings": [
-          "Market cash state",
-          "Borrow/repay functions",
-          "Reserve accounting"
-        ],
-        "rule_family": "lending",
-        "safety_notes": [
-          "Use local asset mocks and synthetic liquidity."
-        ]
-      },
-      "title": "Reserve/cash accounting assumptions not covered",
-      "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
+      "title": "No invariant tests detected for DeFi protocol shape",
+      "why_it_matters": "Protocol-like value flows without invariant or property tests leave core accounting assumptions unverified under fees, rounding, and unexpected action sequences."
     }
   ],
   "repo_root": "examples/lending-fixture",
@@ -3858,6 +3892,373 @@
       ],
       "finding_count": 5,
       "findings": [
+        {
+          "affected_contracts": [
+            "ToyLendingMarket"
+          ],
+          "affected_files": [
+            "src/ToyLendingMarket.sol",
+            "test/ToyLendingMarket.t.sol"
+          ],
+          "affected_functions": [
+            "collateralValue",
+            "getPrice",
+            "liquidate"
+          ],
+          "category": "lending-oracle",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "detail": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
+          "detected_signals": [
+            "LTV",
+            "accrueInterest",
+            "answer",
+            "borrow",
+            "borrowIndex",
+            "cash",
+            "closeFactor",
+            "collateral",
+            "collateralFactor",
+            "debt",
+            "getPrice",
+            "guardian",
+            "healthFactor",
+            "interestIndex",
+            "latestRoundData",
+            "liquidate",
+            "liquidationBonus",
+            "liquidationThreshold",
+            "priceFeed",
+            "ratePerSecond",
+            "repay",
+            "totalBorrows",
+            "totalReserves"
+          ],
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "getPrice",
+              "line": 52,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "collateralValue",
+              "line": 58,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return collateral[user] * getPrice() / 1e18;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "liquidate",
+              "line": 94,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite oracle test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/ToyLendingMarket.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "995093a52992e5d7d6b2e42d",
+          "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
+          "id": "ARK-LEND-004",
+          "invariant_candidates": [
+            "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
+          ],
+          "knowledge": {
+            "broken_invariants": [
+              "health-factor-uses-valid-price",
+              "borrow-and-liquidation-use-bounded-price"
+            ],
+            "failed_assumptions": [
+              "collateral-price-is-current",
+              "oracle-answer-is-normalized"
+            ],
+            "finding_map_version": "0.9.0",
+            "related_docs": [
+              "docs/LENDING_RULE_PACK.md",
+              "docs/ORACLE_RULE_PACK.md"
+            ],
+            "related_patterns": [
+              "pattern-oracle-stale-price",
+              "pattern-collateral-debt-invariant"
+            ],
+            "related_pocs": [
+              "poc-2025-11-moonwell",
+              "poc-2020-10-harvest"
+            ],
+            "root_causes": [
+              "missing-oracle-freshness-validation",
+              "implicit-collateral-price-trust"
+            ],
+            "rule_pack": "lending",
+            "search_terms": [
+              "lending oracle",
+              "stale price",
+              "price shock",
+              "collateral value"
+            ],
+            "suggested_tests": [
+              "stale-oracle-rejection",
+              "decimals-normalization-test",
+              "price-shock-boundary-test",
+              "borrow-blocked-on-invalid-price"
+            ]
+          },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
+          "priority": "High readiness gap",
+          "recommendation": "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
+          "recommended_defensive_checks": [
+            "stale oracle rejection",
+            "decimals normalization",
+            "price shock boundary",
+            "borrow blocked on invalid price"
+          ],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
+            "Test stale oracle rejection for borrow and liquidation paths.",
+            "Test decimals normalization for collateral valuation.",
+            "Test price shock boundaries around health-factor transitions."
+          ],
+          "suppressible": true,
+          "tags": [
+            "lending-oracle",
+            "oracle-risk",
+            "lending-rule-pack"
+          ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_lendingOracleValidityPolicyIsRespected"
+            ],
+            "manual_review_notes": [
+              "Review fallback behavior and collateral-specific feed assumptions."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Lending market",
+              "Oracle mock",
+              "Health-factor logic"
+            ],
+            "rule_family": "lending",
+            "safety_notes": [
+              "Use local oracle values and synthetic price shocks."
+            ]
+          },
+          "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
+          "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
+        },
+        {
+          "affected_contracts": [
+            "ToyLendingMarket"
+          ],
+          "affected_files": [
+            "src/ToyLendingMarket.sol",
+            "test/ToyLendingMarket.t.sol"
+          ],
+          "affected_functions": [
+            "borrow",
+            "collateralValue",
+            "depositCollateral",
+            "healthFactor",
+            "repay"
+          ],
+          "category": "lending-liquidity",
+          "confidence": "high",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "detail": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
+          "detected_signals": [
+            "LTV",
+            "accrueInterest",
+            "borrow",
+            "borrowIndex",
+            "cash",
+            "closeFactor",
+            "collateral",
+            "collateralFactor",
+            "debt",
+            "guardian",
+            "healthFactor",
+            "interestIndex",
+            "liquidate",
+            "liquidationBonus",
+            "liquidationThreshold",
+            "ratePerSecond",
+            "repay",
+            "totalBorrows",
+            "totalReserves"
+          ],
+          "detection_sources": [
+            "semantic-lite"
+          ],
+          "evidence": [
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "depositCollateral",
+              "line": 48,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "collateral[msg.sender] += msg.value;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "collateralValue",
+              "line": 58,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return collateral[user] * getPrice() / 1e18;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "healthFactor",
+              "line": 62,
+              "reason": "Solidity function shape matches this readiness finding.",
+              "snippet": "if (debt[user] == 0) {",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "borrow",
+              "line": 69,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "uint256 projectedDebt = debt[msg.sender] + amount;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "repay",
+              "line": 79,
+              "reason": "Solidity function contains external value-flow call evidence.",
+              "snippet": "uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;",
+              "type": "semantic-lite"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "1594a1336d67ce91c23f435b",
+          "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
+          "id": "ARK-LEND-005",
+          "invariant_candidates": [
+            "Cash, total borrows, total reserves, and utilization remain internally consistent."
+          ],
+          "knowledge": {
+            "broken_invariants": [
+              "borrow-cannot-exceed-available-liquidity",
+              "cash-plus-borrows-reserves-reconcile"
+            ],
+            "failed_assumptions": [
+              "cash-matches-available-liquidity",
+              "repay-updates-debt-and-cash-consistently"
+            ],
+            "finding_map_version": "0.9.0",
+            "related_docs": [
+              "docs/LENDING_RULE_PACK.md",
+              "docs/RULE_PACKS.md"
+            ],
+            "related_patterns": [
+              "pattern-collateral-debt-invariant",
+              "pattern-accounting-index-drift"
+            ],
+            "related_pocs": [
+              "poc-2020-11-cheese-bank"
+            ],
+            "root_causes": [
+              "available-liquidity-assumption",
+              "cash-reserve-accounting-drift"
+            ],
+            "rule_pack": "lending",
+            "search_terms": [
+              "reserve accounting",
+              "available liquidity",
+              "totalBorrows",
+              "utilization"
+            ],
+            "suggested_tests": [
+              "available-liquidity-bound",
+              "repay-cash-debt-consistency",
+              "reserve-withdrawal-constraints",
+              "utilization-bound-test"
+            ]
+          },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
+          "priority": "Medium readiness gap",
+          "recommendation": "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
+          "recommended_defensive_checks": [
+            "available liquidity bound",
+            "repay updates cash/debt",
+            "reserve withdrawal constraints",
+            "utilization bounds"
+          ],
+          "severity": "Medium readiness gap",
+          "suggested_tests": [
+            "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
+            "Test borrow cannot exceed available liquidity.",
+            "Test repay updates cash, debt, and reserves consistently.",
+            "Assert reserves cannot be withdrawn beyond documented constraints."
+          ],
+          "suppressible": true,
+          "tags": [
+            "lending-liquidity",
+            "reserve-accounting",
+            "lending-rule-pack"
+          ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_lendingCashAndDebtAccountingConsistent"
+            ],
+            "manual_review_notes": [
+              "Review reserve factor and protocol fee accounting."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Market cash state",
+              "Borrow/repay functions",
+              "Reserve accounting"
+            ],
+            "rule_family": "lending",
+            "safety_notes": [
+              "Use local asset mocks and synthetic liquidity."
+            ]
+          },
+          "title": "Reserve/cash accounting assumptions not covered",
+          "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
+        },
         {
           "affected_contracts": [
             "ToyLendingMarket"
@@ -4407,373 +4808,6 @@
           },
           "title": "Interest/index accounting not covered by rounding and time-step tests",
           "why_it_matters": "Interest/index accounting can drift when rates, time steps, small balances, and repeated accrual interact."
-        },
-        {
-          "affected_contracts": [
-            "ToyLendingMarket"
-          ],
-          "affected_files": [
-            "src/ToyLendingMarket.sol",
-            "test/ToyLendingMarket.t.sol"
-          ],
-          "affected_functions": [
-            "collateralValue",
-            "getPrice",
-            "liquidate"
-          ],
-          "category": "lending-oracle",
-          "confidence": "high",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-          "detail": "Borrowing, collateral valuation, health-factor, or liquidation logic appears oracle-dependent without visible stale-price or price-shock tests.",
-          "detected_signals": [
-            "LTV",
-            "accrueInterest",
-            "answer",
-            "borrow",
-            "borrowIndex",
-            "cash",
-            "closeFactor",
-            "collateral",
-            "collateralFactor",
-            "debt",
-            "getPrice",
-            "guardian",
-            "healthFactor",
-            "interestIndex",
-            "latestRoundData",
-            "liquidate",
-            "liquidationBonus",
-            "liquidationThreshold",
-            "priceFeed",
-            "ratePerSecond",
-            "repay",
-            "totalBorrows",
-            "totalReserves"
-          ],
-          "detection_sources": [
-            "keyword",
-            "semantic-lite",
-            "test-coverage"
-          ],
-          "evidence": [
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "getPrice",
-              "line": 52,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "collateralValue",
-              "line": 58,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "return collateral[user] * getPrice() / 1e18;",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "liquidate",
-              "line": 94,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
-              "type": "semantic-lite"
-            },
-            {
-              "file": "",
-              "function": "",
-              "line": 1,
-              "reason": "No semantic-lite oracle test coverage terms were detected.",
-              "snippet": "",
-              "type": "test-coverage"
-            },
-            {
-              "file": "src/ToyLendingMarket.sol",
-              "function": "",
-              "line": 1,
-              "reason": "Keyword signal matched this readiness finding.",
-              "snippet": "LTV, accrueInterest, answer, borrow, borrowIndex, cash, closeFactor, collateral",
-              "type": "keyword"
-            }
-          ],
-          "evidence_count": 5,
-          "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-          "false_positive_notes": "",
-          "fingerprint": "995093a52992e5d7d6b2e42d",
-          "historical_pattern_similarity": "Maps to oracle-dependent liquidation and collateral valuation readiness classes.",
-          "id": "ARK-LEND-004",
-          "invariant_candidates": [
-            "Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy."
-          ],
-          "knowledge": {
-            "broken_invariants": [
-              "health-factor-uses-valid-price",
-              "borrow-and-liquidation-use-bounded-price"
-            ],
-            "failed_assumptions": [
-              "collateral-price-is-current",
-              "oracle-answer-is-normalized"
-            ],
-            "finding_map_version": "0.9.0",
-            "related_docs": [
-              "docs/LENDING_RULE_PACK.md",
-              "docs/ORACLE_RULE_PACK.md"
-            ],
-            "related_patterns": [
-              "pattern-oracle-stale-price",
-              "pattern-collateral-debt-invariant"
-            ],
-            "related_pocs": [
-              "poc-2025-11-moonwell",
-              "poc-2020-10-harvest"
-            ],
-            "root_causes": [
-              "missing-oracle-freshness-validation",
-              "implicit-collateral-price-trust"
-            ],
-            "rule_pack": "lending",
-            "search_terms": [
-              "lending oracle",
-              "stale price",
-              "price shock",
-              "collateral value"
-            ],
-            "suggested_tests": [
-              "stale-oracle-rejection",
-              "decimals-normalization-test",
-              "price-shock-boundary-test",
-              "borrow-blocked-on-invalid-price"
-            ]
-          },
-          "negative_evidence": [],
-          "negative_evidence_count": 0,
-          "priority": "High readiness gap",
-          "recommendation": "Add local oracle tests for stale prices, decimals normalization, price shocks, invalid prices, and liquidation after oracle updates.",
-          "recommended_defensive_checks": [
-            "stale oracle rejection",
-            "decimals normalization",
-            "price shock boundary",
-            "borrow blocked on invalid price"
-          ],
-          "severity": "High readiness gap",
-          "suggested_tests": [
-            "Mock stale, invalid, and sharply moved prices and assert borrow/liquidation behavior follows documented policy.",
-            "Test stale oracle rejection for borrow and liquidation paths.",
-            "Test decimals normalization for collateral valuation.",
-            "Test price shock boundaries around health-factor transitions."
-          ],
-          "suppressible": true,
-          "tags": [
-            "lending-oracle",
-            "oracle-risk",
-            "lending-rule-pack"
-          ],
-          "test_plan": {
-            "foundry_skeleton_functions": [
-              "invariant_lendingOracleValidityPolicyIsRespected"
-            ],
-            "manual_review_notes": [
-              "Review fallback behavior and collateral-specific feed assumptions."
-            ],
-            "mapped": true,
-            "required_project_bindings": [
-              "Lending market",
-              "Oracle mock",
-              "Health-factor logic"
-            ],
-            "rule_family": "lending",
-            "safety_notes": [
-              "Use local oracle values and synthetic price shocks."
-            ]
-          },
-          "title": "Oracle-dependent borrowing/liquidation without stale-price tests",
-          "why_it_matters": "Lending solvency can be distorted when collateral values depend on stale, invalid, or mis-normalized prices."
-        },
-        {
-          "affected_contracts": [
-            "ToyLendingMarket"
-          ],
-          "affected_files": [
-            "src/ToyLendingMarket.sol",
-            "test/ToyLendingMarket.t.sol"
-          ],
-          "affected_functions": [
-            "borrow",
-            "collateralValue",
-            "depositCollateral",
-            "healthFactor",
-            "repay"
-          ],
-          "category": "lending-liquidity",
-          "confidence": "high",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-          "detail": "Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.",
-          "detected_signals": [
-            "LTV",
-            "accrueInterest",
-            "borrow",
-            "borrowIndex",
-            "cash",
-            "closeFactor",
-            "collateral",
-            "collateralFactor",
-            "debt",
-            "guardian",
-            "healthFactor",
-            "interestIndex",
-            "liquidate",
-            "liquidationBonus",
-            "liquidationThreshold",
-            "ratePerSecond",
-            "repay",
-            "totalBorrows",
-            "totalReserves"
-          ],
-          "detection_sources": [
-            "semantic-lite"
-          ],
-          "evidence": [
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "depositCollateral",
-              "line": 48,
-              "reason": "Solidity function contains external value-flow call evidence.",
-              "snippet": "collateral[msg.sender] += msg.value;",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "collateralValue",
-              "line": 58,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "return collateral[user] * getPrice() / 1e18;",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "healthFactor",
-              "line": 62,
-              "reason": "Solidity function shape matches this readiness finding.",
-              "snippet": "if (debt[user] == 0) {",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "borrow",
-              "line": 69,
-              "reason": "Solidity function contains external value-flow call evidence.",
-              "snippet": "uint256 projectedDebt = debt[msg.sender] + amount;",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "repay",
-              "line": 79,
-              "reason": "Solidity function contains external value-flow call evidence.",
-              "snippet": "uint256 paid = amount > debt[msg.sender] ? debt[msg.sender] : amount;",
-              "type": "semantic-lite"
-            }
-          ],
-          "evidence_count": 5,
-          "evidence_summary": "src/ToyLendingMarket.sol in `depositCollateral`: Solidity function contains external value-flow call evidence.",
-          "false_positive_notes": "",
-          "fingerprint": "1594a1336d67ce91c23f435b",
-          "historical_pattern_similarity": "Maps to cash/debt mismatch and liquidity accounting readiness classes.",
-          "id": "ARK-LEND-005",
-          "invariant_candidates": [
-            "Cash, total borrows, total reserves, and utilization remain internally consistent."
-          ],
-          "knowledge": {
-            "broken_invariants": [
-              "borrow-cannot-exceed-available-liquidity",
-              "cash-plus-borrows-reserves-reconcile"
-            ],
-            "failed_assumptions": [
-              "cash-matches-available-liquidity",
-              "repay-updates-debt-and-cash-consistently"
-            ],
-            "finding_map_version": "0.9.0",
-            "related_docs": [
-              "docs/LENDING_RULE_PACK.md",
-              "docs/RULE_PACKS.md"
-            ],
-            "related_patterns": [
-              "pattern-collateral-debt-invariant",
-              "pattern-accounting-index-drift"
-            ],
-            "related_pocs": [
-              "poc-2020-11-cheese-bank"
-            ],
-            "root_causes": [
-              "available-liquidity-assumption",
-              "cash-reserve-accounting-drift"
-            ],
-            "rule_pack": "lending",
-            "search_terms": [
-              "reserve accounting",
-              "available liquidity",
-              "totalBorrows",
-              "utilization"
-            ],
-            "suggested_tests": [
-              "available-liquidity-bound",
-              "repay-cash-debt-consistency",
-              "reserve-withdrawal-constraints",
-              "utilization-bound-test"
-            ]
-          },
-          "negative_evidence": [],
-          "negative_evidence_count": 0,
-          "priority": "Medium readiness gap",
-          "recommendation": "Add tests proving borrow cannot exceed available liquidity and repay/reserve updates keep cash and debt accounting consistent.",
-          "recommended_defensive_checks": [
-            "available liquidity bound",
-            "repay updates cash/debt",
-            "reserve withdrawal constraints",
-            "utilization bounds"
-          ],
-          "severity": "Medium readiness gap",
-          "suggested_tests": [
-            "Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.",
-            "Test borrow cannot exceed available liquidity.",
-            "Test repay updates cash, debt, and reserves consistently.",
-            "Assert reserves cannot be withdrawn beyond documented constraints."
-          ],
-          "suppressible": true,
-          "tags": [
-            "lending-liquidity",
-            "reserve-accounting",
-            "lending-rule-pack"
-          ],
-          "test_plan": {
-            "foundry_skeleton_functions": [
-              "invariant_lendingCashAndDebtAccountingConsistent"
-            ],
-            "manual_review_notes": [
-              "Review reserve factor and protocol fee accounting."
-            ],
-            "mapped": true,
-            "required_project_bindings": [
-              "Market cash state",
-              "Borrow/repay functions",
-              "Reserve accounting"
-            ],
-            "rule_family": "lending",
-            "safety_notes": [
-              "Use local asset mocks and synthetic liquidity."
-            ]
-          },
-          "title": "Reserve/cash accounting assumptions not covered",
-          "why_it_matters": "Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state."
         }
       ],
       "label": "Lending Rule Pack",
@@ -4815,128 +4849,6 @@
       ],
       "finding_count": 3,
       "findings": [
-        {
-          "affected_contracts": [
-            "ToyLendingMarket"
-          ],
-          "affected_files": [
-            "src/ToyLendingMarket.sol",
-            "test/ToyLendingMarket.t.sol"
-          ],
-          "affected_functions": [
-            "collateralValue",
-            "getPrice",
-            "liquidate"
-          ],
-          "category": "oracle-pricing",
-          "confidence": "medium",
-          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
-          "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
-          "detected_signals": [],
-          "detection_sources": [
-            "keyword",
-            "semantic-lite",
-            "test-coverage"
-          ],
-          "evidence": [
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "getPrice",
-              "line": 52,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "collateralValue",
-              "line": 58,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "return collateral[user] * getPrice() / 1e18;",
-              "type": "semantic-lite"
-            },
-            {
-              "contract": "ToyLendingMarket",
-              "file": "src/ToyLendingMarket.sol",
-              "function": "liquidate",
-              "line": 94,
-              "reason": "Solidity function contains oracle or price-feed call evidence.",
-              "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
-              "type": "semantic-lite"
-            },
-            {
-              "file": "",
-              "function": "",
-              "line": 1,
-              "reason": "No semantic-lite oracle test coverage terms were detected.",
-              "snippet": "",
-              "type": "test-coverage"
-            },
-            {
-              "file": "src/ToyLendingMarket.sol",
-              "function": "",
-              "line": 1,
-              "reason": "Keyword signal matched this readiness finding.",
-              "snippet": "",
-              "type": "keyword"
-            }
-          ],
-          "evidence_count": 5,
-          "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
-          "false_positive_notes": "",
-          "fingerprint": "8a1699ea5c99922d1c6da655",
-          "historical_pattern_similarity": "",
-          "id": "ARK-ORC-002",
-          "invariant_candidates": [
-            "Normalized oracle values remain within documented unit and decimal assumptions."
-          ],
-          "knowledge": {
-            "finding_map_version": "0.9.0",
-            "related_docs": [],
-            "related_patterns": [],
-            "related_pocs": [],
-            "search_terms": [],
-            "suggested_tests": []
-          },
-          "negative_evidence": [],
-          "negative_evidence_count": 0,
-          "priority": "High readiness gap",
-          "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-          "recommended_defensive_checks": [],
-          "severity": "High readiness gap",
-          "suggested_tests": [
-            "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
-            "Test decimals normalization across expected feed decimals.",
-            "Test zero, negative, or invalid oracle answers if applicable.",
-            "Assert normalized price units match accounting units."
-          ],
-          "suppressible": true,
-          "tags": [
-            "oracle-risk",
-            "price-assumptions"
-          ],
-          "test_plan": {
-            "foundry_skeleton_functions": [
-              "invariant_oracleNormalizationMatchesAccountingUnits"
-            ],
-            "manual_review_notes": [
-              "Review whether feed decimals are fixed at deployment."
-            ],
-            "mapped": true,
-            "required_project_bindings": [
-              "Oracle adapter",
-              "Accounting consumer"
-            ],
-            "rule_family": "oracle",
-            "safety_notes": [
-              "Use synthetic feed answers and local mocks."
-            ]
-          },
-          "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
-          "why_it_matters": ""
-        },
         {
           "affected_contracts": [
             "ToyLendingMarket"
@@ -5108,6 +5020,137 @@
           },
           "title": "Oracle-dependent logic without stale-price tests",
           "why_it_matters": "Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions."
+        },
+        {
+          "affected_contracts": [
+            "ToyLendingMarket"
+          ],
+          "affected_files": [
+            "src/ToyLendingMarket.sol",
+            "test/ToyLendingMarket.t.sol"
+          ],
+          "affected_functions": [
+            "collateralValue",
+            "getPrice",
+            "liquidate"
+          ],
+          "category": "oracle-pricing",
+          "confidence": "medium",
+          "confidence_reason": "Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.",
+          "detail": "Oracle and price-feed signals were detected without enough freshness or sanity-check language.",
+          "detected_signals": [
+            "answer",
+            "getPrice",
+            "latestRoundData",
+            "priceFeed"
+          ],
+          "detection_sources": [
+            "keyword",
+            "semantic-lite",
+            "test-coverage"
+          ],
+          "evidence": [
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "getPrice",
+              "line": 52,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "(, int256 answer,,,) = priceFeed.latestRoundData();",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "collateralValue",
+              "line": 58,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "return collateral[user] * getPrice() / 1e18;",
+              "type": "semantic-lite"
+            },
+            {
+              "contract": "ToyLendingMarket",
+              "file": "src/ToyLendingMarket.sol",
+              "function": "liquidate",
+              "line": 94,
+              "reason": "Solidity function contains oracle or price-feed call evidence.",
+              "snippet": "uint256 seized = actualRepay * liquidationBonus / getPrice();",
+              "type": "semantic-lite"
+            },
+            {
+              "file": "",
+              "function": "",
+              "line": 1,
+              "reason": "No semantic-lite oracle test coverage terms were detected.",
+              "snippet": "",
+              "type": "test-coverage"
+            },
+            {
+              "file": "src/ToyLendingMarket.sol",
+              "function": "",
+              "line": 1,
+              "reason": "Keyword signal matched this readiness finding.",
+              "snippet": "answer, getPrice, latestRoundData, priceFeed",
+              "type": "keyword"
+            }
+          ],
+          "evidence_count": 5,
+          "evidence_summary": "src/ToyLendingMarket.sol in `getPrice`: Solidity function contains oracle or price-feed call evidence.",
+          "false_positive_notes": "",
+          "fingerprint": "2b5212e9506e054f6e136eee",
+          "historical_pattern_similarity": "",
+          "id": "ARK-ORC-002",
+          "invariant_candidates": [
+            "Normalized oracle values remain within documented unit and decimal assumptions."
+          ],
+          "knowledge": {
+            "finding_map_version": "0.9.0",
+            "related_docs": [],
+            "related_patterns": [],
+            "related_pocs": [],
+            "search_terms": [],
+            "suggested_tests": []
+          },
+          "negative_evidence": [],
+          "negative_evidence_count": 0,
+          "priority": "High readiness gap",
+          "recommendation": "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+          "recommended_defensive_checks": [
+            "stale-round and heartbeat handling",
+            "decimals normalization to accounting units",
+            "documented price bounds, TWAP, or fallback policy"
+          ],
+          "severity": "High readiness gap",
+          "suggested_tests": [
+            "Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.",
+            "Test decimals normalization across expected feed decimals.",
+            "Test zero, negative, or invalid oracle answers if applicable.",
+            "Assert normalized price units match accounting units."
+          ],
+          "suppressible": true,
+          "tags": [
+            "oracle-risk",
+            "price-assumptions"
+          ],
+          "test_plan": {
+            "foundry_skeleton_functions": [
+              "invariant_oracleNormalizationMatchesAccountingUnits"
+            ],
+            "manual_review_notes": [
+              "Review whether feed decimals are fixed at deployment."
+            ],
+            "mapped": true,
+            "required_project_bindings": [
+              "Oracle adapter",
+              "Accounting consumer"
+            ],
+            "rule_family": "oracle",
+            "safety_notes": [
+              "Use synthetic feed answers and local mocks."
+            ]
+          },
+          "title": "Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage",
+          "why_it_matters": "Price-dependent accounting can be wrong when oracle data is stale, out of bounds, or mis-normalized and no freshness or sanity check is visible to a reviewer."
         },
         {
           "affected_contracts": [
