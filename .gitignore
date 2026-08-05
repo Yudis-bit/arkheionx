@@ -73,3 +73,8 @@ broadcast/
 !tests/fixtures/repos/**/build/**
 !tests/fixtures/repos/**/artifacts/
 !tests/fixtures/repos/**/artifacts/**
+
+# EVM/lib/forge-std is vendored on purpose (see EVM/README.md and
+# EVM/foundry.lock); the broad lib/ rule above must not exclude it.
+!EVM/lib/
+!EVM/lib/**
