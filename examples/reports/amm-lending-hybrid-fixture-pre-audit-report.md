@@ -3,7 +3,7 @@
 ## Scope
 
 - Repository root: `examples/amm-lending-hybrid-fixture`
-- Generated at: `2026-06-06T12:31:33+00:00`
+- Generated at: `2026-08-05T18:37:06+00:00`
 - Protocol type: `amm`
 - Protocol confidence: `medium`
 - Files scanned: `4`
@@ -114,6 +114,7 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 
 - Detected protocol type: `amm`
 - Confidence: `medium`
+- Protocol shape: `amm` with strong secondary signals: `lending`
 - Protocol score signals: `{"amm": 102, "lending": 94, "oracle": 0, "staking": 0, "vault": 0}`
 - Arkheionx memory metadata loaded: `18` entries
 
@@ -299,285 +300,6 @@ Arkheionx scanned `examples/amm-lending-hybrid-fixture` as `amm` readiness conte
 - Search tags: `lending, liquidation, collateral, oracle-risk`
 
 ## All Readiness Gaps
-
-### ARK-TST-002 - No invariant tests detected for DeFi protocol shape
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword`
-- Category: `testing-readiness`
-
-Evidence:
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding.
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding.
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- scanner signal
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Protocol-like value flows were detected, but no invariant/property testing signal was found.
-
-Related Knowledge:
-
-- Historical patterns: pattern-missing-invariant-coverage, pattern-assumption-not-encoded-in-tests
-- Suggested defensive tests: foundry-invariant-skeleton, stateful-fuzz-sequence, roundtrip-or-conservation-invariant
-- Related PoCs: poc-2020-08-opyn, poc-2020-09-bzx-ifusdc, poc-2021-10-indexed-finance
-
-Suggested tests:
-
-- Add Foundry invariant tests for accounting, oracle, role, and value-flow assumptions.
-- Add a stateful invariant suite for the core protocol lifecycle.
-- Add handler actions for normal user flows and documented edge cases.
-- Add conservation properties for assets, shares, rewards, debt, or reserves as applicable.
-
-Invariant candidates:
-
-- Core accounting relationships hold after any allowed user action.
-- Privileged actions cannot silently bypass documented accounting assumptions.
-
-Search tags: `invariant-testing, amm`
-
-### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword, test-coverage`
-- Category: `oracle-pricing`
-
-Evidence:
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding.
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding.
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- scanner signal
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Oracle and price-feed signals were detected without enough freshness or sanity-check language.
-
-
-Suggested tests:
-
-- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
-- Test decimals normalization across expected feed decimals.
-- Test zero, negative, or invalid oracle answers if applicable.
-- Assert normalized price units match accounting units.
-
-Invariant candidates:
-
-- Normalized oracle values remain within documented unit and decimal assumptions.
-
-Search tags: `oracle-risk, price-assumptions`
-
-### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword, test-coverage`
-- Category: `oracle-pricing`
-
-Evidence:
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- `getReserves`
-- `pool`
-- `reserve0`
-- `reserve1`
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.
-
-Why it matters:
-
-Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions.
-
-Historical pattern similarity:
-
-Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.
-
-Recommended defensive checks:
-
-- stale round rejection
-- heartbeat checks
-- updatedAt validation
-- answeredInRound handling
-
-Related Knowledge:
-
-- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
-- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
-- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
-
-Suggested tests:
-
-- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
-- Reject stale oracle rounds or document fallback behavior.
-- Test updatedAt or heartbeat boundaries.
-- Test borrow, liquidation, vault, or reward flows when oracle data is stale.
-
-Invariant candidates:
-
-- Accounting decisions only use oracle data that satisfies documented freshness policy.
-
-Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
-
-### ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword, test-coverage`
-- Category: `oracle-pricing`
-
-Evidence:
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- `getReserves`
-- `pool`
-- `reserve0`
-- `reserve1`
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Spot, reserve, pool, or sqrtPriceX96 pricing signals were detected without visible manipulation-resistance tests.
-
-Why it matters:
-
-Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design.
-
-Historical pattern similarity:
-
-Maps to historical price-manipulation readiness classes.
-
-Recommended defensive checks:
-
-- TWAP vs spot behavior
-- reserve movement bounds
-- price sanity checks
-- local pool mocks
-
-Related Knowledge:
-
-- Historical patterns: pattern-spot-price-manipulation, pattern-amm-invariant-steering
-- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-bounds-test
-- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth
-
-Suggested tests:
-
-- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.
-- Test spot-price movement bounds.
-- Test TWAP or delay assumptions when used.
-- Document reserve-price dependency and expected safeguards.
-
-Invariant candidates:
-
-- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
-
-Search tags: `oracle-risk, spot-price, reserve-pricing, oracle-rule-pack`
-
-### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
-
-- Priority: `Low readiness gap`
-- Confidence: `low`
-- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
-- Detection sources: `keyword, test-coverage`
-- Category: `oracle-pricing`
-
-Evidence:
-- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
-- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
-
-False-positive notes:
-
-Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
-
-Detected signals:
-- `getReserves`
-- `pool`
-- `reserve0`
-- `reserve1`
-
-Affected files:
-- `src/ToyHybridMarket.sol`
-- `test/ToyHybridMarket.t.sol`
-
-What was detected:
-
-Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.
-
-Why it matters:
-
-Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.
-
-Historical pattern similarity:
-
-Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.
-
-Recommended defensive checks:
-
-- price bounds
-- fallback policy
-- stale-price policy
-- sequencer downtime notes
-
-
-Suggested tests:
-
-- Add documentation plus local tests showing fallback and out-of-bounds price behavior.
-- Test documented price bounds.
-- Test invalid answer fallback behavior.
-- Add documentation for price shock and fallback assumptions.
-
-Invariant candidates:
-
-- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
-
-Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
 ### ARK-AMM-001 - AMM invariant assumptions not covered by tests
 
@@ -841,6 +563,72 @@ Invariant candidates:
 
 Search tags: `amm-slippage, min-output, amm-rule-pack`
 
+### ARK-LEND-005 - Reserve/cash accounting assumptions not covered
+
+- Priority: `Medium readiness gap`
+- Confidence: `high`
+- Confidence reason: Semantic-lite Solidity evidence was detected and matching test coverage evidence was not found.
+- Detection sources: `semantic-lite`
+- Category: `lending-liquidity`
+
+Evidence:
+- `src/ToyHybridMarket.sol:37` in `depositCollateral`: Solidity function contains external value-flow call evidence. Snippet: `collateral[msg.sender] += msg.value;`
+- `src/ToyHybridMarket.sol:41` in `collateralValue`: Solidity function shape matches this readiness finding. Snippet: `return collateral[user] * price / 1e18;`
+- `src/ToyHybridMarket.sol:46` in `healthFactor`: Solidity function shape matches this readiness finding. Snippet: `if (debt[user] == 0) {`
+
+Detected signals:
+- `borrow`
+- `cash`
+- `collateral`
+- `debt`
+- `healthFactor`
+- `liquidate`
+- `liquidationThreshold`
+- `repay`
+- `totalBorrows`
+
+Affected files:
+- `src/ToyHybridMarket.sol`
+- `test/ToyHybridMarket.t.sol`
+
+What was detected:
+
+Cash, reserves, total borrows, utilization, or available-liquidity signals were detected without visible cash/debt consistency tests.
+
+Why it matters:
+
+Reserve and cash accounting define whether borrowers can draw liquidity and whether repayments restore accounting state.
+
+Historical pattern similarity:
+
+Maps to cash/debt mismatch and liquidity accounting readiness classes.
+
+Recommended defensive checks:
+
+- available liquidity bound
+- repay updates cash/debt
+- reserve withdrawal constraints
+- utilization bounds
+
+Related Knowledge:
+
+- Historical patterns: pattern-collateral-debt-invariant, pattern-accounting-index-drift
+- Suggested defensive tests: available-liquidity-bound, repay-cash-debt-consistency, reserve-withdrawal-constraints
+- Related PoCs: poc-2020-11-cheese-bank
+
+Suggested tests:
+
+- Assert borrow reverts above available liquidity and repay updates cash, debt, reserves, and utilization consistently.
+- Test borrow cannot exceed available liquidity.
+- Test repay updates cash, debt, and reserves consistently.
+- Assert reserves cannot be withdrawn beyond documented constraints.
+
+Invariant candidates:
+
+- Cash, total borrows, total reserves, and utilization remain internally consistent.
+
+Search tags: `lending-liquidity, reserve-accounting, lending-rule-pack`
+
 ### ARK-LEND-001 - Collateral/debt solvency invariant not covered by tests
 
 - Priority: `Medium readiness gap`
@@ -1046,6 +834,251 @@ Invariant candidates:
 - Borrowing and liquidation decisions only use oracle data that satisfies documented validity policy.
 
 Search tags: `lending-oracle, oracle-risk, lending-rule-pack`
+
+### ARK-ORC-001 - Oracle-dependent logic without stale-price tests
+
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
+- Detection sources: `keyword, test-coverage`
+- Category: `oracle-pricing`
+
+Evidence:
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+
+False-positive notes:
+
+Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
+
+Detected signals:
+- `getReserves`
+- `pool`
+- `reserve0`
+- `reserve1`
+
+Affected files:
+- `src/ToyHybridMarket.sol`
+- `test/ToyHybridMarket.t.sol`
+
+What was detected:
+
+Oracle or price-feed signals were detected, but tests do not visibly cover stale rounds, heartbeat, or timestamp behavior.
+
+Why it matters:
+
+Oracle-dependent accounting and control flows can be wrong when price data is stale, incomplete, or outside documented assumptions.
+
+Historical pattern similarity:
+
+Maps to historical oracle and pricing failure classes where stale or manipulated price state broke protocol assumptions.
+
+Recommended defensive checks:
+
+- stale round rejection
+- heartbeat checks
+- updatedAt validation
+- answeredInRound handling
+
+Related Knowledge:
+
+- Historical patterns: pattern-oracle-stale-price, pattern-spot-price-manipulation, pattern-pool-price-accounting
+- Suggested defensive tests: stale-round-rejection, heartbeat-bound-test, decimal-normalization-test
+- Related PoCs: poc-2025-11-moonwell, poc-2020-10-harvest, poc-2021-02-yearn-v1-dai
+
+Suggested tests:
+
+- Use a local mock price feed to assert stale or incomplete oracle rounds are rejected or handled according to documented policy.
+- Reject stale oracle rounds or document fallback behavior.
+- Test updatedAt or heartbeat boundaries.
+- Test borrow, liquidation, vault, or reward flows when oracle data is stale.
+
+Invariant candidates:
+
+- Accounting decisions only use oracle data that satisfies documented freshness policy.
+
+Search tags: `oracle-risk, oracle-rule-pack, pre-audit-readiness`
+
+### ARK-ORC-002 - Oracle usage lacks visible staleness, TWAP, bounds, or sanity coverage
+
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
+- Detection sources: `keyword, test-coverage`
+- Category: `oracle-pricing`
+
+Evidence:
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+
+False-positive notes:
+
+Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
+
+Detected signals:
+- `getReserves`
+- `pool`
+- `reserve0`
+- `reserve1`
+
+Affected files:
+- `src/ToyHybridMarket.sol`
+- `test/ToyHybridMarket.t.sol`
+
+What was detected:
+
+Oracle and price-feed signals were detected without enough freshness or sanity-check language.
+
+Why it matters:
+
+Price-dependent accounting can be wrong when oracle data is stale, out of bounds, or mis-normalized and no freshness or sanity check is visible to a reviewer.
+
+Recommended defensive checks:
+
+- stale-round and heartbeat handling
+- decimals normalization to accounting units
+- documented price bounds, TWAP, or fallback policy
+
+
+Suggested tests:
+
+- Document and test oracle freshness, decimals normalization, price bounds, and fallback behavior.
+- Test decimals normalization across expected feed decimals.
+- Test zero, negative, or invalid oracle answers if applicable.
+- Assert normalized price units match accounting units.
+
+Invariant candidates:
+
+- Normalized oracle values remain within documented unit and decimal assumptions.
+
+Search tags: `oracle-risk, price-assumptions`
+
+### ARK-ORC-003 - Spot or reserve-based pricing without manipulation-resistance tests
+
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
+- Detection sources: `keyword, test-coverage`
+- Category: `oracle-pricing`
+
+Evidence:
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+
+False-positive notes:
+
+Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
+
+Detected signals:
+- `getReserves`
+- `pool`
+- `reserve0`
+- `reserve1`
+
+Affected files:
+- `src/ToyHybridMarket.sol`
+- `test/ToyHybridMarket.t.sol`
+
+What was detected:
+
+Spot, reserve, pool, or sqrtPriceX96 pricing signals were detected without visible manipulation-resistance tests.
+
+Why it matters:
+
+Same-block spot or reserve-based pricing can drift from fair value unless bounded by the protocol design.
+
+Historical pattern similarity:
+
+Maps to historical price-manipulation readiness classes.
+
+Recommended defensive checks:
+
+- TWAP vs spot behavior
+- reserve movement bounds
+- price sanity checks
+- local pool mocks
+
+Related Knowledge:
+
+- Historical patterns: pattern-spot-price-manipulation, pattern-amm-invariant-steering
+- Suggested defensive tests: twap-vs-spot-behavior, reserve-manipulation-sanity-test, price-bounds-test
+- Related PoCs: poc-2020-10-harvest, poc-2021-01-saddle, poc-2025-12-yeth
+
+Suggested tests:
+
+- Use a local pool mock to move reserves or price and assert protocol actions respect documented bounds.
+- Test spot-price movement bounds.
+- Test TWAP or delay assumptions when used.
+- Document reserve-price dependency and expected safeguards.
+
+Invariant candidates:
+
+- Price-dependent accounting does not rely on an undocumented instantaneous reserve ratio.
+
+Search tags: `oracle-risk, spot-price, reserve-pricing, oracle-rule-pack`
+
+### ARK-ORC-005 - Missing price bounds or fallback assumptions documentation
+
+- Priority: `Low readiness gap`
+- Confidence: `low`
+- Confidence reason: Keyword-only signal detected without Solidity function-level evidence; manual review is recommended before remediation.
+- Detection sources: `keyword, test-coverage`
+- Category: `oracle-pricing`
+
+Evidence:
+- `test/documentation coverage`: No semantic-lite oracle test coverage terms were detected.
+- `src/ToyHybridMarket.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+- `test/ToyHybridMarket.t.sol:1`: Keyword signal matched this readiness finding. Snippet: `getReserves, pool, reserve0, reserve1`
+
+False-positive notes:
+
+Keyword-only signal without Solidity function-level evidence. Review manually before creating remediation tasks.
+
+Detected signals:
+- `getReserves`
+- `pool`
+- `reserve0`
+- `reserve1`
+
+Affected files:
+- `src/ToyHybridMarket.sol`
+- `test/ToyHybridMarket.t.sol`
+
+What was detected:
+
+Oracle pricing signals were detected without clear documentation for bounds, fallback behavior, or stale price assumptions.
+
+Why it matters:
+
+Auditors and maintainers need explicit pricing assumptions to review whether the design handles oracle failure modes.
+
+Historical pattern similarity:
+
+Maps to failed assumption classes where oracle behavior was implied but not enforced or documented.
+
+Recommended defensive checks:
+
+- price bounds
+- fallback policy
+- stale-price policy
+- sequencer downtime notes
+
+
+Suggested tests:
+
+- Add documentation plus local tests showing fallback and out-of-bounds price behavior.
+- Test documented price bounds.
+- Test invalid answer fallback behavior.
+- Add documentation for price shock and fallback assumptions.
+
+Invariant candidates:
+
+- Invalid or out-of-bound price inputs cannot silently drive critical accounting decisions.
+
+Search tags: `oracle-risk, documentation-readiness, oracle-rule-pack`
 
 _Profile `standard` shows 12 detailed findings. Use `output_profile: full` for all findings._
 

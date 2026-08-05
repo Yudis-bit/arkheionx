@@ -18,9 +18,9 @@ contract ArkheionxHybridInvariants {
     // TODO: Token mock with configurable received amount.
     // TODO: Swap function.
     // TODO: Slippage or deadline inputs.
-    // TODO: Lending market.
-    // TODO: Collateral token mock.
-    // TODO: Borrow token mock.
+    // TODO: Market cash state.
+    // TODO: Borrow/repay functions.
+    // TODO: Reserve accounting.
 
     function invariant_ammAccountingPreservesDocumentedInvariant() public {
         // TODO: implement a defensive property for the mapped readiness finding.
@@ -38,6 +38,10 @@ contract ArkheionxHybridInvariants {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
+    function invariant_lendingCashAndDebtAccountingConsistent() public {
+        // TODO: implement a defensive property for the mapped readiness finding.
+    }
+
     function invariant_collateralDebtSolvencyHolds() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
@@ -46,23 +50,15 @@ contract ArkheionxHybridInvariants {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
-    function invariant_lendingCashAndDebtAccountingConsistent() public {
-        // TODO: implement a defensive property for the mapped readiness finding.
-    }
-
-    function invariant_coreAccountingRelationshipsHold() public {
-        // TODO: implement a defensive property for the mapped readiness finding.
-    }
-
-    function invariant_privilegedActionsRespectDocumentedAssumptions() public {
-        // TODO: implement a defensive property for the mapped readiness finding.
-    }
-
-    function invariant_oracleNormalizationMatchesAccountingUnits() public {
+    function invariant_lendingOracleValidityPolicyIsRespected() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
     function invariant_oracleFreshnessPolicyIsRespected() public {
+        // TODO: implement a defensive property for the mapped readiness finding.
+    }
+
+    function invariant_oracleNormalizationMatchesAccountingUnits() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
@@ -74,7 +70,11 @@ contract ArkheionxHybridInvariants {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
-    function invariant_lendingOracleValidityPolicyIsRespected() public {
+    function invariant_coreAccountingRelationshipsHold() public {
+        // TODO: implement a defensive property for the mapped readiness finding.
+    }
+
+    function invariant_privilegedActionsRespectDocumentedAssumptions() public {
         // TODO: implement a defensive property for the mapped readiness finding.
     }
 
