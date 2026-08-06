@@ -15,9 +15,16 @@ from arkheionx.review_map.model import ReviewMap
 
 
 def repo_summary(rm: ReviewMap, source_files: int = 0, test_files: int = 0) -> dict:
+    """Return portable repository metadata for generated review packs.
+
+    ``ReviewMap.repo_path`` is local execution provenance and can contain a user
+    name, workspace layout, or a private target name. Scope and protocol-lens
+    packs can be exported, so retain the legacy field with a stable relative
+    marker instead of embedding the host path.
+    """
     s = rm.summary
     return {
-        "repo_path": rm.repo_path,
+        "repo_path": ".",
         "mode": rm.mode,
         "protocol_types": list(s.protocol_types),
         "contracts": s.contracts_analyzed,
