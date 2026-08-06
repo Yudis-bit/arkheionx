@@ -51,6 +51,10 @@ class LensSafetyWordingTests(unittest.TestCase):
         for vendor in VENDOR_NAMES:
             self.assertNotIn(vendor, self.low, f"vendor name in pack: {vendor.strip()}")
 
+    def test_no_absolute_repository_path_in_pack(self) -> None:
+        self.assertNotIn(str(FIXTURE.resolve()).lower(), self.low)
+        self.assertIn('"repo_path": "."', self.low)
+
     def test_required_disclaimers_present(self) -> None:
         self.assertIn("human review required", self.low)
         self.assertIn("planning artifact, not a finding", self.low)
